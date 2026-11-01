@@ -1,0 +1,92 @@
+# M10 Rules: the M9 stack plus one calendar rule, a what-if riparian buffer effective
+# 1 April 2025 (data/events/calendar.toml). Agents obey it, the crop grows grass there, the
+# water module feels it. Diff against m9-farms-boone.toml: this module block only.
+
+[run]
+name = "m10-rules-boone-2025"
+start = "2025-01-01"
+end = "2026-01-01"
+seed = 1
+close_every = "1d"
+snapshot_every = "60d"
+
+[[module]]
+name = "wx"
+kind = "weather.era5"
+[module.params]
+lat_s = 42.3
+lat_n = 43.2
+lon_w = -94.2
+lon_e = -93.5
+res_arcsec = 30
+start = "2025-01-01"
+end = "2025-12-31"
+dt = "1h"
+
+[[module]]
+name = "sun"
+kind = "sun.irradiance"
+[module.params]
+lat_s = 42.3
+lat_n = 43.2
+lon_w = -94.2
+lon_e = -93.5
+res_arcsec = 30
+dt = "1h"
+report_every = "90d"
+
+[[module]]
+name = "water"
+kind = "water.basin"
+[module.params]
+forcing = "wx"
+lat_s = 42.3
+lat_n = 43.2
+lon_w = -94.2
+lon_e = -93.5
+res_arcsec = 30
+dt = "1h"
+report_every = "30d"
+
+[[module]]
+name = "veg"
+kind = "veg.crop"
+[module.params]
+lat_s = 42.3
+lat_n = 43.2
+lon_w = -94.2
+lon_e = -93.5
+res_arcsec = 30
+dt = "1h"
+
+[[module]]
+name = "deer"
+kind = "fauna.herbivore"
+[module.params]
+res_arcsec = 30
+init_density_km2 = 6
+
+[[module]]
+name = "coyote"
+kind = "fauna.predator"
+[module.params]
+res_arcsec = 30
+init_density_km2 = 0.3
+
+[[module]]
+name = "farms"
+kind = "agents.farms"
+[module.params]
+res_arcsec = 30
+block_cells = 4
+price_corn_usd_bu = 4.3
+price_soy_usd_bu = 10.2
+
+[[module]]
+name = "rules"
+kind = "rules.calendar"
+[module.params]
+res_arcsec = 30
+rule_id = "whatif-riparian-buffer-boone-2025"
+buffer_cells = 1
+channel_km2 = 20   # buffer only streams draining more than 20 km2; at 2 km2 the buffer covered 85% of this flat, drained basin

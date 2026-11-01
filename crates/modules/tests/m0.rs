@@ -259,3 +259,26 @@ fn m9_farm_agents_write_fields_the_crop_reads_and_money_closes() {
         assert!(out.series.contains_key("agents.corn_bu_day") && out.series.contains_key("agents.soy_bu_day"));
     });
 }
+
+#[test]
+fn m10_a_calendar_rule_changes_land_use_water_and_money() {
+    if !have_dem() { eprintln!("skipped: DEM tile not cached"); return; }
+    let cached: PathBuf = [env!("CARGO_MANIFEST_DIR"), "..", "..", "data", "cache"].iter().collect();
+    let have = |prefix: &str| std::fs::read_dir(&cached).map(|d| d.flatten().any(|e| e.file_name().to_string_lossy().starts_with(prefix))).unwrap_or(false);
+    if !have("open-meteo-era5_") || !have("modis-13a1_") { eprintln!("skipped: weather or MODIS not cached"); return; }
+    with_root(|| {
+        let with = Kernel::new(load("m10-rules-boone-season.toml"), factory).unwrap().run();
+        assert!(with.all_ledgers_closed);
+        assert!(with.series["rules.buffer_cells"].points[0].1 > 100.0);
+        assert!(with.series.contains_key("rules.effective"), "the rule must take effect on its calendar date");
+        let mut m = load("m10-rules-boone-season.toml");
+        m.modules.retain(|e| e.kind != "rules.calendar");
+        let without = Kernel::new(m, factory).unwrap().run();
+        let crop = |o: &esim_kernel::RunOutput| o.series["agents.corn_ha"].points[0].1 + o.series["agents.soy_ha"].points[0].1;
+        assert!(crop(&with) < 0.9 * crop(&without), "the buffer must remove cropland: {} vs {}", crop(&with), crop(&without));
+        let peak = |o: &esim_kernel::RunOutput| o.series["hydro.q_sim_daily_m3_s"].points.iter().map(|p| p.1).fold(0.0, f64::max);
+        assert!(peak(&with) != peak(&without), "land cover must change the river");
+        let rev = |o: &esim_kernel::RunOutput| o.series["agents.revenue_usd_day"].points.iter().map(|p| p.1).sum::<f64>();
+        assert!(rev(&with) < rev(&without));
+    });
+}

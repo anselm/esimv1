@@ -108,8 +108,10 @@ impl Veg {
             self.stage = vec![0; n]; self.lai_at_senesce = vec![0.0; n]; self.day_energy = vec![0.0; n];
             self.kind = vec![1.0; n];
         }
-        let frames = ndvi_frames(&mut f, (grid.nx, grid.ny, grid.dlon, grid.dlat, grid.lon_w, grid.lat_n), [self.lon_w, self.lat_s, self.lon_e, self.lat_n], &self.modis_start, &self.modis_end)?;
-        self.modis = frames.into_iter().collect();
+        if self.modis_start != "none" {
+            let frames = ndvi_frames(&mut f, (grid.nx, grid.ny, grid.dlon, grid.dlat, grid.lon_w, grid.lat_n), [self.lon_w, self.lat_s, self.lon_e, self.lat_n], &self.modis_start, &self.modis_end)?;
+            self.modis = frames.into_iter().collect();
+        }
         self.grid = Some(grid); self.cells = cells;
         Ok(())
     }

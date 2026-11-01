@@ -51,11 +51,19 @@ pub struct Basin {
     forcing: String,
     /// if a `veg.lai` field exists, evaporation demand scales with leaf area
     lai_coupling: bool,
+    /// soil capacity multiplier where a rule keeps perennial cover (a guess)
+    perennial_capacity_factor: f64,
     // state (per basin cell, in basin order)
     snow_mm: Vec<f64>,
     soil_mm: Vec<f64>,
     chan_m3: Vec<f64>,
+    /// nitrate riding the channel stores (kg N), fed by the nitrogen module's leaching
+    chan_n_kg: Vec<f64>,
+    day_drain_mm: Vec<f64>,
     seen_version: u64,
+    seen_leach_version: u64,
+    day_n_out_kg: f64,
+    nitrate_param: String,
     day_q_sum: f64, day_q_n: u32,
     day_p_mm: f64,
     day_sum_soil: Vec<f32>, day_steps: u32,
@@ -74,6 +82,7 @@ pub struct Basin {
     #[serde(skip)] tmax: BTreeMap<i64, f64>,
     #[serde(skip)] tmin: BTreeMap<i64, f64>,
     #[serde(skip)] q_obs: BTreeMap<i64, f64>,
+    #[serde(skip)] no3_obs: BTreeMap<i64, f64>,
     #[serde(skip)] basin_km2: f64,
 }
 
@@ -103,7 +112,9 @@ impl Basin {
             energy_source: param_str(p, "energy_source", "sun.incident_j").to_string(),
             forcing: param_str(p, "forcing", "station").to_string(),
             lai_coupling: p.get("lai_coupling").and_then(|v| v.as_bool()).unwrap_or(true),
-            snow_mm: Vec::new(), soil_mm: Vec::new(), chan_m3: Vec::new(), seen_version: 0,
+            perennial_capacity_factor: param_f64(p, "perennial_capacity_factor", 1.3),
+            snow_mm: Vec::new(), soil_mm: Vec::new(), chan_m3: Vec::new(), chan_n_kg: Vec::new(), day_drain_mm: Vec::new(), seen_version: 0, seen_leach_version: 0, day_n_out_kg: 0.0,
+            nitrate_param: param_str(p, "nitrate_param", "99133").to_string(),
             day_q_sum: 0.0, day_q_n: 0, day_p_mm: 0.0, day_sum_soil: Vec::new(), day_steps: 0, next_report: None,
             missing_prcp_days: 0, last_tmean: 0.0,
             grid: None, cells: Vec::new(), pos: Vec::new(), down: Vec::new(), area: Vec::new(), frac: Vec::new(), accum_km2: Vec::new(),
@@ -147,11 +158,13 @@ impl Basin {
             self.chan_m3 = vec![0.0; n];
             self.day_sum_soil = vec![0.0; n];
         }
+        if self.chan_n_kg.len() != n { self.chan_n_kg = vec![0.0; n]; self.day_drain_mm = vec![0.0; n]; }
         let g = ghcn_station(&mut f, &self.station)?;
         self.prcp = g.prcp_mm; self.tmax = g.tmax_c; self.tmin = g.tmin_c;
         // observed discharge for the window of years the run may touch; the CLI knows the
         // run window but the module does not, so fetch a generous span once
         self.q_obs = usgs_daily(&mut f, &self.usgs_site, "00060", "1940-01-01", "2026-12-31").unwrap_or_default();
+        self.no3_obs = if self.nitrate_param.is_empty() { BTreeMap::new() } else { usgs_daily(&mut f, &self.usgs_site, &self.nitrate_param, "2000-01-01", "2026-12-31").unwrap_or_default() };
         self.grid = Some(grid); self.cells = cells; self.pos = pos; self.down = down; self.area = area; self.frac = frac;
         Ok(())
     }
@@ -189,10 +202,22 @@ impl Module for Basin {
         ctx.field("flow_accum_log10_km2", "log10 km2", &grid, acc);
         ctx.report("basin.area_km2", "km2", self.basin_km2);
         self.next_report = Some(ctx.now().add(self.report_every));
+        ctx.subscribe("nitrogen.leached");
         ctx.schedule_with_priority(self.dt, 2, "tick", json!(null));
     }
 
     fn handle(&mut self, ev: &Event, ctx: &mut Ctx) {
+        if ev.topic == "nitrogen.leached" {
+            // take today's leached nitrate into the channel stores; the ledger transfer
+            // soil_mineral -> channel_n was made by the nitrogen module; we declare the stock
+            let Some(l) = ctx.world_read("nitrogen.leached_kg") else { return };
+            if l.version == self.seen_leach_version { return; }
+            self.seen_leach_version = l.version;
+            for (k, &i) in self.cells.iter().enumerate() { let v = l.data[i]; if v.is_finite() { self.chan_n_kg[k] += v as f64; } }
+            ctx.ledger("nitrogen", "kgN", 1e-3);
+            ctx.declare_stock("nitrogen", "channel_n", self.chan_n_kg.iter().sum());
+            return;
+        }
         if ev.topic != "tick" { return; }
         let now = ctx.now();
         let dt = self.dt.as_secs_f64();
@@ -211,6 +236,8 @@ impl Module for Basin {
         let wx_t: Option<Vec<f32>> = if self.forcing == "wx" { ctx.world_read("wx.t2m_c").map(|f| f.data.clone()) } else { None };
         let steps_per_day_f = steps_per_day;
         let lai: Option<Vec<f32>> = if self.lai_coupling { ctx.world_read("veg.lai").map(|f| f.data.clone()) } else { None };
+        // a rule's perennial cover: deeper rooting and better structure hold more water
+        let no_crop: Option<Vec<f32>> = ctx.world_read("rules.no_crop").map(|f| f.data.clone());
 
         let (mut to_snow, mut to_soil, mut melt, mut evap, mut to_chan) = (0.0f64, 0.0, 0.0, 0.0, 0.0);
         let mut outlet = 0.0f64;
@@ -243,22 +270,39 @@ impl Module for Basin {
                 self.soil_mm[k] -= et; evap += et / 1000.0 * a;
             }
             // saturation excess and drainage to the channel store of this cell
-            let excess = (self.soil_mm[k] - self.soil_capacity_mm).max(0.0);
+            let cap = if no_crop.as_ref().map(|n| n[i] > 0.5).unwrap_or(false) { self.soil_capacity_mm * self.perennial_capacity_factor } else { self.soil_capacity_mm };
+            let excess = (self.soil_mm[k] - cap).max(0.0);
             self.soil_mm[k] -= excess;
             let drain = self.soil_mm[k] * drain_frac;
             self.soil_mm[k] -= drain;
             let gen = (excess + drain) / 1000.0 * a;
             to_chan += gen;
             inflow[k] += gen;
+            self.day_drain_mm[k] += excess + drain;
             self.day_sum_soil[k] += self.soil_mm[k] as f32;
         }
-        // route: cells are in upstream-to-downstream order
+        // route water and the nitrate it carries: cells are in upstream-to-downstream order
+        let has_n = self.chan_n_kg.iter().any(|&v| v > 0.0);
+        let mut n_inflow = vec![0.0f64; n];
+        let mut n_outlet = 0.0f64;
         for k in 0..n {
             self.chan_m3[k] += inflow[k];
             let out = self.chan_m3[k] * self.frac[k];
             self.chan_m3[k] -= out;
             let d = self.down[k];
             if d == usize::MAX { outlet += out; } else { inflow[d] += out; }
+            if has_n {
+                self.chan_n_kg[k] += n_inflow[k];
+                let nout = self.chan_n_kg[k] * self.frac[k];
+                self.chan_n_kg[k] -= nout;
+                if d == usize::MAX { n_outlet += nout; } else { n_inflow[d] += nout; }
+            }
+        }
+        if has_n {
+            ctx.ledger("nitrogen", "kgN", 1e-3);
+            ctx.transfer("nitrogen", "channel_n", "outlet", n_outlet);
+            ctx.declare_stock("nitrogen", "channel_n", self.chan_n_kg.iter().sum());
+            self.day_n_out_kg += n_outlet;
         }
         ctx.transfer(LEDGER, "atmosphere", "snowpack", to_snow);
         ctx.transfer(LEDGER, "atmosphere", "soil", to_soil);
@@ -281,7 +325,18 @@ impl Module for Basin {
             ctx.report("hydro.q_sim_daily_m3_s", "m3/s", qd);
             if let Some(o) = self.q_obs.get(&ld) { ctx.report("hydro.q_obs_daily_m3_s", "m3/s", *o); }
             ctx.report("hydro.precip_daily_mm", "mm", self.day_p_mm / (self.basin_km2 * 1e6));
+            if self.chan_n_kg.iter().any(|&v| v > 0.0) || self.day_n_out_kg > 0.0 {
+                let q_m3 = qd * 86_400.0;
+                let mg_l = if q_m3 > 0.0 { self.day_n_out_kg * 1e6 / (q_m3 * 1000.0) } else { 0.0 }; // kg -> mg, m3 -> L
+                ctx.report("hydro.no3_load_kg_day", "kgN/day", self.day_n_out_kg);
+                ctx.report("hydro.no3_sim_mg_l", "mgN/L", mg_l);
+                if let Some(o) = self.no3_obs.get(&ld) { ctx.report("hydro.no3_obs_mg_l", "mgN/L", *o); }
+                self.day_n_out_kg = 0.0;
+            }
             let grid = self.grid.clone().unwrap();
+            let mut df = vec![f32::NAN; grid.nx * grid.ny];
+            for (k, &i) in self.cells.iter().enumerate() { df[i] = self.day_drain_mm[k] as f32; self.day_drain_mm[k] = 0.0; }
+            ctx.world_write("water.drain_daily_mm", "mm", &grid, df);
             let mut sf = vec![f32::NAN; grid.nx * grid.ny];
             let mut snf = vec![f32::NAN; grid.nx * grid.ny];
             for (k, &i) in self.cells.iter().enumerate() { sf[i] = self.soil_mm[k] as f32; snf[i] = self.snow_mm[k] as f32; }

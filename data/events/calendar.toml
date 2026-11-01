@@ -222,3 +222,18 @@ valence = "bad"
 confidence = "speculative"
 source = "Unidentified book, chapter 14 'AI and Bitcoin', Table 14.1, photographed 2026-10-31"
 known_since = "2026-10-31"
+
+# ---- What-if rules used by manifests (not real law) -------------------------------
+
+[[event]]
+id = "whatif-riparian-buffer-boone-2025"
+title = "What-if: a 450 m riparian buffer rule in the Boone River basin"
+category = "law"
+date = "2025-04-01"
+consequence = "Cells within one grid cell of a channel draining more than 2 km2 may not be cropped; they revert to perennial grass. Changes cover, evaporation, runoff and (M11) nitrate."
+module = "rules"
+valence = "mixed"
+confidence = "speculative"
+source = "a what-if for the simulator, not an enacted rule; Iowa's Nutrient Reduction Strategy (2013) is voluntary and has no such mandate"
+known_since = "2026-11-01"
+notes = "Used by manifests/m10-rules-boone.toml. The width is one grid cell at 30 arc-seconds, about 450 m, far wider than typical buffer practice (10 to 35 m); chosen so the effect is visible at this resolution."
