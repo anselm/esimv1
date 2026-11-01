@@ -87,6 +87,7 @@ pub fn dem_window(fetcher: &mut Fetcher, dem: &Asset, lat_s: f64, lat_n: f64, lo
                 let lon = r.lon(col);
                 if lon < lon_w || lon >= lon_w + nx as f64 * d { continue; }
                 let ocol = ((lon - lon_w) / d) as usize;
+                if ocol >= nx || orow >= ny { continue; }
                 let v = r.get(col, row);
                 if !v.is_finite() || Some(v) == r.nodata { continue; }
                 let i = orow * nx + ocol;

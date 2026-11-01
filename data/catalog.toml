@@ -27,3 +27,27 @@ gauge = "USGS 05481000 Boone River near Webster City, IA; 42.4319722 N, 93.80594
 verified = "2026-10-31 from canada1 via waterservices.usgs.gov site service"
 dem_tiles = ["N42_W094", "N42_W095", "N43_W094", "N43_W095"]
 notes = "Nitrate at this gauge: a short daily series 2012-2017 (parameter 83554) and about twenty ambient samples 2006-2025; the nitrogen scoreboard for M11 will need other Iowa sites or the state's water quality network."
+
+[[asset]]
+id = "usgs-nwis-daily"
+title = "USGS National Water Information System daily values"
+kind = "observation-series"
+units = "discharge (00060) converted from ft3/s to m3/s by the reader"
+format = "RDB tab-separated text from waterservices.usgs.gov/nwis/dv"
+url_template = "https://waterservices.usgs.gov/nwis/dv/?format=rdb&sites={site}&parameterCd={parameter}&statCd=00003&startDT={start}&endDT={end}"
+source = "US Geological Survey"
+licence = "US federal public domain"
+verified = "2026-10-31 from canada1: site 05481000 parameter 00060 for 2025 returned 365 daily values, codes A and A:e (approved, some estimated)"
+notes = "Recent data are provisional and can be revised; the lock records the bytes a run used."
+
+[[asset]]
+id = "ghcn-daily"
+title = "NOAA Global Historical Climatology Network Daily, by station"
+kind = "observation-series"
+units = "precipitation and temperature in tenths of mm and tenths of C in the file; the reader converts to mm and C"
+format = "CSV per station: ID,DATE,ELEMENT,DATA_VALUE,M_FLAG,Q_FLAG,S_FLAG,OBS_TIME"
+url_template = "https://noaa-ghcn-pds.s3.amazonaws.com/csv/by_station/{station}.csv"
+source = "NOAA NCEI, distributed on the AWS Open Data registry (bucket noaa-ghcn-pds)"
+licence = "US federal public domain; WMO Resolution 40 applies to some non-US stations"
+verified = "2026-10-31 from canada1: station USC00138806 (Webster City, IA, 42.4686 N 93.7975 W) has PRCP, SNOW, TMAX, TMIN 1893 to 2026; 2025 has 362 precipitation days totalling 1,089.8 mm, observation time 0700 local"
+notes = "Rows with a quality flag are dropped by the reader. Daily totals are for the 24 hours ending at the observation time."

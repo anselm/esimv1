@@ -5,3 +5,21 @@ url = "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N42_00_
 sha256 = "ed03509b743e06be040cb2ec8e8e623270a12d7232fcc9da09e23938d6a44fa0"
 bytes = 39892566
 fetched = "2026-11-01"
+
+[files."copernicus-dem-glo30/N42_W095.tif"]
+url = "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N42_00_W095_00_DEM/Copernicus_DSM_COG_10_N42_00_W095_00_DEM.tif"
+sha256 = "7320327a578f949dbacd9a49904f1446147a55e4c85f65026dec94dfb1d663fb"
+bytes = 39134435
+fetched = "2026-11-01"
+
+[files."copernicus-dem-glo30/N43_W094.tif"]
+url = "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N43_00_W094_00_DEM/Copernicus_DSM_COG_10_N43_00_W094_00_DEM.tif"
+sha256 = "94bc278a6b7c1331d2d67cf250570e24926c571b75512fa86a9be912e5208c5e"
+bytes = 39321374
+fetched = "2026-11-01"
+
+[files."copernicus-dem-glo30/N43_W095.tif"]
+url = "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N43_00_W095_00_DEM/Copernicus_DSM_COG_10_N43_00_W095_00_DEM.tif"
+sha256 = "fd13c2041ea3a133effeb9cdff3d02c8baf668d8e9dab24cb441840156fa190e"
+bytes = 39189738
+fetched = "2026-11-01"
