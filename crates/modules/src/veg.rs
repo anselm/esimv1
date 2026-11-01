@@ -41,6 +41,7 @@ pub struct Veg {
     lue_gc_per_mj: f64, par_fraction: f64, k_light: f64, sla_m2_per_gc: f64, leaf_fraction: f64, lai_max: f64, lai_emerge: f64, snow_ndvi_mm: f64,
     ra_fraction: f64, grain_fraction: f64, k_litter_per_day: f64,
     ndvi_soil: f64, ndvi_max: f64, k_ndvi: f64,
+    graze_max_frac: f64,
     // state per basin cell
     lai: Vec<f64>, biomass_gc: Vec<f64>, litter_gc: Vec<f64>, gdd: Vec<f64>, stage: Vec<u8>, lai_at_senesce: Vec<f64>,
     seen_energy: u64,
@@ -73,6 +74,7 @@ impl Veg {
             lai_emerge: param_f64(p, "lai_emerge", 0.3), snow_ndvi_mm: param_f64(p, "snow_ndvi_mm", 5.0),
             ra_fraction: param_f64(p, "ra_fraction", 0.5), grain_fraction: param_f64(p, "grain_fraction", 0.45), k_litter_per_day: param_f64(p, "k_litter_per_day", 0.003),
             ndvi_soil: param_f64(p, "ndvi_soil", 0.18), ndvi_max: param_f64(p, "ndvi_max", 0.88), k_ndvi: param_f64(p, "k_ndvi", 0.7),
+            graze_max_frac: param_f64(p, "graze_max_frac", 0.3),
             lai: Vec::new(), biomass_gc: Vec::new(), litter_gc: Vec::new(), gdd: Vec::new(), stage: Vec::new(), lai_at_senesce: Vec::new(),
             seen_energy: 0, day_energy: Vec::new(), day_t_sum: 0.0, day_t_n: 0, day_tmin: 99.0, warm_days: 0, planted_doy: 0, harvested: false, last_day: i64::MIN,
             biomass_kg: 0.0, litter_kg: 0.0,
@@ -139,10 +141,37 @@ impl Module for Veg {
         let mut lai = vec![f32::NAN; grid.nx * grid.ny];
         for &i in &self.cells { lai[i] = 0.0; }
         ctx.world_write("veg.lai", "m2/m2", &grid, lai);
+        ctx.subscribe("graze.request");
         ctx.schedule_with_priority(self.dt, 3, "tick", json!(null));
     }
 
     fn handle(&mut self, ev: &Event, ctx: &mut Ctx) {
+        if ev.topic == "graze.request" {
+            // a grazer asks for carbon per cell; give up to a fraction of standing biomass
+            let Some(demand) = ctx.world_read("fauna.herb_demand_kgc").map(|f| f.data.clone()) else { return };
+            let grid = self.grid.clone().unwrap();
+            let mut given = vec![f32::NAN; grid.nx * grid.ny];
+            let mut total = 0.0;
+            for (k, &i) in self.cells.iter().enumerate() {
+                let a = self.area[k];
+                let have_kgc = self.biomass_gc[k] / 1000.0 * a;
+                let g = (demand[i].max(0.0) as f64).min(self.graze_max_frac * have_kgc);
+                if g > 0.0 && have_kgc > 0.0 {
+                    let frac = g / have_kgc;
+                    self.biomass_gc[k] -= g * 1000.0 / a;
+                    self.lai[k] *= 1.0 - frac;
+                }
+                given[i] = g as f32; total += g;
+            }
+            ctx.transfer(LEDGER, "biomass", "herbivores", total);
+            let (b, l) = self.stocks();
+            ctx.declare_stock(LEDGER, "biomass", b);
+            ctx.declare_stock(LEDGER, "litter", l);
+            ctx.world_write("veg.grazed_kgc", "kgC", &grid, given);
+            ctx.report("veg.grazed_kgc_day", "kgC/day", total);
+            ctx.publish("graze.done", json!({ "by": self.name }));
+            return;
+        }
         if ev.topic != "tick" { return; }
         let now = ctx.now();
         // accumulate the hour: energy per cell, air temperature over the basin
@@ -236,6 +265,9 @@ impl Module for Veg {
                 lai_sum += self.lai[k] * self.area[k]; ndvi_sum += nd * self.area[k];
             }
             ctx.world_write("veg.lai", "m2/m2", &grid, lai_f.clone());
+            let mut bf = vec![f32::NAN; grid.nx * grid.ny];
+            for (k, &i) in self.cells.iter().enumerate() { bf[i] = self.biomass_gc[k] as f32; }
+            ctx.world_write("veg.biomass_gc_m2", "gC/m2", &grid, bf);
             let area_tot = self.basin_km2 * 1e6;
             ctx.report("veg.lai_mean", "m2/m2", lai_sum / area_tot);
             ctx.report("veg.ndvi_sim_daily", "1", ndvi_sum / area_tot);

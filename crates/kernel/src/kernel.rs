@@ -29,6 +29,8 @@ pub struct Kernel {
     rngs: Vec<Rng>,
     index: BTreeMap<String, usize>,
     subs: BTreeMap<String, Vec<usize>>,
+    /// topic -> cell -> modules: the spatial index for cell-addressed events
+    subs_at: BTreeMap<String, BTreeMap<u32, Vec<usize>>>,
     ledgers: BTreeMap<String, Ledger>,
     series: BTreeMap<String, Series>,
     pub fields: BTreeMap<String, FieldSeries>,
@@ -52,6 +54,8 @@ pub struct Snapshot {
     pub rngs: Vec<Rng>,
     pub queue: Vec<Event>,
     pub subs: BTreeMap<String, Vec<usize>>,
+    #[serde(default)]
+    pub subs_at: BTreeMap<String, BTreeMap<u32, Vec<usize>>>,
     pub ledgers: BTreeMap<String, Ledger>,
     pub series: BTreeMap<String, Series>,
     #[serde(default)]
@@ -102,7 +106,7 @@ impl Kernel {
         }
         let mut k = Kernel {
             manifest, start, end, now: start, seq: 0, queue: BinaryHeap::new(),
-            modules, rngs, index, subs: BTreeMap::new(), ledgers: BTreeMap::new(),
+            modules, rngs, index, subs: BTreeMap::new(), subs_at: BTreeMap::new(), ledgers: BTreeMap::new(),
             series: BTreeMap::new(), fields: BTreeMap::new(), world: World::default(), log: EventLog::new(), close_every, snapshot_every,
             snapshots: Vec::new(), delivered: 0,
         };
@@ -113,15 +117,16 @@ impl Kernel {
     fn init(&mut self) {
         for i in 0..self.modules.len() {
             let mut ctx = Ctx {
-                now: self.now, me: self.modules[i].name().to_string(), out: Vec::new(), subs: Vec::new(),
+                now: self.now, me: self.modules[i].name().to_string(), out: Vec::new(), subs: Vec::new(), subs_at: Vec::new(),
                 ledgers: &mut self.ledgers, series: &mut self.series, fields: &mut self.fields, world: &mut self.world, world_writes: Vec::new(), rng: &mut self.rngs[i],
             };
             self.modules[i].init(&mut ctx);
-            let (out, subs, writes) = (ctx.out, ctx.subs, ctx.world_writes);
+            let (out, subs, subs_at, writes) = (ctx.out, ctx.subs, ctx.subs_at, ctx.world_writes);
             for topic in subs { self.subs.entry(topic).or_default().push(i); }
+            for (topic, cells) in subs_at { let m = self.subs_at.entry(topic).or_default(); for c in cells { m.entry(c).or_default().push(i); } }
             let src = self.modules[i].name().to_string();
             self.log_world_writes(&src, writes);
-            for (t, p, to, topic, data) in out { self.push(t, p, &src, to, topic, data); }
+            for (t, p, to, topic, at, data) in out { self.push_at(t, p, &src, to, topic, at, data); }
         }
         // Kernel housekeeping: the first close and the first snapshot.
         self.push(self.start.add(self.close_every), CLOSE_PRIORITY, KERNEL, None, "kernel.close".into(), serde_json::Value::Null);
@@ -131,8 +136,11 @@ impl Kernel {
     }
 
     fn push(&mut self, t: Time, priority: i16, src: &str, to: Option<String>, topic: String, data: serde_json::Value) {
+        self.push_at(t, priority, src, to, topic, None, data);
+    }
+    fn push_at(&mut self, t: Time, priority: i16, src: &str, to: Option<String>, topic: String, at: Option<u32>, data: serde_json::Value) {
         self.seq += 1;
-        self.queue.push(Queued(Event { t, priority, seq: self.seq, src: src.to_string(), to, topic, data }));
+        self.queue.push(Queued(Event { t, priority, seq: self.seq, src: src.to_string(), to, topic, at, data }));
     }
 
     /// Run to the end of the manifest window.
@@ -171,22 +179,30 @@ impl Kernel {
     }
 
     fn deliver(&mut self, ev: &Event) {
-        let targets: Vec<usize> = match &ev.to {
+        let mut targets: Vec<usize> = match &ev.to {
             Some(name) => match self.index.get(name) { Some(&i) => vec![i], None => vec![] },
-            None => self.subs.get(&ev.topic).cloned().unwrap_or_default(),
+            None => {
+                let mut v = self.subs.get(&ev.topic).cloned().unwrap_or_default();
+                if let Some(c) = ev.at {
+                    if let Some(m) = self.subs_at.get(&ev.topic).and_then(|m| m.get(&c)) { v.extend(m.iter().copied()); }
+                }
+                v
+            }
         };
+        targets.sort_unstable(); targets.dedup();
         for i in targets {
             let mut ctx = Ctx {
-                now: self.now, me: self.modules[i].name().to_string(), out: Vec::new(), subs: Vec::new(),
+                now: self.now, me: self.modules[i].name().to_string(), out: Vec::new(), subs: Vec::new(), subs_at: Vec::new(),
                 ledgers: &mut self.ledgers, series: &mut self.series, fields: &mut self.fields, world: &mut self.world, world_writes: Vec::new(), rng: &mut self.rngs[i],
             };
             self.modules[i].handle(ev, &mut ctx);
             self.delivered += 1;
-            let (out, subs, writes) = (ctx.out, ctx.subs, ctx.world_writes);
+            let (out, subs, subs_at, writes) = (ctx.out, ctx.subs, ctx.subs_at, ctx.world_writes);
             for topic in subs { self.subs.entry(topic).or_default().push(i); }
+            for (topic, cells) in subs_at { let m = self.subs_at.entry(topic).or_default(); for c in cells { m.entry(c).or_default().push(i); } }
             let src = self.modules[i].name().to_string();
             self.log_world_writes(&src, writes);
-            for (t, p, to, topic, data) in out { self.push(t, p, &src, to, topic, data); }
+            for (t, p, to, topic, at, data) in out { self.push_at(t, p, &src, to, topic, at, data); }
         }
     }
 
@@ -195,7 +211,7 @@ impl Kernel {
     fn log_world_writes(&mut self, src: &str, writes: Vec<(String, u64, u64, usize)>) {
         for (name, version, digest, len) in writes {
             self.seq += 1;
-            let ev = Event { t: self.now, priority: 0, seq: self.seq, src: src.to_string(), to: None, topic: "world.write".into(),
+            let ev = Event { t: self.now, priority: 0, seq: self.seq, src: src.to_string(), to: None, topic: "world.write".into(), at: None,
                 data: serde_json::json!({ "field": name, "version": version, "digest": format!("{digest:016x}"), "len": len }) };
             self.log.append(&ev);
         }
@@ -207,7 +223,7 @@ impl Kernel {
             modules: self.modules.iter().map(|m| (m.name().to_string(), m.snapshot())).collect(),
             rngs: self.rngs.clone(),
             queue: self.queue.iter().map(|q| q.0.clone()).collect(),
-            subs: self.subs.clone(), ledgers: self.ledgers.clone(), series: self.series.clone(), world: self.world.clone(),
+            subs: self.subs.clone(), subs_at: self.subs_at.clone(), ledgers: self.ledgers.clone(), series: self.series.clone(), world: self.world.clone(),
         }
     }
 
@@ -232,7 +248,7 @@ impl Kernel {
         for ev in snap.queue { queue.push(Queued(ev)); }
         Ok(Kernel {
             manifest, start, end, now: snap.t, seq: snap.seq, queue, modules, rngs: snap.rngs, index,
-            subs: snap.subs, ledgers: snap.ledgers, series: snap.series, fields: BTreeMap::new(), world: snap.world, log: EventLog::new(),
+            subs: snap.subs, subs_at: snap.subs_at, ledgers: snap.ledgers, series: snap.series, fields: BTreeMap::new(), world: snap.world, log: EventLog::new(),
             close_every, snapshot_every, snapshots: Vec::new(), delivered: snap.delivered,
         })
     }

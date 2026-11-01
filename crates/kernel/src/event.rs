@@ -18,6 +18,9 @@ pub struct Event {
     /// Addressed module, or None to broadcast to the topic's subscribers.
     pub to: Option<String>,
     pub topic: String,
+    /// Grid cell the event is about, for cell-addressed delivery and spatial filters.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub at: Option<u32>,
     #[serde(default)]
     pub data: serde_json::Value,
 }

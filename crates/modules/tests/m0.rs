@@ -159,3 +159,32 @@ fn m4_era5_forcing_runs_and_scores() {
         assert!(out.series.contains_key("hydro.q_sim_daily_m3_s"));
     });
 }
+
+#[test]
+fn m6_cohorts_conserve_counts_and_close_four_ledgers() {
+    if !have_dem() { eprintln!("skipped: DEM tile not cached"); return; }
+    let cached: PathBuf = [env!("CARGO_MANIFEST_DIR"), "..", "..", "data", "cache"].iter().collect();
+    let have = |prefix: &str| std::fs::read_dir(&cached).map(|d| d.flatten().any(|e| e.file_name().to_string_lossy().starts_with(prefix))).unwrap_or(false);
+    if !have("open-meteo-era5_") || !have("modis-13a1_") { eprintln!("skipped: weather or MODIS not cached"); return; }
+    with_root(|| {
+        let m = load("m6-eaters-boone-june.toml");
+        let out = Kernel::new(m.clone(), factory).unwrap().run();
+        assert!(out.all_ledgers_closed, "animals, carbon, energy and water ledgers must close");
+        assert_eq!(out.ledgers.len(), 4);
+        let animals = out.ledgers.iter().find(|l| l.name == "animals").unwrap();
+        assert!(animals.closes.iter().all(|c| c.max_leak < 1e-6), "counts must be conserved through movement");
+        let herb = &out.series["fauna.herb_total"].points;
+        assert!(herb.len() >= 28 && herb.iter().all(|p| p.1 > 0.0));
+        assert!(out.series["fauna.herb_grazed_kgc_day"].points.iter().any(|p| p.1 > 0.0), "deer should graze the June crop");
+        // replay through the event protocol between three modules
+        let mut full = Kernel::new(m.clone(), factory).unwrap();
+        full.run();
+        let snap = full.snapshots[0].clone();
+        let tail: Vec<String> = full.log.events[snap.log_len..].iter().map(|e| serde_json::to_string(e).unwrap()).collect();
+        let mut resumed = Kernel::from_snapshot(m, factory, snap).unwrap();
+        resumed.run();
+        let got: Vec<String> = resumed.log.events.iter().map(|e| serde_json::to_string(e).unwrap()).collect();
+        assert_eq!(tail.len(), got.len(), "replay must reproduce the same number of events");
+        assert_eq!(tail, got);
+    });
+}
