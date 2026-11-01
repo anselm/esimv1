@@ -63,3 +63,34 @@ resource later"; orbital-sim did a first version (an orbital-data GitHub repo ho
 
 Sizes are left out on purpose; a basin's base layers are gigabytes, global reanalysis is
 far larger and is subsetted per case. Measure when D7 lands.
+
+## Addendum, same day: where users' own simulations live
+
+Anselm: "Where would we store ... sims belonging to users?" The brief puts accounts and
+access control out of scope, but the shape of the storage is decided now, because it falls
+out of determinism.
+
+A user's simulation is a manifest plus a seed. Everything else is derivable. That splits
+what to keep into three tiers:
+- The manifest and its history. Tiny text, versioned, kept forever. This is the thing the
+  user owns. Manifests form a lineage: a user's sim is usually a baseline plus a diff, and
+  the diff is what they wrote. Store the chain, not copies.
+- Summaries. Distributions, ledgers, scores, the narrated prose. Small, kept with the
+  manifest version that produced them.
+- Full results. Per-branch event logs and snapshots. Large, content-addressed by the hash of
+  (manifest, seed, kernel and module versions), stored as a cache that can expire. Two users
+  running the same manifest share one result. A rerun recreates any expired result bitwise,
+  which is what the determinism was for.
+
+Users also bring private data: a parcel boundary, their own observations, a local plan. Those
+enter the same catalog as any asset, with an owner and visibility, and the manifest pins
+them by hash like everything else. Private assets never enter the public catalog.
+
+Where this lives physically: the same object storage with per-owner prefixes for results and
+private assets, and a document store for manifests with ownership, visibility, forking and
+history. The portfolio already has the pieces: orbital-filespace is a namespaced document
+store with permissions and a post verb, and attest is the identity layer by passkey. The
+decision whether to use them is deferred with the rest of accounts; what is decided now is
+that a sim is a forkable document with a lineage, results are a content-addressed cache, and
+private assets are catalog entries with an owner. Nothing in the kernel needs to know who a
+user is.
