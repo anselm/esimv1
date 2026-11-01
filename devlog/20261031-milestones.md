@@ -92,3 +92,50 @@ that drops. The abiotic rungs are cheap and well-understood, which is what a spe
 The biotic rungs introduce populations, spatial events and thresholds in the order that
 each depends on the last. The human rungs introduce agents, rules and markets the same way,
 and arrive at a chain with a forty-year scoreboard without a single abstract exercise.
+
+## Addendum, same day: forks, and real terrain only
+
+Anselm: "let's think of this in terms of being able to fork in different development
+directions if we want - for example doing planetary irradiance - doing ipcc global models.
+Also we always want to use real terrain for any model - we don't want to use imaginary
+perlin noise type stuff."
+
+### Forkable directions
+
+The ladder above is one path through a module library, not the shape of the library. Two
+rules make other paths cheap:
+
+- Modules are stage-agnostic. A field module runs on any grid it is handed: a projected
+  local tile, a regional grid, or the globe. It never knows which. The manifest chooses the
+  stage; the module chooses nothing.
+- The grid is an abstraction with three concrete kinds from M1: a local projected tile
+  (metres, for a basin or a parcel), a regional lat-lon grid with per-cell area weights,
+  and a global equal-area or area-weighted grid. Ledgers need true cell areas, so area is a
+  grid property, never assumed. Nesting is a relationship between grids: a coarse grid
+  supplies boundary conditions to a fine one inside it.
+
+With those two, the directions Anselm names are the same modules on another stage:
+
+- Planetary irradiance: M1 on the global grid with a global elevation and bathymetry layer.
+  Picture: the lit Earth through a year. The orbital-earth-model work is the precedent.
+- IPCC-style global model: an energy-balance module with forcing pathways and pattern
+  scaling (orbital-sim's atmosphere agent is a first draft), on the global grid, scored
+  against the observed temperature record and run as an ensemble over pathways and climate
+  sensitivity. Add ocean heat uptake and carbon cycle boxes as the ledgers demand.
+- The global branch then feeds the basin branch: the climate already in the pipeline becomes
+  the basin's boundary condition at M4, which is the nesting mechanism used for real.
+
+Forks live as manifests and modules in this one repo, so they share the kernel, registry
+and ledgers; a direction that needs its own room gets a session, not a separate codebase.
+A fork is done when it has a ledger, a picture and a score, same as a rung.
+
+### Real terrain, always
+
+No synthetic landscapes anywhere, including tests. The registry carries a global elevation
+layer and bathymetry from M1 (a 30 m global DEM such as Copernicus GLO-30 or SRTM for land,
+GEBCO for the sea floor; the chosen products are recorded when the registry fetches them).
+Every stage, at every scale, is a real place with real relief, and every picture is of
+somewhere. Tests use small real tiles checked into the repo, a few hundred kilobytes each.
+A numerical unit test may use a constant or analytic field to check a formula, and must be
+labelled as a formula check, never presented as a landscape. The same rule extends to land
+cover, soils, hydrography and boundaries: real layers from the registry or nothing.
