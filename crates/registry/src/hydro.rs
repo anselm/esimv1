@@ -163,3 +163,15 @@ fn topo_order(down: &[usize], n: usize) -> Vec<usize> {
     }
     order
 }
+
+/// Basin cells above a gauge, in upstream-to-downstream order, with the mask. Shared by
+/// every module that works on the same basin so they agree on the cells.
+pub fn delineate(fetcher: &Fetcher, dem: &DemWindow, row_area_m2: &[f64], gauge_lat: f64, gauge_lon: f64, snap_radius: usize) -> (FlowNet, usize, Vec<usize>, Vec<bool>) {
+    let net = FlowNet::build(fetcher, dem, row_area_m2);
+    let col = ((gauge_lon - dem.lon_w) / dem.dlon) as usize;
+    let row = ((dem.lat_n - gauge_lat) / dem.dlat) as usize;
+    let pour = net.snap(col.min(dem.nx - 1), row.min(dem.ny - 1), snap_radius);
+    let mask = net.basin(pour);
+    let cells: Vec<usize> = net.order.iter().copied().filter(|&i| mask[i]).collect();
+    (net, pour, cells, mask)
+}

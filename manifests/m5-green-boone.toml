@@ -1,0 +1,65 @@
+# M5 Green: a summer crop as a vegetation field over the Boone River basin, driven by ERA5
+# weather, the sun's energy and the water module's soil moisture, feeding leaf area back
+# into evaporation, closing a carbon ledger, scored against MODIS MOD13A1 NDVI:
+#   esim score <run> veg.ndvi_sim_16d veg.ndvi_obs_16d
+#   esim score <run> hydro.q_sim_daily_m3_s hydro.q_obs_daily_m3_s
+
+[run]
+name = "m5-green-boone-2025"
+start = "2025-01-01"
+end = "2026-01-01"
+seed = 1
+close_every = "1d"
+snapshot_every = "30d"
+
+[[module]]
+name = "wx"
+kind = "weather.era5"
+[module.params]
+lat_s = 42.3
+lat_n = 43.2
+lon_w = -94.2
+lon_e = -93.5
+res_arcsec = 30
+start = "2025-01-01"
+end = "2025-12-31"
+dt = "1h"
+
+[[module]]
+name = "sun"
+kind = "sun.irradiance"
+[module.params]
+lat_s = 42.3
+lat_n = 43.2
+lon_w = -94.2
+lon_e = -93.5
+res_arcsec = 30
+dt = "1h"
+report_every = "90d"
+
+[[module]]
+name = "water"
+kind = "water.basin"
+[module.params]
+forcing = "wx"
+lai_coupling = true
+lat_s = 42.3
+lat_n = 43.2
+lon_w = -94.2
+lon_e = -93.5
+res_arcsec = 30
+dt = "1h"
+report_every = "30d"
+
+[[module]]
+name = "veg"
+kind = "veg.crop"
+[module.params]
+lat_s = 42.3
+lat_n = 43.2
+lon_w = -94.2
+lon_e = -93.5
+res_arcsec = 30
+dt = "1h"
+modis_start = "2025-01-01"
+modis_end = "2025-12-31"

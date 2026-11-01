@@ -49,6 +49,8 @@ pub struct Basin {
     energy_source: String,
     /// "station" (GHCN daily, uniform) or "wx" (hourly fields wx.precip_mm and wx.t2m_c)
     forcing: String,
+    /// if a `veg.lai` field exists, evaporation demand scales with leaf area
+    lai_coupling: bool,
     // state (per basin cell, in basin order)
     snow_mm: Vec<f64>,
     soil_mm: Vec<f64>,
@@ -100,6 +102,7 @@ impl Basin {
             v_hill_m_s: param_f64(p, "v_hill_m_s", 0.02),
             energy_source: param_str(p, "energy_source", "sun.incident_j").to_string(),
             forcing: param_str(p, "forcing", "station").to_string(),
+            lai_coupling: p.get("lai_coupling").and_then(|v| v.as_bool()).unwrap_or(true),
             snow_mm: Vec::new(), soil_mm: Vec::new(), chan_m3: Vec::new(), seen_version: 0,
             day_q_sum: 0.0, day_q_n: 0, day_p_mm: 0.0, day_sum_soil: Vec::new(), day_steps: 0, next_report: None,
             missing_prcp_days: 0, last_tmean: 0.0,
@@ -207,6 +210,7 @@ impl Module for Basin {
         let wx_p: Option<Vec<f32>> = if self.forcing == "wx" { ctx.world_read("wx.precip_mm").map(|f| f.data.clone()) } else { None };
         let wx_t: Option<Vec<f32>> = if self.forcing == "wx" { ctx.world_read("wx.t2m_c").map(|f| f.data.clone()) } else { None };
         let steps_per_day_f = steps_per_day;
+        let lai: Option<Vec<f32>> = if self.lai_coupling { ctx.world_read("veg.lai").map(|f| f.data.clone()) } else { None };
 
         let (mut to_snow, mut to_soil, mut melt, mut evap, mut to_chan) = (0.0f64, 0.0, 0.0, 0.0, 0.0);
         let mut outlet = 0.0f64;
@@ -233,7 +237,9 @@ impl Module for Basin {
             // evaporation, energy limited and moisture scaled
             if let Some(e) = &energy {
                 let pet_mm = self.pet_factor * (e[i] as f64 / a) / LATENT_HEAT_J_PER_KG * 1000.0 / 1000.0; // J/m2 -> kg/m2 -> mm
-                let et = (pet_mm * (self.soil_mm[k] / self.soil_capacity_mm).clamp(0.0, 1.0)).min(self.soil_mm[k]);
+                // bare soil evaporates less than a closed canopy transpires
+                let cover = lai.as_ref().map(|l| { let v = l[i] as f64; if v.is_finite() { 0.5 + 0.5 * (1.0 - (-0.5 * v).exp()) } else { 1.0 } }).unwrap_or(1.0);
+                let et = (pet_mm * cover * (self.soil_mm[k] / self.soil_capacity_mm).clamp(0.0, 1.0)).min(self.soil_mm[k]);
                 self.soil_mm[k] -= et; evap += et / 1000.0 * a;
             }
             // saturation excess and drainage to the channel store of this cell
@@ -275,6 +281,12 @@ impl Module for Basin {
             ctx.report("hydro.q_sim_daily_m3_s", "m3/s", qd);
             if let Some(o) = self.q_obs.get(&ld) { ctx.report("hydro.q_obs_daily_m3_s", "m3/s", *o); }
             ctx.report("hydro.precip_daily_mm", "mm", self.day_p_mm / (self.basin_km2 * 1e6));
+            let grid = self.grid.clone().unwrap();
+            let mut sf = vec![f32::NAN; grid.nx * grid.ny];
+            let mut snf = vec![f32::NAN; grid.nx * grid.ny];
+            for (k, &i) in self.cells.iter().enumerate() { sf[i] = self.soil_mm[k] as f32; snf[i] = self.snow_mm[k] as f32; }
+            ctx.world_write("water.soil_mm", "mm", &grid, sf);
+            ctx.world_write("water.snow_mm", "mm", &grid, snf);
             ctx.report("hydro.snowpack_mean_mm", "mm", s / self.basin_km2 / 1e3);
             ctx.report("hydro.soil_mean_mm", "mm", so / self.basin_km2 / 1e3);
             self.day_q_sum = 0.0; self.day_q_n = 0; self.day_p_mm = 0.0;

@@ -7,6 +7,7 @@
   import Scores from './Scores.svelte'
   import FieldMap from './FieldMap.svelte'
   import EventLog from './EventLog.svelte'
+  import EnsembleView from './EnsembleView.svelte'
 
   let { id } = $props()
   const base = $derived(`/runs/${encodeURIComponent(id)}`)
@@ -70,6 +71,10 @@
 {#await load()}
   <p class="muted text-sm">loading…</p>
 {:then run}
+{#if run.kind === 'ensemble'}
+  <!-- an ensemble run: facts and band charts come from ensemble.json -->
+  <EnsembleView {run} {base} />
+{:else}
   <!-- facts -->
   <section class="mb-10">
     <h1 class="text-xl font-medium">{run.name}</h1>
@@ -157,6 +162,8 @@
       {/if}
     {/await}
   </section>
+
+{/if}
 
   <!-- manifest -->
   <section class="mb-10">
