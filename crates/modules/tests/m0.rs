@@ -282,3 +282,19 @@ fn m10_a_calendar_rule_changes_land_use_water_and_money() {
         assert!(rev(&with) < rev(&without));
     });
 }
+
+#[test]
+fn m11_nitrogen_rides_the_water_to_the_gauge_and_six_ledgers_close() {
+    if !have_dem() { eprintln!("skipped: DEM tile not cached"); return; }
+    let cached: PathBuf = [env!("CARGO_MANIFEST_DIR"), "..", "..", "data", "cache"].iter().collect();
+    let have = |prefix: &str| std::fs::read_dir(&cached).map(|d| d.flatten().any(|e| e.file_name().to_string_lossy().starts_with(prefix))).unwrap_or(false);
+    if !have("open-meteo-era5_42.3_43.2_-94.2_-93.5_0.5deg_2013") { eprintln!("skipped: 2013 weather not cached"); return; }
+    with_root(|| {
+        let out = Kernel::new(load("m11-nitrogen-boone-2013.toml"), factory).unwrap().run();
+        assert!(out.all_ledgers_closed, "six ledgers must close: {:?}", out.ledgers.iter().map(|l| (l.name.clone(), l.all_closed)).collect::<Vec<_>>());
+        assert_eq!(out.ledgers.len(), 6);
+        assert!(out.series["nitrogen.fertilizer_kg_day"].points.iter().any(|p| p.1 > 0.0), "fertilizer must be applied at planting");
+        assert!(out.series["hydro.no3_sim_mg_l"].points.iter().any(|p| p.1 > 1.0), "nitrate must reach the gauge");
+        assert!(out.series.contains_key("hydro.no3_obs_mg_l"), "the 2013 USGS nitrate record must load");
+    });
+}

@@ -132,8 +132,9 @@ impl Module for Nitrogen {
                     // leaching: the fraction of soil water that drained today carries that fraction of nitrate
                     if let (Some(dr), Some(s)) = (&drain, &soil) {
                         let frac = (dr[i] as f64 / (s[i] as f64 + dr[i] as f64).max(1.0)).clamp(0.0, 1.0) * self.leach_efficiency;
-                        let l = self.mineral[k] * frac;
-                        self.mineral[k] -= l; leached += l; leach_field[i] = l as f32;
+                        // publish f32 and account the f32, so the water module and the ledger see the same kilograms
+                        let l = (self.mineral[k] * frac) as f32;
+                        self.mineral[k] -= l as f64; leached += l as f64; leach_field[i] = l;
                     } else { leach_field[i] = 0.0; }
                 }
                 self.fert_total += fert; self.leach_total += leached; self.uptake_total += uptake;

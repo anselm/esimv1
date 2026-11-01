@@ -228,6 +228,36 @@ sha256 = "007c17dcef12527bf0fa88dd659fd9383304ae7da2277c84b16eb82f51889a3a"
 bytes = 3671923
 fetched = "2026-11-01"
 
+[files."open-meteo-era5/42.3_43.2_-94.2_-93.5_0.5deg_2013-01-01_2013-12-31.json"]
+url = "https://archive-api.open-meteo.com/v1/archive?latitude=42.25,42.25,42.75,42.75,43.25,43.25&longitude=-94.25,-93.75,-94.25,-93.75,-94.25,-93.75&start_date=2013-01-01&end_date=2013-12-31&hourly=temperature_2m,precipitation,shortwave_radiation,relative_humidity_2m,wind_speed_10m&models=era5&timezone=UTC&wind_speed_unit=ms"
+sha256 = "f81a134e63176ef8e43e1a341108814c4c95db05305425c9a9be9b50730a9cdb"
+bytes = 2198503
+fetched = "2026-11-01"
+
+[files."open-meteo-era5/42.3_43.2_-94.2_-93.5_0.5deg_2014-01-01_2014-12-31.json"]
+url = "https://archive-api.open-meteo.com/v1/archive?latitude=42.25,42.25,42.75,42.75,43.25,43.25&longitude=-94.25,-93.75,-94.25,-93.75,-94.25,-93.75&start_date=2014-01-01&end_date=2014-12-31&hourly=temperature_2m,precipitation,shortwave_radiation,relative_humidity_2m,wind_speed_10m&models=era5&timezone=UTC&wind_speed_unit=ms"
+sha256 = "1e3364c70462db807678a9c7d245b1c7b77068e62727b2c99bd51362fce86776"
+bytes = 2200258
+fetched = "2026-11-01"
+
+[files."open-meteo-era5/42.3_43.2_-94.2_-93.5_0.5deg_2015-01-01_2015-12-31.json"]
+url = "https://archive-api.open-meteo.com/v1/archive?latitude=42.25,42.25,42.75,42.75,43.25,43.25&longitude=-94.25,-93.75,-94.25,-93.75,-94.25,-93.75&start_date=2015-01-01&end_date=2015-12-31&hourly=temperature_2m,precipitation,shortwave_radiation,relative_humidity_2m,wind_speed_10m&models=era5&timezone=UTC&wind_speed_unit=ms"
+sha256 = "a2c2d06a25d4768be3388a9e4ef561c8e03d1fa6f3d7843768348f1d7218b23d"
+bytes = 2196404
+fetched = "2026-11-01"
+
+[files."open-meteo-era5/42.3_43.2_-94.2_-93.5_0.5deg_2016-01-01_2016-12-31.json"]
+url = "https://archive-api.open-meteo.com/v1/archive?latitude=42.25,42.25,42.75,42.75,43.25,43.25&longitude=-94.25,-93.75,-94.25,-93.75,-94.25,-93.75&start_date=2016-01-01&end_date=2016-12-31&hourly=temperature_2m,precipitation,shortwave_radiation,relative_humidity_2m,wind_speed_10m&models=era5&timezone=UTC&wind_speed_unit=ms"
+sha256 = "01fbe1e464fb7a196181fd56382e7a59a6e93df25b69a4720142ea29146fa148"
+bytes = 2202324
+fetched = "2026-11-01"
+
+[files."open-meteo-era5/42.3_43.2_-94.2_-93.5_0.5deg_2017-01-01_2017-12-31.json"]
+url = "https://archive-api.open-meteo.com/v1/archive?latitude=42.25,42.25,42.75,42.75,43.25,43.25&longitude=-94.25,-93.75,-94.25,-93.75,-94.25,-93.75&start_date=2017-01-01&end_date=2017-12-31&hourly=temperature_2m,precipitation,shortwave_radiation,relative_humidity_2m,wind_speed_10m&models=era5&timezone=UTC&wind_speed_unit=ms"
+sha256 = "c2fe5532acb0a8ee05ee44af740f997b25af21907cd4b0de056212c57ebd266c"
+bytes = 2193819
+fetched = "2026-11-01"
+
 [files."open-meteo-gefs/42.3_43.2_-94.2_-93.5_0.25deg_p10_f10_2026-11-01.json"]
 url = "https://ensemble-api.open-meteo.com/v1/ensemble?latitude=42.375,42.375,42.375,42.625,42.625,42.625,42.875,42.875,42.875,43.125,43.125,43.125&longitude=-94.125,-93.875,-93.625,-94.125,-93.875,-93.625,-94.125,-93.875,-93.625,-94.125,-93.875,-93.625&hourly=temperature_2m,precipitation,shortwave_radiation,relative_humidity_2m,wind_speed_10m&models=gfs_seamless&past_days=10&forecast_days=10&timezone=UTC&wind_speed_unit=ms"
 sha256 = "0201a5a1ccb4461ef213d914d24f05f66d0f5aff93145cd8b921f1d83e0dc83d"

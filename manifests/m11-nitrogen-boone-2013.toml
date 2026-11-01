@@ -1,0 +1,93 @@
+# M11 Nitrogen: the M9 stack plus a nitrogen module, hindcast 2013-2017, when USGS 05481000
+# recorded daily nitrate. Score:
+#   esim score <run> hydro.no3_sim_mg_l hydro.no3_obs_mg_l
+#   esim score <run> hydro.q_sim_daily_m3_s hydro.q_obs_daily_m3_s
+# MODIS is off for this long run (the crop is scored on 2025 elsewhere).
+
+[run]
+name = "m11-nitrogen-boone-2013"
+start = "2013-03-01"
+end = "2013-12-01"
+seed = 1
+close_every = "1d"
+snapshot_every = "120d"
+
+[[module]]
+name = "wx"
+kind = "weather.era5"
+[module.params]
+lat_s = 42.3
+lat_n = 43.2
+lon_w = -94.2
+lon_e = -93.5
+res_arcsec = 30
+point_step_deg = 0.5
+start = "2013-01-01"
+end = "2017-12-31"
+dt = "1h"
+
+[[module]]
+name = "sun"
+kind = "sun.irradiance"
+[module.params]
+lat_s = 42.3
+lat_n = 43.2
+lon_w = -94.2
+lon_e = -93.5
+res_arcsec = 30
+dt = "1h"
+report_every = "90d"
+
+[[module]]
+name = "water"
+kind = "water.basin"
+[module.params]
+forcing = "wx"
+lat_s = 42.3
+lat_n = 43.2
+lon_w = -94.2
+lon_e = -93.5
+res_arcsec = 30
+dt = "1h"
+report_every = "30d"
+
+[[module]]
+name = "veg"
+kind = "veg.crop"
+[module.params]
+lat_s = 42.3
+lat_n = 43.2
+lon_w = -94.2
+lon_e = -93.5
+res_arcsec = 30
+dt = "1h"
+modis_start = "none"
+
+[[module]]
+name = "deer"
+kind = "fauna.herbivore"
+[module.params]
+res_arcsec = 30
+init_density_km2 = 6
+
+[[module]]
+name = "coyote"
+kind = "fauna.predator"
+[module.params]
+res_arcsec = 30
+init_density_km2 = 0.3
+
+[[module]]
+name = "farms"
+kind = "agents.farms"
+[module.params]
+res_arcsec = 30
+block_cells = 4
+price_corn_usd_bu = 4.3
+price_soy_usd_bu = 10.2
+
+[[module]]
+name = "nitrogen"
+kind = "nitrogen.basin"
+[module.params]
+res_arcsec = 30

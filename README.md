@@ -1,0 +1,62 @@
+# earth-simulator-1
+
+A whole-system simulator: many representations (fields, networks, populations, agents,
+rules), many rates, one shared world state, with conservation checked at every seam by
+ledgers that must close. Output is an ensemble of trajectories with the mechanism visible,
+so a person can inspect a run, rerun it, and intervene by editing a manifest.
+
+The design brief and every decision since are in `devlog/`, dated. Start with
+`devlog/20261031-design-brief.md`, then `devlog/20261031-milestones.md`, then the
+milestone entries (`m0` to `m11`, `f1`). `devlog/20261031-fitness.md` scores the
+framework against the use cases as rungs land.
+
+## What exists (as of 2026-11-01)
+
+- `crates/kernel`: virtual clock, events ordered by (time, priority, sequence), shared
+  world fields, cell-addressed events, double-entry ledgers with declared-stock closing,
+  append-only log with digest, snapshots and exact replay, TOML manifests.
+- `crates/registry`: catalog of base layers and observation series, hash-locked fetcher
+  and cache, readers for Copernicus DEM tiles, MODIS NDVI, USGS daily values,
+  GHCN-Daily, ERA5 and GEFS through Open-Meteo; depression filling, D8 flow routing and
+  basin delineation; the calendar and hazard tables.
+- `crates/modules`: sun (clear-sky irradiance on terrain), heat (slab surface), weather
+  (ERA5 and GEFS members), water (snow, soil, evaporation, routing, nitrate tracer),
+  crop (phenology, light-use growth, harvest), herbivore and predator cohorts (with a
+  cohort-to-individuals zoom), fire hazard, farm agents, calendar rules, nitrogen.
+- `crates/cli`: `esim run | verify | ensemble | score | kinds`.
+- `web/`: a sparse viewer (Svelte 5, Vite) for runs, ledgers, maps, scores, paired
+  sim/obs charts and ensemble bands.
+- `data/`: `catalog.toml` (assets and places), `catalog.lock.toml` (hashes of fetched
+  files), `events/` (calendar and hazards), `cache/` (fetched bytes, not in git).
+
+The stage for every milestone so far is the Boone River above Webster City, Iowa (USGS
+05481000), chosen for its 1940-to-present discharge record, its 2012-2017 nitrate record,
+and its tile-drained Corn Belt land use.
+
+## Run it
+
+```sh
+# Rust stable (rustup) and Node 20+ are needed. GDAL is optional, for cross-checks.
+cargo build --release
+./target/release/esim run manifests/m3-water-boone.toml           # a year of hydrology, ~40 s
+./target/release/esim score runs/<id> hydro.q_sim_daily_m3_s hydro.q_obs_daily_m3_s
+./target/release/esim verify manifests/m2-heat-boone-week.toml    # determinism and replay
+./target/release/esim ensemble manifests/f1-boone-forecast.toml --branches 31 --threads 8
+cargo test --release                                              # ~30 s with the data cached
+cd web && npm install && npm run dev                              # viewer at http://localhost:5173
+```
+
+First runs fetch about 200 MB (four elevation tiles, weather, MODIS composites, gauge
+records) into `data/cache/` and record their hashes in `data/catalog.lock.toml`. Every
+module reads data only through the registry; nothing is synthetic, including in tests.
+
+## Rules of the house for this repo
+
+- Real terrain and real records or nothing. A formula check is labelled as one.
+- A module accounts the numbers it publishes, in the precision it publishes them, and
+  keeps its stocks in f64. The ledgers have caught two precision leaks already.
+- Bulk per-cell numbers travel in shared fields; events signal. Cell-addressed events are
+  for sparse things (an ignition).
+- Nothing is calibrated by hand. Parameters are named, their provenance is stated
+  ("guess" when it is one), and the hindcast harness (M12) will move them by method.
+- Durable thinking goes in dated `devlog/` entries. Status lives there, not here.
