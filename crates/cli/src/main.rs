@@ -248,6 +248,104 @@ fn ensemble(path: &Path, branches: u64, threads: usize, out_root: &Path) -> Resu
     Ok(())
 }
 
+/// esim sweep <manifest> --score <sim> <obs> --samples N [--threads T] [--seed S]
+///            --set <module>.<param>=<lo>:<hi> [--set ...]
+/// Calibration by method, first form: Latin-hypercube samples of the named parameters,
+/// one run each in parallel, scored at matching times, written to runs/<id>/sweep.json
+/// with the best ten printed. Nothing is tuned by hand; the table is the record.
+fn sweep(path: &Path, sim: &str, obs: &str, samples: usize, threads: usize, seed: u64, sets: &[(String, String, f64, f64)], out_root: &Path) -> Result<(), String> {
+    let base = load(path)?;
+    let _ = Kernel::new(base.clone(), factory)?; // warm the cache
+    // Latin hypercube: each parameter's range cut into `samples` strata, one draw per stratum, strata shuffled per parameter
+    let mut rng = esim_kernel::rng::Rng::from_seed(seed);
+    let k = sets.len();
+    let mut design = vec![vec![0.0f64; k]; samples];
+    for (j, (_, _, lo, hi)) in sets.iter().enumerate() {
+        let mut strata: Vec<usize> = (0..samples).collect();
+        for i in (1..samples).rev() { let r = (rng.next_u64() % (i as u64 + 1)) as usize; strata.swap(i, r); }
+        for i in 0..samples { let u = (strata[i] as f64 + rng.f64()) / samples as f64; design[i][j] = lo + u * (hi - lo); }
+    }
+    let t0 = std::time::Instant::now();
+    let queue = std::sync::Mutex::new((0..samples).collect::<Vec<usize>>());
+    let rows: Vec<serde_json::Value> = std::thread::scope(|sc| {
+        let (tx, rx) = std::sync::mpsc::channel();
+        for _ in 0..threads.max(1) {
+            let tx = tx.clone(); let queue = &queue; let base = &base; let design = &design;
+            sc.spawn(move || loop {
+                let i = { let mut q = queue.lock().unwrap(); if q.is_empty() { break; } q.remove(0) };
+                let mut m = base.clone();
+                for (j, (module, param, _, _)) in sets.iter().enumerate() {
+                    if let Some(e) = m.modules.iter_mut().find(|e| &e.name == module) {
+                        if let toml::Value::Table(t) = &mut e.params { t.insert(param.clone(), toml::Value::Float(design[i][j])); }
+                    }
+                }
+                fold_params(&mut m);
+                let res = Kernel::new(m, factory).map(|mut k| k.run());
+                let row = match res {
+                    Ok(o) => {
+                        let get = |name: &str| -> Vec<(i64, f64)> { o.series.get(name).map(|s| s.points.iter().map(|p| (p.0 .0, p.1)).collect()).unwrap_or_default() };
+                        let (sv, ov) = (get(sim), get(obs));
+                        let om: std::collections::BTreeMap<i64, f64> = ov.into_iter().collect();
+                        let pairs: Vec<(f64, f64)> = sv.iter().filter_map(|(t, x)| om.get(t).map(|y| (*x, *y))).collect();
+                        let n = pairs.len() as f64;
+                        let (ms, mo) = (pairs.iter().map(|p| p.0).sum::<f64>() / n, pairs.iter().map(|p| p.1).sum::<f64>() / n);
+                        let sse: f64 = pairs.iter().map(|(x, y)| (x - y).powi(2)).sum();
+                        let sso: f64 = pairs.iter().map(|(_, y)| (y - mo).powi(2)).sum();
+                        let nse = 1.0 - sse / sso;
+                        let pbias = 100.0 * (ms - mo) / mo;
+                        let (ss, so) = ((pairs.iter().map(|(x, _)| (x - ms).powi(2)).sum::<f64>() / n).sqrt(), (sso / n).sqrt());
+                        let r = pairs.iter().map(|(x, y)| (x - ms) * (y - mo)).sum::<f64>() / (n * ss * so);
+                        let kge = 1.0 - ((r - 1.0).powi(2) + (ss / so - 1.0).powi(2) + (ms / mo - 1.0).powi(2)).sqrt();
+                        let mut pm = serde_json::Map::new();
+                        for (j, (m_, p_, _, _)) in sets.iter().enumerate() { pm.insert(format!("{m_}.{p_}"), serde_json::Value::from(design[i][j])); }
+                        serde_json::json!({ "i": i, "params": pm,
+                            "nse": nse, "kge": kge, "r": r, "pbias_pct": pbias, "n": pairs.len(), "digest": o.log_digest, "ledgers_closed": o.all_ledgers_closed })
+                    }
+                    Err(e) => serde_json::json!({ "i": i, "error": e }),
+                };
+                eprintln!("sample {i}: NSE {}", row["nse"]);
+                tx.send(row).unwrap();
+            });
+        }
+        drop(tx);
+        let mut v: Vec<serde_json::Value> = rx.into_iter().collect();
+        v.sort_by(|a, b| b["nse"].as_f64().unwrap_or(f64::MIN).partial_cmp(&a["nse"].as_f64().unwrap_or(f64::MIN)).unwrap());
+        v
+    });
+    let mtext = fs::read_to_string(path).map_err(|e| e.to_string())?;
+    let id = format!("{}-sweep{}-{:08x}", base.run.name, samples, (esim_kernel::hash::fnv1a(mtext.as_bytes()) >> 32) as u32);
+    let dir = out_root.join(&id);
+    fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
+    fs::copy(path, dir.join("manifest.toml")).map_err(|e| e.to_string())?;
+    let out = serde_json::json!({ "name": base.run.name, "kind": "sweep", "sim": sim, "obs": obs, "samples": samples, "seed": seed,
+        "ranges": sets.iter().map(|(m, p, lo, hi)| serde_json::json!({ "param": format!("{m}.{p}"), "lo": lo, "hi": hi })).collect::<Vec<_>>(),
+        "elapsed_ms": t0.elapsed().as_millis(), "rows": rows });
+    fs::write(dir.join("sweep.json"), serde_json::to_string_pretty(&out).unwrap()).map_err(|e| e.to_string())?;
+    println!("sweep    {id}: {samples} samples in {} s", t0.elapsed().as_secs());
+    println!("rank  NSE     KGE     bias%   params");
+    for (rank, row) in out["rows"].as_array().unwrap().iter().take(10).enumerate() {
+        if row.get("error").is_some() { println!("{rank:>4}  error {}", row["error"]); continue; }
+        let ps: Vec<String> = row["params"].as_object().unwrap().iter().map(|(k, v)| format!("{}={:.4}", k.rsplit('.').next().unwrap(), v.as_f64().unwrap())).collect();
+        println!("{rank:>4}  {:6.3}  {:6.3}  {:+6.1}  {}", row["nse"].as_f64().unwrap(), row["kge"].as_f64().unwrap(), row["pbias_pct"].as_f64().unwrap(), ps.join(" "));
+    }
+    println!("out      {}", dir.display());
+    Ok(())
+}
+
+fn parse_sets(args: &[String]) -> Result<Vec<(String, String, f64, f64)>, String> {
+    let mut sets = Vec::new();
+    for (i, a) in args.iter().enumerate() {
+        if a == "--set" {
+            let spec = args.get(i + 1).ok_or("--set needs module.param=lo:hi")?;
+            let (name, range) = spec.split_once('=').ok_or("--set module.param=lo:hi")?;
+            let (module, param) = name.split_once('.').ok_or("--set module.param=lo:hi")?;
+            let (lo, hi) = range.split_once(':').ok_or("--set module.param=lo:hi")?;
+            sets.push((module.to_string(), param.to_string(), lo.parse::<f64>().map_err(|_| "lo")?, hi.parse::<f64>().map_err(|_| "hi")?));
+        }
+    }
+    Ok(sets)
+}
+
 fn main() {
     let args: Vec<String> = std::env::args().collect();
     let res = match args.get(1).map(String::as_str) {
@@ -265,12 +363,23 @@ fn main() {
             let out = get("--out").map(PathBuf::from).unwrap_or_else(|| PathBuf::from("runs"));
             match path { Some(p) => ensemble(&p, branches, threads, &out), None => Err("usage: esim ensemble <manifest.toml> --branches N [--threads T] [--out runs]".into()) }
         }
+        Some("sweep") => {
+            let path = args.get(2).map(PathBuf::from);
+            let get = |flag: &str| args.iter().position(|a| a == flag).and_then(|i| args.get(i + 1));
+            let sim = args.iter().position(|a| a == "--score").and_then(|i| args.get(i + 1)).cloned();
+            let obs = args.iter().position(|a| a == "--score").and_then(|i| args.get(i + 2)).cloned();
+            let samples: usize = get("--samples").and_then(|s| s.parse().ok()).unwrap_or(32);
+            let threads: usize = get("--threads").and_then(|s| s.parse().ok()).unwrap_or(8);
+            let seed: u64 = get("--seed").and_then(|s| s.parse().ok()).unwrap_or(1);
+            let out = get("--out").map(PathBuf::from).unwrap_or_else(|| PathBuf::from("runs"));
+            match (path, sim, obs, parse_sets(&args)) { (Some(p), Some(s), Some(o), Ok(sets)) if !sets.is_empty() => sweep(&p, &s, &o, samples, threads, seed, &sets, &out), (_, _, _, Err(e)) => Err(e), _ => Err("usage: esim sweep <manifest> --score <sim> <obs> --samples N --set module.param=lo:hi ...".into()) }
+        }
         Some("score") => match (args.get(2), args.get(3), args.get(4)) {
             (Some(d), Some(a), Some(b)) => score(Path::new(d), a, b),
             _ => Err("usage: esim score <run_dir> <sim_series> <obs_series>".into()),
         },
         Some("kinds") => { for k in esim_modules::kinds() { println!("{k}"); } Ok(()) }
-        _ => Err("usage: esim run|verify|ensemble|score|kinds".into()),
+        _ => Err("usage: esim run|verify|ensemble|sweep|score|kinds".into()),
     };
     if let Err(e) = res { eprintln!("error: {e}"); std::process::exit(1); }
 }
