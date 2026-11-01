@@ -105,7 +105,11 @@ pub fn read_bytes(buf: &[u8]) -> Result<Raster, String> {
     let scale = ifd.f64s(33550, le);
     let tie = ifd.f64s(33922, le);
     let (dx, dy) = (scale.first().copied().unwrap_or(1.0), scale.get(1).copied().unwrap_or(1.0));
-    let (x0, y0) = if tie.len() >= 6 { (tie[3] - tie[0] * dx, tie[4] + tie[1] * dy) } else { (0.0, 0.0) };
+    let (mut x0, mut y0) = if tie.len() >= 6 { (tie[3] - tie[0] * dx, tie[4] + tie[1] * dy) } else { (0.0, 0.0) };
+    // GTRasterTypeGeoKey (1025): 1 = PixelIsArea (tiepoint at the corner), 2 = PixelIsPoint
+    // (tiepoint at the centre of the first pixel). Copernicus tiles are PixelIsPoint, so
+    // the outer edge is half a pixel beyond the tiepoint.
+    if raster_type(&ifd, le) == 2 { x0 -= dx / 2.0; y0 += dy / 2.0; }
 
     let mut data = vec![f32::NAN; width * height];
     let (tw, th) = (ifd.u32(322, le, 0) as usize, ifd.u32(323, le, 0) as usize);
@@ -147,6 +151,19 @@ pub fn read_bytes(buf: &[u8]) -> Result<Raster, String> {
         }
     }
     Ok(Raster { width, height, data, nodata, x0, y0, dx, dy })
+}
+
+/// Value of GeoKey 1025 (raster type) from the GeoKeyDirectory, or 1 if absent.
+fn raster_type(ifd: &Ifd, le: bool) -> u32 {
+    let keys = ifd.u32s(34735, le);
+    if keys.len() < 4 { return 1; }
+    let n = keys[3] as usize;
+    for k in 0..n {
+        let e = &keys[4 + k * 4..];
+        if e.len() < 4 { break; }
+        if e[0] == 1025 && e[1] == 0 { return e[3]; }
+    }
+    1
 }
 
 fn decompress(raw: &[u8], comp: u32, expect: usize) -> Result<Vec<u8>, String> {

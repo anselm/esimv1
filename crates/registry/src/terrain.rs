@@ -23,7 +23,7 @@ pub struct DemWindow {
     pub provenance: String,
 }
 
-const RECIPE_VERSION: &str = "terrain-v1";
+const RECIPE_VERSION: &str = "terrain-v2"; // v2: reader honours PixelIsPoint
 
 fn derived_path(fetcher: &Fetcher, key: &str) -> PathBuf {
     let dir = fetcher.cache_dir.join("derived");
