@@ -10,6 +10,7 @@ use crate::manifest::Manifest;
 use crate::module::{Ctx, FieldSeries, Module, ModuleFactory, Series};
 use crate::rng::Rng;
 use crate::time::{Duration, Time};
+use crate::world::World;
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BinaryHeap};
 
@@ -31,6 +32,7 @@ pub struct Kernel {
     ledgers: BTreeMap<String, Ledger>,
     series: BTreeMap<String, Series>,
     pub fields: BTreeMap<String, FieldSeries>,
+    pub world: World,
     pub log: EventLog,
     close_every: Duration,
     snapshot_every: Option<Duration>,
@@ -52,6 +54,8 @@ pub struct Snapshot {
     pub subs: BTreeMap<String, Vec<usize>>,
     pub ledgers: BTreeMap<String, Ledger>,
     pub series: BTreeMap<String, Series>,
+    #[serde(default)]
+    pub world: World,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -99,7 +103,7 @@ impl Kernel {
         let mut k = Kernel {
             manifest, start, end, now: start, seq: 0, queue: BinaryHeap::new(),
             modules, rngs, index, subs: BTreeMap::new(), ledgers: BTreeMap::new(),
-            series: BTreeMap::new(), fields: BTreeMap::new(), log: EventLog::new(), close_every, snapshot_every,
+            series: BTreeMap::new(), fields: BTreeMap::new(), world: World::default(), log: EventLog::new(), close_every, snapshot_every,
             snapshots: Vec::new(), delivered: 0,
         };
         k.init();
@@ -110,12 +114,13 @@ impl Kernel {
         for i in 0..self.modules.len() {
             let mut ctx = Ctx {
                 now: self.now, me: self.modules[i].name().to_string(), out: Vec::new(), subs: Vec::new(),
-                ledgers: &mut self.ledgers, series: &mut self.series, fields: &mut self.fields, rng: &mut self.rngs[i],
+                ledgers: &mut self.ledgers, series: &mut self.series, fields: &mut self.fields, world: &mut self.world, world_writes: Vec::new(), rng: &mut self.rngs[i],
             };
             self.modules[i].init(&mut ctx);
-            let (out, subs) = (ctx.out, ctx.subs);
+            let (out, subs, writes) = (ctx.out, ctx.subs, ctx.world_writes);
             for topic in subs { self.subs.entry(topic).or_default().push(i); }
             let src = self.modules[i].name().to_string();
+            self.log_world_writes(&src, writes);
             for (t, p, to, topic, data) in out { self.push(t, p, &src, to, topic, data); }
         }
         // Kernel housekeeping: the first close and the first snapshot.
@@ -173,14 +178,26 @@ impl Kernel {
         for i in targets {
             let mut ctx = Ctx {
                 now: self.now, me: self.modules[i].name().to_string(), out: Vec::new(), subs: Vec::new(),
-                ledgers: &mut self.ledgers, series: &mut self.series, fields: &mut self.fields, rng: &mut self.rngs[i],
+                ledgers: &mut self.ledgers, series: &mut self.series, fields: &mut self.fields, world: &mut self.world, world_writes: Vec::new(), rng: &mut self.rngs[i],
             };
             self.modules[i].handle(ev, &mut ctx);
             self.delivered += 1;
-            let (out, subs) = (ctx.out, ctx.subs);
+            let (out, subs, writes) = (ctx.out, ctx.subs, ctx.world_writes);
             for topic in subs { self.subs.entry(topic).or_default().push(i); }
             let src = self.modules[i].name().to_string();
+            self.log_world_writes(&src, writes);
             for (t, p, to, topic, data) in out { self.push(t, p, &src, to, topic, data); }
+        }
+    }
+
+    /// World writes are logged as events that were never queued: they record that the
+    /// state changed, with a digest, so a replay can be checked against the log.
+    fn log_world_writes(&mut self, src: &str, writes: Vec<(String, u64, u64, usize)>) {
+        for (name, version, digest, len) in writes {
+            self.seq += 1;
+            let ev = Event { t: self.now, priority: 0, seq: self.seq, src: src.to_string(), to: None, topic: "world.write".into(),
+                data: serde_json::json!({ "field": name, "version": version, "digest": format!("{digest:016x}"), "len": len }) };
+            self.log.append(&ev);
         }
     }
 
@@ -190,7 +207,7 @@ impl Kernel {
             modules: self.modules.iter().map(|m| (m.name().to_string(), m.snapshot())).collect(),
             rngs: self.rngs.clone(),
             queue: self.queue.iter().map(|q| q.0.clone()).collect(),
-            subs: self.subs.clone(), ledgers: self.ledgers.clone(), series: self.series.clone(),
+            subs: self.subs.clone(), ledgers: self.ledgers.clone(), series: self.series.clone(), world: self.world.clone(),
         }
     }
 
@@ -215,7 +232,7 @@ impl Kernel {
         for ev in snap.queue { queue.push(Queued(ev)); }
         Ok(Kernel {
             manifest, start, end, now: snap.t, seq: snap.seq, queue, modules, rngs: snap.rngs, index,
-            subs: snap.subs, ledgers: snap.ledgers, series: snap.series, fields: BTreeMap::new(), log: EventLog::new(),
+            subs: snap.subs, ledgers: snap.ledgers, series: snap.series, fields: BTreeMap::new(), world: snap.world, log: EventLog::new(),
             close_every, snapshot_every, snapshots: Vec::new(), delivered: snap.delivered,
         })
     }

@@ -1,0 +1,36 @@
+# M2 Heat: two fields at two rates. The sun writes incident energy hourly; a slab
+# surface at 15-minute steps absorbs, reflects and radiates it. One energy ledger across
+# both modules must close every day. Boone River country, 30 arc-seconds, one year.
+
+[run]
+name = "m2-heat-boone-2025"
+start = "2025-01-01"
+end = "2026-01-01"
+seed = 1
+close_every = "1d"
+snapshot_every = "30d"
+
+[[module]]
+name = "sun"
+kind = "sun.irradiance"
+[module.params]
+lat_s = 42.3
+lat_n = 43.0
+lon_w = -94.0
+lon_e = -93.5
+res_arcsec = 30
+dt = "1h"
+report_every = "1d"
+
+[[module]]
+name = "heat"
+kind = "heat.slab"
+[module.params]
+source = "sun.incident_j"
+dt = "15m"
+report_every = "1d"
+albedo = 0.2
+emissivity = 0.95
+heat_capacity_j_m2_k = 3.0e5
+t_sky_k = 255
+t_init_c = 0

@@ -114,7 +114,7 @@
     <canvas
       bind:this={canvas}
       style="width:{width}px;height:{height}px"
-      class="block rounded-[2px] bg-neutral-100 dark:bg-neutral-900 touch-none"
+      class="block rounded-[2px] bg-neutral-100 dark:bg-neutral-900"
       role="img"
       aria-label="{name} map, {grid.nx} by {grid.ny} cells"
       onpointermove={onmove}

@@ -7,6 +7,7 @@ use crate::grid::LatLonGrid;
 use crate::ledger::Ledger;
 use crate::rng::Rng;
 use crate::time::{Duration, Time};
+use crate::world::{World, WorldField};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
@@ -47,6 +48,8 @@ pub struct Ctx<'a> {
     pub(crate) ledgers: &'a mut BTreeMap<String, Ledger>,
     pub(crate) series: &'a mut BTreeMap<String, Series>,
     pub(crate) fields: &'a mut BTreeMap<String, FieldSeries>,
+    pub(crate) world: &'a mut World,
+    pub(crate) world_writes: Vec<(String, u64, u64, usize)>,
     pub(crate) rng: &'a mut Rng,
 }
 
@@ -56,8 +59,13 @@ impl<'a> Ctx<'a> {
 
     /// Schedule an event to myself after `after`.
     pub fn schedule(&mut self, after: Duration, topic: &str, data: serde_json::Value) {
+        self.schedule_with_priority(after, 0, topic, data);
+    }
+    /// Same, with a priority: lower runs first among events at the same instant. A
+    /// module that reads what another writes at the same instant takes a higher number.
+    pub fn schedule_with_priority(&mut self, after: Duration, priority: Priority, topic: &str, data: serde_json::Value) {
         let me = self.me.clone();
-        self.out.push((self.now.add(after), 0, Some(me), topic.to_string(), data));
+        self.out.push((self.now.add(after), priority, Some(me), topic.to_string(), data));
     }
     /// Schedule an event to a named module at an absolute time.
     pub fn send_at(&mut self, t: Time, to: &str, topic: &str, data: serde_json::Value) {
@@ -96,5 +104,14 @@ impl<'a> Ctx<'a> {
         assert_eq!(&f.grid, grid, "field {name}: grid changed between frames");
         f.frames.push((self.now, data));
     }
+    /// Write a shared field. The first writer owns it; nobody else may write it. The
+    /// kernel logs the write (name, version, digest), not the data.
+    pub fn world_write(&mut self, name: &str, unit: &str, grid: &LatLonGrid, data: Vec<f32>) {
+        let len = data.len();
+        let (version, digest) = self.world.write(&self.me, name, unit, grid, data, self.now).unwrap_or_else(|e| panic!("{e}"));
+        self.world_writes.push((name.to_string(), version, digest, len));
+    }
+    /// Read a shared field as last written.
+    pub fn world_read(&self, name: &str) -> Option<&WorldField> { self.world.get(name) }
     pub fn rng(&mut self) -> &mut Rng { self.rng }
 }

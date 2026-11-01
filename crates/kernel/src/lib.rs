@@ -14,6 +14,7 @@ pub mod manifest;
 pub mod grid;
 pub mod kernel;
 pub mod hash;
+pub mod world;
 
 pub use event::{Event, Priority};
 pub use kernel::{FieldMeta, Kernel, RunOutput};
@@ -22,3 +23,4 @@ pub use ledger::{Ledger, LedgerReport};
 pub use manifest::Manifest;
 pub use module::{Ctx, FieldSeries, Module, ModuleFactory};
 pub use time::{Duration, Time};
+pub use world::{World, WorldField};

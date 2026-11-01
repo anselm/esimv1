@@ -69,3 +69,56 @@ fn replay_from_snapshot_reproduces_the_tail() {
         assert_eq!(tail, got);
     }
 }
+
+/// M1 and M2 run on the real Copernicus tile. They need the tile in the cache; on a
+/// box without it (or without network) they are skipped rather than downloading 40 MB
+/// inside a unit test. Run `cargo run -p esim-registry --example dem_stats` once.
+fn have_dem() -> bool {
+    let p: PathBuf = [env!("CARGO_MANIFEST_DIR"), "..", "..", "data", "cache", "copernicus-dem-glo30_N42_W094.tif"].iter().collect();
+    p.exists()
+}
+
+fn with_root<T>(f: impl FnOnce() -> T) -> T {
+    let root: PathBuf = [env!("CARGO_MANIFEST_DIR"), "..", ".."].iter().collect();
+    std::env::set_var("ESIM_ROOT", root.canonicalize().unwrap());
+    f()
+}
+
+#[test]
+fn m1_sun_week_closes_and_replays() {
+    if !have_dem() { eprintln!("skipped: DEM tile not cached"); return; }
+    with_root(|| {
+        let m = load("m1-sun-boone-week.toml");
+        let a = Kernel::new(m.clone(), factory).unwrap().run();
+        assert!(a.all_ledgers_closed, "energy ledger must close");
+        let peak = a.series["sun.ghi_mean_w_m2"].points.iter().map(|p| p.1).fold(0.0, f64::max);
+        assert!(peak > 900.0 && peak < 1050.0, "June clear-sky peak {peak}");
+        let mut full = Kernel::new(m.clone(), factory).unwrap();
+        full.run();
+        let snap = full.snapshots[0].clone();
+        let tail: Vec<String> = full.log.events[snap.log_len..].iter().map(|e| serde_json::to_string(e).unwrap()).collect();
+        let mut resumed = Kernel::from_snapshot(m, factory, snap).unwrap();
+        resumed.run();
+        let got: Vec<String> = resumed.log.events.iter().map(|e| serde_json::to_string(e).unwrap()).collect();
+        assert_eq!(tail, got);
+    });
+}
+
+#[test]
+fn m2_two_rates_one_energy_ledger() {
+    if !have_dem() { eprintln!("skipped: DEM tile not cached"); return; }
+    with_root(|| {
+        let m = load("m2-heat-boone-week.toml");
+        let out = Kernel::new(m.clone(), factory).unwrap().run();
+        assert!(out.all_ledgers_closed, "energy ledger across sun and heat must close");
+        let e = &out.ledgers[0];
+        let worst = e.closes.iter().map(|c| c.max_leak).fold(0.0, f64::max);
+        assert!(worst < 1e4, "worst leak {worst} J");
+        // the two modules really ran at different rates
+        let sun_ticks = out.ledgers[0].transfers; // 3 per sun step + 3 per heat step
+        assert!(sun_ticks > 2000);
+        let t = &out.series["heat.t_surface_mean_c"].points;
+        let (lo, hi) = t.iter().fold((f64::MAX, f64::MIN), |(l, h), p| (l.min(p.1), h.max(p.1)));
+        assert!(hi > lo + 10.0, "a diurnal cycle should exist: {lo}..{hi}");
+    });
+}

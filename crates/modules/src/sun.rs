@@ -139,7 +139,7 @@ pub fn air_mass(zenith_deg: f64) -> f64 {
 impl Module for Sun {
     fn name(&self) -> &str { &self.name }
     fn init(&mut self, ctx: &mut Ctx) {
-        ctx.ledger(LEDGER, "J", 1.0); // one joule over a basin-day is far below float noise of the sums
+        ctx.ledger(LEDGER, "J", 1e6); // 1 MJ against ~1e17 J per basin-day: 1e-11 relative
         ctx.declare_stock(LEDGER, "surface", self.absorbed_j);
         let grid = self.grid.as_ref().unwrap();
         ctx.field("elevation", "m", grid, {
@@ -163,6 +163,7 @@ impl Module for Sun {
         let (mut toa, mut surf, mut shadow, mut atm) = (0.0f64, 0.0f64, 0.0f64, 0.0f64);
         let mut ghi_sum = 0.0f64;
         let n_az = self.n_az;
+        let mut incident = vec![0f32; grid.nx * grid.ny];
         for row in 0..grid.ny {
             let lat = grid.lat(row);
             for col in 0..grid.nx {
@@ -193,12 +194,21 @@ impl Module for Sun {
                 let direct_c = dni * cosz * a * dt;
                 let diffuse_c = dhi * a * dt;
                 toa += toa_c;
-                if shadowed { shadow += direct_c; surf += diffuse_c; } else { surf += direct_c + diffuse_c; }
-                atm += toa_c - direct_c - diffuse_c;
+                let surf_c = if shadowed { diffuse_c } else { direct_c + diffuse_c };
+                // Publish f32; account the f32 value, so readers and the ledger see the same joules.
+                incident[i] = surf_c as f32;
+                let surf_c = incident[i] as f64;
+                if shadowed { shadow += direct_c; }
+                surf += surf_c;
+                atm += toa_c - surf_c - if shadowed { direct_c } else { 0.0 };
                 ghi_sum += (if shadowed { dhi } else { dni * cosz + dhi }) * a;
             }
         }
         self.day_steps += 1;
+        // Shared state for whoever heats, grows or evaporates with this energy: joules
+        // per cell footprint over this step. Summed in f64 above for the ledger; the
+        // f32 field is what readers get, so readers must account in f32-consistent sums.
+        ctx.world_write("sun.incident_j", "J", &grid, incident);
         if toa > 0.0 {
             ctx.transfer(LEDGER, "sun", "surface", surf);
             ctx.transfer(LEDGER, "sun", "terrain_shadow", shadow);

@@ -1,0 +1,27 @@
+# M2 Heat, one June week at 30 arc-seconds, for tests.
+
+[run]
+name = "m2-heat-boone-june-week"
+start = "2025-06-18"
+end = "2025-06-25"
+seed = 1
+close_every = "1d"
+snapshot_every = "2d"
+
+[[module]]
+name = "sun"
+kind = "sun.irradiance"
+[module.params]
+lat_s = 42.3
+lat_n = 43.0
+lon_w = -94.0
+lon_e = -93.5
+res_arcsec = 30
+dt = "1h"
+
+[[module]]
+name = "heat"
+kind = "heat.slab"
+[module.params]
+dt = "15m"
+t_init_c = 15
