@@ -22,7 +22,7 @@ lon_w = -94.2
 lon_e = -93.5
 res_arcsec = 30
 point_step_deg = 0.25
-start = "2025-06-01"
+start = "2025-01-01"
 end = "2025-12-31"
 dt = "1h"
 

@@ -38,13 +38,13 @@
 </script>
 
 <figure class="min-w-0">
-  <figcaption class="flex items-baseline justify-between gap-x-3 text-xs">
+  <figcaption class="flex flex-wrap items-baseline justify-between gap-x-3 text-xs">
     {#if paired}
-      <span class="mono min-w-0 truncate">{name} <span class="muted">vs</span> {obsName}</span>
-      <span class="mono muted shrink-0">{unit} · {points.length}+{obs.length} pts</span>
+      <span class="mono">{name} <span class="muted">vs</span> {obsName}</span>
+      <span class="mono muted">{unit} · {points.length}+{obs.length} pts</span>
     {:else}
-      <span class="mono min-w-0 truncate">{name}</span>
-      <span class="mono muted shrink-0">{unit} · {points.length} pts</span>
+      <span class="mono">{name}</span>
+      <span class="mono muted">{unit} · {points.length} pts</span>
     {/if}
   </figcaption>
   <div class="mt-1 flex items-start gap-2">
