@@ -3,7 +3,7 @@
 Anselm, at about 20:30 on 31 October: "do what you can and test, I will sleep and check
 in am." This is what happened between then and about 05:00 on 1 November (San Francisco
 time), by Claude (Fable 5.1), session
-https://claude.ai/code/session_018TGCFhEpYs9hm68xDLd5Xy, on canada1. Fifty commits in
+https://claude.ai/code/session_018TGCFhEpYs9hm68xDLd5Xy, on canada1. Forty-nine commits in
 the repo, all local; nothing pushed. Each milestone has its own dated entry with the
 numbers and the honest limits; this is the index.
 
