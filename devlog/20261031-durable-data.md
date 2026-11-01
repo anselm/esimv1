@@ -151,3 +151,26 @@ find those bytes in 2031. So:
 That is a dedicated store in the end, but one that grows only as fast as real runs need it,
 and an index for everything else. The decision deferred: whether users' private assets go in
 the same bucket under their prefix or in storage they bring. Not needed before stage 5.
+
+## Addendum, same day: registry in scope, warehouse out
+
+Anselm: "a simulation service needs a data warehouse of some kind I think? A registry of
+sources? Or is that out of scope?"
+
+In scope, and load-bearing: a registry of sources. The brief's manifest pins data by hash and
+its validation needs observation series with provenance, so the kernel cannot run a
+reproducible, scorable simulation without a registry. It is one of the three state kinds in
+the brief (reference data behind a query interface). Deliverables D7 and D8 above are that
+registry: catalog as text in the wiki repo, fetcher with hash verification, mirror on demand,
+event tables with known_since.
+
+Out of scope: a data warehouse in the usual sense. No general ETL pipelines, no analytical
+query engine, no dashboards over the data, no attempt to hold the world's geodata. We index,
+fetch, verify, cache and mirror what runs need, and we transform only inside modules and the
+derived-data cache. If a case needs a transformation at scale (a national parcel layer
+reprojected and tiled), it is a derived asset with a recipe, built once and catalogued, not a
+warehouse feature.
+
+The line: anything required to make a run reproducible and scorable is in; anything that
+serves analysis of data for its own sake is out. The registry can later grow toward a
+warehouse if users ask for it, but the kernel does not depend on that.
