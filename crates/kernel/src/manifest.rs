@@ -7,6 +7,10 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Manifest {
     pub run: Run,
+    /// Optional `[place]` table: a window, resolution and gauge stated once and inherited
+    /// by every module that does not set the same keys itself.
+    #[serde(default)]
+    pub place: Option<toml::Value>,
     #[serde(default, rename = "module")]
     pub modules: Vec<ModuleEntry>,
 }
@@ -42,7 +46,19 @@ fn empty_table() -> toml::Value { toml::Value::Table(Default::default()) }
 
 impl Manifest {
     pub fn parse(text: &str) -> Result<Manifest, String> {
-        toml::from_str(text).map_err(|e| format!("manifest: {e}"))
+        let mut m: Manifest = toml::from_str(text).map_err(|e| format!("manifest: {e}"))?;
+        m.fold_place();
+        Ok(m)
+    }
+    /// Copy every key of `[place]` into each module's params where the module has not
+    /// set that key. Done at parse time so the check and the build see the same params.
+    pub fn fold_place(&mut self) {
+        let Some(toml::Value::Table(place)) = &self.place else { return };
+        for e in &mut self.modules {
+            if let toml::Value::Table(t) = &mut e.params {
+                for (k, v) in place { t.entry(k.clone()).or_insert_with(|| v.clone()); }
+            }
+        }
     }
     pub fn start(&self) -> Result<Time, String> { Time::parse(&self.run.start) }
     pub fn end(&self) -> Result<Time, String> { Time::parse(&self.run.end) }

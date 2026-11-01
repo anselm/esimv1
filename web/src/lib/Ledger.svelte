@@ -22,15 +22,23 @@
     </span>
   </div>
 
-  <!-- one square per close -->
-  <div class="mt-2 flex flex-wrap gap-[3px]" role="img" aria-label="{closes.length} ledger closes, {leaks} leaks">
-    {#each closes as c, i (c.t)}
-      <span
-        class="h-3 w-3 rounded-[2px] {c.ok ? 'bg-ok/80' : 'bg-leak'}"
-        title="{isoTime(c.t)} · {c.ok ? 'ok' : 'LEAK'} · max_leak {c.max_leak}"
-      ></span>
-    {/each}
-  </div>
+  <!-- one square per close while that fits; past 120 closes, a strip with only the leaks drawn -->
+  {#if closes.length <= 120}
+    <div class="mt-2 flex flex-wrap gap-[3px]" role="img" aria-label="{closes.length} ledger closes, {leaks} leaks">
+      {#each closes as c, i (c.t)}
+        <span
+          class="h-3 w-3 rounded-[2px] {c.ok ? 'bg-ok/80' : 'bg-leak'}"
+          title="{isoTime(c.t)} · {c.ok ? 'ok' : 'LEAK'} · max_leak {c.max_leak}"
+        ></span>
+      {/each}
+    </div>
+  {:else}
+    <div class="relative mt-2 h-2 w-full rounded-[2px] bg-ok/60" role="img" aria-label="{closes.length} ledger closes, {leaks} leaks">
+      {#each closes.filter((c) => !c.ok) as c (c.t)}
+        <span class="absolute top-0 h-2 w-0.5 bg-leak" style="left:{((c.t - closes[0].t) / Math.max(1, closes[closes.length - 1].t - closes[0].t)) * 100}%" title="{isoTime(c.t)} · LEAK · max_leak {c.max_leak}"></span>
+      {/each}
+    </div>
+  {/if}
 
   {#if last}
     <table class="mt-3 text-xs">

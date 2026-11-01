@@ -1,0 +1,37 @@
+[run]
+name = "boone-dry-summer-2025"
+start = "2025-04-01"
+end = "2025-10-31"
+seed = 1
+close_every = "1d"
+notes = "Simulate the 2025 growing season in the Boone River basin (Iowa). Includes ERA5 weather, clear-sky irradiance, surface heat slab, basin water balance, crop growth and deer grazing. Drafted by gpt-oss:120b on canada1 from a plain-language description; scores added by hand."
+
+[[module]]
+name = "weather"
+kind = "weather.era5"
+[module.params]
+start = "2025-01-01"
+end = "2025-12-31"
+
+[[module]]
+name = "sun"
+kind = "sun.irradiance"
+
+[[module]]
+name = "heat"
+kind = "heat.slab"
+
+[[module]]
+name = "basin"
+kind = "water.basin"
+
+[[module]]
+name = "crop"
+kind = "veg.crop"
+
+[[module]]
+name = "deer"
+kind = "fauna.herbivore"
+
+[audit]
+scores = [["hydro.q_sim_daily_m3_s", "hydro.q_obs_daily_m3_s"], ["veg.ndvi_sim_16d", "veg.ndvi_obs_16d"]]

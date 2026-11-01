@@ -1,0 +1,42 @@
+# P1: the bottom of the planetary cascade in one box. Observed global emissions (fossil and
+# land use) enter a carbon ledger; an impulse-response carbon cycle keeps part of them in
+# the air; a two-layer energy balance turns the extra CO2 into forcing and warms the
+# surface and the deep ocean. Nothing is tuned to the curves it is scored against:
+# Mauna Loa and Law Dome CO2, HadCRUT5 and GISTEMP temperature. CO2 only; other gases and
+# aerosols are left out and the gap is part of the result.
+
+[run]
+name = "p1-planet-co2-1850-2025"
+start = "1850-01-01"
+end = "2025-01-01"
+seed = 1
+close_every = "30d"
+notes = "Zero-dimensional planet, 175 years, monthly steps."
+
+[audit]
+scores = [["carbon.co2_ppm", "obs.co2_ppm"], ["energy.gmst_anom_c", "obs.gmst_hadcrut5_c"], ["energy.gmst_anom_c", "obs.gmst_gistemp_c"]]
+
+[[module]]
+name = "emissions"
+kind = "carbon.emissions"
+[module.params]
+include_land_use = true
+
+[[module]]
+name = "carbon"
+kind = "carbon.pools"
+[module.params]
+co2_start_ppm = 286.8
+
+[[module]]
+name = "energy"
+kind = "energy.twolayer"
+[module.params]
+co2_ref_ppm = 286.8
+
+[[module]]
+name = "obs"
+kind = "obs.planet"
+[module.params]
+baseline_from = 1850
+baseline_to = 1900

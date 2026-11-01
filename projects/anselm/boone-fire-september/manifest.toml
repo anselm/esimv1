@@ -1,0 +1,85 @@
+# M7 Tearing: the fire hazard from data/events/hazards.toml, forced on 20 September 2025
+# at a point in the northern basin, on top of the M6 stack. A what-if: what does a dry
+# September field fire do to the crop, the carbon ledger and the deer? Run also with
+# setting = "on" (stochastic ignitions from the module's seeded stream) as an ensemble.
+
+[run]
+name = "m7-fire-boone-sept"
+start = "2025-04-01"
+end = "2025-09-20"
+seed = 1
+close_every = "1d"
+snapshot_every = "10d"
+
+[[module]]
+name = "wx"
+kind = "weather.era5"
+[module.params]
+lat_s = 42.3
+lat_n = 43.2
+lon_w = -94.2
+lon_e = -93.5
+res_arcsec = 30
+start = "2025-01-01"
+end = "2025-12-31"
+dt = "1h"
+
+[[module]]
+name = "sun"
+kind = "sun.irradiance"
+[module.params]
+lat_s = 42.3
+lat_n = 43.2
+lon_w = -94.2
+lon_e = -93.5
+res_arcsec = 30
+dt = "1h"
+report_every = "90d"
+
+[[module]]
+name = "water"
+kind = "water.basin"
+[module.params]
+forcing = "wx"
+lat_s = 42.3
+lat_n = 43.2
+lon_w = -94.2
+lon_e = -93.5
+res_arcsec = 30
+dt = "1h"
+report_every = "30d"
+
+[[module]]
+name = "veg"
+kind = "veg.crop"
+[module.params]
+lat_s = 42.3
+lat_n = 43.2
+lon_w = -94.2
+lon_e = -93.5
+res_arcsec = 30
+dt = "1h"
+
+[[module]]
+name = "deer"
+kind = "fauna.herbivore"
+[module.params]
+res_arcsec = 30
+
+[[module]]
+name = "coyote"
+kind = "fauna.predator"
+[module.params]
+res_arcsec = 30
+
+[[module]]
+name = "fire"
+kind = "hazard.fire"
+[module.params]
+res_arcsec = 30
+hazard_id = "cropland-fire-corn-belt"
+setting = "forced"
+forced_date = "2025-09-05"
+forced_lat = 42.75
+forced_lon = -93.85
+spread_base = 0.9   # what-if: an extreme dry, windy day; the default 0.35 does not spread in Iowa

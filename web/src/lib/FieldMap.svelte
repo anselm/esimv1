@@ -6,7 +6,7 @@
   import { isoDate, num } from './fmt.js'
   import { LUT, RAMP_CSS } from './ramp.js'
 
-  let { name, field, base } = $props()
+  let { name, field, base, cursor = null } = $props()
 
   const grid = $derived(field.grid)
   const times = $derived(field.times ?? [])
@@ -35,6 +35,13 @@
   )
 
   let idx = $state(0)
+  // with a shared cursor, show the last frame at or before it
+  $effect(() => {
+    if (cursor === null || !times.length) return
+    let i = 0
+    while (i + 1 < times.length && times[i + 1] <= cursor) i++
+    idx = i
+  })
   let width = $state(320)
   const height = $derived(Math.round(width * aspect))
 
@@ -172,13 +179,15 @@
   <!-- time -->
   <div class="mono mt-1.5 flex items-center gap-3 text-xs">
     <span class="muted">{times.length ? isoDate(times[idx]) : '—'}</span>
-    {#if times.length > 1}
+    {#if times.length > 1 && cursor === null}
       <input
         type="range" min="0" max={times.length - 1} step="1" bind:value={idx}
         class="h-1 flex-1 accent-brand"
         aria-label="frame"
       />
-      <span class="muted">{idx + 1}/{times.length}</span>
+    {/if}
+    {#if times.length > 1}
+      <span class="muted ml-auto">{idx + 1}/{times.length}</span>
     {/if}
   </div>
 </figure>

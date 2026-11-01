@@ -1,0 +1,7 @@
+# A project: who asked for what, in their words, and the manifest beside it.
+area = "anselm"
+name = "boone-predators-and-prey"
+title = "Deer and predators in the Boone basin, 2025"
+description = "Crop and grass growth from ERA5 weather, a deer herd grazing it, a predator cohort eating the deer; ledgers for animals, carbon, energy and water."
+created = "2026-11-01"
+by = "anselm, via claude 2026-11-01"

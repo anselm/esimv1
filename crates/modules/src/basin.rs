@@ -94,7 +94,7 @@ impl Basin {
             usgs_site: param_str(p, "usgs_site", "05481000").to_string(),
             lat_s: param_f64(p, "lat_s", 42.3), lat_n: param_f64(p, "lat_n", 43.2),
             lon_w: param_f64(p, "lon_w", -94.2), lon_e: param_f64(p, "lon_e", -93.5),
-            res_arcsec: param_f64(p, "res_arcsec", 15.0),
+            res_arcsec: param_f64(p, "res_arcsec", 30.0),
             gauge_lat: param_f64(p, "gauge_lat", 42.4319722), gauge_lon: param_f64(p, "gauge_lon", -93.8059444),
             snap_radius: param_f64(p, "snap_radius", 3.0) as usize,
             obs_hour_utc: param_f64(p, "obs_hour_utc", 13.0) as i64,
@@ -229,15 +229,16 @@ impl Module for Basin {
         let snowing = tmean < self.snow_t_c;
         let melt_mm = if tmean > 0.0 { self.ddf_mm_per_c_day * tmean / steps_per_day } else { 0.0 };
         // energy for evaporation from the sun's field (J per cell footprint this step)
-        let energy: Option<Vec<f32>> = ctx.world_read(&self.energy_source).map(|f| f.data.clone());
+        let grid = self.grid.clone().unwrap();
+        let energy: Option<Vec<f32>> = ctx.world_read_on(&self.energy_source, &grid).map(|f| f.data.clone());
         let drain_frac = self.drain_per_day * dt / 86_400.0;
         // gridded forcing, if asked for and present: per-cell precipitation this step and air temperature
-        let wx_p: Option<Vec<f32>> = if self.forcing == "wx" { ctx.world_read("wx.precip_mm").map(|f| f.data.clone()) } else { None };
-        let wx_t: Option<Vec<f32>> = if self.forcing == "wx" { ctx.world_read("wx.t2m_c").map(|f| f.data.clone()) } else { None };
+        let wx_p: Option<Vec<f32>> = if self.forcing == "wx" { ctx.world_read_on("wx.precip_mm", &grid).map(|f| f.data.clone()) } else { None };
+        let wx_t: Option<Vec<f32>> = if self.forcing == "wx" { ctx.world_read_on("wx.t2m_c", &grid).map(|f| f.data.clone()) } else { None };
         let steps_per_day_f = steps_per_day;
-        let lai: Option<Vec<f32>> = if self.lai_coupling { ctx.world_read("veg.lai").map(|f| f.data.clone()) } else { None };
+        let lai: Option<Vec<f32>> = if self.lai_coupling { ctx.world_read_on("veg.lai", &grid).map(|f| f.data.clone()) } else { None };
         // a rule's perennial cover: deeper rooting and better structure hold more water
-        let no_crop: Option<Vec<f32>> = ctx.world_read("rules.no_crop").map(|f| f.data.clone());
+        let no_crop: Option<Vec<f32>> = ctx.world_read_on("rules.no_crop", &grid).map(|f| f.data.clone());
 
         let (mut to_snow, mut to_soil, mut melt, mut evap, mut to_chan) = (0.0f64, 0.0, 0.0, 0.0, 0.0);
         let mut outlet = 0.0f64;
@@ -382,7 +383,7 @@ impl Basin {
             .param("station", "USC00138806", "", "GHCN-Daily station for rain and temperature (forcing = station)")
             .param("usgs_site", "05481000", "", "USGS site for observed discharge and nitrate")
             .param("lat_s", 42.3, "deg", "").param("lat_n", 43.2, "deg", "").param("lon_w", -94.2, "deg", "").param("lon_e", -93.5, "deg", "")
-            .param("res_arcsec", 15.0, "arcsec", "")
+            .param("res_arcsec", 30.0, "arcsec", "")
             .param("gauge_lat", 42.4319722, "deg", "USGS 05481000").param("gauge_lon", -93.8059444, "deg", "USGS 05481000")
             .param("snap_radius", 3, "cells", "gauge snapped to the highest accumulation within this radius")
             .param("obs_hour_utc", 13, "h", "daily total booked at the station's observation time").param("local_offset_h", -6, "h", "")

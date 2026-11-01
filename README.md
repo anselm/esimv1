@@ -26,9 +26,17 @@ framework against the use cases as rungs land.
   the first planetary rung, zero-dimensional: observed emissions into a carbon ledger,
   impulse-response sinks, a two-layer energy balance, and the records (Mauna Loa, Law
   Dome, HadCRUT5, GISTEMP) as scoreboards.
-- `crates/cli`: `esim run | verify | ensemble | sweep | score | check | describe | kinds`.
-- `web/`: a sparse viewer (Svelte 5, Vite) for runs, ledgers, maps, scores, paired
-  sim/obs charts and ensemble bands.
+- `crates/audit`: the independent auditor of a finished run: spend-down of every ledger
+  stock, diversity of populations, shocks and recovery, tears, a verdict.
+- `crates/cli`: `esim run | verify | ensemble | sweep | score | audit | check | describe |
+  kinds | project new/run | projects`.
+- `projects/`: a folder per project, `<area>/<name>/{project.toml, manifest.toml, runs/}`.
+  The folder is the project; the CLI writes it and anyone can run it by hand.
+- `web/`: the viewer (Svelte 5, Vite): projects first, a project's runs, a run with its
+  maps under one time cursor, the audit, scores, charts, ledgers; and `server.mjs`, a
+  thin socket.io layer over the CLI that lists projects, drafts a manifest from a
+  description (Claude, or a local model through ollama when the API is not usable),
+  checks it, creates the folder and runs it.
 - `data/`: `catalog.toml` (assets and places), `catalog.lock.toml` (hashes of fetched
   files), `events/` (calendar and hazards), `cache/` (fetched bytes, not in git).
 
@@ -48,7 +56,11 @@ cargo build --release
 ./target/release/esim ensemble manifests/f1-boone-forecast.toml --branches 31 --threads 8
 ./target/release/esim run manifests/p1-planet-co2-1850-2025.toml  # 175 years of planet, 1 s
 cargo test --release                                              # ~30 s with the data cached
+./target/release/esim project new me/first --manifest manifests/m0-buckets.toml
+./target/release/esim project run me/first                         # into projects/me/first/runs
+./target/release/esim audit projects/me/first/runs/<id>            # the auditor's verdict
 cd web && npm install && npm run dev                              # viewer at http://localhost:5173
+cd web && node server.mjs                                         # project server on :5181 (needs ANTHROPIC_API_KEY for drafts)
 ```
 
 First runs fetch about 200 MB (four elevation tiles, weather, MODIS composites, gauge
@@ -74,6 +86,17 @@ The contract between kernel and module, and the wire binding that will let a mod
 as a separate process or a wasm component, is `docs/protocol-v0.md`. A test runs real
 manifests and compares everything the log records against the declarations, so a
 description that drifts from its code fails the build.
+
+## Scoring and tearing
+
+A manifest may name its scoreboards (`[audit] scores = [["sim.series", "obs.series"]]`)
+and `esim run` scores them. The auditor then reads the finished run folder, never the
+live run: every ledger stock's change over the run (spent down, accumulating, steady),
+Shannon evenness over population stocks, shock episodes from the log (`fire.burn` and
+`hazard.*` by default; `[audit] shock_topics` to change) with each stock's drop and time
+to recover compared against the time to the next shock, extinctions and failed closes as
+tears, and a verdict: holds, stretching or tearing. It says what it could not measure
+rather than inventing a number. Output: `audit.json` beside `run.json`.
 
 ## Rules of the house for this repo
 

@@ -3,6 +3,10 @@
 //! esim check <manifest.toml>              check the wiring from the modules' descriptions, fetching nothing
 //! esim describe <manifest.toml>           the wired modules' descriptions and findings as JSON
 //! esim kinds [--json]                     list module kinds, or describe each under default parameters
+//! esim audit <run_dir>                    the independent auditor: spend-down, diversity, shocks, tears
+//! esim project new <area/name> [--manifest f] [--title t] [--description d]   a project folder under projects/
+//! esim project run <area/name>            run a project's manifest into its runs/
+//! esim projects [--json]                  list projects (and refresh projects/index.json)
 
 use esim_kernel::{Kernel, Manifest, Module};
 use std::fs;
@@ -103,7 +107,7 @@ fn fold_params(m: &mut Manifest) {
     }
 }
 
-fn run(path: &Path, out_root: &Path) -> Result<(), String> {
+fn run(path: &Path, out_root: &Path) -> Result<PathBuf, String> {
     let manifest = load(path)?;
     let mut k = Kernel::new(manifest.clone(), factory)?;
     let out = k.run();
@@ -139,8 +143,109 @@ fn run(path: &Path, out_root: &Path) -> Result<(), String> {
         println!("ledger   {} [{}]: {} transfers, {} closes, worst leak {:.3e} {}, {}",
             l.name, l.unit, l.transfers, l.closes.len(), worst, l.unit, if l.all_closed { "CLOSED" } else { "LEAK" });
     }
+    // scoreboards the manifest names, then the auditor
+    if let Ok(v) = toml::from_str::<toml::Value>(&mtext) {
+        for pair in v.get("audit").and_then(|a| a.get("scores")).and_then(|x| x.as_array()).into_iter().flatten() {
+            if let (Some(sim), Some(obs)) = (pair.get(0).and_then(|x| x.as_str()), pair.get(1).and_then(|x| x.as_str())) {
+                if let Err(e) = score(&dir, sim, obs) { eprintln!("score    {sim} vs {obs}: {e}"); }
+            }
+        }
+    }
+    audit(&dir)?;
     println!("out      {}", dir.display());
     if !out.all_ledgers_closed { return Err("a ledger did not close".into()); }
+    Ok(dir)
+}
+
+/// esim audit <run_dir>: write audit.json and print the verdict.
+fn audit(dir: &Path) -> Result<(), String> {
+    let a = esim_audit::audit_dir(dir)?;
+    fs::write(dir.join("audit.json"), serde_json::to_string_pretty(&a).unwrap()).map_err(|e| e.to_string())?;
+    println!("audit    {}: {}", a.verdict, a.reasons.join("; "));
+    for s in &a.silent { println!("         silent: {s}"); }
+    Ok(())
+}
+
+// ---- projects: a folder per project under projects/<area>/<name>, holding project.toml,
+// manifest.toml and runs/. The folder is the project; the viewer and the server only read it.
+
+fn projects_root() -> PathBuf { esim_root().join("projects") }
+
+fn project_dir(path: &str) -> Result<PathBuf, String> {
+    let parts: Vec<&str> = path.trim_matches('/').split('/').collect();
+    if parts.len() != 2 || parts.iter().any(|p| p.is_empty() || p.starts_with('.') || !p.chars().all(|c| c.is_ascii_alphanumeric() || c == '-' || c == '_')) {
+        return Err(format!("project path must be <area>/<name> in [a-z0-9-_], got {path}"));
+    }
+    Ok(projects_root().join(parts[0]).join(parts[1]))
+}
+
+fn project_new(path: &str, manifest: Option<&Path>, title: Option<&str>, description: Option<&str>, by: &str) -> Result<(), String> {
+    let dir = project_dir(path)?;
+    if dir.exists() { return Err(format!("project {path} exists at {}", dir.display())); }
+    let m = match manifest { Some(p) => load(p)?, None => return Err("a manifest is required (--manifest file)".into()) };
+    fs::create_dir_all(dir.join("runs")).map_err(|e| e.to_string())?;
+    fs::copy(manifest.unwrap(), dir.join("manifest.toml")).map_err(|e| e.to_string())?;
+    let (area, name) = path.trim_matches('/').split_once('/').unwrap();
+    let meta = format!(
+        "# A project: who asked for what, in their words, and the manifest beside it.
+area = {}
+name = {}
+title = {}
+description = {}
+created = {}
+by = {}
+",
+        toml::Value::String(area.into()), toml::Value::String(name.into()),
+        toml::Value::String(title.unwrap_or(&m.run.name).into()), toml::Value::String(description.unwrap_or(&m.run.notes).into()),
+        toml::Value::String(esim_registry::fetch::today_string()), toml::Value::String(by.into()));
+    fs::write(dir.join("project.toml"), meta).map_err(|e| e.to_string())?;
+    fs::write(dir.join("runs").join("index.json"), "[]").map_err(|e| e.to_string())?;
+    projects_index()?;
+    println!("project  {path} at {}", dir.display());
+    Ok(())
+}
+
+fn project_run(path: &str) -> Result<(), String> {
+    let dir = project_dir(path)?;
+    if !dir.join("manifest.toml").exists() { return Err(format!("no project at {}", dir.display())); }
+    run(&dir.join("manifest.toml"), &dir.join("runs"))?;
+    projects_index()?;
+    Ok(())
+}
+
+/// projects/index.json: every project with its metadata and its runs' index rows.
+fn projects_index() -> Result<Vec<serde_json::Value>, String> {
+    let root = projects_root();
+    fs::create_dir_all(&root).map_err(|e| e.to_string())?;
+    let mut rows = Vec::new();
+    for area in fs::read_dir(&root).map_err(|e| e.to_string())?.flatten() {
+        if !area.path().is_dir() { continue; }
+        for proj in fs::read_dir(area.path()).map_err(|e| e.to_string())?.flatten() {
+            let d = proj.path();
+            let Ok(meta) = fs::read_to_string(d.join("project.toml")) else { continue };
+            let meta: toml::Value = toml::from_str(&meta).unwrap_or(toml::Value::Table(Default::default()));
+            let runs: serde_json::Value = fs::read_to_string(d.join("runs").join("index.json")).ok().and_then(|t| serde_json::from_str(&t).ok()).unwrap_or(serde_json::json!([]));
+            let manifest = fs::read_to_string(d.join("manifest.toml")).unwrap_or_default();
+            let kinds: Vec<String> = Manifest::parse(&manifest).map(|m| m.modules.iter().map(|e| e.kind.clone()).collect()).unwrap_or_default();
+            let path = format!("{}/{}", area.file_name().to_string_lossy(), proj.file_name().to_string_lossy());
+            let mut row = serde_json::to_value(&meta).unwrap_or(serde_json::json!({}));
+            row["path"] = serde_json::json!(path);
+            row["kinds"] = serde_json::json!(kinds);
+            row["runs"] = runs;
+            rows.push(row);
+        }
+    }
+    rows.sort_by(|a, b| a["path"].as_str().cmp(&b["path"].as_str()));
+    fs::write(root.join("index.json"), serde_json::to_string_pretty(&rows).unwrap()).map_err(|e| e.to_string())?;
+    Ok(rows)
+}
+
+fn projects(json: bool) -> Result<(), String> {
+    let rows = projects_index()?;
+    if json { println!("{}", serde_json::to_string_pretty(&rows).unwrap()); return Ok(()); }
+    for r in &rows {
+        println!("{:40} {:3} runs  {}", r["path"].as_str().unwrap_or(""), r["runs"].as_array().map(|a| a.len()).unwrap_or(0), r["title"].as_str().unwrap_or(""));
+    }
     Ok(())
 }
 
@@ -424,7 +529,7 @@ fn main() {
         Some("run") => {
             let path = args.get(2).map(PathBuf::from);
             let out = args.iter().position(|a| a == "--out").and_then(|i| args.get(i + 1)).map(PathBuf::from).unwrap_or_else(|| PathBuf::from("runs"));
-            match path { Some(p) => run(&p, &out), None => Err("usage: esim run <manifest.toml> [--out runs]".into()) }
+            match path { Some(p) => run(&p, &out).map(|_| ()), None => Err("usage: esim run <manifest.toml> [--out runs]".into()) }
         }
         Some("verify") => match args.get(2) { Some(p) => verify(Path::new(p)), None => Err("usage: esim verify <manifest.toml>".into()) },
         Some("ensemble") => {
@@ -451,9 +556,19 @@ fn main() {
             _ => Err("usage: esim score <run_dir> <sim_series> <obs_series>".into()),
         },
         Some("kinds") => kinds(args.iter().any(|a| a == "--json")),
+        Some("audit") => match args.get(2) { Some(d) => audit(Path::new(d)), None => Err("usage: esim audit <run_dir>".into()) },
+        Some("projects") => projects(args.iter().any(|a| a == "--json")),
+        Some("project") => {
+            let get = |flag: &str| args.iter().position(|a| a == flag).and_then(|i| args.get(i + 1)).map(String::as_str);
+            match (args.get(2).map(String::as_str), args.get(3)) {
+                (Some("new"), Some(p)) => project_new(p, get("--manifest").map(Path::new), get("--title"), get("--description"), get("--by").unwrap_or("cli")),
+                (Some("run"), Some(p)) => project_run(p),
+                _ => Err("usage: esim project new <area/name> --manifest <file> [--title t] [--description d] [--by who] | esim project run <area/name>".into()),
+            }
+        }
         Some("check") => match args.get(2) { Some(p) => check(Path::new(p)), None => Err("usage: esim check <manifest.toml>".into()) },
         Some("describe") => match args.get(2) { Some(p) => describe(Path::new(p)), None => Err("usage: esim describe <manifest.toml>".into()) },
-        _ => Err("usage: esim run|verify|ensemble|sweep|score|check|describe|kinds [--json]".into()),
+        _ => Err("usage: esim run|verify|ensemble|sweep|score|audit|check|describe|kinds|project|projects".into()),
     };
     if let Err(e) = res { eprintln!("error: {e}"); std::process::exit(1); }
 }

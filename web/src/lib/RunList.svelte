@@ -1,5 +1,5 @@
 <script>
-  import { go } from './router.svelte.js'
+  import { link } from './router.svelte.js'
   import { isoDate, num } from './fmt.js'
   import Status from './Status.svelte'
 
@@ -44,6 +44,7 @@
   }
 </script>
 
+<a use:link={{}} class="floating left-3 top-3 hover:text-brand">← projects</a>
 <div class="floating right-3 top-3 mono text-xs muted select-none">esim</div>
 
 {#await load()}
@@ -52,13 +53,12 @@
   {#if runs.length === 0}
     <p class="muted text-sm">no runs yet</p>
   {:else}
-    <div class="label mb-2">{runs.length} {runs.length === 1 ? 'run' : 'runs'}</div>
+    <div class="label mb-2">{runs.length} loose {runs.length === 1 ? 'run' : 'runs'} · not in any project</div>
     <ul class="divide-y divide-neutral-200 dark:divide-neutral-800">
       {#each runs as r (r.id)}
         <li>
           <a
-            href="?run={encodeURIComponent(r.id)}"
-            onclick={(e) => { e.preventDefault(); go(r.id) }}
+            use:link={{ run: r.id }}
             class="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 py-3 sm:grid-cols-[1fr_auto_auto_auto] sm:items-center hover:bg-brand-soft/40 -mx-2 px-2 rounded-[3px]"
           >
             <span class="font-medium">{r.name}</span>

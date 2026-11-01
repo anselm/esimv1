@@ -4,7 +4,7 @@
   // (neutral text colour), with a two-item legend.
   import { isoDate, num } from './fmt.js'
 
-  let { name, unit, points = [], t0, t1, obs = null, obsName = null } = $props()
+  let { name, unit, points = [], t0, t1, obs = null, obsName = null, cursor = null } = $props()
 
   let width = $state(320)
   const H = 120
@@ -28,6 +28,17 @@
   const path = $derived(toPath(points))
   const obsPath = $derived(paired ? toPath(obs) : '')
 
+  // value at the cursor: the last point at or before it
+  const at = (pts, t) => {
+    if (t === null || !pts.length) return null
+    let lo = 0, hi = pts.length - 1
+    if (pts[0][0] > t) return null
+    while (lo < hi) { const mid = (lo + hi + 1) >> 1; if (pts[mid][0] <= t) lo = mid; else hi = mid - 1 }
+    return pts[lo][1]
+  }
+  const vSim = $derived(at(points, cursor))
+  const vObs = $derived(paired ? at(obs, cursor) : null)
+
   // a few evenly spaced time ticks, labelled with ISO dates
   const ticks = $derived.by(() => {
     const n = width < 360 ? 2 : width < 600 ? 3 : 4
@@ -47,6 +58,13 @@
       <span class="mono muted">{unit} · {points.length} pts</span>
     {/if}
   </figcaption>
+  {#if cursor !== null && (vSim !== null || vObs !== null)}
+    <div class="mono text-[11px] tabular-nums">
+      <span class="text-brand">{vSim === null ? '—' : num(+vSim.toPrecision(5))}</span>
+      {#if paired}<span class="muted"> · obs </span><span>{vObs === null ? '—' : num(+vObs.toPrecision(5))}</span>{/if}
+      <span class="muted"> {unit}</span>
+    </div>
+  {/if}
   <div class="mt-1 flex items-start gap-2">
     <div class="mono flex h-[120px] w-16 shrink-0 flex-col justify-between py-1 text-right text-[10px] muted" style="padding-bottom: {padB}px">
       <span>{num(yMax)}</span>
@@ -70,6 +88,11 @@
         {/if}
         {#if points.length}
           <path d={path} fill="none" class="stroke-brand" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke" />
+        {/if}
+        {#if cursor !== null && cursor >= tMin && cursor <= tMax}
+          <line x1={sx(cursor)} y1={padT} x2={sx(cursor)} y2={H - padB} class="stroke-neutral-400 dark:stroke-neutral-500" stroke-width="1" />
+          {#if vSim !== null}<circle cx={sx(cursor)} cy={sy(vSim)} r="2.5" class="fill-brand" />{/if}
+          {#if vObs !== null}<circle cx={sx(cursor)} cy={sy(vObs)} r="2.5" class="fill-neutral-900 dark:fill-neutral-100" />{/if}
         {/if}
       </svg>
     </div>

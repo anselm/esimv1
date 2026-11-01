@@ -127,5 +127,16 @@ impl<'a> Ctx<'a> {
     }
     /// Read a shared field as last written.
     pub fn world_read(&self, name: &str) -> Option<&WorldField> { self.world.get(name) }
+    /// Read a shared field that must be on this module's grid. A mismatch is a manifest
+    /// error (two modules given different windows or resolutions) and is reported as one
+    /// instead of an index out of bounds later.
+    pub fn world_read_on(&self, name: &str, grid: &LatLonGrid) -> Option<&WorldField> {
+        let f = self.world.get(name)?;
+        if &f.grid != grid {
+            panic!("{} reads field {name} written by {} on a {}x{} grid at {:.4} arcsec, but runs on a {}x{} grid at {:.4} arcsec; give every module one window and resolution (a [place] table in the manifest)",
+                self.me, f.owner, f.grid.nx, f.grid.ny, f.grid.dlon * 3600.0, grid.nx, grid.ny, grid.dlon * 3600.0);
+        }
+        Some(f)
+    }
     pub fn rng(&mut self) -> &mut Rng { self.rng }
 }

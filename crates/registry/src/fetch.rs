@@ -95,6 +95,8 @@ pub fn sha256_file(path: &Path) -> Result<(String, u64), String> {
     Ok((format!("{:x}", h.finalize()), total))
 }
 
+pub fn today_string() -> String { today() }
+
 fn today() -> String {
     let secs = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs() as i64;
     let days = secs.div_euclid(86_400);

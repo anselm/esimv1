@@ -1,0 +1,39 @@
+# M0: two buckets at two rates fed by one source. The water ledger must close.
+# Not a landscape: a formula check for the kernel, labelled as such.
+
+[run]
+name = "m0-buckets"
+start = "2026-01-01"
+end = "2026-01-31"
+seed = 42
+close_every = "1d"
+snapshot_every = "7d"
+notes = "Kernel seed proof: source (1h) -> upper bucket (6h) -> lower bucket (1d) -> sea."
+
+[[module]]
+name = "rain"
+kind = "water.source"
+[module.params]
+rate_m3_s = 0.5
+dt = "1h"
+from = "atmosphere"
+into = "upper"
+
+[[module]]
+name = "upper"
+kind = "water.bucket"
+[module.params]
+volume_m3 = 10000
+k_per_s = 2e-5
+dt = "6h"
+outlet = "lower"
+outlet_is_module = true
+
+[[module]]
+name = "lower"
+kind = "water.bucket"
+[module.params]
+volume_m3 = 50000
+k_per_s = 5e-6
+dt = "1d"
+outlet = "sea"

@@ -11,7 +11,10 @@ start = "1850-01-01"
 end = "2025-01-01"
 seed = 1
 close_every = "30d"
-notes = "Zero-dimensional planet, 175 years, monthly steps. Score: carbon.co2_ppm vs obs.co2_ppm; energy.gmst_anom_c vs obs.gmst_hadcrut5_c."
+notes = "Zero-dimensional planet, 175 years, monthly steps."
+
+[audit]
+scores = [["carbon.co2_ppm", "obs.co2_ppm"], ["energy.gmst_anom_c", "obs.gmst_hadcrut5_c"], ["energy.gmst_anom_c", "obs.gmst_gistemp_c"]]
 
 [[module]]
 name = "emissions"

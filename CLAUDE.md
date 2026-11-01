@@ -17,7 +17,10 @@ how to run it. Not deployed anywhere; it runs on canada1.
 - Devlog: `devlog/` (dated entries; read the tail first, especially the latest milestone
   entry and `20261031-fitness.md`).
 - Deploy: none. See `project.toml`.
-- Runs: `runs/` (gitignored). Viewer: `web/` (`npm run dev` serves `../runs`).
+- Runs: `runs/` (gitignored, loose runs) and `projects/<area>/<name>/runs/` (project runs).
+  Viewer: `web/` (`npm run dev` serves `../runs` and `../projects`; `node server.mjs` is the
+  project server on :5181, socket.io, proxied by Vite). On canada1 both are usually left
+  running: Vite on :5180, the server on :5181 (PIDs in the session scratchpad, kill by PID).
 - Data: `data/catalog.toml` is the registry's index; `data/cache/` holds fetched bytes
   (gitignored, about 200 MB when warm); `data/catalog.lock.toml` holds their hashes and
   is committed; `data/events/` holds the calendar and hazard tables.
@@ -49,5 +52,11 @@ how to run it. Not deployed anywhere; it runs on canada1.
   Law Dome, HadCRUT5, GISTEMP); NOAA's ocean heat content server was down on 2026-11-01,
   so that scoreboard is not wired yet. Model parameters there are published values
   recalled from memory and flagged as such in each describe; nothing is tuned.
+- `crates/audit` audits run folders after the fact; `esim run` calls it and writes
+  `audit.json`. Populations and watched stocks come from ledger closes, so a module that
+  wants the auditor to see a population must keep it as a declared stock in a ledger whose
+  unit is `individuals`. Season-long runs confound recovery with seasonality; say so.
+- The Anthropic API key in `~/.bashrc` had no credit on 2026-11-01 ("credit balance is too
+  low"); the project server then drafts with a local model through ollama and labels it.
 - A first ten-day river forecast was issued 2026-11-01 (`devlog/20261101-f1-first-forecast.md`)
   and is to be checked against USGS on or after 2026-11-11.

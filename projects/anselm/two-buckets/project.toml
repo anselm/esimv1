@@ -1,0 +1,7 @@
+# A project: who asked for what, in their words, and the manifest beside it.
+area = "anselm"
+name = "two-buckets"
+title = "Two buckets and a tap"
+description = "The trivial rung: a source feeding two leaky buckets at different rates; the water ledger must close. A formula check, labelled as one."
+created = "2026-11-01"
+by = "anselm, via claude 2026-11-01"

@@ -1,0 +1,132 @@
+[
+  {
+    "area": "anselm",
+    "by": "anselm, via claude 2026-11-01",
+    "created": "2026-11-01",
+    "description": "The M6 crop, deer and predator stack with a forced fire on 5 September 2025: a shock to measure recovery against.",
+    "kinds": [
+      "weather.era5",
+      "sun.irradiance",
+      "water.basin",
+      "veg.crop",
+      "fauna.herbivore",
+      "fauna.predator",
+      "hazard.fire"
+    ],
+    "name": "boone-fire-september",
+    "path": "anselm/boone-fire-september",
+    "runs": [
+      {
+        "all_ledgers_closed": true,
+        "digest": "ed758cab7490705b",
+        "end": 1758326400,
+        "events": 44770,
+        "id": "m7-fire-boone-sept-af5039cd-ed758cab",
+        "name": "m7-fire-boone-sept",
+        "seed": 1,
+        "start": 1743465600
+      }
+    ],
+    "title": "A September fire in the Boone basin"
+  },
+  {
+    "area": "anselm",
+    "by": "anselm, via claude 2026-11-01",
+    "created": "2026-11-01",
+    "description": "Crop and grass growth from ERA5 weather, a deer herd grazing it, a predator cohort eating the deer; ledgers for animals, carbon, energy and water.",
+    "kinds": [
+      "weather.era5",
+      "sun.irradiance",
+      "water.basin",
+      "veg.crop",
+      "fauna.herbivore",
+      "fauna.predator"
+    ],
+    "name": "boone-predators-and-prey",
+    "path": "anselm/boone-predators-and-prey",
+    "runs": [],
+    "title": "Deer and predators in the Boone basin, 2025"
+  },
+  {
+    "area": "anselm",
+    "by": "anselm, via claude 2026-11-01",
+    "created": "2026-11-01",
+    "description": "Observed emissions into a carbon ledger, impulse-response sinks, a two-layer energy balance; scored against Mauna Loa, Law Dome, HadCRUT5 and GISTEMP. The bottom of the planetary cascade.",
+    "kinds": [
+      "carbon.emissions",
+      "carbon.pools",
+      "energy.twolayer",
+      "obs.planet"
+    ],
+    "name": "planet-co2-1850-2025",
+    "path": "anselm/planet-co2-1850-2025",
+    "runs": [
+      {
+        "all_ledgers_closed": true,
+        "digest": "8d8d2ffbee4226b3",
+        "end": 1735689600,
+        "events": 12805,
+        "id": "p1-planet-co2-1850-2025-8a0a0e63-8d8d2ffb",
+        "name": "p1-planet-co2-1850-2025",
+        "seed": 1,
+        "start": -3786825600
+      }
+    ],
+    "title": "CO2 and warming since 1850, one box"
+  },
+  {
+    "area": "anselm",
+    "by": "anselm, via claude 2026-11-01",
+    "created": "2026-11-01",
+    "description": "The trivial rung: a source feeding two leaky buckets at different rates; the water ledger must close. A formula check, labelled as one.",
+    "kinds": [
+      "water.source",
+      "water.bucket",
+      "water.bucket"
+    ],
+    "name": "two-buckets",
+    "path": "anselm/two-buckets",
+    "runs": [
+      {
+        "all_ledgers_closed": true,
+        "digest": "4d08eea639976b96",
+        "end": 1769817600,
+        "events": 1743,
+        "id": "m0-buckets-499f95ca-4d08eea6",
+        "name": "m0-buckets",
+        "seed": 42,
+        "start": 1767225600
+      }
+    ],
+    "title": "Two buckets and a tap"
+  },
+  {
+    "area": "guest",
+    "by": "web test, manifest drafted by gpt-oss:120b",
+    "created": "2026-11-01",
+    "description": "I want to see the Boone River basin in Iowa through the growing season of 2025: the weather, the soil water, the crop growing, and deer grazing on it, with the river flow checked against the USGS gauge. Spring to autumn.",
+    "kinds": [
+      "weather.era5",
+      "sun.irradiance",
+      "heat.slab",
+      "water.basin",
+      "veg.crop",
+      "fauna.herbivore"
+    ],
+    "name": "boone-dry-summer-2025",
+    "path": "guest/boone-dry-summer-2025",
+    "runs": [
+      {
+        "all_ledgers_closed": true,
+        "digest": "8abbb6aedab6a74c",
+        "end": 1761868800,
+        "events": 74127,
+        "id": "boone-dry-summer-2025-b1f31d34-8abbb6ae",
+        "name": "boone-dry-summer-2025",
+        "seed": 1,
+        "start": 1743465600
+      }
+    ],
+    "title": "Boone basin, a dry summer"
+  }
+]

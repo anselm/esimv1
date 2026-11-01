@@ -56,9 +56,9 @@ impl Sun {
     pub fn new(name: &str, p: &toml::Value) -> Result<Sun, String> {
         let mut s = Sun {
             name: name.to_string(),
-            lat_s: param_f64(p, "lat_s", 42.3), lat_n: param_f64(p, "lat_n", 43.0),
-            lon_w: param_f64(p, "lon_w", -94.0), lon_e: param_f64(p, "lon_e", -93.5),
-            res_arcsec: param_f64(p, "res_arcsec", 15.0),
+            lat_s: param_f64(p, "lat_s", 42.3), lat_n: param_f64(p, "lat_n", 43.2),
+            lon_w: param_f64(p, "lon_w", -94.2), lon_e: param_f64(p, "lon_e", -93.5),
+            res_arcsec: param_f64(p, "res_arcsec", 30.0),
             dt: param_duration(p, "dt", "1h")?,
             report_every: param_duration(p, "report_every", "1d")?,
             n_az: param_f64(p, "horizon_azimuths", 16.0) as usize,
@@ -271,8 +271,8 @@ impl Sun {
     pub fn describe(name: &str, p: &toml::Value) -> esim_kernel::describe::Describe {
         esim_kernel::describe::Describe::new("sun.irradiance", name, "Clear-sky solar irradiance on real terrain every tick: sun position, air mass, slope incidence and horizon shadow; absorbed energy through the energy ledger.")
             .priority(0).dt(param_str(p, "dt", "1h"))
-            .param("lat_s", 42.3, "deg", "").param("lat_n", 43.0, "deg", "").param("lon_w", -94.0, "deg", "").param("lon_e", -93.5, "deg", "")
-            .param("res_arcsec", 15.0, "arcsec", "grid cell; the DEM is aggregated to it")
+            .param("lat_s", 42.3, "deg", "").param("lat_n", 43.2, "deg", "").param("lon_w", -94.2, "deg", "").param("lon_e", -93.5, "deg", "")
+            .param("res_arcsec", 30.0, "arcsec", "grid cell; the DEM is aggregated to it; every module in a manifest must use one window and resolution, so state them once in [place]")
             .param("dt", "1h", "", "").param("report_every", "1d", "", "")
             .param("horizon_azimuths", 16, "", "").param("horizon_km", 20.0, "km", "how far the horizon search looks")
             .param("transmittance", 0.7, "", "Meinel clear-sky placeholder; winter clearness above one exposed it (devlog 20261101-m4-weather)")

@@ -98,9 +98,19 @@ checksum = "00d174d5400e5e8fd687ad1049e2f578285fa914201b1af7e8b112a4546bd826"
 name = "esim"
 version = "0.0.1"
 dependencies = [
+ "esim-audit",
  "esim-kernel",
  "esim-modules",
  "esim-registry",
+ "serde",
+ "serde_json",
+ "toml",
+]
+
+[[package]]
+name = "esim-audit"
+version = "0.0.1"
+dependencies = [
  "serde",
  "serde_json",
  "toml",

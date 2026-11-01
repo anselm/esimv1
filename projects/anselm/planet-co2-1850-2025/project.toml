@@ -1,0 +1,7 @@
+# A project: who asked for what, in their words, and the manifest beside it.
+area = "anselm"
+name = "planet-co2-1850-2025"
+title = "CO2 and warming since 1850, one box"
+description = "Observed emissions into a carbon ledger, impulse-response sinks, a two-layer energy balance; scored against Mauna Loa, Law Dome, HadCRUT5 and GISTEMP. The bottom of the planetary cascade."
+created = "2026-11-01"
+by = "anselm, via claude 2026-11-01"
