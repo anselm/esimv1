@@ -240,3 +240,22 @@ fn m8_zoom_switch_conserves_the_count_both_ways() {
         assert_eq!(tail, got, "a run resumed while zoomed must replay exactly");
     });
 }
+
+#[test]
+fn m9_farm_agents_write_fields_the_crop_reads_and_money_closes() {
+    if !have_dem() { eprintln!("skipped: DEM tile not cached"); return; }
+    let cached: PathBuf = [env!("CARGO_MANIFEST_DIR"), "..", "..", "data", "cache"].iter().collect();
+    let have = |prefix: &str| std::fs::read_dir(&cached).map(|d| d.flatten().any(|e| e.file_name().to_string_lossy().starts_with(prefix))).unwrap_or(false);
+    if !have("open-meteo-era5_") || !have("modis-13a1_") { eprintln!("skipped: weather or MODIS not cached"); return; }
+    with_root(|| {
+        let m = load("m9-farms-boone-season.toml");
+        let out = Kernel::new(m, factory).unwrap().run();
+        assert!(out.all_ledgers_closed, "five ledgers including money must close");
+        assert!(out.ledgers.iter().any(|l| l.name == "money" && l.unit == "USD"));
+        let corn = out.series["agents.corn_ha"].points[0].1; let soy = out.series["agents.soy_ha"].points[0].1;
+        assert!(corn > 0.0 && soy > 0.0, "with a corn-on-corn penalty the basin should rotate: corn {corn} soy {soy}");
+        assert!(out.series.contains_key("agents.blocks_planted_day"), "agents must plant");
+        assert!(out.series["agents.revenue_usd_day"].points.iter().any(|p| p.1 > 0.0), "a harvest must be sold");
+        assert!(out.series.contains_key("agents.corn_bu_day") && out.series.contains_key("agents.soy_bu_day"));
+    });
+}

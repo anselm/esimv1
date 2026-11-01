@@ -43,7 +43,10 @@ pub struct Veg {
     ndvi_soil: f64, ndvi_max: f64, k_ndvi: f64,
     graze_max_frac: f64,
     burn_biomass_frac: f64, burn_litter_frac: f64,
+    /// soybean relative to corn: light-use efficiency and season length, and grass as perennial cover
+    soy_lue_factor: f64, soy_gdd_factor: f64, soy_grain_fraction: f64, grass_lai: f64,
     // state per basin cell
+    kind: Vec<f32>,
     lai: Vec<f64>, biomass_gc: Vec<f64>, litter_gc: Vec<f64>, gdd: Vec<f64>, stage: Vec<u8>, lai_at_senesce: Vec<f64>,
     seen_energy: u64,
     day_energy: Vec<f64>, day_t_sum: f64, day_t_n: u32, day_tmin: f64, warm_days: u32,
@@ -77,6 +80,8 @@ impl Veg {
             ndvi_soil: param_f64(p, "ndvi_soil", 0.18), ndvi_max: param_f64(p, "ndvi_max", 0.88), k_ndvi: param_f64(p, "k_ndvi", 0.7),
             graze_max_frac: param_f64(p, "graze_max_frac", 0.3),
             burn_biomass_frac: param_f64(p, "burn_biomass_frac", 0.9), burn_litter_frac: param_f64(p, "burn_litter_frac", 0.7),
+            soy_lue_factor: param_f64(p, "soy_lue_factor", 0.75), soy_gdd_factor: param_f64(p, "soy_gdd_factor", 0.85), soy_grain_fraction: param_f64(p, "soy_grain_fraction", 0.4), grass_lai: param_f64(p, "grass_lai", 2.0),
+            kind: Vec::new(),
             lai: Vec::new(), biomass_gc: Vec::new(), litter_gc: Vec::new(), gdd: Vec::new(), stage: Vec::new(), lai_at_senesce: Vec::new(),
             seen_energy: 0, day_energy: Vec::new(), day_t_sum: 0.0, day_t_n: 0, day_tmin: 99.0, warm_days: 0, planted_doy: 0, harvested: false, last_day: i64::MIN,
             biomass_kg: 0.0, litter_kg: 0.0,
@@ -101,6 +106,7 @@ impl Veg {
         if self.lai.len() != n {
             self.lai = vec![0.0; n]; self.biomass_gc = vec![0.0; n]; self.litter_gc = vec![200.0; n]; self.gdd = vec![0.0; n];
             self.stage = vec![0; n]; self.lai_at_senesce = vec![0.0; n]; self.day_energy = vec![0.0; n];
+            self.kind = vec![1.0; n];
         }
         let frames = ndvi_frames(&mut f, (grid.nx, grid.ny, grid.dlon, grid.dlat, grid.lon_w, grid.lat_n), [self.lon_w, self.lat_s, self.lon_e, self.lat_n], &self.modis_start, &self.modis_end)?;
         self.modis = frames.into_iter().collect();
@@ -217,15 +223,43 @@ impl Module for Veg {
             let doy = doy_of(day);
             if doy == 1 { self.harvested = false; self.planted_doy = 0; }
             if tmean >= self.plant_t_c { self.warm_days += 1; } else { self.warm_days = 0; }
-            let plant_today = self.planted_doy == 0 && !self.harvested && doy >= self.plant_after_doy && doy < 200 && self.warm_days >= 5;
+            let agent_plant: Option<Vec<f32>> = ctx.world_read("agents.plant_now").map(|f| f.data.clone());
+            let agent_kind: Option<Vec<f32>> = ctx.world_read("agents.crop_kind").map(|f| f.data.clone());
+            let plant_today = agent_plant.is_none() && self.planted_doy == 0 && !self.harvested && doy >= self.plant_after_doy && doy < 200 && self.warm_days >= 5;
             if plant_today { self.planted_doy = doy; }
+            if let Some(ak) = &agent_kind { for (k, &i) in self.cells.iter().enumerate() { if ak[i].is_finite() && ak[i] > 0.0 { self.kind[k] = ak[i]; } } }
+            let mut grain_export = vec![f32::NAN; self.grid.as_ref().unwrap().nx * self.grid.as_ref().unwrap().ny];
+            for &i in &self.cells { grain_export[i] = 0.0; }
+            let mut any_harvest = false;
             let soil: Option<Vec<f32>> = ctx.world_read(&self.soil_source).map(|f| f.data.clone());
             let (mut gpp, mut ra, mut to_litter, mut export, mut rh, mut seed_import) = (0.0f64, 0.0, 0.0, 0.0, 0.0, 0.0);
             let snow: Option<Vec<f32>> = ctx.world_read("water.snow_mm").map(|f| f.data.clone());
             let tf = ((tmean - 8.0) / 22.0).clamp(0.0, 1.0).min(((42.0 - tmean) / 12.0).clamp(0.0, 1.0));
             for (k, &i) in self.cells.iter().enumerate() {
                 let a = self.area[k];
-                if plant_today { self.stage[k] = 1; self.gdd[k] = 0.0; }
+                let soy = self.kind[k] == 2.0;
+                let grass = self.kind[k] == 3.0;
+                let lue = if soy { self.lue_gc_per_mj * self.soy_lue_factor } else { self.lue_gc_per_mj };
+                let (gdd_sen, gdd_harv) = if soy { (self.gdd_senesce * self.soy_gdd_factor, self.gdd_harvest * self.soy_gdd_factor) } else { (self.gdd_senesce, self.gdd_harvest) };
+                let grain_frac = if soy { self.soy_grain_fraction } else { self.grain_fraction };
+                // perennial grass (a rule's buffer strip): a standing canopy that is never harvested
+                if grass {
+                    if self.stage[k] != 4 { self.stage[k] = 4; self.lai[k] = self.lai[k].max(0.3); }
+                    let par_mj = self.day_energy[k] / a * self.par_fraction / 1e6;
+                    let fapar = 1.0 - (-self.k_light * self.lai[k].max(0.05)).exp();
+                    let wf = soil.as_ref().map(|s| (s[i] as f64 / (0.5 * self.soil_capacity_mm)).clamp(0.0, 1.0)).unwrap_or(1.0);
+                    let g = lue * 0.7 * par_mj * fapar * wf * tf; let r = self.ra_fraction * g; let npp = g - r;
+                    let turnover = self.biomass_gc[k] * 0.01; // leaves and roots to litter
+                    self.biomass_gc[k] += npp - turnover; self.litter_gc[k] += turnover; to_litter += turnover / 1000.0 * a;
+                    self.lai[k] = (self.lai[k] + self.sla_m2_per_gc * self.leaf_fraction * npp - 0.01 * self.lai[k]).clamp(0.0, self.grass_lai);
+                    if self.day_tmin <= self.frost_c { self.lai[k] *= 0.5; }
+                    gpp += g / 1000.0 * a; ra += r / 1000.0 * a;
+                    let dl = self.litter_gc[k] * self.k_litter_per_day * tf.max(0.05);
+                    self.litter_gc[k] -= dl; rh += dl / 1000.0 * a;
+                    continue;
+                }
+                let plant_here = plant_today || agent_plant.as_ref().map(|p| p[i] > 0.5).unwrap_or(false);
+                if plant_here && self.stage[k] != 1 && self.stage[k] != 2 { self.stage[k] = 1; self.gdd[k] = 0.0; if self.planted_doy == 0 { self.planted_doy = doy; } }
                 if self.stage[k] >= 1 && self.stage[k] <= 2 { self.gdd[k] += (tmean - self.gdd_base_c).max(0.0); }
                 // emergence: a seedling canopy from imported seed carbon, once
                 if self.stage[k] == 1 && self.gdd[k] >= self.gdd_emerge && self.lai[k] < self.lai_emerge {
@@ -237,23 +271,24 @@ impl Module for Veg {
                     let par_mj = self.day_energy[k] / a * self.par_fraction / 1e6;
                     let fapar = 1.0 - (-self.k_light * self.lai[k].max(0.05)).exp();
                     let wf = soil.as_ref().map(|s| (s[i] as f64 / (0.5 * self.soil_capacity_mm)).clamp(0.0, 1.0)).unwrap_or(1.0);
-                    let g = self.lue_gc_per_mj * par_mj * fapar * wf * tf; // g C/m2/day
+                    let g = lue * par_mj * fapar * wf * tf; // g C/m2/day
                     let r = self.ra_fraction * g;
                     let npp = g - r;
                     self.biomass_gc[k] += npp;
                     let dlai = (self.sla_m2_per_gc * self.leaf_fraction * npp).max(0.0);
                     self.lai[k] = (self.lai[k] + dlai).min(self.lai_max);
                     gpp += g / 1000.0 * a; ra += r / 1000.0 * a;
-                    if self.gdd[k] >= self.gdd_senesce { self.stage[k] = 2; self.lai_at_senesce[k] = self.lai[k]; }
+                    if self.gdd[k] >= gdd_sen { self.stage[k] = 2; self.lai_at_senesce[k] = self.lai[k]; }
                 }
                 // senescence: leaf area falls linearly with gdd to harvest; carbon stays in biomass until harvest
                 if self.stage[k] == 2 {
-                    let f = ((self.gdd_harvest - self.gdd[k]) / (self.gdd_harvest - self.gdd_senesce)).clamp(0.0, 1.0);
+                    let f = ((gdd_harv - self.gdd[k]) / (gdd_harv - gdd_sen)).clamp(0.0, 1.0);
                     self.lai[k] = self.lai_at_senesce[k] * f;
                     let frost = self.day_tmin <= self.frost_c;
-                    if self.gdd[k] >= self.gdd_harvest || frost {
+                    if self.gdd[k] >= gdd_harv || frost {
                         let b = self.biomass_gc[k];
-                        let grain = self.grain_fraction * b;
+                        let grain = grain_frac * b;
+                        grain_export[i] = (grain / 1000.0 * a) as f32; any_harvest = true;
                         export += grain / 1000.0 * a;
                         to_litter += (b - grain) / 1000.0 * a;
                         self.litter_gc[k] += b - grain;
@@ -265,7 +300,12 @@ impl Module for Veg {
                 let dl = self.litter_gc[k] * self.k_litter_per_day * tf.max(0.05);
                 self.litter_gc[k] -= dl; rh += dl / 1000.0 * a;
             }
-            if self.cells.iter().enumerate().all(|(k, _)| self.stage[k] == 3 || self.stage[k] == 0) && self.planted_doy > 0 && doy > 250 { self.harvested = true; }
+            if self.cells.iter().enumerate().all(|(k, _)| self.stage[k] == 3 || self.stage[k] == 0 || self.stage[k] == 4) && self.planted_doy > 0 && doy > 250 { self.harvested = true; }
+            if any_harvest {
+                let grid = self.grid.clone().unwrap();
+                ctx.world_write("veg.grain_export_kgc", "kgC", &grid, grain_export);
+                ctx.publish("harvest.done", json!({ "by": self.name }));
+            }
             ctx.transfer(LEDGER, "import", "biomass", seed_import);
             ctx.transfer(LEDGER, "atmosphere", "biomass", gpp);
             ctx.transfer(LEDGER, "biomass", "atmosphere", ra);
