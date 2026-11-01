@@ -76,3 +76,16 @@ matrix lives in `20261031-fitness.md` and is updated as rungs land.
 
 M1 Sun on a real elevation tile, which needs the first registry fetch (a global DEM
 product chosen and recorded) and the regional grid. The viewer gets its first map then.
+
+## Addendum, same day: data layer lives here for now
+
+Anselm: "we will have our own data layer for now or ways of fetching elevation data and
+so on - later can move to other repos." So the registry (catalog, fetcher, mirror rules,
+event tables) is built inside this repo under `data/` and a `registry` crate, with the
+intent recorded in the data devlog entry of moving the text half to the wiki repo later.
+Nothing in the kernel may assume where the data lives; it goes through the fetcher.
+
+He also pointed out that "there are encyclopedias of the future out there". A web search
+found Wikipedia's timelines-of-the-future hub and lists, and futuretimeline.net; they are
+recorded in `data/events/README.md` as sources to mine into draft rows by an agent, with
+promotion by review.

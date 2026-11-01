@@ -36,11 +36,24 @@ known then.
 *projected* (an institution's forecast with a method), *speculative* (an opinion or a
 book's table).
 
-## Sources worth mining for rows (not yet mined)
+## Sources worth mining for rows (found 2026-10-31, not yet mined)
 
-Public lists of future events exist and are the cheap way to fill the calendar: the
-Wikipedia lists of future astronomical events and the decade pages (2030s onward), the
-UN and IPCC meeting calendars, national election calendars, utility and transmission
-plans with in-service dates, dam and power-plant retirement schedules, treaty texts with
-their sunset and review clauses, and census and Olympic schedules. Each row taken from
-such a list cites the list and the list's own source where it has one.
+Anselm: "There are encyclopedias of the future out there." There are, and they are the
+cheap way to fill the calendar. Found by web search this session; the pages exist, their
+contents have not yet been read into rows:
+
+- Wikipedia's hub, https://en.wikipedia.org/wiki/Timelines_of_the_future, which points
+  to the "Timeline of the near future" (to 2299), the "3rd millennium" page (to 3000),
+  the "Timeline of the far future", the "List of future astronomical events"
+  (https://en.wikipedia.org/wiki/List_of_future_astronomical_events) and the "List of
+  future calendar events". Wikipedia's own sourcing varies by row; each row we take
+  cites the page and the page's own source where it has one.
+- futuretimeline.net, a long-running site of dated predictions in a press style; useful
+  as a list of claims, each to be marked speculative with that site as the source.
+- Institutional calendars, which are better than encyclopedias for committed events: UN
+  and IPCC meeting schedules, national election calendars, utility and transmission
+  plans with in-service dates, dam and plant retirement schedules, treaty texts with
+  sunset and review clauses, census and Olympic schedules, launch manifests.
+
+Mining is a job for an agent that reads a page and drafts rows into a `drafts/` file;
+rows move into these tables by review. Machines propose, humans promote.

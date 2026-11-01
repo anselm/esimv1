@@ -30,7 +30,7 @@ body {
 }
 
 .label {
-  @apply text-[11px] uppercase tracking-wider muted;
+  @apply text-[11px] uppercase tracking-wider text-neutral-500 dark:text-neutral-400;
 }
 
 .floating {
