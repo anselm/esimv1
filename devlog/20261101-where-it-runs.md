@@ -146,3 +146,10 @@ Recommendation, in stages, with no design change between them:
 
 The code asks are unchanged: stores behind a trait, chunked frames, a job runner whose
 worker is a container with `esim` in it.
+
+## Decision, same morning
+
+Anselm looked around and chose: "Google cloud run is best for public facing. I hate Amazon
+in general don't want to use or even consider aws." So the staged plan above reads with
+AWS struck out: Cloud Run Jobs for the workers, Cloudflare R2 for the two immutable stores,
+exe.dev or Cloudflare Pages for the facade. Nothing is provisioned yet.
