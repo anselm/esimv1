@@ -1,0 +1,8 @@
+name = "earth-simulator-1"
+horizon = "2026"
+repo = ""
+code = "local"
+deploy = "none"
+status = "active"        # active | parked (struck through on the dashboard) | archived (hidden)
+autodeploy = false
+notes = ""
