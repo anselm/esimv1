@@ -139,3 +139,41 @@ somewhere. Tests use small real tiles checked into the repo, a few hundred kilob
 A numerical unit test may use a constant or analytic field to check a formula, and must be
 labelled as a formula check, never presented as a landscape. The same rule extends to land
 cover, soils, hydrography and boundaries: real layers from the registry or nothing.
+
+## Addendum, same day: the Hormuz fork
+
+Anselm: "I will eventually want to be able to do the strait of Hormuz and so on as per the
+now retired orbital-sim.exe.xyz". (He calls orbital-sim retired here; its project.toml in
+~/projects/2027/orbital/orbital-sim still says active and is for that room or the manager
+to change.)
+
+Hormuz is the brief's "food system" chain with a chokepoint as the shock, and in this design
+it is a fork off the human rungs, mostly M9 to M11, on the global grid:
+
+- Network: a commodity flow network from producers to consumers along real routes (the
+  strait, the Saudi and UAE pipelines, the Cape, Suez), carrying several conserved things
+  (crude, LNG, urea, ammonia, sulphur, helium, methanol). Mass ledgers per commodity close:
+  produced, in transit, stranded, delivered, consumed. orbital-sim's flows agent, with its
+  baseline volumes, bypass capacities and ramp days, is the seed, to be re-sourced with
+  provenance before it enters the registry.
+- Rules: the closure is a rule on a calendar date (or a hazard, forced for a what-if) that
+  cuts edge capacity; insurance is a second rule that cuts capacity as a function of risk.
+  Nothing else is hand-programmed, which was Anselm's test in June 2026: the second-order
+  effects must fall out of reduced outflows.
+- Agents: countries as coarse agents with stocks, substitution, export bans and fragility
+  (FSI already ingested in orbital-sim); refineries, fertilizer plants and ports as real
+  located nodes from the registry.
+- Populations: crops by country as the fertilizer-to-yield link (the same crop module as
+  M11, on a coarser grid), then consumption and the hunger ledger (people).
+- Markets: prices from stock-to-use, the money ledger.
+- Hazards: conflict as a rate that reads food prices, the brief's example.
+
+Scoreboards exist: the 2026 closure itself (prices, fertilizer and urea indices, tanker
+counts from AIS, the FAO food price index) as a near-term hindcast, and the 2008, 2011 and
+2022 food price crises as longer ones. Real terrain applies: the strait, the lanes, the
+ports and plants are real places on the global grid, and the viewer shows them there.
+
+Place in the order: after M11, as the first fork, because by then the network, rule, agent,
+market and crop modules exist and Hormuz is a manifest over them plus one new module (the
+chokepoint rule) and a lot of registry work (the located nodes and the commodity baselines).
+The registry work can start any time; it is data, not kernel.
