@@ -82,3 +82,99 @@ pub fn ghcn_station(fetcher: &mut Fetcher, id: &str) -> Result<GhcnDaily, String
     if g.prcp_mm.is_empty() { return Err(format!("ghcn {id}: no precipitation parsed")); }
     Ok(g)
 }
+
+/// Hourly ERA5 reanalysis (via Open-Meteo's archive API, free for non-commercial use)
+/// at a regular grid of points. Each point's series are in SI except as named.
+#[derive(Clone, Debug, Default)]
+pub struct WeatherGrid {
+    pub lats: Vec<f64>,
+    pub lons: Vec<f64>,
+    /// hours since the first hour, as Unix seconds of each hour
+    pub times: Vec<i64>,
+    /// [point][hour]; point index = lat_i * lons.len() + lon_i
+    pub t2m_c: Vec<Vec<f32>>,
+    pub precip_mm: Vec<Vec<f32>>,
+    pub sw_w_m2: Vec<Vec<f32>>,
+    pub rh_pct: Vec<Vec<f32>>,
+    pub wind_m_s: Vec<Vec<f32>>,
+}
+
+/// Fetch ERA5 hourly for the points of a `step`-degree grid covering the box, for the
+/// date range (inclusive, YYYY-MM-DD). One request per year, all points at once.
+pub fn era5_hourly(fetcher: &mut Fetcher, lat_s: f64, lat_n: f64, lon_w: f64, lon_e: f64, step: f64, start: &str, end: &str) -> Result<WeatherGrid, String> {
+    let mut lats = Vec::new();
+    let mut la = (lat_s / step).floor() * step + step / 2.0;
+    while la < lat_n + step / 2.0 { lats.push((la * 1e4).round() / 1e4); la += step; }
+    let mut lons = Vec::new();
+    let mut lo = (lon_w / step).floor() * step + step / 2.0;
+    while lo < lon_e + step / 2.0 { lons.push((lo * 1e4).round() / 1e4); lo += step; }
+    let mut pts_lat = Vec::new(); let mut pts_lon = Vec::new();
+    for &a in &lats { for &o in &lons { pts_lat.push(format!("{a}")); pts_lon.push(format!("{o}")); } }
+    let y0: i64 = start[..4].parse().map_err(|_| "start year")?;
+    let y1: i64 = end[..4].parse().map_err(|_| "end year")?;
+    let mut g = WeatherGrid { lats: lats.clone(), lons: lons.clone(), ..Default::default() };
+    let np = pts_lat.len();
+    g.t2m_c = vec![Vec::new(); np]; g.precip_mm = vec![Vec::new(); np]; g.sw_w_m2 = vec![Vec::new(); np]; g.rh_pct = vec![Vec::new(); np]; g.wind_m_s = vec![Vec::new(); np];
+    for y in y0..=y1 {
+        let s = if y == y0 { start.to_string() } else { format!("{y}-01-01") };
+        let e = if y == y1 { end.to_string() } else { format!("{y}-12-31") };
+        let url = format!("https://archive-api.open-meteo.com/v1/archive?latitude={}&longitude={}&start_date={s}&end_date={e}&hourly=temperature_2m,precipitation,shortwave_radiation,relative_humidity_2m,wind_speed_10m&models=era5&timezone=UTC&wind_speed_unit=ms",
+            pts_lat.join(","), pts_lon.join(","));
+        let key = format!("open-meteo-era5/{}_{}_{}_{}_{}deg_{s}_{e}.json", lat_s, lat_n, lon_w, lon_e, step);
+        let path = fetcher.fetch(&key, &url)?;
+        let text = std::fs::read_to_string(&path).map_err(|e| e.to_string())?;
+        let v: serde_json::Value = serde_json::from_str(&text).map_err(|e| format!("open-meteo json: {e}"))?;
+        let arr: Vec<serde_json::Value> = match v { serde_json::Value::Array(a) => a, other => vec![other] };
+        if arr.len() != np { return Err(format!("open-meteo returned {} points, expected {np}: {}", arr.len(), arr.first().map(|a| a["reason"].to_string()).unwrap_or_default())); }
+        for (p, item) in arr.iter().enumerate() {
+            let h = &item["hourly"];
+            if g.times.len() < h["time"].as_array().map(|a| a.len()).unwrap_or(0) + g.t2m_c[p].len() && p == 0 {
+                for t in h["time"].as_array().ok_or("no hourly.time")? {
+                    let s = t.as_str().ok_or("time")?;
+                    g.times.push(crate::obs::parse_iso_hour(s)?);
+                }
+            }
+            let take = |name: &str, dst: &mut Vec<f32>| {
+                for x in h[name].as_array().cloned().unwrap_or_default() { dst.push(x.as_f64().map(|f| f as f32).unwrap_or(f32::NAN)); }
+            };
+            take("temperature_2m", &mut g.t2m_c[p]);
+            take("precipitation", &mut g.precip_mm[p]);
+            take("shortwave_radiation", &mut g.sw_w_m2[p]);
+            take("relative_humidity_2m", &mut g.rh_pct[p]);
+            take("wind_speed_10m", &mut g.wind_m_s[p]);
+        }
+    }
+    Ok(g)
+}
+
+/// "2025-06-18T13:00" -> Unix seconds.
+pub fn parse_iso_hour(s: &str) -> Result<i64, String> {
+    let (d, t) = s.split_once('T').ok_or("iso hour")?;
+    let p: Vec<i64> = d.split('-').filter_map(|x| x.parse().ok()).collect();
+    let q: Vec<i64> = t.split(':').filter_map(|x| x.parse().ok()).collect();
+    if p.len() != 3 || q.is_empty() { return Err(format!("iso hour {s}")); }
+    Ok(day_secs(p[0], p[1], p[2]) + q[0] * 3600 + q.get(1).copied().unwrap_or(0) * 60)
+}
+
+impl WeatherGrid {
+    /// Bilinear value of a variable at (lat, lon) for hour index `h`; clamps to the grid.
+    pub fn at(&self, var: &[Vec<f32>], h: usize, lat: f64, lon: f64) -> f32 {
+        let (nla, nlo) = (self.lats.len(), self.lons.len());
+        if nla == 0 || nlo == 0 { return f32::NAN; }
+        let fy = if nla > 1 { ((lat - self.lats[0]) / (self.lats[1] - self.lats[0])).clamp(0.0, (nla - 1) as f64) } else { 0.0 };
+        let fx = if nlo > 1 { ((lon - self.lons[0]) / (self.lons[1] - self.lons[0])).clamp(0.0, (nlo - 1) as f64) } else { 0.0 };
+        let (y0, x0) = (fy.floor() as usize, fx.floor() as usize);
+        let (y1, x1) = ((y0 + 1).min(nla - 1), (x0 + 1).min(nlo - 1));
+        let (wy, wx) = ((fy - y0 as f64) as f32, (fx - x0 as f64) as f32);
+        let v = |yi: usize, xi: usize| var[yi * nlo + xi].get(h).copied().unwrap_or(f32::NAN);
+        let top = v(y0, x0) * (1.0 - wx) + v(y0, x1) * wx;
+        let bot = v(y1, x0) * (1.0 - wx) + v(y1, x1) * wx;
+        top * (1.0 - wy) + bot * wy
+    }
+    pub fn hour_index(&self, t: i64) -> Option<usize> {
+        let first = *self.times.first()?;
+        if t < first { return None; }
+        let i = ((t - first) / 3600) as usize;
+        if i < self.times.len() { Some(i) } else { None }
+    }
+}

@@ -7,7 +7,22 @@
     const r = await fetch('/runs/index.json', { cache: 'no-store' })
     if (!r.ok) return []
     const list = await r.json()
-    return Array.isArray(list) ? list.slice().sort((a, b) => (b.start ?? 0) - (a.start ?? 0)) : []
+    if (!Array.isArray(list)) return []
+    const runs = list.slice().sort((a, b) => (b.start ?? 0) - (a.start ?? 0))
+    // best NSE per run, from the optional scores.json (404 means none)
+    await Promise.all(runs.map(async (run) => { run.nse = await bestNse(run.id) }))
+    return runs
+  }
+  async function bestNse(id) {
+    try {
+      const r = await fetch(`/runs/${encodeURIComponent(id)}/scores.json`, { cache: 'no-store' })
+      if (!r.ok) return null
+      const list = await r.json()
+      const v = Math.max(...(Array.isArray(list) ? list : []).map((s) => s.nse).filter((x) => typeof x === 'number'))
+      return Number.isFinite(v) ? v : null
+    } catch {
+      return null
+    }
   }
 </script>
 
@@ -35,6 +50,9 @@
             </span>
             <span class="flex items-center gap-3 text-xs col-span-2 sm:col-span-1 sm:order-3">
               <span class="mono muted">{num(r.events)} events</span>
+              {#if r.nse != null}
+                <span class="mono muted" title="best Nash–Sutcliffe efficiency in scores.json">NSE {r.nse.toFixed(2)}</span>
+              {/if}
               <Status closed={r.all_ledgers_closed} />
             </span>
           </a>

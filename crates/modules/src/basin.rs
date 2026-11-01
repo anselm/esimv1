@@ -47,6 +47,8 @@ pub struct Basin {
     v_channel_m_s: f64,
     v_hill_m_s: f64,
     energy_source: String,
+    /// "station" (GHCN daily, uniform) or "wx" (hourly fields wx.precip_mm and wx.t2m_c)
+    forcing: String,
     // state (per basin cell, in basin order)
     snow_mm: Vec<f64>,
     soil_mm: Vec<f64>,
@@ -97,6 +99,7 @@ impl Basin {
             v_channel_m_s: param_f64(p, "v_channel_m_s", 0.4),
             v_hill_m_s: param_f64(p, "v_hill_m_s", 0.02),
             energy_source: param_str(p, "energy_source", "sun.incident_j").to_string(),
+            forcing: param_str(p, "forcing", "station").to_string(),
             snow_mm: Vec::new(), soil_mm: Vec::new(), chan_m3: Vec::new(), seen_version: 0,
             day_q_sum: 0.0, day_q_n: 0, day_p_mm: 0.0, day_sum_soil: Vec::new(), day_steps: 0, next_report: None,
             missing_prcp_days: 0, last_tmean: 0.0,
@@ -200,6 +203,10 @@ impl Module for Basin {
         // energy for evaporation from the sun's field (J per cell footprint this step)
         let energy: Option<Vec<f32>> = ctx.world_read(&self.energy_source).map(|f| f.data.clone());
         let drain_frac = self.drain_per_day * dt / 86_400.0;
+        // gridded forcing, if asked for and present: per-cell precipitation this step and air temperature
+        let wx_p: Option<Vec<f32>> = if self.forcing == "wx" { ctx.world_read("wx.precip_mm").map(|f| f.data.clone()) } else { None };
+        let wx_t: Option<Vec<f32>> = if self.forcing == "wx" { ctx.world_read("wx.t2m_c").map(|f| f.data.clone()) } else { None };
+        let steps_per_day_f = steps_per_day;
 
         let (mut to_snow, mut to_soil, mut melt, mut evap, mut to_chan) = (0.0f64, 0.0, 0.0, 0.0, 0.0);
         let mut outlet = 0.0f64;
@@ -208,9 +215,18 @@ impl Module for Basin {
         for k in 0..n {
             let a = self.area[k];
             let i = self.cells[k];
-            // precipitation
+            // precipitation and phase, from the station day or the gridded hour
+            let (p_mm, snowing, melt_mm) = match (&wx_p, &wx_t) {
+                (Some(pp), Some(tt)) => {
+                    let p = pp[i] as f64; let tc = tt[i] as f64;
+                    let tc = if tc.is_finite() { tc } else { tmean };
+                    (p, tc < self.snow_t_c, if tc > 0.0 { self.ddf_mm_per_c_day * tc / steps_per_day_f } else { 0.0 })
+                }
+                _ => (p_mm, snowing, melt_mm),
+            };
             if snowing { self.snow_mm[k] += p_mm; to_snow += p_mm / 1000.0 * a; }
             else { self.soil_mm[k] += p_mm; to_soil += p_mm / 1000.0 * a; }
+            self.day_p_mm += p_mm * a; // area-weighted, divided out at the day boundary
             // melt
             let m = melt_mm.min(self.snow_mm[k]);
             self.snow_mm[k] -= m; self.soil_mm[k] += m; melt += m / 1000.0 * a;
@@ -250,7 +266,7 @@ impl Module for Basin {
         ctx.declare_stock(LEDGER, "channel", c);
         let q = outlet / dt;
         ctx.report("hydro.q_outlet_m3_s", "m3/s", q);
-        self.day_q_sum += q; self.day_q_n += 1; self.day_p_mm += p_mm; self.day_steps += 1;
+        self.day_q_sum += q; self.day_q_n += 1; self.day_steps += 1;
         // local-day boundary: daily mean simulated and observed discharge for scoring
         let next_local = self.local_day(Time(now.0 + self.dt.0));
         if next_local != self.local_day(now) {
@@ -258,7 +274,7 @@ impl Module for Basin {
             let qd = self.day_q_sum / self.day_q_n.max(1) as f64;
             ctx.report("hydro.q_sim_daily_m3_s", "m3/s", qd);
             if let Some(o) = self.q_obs.get(&ld) { ctx.report("hydro.q_obs_daily_m3_s", "m3/s", *o); }
-            ctx.report("hydro.precip_daily_mm", "mm", self.day_p_mm);
+            ctx.report("hydro.precip_daily_mm", "mm", self.day_p_mm / (self.basin_km2 * 1e6));
             ctx.report("hydro.snowpack_mean_mm", "mm", s / self.basin_km2 / 1e3);
             ctx.report("hydro.soil_mean_mm", "mm", so / self.basin_km2 / 1e3);
             self.day_q_sum = 0.0; self.day_q_n = 0; self.day_p_mm = 0.0;

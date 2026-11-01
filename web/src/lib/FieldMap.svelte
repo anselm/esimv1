@@ -1,7 +1,8 @@
 <script>
-  // One field snapshot drawn to a canvas: nearest-neighbour blocks, one shared
-  // colour scale across frames, a time slider when there is more than one frame,
-  // and a hover/tap readout of lat, lon and value.
+  // One field snapshot drawn to a canvas: nearest-neighbour blocks, a colour
+  // scale that is either the run-wide min/max (default) or the current frame's
+  // own, a time slider when there is more than one frame, and a hover/tap
+  // readout of lat, lon and value.
   import { isoDate, num } from './fmt.js'
   import { LUT, RAMP_CSS } from './ramp.js'
 
@@ -9,8 +10,22 @@
 
   const grid = $derived(field.grid)
   const times = $derived(field.times ?? [])
-  const lo = $derived(field.min)
-  const hi = $derived(field.max)
+  let frame = $state(null)      // Float32Array of the current frame
+  // colour stretch: 'run' uses run.json's run-wide min/max, 'frame' the loaded frame's own
+  let stretch = $state('run')
+  const frameRange = $derived.by(() => {
+    if (!frame) return null
+    let lo = Infinity, hi = -Infinity
+    for (let k = 0; k < frame.length; k++) {
+      const v = frame[k]
+      if (Number.isNaN(v)) continue
+      if (v < lo) lo = v
+      if (v > hi) hi = v
+    }
+    return lo <= hi ? [lo, hi] : null
+  })
+  const lo = $derived(stretch === 'frame' && frameRange ? frameRange[0] : field.min)
+  const hi = $derived(stretch === 'frame' && frameRange ? frameRange[1] : field.max)
 
   // Aspect in degrees, corrected by cos(latitude at the grid's centre) so a
   // degree of longitude is drawn shorter than a degree of latitude.
@@ -24,7 +39,6 @@
   const height = $derived(Math.round(width * aspect))
 
   let canvas = $state()
-  let frame = $state(null)      // Float32Array of the current frame
   let error = $state(null)
   let hover = $state(null)      // { x, y, lat, lon, v }
 
@@ -138,12 +152,21 @@
     {/if}
   </div>
 
-  <!-- legend: one scale across all frames -->
+  <!-- legend: labels follow the chosen stretch -->
   <div class="mono mt-1.5 flex items-center gap-2 text-[10px] muted">
     <span>{num(+lo.toPrecision(5))}</span>
     <span class="h-2 flex-1 rounded-[2px]" style="background:{RAMP_CSS}" aria-hidden="true"></span>
     <span>{num(+hi.toPrecision(5))}</span>
     <span>{field.unit}</span>
+    <span class="ml-1 inline-flex select-none" role="radiogroup" aria-label="colour stretch" title="colour scale: run-wide or this frame's min/max">
+      {#each ['run', 'frame'] as m (m)}
+        <button
+          type="button" role="radio" aria-checked={stretch === m}
+          class="px-1 leading-4 rounded-[2px] {stretch === m ? 'text-brand ring-1 ring-brand/40' : 'hover:text-neutral-900 dark:hover:text-neutral-100'}"
+          onclick={() => { stretch = m }}
+        >{m}</button>
+      {/each}
+    </span>
   </div>
 
   <!-- time -->

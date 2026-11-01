@@ -30,6 +30,18 @@ sha256 = "47d52f1920f874f5185ffa78760b733485275290c603c33d1e30a0c5019d5b42"
 bytes = 9800809
 fetched = "2026-11-01"
 
+[files."open-meteo-era5/42.3_43.2_-94.2_-93.5_0.25deg_2025-01-01_2025-12-31.json"]
+url = "https://archive-api.open-meteo.com/v1/archive?latitude=42.375,42.375,42.375,42.625,42.625,42.625,42.875,42.875,42.875,43.125,43.125,43.125&longitude=-94.125,-93.875,-93.625,-94.125,-93.875,-93.625,-94.125,-93.875,-93.625,-94.125,-93.875,-93.625&start_date=2025-01-01&end_date=2025-12-31&hourly=temperature_2m,precipitation,shortwave_radiation,relative_humidity_2m,wind_speed_10m&models=era5&timezone=UTC&wind_speed_unit=ms"
+sha256 = "887ebe81f028e866a8ba4047ddb6e986c8cb0e5149b67b5e7e1083d8fee94b36"
+bytes = 4397752
+fetched = "2026-11-01"
+
+[files."open-meteo-era5/42.3_43.2_-94.2_-93.5_0.25deg_2025-06-01_2025-12-31.json"]
+url = "https://archive-api.open-meteo.com/v1/archive?latitude=42.375,42.375,42.375,42.625,42.625,42.625,42.875,42.875,42.875,43.125,43.125,43.125&longitude=-94.125,-93.875,-93.625,-94.125,-93.875,-93.625,-94.125,-93.875,-93.625,-94.125,-93.875,-93.625&start_date=2025-06-01&end_date=2025-12-31&hourly=temperature_2m,precipitation,shortwave_radiation,relative_humidity_2m,wind_speed_10m&models=era5&timezone=UTC&wind_speed_unit=ms"
+sha256 = "b208d86f827cd4efe1cf81263f40a9a60553bcbb835daddad18b32123abca695"
+bytes = 2581374
+fetched = "2026-11-01"
+
 [files."usgs-dv/05481000-00060-1940-01-01-2026-12-31.rdb"]
 url = "https://waterservices.usgs.gov/nwis/dv/?format=rdb&sites=05481000&parameterCd=00060&statCd=00003&startDT=1940-01-01&endDT=2026-12-31"
 sha256 = "edbe0bb5b639a8c8ece755c5a68bb4d31ff044d0277ee8352c86d56ffcfd7693"

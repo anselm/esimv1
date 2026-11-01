@@ -137,3 +137,25 @@ fn m3_water_closes_and_delineates_the_boone() {
         assert!(q.len() >= 28 && q.iter().all(|p| p.1.is_finite() && p.1 >= 0.0));
     });
 }
+
+#[test]
+fn m4_era5_forcing_runs_and_scores() {
+    if !have_dem() { eprintln!("skipped: DEM tile not cached"); return; }
+    let cached: PathBuf = [env!("CARGO_MANIFEST_DIR"), "..", "..", "data", "cache"].iter().collect();
+    let have_wx = std::fs::read_dir(&cached).map(|d| d.flatten().any(|e| e.file_name().to_string_lossy().starts_with("open-meteo-era5_"))).unwrap_or(false);
+    if !have_wx { eprintln!("skipped: ERA5 file not cached"); return; }
+    with_root(|| {
+        let m = load("m4-weather-boone-june.toml");
+        let out = Kernel::new(m, factory).unwrap().run();
+        assert!(out.all_ledgers_closed);
+        let sw = &out.series["wx.sw_mean_w_m2"].points;
+        let cs = &out.series["sun.ghi_mean_w_m2"].points;
+        assert_eq!(sw.len(), cs.len());
+        let peak_sw = sw.iter().map(|p| p.1).fold(0.0, f64::max);
+        assert!(peak_sw > 700.0 && peak_sw < 1100.0, "ERA5 June peak {peak_sw}");
+        // all-sky must on average sit below clear sky in June
+        let (ms, mc) = (sw.iter().map(|p| p.1).sum::<f64>() / sw.len() as f64, cs.iter().map(|p| p.1).sum::<f64>() / cs.len() as f64);
+        assert!(ms < mc, "all-sky mean {ms} should be below clear-sky {mc}");
+        assert!(out.series.contains_key("hydro.q_sim_daily_m3_s"));
+    });
+}
