@@ -86,6 +86,7 @@ pub struct Herbivore {
     /// food outside the crop (residue, browse, pasture) per individual per day, from an
     /// untracked `browse` boundary account: Iowa deer do not live on standing corn alone
     browse_kgc_ind_day: f64,
+    flee_frac: f64, fire_mortality: f64,
     n: Vec<f64>,
     intake_today: Vec<f64>,
     births_total: f64, deaths_total: f64, killed_total: f64,
@@ -105,6 +106,7 @@ impl Herbivore {
             assimilation: param_f64(p, "assimilation", 0.5), birth_per_day: param_f64(p, "birth_per_day", 0.002),
             mortality_per_day: param_f64(p, "mortality_per_day", 0.0007), starvation_per_day: param_f64(p, "starvation_per_day", 0.01), move_frac: param_f64(p, "move_frac", 0.1),
             browse_kgc_ind_day: param_f64(p, "browse_kgc_ind_day", 0.2),
+            flee_frac: param_f64(p, "flee_frac", 0.8), fire_mortality: param_f64(p, "fire_mortality", 0.3),
             n: Vec::new(), intake_today: Vec::new(), births_total: 0.0, deaths_total: 0.0, killed_total: 0.0, geo: None,
         };
         h.load()?;
@@ -137,6 +139,10 @@ impl Module for Herbivore {
         ctx.declare_stock(CARBON, "herbivores", self.total() * self.c_ind_kgc);
         ctx.subscribe("graze.done");
         ctx.subscribe("predation.request");
+        ctx.subscribe("fire.burn");
+        // the kernel's spatial index: hear ignitions only where this cohort lives
+        let cells: Vec<usize> = self.geo.as_ref().unwrap().cells.clone();
+        ctx.subscribe_at("fire.ignition", &cells);
         self.write_n(ctx);
         ctx.schedule_with_priority(self.dt, 4, "tick", json!(null));
     }
@@ -196,6 +202,31 @@ impl Module for Herbivore {
                     for (k, &i) in g.cells.iter().enumerate() { f[i] = (self.n[k] / g.area_km2[k]) as f32; }
                     ctx.field("herbivore_density_km2", "1/km2", &g.grid, f);
                 }
+            }
+            "fire.ignition" => {
+                // flight: most animals leave the ignited cell for its neighbours, exactly
+                let Some(cell) = ev.at else { return };
+                let Some(k) = g.cells.iter().position(|&c| c == cell as usize) else { return };
+                if g.nbrs[k].is_empty() || self.n[k] <= 0.0 { return; }
+                let leaving = self.n[k] * self.flee_frac;
+                let share = leaving / g.nbrs[k].len() as f64;
+                self.n[k] -= leaving;
+                for &j in &g.nbrs[k] { self.n[j] += share; }
+                ctx.report("fauna.herb_fled", "individuals", leaving);
+            }
+            "fire.burn" => {
+                let Some(bf) = ctx.world_read("fire.burned_frac").map(|f| f.data.clone()) else { return };
+                let mut dead = 0.0;
+                for (k, &i) in g.cells.iter().enumerate() {
+                    let f = bf[i]; if !f.is_finite() || f <= 0.0 { continue; }
+                    let d = self.n[k] * f as f64 * self.fire_mortality; self.n[k] -= d; dead += d;
+                }
+                ctx.transfer(ANIMALS, "herbivores_n", "deaths_fire", dead);
+                ctx.transfer(CARBON, "herbivores", "carcass_sink", dead * self.c_ind_kgc);
+                ctx.declare_stock(ANIMALS, "herbivores_n", self.total());
+                ctx.declare_stock(CARBON, "herbivores", self.total() * self.c_ind_kgc);
+                ctx.report("fauna.herb_fire_deaths", "individuals", dead);
+                self.write_n(ctx);
             }
             "predation.request" => {
                 let Some(req) = ctx.world_read("fauna.pred_kills").map(|f| f.data.clone()) else { return };

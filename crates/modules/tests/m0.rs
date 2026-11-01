@@ -188,3 +188,25 @@ fn m6_cohorts_conserve_counts_and_close_four_ledgers() {
         assert_eq!(tail, got);
     });
 }
+
+#[test]
+fn m7_forced_fire_spreads_burns_carbon_and_closes() {
+    if !have_dem() { eprintln!("skipped: DEM tile not cached"); return; }
+    let cached: PathBuf = [env!("CARGO_MANIFEST_DIR"), "..", "..", "data", "cache"].iter().collect();
+    let have = |prefix: &str| std::fs::read_dir(&cached).map(|d| d.flatten().any(|e| e.file_name().to_string_lossy().starts_with(prefix))).unwrap_or(false);
+    if !have("open-meteo-era5_") || !have("modis-13a1_") { eprintln!("skipped: weather or MODIS not cached"); return; }
+    with_root(|| {
+        let m = load("m7-fire-boone-sept.toml");
+        let out = Kernel::new(m.clone(), factory).unwrap().run();
+        assert!(out.all_ledgers_closed, "all ledgers must close through a fire");
+        let burned = out.series["fire.burned_km2_total"].points.last().unwrap().1;
+        assert!(burned > 1.0, "the forced fire should spread beyond its cell under the what-if parameters: {burned} km2");
+        let em: f64 = out.series["veg.fire_emissions_kgc_day"].points.iter().map(|p| p.1).sum();
+        assert!(em > 1e5, "burning should emit carbon: {em} kgC");
+        assert!(out.series.contains_key("fauna.herb_fled"), "the ignition must reach the cohort subscribed at that cell");
+        // the log carries the hazard row and the ignition as a cell-addressed event
+        let mut k = Kernel::new(m, factory).unwrap(); k.run();
+        assert!(k.log.events.iter().any(|e| e.topic == "hazard.loaded"));
+        assert!(k.log.events.iter().any(|e| e.topic == "fire.ignition" && e.at.is_some()));
+    });
+}

@@ -209,3 +209,17 @@ confidence = "projected"
 source = "computed by the fauna module when a manifest introduces the species"
 known_since = "1995-01-12"
 setting = "on"
+
+[[event]]
+id = "cropland-fire-corn-belt"
+title = "Field or grass fire in dry standing crop or residue"
+category = "climate"
+rate_per_year = 0.0
+consequence = "Standing biomass and litter burn to the atmosphere; animals in burned cells die or flee; bare soil until the next season."
+depends_on = ["soil_moisture", "air_temperature", "wind_speed", "standing_biomass"]
+module = "fire"
+valence = "bad"
+confidence = "speculative"
+source = "guess: ignition rate per dry cell-day is a parameter of the fire module, not a measured frequency; Iowa field fires are common in dry autumns and rarely large"
+known_since = "2026-11-01"
+setting = "on"

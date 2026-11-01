@@ -42,6 +42,7 @@ pub struct Veg {
     ra_fraction: f64, grain_fraction: f64, k_litter_per_day: f64,
     ndvi_soil: f64, ndvi_max: f64, k_ndvi: f64,
     graze_max_frac: f64,
+    burn_biomass_frac: f64, burn_litter_frac: f64,
     // state per basin cell
     lai: Vec<f64>, biomass_gc: Vec<f64>, litter_gc: Vec<f64>, gdd: Vec<f64>, stage: Vec<u8>, lai_at_senesce: Vec<f64>,
     seen_energy: u64,
@@ -75,6 +76,7 @@ impl Veg {
             ra_fraction: param_f64(p, "ra_fraction", 0.5), grain_fraction: param_f64(p, "grain_fraction", 0.45), k_litter_per_day: param_f64(p, "k_litter_per_day", 0.003),
             ndvi_soil: param_f64(p, "ndvi_soil", 0.18), ndvi_max: param_f64(p, "ndvi_max", 0.88), k_ndvi: param_f64(p, "k_ndvi", 0.7),
             graze_max_frac: param_f64(p, "graze_max_frac", 0.3),
+            burn_biomass_frac: param_f64(p, "burn_biomass_frac", 0.9), burn_litter_frac: param_f64(p, "burn_litter_frac", 0.7),
             lai: Vec::new(), biomass_gc: Vec::new(), litter_gc: Vec::new(), gdd: Vec::new(), stage: Vec::new(), lai_at_senesce: Vec::new(),
             seen_energy: 0, day_energy: Vec::new(), day_t_sum: 0.0, day_t_n: 0, day_tmin: 99.0, warm_days: 0, planted_doy: 0, harvested: false, last_day: i64::MIN,
             biomass_kg: 0.0, litter_kg: 0.0,
@@ -142,10 +144,31 @@ impl Module for Veg {
         for &i in &self.cells { lai[i] = 0.0; }
         ctx.world_write("veg.lai", "m2/m2", &grid, lai);
         ctx.subscribe("graze.request");
+        ctx.subscribe("fire.burn");
         ctx.schedule_with_priority(self.dt, 3, "tick", json!(null));
     }
 
     fn handle(&mut self, ev: &Event, ctx: &mut Ctx) {
+        if ev.topic == "fire.burn" {
+            // standing biomass and most litter go to the atmosphere in burned cells
+            let Some(bf) = ctx.world_read("fire.burned_frac").map(|f| f.data.clone()) else { return };
+            let (mut em_b, mut em_l) = (0.0, 0.0);
+            for (k, &i) in self.cells.iter().enumerate() {
+                let f = bf[i]; if !f.is_finite() || f <= 0.0 { continue; }
+                let a = self.area[k];
+                let b = self.biomass_gc[k] * f as f64 * self.burn_biomass_frac; let l = self.litter_gc[k] * f as f64 * self.burn_litter_frac;
+                self.biomass_gc[k] -= b; self.litter_gc[k] -= l; self.lai[k] *= 1.0 - f as f64;
+                if f >= 0.99 && self.stage[k] == 1 { self.stage[k] = 3; }
+                em_b += b / 1000.0 * a; em_l += l / 1000.0 * a;
+            }
+            ctx.transfer(LEDGER, "biomass", "atmosphere", em_b);
+            ctx.transfer(LEDGER, "litter", "atmosphere", em_l);
+            let (b, l) = self.stocks();
+            ctx.declare_stock(LEDGER, "biomass", b);
+            ctx.declare_stock(LEDGER, "litter", l);
+            ctx.report("veg.fire_emissions_kgc_day", "kgC/day", em_b + em_l);
+            return;
+        }
         if ev.topic == "graze.request" {
             // a grazer asks for carbon per cell; give up to a fraction of standing biomass
             let Some(demand) = ctx.world_read("fauna.herb_demand_kgc").map(|f| f.data.clone()) else { return };

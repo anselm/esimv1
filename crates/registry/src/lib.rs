@@ -8,6 +8,7 @@ pub mod terrain;
 pub mod hydro;
 pub mod obs;
 pub mod modis;
+pub mod events;
 
 pub const EARTH_RADIUS_M: f64 = 6_371_008.8;
 
