@@ -157,3 +157,23 @@ profile in Wasmtime. Modules advance one dt per call, not one event per call, so
 cost is amortised. Status: "Wasm 3.0 is already shipping in most major web browsers" and
 Wasmtime support is "on track to completion", per the page; check the feature status page it
 links before relying on memory64 or the deterministic profile in a given engine version.
+
+## Addendum, same day: native is the default
+
+Anselm: "we probably run native often - like not always in browser". Consequence for the
+design, agreed by the agent:
+
+- Modules are native Rust crates behind the module trait by default. No wasm in the path
+  for the kernel's own modules. Ensembles run on canada1 and on servers.
+- Wasm stays as an optional second loader for the same trait: for third-party or untrusted
+  modules that need a sandbox, for modules written in other languages, and for a browser
+  preview of small runs. It is not needed for stage 0 and is deferred, which the brief already
+  said about module loading.
+- Determinism therefore rests on native discipline, not on the wasm profile: no fast-math,
+  no reductions whose order depends on thread timing, fixed iteration order, one PRNG stream
+  per module seeded from the run seed. Replay is guaranteed bit-for-bit on the same build and
+  platform. Across x86 and ARM, fused multiply-add and libm differences can change the last
+  bit; cross-platform bit identity is a stated non-goal until someone needs it, and the wasm
+  deterministic profile is the tool to reach for then.
+- GPU fields, when any module needs them, are native only.
+- The browser gets the viewer, the narrator and manifest editing. Runs happen on the server.
