@@ -44,5 +44,10 @@ how to run it. Not deployed anywhere; it runs on canada1.
   or asset, update its describe; `crates/modules/tests/describe.rs` compares declarations
   against real run logs and fails otherwise. `esim run` refuses a manifest whose wiring
   does not check. The contract is `docs/protocol-v0.md`.
+- Planetary rungs (`manifests/p1-*`, `crates/modules/src/planet.rs`) are zero-dimensional
+  and read five small global records listed in the catalog (OWID emissions, Mauna Loa,
+  Law Dome, HadCRUT5, GISTEMP); NOAA's ocean heat content server was down on 2026-11-01,
+  so that scoreboard is not wired yet. Model parameters there are published values
+  recalled from memory and flagged as such in each describe; nothing is tuned.
 - A first ten-day river forecast was issued 2026-11-01 (`devlog/20261101-f1-first-forecast.md`)
   and is to be checked against USGS on or after 2026-11-11.

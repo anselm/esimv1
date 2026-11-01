@@ -14,6 +14,7 @@ pub mod fire;
 pub mod farms;
 pub mod rules;
 pub mod nitrogen;
+pub mod planet;
 
 use esim_kernel::describe::Describe;
 use esim_kernel::Module;
@@ -44,6 +45,10 @@ pub static KINDS: &[Kind] = &[
     kind!("agents.farms", farms::Farms),
     kind!("rules.calendar", rules::Rules),
     kind!("nitrogen.basin", nitrogen::Nitrogen),
+    kind!("carbon.emissions", planet::EmissionsIn),
+    kind!("carbon.pools", planet::Pools),
+    kind!("energy.twolayer", planet::TwoLayer),
+    kind!("obs.planet", planet::PlanetObs),
 ];
 
 fn find(kind: &str) -> Result<&'static Kind, String> {

@@ -139,6 +139,25 @@ fn m7_fire_surface_matches_the_log() {
     with_root(|| surface_matches_log(load("m7-fire-boone-sept.toml")));
 }
 
+/// P1 fetches five small record files; it runs when the cache exists at all.
+#[test]
+fn p1_planet_surface_matches_the_log_and_scores_exist() {
+    if !have_dem() { eprintln!("skipped: no data cache"); return; }
+    with_root(|| {
+        let m = load("p1-planet-co2-1850-2025.toml");
+        surface_matches_log(m.clone());
+        let mut k = Kernel::new(m, factory).unwrap();
+        k.run();
+        let series = k.snapshot().series;
+        let last = |n: &str| series[n].points.last().unwrap().1;
+        // the record ends in 2024: 424.61 ppm at Mauna Loa, and the model must land in the same century of ppm
+        assert!((last("obs.co2_ppm") - 424.61).abs() < 0.01, "obs {}", last("obs.co2_ppm"));
+        assert!(last("carbon.co2_ppm") > 400.0 && last("carbon.co2_ppm") < 500.0, "sim {}", last("carbon.co2_ppm"));
+        assert!(last("energy.gmst_anom_c") > 0.8 && last("energy.gmst_anom_c") < 2.5);
+        assert!(k.snapshot().ledgers.values().all(|l| l.all_closed()));
+    });
+}
+
 #[test]
 fn kinds_describe_under_default_params() {
     let empty = toml::Value::Table(Default::default());

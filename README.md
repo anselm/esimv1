@@ -22,16 +22,20 @@ framework against the use cases as rungs land.
 - `crates/modules`: sun (clear-sky irradiance on terrain), heat (slab surface), weather
   (ERA5 and GEFS members), water (snow, soil, evaporation, routing, nitrate tracer),
   crop (phenology, light-use growth, harvest), herbivore and predator cohorts (with a
-  cohort-to-individuals zoom), fire hazard, farm agents, calendar rules, nitrogen.
-- `crates/cli`: `esim run | verify | ensemble | score | kinds`.
+  cohort-to-individuals zoom), fire hazard, farm agents, calendar rules, nitrogen; and
+  the first planetary rung, zero-dimensional: observed emissions into a carbon ledger,
+  impulse-response sinks, a two-layer energy balance, and the records (Mauna Loa, Law
+  Dome, HadCRUT5, GISTEMP) as scoreboards.
+- `crates/cli`: `esim run | verify | ensemble | sweep | score | check | describe | kinds`.
 - `web/`: a sparse viewer (Svelte 5, Vite) for runs, ledgers, maps, scores, paired
   sim/obs charts and ensemble bands.
 - `data/`: `catalog.toml` (assets and places), `catalog.lock.toml` (hashes of fetched
   files), `events/` (calendar and hazards), `cache/` (fetched bytes, not in git).
 
-The stage for every milestone so far is the Boone River above Webster City, Iowa (USGS
+The stage for the basin milestones is the Boone River above Webster City, Iowa (USGS
 05481000), chosen for its 1940-to-present discharge record, its 2012-2017 nitrate record,
-and its tile-drained Corn Belt land use.
+and its tile-drained Corn Belt land use. The planetary rungs (`p1` onward) have no stage:
+the planet is one box until a module needs it gridded.
 
 ## Run it
 
@@ -42,6 +46,7 @@ cargo build --release
 ./target/release/esim score runs/<id> hydro.q_sim_daily_m3_s hydro.q_obs_daily_m3_s
 ./target/release/esim verify manifests/m2-heat-boone-week.toml    # determinism and replay
 ./target/release/esim ensemble manifests/f1-boone-forecast.toml --branches 31 --threads 8
+./target/release/esim run manifests/p1-planet-co2-1850-2025.toml  # 175 years of planet, 1 s
 cargo test --release                                              # ~30 s with the data cached
 cd web && npm install && npm run dev                              # viewer at http://localhost:5173
 ```
