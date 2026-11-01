@@ -3,6 +3,7 @@
 pub mod water;
 pub mod sun;
 pub mod heat;
+pub mod basin;
 
 use esim_kernel::Module;
 
@@ -18,8 +19,9 @@ pub fn build(kind: &str, name: &str, params: &toml::Value) -> Result<Box<dyn Mod
         "water.bucket" => Ok(Box::new(water::Bucket::new(name, params)?)),
         "sun.irradiance" => Ok(Box::new(sun::Sun::new(name, params)?)),
         "heat.slab" => Ok(Box::new(heat::Heat::new(name, params)?)),
+        "water.basin" => Ok(Box::new(basin::Basin::new(name, params)?)),
         other => Err(format!("unknown module kind {other}")),
     }
 }
 
-pub fn kinds() -> &'static [&'static str] { &["water.source", "water.bucket", "sun.irradiance", "heat.slab"] }
+pub fn kinds() -> &'static [&'static str] { &["water.source", "water.bucket", "sun.irradiance", "heat.slab", "water.basin"] }

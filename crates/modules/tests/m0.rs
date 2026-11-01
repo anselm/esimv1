@@ -122,3 +122,18 @@ fn m2_two_rates_one_energy_ledger() {
         assert!(hi > lo + 10.0, "a diurnal cycle should exist: {lo}..{hi}");
     });
 }
+
+#[test]
+fn m3_water_closes_and_delineates_the_boone() {
+    if !have_dem() { eprintln!("skipped: DEM tile not cached"); return; }
+    with_root(|| {
+        let m = load("m3-water-boone-june.toml");
+        let out = Kernel::new(m.clone(), factory).unwrap().run();
+        assert!(out.all_ledgers_closed, "water and energy ledgers must close");
+        let area = out.series["basin.area_km2"].points[0].1;
+        assert!((area - 2186.0).abs() / 2186.0 < 0.05, "basin area {area} km2 vs USGS 2186");
+        assert!(out.series.contains_key("hydro.q_obs_daily_m3_s"), "observed discharge must be loaded");
+        let q = &out.series["hydro.q_sim_daily_m3_s"].points;
+        assert!(q.len() >= 28 && q.iter().all(|p| p.1.is_finite() && p.1 >= 0.0));
+    });
+}

@@ -1,0 +1,49 @@
+# M3 Water: sky to gauge. GHCN-Daily rain and temperature at Webster City over the Boone
+# River basin delineated from the Copernicus DEM; snow, soil, evaporation from the sun's
+# energy, routing to the pour point. Water ledger closes daily. Scored against USGS
+# 05481000 with: esim score <run> hydro.q_sim_daily_m3_s hydro.q_obs_daily_m3_s
+
+[run]
+name = "m3-water-boone-2025"
+start = "2025-01-01"
+end = "2026-01-01"
+seed = 1
+close_every = "1d"
+snapshot_every = "30d"
+
+[[module]]
+name = "sun"
+kind = "sun.irradiance"
+[module.params]
+lat_s = 42.3
+lat_n = 43.2
+lon_w = -94.2
+lon_e = -93.5
+res_arcsec = 15
+dt = "1h"
+report_every = "30d"
+
+[[module]]
+name = "water"
+kind = "water.basin"
+[module.params]
+station = "USC00138806"
+usgs_site = "05481000"
+lat_s = 42.3
+lat_n = 43.2
+lon_w = -94.2
+lon_e = -93.5
+res_arcsec = 15
+gauge_lat = 42.4319722
+gauge_lon = -93.8059444
+snap_radius = 3
+dt = "1h"
+report_every = "1d"
+soil_capacity_mm = 150
+drain_per_day = 0.03
+pet_factor = 0.7
+snow_t_c = 0
+ddf_mm_per_c_day = 3
+channel_km2 = 2
+v_channel_m_s = 0.4
+v_hill_m_s = 0.02

@@ -114,6 +114,42 @@ fn verify(path: &Path) -> Result<(), String> {
     Ok(())
 }
 
+/// esim score <run_dir> <sim_series> <obs_series>: skill of one series against another
+/// at matching times. Writes scores.json in the run folder.
+fn score(dir: &Path, sim: &str, obs: &str) -> Result<(), String> {
+    let text = fs::read_to_string(dir.join("run.json")).map_err(|e| e.to_string())?;
+    let v: serde_json::Value = serde_json::from_str(&text).map_err(|e| e.to_string())?;
+    let get = |name: &str| -> Result<Vec<(i64, f64)>, String> {
+        v["series"][name]["points"].as_array().ok_or(format!("no series {name}"))
+            .map(|a| a.iter().filter_map(|p| Some((p[0].as_i64()?, p[1].as_f64()?))).collect())
+    };
+    let s = get(sim)?; let o = get(obs)?;
+    let om: std::collections::BTreeMap<i64, f64> = o.into_iter().collect();
+    let pairs: Vec<(f64, f64)> = s.iter().filter_map(|(t, x)| om.get(t).map(|y| (*x, *y))).collect();
+    let n = pairs.len();
+    if n < 2 { return Err(format!("only {n} matching times between {sim} and {obs}")); }
+    let (ms, mo) = (pairs.iter().map(|p| p.0).sum::<f64>() / n as f64, pairs.iter().map(|p| p.1).sum::<f64>() / n as f64);
+    let sse: f64 = pairs.iter().map(|(x, y)| (x - y).powi(2)).sum();
+    let sso: f64 = pairs.iter().map(|(_, y)| (y - mo).powi(2)).sum();
+    let nse = 1.0 - sse / sso;
+    let rmse = (sse / n as f64).sqrt();
+    let pbias = 100.0 * pairs.iter().map(|(x, y)| x - y).sum::<f64>() / pairs.iter().map(|p| p.1).sum::<f64>();
+    let (ss, so) = ((pairs.iter().map(|(x, _)| (x - ms).powi(2)).sum::<f64>() / n as f64).sqrt(), (sso / n as f64).sqrt());
+    let r = pairs.iter().map(|(x, y)| (x - ms) * (y - mo)).sum::<f64>() / (n as f64 * ss * so);
+    let kge = 1.0 - ((r - 1.0).powi(2) + (ss / so - 1.0).powi(2) + (ms / mo - 1.0).powi(2)).sqrt();
+    let (maxs, maxo) = (pairs.iter().map(|p| p.0).fold(f64::MIN, f64::max), pairs.iter().map(|p| p.1).fold(f64::MIN, f64::max));
+    let row = serde_json::json!({ "sim": sim, "obs": obs, "n": n, "nse": nse, "kge": kge, "r": r, "pbias_pct": pbias, "rmse": rmse,
+        "mean_sim": ms, "mean_obs": mo, "max_sim": maxs, "max_obs": maxo });
+    let sp = dir.join("scores.json");
+    let mut all: Vec<serde_json::Value> = fs::read_to_string(&sp).ok().and_then(|t| serde_json::from_str(&t).ok()).unwrap_or_default();
+    all.retain(|x| !(x["sim"] == sim && x["obs"] == obs));
+    all.push(row.clone());
+    fs::write(&sp, serde_json::to_string_pretty(&all).unwrap()).map_err(|e| e.to_string())?;
+    println!("score    {sim} vs {obs}: n={n}  NSE={nse:.3}  KGE={kge:.3}  r={r:.3}  PBIAS={pbias:+.1}%  RMSE={rmse:.2}");
+    println!("         mean sim {ms:.2} obs {mo:.2}; max sim {maxs:.1} obs {maxo:.1}");
+    Ok(())
+}
+
 fn main() {
     let args: Vec<String> = std::env::args().collect();
     let res = match args.get(1).map(String::as_str) {
@@ -123,8 +159,12 @@ fn main() {
             match path { Some(p) => run(&p, &out), None => Err("usage: esim run <manifest.toml> [--out runs]".into()) }
         }
         Some("verify") => match args.get(2) { Some(p) => verify(Path::new(p)), None => Err("usage: esim verify <manifest.toml>".into()) },
+        Some("score") => match (args.get(2), args.get(3), args.get(4)) {
+            (Some(d), Some(a), Some(b)) => score(Path::new(d), a, b),
+            _ => Err("usage: esim score <run_dir> <sim_series> <obs_series>".into()),
+        },
         Some("kinds") => { for k in esim_modules::kinds() { println!("{k}"); } Ok(()) }
-        _ => Err("usage: esim run|verify|kinds".into()),
+        _ => Err("usage: esim run|verify|score|kinds".into()),
     };
     if let Err(e) = res { eprintln!("error: {e}"); std::process::exit(1); }
 }

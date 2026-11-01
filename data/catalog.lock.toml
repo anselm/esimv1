@@ -23,3 +23,15 @@ url = "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N43_00_
 sha256 = "fd13c2041ea3a133effeb9cdff3d02c8baf668d8e9dab24cb441840156fa190e"
 bytes = 39189738
 fetched = "2026-11-01"
+
+[files."ghcn-daily/USC00138806.csv"]
+url = "https://noaa-ghcn-pds.s3.amazonaws.com/csv/by_station/USC00138806.csv"
+sha256 = "47d52f1920f874f5185ffa78760b733485275290c603c33d1e30a0c5019d5b42"
+bytes = 9800809
+fetched = "2026-11-01"
+
+[files."usgs-dv/05481000-00060-1940-01-01-2026-12-31.rdb"]
+url = "https://waterservices.usgs.gov/nwis/dv/?format=rdb&sites=05481000&parameterCd=00060&statCd=00003&startDT=1940-01-01&endDT=2026-12-31"
+sha256 = "edbe0bb5b639a8c8ece755c5a68bb4d31ff044d0277ee8352c86d56ffcfd7693"
+bytes = 1006212
+fetched = "2026-11-01"
