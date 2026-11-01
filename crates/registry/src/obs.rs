@@ -121,8 +121,7 @@ pub fn era5_hourly(fetcher: &mut Fetcher, lat_s: f64, lat_n: f64, lon_w: f64, lo
         let url = format!("https://archive-api.open-meteo.com/v1/archive?latitude={}&longitude={}&start_date={s}&end_date={e}&hourly=temperature_2m,precipitation,shortwave_radiation,relative_humidity_2m,wind_speed_10m&models=era5&timezone=UTC&wind_speed_unit=ms",
             pts_lat.join(","), pts_lon.join(","));
         let key = format!("open-meteo-era5/{}_{}_{}_{}_{}deg_{s}_{e}.json", lat_s, lat_n, lon_w, lon_e, step);
-        let path = fetcher.fetch(&key, &url)?;
-        let text = std::fs::read_to_string(&path).map_err(|e| e.to_string())?;
+        let text = fetch_json_text(fetcher, &key, &url)?;
         let v: serde_json::Value = serde_json::from_str(&text).map_err(|e| format!("open-meteo json: {e}"))?;
         let arr: Vec<serde_json::Value> = match v { serde_json::Value::Array(a) => a, other => vec![other] };
         if arr.len() != np { return Err(format!("open-meteo returned {} points, expected {np}: {}", arr.len(), arr.first().map(|a| a["reason"].to_string()).unwrap_or_default())); }
@@ -145,6 +144,32 @@ pub fn era5_hourly(fetcher: &mut Fetcher, lat_s: f64, lat_n: f64, lon_w: f64, lo
         }
     }
     Ok(g)
+}
+
+/// Fetch a JSON document through the cache, refusing to keep anything that is not JSON
+/// (Open-Meteo answers rate limits and oversized requests with HTML or plain text), with
+/// a few retries and a pause between them.
+pub fn fetch_json_text(fetcher: &mut Fetcher, key: &str, url: &str) -> Result<String, String> {
+    let mut last = String::new();
+    for attempt in 0..4 {
+        let path = fetcher.fetch(key, url)?;
+        let text = std::fs::read_to_string(&path).map_err(|e| e.to_string())?;
+        let first = text.trim_start().chars().next().unwrap_or(' ');
+        if first == '{' || first == '[' {
+            // an error object is still JSON: surface its reason instead of caching it
+            if text.trim_start().starts_with("{\"error\"") {
+                last = text.chars().take(200).collect();
+            } else {
+                return Ok(text);
+            }
+        } else {
+            last = text.chars().take(200).collect();
+        }
+        let _ = std::fs::remove_file(&path);
+        fetcher.lock.files.remove(key);
+        std::thread::sleep(std::time::Duration::from_secs(15 * (attempt + 1)));
+    }
+    Err(format!("{key}: not JSON after retries: {last}"))
 }
 
 /// "2025-06-18T13:00" -> Unix seconds.

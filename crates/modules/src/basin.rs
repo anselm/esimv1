@@ -118,7 +118,7 @@ impl Basin {
             day_q_sum: 0.0, day_q_n: 0, day_p_mm: 0.0, day_sum_soil: Vec::new(), day_steps: 0, next_report: None,
             missing_prcp_days: 0, last_tmean: 0.0,
             grid: None, cells: Vec::new(), pos: Vec::new(), down: Vec::new(), area: Vec::new(), frac: Vec::new(), accum_km2: Vec::new(),
-            prcp: BTreeMap::new(), tmax: BTreeMap::new(), tmin: BTreeMap::new(), q_obs: BTreeMap::new(), basin_km2: 0.0,
+            prcp: BTreeMap::new(), tmax: BTreeMap::new(), tmin: BTreeMap::new(), q_obs: BTreeMap::new(), no3_obs: BTreeMap::new(), basin_km2: 0.0,
         };
         b.load()?;
         Ok(b)

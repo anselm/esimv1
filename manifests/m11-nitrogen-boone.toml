@@ -21,6 +21,7 @@ lat_n = 43.2
 lon_w = -94.2
 lon_e = -93.5
 res_arcsec = 30
+point_step_deg = 0.5
 start = "2013-01-01"
 end = "2017-12-31"
 dt = "1h"
