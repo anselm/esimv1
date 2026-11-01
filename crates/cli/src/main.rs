@@ -15,12 +15,20 @@ fn factory(name: &str, params: &toml::Value) -> Result<Box<dyn Module>, String> 
 fn load(path: &Path) -> Result<Manifest, String> {
     let text = fs::read_to_string(path).map_err(|e| format!("{}: {e}", path.display()))?;
     let mut m = Manifest::parse(&text)?;
+    fold_params(&mut m);
+    Ok(m)
+}
+
+/// The kernel's factory sees params only, so the CLI folds each entry's kind and the
+/// run seed into them. Modules that pick ensemble members read `seed`.
+fn fold_params(m: &mut Manifest) {
+    let seed = m.run.seed as i64;
     for e in &mut m.modules {
         if let toml::Value::Table(t) = &mut e.params {
             t.insert("kind".into(), toml::Value::String(e.kind.clone()));
+            t.insert("seed".into(), toml::Value::Integer(seed));
         }
     }
-    Ok(m)
 }
 
 fn run(path: &Path, out_root: &Path) -> Result<(), String> {
@@ -154,6 +162,92 @@ fn score(dir: &Path, sim: &str, obs: &str) -> Result<(), String> {
     Ok(())
 }
 
+/// esim ensemble <manifest> --branches N [--threads T] [--out runs]
+/// Runs N branches with seeds base+1..base+N in parallel, keeps each branch's series,
+/// and writes quantile bands per series. Branches never write field frames.
+fn ensemble(path: &Path, branches: u64, threads: usize, out_root: &Path) -> Result<(), String> {
+    let base = load(path)?;
+    // Warm the cache in this thread so branches do not race on downloads and the lock.
+    let _ = Kernel::new(base.clone(), factory)?;
+    let t0 = std::time::Instant::now();
+    let seeds: Vec<u64> = (1..=branches).map(|k| base.run.seed + k).collect();
+    let queue = std::sync::Mutex::new(seeds.clone());
+    let results: Vec<(u64, esim_kernel::RunOutput)> = std::thread::scope(|sc| {
+        let (tx, rx) = std::sync::mpsc::channel();
+        for _ in 0..threads.max(1) {
+            let tx = tx.clone();
+            let queue = &queue;
+            let base = &base;
+            sc.spawn(move || loop {
+                let seed = { let mut q = queue.lock().unwrap(); if q.is_empty() { break; } q.remove(0) };
+                let mut m = base.clone();
+                m.run.seed = seed;
+                fold_params(&mut m);
+                let out = Kernel::new(m, factory).and_then(|mut k| Ok(k.run()));
+                tx.send((seed, out)).unwrap();
+            });
+        }
+        drop(tx);
+        let mut v: Vec<(u64, esim_kernel::RunOutput)> = Vec::new();
+        for (seed, out) in rx { match out { Ok(o) => { eprintln!("branch seed {seed}: {} events, digest {}, ledgers {}", o.events, o.log_digest, if o.all_ledgers_closed { "closed" } else { "LEAK" }); v.push((seed, o)); } Err(e) => eprintln!("branch seed {seed} failed: {e}") } }
+        v.sort_by_key(|(s, _)| *s);
+        v
+    });
+    if results.is_empty() { return Err("no branch finished".into()); }
+    let mtext = fs::read_to_string(path).map_err(|e| e.to_string())?;
+    let mhash = esim_kernel::hash::fnv1a(mtext.as_bytes());
+    let id = format!("{}-ens{}-{:08x}", base.run.name, results.len(), (mhash >> 32) as u32);
+    let dir = out_root.join(&id);
+    fs::create_dir_all(dir.join("branches")).map_err(|e| e.to_string())?;
+    fs::copy(path, dir.join("manifest.toml")).map_err(|e| e.to_string())?;
+    // quantiles per series over branches at matching times
+    let mut series_names: Vec<String> = results[0].1.series.keys().cloned().collect();
+    series_names.sort();
+    let mut bands = serde_json::Map::new();
+    for name in &series_names {
+        let unit = results[0].1.series[name].unit.clone();
+        let times: Vec<i64> = results[0].1.series[name].points.iter().map(|p| p.0 .0).collect();
+        let n = times.len();
+        let mut cols: Vec<Vec<f64>> = vec![Vec::with_capacity(results.len()); n];
+        for (_, o) in &results {
+            if let Some(s) = o.series.get(name) { for (i, p) in s.points.iter().enumerate() { if i < n { cols[i].push(p.1); } } }
+        }
+        let q = |v: &mut Vec<f64>, f: f64| -> f64 { if v.is_empty() { return f64::NAN; } v.sort_by(|a, b| a.partial_cmp(b).unwrap()); let x = f * (v.len() - 1) as f64; let (i, w) = (x.floor() as usize, x.fract()); if i + 1 < v.len() { v[i] * (1.0 - w) + v[i + 1] * w } else { v[i] } };
+        let mut band = serde_json::Map::new();
+        band.insert("unit".into(), serde_json::json!(unit));
+        band.insert("times".into(), serde_json::json!(times));
+        for (label, f) in [("min", 0.0), ("p10", 0.1), ("p25", 0.25), ("p50", 0.5), ("p75", 0.75), ("p90", 0.9), ("max", 1.0)] {
+            let vals: Vec<f64> = cols.iter_mut().map(|c| q(c, f)).collect();
+            band.insert(label.into(), serde_json::json!(vals));
+        }
+        bands.insert(name.clone(), serde_json::Value::Object(band));
+    }
+    for (seed, o) in &results {
+        let slim = serde_json::json!({ "seed": seed, "digest": o.log_digest, "events": o.events, "all_ledgers_closed": o.all_ledgers_closed, "series": o.series });
+        fs::write(dir.join("branches").join(format!("{seed}.json")), serde_json::to_string(&slim).unwrap()).map_err(|e| e.to_string())?;
+    }
+    let distinct = { let mut d: Vec<&String> = results.iter().map(|(_, o)| &o.log_digest).collect(); d.sort(); d.dedup(); d.len() };
+    let summary = serde_json::json!({
+        "name": base.run.name, "kind": "ensemble", "branches": results.len(), "seeds": results.iter().map(|(s, _)| *s).collect::<Vec<_>>(),
+        "start": results[0].1.start, "end": results[0].1.end, "kernel_version": results[0].1.kernel_version,
+        "all_ledgers_closed": results.iter().all(|(_, o)| o.all_ledgers_closed),
+        "distinct_digests": distinct,
+        "elapsed_ms": t0.elapsed().as_millis(), "series": bands,
+    });
+    fs::write(dir.join("ensemble.json"), serde_json::to_string(&summary).unwrap()).map_err(|e| e.to_string())?;
+    // an index row shaped like a run's, with kind
+    fs::write(dir.join("run.json"), serde_json::to_string_pretty(&serde_json::json!({
+        "name": base.run.name, "kind": "ensemble", "seed": base.run.seed, "start": results[0].1.start, "end": results[0].1.end,
+        "kernel_version": results[0].1.kernel_version, "events": results.iter().map(|(_, o)| o.events).sum::<usize>(), "delivered": 0,
+        "log_digest": format!("ens{}", results.len()), "all_ledgers_closed": summary["all_ledgers_closed"], "ledgers": [], "series": {}, "fields": {},
+        "elapsed_ms": summary["elapsed_ms"], "branches": results.len(),
+    })).unwrap()).map_err(|e| e.to_string())?;
+    update_index(out_root)?;
+    println!("ensemble {id}: {} branches, {} distinct digests, {} ms, ledgers {}", results.len(), summary["distinct_digests"], summary["elapsed_ms"], if summary["all_ledgers_closed"].as_bool().unwrap() { "all closed" } else { "LEAK" });
+    println!("out      {}", dir.display());
+    Ok(())
+}
+
 fn main() {
     let args: Vec<String> = std::env::args().collect();
     let res = match args.get(1).map(String::as_str) {
@@ -163,12 +257,20 @@ fn main() {
             match path { Some(p) => run(&p, &out), None => Err("usage: esim run <manifest.toml> [--out runs]".into()) }
         }
         Some("verify") => match args.get(2) { Some(p) => verify(Path::new(p)), None => Err("usage: esim verify <manifest.toml>".into()) },
+        Some("ensemble") => {
+            let path = args.get(2).map(PathBuf::from);
+            let get = |flag: &str| args.iter().position(|a| a == flag).and_then(|i| args.get(i + 1));
+            let branches: u64 = get("--branches").and_then(|s| s.parse().ok()).unwrap_or(8);
+            let threads: usize = get("--threads").and_then(|s| s.parse().ok()).unwrap_or(8);
+            let out = get("--out").map(PathBuf::from).unwrap_or_else(|| PathBuf::from("runs"));
+            match path { Some(p) => ensemble(&p, branches, threads, &out), None => Err("usage: esim ensemble <manifest.toml> --branches N [--threads T] [--out runs]".into()) }
+        }
         Some("score") => match (args.get(2), args.get(3), args.get(4)) {
             (Some(d), Some(a), Some(b)) => score(Path::new(d), a, b),
             _ => Err("usage: esim score <run_dir> <sim_series> <obs_series>".into()),
         },
         Some("kinds") => { for k in esim_modules::kinds() { println!("{k}"); } Ok(()) }
-        _ => Err("usage: esim run|verify|score|kinds".into()),
+        _ => Err("usage: esim run|verify|ensemble|score|kinds".into()),
     };
     if let Err(e) = res { eprintln!("error: {e}"); std::process::exit(1); }
 }

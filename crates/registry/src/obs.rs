@@ -178,3 +178,66 @@ impl WeatherGrid {
         if i < self.times.len() { Some(i) } else { None }
     }
 }
+
+/// Today's date (UTC) as YYYY-MM-DD, for keys of forecast fetches so each day's forecast
+/// is kept as its own file and can be verified later.
+pub fn today_utc() -> String {
+    let secs = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs() as i64;
+    let z = secs.div_euclid(86_400) + 719_468;
+    let era = z.div_euclid(146_097);
+    let doe = z - era * 146_097;
+    let yoe = (doe - doe / 1460 + doe / 36_524 - doe / 146_096) / 365;
+    let y = yoe + era * 400;
+    let doy = doe - (365 * yoe + yoe / 4 - yoe / 100);
+    let mp = (5 * doy + 2) / 153;
+    let d = doy - (153 * mp + 2) / 5 + 1;
+    let m = if mp < 10 { mp + 3 } else { mp - 9 };
+    let y = if m <= 2 { y + 1 } else { y };
+    format!("{y:04}-{m:02}-{d:02}")
+}
+
+/// GEFS ensemble members (via Open-Meteo's ensemble API, gfs_seamless) for the same
+/// point grid: `past_days` of analysis plus `forecast_days` ahead, one WeatherGrid per
+/// member (index 0 is the control). Keyed by today's date.
+pub fn gefs_ensemble(fetcher: &mut Fetcher, lat_s: f64, lat_n: f64, lon_w: f64, lon_e: f64, step: f64, past_days: u32, forecast_days: u32) -> Result<Vec<WeatherGrid>, String> {
+    let mut lats = Vec::new();
+    let mut la = (lat_s / step).floor() * step + step / 2.0;
+    while la < lat_n + step / 2.0 { lats.push((la * 1e4).round() / 1e4); la += step; }
+    let mut lons = Vec::new();
+    let mut lo = (lon_w / step).floor() * step + step / 2.0;
+    while lo < lon_e + step / 2.0 { lons.push((lo * 1e4).round() / 1e4); lo += step; }
+    let mut pts_lat = Vec::new(); let mut pts_lon = Vec::new();
+    for &a in &lats { for &o in &lons { pts_lat.push(format!("{a}")); pts_lon.push(format!("{o}")); } }
+    let np = pts_lat.len();
+    let url = format!("https://ensemble-api.open-meteo.com/v1/ensemble?latitude={}&longitude={}&hourly=temperature_2m,precipitation,shortwave_radiation,relative_humidity_2m,wind_speed_10m&models=gfs_seamless&past_days={past_days}&forecast_days={forecast_days}&timezone=UTC&wind_speed_unit=ms",
+        pts_lat.join(","), pts_lon.join(","));
+    let key = format!("open-meteo-gefs/{}_{}_{}_{}_{}deg_p{past_days}_f{forecast_days}_{}.json", lat_s, lat_n, lon_w, lon_e, step, today_utc());
+    let path = fetcher.fetch(&key, &url)?;
+    let text = std::fs::read_to_string(&path).map_err(|e| e.to_string())?;
+    let v: serde_json::Value = serde_json::from_str(&text).map_err(|e| format!("open-meteo json: {e}"))?;
+    let arr: Vec<serde_json::Value> = match v { serde_json::Value::Array(a) => a, other => vec![other] };
+    if arr.len() != np { return Err(format!("ensemble returned {} points, expected {np}: {}", arr.len(), arr.first().map(|a| a["reason"].to_string()).unwrap_or_default())); }
+    let h0 = &arr[0]["hourly"];
+    let n_members = h0.as_object().map(|o| o.keys().filter(|k| k.starts_with("precipitation")).count()).unwrap_or(0);
+    if n_members == 0 { return Err("ensemble: no members".into()); }
+    let times: Vec<i64> = h0["time"].as_array().ok_or("no hourly.time")?.iter().map(|t| parse_iso_hour(t.as_str().unwrap_or(""))).collect::<Result<_, _>>()?;
+    let mut members = Vec::with_capacity(n_members);
+    for m in 0..n_members {
+        let suffix = if m == 0 { String::new() } else { format!("_member{m:02}") };
+        let mut g = WeatherGrid { lats: lats.clone(), lons: lons.clone(), times: times.clone(), ..Default::default() };
+        g.t2m_c = vec![Vec::new(); np]; g.precip_mm = vec![Vec::new(); np]; g.sw_w_m2 = vec![Vec::new(); np]; g.rh_pct = vec![Vec::new(); np]; g.wind_m_s = vec![Vec::new(); np];
+        for (p, item) in arr.iter().enumerate() {
+            let h = &item["hourly"];
+            let take = |name: &str, dst: &mut Vec<f32>| {
+                for x in h[format!("{name}{suffix}")].as_array().cloned().unwrap_or_default() { dst.push(x.as_f64().map(|f| f as f32).unwrap_or(f32::NAN)); }
+            };
+            take("temperature_2m", &mut g.t2m_c[p]);
+            take("precipitation", &mut g.precip_mm[p]);
+            take("shortwave_radiation", &mut g.sw_w_m2[p]);
+            take("relative_humidity_2m", &mut g.rh_pct[p]);
+            take("wind_speed_10m", &mut g.wind_m_s[p]);
+        }
+        members.push(g);
+    }
+    Ok(members)
+}

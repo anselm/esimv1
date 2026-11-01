@@ -1,0 +1,63 @@
+# F1: a river forecast with a band. ERA5 reanalysis spins the Boone River basin up from
+# January 2025 to where ERA5 ends (about five days ago); a GEFS ensemble member, chosen by
+# the run seed, carries the recent days and the next ten. Run as an ensemble:
+#   esim ensemble manifests/f1-boone-forecast.toml --branches 31 --threads 8
+# Each branch is one member; the band is the forecast. The hindcast part is scored with
+#   esim score runs/<branch> hydro.q_sim_daily_m3_s hydro.q_obs_daily_m3_s
+
+[run]
+name = "f1-boone-forecast"
+start = "2025-01-01"
+end = "2026-11-11"
+seed = 0
+close_every = "1d"
+
+[[module]]
+name = "wx"
+kind = "weather.era5"
+[module.params]
+source = "chain"
+lat_s = 42.3
+lat_n = 43.2
+lon_w = -94.2
+lon_e = -93.5
+res_arcsec = 30
+point_step_deg = 0.25
+start = "2025-01-01"
+end = "2026-10-31"
+past_days = 10
+forecast_days = 10
+dt = "1h"
+
+[[module]]
+name = "sun"
+kind = "sun.irradiance"
+[module.params]
+lat_s = 42.3
+lat_n = 43.2
+lon_w = -94.2
+lon_e = -93.5
+res_arcsec = 30
+dt = "1h"
+report_every = "90d"
+
+[[module]]
+name = "water"
+kind = "water.basin"
+[module.params]
+forcing = "wx"
+station = "USC00138806"
+usgs_site = "05481000"
+lat_s = 42.3
+lat_n = 43.2
+lon_w = -94.2
+lon_e = -93.5
+res_arcsec = 30
+gauge_lat = 42.4319722
+gauge_lon = -93.8059444
+snap_radius = 3
+dt = "1h"
+report_every = "90d"
+soil_capacity_mm = 150
+drain_per_day = 0.03
+pet_factor = 0.7

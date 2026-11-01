@@ -8,7 +8,7 @@
 
 use esim_kernel::manifest::{param_duration, param_f64};
 use esim_kernel::{Ctx, Duration, Event, LatLonGrid, Module, Time};
-use esim_registry::obs::{era5_hourly, WeatherGrid};
+use esim_registry::obs::{era5_hourly, gefs_ensemble, WeatherGrid};
 use esim_registry::{dem_window, Catalog, Fetcher};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
@@ -23,9 +23,19 @@ pub struct Weather {
     dt: Duration,
     start: String,
     end: String,
+    /// "era5": reanalysis only. "chain": ERA5 where it exists, then a GEFS ensemble member
+    /// chosen by the run seed, for the recent past and the forecast window.
+    source: String,
+    past_days: u32,
+    forecast_days: u32,
+    seed: u64,
+    member: usize,
     missing_hours: u32,
+    era5_hours: u32,
+    member_hours: u32,
     #[serde(skip)] grid: Option<LatLonGrid>,
     #[serde(skip)] wx: Option<WeatherGrid>,
+    #[serde(skip)] fc: Option<WeatherGrid>,
     #[serde(skip)] areas: Vec<f64>,
 }
 
@@ -40,7 +50,12 @@ impl Weather {
             dt: param_duration(p, "dt", "1h")?,
             start: p.get("start").and_then(|v| v.as_str()).unwrap_or("2025-01-01").to_string(),
             end: p.get("end").and_then(|v| v.as_str()).unwrap_or("2025-12-31").to_string(),
-            missing_hours: 0, grid: None, wx: None, areas: Vec::new(),
+            source: p.get("source").and_then(|v| v.as_str()).unwrap_or("era5").to_string(),
+            past_days: param_f64(p, "past_days", 10.0) as u32,
+            forecast_days: param_f64(p, "forecast_days", 10.0) as u32,
+            seed: p.get("seed").and_then(|v| v.as_integer()).unwrap_or(1) as u64,
+            member: 0,
+            missing_hours: 0, era5_hours: 0, member_hours: 0, grid: None, wx: None, fc: None, areas: Vec::new(),
         };
         w.load()?;
         Ok(w)
@@ -54,6 +69,11 @@ impl Weather {
         let grid = LatLonGrid { nx: w.nx, ny: w.ny, dlon: w.dlon, dlat: w.dlat, lon_w: w.lon_w, lat_n: w.lat_n };
         self.areas = (0..grid.ny).flat_map(|r| std::iter::repeat_n(grid.row_area(r), grid.nx)).collect();
         self.wx = Some(era5_hourly(&mut f, self.lat_s, self.lat_n, self.lon_w, self.lon_e, self.point_step_deg, &self.start, &self.end)?);
+        if self.source == "chain" {
+            let members = gefs_ensemble(&mut f, self.lat_s, self.lat_n, self.lon_w, self.lon_e, self.point_step_deg, self.past_days, self.forecast_days)?;
+            self.member = ((self.seed.max(1) - 1) as usize) % members.len();
+            self.fc = members.into_iter().nth(self.member);
+        }
         self.grid = Some(grid);
         Ok(())
     }
@@ -74,12 +94,20 @@ impl Module for Weather {
         // instant (states); our step ending at `now` takes the record labelled now - 1h,
         // which Open-Meteo labels by the start of the hour.
         let t: Time = ctx.now();
-        let h = wx.hour_index(t.0 - 3600);
         let n = grid.nx * grid.ny;
         let (mut t2m, mut pr, mut sw, mut rh, mut wind) = (vec![f32::NAN; n], vec![0f32; n], vec![0f32; n], vec![f32::NAN; n], vec![f32::NAN; n]);
+        // ERA5 if it has a finite temperature for this hour, else the forecast member.
+        let era_h = wx.hour_index(t.0 - 3600).filter(|&h| wx.t2m_c.first().and_then(|v| v.get(h)).map(|x| x.is_finite()).unwrap_or(false));
+        let (src, h): (&WeatherGrid, Option<usize>) = match (era_h, &self.fc) {
+            (Some(h), _) => { self.era5_hours += 1; (wx, Some(h)) }
+            (None, Some(fc)) => { let h = fc.hour_index(t.0 - 3600).filter(|&h| fc.t2m_c.first().and_then(|v| v.get(h)).map(|x| x.is_finite()).unwrap_or(false)); if h.is_some() { self.member_hours += 1; } (fc, h) }
+            (None, None) => (wx, None),
+        };
+        ctx.report("wx.source", "0=era5 1=member", if era_h.is_some() { 0.0 } else { 1.0 });
         match h {
             None => { self.missing_hours += 1; }
             Some(h) => {
+                let wx = src;
                 for row in 0..grid.ny {
                     let lat = grid.lat(row);
                     for col in 0..grid.nx {
