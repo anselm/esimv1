@@ -94,3 +94,34 @@ decision whether to use them is deferred with the rest of accounts; what is deci
 that a sim is a forkable document with a lineage, results are a content-addressed cache, and
 private assets are catalog entries with an owner. Nothing in the kernel needs to know who a
 user is.
+
+## Addendum, same day: digitaltwins.wiki or a data server
+
+Anselm: "We could maybe store common data on digitaltwins.wiki ... Or have a data server I
+guess hmm." Agent's view after reading the wiki's manifest and README
+(~/projects/2026/twin-compendium, repo anselm/digitaltwin-wiki, one exe.dev VM, the repo is
+the site, every entry a markdown file, machines draft and people promote by pull request).
+
+Both, split by size and by what each is good at.
+
+- The wiki is the right home for the catalog and the event tables, as text. A base layer's
+  wiki page is its catalog entry: what it is, source, licence, resolution, how to fetch, the
+  hash of the current version. The calendar and hazard tables are exactly the wiki's model:
+  public, plain text, sourced, reviewed by pull request, machine-readable exports already
+  promised to practitioners. The wiki's own devlog already has a shocks entry (2026-10-25)
+  that is the start of the hazards table. Putting the tables there makes them a civic good
+  with an editorial process, which is better than a private repo nobody reviews.
+- The wiki is the wrong home for bytes. It is one exe.dev VM with the single-VM durability
+  the portfolio has already learned about, and a 461 MB repo today; gigabytes of rasters do
+  not belong in git or on that disk. Bytes go to object storage (R2), and the wiki page
+  points at them by hash.
+- A data server is not needed at first. Cloud-native formats are read by range request
+  straight from object storage, so the "server" is a bucket plus a fetcher library. Build a
+  real server only if a need appears that a bucket cannot meet: tile serving for the viewer,
+  authenticated private assets, or a query interface over observations. Those are later and
+  each is a small service in front of the same bucket.
+
+So: catalog and tables in the wiki repo, bytes in R2, fetcher in the kernel, no server until
+proven necessary. This adds a dependency from this project onto the wiki's schema, which is
+fine because both are his and the wiki wanted machine-readable exports anyway. D7 and D8
+above are revised to target the wiki repo for the text half.
