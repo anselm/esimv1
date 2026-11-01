@@ -125,3 +125,29 @@ So: catalog and tables in the wiki repo, bytes in R2, fetcher in the kernel, no 
 proven necessary. This adds a dependency from this project onto the wiki's schema, which is
 fine because both are his and the wiki wanted machine-readable exports anyway. D7 and D8
 above are revised to target the wiki repo for the text half.
+
+## Addendum, same day: a dedicated store or just an index
+
+Anselm: "Maybe we have a dedicated data store or just an index of data sources?" Agent's
+recommendation: an index first, with a mirror that fills itself on demand.
+
+Most base layers are already hosted by institutions more durable than we are (USGS, NASA,
+NOAA, Copernicus, national mapping agencies), and much of it is already in cloud-native form
+on public buckets (AWS Open Data, Microsoft's Planetary Computer, Source Cooperative are the
+ones the agent is confident exist). Mirroring all of that would be expensive and pointless.
+But upstream URLs rot, files get silently replaced, and a run pinned to a hash in 2026 has to
+find those bytes in 2031. So:
+
+- The index is the catalog: for every asset, where it lives upstream, how to fetch it, its
+  licence, and the hash of the version we used. Lives in the wiki repo as text.
+- The fetcher resolves a hash: local cache first, then upstream, verifying the hash; if
+  upstream no longer matches, the mirror.
+- The mirror (an R2 bucket) holds only three things: what we made ourselves (event tables'
+  exports, observation series we assembled, derived layers worth keeping), anything small,
+  and any upstream asset a promoted manifest depends on, copied at first use. A manifest
+  that is promoted to the public baseline triggers mirroring of everything it pins. Nothing
+  else is copied.
+
+That is a dedicated store in the end, but one that grows only as fast as real runs need it,
+and an index for everything else. The decision deferred: whether users' private assets go in
+the same bucket under their prefix or in storage they bring. Not needed before stage 5.
