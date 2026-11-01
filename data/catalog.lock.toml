@@ -1,0 +1,7 @@
+# Written by the fetcher. One entry per fetched file: the bytes a run used.
+
+[files."copernicus-dem-glo30/N42_W094.tif"]
+url = "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N42_00_W094_00_DEM/Copernicus_DSM_COG_10_N42_00_W094_00_DEM.tif"
+sha256 = "ed03509b743e06be040cb2ec8e8e623270a12d7232fcc9da09e23938d6a44fa0"
+bytes = 39892566
+fetched = "2026-11-01"

@@ -1,0 +1,14 @@
+[package]
+name = "esim-registry"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Catalog of base layers, a fetcher that verifies hashes and caches, and readers for the formats they come in"
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+toml.workspace = true
+ureq = "2"
+flate2 = "1"
+sha2 = "0.10"

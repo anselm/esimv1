@@ -1,0 +1,29 @@
+# The registry's catalog: where each base layer lives upstream, how to fetch it, under
+# what licence, and how its tiles are named. Hashes of fetched files go in
+# catalog.lock.toml so a manifest can pin bytes. Text half of the registry; the bytes
+# are cached under data/cache (ignored by git) and mirrored on demand later.
+
+[[asset]]
+id = "copernicus-dem-glo30"
+title = "Copernicus DEM GLO-30, global land surface elevation at one arc-second"
+kind = "raster-tiles"
+crs = "EPSG:4326"
+resolution = "1 arc-second (about 30 m)"
+units = "m above EGM2008 geoid"
+format = "Cloud Optimized GeoTIFF, Float32, deflate with floating-point predictor, 1024-px internal tiles, 3600x3600 per one-degree tile"
+# {lat} like N42 or S05, {lon} like W094 or E006; the tile's name gives its north-west corner's latitude floor and longitude floor.
+url_template = "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_{lat}_00_{lon}_00_DEM/Copernicus_DSM_COG_10_{lat}_00_{lon}_00_DEM.tif"
+tile_list = "https://copernicus-dem-30m.s3.amazonaws.com/tileList.txt"
+source = "ESA Copernicus DEM, produced by Airbus, distributed on the AWS Open Data registry (bucket copernicus-dem-30m)"
+licence = "Copernicus DEM licence: free use with attribution to ESA/Airbus; full text to be fetched and stored before promotion"
+verified = "2026-10-31 from canada1: anonymous GET and range requests work; 26,450 tiles listed"
+notes = "Land only; sea is nodata. Bathymetry (GEBCO) is a separate asset, not yet verified."
+
+[[place]]
+id = "boone-river-webster-city"
+title = "Boone River above Webster City, Iowa"
+why = "The stage for the milestone ladder: tile-drained Corn Belt, a USGS gauge with daily discharge since 1940, MODIS coverage, farms, drains to the Des Moines, Mississippi and the Gulf."
+gauge = "USGS 05481000 Boone River near Webster City, IA; 42.4319722 N, 93.8059444 W; drainage area 844 sq mi; HUC 07100005; daily discharge (00060) 1940-03-09 to present"
+verified = "2026-10-31 from canada1 via waterservices.usgs.gov site service"
+dem_tiles = ["N42_W094", "N42_W095", "N43_W094", "N43_W095"]
+notes = "Nitrate at this gauge: a short daily series 2012-2017 (parameter 83554) and about twenty ambient samples 2006-2025; the nitrogen scoreboard for M11 will need other Iowa sites or the state's water quality network."

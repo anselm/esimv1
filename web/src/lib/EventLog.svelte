@@ -26,6 +26,11 @@
     })
   })
   const shown = $derived(filtered.slice(-LIMIT))
+  const summary = $derived(
+    (filtered.length > LIMIT ? `last ${LIMIT} of ` : '') +
+      filtered.length.toLocaleString('en-US') +
+      (topic || q.trim() ? ' matching' : ' events'),
+  )
 </script>
 
 <div class="mb-2 flex flex-wrap items-center gap-2 text-xs">
@@ -35,7 +40,7 @@
   </select>
   <input bind:value={q} placeholder="filter" class="field w-40" aria-label="text filter" />
   <span class="mono muted">
-    {#if filtered.length > LIMIT}last {LIMIT} of {/if}{filtered.length.toLocaleString('en-US')} of {events.length.toLocaleString('en-US')}
+    {summary}
   </span>
 </div>
 
@@ -47,7 +52,7 @@
       <thead>
         <tr class="muted text-left">
           <th class="pr-3 font-normal">time</th>
-          <th class="pr-3 font-normal">seq</th>
+          <th class="pr-3 text-right font-normal">seq</th>
           <th class="pr-3 font-normal">src → to</th>
           <th class="pr-3 font-normal">topic</th>
           <th class="font-normal">data</th>

@@ -25,14 +25,14 @@
 
   // a few evenly spaced time ticks, labelled with ISO dates
   const ticks = $derived.by(() => {
-    const n = width < 360 ? 2 : 4
+    const n = width < 360 ? 2 : width < 600 ? 3 : 4
     const out = []
     for (let i = 0; i <= n; i++) out.push(tMin + ((tMax - tMin) * i) / n)
     return out
   })
 </script>
 
-<figure>
+<figure class="min-w-0">
   <figcaption class="flex items-baseline justify-between text-xs">
     <span class="mono">{name}</span>
     <span class="mono muted">{unit} · {points.length} pts</span>
@@ -43,7 +43,7 @@
       <span>{num(yMin)}</span>
     </div>
     <div class="min-w-0 flex-1" bind:clientWidth={width}>
-      <svg {width} height={H} viewBox="0 0 {width} {H}" class="block overflow-visible" role="img" aria-label="{name} over time">
+      <svg height={H} viewBox="0 0 {width} {H}" class="block w-full" role="img" aria-label="{name} over time">
         <!-- frame -->
         <line x1={padL} y1={H - padB} x2={width - padR} y2={H - padB} class="stroke-neutral-300 dark:stroke-neutral-700" stroke-width="1" />
         <line x1={padL} y1={padT} x2={width - padR} y2={padT} class="stroke-neutral-200 dark:stroke-neutral-800" stroke-width="1" stroke-dasharray="2 3" />
