@@ -174,3 +174,14 @@ warehouse feature.
 The line: anything required to make a run reproducible and scorable is in; anything that
 serves analysis of data for its own sake is out. The registry can later grow toward a
 warehouse if users ask for it, but the kernel does not depend on that.
+
+## Addendum, 2026-11-01 UTC (still 2026-10-31 in SF): elevation source verified
+
+Checked from canada1, not recalled: the Copernicus DEM GLO-30 is on a public S3 bucket,
+`copernicus-dem-30m.s3.amazonaws.com`, anonymous, no requester-pays, `Accept-Ranges:
+bytes`, 26,450 one-degree Cloud Optimized GeoTIFF tiles named like
+`Copernicus_DSM_COG_10_N42_00_W094_00_DEM/…_DEM.tif` (that tile is 39.9 MB, dated
+2022-05-09), with a `tileList.txt` at the bucket root. This is the registry's first base
+layer: global land elevation at one arc-second. Bathymetry (GEBCO) is still to be checked.
+Licence: the Copernicus DEM licence permits free use with attribution; the exact text is
+to be fetched and stored with the catalog entry before promotion.
