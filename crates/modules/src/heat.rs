@@ -167,3 +167,20 @@ impl Module for Heat {
         self.t_k = keep_t;
     }
 }
+
+impl Heat {
+    pub fn describe(name: &str, p: &toml::Value) -> esim_kernel::describe::Describe {
+        let source = param_str(p, "source", "sun.incident_j");
+        esim_kernel::describe::Describe::new("heat.slab", name, "A surface heat slab: absorbs the incident energy field, radiates to a sky temperature, keeps the energy ledger closed at a different rate from the sun.")
+            .priority(1).dt(param_str(p, "dt", "15m"))
+            .param("source", "sun.incident_j", "", "world field of incident energy per cell per source tick")
+            .param("dt", "15m", "", "").param("report_every", "1d", "", "")
+            .param("albedo", 0.2, "", "").param("emissivity", 0.95, "", "")
+            .param("heat_capacity_j_m2_k", 3.0e5, "J/m2/K", "").param("t_sky_k", 255.0, "K", "").param("t_init_c", 0.0, "degC", "")
+            .read(source, "J", true, "")
+            .ledger("energy", "J", 1e6)
+            .frame("t_surface_daily_mean", "degC")
+            .report("heat.t_surface_mean_c", "degC")
+            .note("Parameter provenance: devlog/20261101-m2-heat.md")
+    }
+}

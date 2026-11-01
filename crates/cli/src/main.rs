@@ -1,6 +1,8 @@
 //! esim run <manifest.toml> [--out runs]   write a run folder and print the summary
 //! esim verify <manifest.toml>             prove determinism and replay-from-snapshot
-//! esim kinds                              list module kinds
+//! esim check <manifest.toml>              check the wiring from the modules' descriptions, fetching nothing
+//! esim describe <manifest.toml>           the wired modules' descriptions and findings as JSON
+//! esim kinds [--json]                     list module kinds, or describe each under default parameters
 
 use esim_kernel::{Kernel, Manifest, Module};
 use std::fs;
@@ -12,11 +14,81 @@ fn factory(name: &str, params: &toml::Value) -> Result<Box<dyn Module>, String> 
 }
 
 /// The kernel's factory takes params only; fold each entry's kind into its params.
+/// Every load checks the wiring first: errors refuse the run, warnings go to stderr.
 fn load(path: &Path) -> Result<Manifest, String> {
     let text = fs::read_to_string(path).map_err(|e| format!("{}: {e}", path.display()))?;
     let mut m = Manifest::parse(&text)?;
+    let r = check_report(&m);
+    for w in &r.warnings { eprintln!("warning: {w}"); }
+    if !r.errors.is_empty() {
+        return Err(format!("manifest does not wire up:\n  {}", r.errors.join("\n  ")));
+    }
     fold_params(&mut m);
     Ok(m)
+}
+
+fn esim_root() -> PathBuf { std::env::var("ESIM_ROOT").ok().map(PathBuf::from).unwrap_or_else(|| PathBuf::from(".")) }
+
+/// The kernel's wiring check plus the registry's: every asset a module names must be in
+/// the catalog, every event table it names must exist.
+fn check_report(m: &Manifest) -> esim_kernel::CheckReport {
+    let mut r = esim_kernel::check(m, esim_modules::describe);
+    let root = esim_root();
+    let catalog = esim_registry::Catalog::load(&root.join("data/catalog.toml")).ok();
+    for d in &r.modules {
+        for a in &d.assets {
+            if let Some(table) = a.key.strip_prefix("events/") {
+                if !root.join("data/events").join(table).exists() { r.errors.push(format!("{} needs data/events/{table}, which is missing", d.name)); }
+            } else {
+                match &catalog {
+                    None => r.warnings.push(format!("{} needs asset {}, and data/catalog.toml could not be read", d.name, a.key)),
+                    Some(c) if c.asset(&a.key).is_none() => r.errors.push(format!("{} needs asset {}, which is not in data/catalog.toml", d.name, a.key)),
+                    _ => {}
+                }
+            }
+        }
+    }
+    r
+}
+
+/// esim check <manifest>: print the wiring report; exit 1 on errors.
+fn check(path: &Path) -> Result<(), String> {
+    let text = fs::read_to_string(path).map_err(|e| format!("{}: {e}", path.display()))?;
+    let m = Manifest::parse(&text)?;
+    let r = check_report(&m);
+    println!("{}  {} -> {}  {} modules", m.run.name, m.run.start, m.run.end, r.modules.len());
+    for d in &r.modules {
+        println!("  {:<10} {:<16} priority {:>2}  dt {:<4} owns {}  reads {}  pub {}  sub {}  ledgers {}",
+            d.name, d.kind, d.priority, d.dt,
+            d.fields_owned.iter().map(|p| p.name.as_str()).collect::<Vec<_>>().join(","),
+            d.fields_read.iter().map(|p| p.name.as_str()).collect::<Vec<_>>().join(","),
+            d.publishes.iter().map(|p| p.name.as_str()).collect::<Vec<_>>().join(","),
+            d.subscribes.iter().map(|p| p.name.as_str()).collect::<Vec<_>>().join(","),
+            d.ledgers.iter().map(|l| l.name.as_str()).collect::<Vec<_>>().join(","));
+    }
+    for e in &r.errors { println!("error: {e}"); }
+    for w in &r.warnings { println!("warning: {w}"); }
+    for i in &r.info { println!("info: {i}"); }
+    if r.errors.is_empty() { println!("ok: wiring checks"); Ok(()) } else { Err(format!("{} wiring error(s)", r.errors.len())) }
+}
+
+/// esim describe <manifest>: the wired modules' full descriptions and findings as JSON,
+/// for a facade or a person who wants everything.
+fn describe(path: &Path) -> Result<(), String> {
+    let text = fs::read_to_string(path).map_err(|e| format!("{}: {e}", path.display()))?;
+    let m = Manifest::parse(&text)?;
+    let r = check_report(&m);
+    println!("{}", serde_json::to_string_pretty(&r).unwrap());
+    Ok(())
+}
+
+/// esim kinds [--json]: the kinds, or their full descriptions under default parameters.
+fn kinds(json: bool) -> Result<(), String> {
+    if !json { for k in esim_modules::kinds() { println!("{k}"); } return Ok(()); }
+    let empty = toml::Value::Table(Default::default());
+    let all: Vec<_> = esim_modules::kinds().iter().map(|k| esim_modules::describe(k, k, &empty).unwrap()).collect();
+    println!("{}", serde_json::to_string_pretty(&all).unwrap());
+    Ok(())
 }
 
 /// The kernel's factory sees params only, so the CLI folds each entry's kind and the
@@ -378,8 +450,10 @@ fn main() {
             (Some(d), Some(a), Some(b)) => score(Path::new(d), a, b),
             _ => Err("usage: esim score <run_dir> <sim_series> <obs_series>".into()),
         },
-        Some("kinds") => { for k in esim_modules::kinds() { println!("{k}"); } Ok(()) }
-        _ => Err("usage: esim run|verify|ensemble|sweep|score|kinds".into()),
+        Some("kinds") => kinds(args.iter().any(|a| a == "--json")),
+        Some("check") => match args.get(2) { Some(p) => check(Path::new(p)), None => Err("usage: esim check <manifest.toml>".into()) },
+        Some("describe") => match args.get(2) { Some(p) => describe(Path::new(p)), None => Err("usage: esim describe <manifest.toml>".into()) },
+        _ => Err("usage: esim run|verify|ensemble|sweep|score|check|describe|kinds [--json]".into()),
     };
     if let Err(e) = res { eprintln!("error: {e}"); std::process::exit(1); }
 }

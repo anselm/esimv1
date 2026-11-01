@@ -1,4 +1,7 @@
-//! Modules. Each is built by `factory` from its manifest `kind`.
+//! Modules. Each kind registers two functions in `KINDS`: `build`, which constructs it
+//! (and fetches its data), and `describe`, which states its surface from the parameters
+//! alone, fetching nothing. The kernel checks wiring from the descriptions; the CLI
+//! prints them for people and for the facade.
 
 pub mod water;
 pub mod sun;
@@ -12,7 +15,40 @@ pub mod farms;
 pub mod rules;
 pub mod nitrogen;
 
+use esim_kernel::describe::Describe;
 use esim_kernel::Module;
+
+pub struct Kind {
+    pub kind: &'static str,
+    pub build: fn(&str, &toml::Value) -> Result<Box<dyn Module>, String>,
+    pub describe: fn(&str, &toml::Value) -> Describe,
+}
+
+macro_rules! kind {
+    ($k:literal, $t:ty) => {
+        Kind { kind: $k, build: |n, p| Ok(Box::new(<$t>::new(n, p)?) as Box<dyn Module>), describe: <$t>::describe }
+    };
+}
+
+pub static KINDS: &[Kind] = &[
+    kind!("water.source", water::Source),
+    kind!("water.bucket", water::Bucket),
+    kind!("sun.irradiance", sun::Sun),
+    kind!("heat.slab", heat::Heat),
+    kind!("water.basin", basin::Basin),
+    kind!("weather.era5", weather::Weather),
+    kind!("veg.crop", veg::Veg),
+    kind!("fauna.herbivore", fauna::Herbivore),
+    kind!("fauna.predator", fauna::Predator),
+    kind!("hazard.fire", fire::Fire),
+    kind!("agents.farms", farms::Farms),
+    kind!("rules.calendar", rules::Rules),
+    kind!("nitrogen.basin", nitrogen::Nitrogen),
+];
+
+fn find(kind: &str) -> Result<&'static Kind, String> {
+    KINDS.iter().find(|k| k.kind == kind).ok_or_else(|| format!("unknown module kind {kind}"))
+}
 
 pub fn factory(name: &str, params: &toml::Value) -> Result<Box<dyn Module>, String> {
     let kind = params.get("kind").and_then(|v| v.as_str()).unwrap_or("");
@@ -21,22 +57,12 @@ pub fn factory(name: &str, params: &toml::Value) -> Result<Box<dyn Module>, Stri
 
 /// Build by kind. The kernel passes params only, so the CLI folds `kind` into them.
 pub fn build(kind: &str, name: &str, params: &toml::Value) -> Result<Box<dyn Module>, String> {
-    match kind {
-        "water.source" => Ok(Box::new(water::Source::new(name, params)?)),
-        "water.bucket" => Ok(Box::new(water::Bucket::new(name, params)?)),
-        "sun.irradiance" => Ok(Box::new(sun::Sun::new(name, params)?)),
-        "heat.slab" => Ok(Box::new(heat::Heat::new(name, params)?)),
-        "water.basin" => Ok(Box::new(basin::Basin::new(name, params)?)),
-        "weather.era5" => Ok(Box::new(weather::Weather::new(name, params)?)),
-        "veg.crop" => Ok(Box::new(veg::Veg::new(name, params)?)),
-        "fauna.herbivore" => Ok(Box::new(fauna::Herbivore::new(name, params)?)),
-        "fauna.predator" => Ok(Box::new(fauna::Predator::new(name, params)?)),
-        "hazard.fire" => Ok(Box::new(fire::Fire::new(name, params)?)),
-        "agents.farms" => Ok(Box::new(farms::Farms::new(name, params)?)),
-        "rules.calendar" => Ok(Box::new(rules::Rules::new(name, params)?)),
-        "nitrogen.basin" => Ok(Box::new(nitrogen::Nitrogen::new(name, params)?)),
-        other => Err(format!("unknown module kind {other}")),
-    }
+    (find(kind)?.build)(name, params)
 }
 
-pub fn kinds() -> &'static [&'static str] { &["water.source", "water.bucket", "sun.irradiance", "heat.slab", "water.basin", "weather.era5", "veg.crop", "fauna.herbivore", "fauna.predator", "hazard.fire", "agents.farms", "rules.calendar", "nitrogen.basin"] }
+/// Describe a kind under a name and parameters without building it. Nothing is fetched.
+pub fn describe(kind: &str, name: &str, params: &toml::Value) -> Result<Describe, String> {
+    Ok((find(kind)?.describe)(name, params))
+}
+
+pub fn kinds() -> Vec<&'static str> { KINDS.iter().map(|k| k.kind).collect() }

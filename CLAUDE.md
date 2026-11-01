@@ -39,5 +39,10 @@ how to run it. Not deployed anywhere; it runs on canada1.
   USC00138806, window 42.3 to 43.2 N and 94.2 to 93.5 W, four one-degree DEM tiles.
 - `esim ensemble` warms the cache once before spawning threads; branches must not
   download.
+- Every module kind has a `describe(name, params)` beside its `new`, registered in
+  `crates/modules/src/lib.rs::KINDS`. When a module gains or loses a topic, field, ledger
+  or asset, update its describe; `crates/modules/tests/describe.rs` compares declarations
+  against real run logs and fails otherwise. `esim run` refuses a manifest whose wiring
+  does not check. The contract is `docs/protocol-v0.md`.
 - A first ten-day river forecast was issued 2026-11-01 (`devlog/20261101-f1-first-forecast.md`)
   and is to be checked against USGS on or after 2026-11-11.

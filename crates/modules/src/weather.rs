@@ -141,3 +141,22 @@ impl Module for Weather {
         *self = w;
     }
 }
+
+impl Weather {
+    pub fn describe(name: &str, p: &toml::Value) -> esim_kernel::describe::Describe {
+        let source = p.get("source").and_then(|v| v.as_str()).unwrap_or("era5");
+        let d = esim_kernel::describe::Describe::new("weather.era5", name, "Observed weather as fields: ERA5 reanalysis hourly on a point grid, bilinear to the cells; with source = chain, ERA5 up to the archive's edge then one GEFS ensemble member chosen by the seed.")
+            .priority(-1).dt(esim_kernel::manifest::param_str(p, "dt", "1h"))
+            .param("lat_s", 42.3, "deg", "").param("lat_n", 43.2, "deg", "").param("lon_w", -94.2, "deg", "").param("lon_e", -93.5, "deg", "")
+            .param("res_arcsec", 15.0, "arcsec", "").param("point_step_deg", 0.25, "deg", "spacing of the Open-Meteo points")
+            .param("dt", "1h", "", "").param("start", "2025-01-01", "date", "").param("end", "2025-12-31", "date", "")
+            .param("source", "era5", "", "era5 | chain").param("past_days", 10, "d", "chain: GEFS past days").param("forecast_days", 10, "d", "chain: GEFS horizon")
+            .param("seed", 1, "", "folded in from the run seed; chain picks the GEFS member from it")
+            .own("wx.t2m_c", "degC").own("wx.precip_mm", "mm").own("wx.sw_w_m2", "W/m2").own("wx.rh_pct", "%").own("wx.wind_m_s", "m/s")
+            .report("wx.points", "1").report("wx.source", "0=era5 1=member")
+            .report("wx.sw_mean_w_m2", "W/m2").report("wx.t2m_mean_c", "degC").report("wx.precip_mean_mm", "mm")
+            .asset("copernicus-dem-glo30", "the cell grid")
+            .asset("open-meteo-era5", "hourly archive; lags about five days");
+        if source == "chain" { d.asset("open-meteo-gefs", "31-member ensemble, one member per branch") } else { d }
+    }
+}

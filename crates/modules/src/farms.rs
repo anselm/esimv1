@@ -236,3 +236,29 @@ impl Module for Farms {
     fn snapshot(&self) -> serde_json::Value { serde_json::to_value(self).unwrap() }
     fn restore(&mut self, v: serde_json::Value) { let mut f: Farms = serde_json::from_value(v).unwrap(); f.load().expect("farms reload"); *self = f; }
 }
+
+impl Farms {
+    pub fn describe(name: &str, p: &toml::Value) -> esim_kernel::describe::Describe {
+        esim_kernel::describe::Describe::new("agents.farms", name, "Farm agents on blocks of basin cells: choose corn or soy each spring by expected margin and rotation, plant when the soil is warm and workable and no rule forbids, pay costs, sell the harvest, keep a money ledger; write their orders as fields the crop and the nitrogen module read.")
+            .priority(2).dt(esim_kernel::manifest::param_str(p, "dt", "1d"))
+            .param("lat_s", 42.3, "deg", "").param("lat_n", 43.2, "deg", "").param("lon_w", -94.2, "deg", "").param("lon_e", -93.5, "deg", "")
+            .param("res_arcsec", 30.0, "arcsec", "").param("gauge_lat", 42.4319722, "deg", "").param("gauge_lon", -93.8059444, "deg", "").param("snap_radius", 3, "cells", "")
+            .param("dt", "1d", "", "").param("block_cells", 4, "cells", "cells on a side of one farm block")
+            .param("price_corn_usd_bu", 4.3, "USD/bu", "").param("price_soy_usd_bu", 10.2, "USD/bu", "")
+            .param("cost_corn_usd_ha", 1100.0, "USD/ha", "").param("cost_soy_usd_ha", 700.0, "USD/ha", "").param("land_cost_usd_ha", 650.0, "USD/ha", "")
+            .param("expect_corn_bu_ac", 200.0, "bu/ac", "").param("expect_soy_bu_ac", 58.0, "bu/ac", "")
+            .param("rotation_bonus_bu_ac", 12.0, "bu/ac", "").param("corn_on_corn_penalty_bu_ac", 20.0, "bu/ac", "so the basin rotates about half and half")
+            .param("n_rate_corn_kg_ha", 170.0, "kgN/ha", "").param("n_rate_soy_kg_ha", 0.0, "kgN/ha", "").param("n_price_usd_kg", 1.1, "USD/kg", "")
+            .param("kgc_per_bu_corn", 9.0, "kgC/bu", "").param("kgc_per_bu_soy", 12.0, "kgC/bu", "")
+            .param("plant_after_doy", 105, "doy", "").param("plant_t_c", 10.0, "degC", "").param("workable_soil_frac", 0.85, "", "of soil capacity").param("soil_capacity_mm", 150.0, "mm", "")
+            .subscribe("harvest.done", "the crop has exported grain")
+            .own("agents.crop_kind", "0 none 1 corn 2 soy 3 grass").own("agents.plant_now", "1").own("agents.n_rate_kg_ha", "kgN/ha")
+            .read("wx.t2m_c", "degC", true, "warm days before planting").read("water.soil_mm", "mm", false, "workable soil")
+            .read("rules.no_crop", "", false, "cells a rule closes to crops").read_on("veg.grain_export_kgc", "kgC", false, "harvest.done", "revenue")
+            .ledger("money", "USD", 1e-3)
+            .report("agents.farm_blocks", "1").report("agents.blocks_planted_day", "1/day").report("agents.cash_total_usd", "USD")
+            .report("agents.corn_ha", "ha").report("agents.soy_ha", "ha").report("agents.revenue_usd_day", "USD/day").report("agents.corn_bu_day", "bu/day").report("agents.soy_bu_day", "bu/day")
+            .asset("copernicus-dem-glo30", "basin cells")
+            .note("Parameter provenance: devlog/20261101-m9-takers.md; prices and costs are round numbers, not quotes")
+    }
+}

@@ -191,3 +191,28 @@ impl Module for Fire {
     fn snapshot(&self) -> serde_json::Value { serde_json::to_value(self).unwrap() }
     fn restore(&mut self, v: serde_json::Value) { let mut f: Fire = serde_json::from_value(v).unwrap(); f.load().expect("fire reload"); *self = f; }
 }
+
+impl Fire {
+    pub fn describe(name: &str, p: &toml::Value) -> esim_kernel::describe::Describe {
+        let hazard = param_str(p, "hazard_id", "cropland-fire-corn-belt");
+        esim_kernel::describe::Describe::new("hazard.fire", name, "Cropland fire as a cellular automaton over the basin: ignition by chance, or forced on a date from the hazards table, spread to neighbours by fuel, dryness, warmth and wind, a refractory period after burning; publishes burning cells for the crop and the animals.")
+            .priority(6).dt(param_str(p, "dt", "1d"))
+            .param("lat_s", 42.3, "deg", "").param("lat_n", 43.2, "deg", "").param("lon_w", -94.2, "deg", "").param("lon_e", -93.5, "deg", "")
+            .param("res_arcsec", 30.0, "arcsec", "").param("gauge_lat", 42.4319722, "deg", "").param("gauge_lon", -93.8059444, "deg", "").param("snap_radius", 3, "cells", "")
+            .param("dt", "1d", "", "")
+            .param("hazard_id", "cropland-fire-corn-belt", "", "row in data/events/hazards.toml")
+            .param("setting", "", "", "off | on | forced; empty means the table's default")
+            .param("forced_date", "", "date", "").param("forced_lat", 42.7, "deg", "").param("forced_lon", -93.85, "deg", "")
+            .param("ignition_per_cell_day", 2e-6, "1/d", "").param("spread_base", 0.35, "", "subcritical by default; 0.9 in the what-if")
+            .param("fuel_min_gc_m2", 60.0, "gC/m2", "").param("soil_capacity_mm", 150.0, "mm", "").param("burn_days", 1, "d", "").param("refractory_days", 60, "d", "")
+            .publish("hazard.loaded", "{ id, title, setting, confidence }").publish("fire.ignition", "at a cell: { hazard, setting, lat, lon }").publish("fire.burn", "{ cells, km2 }")
+            .own("fire.burned_frac", "1")
+            .read("water.soil_mm", "mm", false, "dryness").read("veg.biomass_gc_m2", "gC/m2", false, "fuel")
+            .read("wx.t2m_c", "degC", false, "warmth").read("wx.wind_m_s", "m/s", false, "spread")
+            .frame("fire_burning", "1")
+            .report("fire.setting", "0=off 1=on 2=forced").report("fire.ignitions_day", "1/day").report("fire.burning_km2", "km2").report("fire.burned_km2_total", "km2")
+            .asset("copernicus-dem-glo30", "basin cells")
+            .asset("events/hazards.toml", &format!("row {hazard}"))
+            .note("Parameter provenance: devlog/20261101-m7-tearing.md")
+    }
+}

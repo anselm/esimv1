@@ -266,3 +266,23 @@ mod tests {
         assert!(h > 30.0 && h < 45.0, "{h}");
     }
 }
+
+impl Sun {
+    pub fn describe(name: &str, p: &toml::Value) -> esim_kernel::describe::Describe {
+        esim_kernel::describe::Describe::new("sun.irradiance", name, "Clear-sky solar irradiance on real terrain every tick: sun position, air mass, slope incidence and horizon shadow; absorbed energy through the energy ledger.")
+            .priority(0).dt(param_str(p, "dt", "1h"))
+            .param("lat_s", 42.3, "deg", "").param("lat_n", 43.0, "deg", "").param("lon_w", -94.0, "deg", "").param("lon_e", -93.5, "deg", "")
+            .param("res_arcsec", 15.0, "arcsec", "grid cell; the DEM is aggregated to it")
+            .param("dt", "1h", "", "").param("report_every", "1d", "", "")
+            .param("horizon_azimuths", 16, "", "").param("horizon_km", 20.0, "km", "how far the horizon search looks")
+            .param("transmittance", 0.7, "", "Meinel clear-sky placeholder; winter clearness above one exposed it (devlog 20261101-m4-weather)")
+            .param("diffuse_fraction", 0.1, "", "placeholder")
+            .param("data_root", "", "", "overrides ESIM_ROOT")
+            .own("sun.incident_j", "J")
+            .ledger("energy", "J", 1e6)
+            .frame("elevation", "m").frame("slope", "rad").frame("irradiance_daily_mean", "W/m2")
+            .report("sun.ghi_mean_w_m2", "W/m2").report("sun.irradiance_daily_mean_w_m2", "W/m2")
+            .asset("copernicus-dem-glo30", "terrain window, slope, aspect and horizons")
+            .note("Parameter provenance: devlog/20261101-m1-sun.md")
+    }
+}

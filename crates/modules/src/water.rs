@@ -118,3 +118,42 @@ impl Module for Bucket {
     fn snapshot(&self) -> serde_json::Value { serde_json::to_value(self).unwrap() }
     fn restore(&mut self, v: serde_json::Value) { *self = serde_json::from_value(v).unwrap(); }
 }
+
+// --- describe: the surface of each kind, from parameters alone -------------------------
+
+use esim_kernel::describe::Describe;
+
+impl Source {
+    pub fn describe(name: &str, p: &toml::Value) -> Describe {
+        let into = param_str(p, "into", "bucket");
+        Describe::new("water.source", name, "Pours water at a constant rate from a ledger account into a named module, every tick.")
+            .priority(0).dt(param_str(p, "dt", "1h"))
+            .param("rate_m3_s", 1.0, "m3/s", "")
+            .param("dt", "1h", "", "")
+            .param("from", "atmosphere", "", "ledger account the water is drawn from")
+            .param("into", "bucket", "", "module that accepts `inflow`")
+            .send(into, "inflow")
+            .ledger("water", "m3", 1e-6)
+            .report(&format!("{name}.poured_m3"), "m3")
+    }
+}
+
+impl Bucket {
+    pub fn describe(name: &str, p: &toml::Value) -> Describe {
+        let outlet = param_str(p, "outlet", "sea");
+        let outlet_is_module = p.get("outlet_is_module").and_then(|v| v.as_bool()).unwrap_or(false);
+        let d = Describe::new("water.bucket", name, "A linear reservoir: accepts inflow, drains at a rate proportional to its volume to an account or another bucket.")
+            .priority(0).dt(param_str(p, "dt", "6h"))
+            .param("volume_m3", 0.0, "m3", "opening stock")
+            .param("k_per_s", 1e-5, "1/s", "drain rate constant")
+            .param("dt", "6h", "", "")
+            .param("outlet", "sea", "", "ledger account, or a module when outlet_is_module")
+            .param("outlet_is_module", false, "", "")
+            .param("leak", 0.0, "fraction", "a deliberate leak per tick, so the ledger test can fail on purpose")
+            .accept("inflow", "{ m3 }")
+            .ledger("water", "m3", 1e-6)
+            .report(&format!("{name}.volume_m3"), "m3")
+            .report(&format!("{name}.outflow_m3_s"), "m3/s");
+        if outlet_is_module { d.send(outlet, "inflow") } else { d }
+    }
+}

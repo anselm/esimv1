@@ -179,3 +179,29 @@ impl Module for Nitrogen {
     fn snapshot(&self) -> serde_json::Value { serde_json::to_value(self).unwrap() }
     fn restore(&mut self, v: serde_json::Value) { let mut n: Nitrogen = serde_json::from_value(v).unwrap(); n.load().expect("nitrogen reload"); *self = n; }
 }
+
+impl Nitrogen {
+    pub fn describe(name: &str, p: &toml::Value) -> esim_kernel::describe::Describe {
+        esim_kernel::describe::Describe::new("nitrogen.basin", name, "Soil nitrogen per basin cell: mineral and organic pools, fertiliser at the farms' rate on planting, mineralisation, crop uptake from biomass growth, soybean fixation, denitrification, leaching with drainage into the water module's tracer; harvest export; one ledger closed across two modules.")
+            .priority(7).dt(esim_kernel::manifest::param_str(p, "dt", "1d"))
+            .param("lat_s", 42.3, "deg", "").param("lat_n", 43.2, "deg", "").param("lon_w", -94.2, "deg", "").param("lon_e", -93.5, "deg", "")
+            .param("res_arcsec", 30.0, "arcsec", "").param("gauge_lat", 42.4319722, "deg", "").param("gauge_lon", -93.8059444, "deg", "").param("snap_radius", 3, "cells", "")
+            .param("dt", "1d", "", "")
+            .param("init_mineral_kg_ha", 40.0, "kgN/ha", "").param("init_organic_kg_ha", 8000.0, "kgN/ha", "")
+            .param("mineralisation_per_day", 4e-5, "1/d", "").param("denitrification_per_day", 0.004, "1/d", "")
+            .param("n_per_c_biomass", 0.025, "kgN/kgC", "").param("n_per_c_grain", 0.03, "kgN/kgC", "").param("soy_fixation_frac", 0.5, "", "")
+            .param("leach_efficiency", 1.0, "", "").param("soil_capacity_mm", 150.0, "mm", "")
+            .subscribe("harvest.done", "export the grain's nitrogen")
+            .publish("nitrogen.leached", "{ kg }")
+            .own("nitrogen.leached_kg", "kgN")
+            .read("water.soil_mm", "mm", true, "concentration").read("water.drain_daily_mm", "mm", true, "leaching")
+            .read("agents.plant_now", "", false, "fertiliser on planting").read("agents.n_rate_kg_ha", "kgN/ha", false, "").read("agents.crop_kind", "", false, "soy fixes")
+            .read("veg.biomass_gc_m2", "gC/m2", false, "uptake from growth").read("wx.t2m_c", "degC", false, "")
+            .read_on("veg.grain_export_kgc", "kgC", false, "harvest.done", "")
+            .ledger("nitrogen", "kgN", 1e-3)
+            .report("nitrogen.soil_mineral_kg_ha", "kgN/ha").report("nitrogen.leached_kg_day", "kgN/day").report("nitrogen.fertilizer_kg_day", "kgN/day")
+            .report("nitrogen.uptake_kg_day", "kgN/day").report("nitrogen.mineralised_kg_day", "kgN/day").report("nitrogen.harvest_export_kg", "kgN")
+            .asset("copernicus-dem-glo30", "basin cells")
+            .note("Parameter provenance: devlog/20261101-m11-nitrogen.md; nitrate comes out at twice the observed concentration because the crop takes up too little")
+    }
+}

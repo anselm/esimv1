@@ -527,3 +527,55 @@ impl Module for Predator {
     fn snapshot(&self) -> serde_json::Value { serde_json::to_value(self).unwrap() }
     fn restore(&mut self, v: serde_json::Value) { let mut d: Predator = serde_json::from_value(v).unwrap(); d.load().expect("predator reload"); *self = d; }
 }
+
+impl Herbivore {
+    pub fn describe(name: &str, p: &toml::Value) -> esim_kernel::describe::Describe {
+        esim_kernel::describe::Describe::new("fauna.herbivore", name, "Herbivore cohorts per basin cell: graze the crop by request, Holling type II intake, births, deaths, starvation, migration toward forage, flight and mortality in fire, predation by request; can zoom a window to individuals and back with residues so the count is conserved.")
+            .priority(4).dt(param_str(p, "dt", "1d"))
+            .param("lat_s", 42.3, "deg", "").param("lat_n", 43.2, "deg", "").param("lon_w", -94.2, "deg", "").param("lon_e", -93.5, "deg", "")
+            .param("res_arcsec", 30.0, "arcsec", "").param("gauge_lat", 42.4319722, "deg", "").param("gauge_lon", -93.8059444, "deg", "").param("snap_radius", 3, "cells", "")
+            .param("dt", "1d", "", "").param("veg_module", "veg", "", "")
+            .param("c_ind_kgc", 5.0, "kgC", "carbon per individual").param("init_density_km2", 6.0, "1/km2", "")
+            .param("intake_max_kgc_day", 0.5, "kgC/d", "").param("maintenance_kgc_day", 0.3, "kgC/d", "").param("assimilation", 0.5, "", "")
+            .param("birth_per_day", 0.002, "1/d", "").param("mortality_per_day", 0.0007, "1/d", "").param("starvation_per_day", 0.01, "1/d", "").param("move_frac", 0.1, "", "")
+            .param("browse_kgc_ind_day", 0.2, "kgC/d", "").param("flee_frac", 0.8, "", "").param("fire_mortality", 0.3, "", "")
+            .param("zoom_lat_s", 0.0, "deg", "zoom window; zero disables").param("zoom_lat_n", 0.0, "deg", "").param("zoom_lon_w", 0.0, "deg", "").param("zoom_lon_e", 0.0, "deg", "")
+            .param("zoom_from", "", "date", "").param("zoom_to", "", "date", "").param("step_m_per_day", 400.0, "m/d", "individual step while zoomed")
+            .subscribe("graze.done", "forage granted").subscribe("predation.request", "predators' kill requests")
+            .subscribe("fire.burn", "cells burning").subscribe("fire.ignition", "at the basin cells only")
+            .publish("graze.request", "{ by }").publish("predation.done", "{ by }").publish("zoom.in", "{ module, individuals }").publish("zoom.out", "{ module }")
+            .own("fauna.herb_n", "individuals").own("fauna.herb_demand_kgc", "kgC").own("fauna.prey_taken", "individuals").own("fauna.prey_c_per_kill", "kgC")
+            .read_on("veg.grazed_kgc", "kgC", true, "graze.done", "what the crop gave").read("veg.biomass_gc_m2", "gC/m2", false, "where to move")
+            .read_on("fire.burned_frac", "1", false, "fire.burn", "").read_on("fauna.pred_kills", "individuals", false, "predation.request", "")
+            .ledger("animals", "individuals", 1e-6).ledger("carbon", "kgC", 1e-3)
+            .frame("herbivore_density_km2", "1/km2")
+            .report("fauna.herb_total", "individuals").report("fauna.herb_grazed_kgc_day", "kgC/day").report("fauna.herb_births_day", "1/day").report("fauna.herb_deaths_day", "1/day")
+            .report("fauna.herb_killed_day", "1/day").report("fauna.herb_fled", "individuals").report("fauna.herb_fire_deaths", "individuals")
+            .report("fauna.zoom_individuals", "individuals").report("fauna.zoom_switch_error", "individuals").report("fauna.zoom_folded_out", "individuals").report("fauna.zoom_lat_sd_km", "km")
+            .asset("copernicus-dem-glo30", "basin cells")
+            .note("Parameter provenance: devlog/20261101-m6-eaters.md and 20261101-m8-zoom.md")
+    }
+}
+
+impl Predator {
+    pub fn describe(name: &str, p: &toml::Value) -> esim_kernel::describe::Describe {
+        esim_kernel::describe::Describe::new("fauna.predator", name, "Predator cohorts per basin cell: Holling type II attack on the herbivore field, kills by request, births, deaths, starvation, movement toward prey.")
+            .priority(5).dt(param_str(p, "dt", "1d"))
+            .param("lat_s", 42.3, "deg", "").param("lat_n", 43.2, "deg", "").param("lon_w", -94.2, "deg", "").param("lon_e", -93.5, "deg", "")
+            .param("res_arcsec", 30.0, "arcsec", "").param("gauge_lat", 42.4319722, "deg", "").param("gauge_lon", -93.8059444, "deg", "").param("snap_radius", 3, "cells", "")
+            .param("dt", "1d", "", "")
+            .param("c_ind_kgc", 1.5, "kgC", "").param("init_density_km2", 0.3, "1/km2", "")
+            .param("attack_km2_day", 0.02, "km2/d", "").param("handling_days", 20.0, "d", "").param("need_kgc_day", 0.1, "kgC/d", "").param("assimilation", 0.8, "", "")
+            .param("birth_per_day", 0.002, "1/d", "").param("mortality_per_day", 0.001, "1/d", "").param("starvation_per_day", 0.01, "1/d", "").param("move_frac", 0.1, "", "")
+            .subscribe("predation.done", "kills granted")
+            .publish("predation.request", "{ by }")
+            .own("fauna.pred_kills", "individuals")
+            .read("fauna.herb_n", "individuals", true, "prey density")
+            .read_on("fauna.prey_taken", "individuals", true, "predation.done", "").read_on("fauna.prey_c_per_kill", "kgC", true, "predation.done", "")
+            .ledger("animals", "individuals", 1e-6).ledger("carbon", "kgC", 1e-3)
+            .frame("predator_density_km2", "1/km2")
+            .report("fauna.pred_total", "individuals").report("fauna.pred_intake_kgc_day", "kgC/day")
+            .asset("copernicus-dem-glo30", "basin cells")
+            .note("Parameter provenance: devlog/20261101-m6-eaters.md")
+    }
+}

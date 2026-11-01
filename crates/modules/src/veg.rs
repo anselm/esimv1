@@ -367,3 +367,42 @@ impl Module for Veg {
         *self = g;
     }
 }
+
+impl Veg {
+    pub fn describe(name: &str, p: &toml::Value) -> esim_kernel::describe::Describe {
+        let energy = param_str(p, "energy_source", "sun.incident_j");
+        let soil = param_str(p, "soil_source", "water.soil_mm");
+        let modis_start = param_str(p, "modis_start", "2025-01-01");
+        let d = esim_kernel::describe::Describe::new("veg.crop", name, "A crop canopy per basin cell: planting by date and warmth or by the farms' orders, phenology by growing degree days, light-use-efficiency growth under water stress, senescence, harvest and export, litter; answers grazing and burning; scored against MODIS NDVI.")
+            .priority(3).dt(param_str(p, "dt", "1h"))
+            .param("lat_s", 42.3, "deg", "").param("lat_n", 43.2, "deg", "").param("lon_w", -94.2, "deg", "").param("lon_e", -93.5, "deg", "")
+            .param("res_arcsec", 30.0, "arcsec", "").param("gauge_lat", 42.4319722, "deg", "").param("gauge_lon", -93.8059444, "deg", "").param("snap_radius", 3, "cells", "")
+            .param("dt", "1h", "", "")
+            .param("energy_source", "sun.incident_j", "", "").param("soil_source", "water.soil_mm", "", "").param("soil_capacity_mm", 150.0, "mm", "")
+            .param("modis_start", "2025-01-01", "date", "MODIS MOD13A1 composites to fetch for scoring; \"none\" disables").param("modis_end", "2025-12-31", "date", "")
+            .param("plant_after_doy", 110, "doy", "").param("plant_t_c", 10.0, "degC", "").param("gdd_base_c", 10.0, "degC", "")
+            .param("gdd_emerge", 80.0, "degC d", "").param("gdd_senesce", 1300.0, "degC d", "").param("gdd_harvest", 1650.0, "degC d", "").param("frost_c", -2.0, "degC", "")
+            .param("lue_gc_per_mj", 1.6, "gC/MJ", "").param("par_fraction", 0.48, "", "").param("k_light", 0.5, "", "")
+            .param("sla_m2_per_gc", 0.025, "m2/gC", "").param("leaf_fraction", 0.45, "", "").param("lai_max", 5.5, "m2/m2", "").param("lai_emerge", 0.3, "m2/m2", "seeded from the import account at emergence")
+            .param("snow_ndvi_mm", 5.0, "mm", "snow above this reads as NDVI zero")
+            .param("ra_fraction", 0.5, "", "").param("grain_fraction", 0.45, "", "").param("k_litter_per_day", 0.003, "1/d", "")
+            .param("ndvi_soil", 0.18, "", "").param("ndvi_max", 0.88, "", "").param("k_ndvi", 0.7, "", "")
+            .param("graze_max_frac", 0.3, "", "").param("burn_biomass_frac", 0.9, "", "").param("burn_litter_frac", 0.7, "", "")
+            .param("soy_lue_factor", 0.75, "", "").param("soy_gdd_factor", 0.85, "", "").param("soy_grain_fraction", 0.4, "", "").param("grass_lai", 2.0, "m2/m2", "")
+            .read(energy, "J", true, "light for growth").read("wx.t2m_c", "degC", true, "degree days and frost")
+            .read(soil, "mm", false, "water stress").read("water.snow_mm", "mm", false, "snow hides the canopy from the satellite")
+            .read("agents.plant_now", "", false, "farms' planting orders").read("agents.crop_kind", "", false, "corn, soy or grass per cell")
+            .read_on("fire.burned_frac", "1", false, "fire.burn", "").read_on("fauna.herb_demand_kgc", "kgC", false, "graze.request", "")
+            .subscribe("graze.request", "herbivores ask for forage").subscribe("fire.burn", "cells burning today")
+            .publish("graze.done", "{ by }").publish("harvest.done", "{ by }")
+            .own("veg.lai", "m2/m2").own("veg.biomass_gc_m2", "gC/m2").own("veg.grazed_kgc", "kgC").own("veg.grain_export_kgc", "kgC")
+            .ledger("carbon", "kgC", 1e-3)
+            .frame("lai", "m2/m2").frame("ndvi_modis", "1").frame("ndvi_sim", "1")
+            .report("veg.modis_composites", "1").report("veg.lai_mean", "m2/m2").report("veg.ndvi_sim_daily", "1").report("veg.biomass_mean_gc_m2", "gC/m2")
+            .report("veg.gpp_basin_tc_day", "tC/day").report("veg.ndvi_obs_16d", "1").report("veg.ndvi_sim_16d", "1")
+            .report("veg.grazed_kgc_day", "kgC/day").report("veg.fire_emissions_kgc_day", "kgC/day")
+            .asset("copernicus-dem-glo30", "basin cells")
+            .note("Parameter provenance: devlog/20261101-m5-green.md; the canopy greens a month late and reaches a third of a real crop's biomass");
+        if modis_start == "none" { d } else { d.asset("modis-mod13a1", "16-day NDVI composites for scoring, via Planetary Computer") }
+    }
+}

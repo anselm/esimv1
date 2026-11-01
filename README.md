@@ -50,6 +50,26 @@ First runs fetch about 200 MB (four elevation tiles, weather, MODIS composites, 
 records) into `data/cache/` and record their hashes in `data/catalog.lock.toml`. Every
 module reads data only through the registry; nothing is synthetic, including in tests.
 
+## Describe and check
+
+Every module kind describes its own surface from its parameters alone, fetching nothing:
+parameters with defaults and provenance, topics published and subscribed, fields owned and
+read with units, ledgers, frames, series and the data assets it needs. The kernel checks a
+manifest's wiring from those descriptions before a run, and refuses one that cannot be
+right (a required read with no writer, two writers of one field, a ledger in two units, a
+send to nobody, an asset missing from the catalog).
+
+```sh
+esim check manifests/m10-rules-boone.toml     # the wiring report; exit 1 on errors
+esim describe manifests/m10-rules-boone.toml  # descriptions and findings as JSON
+esim kinds --json                             # every kind under default parameters
+```
+
+The contract between kernel and module, and the wire binding that will let a module run
+as a separate process or a wasm component, is `docs/protocol-v0.md`. A test runs real
+manifests and compares everything the log records against the declarations, so a
+description that drifts from its code fails the build.
+
 ## Rules of the house for this repo
 
 - Real terrain and real records or nothing. A formula check is labelled as one.

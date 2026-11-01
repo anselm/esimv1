@@ -113,3 +113,23 @@ impl Module for Rules {
     fn snapshot(&self) -> serde_json::Value { serde_json::to_value(self).unwrap() }
     fn restore(&mut self, v: serde_json::Value) { let mut r: Rules = serde_json::from_value(v).unwrap(); r.load().expect("rules reload"); *self = r; }
 }
+
+impl Rules {
+    pub fn describe(name: &str, p: &toml::Value) -> esim_kernel::describe::Describe {
+        let rule = param_str(p, "rule_id", "whatif-riparian-buffer-boone-2025");
+        esim_kernel::describe::Describe::new("rules.calendar", name, "A dated land-use rule from the calendar table: from its effective date, cells within a buffer of the channel network are closed to crops; the field it writes is obeyed by the farms, the crop and the water module.")
+            .priority(1).dt(param_str(p, "dt", "1d"))
+            .param("lat_s", 42.3, "deg", "").param("lat_n", 43.2, "deg", "").param("lon_w", -94.2, "deg", "").param("lon_e", -93.5, "deg", "")
+            .param("res_arcsec", 30.0, "arcsec", "").param("gauge_lat", 42.4319722, "deg", "").param("gauge_lon", -93.8059444, "deg", "").param("snap_radius", 3, "cells", "")
+            .param("dt", "1d", "", "")
+            .param("rule_id", "whatif-riparian-buffer-boone-2025", "", "row in data/events/calendar.toml")
+            .param("buffer_cells", 1, "cells", "").param("channel_km2", 2.0, "km2", "streams draining more than this get the buffer; 20 fits the Boone")
+            .publish("rule.loaded", "{ id, title, effective, confidence }").publish("rule.effective", "{ id, cells }")
+            .own("rules.no_crop", "1")
+            .frame("rule_no_crop", "1")
+            .report("rules.buffer_cells", "1").report("rules.effective", "1")
+            .asset("copernicus-dem-glo30", "channel network")
+            .asset("events/calendar.toml", &format!("row {rule}"))
+            .note("Provenance: devlog/20261101-m10-rules.md")
+    }
+}

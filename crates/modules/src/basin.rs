@@ -368,3 +368,52 @@ impl Module for Basin {
         *self = b;
     }
 }
+
+impl Basin {
+    pub fn describe(name: &str, p: &toml::Value) -> esim_kernel::describe::Describe {
+        let forcing = param_str(p, "forcing", "station");
+        let energy = param_str(p, "energy_source", "sun.incident_j");
+        let lai = p.get("lai_coupling").and_then(|v| v.as_bool()).unwrap_or(true);
+        let station = param_str(p, "station", "USC00138806");
+        let site = param_str(p, "usgs_site", "05481000");
+        let no3 = param_str(p, "nitrate_param", "99133");
+        let mut d = esim_kernel::describe::Describe::new("water.basin", name, "A gauged basin delineated from the DEM: rain or snow from a station or the weather fields, a soil bucket with sun-driven evapotranspiration, drainage routed down the D8 network to the gauge, a nitrate tracer riding the drainage; scored against the USGS record.")
+            .priority(2).dt(param_str(p, "dt", "1h"))
+            .param("station", "USC00138806", "", "GHCN-Daily station for rain and temperature (forcing = station)")
+            .param("usgs_site", "05481000", "", "USGS site for observed discharge and nitrate")
+            .param("lat_s", 42.3, "deg", "").param("lat_n", 43.2, "deg", "").param("lon_w", -94.2, "deg", "").param("lon_e", -93.5, "deg", "")
+            .param("res_arcsec", 15.0, "arcsec", "")
+            .param("gauge_lat", 42.4319722, "deg", "USGS 05481000").param("gauge_lon", -93.8059444, "deg", "USGS 05481000")
+            .param("snap_radius", 3, "cells", "gauge snapped to the highest accumulation within this radius")
+            .param("obs_hour_utc", 13, "h", "daily total booked at the station's observation time").param("local_offset_h", -6, "h", "")
+            .param("dt", "1h", "", "").param("report_every", "1d", "", "")
+            .param("soil_capacity_mm", 150.0, "mm", "").param("drain_per_day", 0.03, "1/d", "").param("pet_factor", 0.7, "", "")
+            .param("snow_t_c", 0.0, "degC", "").param("ddf_mm_per_c_day", 3.0, "mm/degC/d", "degree-day melt factor")
+            .param("channel_km2", 2.0, "km2", "accumulation above which a cell is channel").param("v_channel_m_s", 0.4, "m/s", "").param("v_hill_m_s", 0.02, "m/s", "")
+            .param("energy_source", "sun.incident_j", "", "world field driving evapotranspiration")
+            .param("forcing", "station", "", "station | wx")
+            .param("lai_coupling", true, "", "read veg.lai to scale evapotranspiration")
+            .param("perennial_capacity_factor", 1.3, "", "soil capacity multiplier under a no-crop rule (a guess)")
+            .param("nitrate_param", "99133", "", "USGS parameter for observed nitrate; empty disables")
+            .read(energy, "J", false, "evapotranspiration energy")
+            .read("rules.no_crop", "", false, "perennial cover changes soil capacity")
+            .read_on("nitrogen.leached_kg", "kgN", false, "nitrogen.leached", "tracer source")
+            .subscribe("nitrogen.leached", "the nitrogen module's daily leaching")
+            .own("water.drain_daily_mm", "mm").own("water.soil_mm", "mm").own("water.snow_mm", "mm")
+            .ledger("water", "m3", 1.0).ledger("nitrogen", "kgN", 1e-3)
+            .frame("basin", "1").frame("flow_accum_log10_km2", "log10 km2").frame("soil_daily_mean_mm", "mm")
+            .report("basin.area_km2", "km2")
+            .report("hydro.q_outlet_m3_s", "m3/s").report("hydro.q_sim_daily_m3_s", "m3/s").report("hydro.q_obs_daily_m3_s", "m3/s")
+            .report("hydro.precip_daily_mm", "mm").report("hydro.snowpack_mean_mm", "mm").report("hydro.soil_mean_mm", "mm")
+            .report("hydro.no3_load_kg_day", "kgN/day").report("hydro.no3_sim_mg_l", "mgN/L").report("hydro.no3_obs_mg_l", "mgN/L")
+            .asset("copernicus-dem-glo30", "window, priority-flood fill, D8, accumulation, basin delineation")
+            .asset("ghcn-daily", &format!("station {station}: precipitation and temperature"))
+            .asset("usgs-nwis-daily", &format!("site {site}: discharge 00060{}", if no3.is_empty() { String::new() } else { format!(" and nitrate {no3}") }))
+            .note("Parameter provenance: devlog/20261101-m3-water.md and 20261101-m12-sweep.md (a 64-sample sweep found no better set)");
+        if forcing == "wx" {
+            d = d.read("wx.precip_mm", "mm", true, "forcing = wx").read("wx.t2m_c", "degC", true, "forcing = wx");
+        }
+        if lai { d = d.read("veg.lai", "m2/m2", false, "cover factor on evapotranspiration"); }
+        d
+    }
+}
