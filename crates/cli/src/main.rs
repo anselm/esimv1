@@ -27,7 +27,11 @@ fn run(path: &Path, out_root: &Path) -> Result<(), String> {
     let manifest = load(path)?;
     let mut k = Kernel::new(manifest.clone(), factory)?;
     let out = k.run();
-    let id = format!("{}-{}", out.name, &out.log_digest[..8]);
+    // The log digest alone does not see parameters that change only ledger and series
+    // values, so the run id also hashes the manifest text.
+    let mtext = fs::read_to_string(path).map_err(|e| e.to_string())?;
+    let mhash = esim_kernel::hash::fnv1a(mtext.as_bytes());
+    let id = format!("{}-{:08x}-{}", out.name, (mhash >> 32) as u32, &out.log_digest[..8]);
     let dir = out_root.join(&id);
     fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
     fs::copy(path, dir.join("manifest.toml")).map_err(|e| e.to_string())?;
