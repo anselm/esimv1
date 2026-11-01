@@ -125,3 +125,35 @@ and 2 close their ledgers.
   and modules being public and the data assimilation, hosting and ensembles being the product.
 - Whether 1, 2, 3 are the right three, and who the first real user is for each. A name of a
   real person who would run it beats any amount of this list.
+
+## Addendum, same day: Wasm 3.0
+
+Anselm pointed at https://webassembly.org/news/2025-09-17-wasm-3.0/ (2025-09-17). Read by the
+agent on 2026-10-31. It changes the wasm half of the recommendation above, not the Rust half.
+
+Useful to this project, from the announcement:
+- Deterministic profile. The spec now defines a deterministic default for everything that was
+  implementation-defined, NaN payloads and relaxed SIMD included, and names "replayable
+  systems" as a target. Replay of a branch across machines becomes a property of the module
+  sandbox rather than of module authors' discipline. This is the strongest argument for wasm
+  as the module boundary.
+- memory64. The 4 GB ceiling the agent cited is gone; the page says 16 GB on the web, and the
+  standalone-engine limit is not stated there (unknown).
+- Multiple memories per module. A module can own a private memory and import a shared one,
+  which maps onto the brief's split of module-private state from shared world state, and the
+  spec adds copying between memories.
+- Relaxed SIMD. Faster field arithmetic, with the deterministic profile pinning its behaviour
+  where replay matters more than speed; a per-module choice.
+- GC and typed references. Irrelevant to Rust modules, but a module written in a GC language
+  (a port of Madingley from C#, say) can target wasm without shipping its own collector.
+
+Not in the announcement: threads and the component model are not mentioned at all. The agent
+believes shared-memory atomics ship separately in browsers and in Wasmtime, from memory and
+unverified here. Still absent: GPU access, and the per-call cost at the boundary.
+
+Revised shape: a native Rust kernel (scheduler, event log, ledgers, ensemble fan-out across
+threads, any GPU fields) hosting modules compiled to wasm and run under the deterministic
+profile in Wasmtime. Modules advance one dt per call, not one event per call, so the boundary
+cost is amortised. Status: "Wasm 3.0 is already shipping in most major web browsers" and
+Wasmtime support is "on track to completion", per the page; check the feature status page it
+links before relying on memory64 or the deterministic profile in a given engine version.
