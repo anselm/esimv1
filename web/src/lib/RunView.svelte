@@ -4,6 +4,7 @@
   import Status from './Status.svelte'
   import Ledger from './Ledger.svelte'
   import Chart from './Chart.svelte'
+  import FieldMap from './FieldMap.svelte'
   import EventLog from './EventLog.svelte'
 
   let { id } = $props()
@@ -71,6 +72,18 @@
       <div class="space-y-6">
         {#each run.ledgers as l (l.name)}
           <Ledger ledger={l} />
+        {/each}
+      </div>
+    </section>
+  {/if}
+
+  <!-- maps: field snapshots -->
+  {#if run.fields && Object.keys(run.fields).length}
+    <section class="mb-10">
+      <div class="label mb-3">maps</div>
+      <div class="grid gap-x-6 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
+        {#each Object.keys(run.fields).sort() as f (f)}
+          <FieldMap name={f} field={run.fields[f]} {base} />
         {/each}
       </div>
     </section>
