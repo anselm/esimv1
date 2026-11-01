@@ -89,3 +89,30 @@ He also pointed out that "there are encyclopedias of the future out there". A we
 found Wikipedia's timelines-of-the-future hub and lists, and futuretimeline.net; they are
 recorded in `data/events/README.md` as sources to mine into draft rows by an agent, with
 promotion by review.
+
+## Addendum, end of session: viewer and registry landed
+
+- Viewer (`web/`, Svelte 5 + Tailwind 4 + Vite 8, built by a subagent, checked by eye in
+  this session in light and dark, desktop and phone width): run list from
+  `runs/index.json`; run page with facts, a ledger strip of one square per close with
+  final balances and leaks per account, inline-SVG series charts grouped by unit, the
+  last 200 events with topic and text filters, and the manifest. The leaking run shows
+  red squares and the leak amount. `cd web && npm run dev` serves `../runs` at `/runs/`.
+  Not verified: hover titles and the filters (interactive), `npm run preview`.
+- Registry crate (`crates/registry`): `data/catalog.toml` (assets and places),
+  a fetcher that caches under `data/cache/` (ignored) and records sha256 in
+  `data/catalog.lock.toml` (committed; a run can pin bytes), and a GeoTIFF reader for
+  tiled deflate rasters with the floating-point predictor. No GDAL on the box and none
+  needed.
+- First base layer fetched and decoded: Copernicus DEM GLO-30 tile N42_W094, 39.9 MB in
+  3.9 s, decoded in 1.9 s. Elevation 246.7 to 407.1 m, mean 340.5 m, which is right for
+  north-central Iowa. The pixel at the Boone River gauge reads 299.5 m; the USGS datum
+  for the gauge is 989.38 ft, 301.6 m. The two-metre difference is consistent with a
+  surface model over a gauge house, and it validates the predictor decode.
+- The stage is chosen: Boone River above Webster City, Iowa. USGS 05481000, daily
+  discharge from 1940-03-09 to the present, 844 sq mi, tile-drained Corn Belt, draining
+  to the Des Moines, the Mississippi and the Gulf. Recorded in the catalog as a place.
+- Not found: GEBCO bathymetry at the URLs the agent guessed; left unverified and unneeded
+  for an inland basin.
+
+Commits today: design entries, then M0 kernel, event tables, registry. Nothing pushed.
