@@ -1,0 +1,21 @@
+# M1 Sun, one June week, for tests and quick looks.
+
+[run]
+name = "m1-sun-boone-june-week"
+start = "2025-06-18"
+end = "2025-06-25"
+seed = 1
+close_every = "1d"
+snapshot_every = "2d"
+
+[[module]]
+name = "sun"
+kind = "sun.irradiance"
+[module.params]
+lat_s = 42.3
+lat_n = 43.0
+lon_w = -94.0
+lon_e = -93.5
+res_arcsec = 30
+dt = "1h"
+report_every = "1d"

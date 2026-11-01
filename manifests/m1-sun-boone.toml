@@ -1,0 +1,27 @@
+# M1 Sun: clear-sky irradiance over the Boone River country, Iowa, for one year, on the
+# Copernicus DEM aggregated to 15 arc-seconds. Energy ledger closes daily.
+
+[run]
+name = "m1-sun-boone-2025"
+start = "2025-01-01"
+end = "2026-01-01"
+seed = 1
+close_every = "1d"
+snapshot_every = "30d"
+notes = "Boone River above Webster City (USGS 05481000). Window 42.3-43.0 N, 94.0-93.5 W."
+
+[[module]]
+name = "sun"
+kind = "sun.irradiance"
+[module.params]
+lat_s = 42.3
+lat_n = 43.0
+lon_w = -94.0
+lon_e = -93.5
+res_arcsec = 15
+dt = "1h"
+report_every = "1d"
+horizon_azimuths = 16
+horizon_km = 20
+transmittance = 0.7
+diffuse_fraction = 0.1

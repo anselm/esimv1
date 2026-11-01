@@ -7,7 +7,7 @@ use crate::event::{Event, Queued};
 use crate::ledger::{Ledger, LedgerReport};
 use crate::log::EventLog;
 use crate::manifest::Manifest;
-use crate::module::{Ctx, Module, ModuleFactory, Series};
+use crate::module::{Ctx, FieldSeries, Module, ModuleFactory, Series};
 use crate::rng::Rng;
 use crate::time::{Duration, Time};
 use serde::{Deserialize, Serialize};
@@ -30,6 +30,7 @@ pub struct Kernel {
     subs: BTreeMap<String, Vec<usize>>,
     ledgers: BTreeMap<String, Ledger>,
     series: BTreeMap<String, Series>,
+    pub fields: BTreeMap<String, FieldSeries>,
     pub log: EventLog,
     close_every: Duration,
     snapshot_every: Option<Duration>,
@@ -66,7 +67,18 @@ pub struct RunOutput {
     pub ledgers: Vec<LedgerReport>,
     pub all_ledgers_closed: bool,
     pub series: BTreeMap<String, Series>,
+    /// Field names with unit, grid and frame times; frame data is written separately.
+    pub fields: BTreeMap<String, FieldMeta>,
     pub elapsed_ms: u128,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct FieldMeta {
+    pub unit: String,
+    pub grid: crate::grid::LatLonGrid,
+    pub times: Vec<Time>,
+    pub min: f32,
+    pub max: f32,
 }
 
 impl Kernel {
@@ -87,7 +99,7 @@ impl Kernel {
         let mut k = Kernel {
             manifest, start, end, now: start, seq: 0, queue: BinaryHeap::new(),
             modules, rngs, index, subs: BTreeMap::new(), ledgers: BTreeMap::new(),
-            series: BTreeMap::new(), log: EventLog::new(), close_every, snapshot_every,
+            series: BTreeMap::new(), fields: BTreeMap::new(), log: EventLog::new(), close_every, snapshot_every,
             snapshots: Vec::new(), delivered: 0,
         };
         k.init();
@@ -98,7 +110,7 @@ impl Kernel {
         for i in 0..self.modules.len() {
             let mut ctx = Ctx {
                 now: self.now, me: self.modules[i].name().to_string(), out: Vec::new(), subs: Vec::new(),
-                ledgers: &mut self.ledgers, series: &mut self.series, rng: &mut self.rngs[i],
+                ledgers: &mut self.ledgers, series: &mut self.series, fields: &mut self.fields, rng: &mut self.rngs[i],
             };
             self.modules[i].init(&mut ctx);
             let (out, subs) = (ctx.out, ctx.subs);
@@ -161,7 +173,7 @@ impl Kernel {
         for i in targets {
             let mut ctx = Ctx {
                 now: self.now, me: self.modules[i].name().to_string(), out: Vec::new(), subs: Vec::new(),
-                ledgers: &mut self.ledgers, series: &mut self.series, rng: &mut self.rngs[i],
+                ledgers: &mut self.ledgers, series: &mut self.series, fields: &mut self.fields, rng: &mut self.rngs[i],
             };
             self.modules[i].handle(ev, &mut ctx);
             self.delivered += 1;
@@ -203,7 +215,7 @@ impl Kernel {
         for ev in snap.queue { queue.push(Queued(ev)); }
         Ok(Kernel {
             manifest, start, end, now: snap.t, seq: snap.seq, queue, modules, rngs: snap.rngs, index,
-            subs: snap.subs, ledgers: snap.ledgers, series: snap.series, log: EventLog::new(),
+            subs: snap.subs, ledgers: snap.ledgers, series: snap.series, fields: BTreeMap::new(), log: EventLog::new(),
             close_every, snapshot_every, snapshots: Vec::new(), delivered: snap.delivered,
         })
     }
@@ -215,7 +227,13 @@ impl Kernel {
             kernel_version: env!("CARGO_PKG_VERSION").to_string(),
             events: self.log.len(), delivered: self.delivered, log_digest: self.log.digest_hex(),
             all_ledgers_closed: ledgers.iter().all(|l| l.all_closed), ledgers,
-            series: self.series.clone(), elapsed_ms,
+            series: self.series.clone(),
+            fields: self.fields.iter().map(|(k, f)| {
+                let (mut lo, mut hi) = (f32::MAX, f32::MIN);
+                for (_, d) in &f.frames { for &v in d { if v.is_finite() { lo = lo.min(v); hi = hi.max(v); } } }
+                (k.clone(), FieldMeta { unit: f.unit.clone(), grid: f.grid.clone(), times: f.frames.iter().map(|(t, _)| *t).collect(), min: lo, max: hi })
+            }).collect(),
+            elapsed_ms,
         }
     }
 

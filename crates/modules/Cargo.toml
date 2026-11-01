@@ -10,3 +10,4 @@ esim-kernel = { path = "../kernel" }
 serde.workspace = true
 serde_json.workspace = true
 toml.workspace = true
+esim-registry = { path = "../registry" }

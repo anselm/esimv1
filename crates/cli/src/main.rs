@@ -34,6 +34,14 @@ fn run(path: &Path, out_root: &Path) -> Result<(), String> {
     let f = fs::File::create(dir.join("log.jsonl")).map_err(|e| e.to_string())?;
     k.log.write_jsonl(std::io::BufWriter::new(f)).map_err(|e| e.to_string())?;
     fs::write(dir.join("run.json"), serde_json::to_string_pretty(&out).unwrap()).map_err(|e| e.to_string())?;
+    for (name, f) in &k.fields {
+        let fd = dir.join("fields").join(name);
+        fs::create_dir_all(&fd).map_err(|e| e.to_string())?;
+        for (i, (_, data)) in f.frames.iter().enumerate() {
+            let bytes: Vec<u8> = data.iter().flat_map(|v| v.to_le_bytes()).collect();
+            fs::write(fd.join(format!("{i:05}.f32")), bytes).map_err(|e| e.to_string())?;
+        }
+    }
     if !k.snapshots.is_empty() {
         fs::write(dir.join("snapshots.json"), serde_json::to_string(&k.snapshots).unwrap()).map_err(|e| e.to_string())?;
     }

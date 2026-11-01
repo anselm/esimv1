@@ -3,6 +3,7 @@
 //! ledgers, and declares its stocks. It never touches another module.
 
 use crate::event::{Event, Priority};
+use crate::grid::LatLonGrid;
 use crate::ledger::Ledger;
 use crate::rng::Rng;
 use crate::time::{Duration, Time};
@@ -28,6 +29,15 @@ pub struct Series {
     pub points: Vec<(Time, f64)>,
 }
 
+/// A field snapshot series: one grid, a unit, and frames at times. Output, not state:
+/// a resumed run starts a new series.
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct FieldSeries {
+    pub unit: String,
+    pub grid: LatLonGrid,
+    pub frames: Vec<(Time, Vec<f32>)>,
+}
+
 /// Requests a module makes during one `handle`, applied by the kernel afterwards.
 pub struct Ctx<'a> {
     pub(crate) now: Time,
@@ -36,6 +46,7 @@ pub struct Ctx<'a> {
     pub(crate) subs: Vec<String>,
     pub(crate) ledgers: &'a mut BTreeMap<String, Ledger>,
     pub(crate) series: &'a mut BTreeMap<String, Series>,
+    pub(crate) fields: &'a mut BTreeMap<String, FieldSeries>,
     pub(crate) rng: &'a mut Rng,
 }
 
@@ -76,6 +87,14 @@ impl<'a> Ctx<'a> {
         let s = self.series.entry(series.to_string()).or_default();
         if s.unit.is_empty() { s.unit = unit.to_string(); }
         s.points.push((self.now, value));
+    }
+    /// Record a whole field at the current time, for maps. Frames are kept in memory
+    /// until the run writes them, so modules choose the cadence with care.
+    pub fn field(&mut self, name: &str, unit: &str, grid: &LatLonGrid, data: Vec<f32>) {
+        assert_eq!(data.len(), grid.nx * grid.ny, "field {name}: data does not match grid");
+        let f = self.fields.entry(name.to_string()).or_insert_with(|| FieldSeries { unit: unit.to_string(), grid: grid.clone(), frames: Vec::new() });
+        assert_eq!(&f.grid, grid, "field {name}: grid changed between frames");
+        f.frames.push((self.now, data));
     }
     pub fn rng(&mut self) -> &mut Rng { self.rng }
 }

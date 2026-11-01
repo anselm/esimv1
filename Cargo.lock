@@ -119,6 +119,7 @@ name = "esim-modules"
 version = "0.0.1"
 dependencies = [
  "esim-kernel",
+ "esim-registry",
  "serde",
  "serde_json",
  "toml",
