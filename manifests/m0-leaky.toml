@@ -1,0 +1,26 @@
+# A bucket that misreports its stock. This manifest must FAIL to close; the test suite
+# runs it to prove the ledger notices.
+
+[run]
+name = "m0-leaky"
+start = "2026-01-01"
+end = "2026-01-08"
+seed = 1
+close_every = "1d"
+
+[[module]]
+name = "rain"
+kind = "water.source"
+[module.params]
+rate_m3_s = 0.5
+dt = "1h"
+into = "bucket"
+
+[[module]]
+name = "bucket"
+kind = "water.bucket"
+[module.params]
+volume_m3 = 1000
+k_per_s = 1e-5
+dt = "6h"
+leak = 0.01

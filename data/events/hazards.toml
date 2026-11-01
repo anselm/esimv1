@@ -1,0 +1,211 @@
+# Possible events with rates: the chaos, the black swans, good and bad. See README.md.
+# Seeded 2026-10-31 by the agent. Rates marked "guess" are guesses. Every cited rate
+# needs its source opened and checked before promotion.
+
+[[event]]
+id = "geomagnetic-storm-carrington"
+title = "Carrington-class geomagnetic storm"
+category = "space-weather"
+rate_per_year = 0.012
+consequence = "Transformer damage, grid outages lasting weeks in affected latitudes, satellite losses, GNSS degradation."
+module = "grid"
+valence = "bad"
+confidence = "projected"
+source = "Riley 2012, Space Weather: about 12% per decade for a Carrington-class event; later estimates range lower"
+known_since = "2012-02-01"
+setting = "on"
+
+[[event]]
+id = "cascadia-m9"
+title = "Cascadia subduction zone M8.7 to M9 earthquake and tsunami"
+category = "geophysical"
+rate_per_year = 0.003
+consequence = "Coastal Pacific Northwest shaking for minutes, tsunami within 15 to 30 minutes, infrastructure loss for months."
+valence = "bad"
+confidence = "projected"
+source = "Paleoseismic recurrence (about 10 to 15 percent in 50 years for a full-margin rupture, per USGS and Oregon State work); rate here is the agent's conversion"
+known_since = "1990-01-01"
+setting = "on"
+
+[[event]]
+id = "bay-area-m6.7"
+title = "San Francisco Bay Area M6.7 or larger earthquake"
+category = "geophysical"
+rate_per_year = 0.042
+consequence = "Regional shaking, fires, housing and transport loss; the Hayward fault is the most likely source."
+valence = "bad"
+confidence = "projected"
+source = "USGS UCERF3 (2014): about 72% probability in 30 years for the region; converted to an annual rate by the agent"
+known_since = "2014-03-01"
+setting = "on"
+
+[[event]]
+id = "pandemic-covid-scale"
+title = "Pandemic of COVID-19 scale or worse"
+category = "biological"
+rate_per_year = 0.02
+consequence = "Mortality, mobility collapse, supply chain stoppage, fiscal shock; duration one to three years."
+depends_on = ["travel_volume", "land_use_change"]
+valence = "bad"
+confidence = "projected"
+source = "Marani et al. 2021, PNAS: about 2 percent per year for a COVID-scale pandemic, rising with time"
+known_since = "2021-08-23"
+setting = "on"
+
+[[event]]
+id = "vei7-eruption"
+title = "Volcanic eruption of VEI 7 (Tambora class)"
+category = "geophysical"
+rate_per_year = 0.0017
+consequence = "Global cooling of about one degree for one to three years, crop failures, food price spike (1816 precedent)."
+module = "atmosphere"
+valence = "bad"
+confidence = "projected"
+source = "Cassidy and Mani 2022, Nature: about one in six chance per century"
+known_since = "2022-08-17"
+setting = "on"
+
+[[event]]
+id = "yellowstone-supereruption"
+title = "Yellowstone caldera supereruption"
+category = "geophysical"
+rate_per_year = 0.0000014
+consequence = "Continental ash fall, multi-year global cooling. Near zero; included so the table is honest about tails."
+valence = "bad"
+confidence = "projected"
+source = "USGS: roughly 1 in 730,000 per year"
+known_since = "2000-01-01"
+setting = "off"
+
+[[event]]
+id = "impactor-tunguska"
+title = "Tunguska-class airburst (about 50 m object)"
+category = "celestial"
+rate_per_year = 0.003
+consequence = "Regional devastation over tens of kilometres; most land in ocean or wilderness."
+valence = "bad"
+confidence = "projected"
+source = "Impact frequency estimates of roughly once per few centuries (agent's recollection of the literature; check)"
+known_since = "1990-01-01"
+setting = "off"
+
+[[event]]
+id = "multi-breadbasket-failure"
+title = "Simultaneous harvest failure in two or more major grain exporters"
+category = "climate"
+rate_per_year = 0.0
+consequence = "Stock drawdown, price spike, export bans, consumption loss in import-dependent countries. The food-system chain's trigger."
+depends_on = ["enso_state", "global_temperature_anomaly"]
+module = "crops"
+valence = "bad"
+confidence = "projected"
+source = "Gaupp et al. 2019, Nature Climate Change, show rising probability with warming; no single base rate is stated here, so the module computes it"
+known_since = "2019-12-09"
+setting = "on"
+notes = "rate_per_year 0.0 means: computed by the module from state, not a constant."
+
+[[event]]
+id = "systemic-financial-crisis"
+title = "Systemic financial crisis in advanced economies"
+category = "economic"
+rate_per_year = 0.07
+consequence = "Credit contraction, unemployment rise, fiscal response; two to five years of effect."
+depends_on = ["credit_growth", "asset_prices"]
+valence = "bad"
+confidence = "speculative"
+source = "guess: roughly one every ten to fifteen years in the historical record (1990, 2001, 2008, 2020 as recent instances)"
+known_since = "2008-09-15"
+setting = "on"
+
+[[event]]
+id = "grid-failure-heat"
+title = "Regional grid failure during a heat wave"
+category = "human"
+rate_per_year = 0.0
+consequence = "Cooling loss, water pumping loss, excess mortality concentrated in poor and old populations."
+depends_on = ["heat_index", "grid_reserve_margin"]
+module = "grid"
+valence = "bad"
+confidence = "projected"
+source = "state-dependent; computed by the module (Texas 2021 and California 2020 are the precedents)"
+known_since = "2021-02-15"
+setting = "on"
+
+[[event]]
+id = "interstate-war-major"
+title = "Major interstate war involving a great power"
+category = "human"
+rate_per_year = 0.02
+consequence = "Trade route closures, energy and fertilizer shocks, refugee flows; see the Hormuz fork."
+depends_on = ["food_prices", "alliance_tension"]
+valence = "bad"
+confidence = "speculative"
+source = "guess"
+known_since = "2022-02-24"
+setting = "on"
+
+[[event]]
+id = "coup-or-state-collapse"
+title = "Coup or state collapse in a fragile state"
+category = "human"
+rate_per_year = 0.0
+consequence = "Governance loss; local rules stop being enforced; migration."
+depends_on = ["fragility_index", "food_prices"]
+valence = "bad"
+confidence = "projected"
+source = "computed by the module from the Fragile States Index and food prices (orbital-sim's tipping model is the draft)"
+known_since = "2005-01-01"
+setting = "on"
+
+# ---- Good surprises -----------------------------------------------------------------
+
+[[event]]
+id = "battery-cost-halving"
+title = "Battery pack cost halves within three years"
+category = "technology"
+rate_per_year = 0.1
+consequence = "Grid storage and vehicle electrification accelerate; fuel demand falls faster than pathways assume."
+module = "grid"
+valence = "good"
+confidence = "speculative"
+source = "guess; the 2010 to 2020 record saw roughly 90 percent decline over the decade"
+known_since = "2020-01-01"
+setting = "on"
+
+[[event]]
+id = "bumper-harvest-year"
+title = "Global bumper harvest year"
+category = "climate"
+rate_per_year = 0.0
+consequence = "Stocks rebuild, prices fall, hunger ledger improves. Computed by the crop module from weather branches; listed so the good tail is visible."
+module = "crops"
+valence = "good"
+confidence = "projected"
+source = "computed by the module"
+known_since = "2026-10-31"
+setting = "on"
+
+[[event]]
+id = "fusion-net-electricity"
+title = "Commercial fusion plant delivers net electricity to a grid"
+category = "technology"
+rate_per_year = 0.02
+consequence = "Long-run energy price expectations shift; little physical effect before the 2040s even if it happens."
+valence = "good"
+confidence = "speculative"
+source = "guess"
+known_since = "2026-10-31"
+setting = "off"
+
+[[event]]
+id = "major-conservation-rebound"
+title = "A keystone species reintroduction succeeds at landscape scale"
+category = "biological"
+rate_per_year = 0.0
+consequence = "Trophic cascade: vegetation, hydrology and other populations shift over a decade (Yellowstone wolves as precedent)."
+module = "fauna"
+valence = "good"
+confidence = "projected"
+source = "computed by the fauna module when a manifest introduces the species"
+known_since = "1995-01-12"
+setting = "on"

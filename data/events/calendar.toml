@@ -1,0 +1,224 @@
+# Known and committed future events. See README.md for the schema and the rules.
+# Seeded 2026-10-31 by the agent from general knowledge; every row needs its source
+# opened and checked before it is promoted. Rows the agent is not sure of are marked.
+
+[[event]]
+id = "eclipse-2027-08-02"
+title = "Total solar eclipse across North Africa and southern Spain"
+category = "celestial"
+date = "2027-08-02"
+consequence = "Minutes of darkness along a narrow path; irradiance dip; large travel movements to the path."
+module = "sun"
+valence = "mixed"
+confidence = "certain"
+source = "Celestial mechanics; NASA eclipse catalog (not opened this session)"
+known_since = "1900-01-01"
+
+[[event]]
+id = "apophis-2029-04-13"
+title = "Asteroid 99942 Apophis close approach"
+category = "celestial"
+date = "2029-04-13"
+consequence = "Passes inside geostationary distance; no impact. A rhythm event for attention, not a hazard."
+valence = "mixed"
+confidence = "certain"
+source = "JPL orbit solution; impact ruled out in 2021 (NASA JPL announcement)"
+known_since = "2004-06-19"
+
+[[event]]
+id = "us-presidential-election-2028"
+title = "United States presidential election"
+category = "rhythm"
+date = "2028-11-07"
+consequence = "Policy regime may change; rules modules re-read their parameters after inauguration 2029-01-20."
+module = "rules"
+valence = "mixed"
+confidence = "certain"
+source = "US law: first Tuesday after the first Monday in November"
+known_since = "1845-01-23"
+
+[[event]]
+id = "us-census-2030"
+title = "United States decennial census"
+category = "demography"
+date = "2030-04-01"
+consequence = "Population counts refresh; apportionment follows; synthetic populations re-anchor."
+valence = "mixed"
+confidence = "certain"
+source = "US Constitution, Article I; Census Bureau schedule"
+known_since = "1790-01-01"
+
+[[event]]
+id = "olympics-la-2028"
+title = "Summer Olympic Games, Los Angeles"
+category = "rhythm"
+window = ["2028-07-14", "2028-07-30"]
+consequence = "Transport demand spike and construction completion deadlines in the Los Angeles basin."
+valence = "mixed"
+confidence = "committed"
+source = "IOC award 2017; dates per organising committee (agent recalls July 2028; check)"
+known_since = "2017-09-13"
+
+[[event]]
+id = "iss-deorbit"
+title = "International Space Station deorbit"
+category = "capital"
+window = ["2030-01-01", "2031-12-31"]
+consequence = "Controlled re-entry over the South Pacific; end of a built asset with a lead time."
+valence = "mixed"
+confidence = "committed"
+source = "NASA plan and deorbit-vehicle contract awarded 2024 (agent's recollection; check the current date)"
+known_since = "2024-06-26"
+
+[[event]]
+id = "eu-new-ice-car-sales-end"
+title = "EU: new cars and vans must be zero-emission"
+category = "law"
+date = "2035-01-01"
+consequence = "Fleet composition, fuel demand and grid load shift over the following fifteen years; a rule module parameter change with a date."
+module = "rules"
+valence = "mixed"
+confidence = "committed"
+source = "EU Regulation 2023/851 (CO2 standards); politically contested, review clauses exist"
+known_since = "2023-03-28"
+notes = "Committed in law but under active challenge as of 2026; treat the date as having a band."
+
+[[event]]
+id = "paris-agreement-ndc-2030"
+title = "Paris Agreement 2030 nationally determined contribution targets"
+category = "law"
+date = "2030-12-31"
+consequence = "Emissions targets per country come due; pathway modules compare pledged against delivered."
+module = "atmosphere"
+valence = "good"
+confidence = "committed"
+source = "UNFCCC Paris Agreement 2015 and the NDC register"
+known_since = "2015-12-12"
+
+[[event]]
+id = "us-social-security-trust-fund-depletion"
+title = "US Social Security OASI trust fund reserves depleted"
+category = "economic"
+window = ["2033-01-01", "2034-12-31"]
+consequence = "Scheduled benefits fall to what payroll taxes cover (about four fifths) unless law changes; household income shock for retirees."
+module = "agents"
+valence = "bad"
+confidence = "projected"
+source = "Social Security Trustees Report (2024 and 2025 editions projected 2033; check the latest)"
+known_since = "2010-01-01"
+
+[[event]]
+id = "halley-perihelion-2061"
+title = "Halley's Comet returns to perihelion"
+category = "celestial"
+date = "2061-07-28"
+consequence = "None physical; a rhythm event. The day is approximate."
+valence = "good"
+confidence = "certain"
+source = "Orbital period; date recalled by the agent to the month, day unverified"
+known_since = "1705-01-01"
+
+# ---- A book's speculative timeline, kept as a claim, not a fact -------------------
+# Photographed by Anselm on 2026-10-31: "Table 14.1: Timeline To Technical Capability
+# (Actual Adoption May Lag Due to Regulatory and Cultural Friction)", in a chapter
+# titled "AI and Bitcoin". Book title and author unknown to the agent. Each row is the
+# book's prediction of when a technical capability exists, not of adoption.
+
+[[event]]
+id = "book-ai-coders-2028"
+title = "AI writes and tests all code (a book's prediction)"
+category = "technology"
+date = "2028-01-01"
+consequence = "Labour demand shift for software work; wage and employment ledger effect in agent modules."
+valence = "mixed"
+confidence = "speculative"
+source = "Unidentified book, chapter 14 'AI and Bitcoin', Table 14.1, photographed 2026-10-31"
+known_since = "2026-10-31"
+
+[[event]]
+id = "book-self-driving-2029"
+title = "Self-driving ubiquitous; 12 million drivers unemployed (a book's prediction)"
+category = "technology"
+date = "2029-01-01"
+consequence = "Transport labour shock; traffic and road-safety parameters change."
+valence = "mixed"
+confidence = "speculative"
+source = "Unidentified book, chapter 14 'AI and Bitcoin', Table 14.1, photographed 2026-10-31"
+known_since = "2026-10-31"
+
+[[event]]
+id = "book-ai-teachers-2029"
+title = "Personalised AI tutors for every student (a book's prediction)"
+category = "technology"
+date = "2029-01-01"
+consequence = "Education labour and outcomes shift."
+valence = "mixed"
+confidence = "speculative"
+source = "Unidentified book, chapter 14 'AI and Bitcoin', Table 14.1, photographed 2026-10-31"
+known_since = "2026-10-31"
+
+[[event]]
+id = "book-ai-doctors-2030"
+title = "AI diagnoses better than humans (a book's prediction)"
+category = "technology"
+date = "2030-01-01"
+consequence = "Health outcomes and medical labour shift."
+valence = "mixed"
+confidence = "speculative"
+source = "Unidentified book, chapter 14 'AI and Bitcoin', Table 14.1, photographed 2026-10-31"
+known_since = "2026-10-31"
+
+[[event]]
+id = "book-ai-artists-2030"
+title = "AI generates any creative content on demand (a book's prediction)"
+category = "technology"
+date = "2030-01-01"
+consequence = "Creative labour market shift."
+valence = "mixed"
+confidence = "speculative"
+source = "Unidentified book, chapter 14 'AI and Bitcoin', Table 14.1, photographed 2026-10-31"
+known_since = "2026-10-31"
+
+[[event]]
+id = "book-ai-lawyers-2031"
+title = "AI reads all case law, writes contracts and briefs (a book's prediction)"
+category = "technology"
+date = "2031-01-01"
+consequence = "Legal labour shift."
+valence = "mixed"
+confidence = "speculative"
+source = "Unidentified book, chapter 14 'AI and Bitcoin', Table 14.1, photographed 2026-10-31"
+known_since = "2026-10-31"
+
+[[event]]
+id = "book-lights-out-factories-2031"
+title = "Total factory automation (a book's prediction)"
+category = "technology"
+date = "2031-01-01"
+consequence = "Manufacturing labour shift; energy demand pattern change."
+valence = "mixed"
+confidence = "speculative"
+source = "Unidentified book, chapter 14 'AI and Bitcoin', Table 14.1, photographed 2026-10-31"
+known_since = "2026-10-31"
+
+[[event]]
+id = "book-robotic-surgeons-2032"
+title = "Robotic surgery replaces surgeons (a book's prediction)"
+category = "technology"
+date = "2032-01-01"
+consequence = "Medical labour shift."
+valence = "mixed"
+confidence = "speculative"
+source = "Unidentified book, chapter 14 'AI and Bitcoin', Table 14.1, photographed 2026-10-31"
+known_since = "2026-10-31"
+
+[[event]]
+id = "book-automated-warfare-2033"
+title = "AI-controlled drones and robots; automated warfare deployed (a book's prediction)"
+category = "technology"
+date = "2033-01-01"
+consequence = "Conflict hazard rates and casualty structure change."
+valence = "bad"
+confidence = "speculative"
+source = "Unidentified book, chapter 14 'AI and Bitcoin', Table 14.1, photographed 2026-10-31"
+known_since = "2026-10-31"

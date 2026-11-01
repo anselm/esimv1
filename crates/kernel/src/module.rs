@@ -1,0 +1,81 @@
+//! The module trait and the context a module is handed while it runs. A module owns its
+//! private state, reacts to events, schedules more, moves conserved quantities through
+//! ledgers, and declares its stocks. It never touches another module.
+
+use crate::event::{Event, Priority};
+use crate::ledger::Ledger;
+use crate::rng::Rng;
+use crate::time::{Duration, Time};
+use serde::{Deserialize, Serialize};
+use std::collections::BTreeMap;
+
+pub trait Module {
+    fn name(&self) -> &str;
+    /// Subscribe, create ledgers and accounts, declare opening stocks, schedule the first events.
+    fn init(&mut self, ctx: &mut Ctx);
+    fn handle(&mut self, ev: &Event, ctx: &mut Ctx);
+    /// Private state, for snapshots. Must round-trip through `restore` exactly.
+    fn snapshot(&self) -> serde_json::Value;
+    fn restore(&mut self, state: serde_json::Value);
+}
+
+/// Builds a module from its manifest entry. Modules crates register one per `kind`.
+pub type ModuleFactory = fn(name: &str, params: &toml::Value) -> Result<Box<dyn Module>, String>;
+
+#[derive(Clone, Debug, Serialize, Deserialize, Default)]
+pub struct Series {
+    pub unit: String,
+    pub points: Vec<(Time, f64)>,
+}
+
+/// Requests a module makes during one `handle`, applied by the kernel afterwards.
+pub struct Ctx<'a> {
+    pub(crate) now: Time,
+    pub(crate) me: String,
+    pub(crate) out: Vec<(Time, Priority, Option<String>, String, serde_json::Value)>,
+    pub(crate) subs: Vec<String>,
+    pub(crate) ledgers: &'a mut BTreeMap<String, Ledger>,
+    pub(crate) series: &'a mut BTreeMap<String, Series>,
+    pub(crate) rng: &'a mut Rng,
+}
+
+impl<'a> Ctx<'a> {
+    pub fn now(&self) -> Time { self.now }
+    pub fn me(&self) -> &str { &self.me }
+
+    /// Schedule an event to myself after `after`.
+    pub fn schedule(&mut self, after: Duration, topic: &str, data: serde_json::Value) {
+        let me = self.me.clone();
+        self.out.push((self.now.add(after), 0, Some(me), topic.to_string(), data));
+    }
+    /// Schedule an event to a named module at an absolute time.
+    pub fn send_at(&mut self, t: Time, to: &str, topic: &str, data: serde_json::Value) {
+        self.out.push((t, 0, Some(to.to_string()), topic.to_string(), data));
+    }
+    /// Send to a named module now (delivered after the current instant's earlier events).
+    pub fn send(&mut self, to: &str, topic: &str, data: serde_json::Value) {
+        self.out.push((self.now, 0, Some(to.to_string()), topic.to_string(), data));
+    }
+    /// Broadcast to every subscriber of a topic, now.
+    pub fn publish(&mut self, topic: &str, data: serde_json::Value) {
+        self.out.push((self.now, 0, None, topic.to_string(), data));
+    }
+    pub fn subscribe(&mut self, topic: &str) { self.subs.push(topic.to_string()); }
+
+    pub fn ledger(&mut self, name: &str, unit: &str, tolerance: f64) {
+        self.ledgers.entry(name.to_string()).or_insert_with(|| Ledger::new(name, unit, tolerance));
+    }
+    pub fn transfer(&mut self, ledger: &str, from: &str, to: &str, amount: f64) {
+        self.ledgers.get_mut(ledger).unwrap_or_else(|| panic!("no ledger {ledger}")).transfer(from, to, amount);
+    }
+    pub fn declare_stock(&mut self, ledger: &str, account: &str, value: f64) {
+        self.ledgers.get_mut(ledger).unwrap_or_else(|| panic!("no ledger {ledger}")).declare_stock(account, value);
+    }
+    /// Record a named scalar at the current time, for scoreboards and the viewer.
+    pub fn report(&mut self, series: &str, unit: &str, value: f64) {
+        let s = self.series.entry(series.to_string()).or_default();
+        if s.unit.is_empty() { s.unit = unit.to_string(); }
+        s.points.push((self.now, value));
+    }
+    pub fn rng(&mut self) -> &mut Rng { self.rng }
+}

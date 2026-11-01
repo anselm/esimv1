@@ -1,0 +1,17 @@
+[package]
+name = "esim"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Command line for the earth simulator: run a manifest, verify determinism and replay"
+
+[[bin]]
+name = "esim"
+path = "src/main.rs"
+
+[dependencies]
+esim-kernel = { path = "../kernel" }
+esim-modules = { path = "../modules" }
+serde.workspace = true
+serde_json.workspace = true
+toml.workspace = true

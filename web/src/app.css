@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+@theme {
+  /* one brand colour, used sparingly: a deep teal */
+  --color-brand: #0e7c86;
+  --color-brand-soft: #0e7c8622;
+  /* status palette, always paired with a label */
+  --color-ok: #2e8b57;
+  --color-leak: #c0392b;
+  --radius-house: 3px;
+}
+
+html {
+  color-scheme: light dark;
+}
+
+body {
+  @apply bg-white text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.muted {
+  @apply text-neutral-500 dark:text-neutral-400;
+}
+
+.label {
+  @apply text-[11px] uppercase tracking-wider muted;
+}
+
+.floating {
+  @apply fixed z-10 rounded-[3px] px-2.5 py-1.5 text-sm
+    bg-white/85 dark:bg-neutral-900/85 backdrop-blur
+    shadow-sm ring-1 ring-neutral-200 dark:ring-neutral-800;
+}
+
+.field {
+  @apply rounded-[3px] px-2 py-1 text-sm bg-neutral-100 dark:bg-neutral-900
+    ring-1 ring-neutral-200 dark:ring-neutral-800 outline-none
+    focus:ring-brand;
+}
