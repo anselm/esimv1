@@ -210,3 +210,33 @@ fn m7_forced_fire_spreads_burns_carbon_and_closes() {
         assert!(k.log.events.iter().any(|e| e.topic == "fire.ignition" && e.at.is_some()));
     });
 }
+
+#[test]
+fn m8_zoom_switch_conserves_the_count_both_ways() {
+    if !have_dem() { eprintln!("skipped: DEM tile not cached"); return; }
+    let cached: PathBuf = [env!("CARGO_MANIFEST_DIR"), "..", "..", "data", "cache"].iter().collect();
+    let have = |prefix: &str| std::fs::read_dir(&cached).map(|d| d.flatten().any(|e| e.file_name().to_string_lossy().starts_with(prefix))).unwrap_or(false);
+    if !have("open-meteo-era5_") || !have("modis-13a1_") { eprintln!("skipped: weather or MODIS not cached"); return; }
+    with_root(|| {
+        let m = load("m8-zoom-boone-spring.toml");
+        let out = Kernel::new(m.clone(), factory).unwrap().run();
+        assert!(out.all_ledgers_closed);
+        let z = &out.series["fauna.zoom_individuals"].points;
+        assert!(z.iter().any(|p| p.1 > 100.0), "the box should hold hundreds of individuals");
+        let errs = &out.series["fauna.zoom_switch_error"].points;
+        assert_eq!(errs.len(), 2, "one switch in, one switch out");
+        assert!(errs.iter().all(|p| p.1.abs() < 1e-6), "switches must conserve the count: {errs:?}");
+        assert!(out.series.get("fauna.zoom_folded_out").map(|s| s.points.iter().map(|p| p.1).sum::<f64>()).unwrap_or(0.0) > 0.0, "some individuals should cross the box edge and fold back into counts");
+        let animals = out.ledgers.iter().find(|l| l.name == "animals").unwrap();
+        assert!(animals.closes.iter().all(|c| c.max_leak < 1e-6));
+        // replay across the representation switch
+        let mut full = Kernel::new(m.clone(), factory).unwrap();
+        full.run();
+        let snap = full.snapshots.iter().find(|s| s.t.0 > esim_kernel::Time::parse("2025-05-01").unwrap().0).cloned().expect("a snapshot while zoomed");
+        let tail: Vec<String> = full.log.events[snap.log_len..].iter().map(|e| serde_json::to_string(e).unwrap()).collect();
+        let mut resumed = Kernel::from_snapshot(m, factory, snap).unwrap();
+        resumed.run();
+        let got: Vec<String> = resumed.log.events.iter().map(|e| serde_json::to_string(e).unwrap()).collect();
+        assert_eq!(tail, got, "a run resumed while zoomed must replay exactly");
+    });
+}

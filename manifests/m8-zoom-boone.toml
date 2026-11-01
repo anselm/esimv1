@@ -1,0 +1,82 @@
+# M8 Zoom: the M6 stack, with the deer cohort becoming individuals with positions inside a
+# 20 by 16 km box in the middle of the basin from 1 June to 1 September, and folding back
+# into counts. The population ledger must close to a millionth of an animal across both
+# switches and every boundary crossing.
+
+[run]
+name = "m8-zoom-boone-2025"
+start = "2025-01-01"
+end = "2026-01-01"
+seed = 1
+close_every = "1d"
+snapshot_every = "60d"
+
+[[module]]
+name = "wx"
+kind = "weather.era5"
+[module.params]
+lat_s = 42.3
+lat_n = 43.2
+lon_w = -94.2
+lon_e = -93.5
+res_arcsec = 30
+start = "2025-01-01"
+end = "2025-12-31"
+dt = "1h"
+
+[[module]]
+name = "sun"
+kind = "sun.irradiance"
+[module.params]
+lat_s = 42.3
+lat_n = 43.2
+lon_w = -94.2
+lon_e = -93.5
+res_arcsec = 30
+dt = "1h"
+report_every = "90d"
+
+[[module]]
+name = "water"
+kind = "water.basin"
+[module.params]
+forcing = "wx"
+lat_s = 42.3
+lat_n = 43.2
+lon_w = -94.2
+lon_e = -93.5
+res_arcsec = 30
+dt = "1h"
+report_every = "30d"
+
+[[module]]
+name = "veg"
+kind = "veg.crop"
+[module.params]
+lat_s = 42.3
+lat_n = 43.2
+lon_w = -94.2
+lon_e = -93.5
+res_arcsec = 30
+dt = "1h"
+
+[[module]]
+name = "deer"
+kind = "fauna.herbivore"
+[module.params]
+res_arcsec = 30
+init_density_km2 = 6
+zoom_lat_s = 42.6
+zoom_lat_n = 42.8
+zoom_lon_w = -93.95
+zoom_lon_e = -93.75
+zoom_from = "2025-06-01"
+zoom_to = "2025-09-01"
+step_m_per_day = 400
+
+[[module]]
+name = "coyote"
+kind = "fauna.predator"
+[module.params]
+res_arcsec = 30
+init_density_km2 = 0.3

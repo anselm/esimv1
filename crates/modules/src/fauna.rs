@@ -87,6 +87,16 @@ pub struct Herbivore {
     /// untracked `browse` boundary account: Iowa deer do not live on standing corn alone
     browse_kgc_ind_day: f64,
     flee_frac: f64, fire_mortality: f64,
+    /// M8 zoom: inside this box and between these dates the cohort is individuals.
+    zoom_lat_s: f64, zoom_lat_n: f64, zoom_lon_w: f64, zoom_lon_e: f64,
+    zoom_from: String, zoom_to: String,
+    step_m_per_day: f64,
+    zoomed: bool,
+    /// individuals: (cell position k, lon, lat)
+    indiv: Vec<(usize, f64, f64)>,
+    /// fractional cohort remainder per cell while zoomed (counts below one animal)
+    residue: Vec<f64>,
+    kill_carry: Vec<f64>,
     n: Vec<f64>,
     intake_today: Vec<f64>,
     births_total: f64, deaths_total: f64, killed_total: f64,
@@ -107,6 +117,10 @@ impl Herbivore {
             mortality_per_day: param_f64(p, "mortality_per_day", 0.0007), starvation_per_day: param_f64(p, "starvation_per_day", 0.01), move_frac: param_f64(p, "move_frac", 0.1),
             browse_kgc_ind_day: param_f64(p, "browse_kgc_ind_day", 0.2),
             flee_frac: param_f64(p, "flee_frac", 0.8), fire_mortality: param_f64(p, "fire_mortality", 0.3),
+            zoom_lat_s: param_f64(p, "zoom_lat_s", 0.0), zoom_lat_n: param_f64(p, "zoom_lat_n", 0.0), zoom_lon_w: param_f64(p, "zoom_lon_w", 0.0), zoom_lon_e: param_f64(p, "zoom_lon_e", 0.0),
+            zoom_from: param_str(p, "zoom_from", "").to_string(), zoom_to: param_str(p, "zoom_to", "").to_string(),
+            step_m_per_day: param_f64(p, "step_m_per_day", 400.0),
+            zoomed: false, indiv: Vec::new(), residue: Vec::new(), kill_carry: Vec::new(),
             n: Vec::new(), intake_today: Vec::new(), births_total: 0.0, deaths_total: 0.0, killed_total: 0.0, geo: None,
         };
         h.load()?;
@@ -117,15 +131,59 @@ impl Herbivore {
         if self.n.len() != g.cells.len() {
             self.n = g.area_km2.iter().map(|a| a * self.init_density_km2).collect();
             self.intake_today = vec![0.0; g.cells.len()];
+            self.residue = vec![0.0; g.cells.len()];
+            self.kill_carry = vec![0.0; g.cells.len()];
         }
         self.geo = Some(g);
         Ok(())
     }
-    fn total(&self) -> f64 { self.n.iter().sum() }
+    /// Every animal, whatever its representation: cohort counts, residues, individuals.
+    fn total(&self) -> f64 { self.n.iter().sum::<f64>() + self.residue.iter().sum::<f64>() + self.indiv.len() as f64 }
+    /// Count per cell across representations.
+    fn indiv_counts(&self) -> Vec<usize> { let mut v = vec![0usize; self.n.len()]; for (c, _, _) in &self.indiv { v[*c] += 1; } v }
+    fn in_zoom_cell(&self, k: usize) -> bool {
+        if !self.zoomed { return false; }
+        let g = self.geo.as_ref().unwrap();
+        let i = g.cells[k]; let lat = g.grid.lat(i / g.grid.nx); let lon = g.grid.lon(i % g.grid.nx);
+        lat >= self.zoom_lat_s && lat < self.zoom_lat_n && lon >= self.zoom_lon_w && lon < self.zoom_lon_e
+    }
+    fn cell_at(&self, lon: f64, lat: f64) -> Option<usize> {
+        let g = self.geo.as_ref().unwrap();
+        if lon < g.grid.lon_w || lat > g.grid.lat_n { return None; }
+        let col = ((lon - g.grid.lon_w) / g.grid.dlon) as usize; let row = ((g.grid.lat_n - lat) / g.grid.dlat) as usize;
+        if col >= g.grid.nx || row >= g.grid.ny { return None; }
+        let i = row * g.grid.nx + col;
+        g.cells.iter().position(|&c| c == i)
+    }
+    /// Zoom in: whole animals in the box become individuals at random positions in
+    /// their cell; fractions stay as residues. Exact.
+    fn zoom_in(&mut self, rng: &mut esim_kernel::rng::Rng) {
+        self.zoomed = true;
+        let g = self.geo.as_ref().unwrap();
+        for k in 0..self.n.len() {
+            if !self.in_zoom_cell(k) { continue; }
+            let whole = self.n[k].floor();
+            self.residue[k] += self.n[k] - whole;
+            self.n[k] = 0.0;
+            let i = g.cells[k]; let (col, row) = (i % g.grid.nx, i / g.grid.nx);
+            for _ in 0..(whole as usize) {
+                let lon = g.grid.lon_w + (col as f64 + rng.f64()) * g.grid.dlon;
+                let lat = g.grid.lat_n - (row as f64 + rng.f64()) * g.grid.dlat;
+                self.indiv.push((k, lon, lat));
+            }
+        }
+    }
+    /// Zoom out: individuals and residues fold back into cohort counts. Exact.
+    fn zoom_out(&mut self) {
+        for (k, _, _) in self.indiv.drain(..) { self.n[k] += 1.0; }
+        for k in 0..self.n.len() { self.n[k] += self.residue[k]; self.residue[k] = 0.0; }
+        self.zoomed = false;
+    }
     fn write_n(&self, ctx: &mut Ctx) {
         let g = self.geo.as_ref().unwrap();
+        let ic = self.indiv_counts();
         let mut f = vec![f32::NAN; g.grid.nx * g.grid.ny];
-        for (k, &i) in g.cells.iter().enumerate() { f[i] = self.n[k] as f32; }
+        for (k, &i) in g.cells.iter().enumerate() { f[i] = (self.n[k] + self.residue[k] + ic[k] as f64) as f32; }
         ctx.world_write("fauna.herb_n", "individuals", &g.grid, f);
     }
 }
@@ -147,12 +205,35 @@ impl Module for Herbivore {
         ctx.schedule_with_priority(self.dt, 4, "tick", json!(null));
     }
     fn handle(&mut self, ev: &Event, ctx: &mut Ctx) {
+        if ev.topic == "tick" {
+        // M8: switch representation on the zoom dates, conserving the count
+        if !self.zoom_from.is_empty() {
+            let now = ctx.now().0;
+            let from = esim_kernel::Time::parse(&self.zoom_from).map(|t| t.0).unwrap_or(i64::MAX);
+            let to = esim_kernel::Time::parse(&self.zoom_to).map(|t| t.0).unwrap_or(i64::MAX);
+            if !self.zoomed && now >= from && now < to {
+                let before = self.total();
+                let mut rng = ctx.rng().clone(); self.zoom_in(&mut rng); *ctx.rng() = rng;
+                ctx.report("fauna.zoom_individuals", "individuals", self.indiv.len() as f64);
+                ctx.report("fauna.zoom_switch_error", "individuals", self.total() - before);
+                ctx.publish("zoom.in", json!({ "module": self.name, "individuals": self.indiv.len() }));
+            }
+            if self.zoomed && now >= to {
+                let before = self.total();
+                self.zoom_out();
+                ctx.report("fauna.zoom_individuals", "individuals", 0.0);
+                ctx.report("fauna.zoom_switch_error", "individuals", self.total() - before);
+                ctx.publish("zoom.out", json!({ "module": self.name }));
+            }
+        }
+        }
         let g = self.geo.as_ref().unwrap();
         match ev.topic.as_str() {
             "tick" => {
-                // ask the crop for food: demand per cell
+                // ask the crop for food: demand per cell, whatever the representation
                 let mut f = vec![f32::NAN; g.grid.nx * g.grid.ny];
-                for (k, &i) in g.cells.iter().enumerate() { f[i] = (self.n[k] * self.intake_max_kgc_day) as f32; }
+                let ic = self.indiv_counts();
+                for (k, &i) in g.cells.iter().enumerate() { f[i] = ((self.n[k] + self.residue[k] + ic[k] as f64) * self.intake_max_kgc_day) as f32; }
                 ctx.world_write("fauna.herb_demand_kgc", "kgC", &g.grid, f);
                 ctx.publish("graze.request", json!({ "by": self.name }));
                 ctx.schedule_with_priority(self.dt, 4, "tick", json!(null));
@@ -162,26 +243,82 @@ impl Module for Herbivore {
                 let (mut dung, mut resp, mut births, mut deaths, mut eaten, mut browse) = (0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
                 let mut score = vec![0.0; g.cells.len()];
                 let veg_b: Option<Vec<f32>> = ctx.world_read("veg.biomass_gc_m2").map(|f| f.data.clone());
+                let ic = self.indiv_counts();
+                let mut fed_cell = vec![1.0f64; g.cells.len()];
+                let mut assim_ind = vec![0.0f64; g.cells.len()];
                 for (k, &i) in g.cells.iter().enumerate() {
-                    let n = self.n[k];
+                    let all = self.n[k] + self.residue[k] + ic[k] as f64;
                     let crop = gr[i].max(0.0) as f64;
-                    let br = n * self.browse_kgc_ind_day;
+                    let br = all * self.browse_kgc_ind_day;
                     let got = crop + br;
                     eaten += crop; browse += br;
                     let assim = got * self.assimilation;
                     dung += got - assim;
-                    let per_ind = if n > 0.0 { got / n } else { 0.0 };
+                    let per_ind = if all > 0.0 { got / all } else { 0.0 };
                     let fed = (per_ind / self.maintenance_kgc_day).clamp(0.0, 1.0);
-                    let b = (n * self.birth_per_day * fed).min(assim / self.c_ind_kgc);
+                    fed_cell[k] = fed; assim_ind[k] = per_ind * self.assimilation;
+                    // cohort part (counts and residues) at continuous rates
+                    let coh = self.n[k] + self.residue[k];
+                    let b = (coh * self.birth_per_day * fed).min(coh * assim_ind[k] / self.c_ind_kgc);
                     let starv = if per_ind < self.maintenance_kgc_day { self.starvation_per_day * (1.0 - fed) } else { 0.0 };
-                    let d = n * (self.mortality_per_day + starv);
-                    resp += assim - b * self.c_ind_kgc;
-                    self.n[k] = (n + b - d).max(0.0);
+                    let d = coh * (self.mortality_per_day + starv);
+                    resp += coh * assim_ind[k] - b * self.c_ind_kgc;
+                    if self.n[k] > 0.0 { self.n[k] = (self.n[k] + b - d).max(0.0); } else { self.residue[k] = (self.residue[k] + b - d).max(0.0); }
                     births += b; deaths += d;
                     self.intake_today[k] = per_ind;
                     score[k] = veg_b.as_ref().map(|v| v[i] as f64).unwrap_or(0.0);
                 }
+                // individual part: Bernoulli births and deaths at the same rates, whole animals
+                if !self.indiv.is_empty() {
+                    let mut newborn = Vec::new();
+                    let mut keep = Vec::with_capacity(self.indiv.len());
+                    let (mut ib, mut id, mut iresp) = (0.0, 0.0, 0.0);
+                    for &(k, lon, lat) in &self.indiv {
+                        let fed = fed_cell[k];
+                        let starv = if fed < 1.0 { self.starvation_per_day * (1.0 - fed) } else { 0.0 };
+                        let can_breed = assim_ind[k] >= self.birth_per_day * self.c_ind_kgc; // energy for the expected birth
+                        if can_breed && ctx.rng().f64() < self.birth_per_day * fed { newborn.push((k, lon, lat)); ib += 1.0; iresp += assim_ind[k] - self.c_ind_kgc; } else { iresp += assim_ind[k]; }
+                        if ctx.rng().f64() < self.mortality_per_day + starv { id += 1.0; } else { keep.push((k, lon, lat)); }
+                    }
+                    self.indiv = keep; self.indiv.extend(newborn);
+                    births += ib; deaths += id; resp += iresp;
+                }
                 migrate(&mut self.n, &score, &g.nbrs, self.move_frac);
+                // individuals walk: half a step toward the best neighbouring cell's food, half noise
+                if !self.indiv.is_empty() {
+                    let (mpd_lon, mpd_lat) = g.grid.metres_per_degree(g.grid.ny / 2);
+                    let mut folded = 0usize;
+                    let mut next = Vec::with_capacity(self.indiv.len());
+                    for &(k, lon, lat) in &self.indiv {
+                        let mut best = k; let mut bs = score[k];
+                        for &j in &g.nbrs[k] { if score[j] > bs { bs = score[j]; best = j; } }
+                        let (mut dx, mut dy) = (0.0, 0.0);
+                        if best != k {
+                            let (ci, ck) = (g.cells[best], g.cells[k]);
+                            dx = ((ci % g.grid.nx) as f64 - (ck % g.grid.nx) as f64) * g.grid.dlon * mpd_lon;
+                            dy = -(((ci / g.grid.nx) as f64 - (ck / g.grid.nx) as f64) * g.grid.dlat * mpd_lat);
+                        }
+                        let norm = (dx * dx + dy * dy).sqrt().max(1.0);
+                        let step = self.step_m_per_day;
+                        let nlon = lon + (dx / norm * step * 0.5 + ctx.rng().normal() * step * 0.5) / mpd_lon;
+                        let nlat = lat + (dy / norm * step * 0.5 + ctx.rng().normal() * step * 0.5) / mpd_lat;
+                        match self.cell_at(nlon, nlat) {
+                            None => next.push((k, lon, lat)), // outside the basin: stay put
+                            Some(nk) => {
+                                let inside = nlat >= self.zoom_lat_s && nlat < self.zoom_lat_n && nlon >= self.zoom_lon_w && nlon < self.zoom_lon_e;
+                                if inside { next.push((nk, nlon, nlat)); } else { self.n[nk] += 1.0; folded += 1; }
+                            }
+                        }
+                    }
+                    self.indiv = next;
+                    if folded > 0 { ctx.report("fauna.zoom_folded_out", "individuals", folded as f64); }
+                    if !self.indiv.is_empty() {
+                        let n = self.indiv.len() as f64;
+                        let mlat = self.indiv.iter().map(|p| p.2).sum::<f64>() / n;
+                        let sd_lat = (self.indiv.iter().map(|p| (p.2 - mlat).powi(2)).sum::<f64>() / n).sqrt();
+                        ctx.report("fauna.zoom_lat_sd_km", "km", sd_lat * 111.0);
+                    }
+                }
                 self.births_total += births; self.deaths_total += deaths;
                 ctx.transfer(CARBON, "browse", "herbivores", browse);
                 ctx.transfer(CARBON, "herbivores", "litter_dung", dung);
@@ -197,20 +334,22 @@ impl Module for Herbivore {
                 ctx.report("fauna.herb_deaths_day", "1/day", deaths);
                 self.write_n(ctx);
                 let day = (ctx.now().0 / 86_400) % 8;
-                if day == 0 {
+                if day == 0 || self.zoomed {
+                    let ic = self.indiv_counts();
                     let mut f = vec![f32::NAN; g.grid.nx * g.grid.ny];
-                    for (k, &i) in g.cells.iter().enumerate() { f[i] = (self.n[k] / g.area_km2[k]) as f32; }
+                    for (k, &i) in g.cells.iter().enumerate() { f[i] = ((self.n[k] + self.residue[k] + ic[k] as f64) / g.area_km2[k]) as f32; }
                     ctx.field("herbivore_density_km2", "1/km2", &g.grid, f);
                 }
+                if self.zoomed { ctx.report("fauna.zoom_individuals", "individuals", self.indiv.len() as f64); }
             }
             "fire.ignition" => {
                 // flight: most animals leave the ignited cell for its neighbours, exactly
                 let Some(cell) = ev.at else { return };
                 let Some(k) = g.cells.iter().position(|&c| c == cell as usize) else { return };
                 if g.nbrs[k].is_empty() || self.n[k] <= 0.0 { return; }
-                let leaving = self.n[k] * self.flee_frac;
+                let leaving = (self.n[k] + self.residue[k]) * self.flee_frac;
                 let share = leaving / g.nbrs[k].len() as f64;
-                self.n[k] -= leaving;
+                let from_n = leaving.min(self.n[k]); self.n[k] -= from_n; self.residue[k] -= leaving - from_n;
                 for &j in &g.nbrs[k] { self.n[j] += share; }
                 ctx.report("fauna.herb_fled", "individuals", leaving);
             }
@@ -219,7 +358,9 @@ impl Module for Herbivore {
                 let mut dead = 0.0;
                 for (k, &i) in g.cells.iter().enumerate() {
                     let f = bf[i]; if !f.is_finite() || f <= 0.0 { continue; }
-                    let d = self.n[k] * f as f64 * self.fire_mortality; self.n[k] -= d; dead += d;
+                    let coh = self.n[k] + self.residue[k];
+                    let d = coh * f as f64 * self.fire_mortality;
+                    let from_n = d.min(self.n[k]); self.n[k] -= from_n; self.residue[k] -= d - from_n; dead += d;
                 }
                 ctx.transfer(ANIMALS, "herbivores_n", "deaths_fire", dead);
                 ctx.transfer(CARBON, "herbivores", "carcass_sink", dead * self.c_ind_kgc);
@@ -232,12 +373,35 @@ impl Module for Herbivore {
                 let Some(req) = ctx.world_read("fauna.pred_kills").map(|f| f.data.clone()) else { return };
                 let mut taken = vec![f32::NAN; g.grid.nx * g.grid.ny];
                 let mut kills = 0.0;
+                let ic = self.indiv_counts();
+                let mut remove_per_cell = vec![0usize; g.cells.len()];
                 for (k, &i) in g.cells.iter().enumerate() {
                     let want = req[i].max(0.0) as f64;
-                    let k_ = want.min(self.n[k]);
-                    self.n[k] -= k_;
-                    taken[i] = k_ as f32;
-                    kills += k_;
+                    let mut taken_here = 0.0;
+                    if ic[k] > 0 {
+                        // whole animals from the individuals, fractions carried to tomorrow
+                        let avail = ic[k] as f64;
+                        let w = want + self.kill_carry[k];
+                        let whole = w.floor().min(avail);
+                        self.kill_carry[k] = if whole < avail { w - whole } else { 0.0 };
+                        remove_per_cell[k] = whole as usize;
+                        taken_here += whole;
+                        let rest = (want - whole).max(0.0).min(self.n[k] + self.residue[k]);
+                        if self.n[k] >= rest { self.n[k] -= rest; } else { let r2 = rest - self.n[k]; self.n[k] = 0.0; self.residue[k] -= r2; }
+                        taken_here += rest;
+                    } else {
+                        let coh = self.n[k] + self.residue[k];
+                        let k_ = want.min(coh);
+                        if self.n[k] >= k_ { self.n[k] -= k_; } else { let r2 = k_ - self.n[k]; self.n[k] = 0.0; self.residue[k] -= r2; }
+                        taken_here += k_;
+                    }
+                    taken[i] = taken_here as f32;
+                    kills += taken_here;
+                }
+                if remove_per_cell.iter().any(|&r| r > 0) {
+                    let mut keep = Vec::with_capacity(self.indiv.len());
+                    for &(k, lon, lat) in &self.indiv { if remove_per_cell[k] > 0 { remove_per_cell[k] -= 1; } else { keep.push((k, lon, lat)); } }
+                    self.indiv = keep;
                 }
                 self.killed_total += kills;
                 ctx.transfer(ANIMALS, "herbivores_n", "deaths_predation", kills);
