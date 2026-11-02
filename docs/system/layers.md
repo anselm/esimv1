@@ -34,8 +34,10 @@ why the planet runs report the deep ocean beside the surface.
 
 ## Patches
 
-The layers picture is too flat for a planet. A basin is a patch: a place with its own
-weather, water, plants, animals, people and rules, resolved on its own grid. A
+The layers picture is too flat for a planet. A patch is anything bound to one place: one
+module for the Amazon basin, or a bundle for a river basin with its own weather, water,
+plants, animals, people and rules, resolved on its own grid. A manifest that includes
+many patches is a world-spanning layer; a module never has to span the planet itself. A
 planetary simulation is many patches on one clock, coupled through shared global state
 (the carbon and energy ledgers, the global temperature anomaly) and through boundary
 fluxes (a river into a sea, rainfall from a circulation into a basin). The country layer

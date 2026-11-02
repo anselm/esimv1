@@ -162,13 +162,35 @@ pub struct Pools {
     a: [f64; 4], tau: [f64; 3],
     pools: [f64; 4],
     sinks: f64, emitted: f64,
+    /// Sink saturation and temperature feedback after Millar et al. 2017 (the FaIR v1
+    /// scheme): the three timescales are scaled by alpha, chosen each year so that the
+    /// 100-year integrated response equals r0 + rc * (carbon taken up so far) + rt * T.
+    feedback: bool, r0: f64, rc: f64, rt: f64,
+    alpha: f64, gmst: f64,
     last_tick: Option<Time>,
 }
 
 impl Pools {
     pub fn new(name: &str, p: &toml::Value) -> Result<Pools, String> {
         let s = Self::settings(p);
-        Ok(Pools { name: name.to_string(), co2_start_ppm: s.0, gtc_per_ppm: s.1, a: s.2, tau: s.3, pools: [0.0; 4], sinks: 0.0, emitted: 0.0, last_tick: None })
+        Ok(Pools { name: name.to_string(), co2_start_ppm: s.0, gtc_per_ppm: s.1, a: s.2, tau: s.3, pools: [0.0; 4], sinks: 0.0, emitted: 0.0,
+            feedback: p.get("feedback").and_then(|v| v.as_bool()).unwrap_or(true),
+            r0: param_f64(p, "r0_yr", 35.0), rc: param_f64(p, "rc_yr_per_gtc", 0.019), rt: param_f64(p, "rt_yr_per_k", 4.165),
+            alpha: 1.0, gmst: 0.0, last_tick: None })
+    }
+    /// 100-year integrated impulse response for a timescale scaling alpha.
+    fn iirf100(&self, alpha: f64) -> f64 {
+        self.a[0] * 100.0 + (1..4).map(|i| self.a[i] * alpha * self.tau[i - 1] * (1.0 - (-100.0 / (alpha * self.tau[i - 1])).exp())).sum::<f64>()
+    }
+    /// Solve alpha so that iIRF100 matches the target; bisection on a monotone function.
+    fn solve_alpha(&self, target: f64) -> f64 {
+        let target = target.clamp(10.0, 97.0); // the unscaled response integrates to about 52 years; keep the target in the solvable band
+        let (mut lo, mut hi) = (1e-3f64, 1e3f64);
+        for _ in 0..80 {
+            let mid = (lo * hi).sqrt();
+            if self.iirf100(mid) < target { lo = mid; } else { hi = mid; }
+        }
+        (lo * hi).sqrt()
     }
     fn settings(p: &toml::Value) -> (f64, f64, [f64; 4], [f64; 3]) {
         (
@@ -189,10 +211,15 @@ impl Pools {
             .param("a0", s.2[0], "", "fraction never removed on these timescales; Joos et al. 2013 multi-model mean as tabulated in IPCC AR5 8.SM, recalled from memory and to be checked against the paper")
             .param("a1", s.2[1], "", "fraction on tau1").param("a2", s.2[2], "", "fraction on tau2").param("a3", s.2[3], "", "fraction on tau3")
             .param("tau1_yr", s.3[0], "yr", "").param("tau2_yr", s.3[1], "yr", "").param("tau3_yr", s.3[2], "yr", "")
+            .param("feedback", p.get("feedback").and_then(|v| v.as_bool()).unwrap_or(true), "", "scale the timescales each year so the 100-year integrated response equals r0 + rc * uptake + rt * T (Millar et al. 2017, the FaIR v1 carbon scheme); false is the fixed Joos response")
+            .param("r0_yr", param_f64(p, "r0_yr", 35.0), "yr", "pre-industrial 100-year integrated response; Millar et al. 2017 (recalled; to be checked)")
+            .param("rc_yr_per_gtc", param_f64(p, "rc_yr_per_gtc", 0.019), "yr/GtC", "sensitivity to cumulative uptake; same source and caveat")
+            .param("rt_yr_per_k", param_f64(p, "rt_yr_per_k", 4.165), "yr/K", "sensitivity to warming; same source and caveat")
+            .subscribe("energy.state", "{ gmst_c } for the temperature feedback")
             .subscribe("carbon.emitted", "{ gtc } added to the four pools by their fractions")
             .publish("carbon.co2", "{ ppm } after each monthly step")
             .ledger(CARBON, "GtC", 1e-6)
-            .report("carbon.co2_ppm", "ppm").report("carbon.excess_gtc", "GtC").report("carbon.airborne_fraction", "")
+            .report("carbon.co2_ppm", "ppm").report("carbon.excess_gtc", "GtC").report("carbon.airborne_fraction", "").report("carbon.alpha", "")
             .note("The ledger makes the turnover-versus-excess distinction concrete: molecules exchange fast, the excess mass drains slowly, and the stock the ledger checks is the excess.")
     }
 }
@@ -204,12 +231,14 @@ impl Module for Pools {
         ctx.declare_stock(CARBON, "atmosphere", self.atmosphere());
         ctx.declare_stock(CARBON, "sinks", self.sinks);
         ctx.subscribe("carbon.emitted");
+        ctx.subscribe("energy.state");
         self.last_tick = Some(ctx.now());
         ctx.report("carbon.co2_ppm", "ppm", self.ppm());
         ctx.schedule_with_priority(to_next_month(ctx.now()), 1, "tick", json!(null));
     }
     fn handle(&mut self, ev: &Event, ctx: &mut Ctx) {
         match ev.topic.as_str() {
+            "energy.state" => { if let Some(g) = ev.data.get("gmst_c").and_then(|v| v.as_f64()) { self.gmst = g; } }
             "carbon.emitted" => {
                 let g = ev.data.get("gtc").and_then(|v| v.as_f64()).unwrap_or(0.0);
                 for i in 0..4 { self.pools[i] += g * self.a[i]; }
@@ -218,9 +247,13 @@ impl Module for Pools {
             }
             "tick" => {
                 let dt_yr = years_between(self.last_tick.unwrap_or(ctx.now()), ctx.now());
+                // the sink feedback: once a year, re-solve the timescale scaling
+                if self.feedback && year_month(ctx.now()).1 == 1 {
+                    self.alpha = self.solve_alpha(self.r0 + self.rc * self.sinks + self.rt * self.gmst);
+                }
                 let mut removed = 0.0;
                 for i in 1..4 {
-                    let left = self.pools[i] * (-dt_yr / self.tau[i - 1]).exp();
+                    let left = self.pools[i] * (-dt_yr / (self.alpha * self.tau[i - 1])).exp();
                     removed += self.pools[i] - left;
                     self.pools[i] = left;
                 }
@@ -233,6 +266,7 @@ impl Module for Pools {
                 ctx.report("carbon.co2_ppm", "ppm", ppm);
                 ctx.report("carbon.excess_gtc", "GtC", self.excess());
                 if self.emitted > 0.0 { ctx.report("carbon.airborne_fraction", "", self.excess() / self.emitted); }
+                ctx.report("carbon.alpha", "", self.alpha);
                 self.last_tick = Some(ctx.now());
                 ctx.schedule_with_priority(to_next_month(ctx.now()), 1, "tick", json!(null));
             }
@@ -434,6 +468,85 @@ impl Gases {
 fn to_next_year(now: Time) -> Duration {
     let (y, _) = year_month(now);
     Time::parse(&format!("{:04}-01-01", y + 1)).unwrap().since(now)
+}
+
+// ---------------------------------------------------------------------------------------
+// forcing.ar6: the assessed forcings this model does not compute itself.
+
+#[derive(Serialize, Deserialize)]
+pub struct ForcingAr6 {
+    name: String,
+    components: Vec<String>,
+    after_record: String,
+    #[serde(skip)] series: BTreeMap<String, BTreeMap<i64, f64>>,
+}
+
+const AR6_DEFAULT: &[&str] = &["aerosol", "o3", "other_wmghg", "h2o_stratospheric", "contrails", "bc_on_snow", "land_use", "volcanic", "solar"];
+
+impl ForcingAr6 {
+    pub fn new(name: &str, p: &toml::Value) -> Result<ForcingAr6, String> {
+        let components = p.get("components").and_then(|v| v.as_array()).map(|a| a.iter().filter_map(|x| x.as_str().map(String::from)).collect())
+            .unwrap_or_else(|| AR6_DEFAULT.iter().map(|s| s.to_string()).collect());
+        let mut m = ForcingAr6 { name: name.to_string(), components, after_record: esim_kernel::manifest::param_str(p, "after_record", "hold").to_string(), series: BTreeMap::new() };
+        m.load()?;
+        Ok(m)
+    }
+    fn load(&mut self) -> Result<(), String> {
+        let root = root();
+        let cat = Catalog::load(&root.join("data/catalog.toml"))?;
+        let mut f = Fetcher::default_for(&root)?;
+        self.series = planet::ar6_erf(&mut f, &asset_url(&cat, "ipcc-ar6-erf")?)?;
+        for c in &self.components { if !self.series.contains_key(c) { return Err(format!("AR6 ERF file has no column {c}")); } }
+        Ok(())
+    }
+    fn value(&self, c: &str, y: i64) -> f64 {
+        let s = &self.series[c];
+        if let Some(v) = s.get(&y) { return *v; }
+        let Some((&ly, &lv)) = s.iter().next_back() else { return 0.0 };
+        if y < *s.keys().next().unwrap() { return 0.0; }
+        match self.after_record.as_str() {
+            "zero" => 0.0,
+            "mean_last_decade" => { let v: Vec<f64> = s.range(ly - 9..=ly).map(|(_, v)| *v).collect(); v.iter().sum::<f64>() / v.len() as f64 }
+            _ => lv,
+        }
+    }
+    pub fn describe(name: &str, p: &toml::Value) -> Describe {
+        let comps: Vec<String> = p.get("components").and_then(|v| v.as_array()).map(|a| a.iter().filter_map(|x| x.as_str().map(String::from)).collect()).unwrap_or_else(|| AR6_DEFAULT.iter().map(|s| s.to_string()).collect());
+        Describe::new("forcing.ar6", name, "The IPCC AR6 assessed effective radiative forcing time series (1750 to 2019) for the components this model does not compute: aerosols (radiation and cloud interactions together), ozone, the other well-mixed greenhouse gases, stratospheric water vapour, contrails, black carbon on snow, land use, volcanoes and the sun, each published to the energy module by name. Read, not modelled. Beyond 2019 the stated assumption applies.")
+            .priority(1).dt("1 year (1 January)")
+            .param("components", serde_json::Value::Array(comps.iter().map(|c| serde_json::Value::String(c.clone())).collect()), "", "columns of the AR6 file to carry; co2, ch4 and n2o are left to the carbon modules")
+            .param("after_record", esim_kernel::manifest::param_str(p, "after_record", "hold"), "", "beyond 2019: hold the 2019 value; mean_last_decade; zero. Aerosols are falling in the real world, so hold is a conservative-warm choice for them and the manifest should say so")
+            .publish("forcing.extra", "{ name, w_m2 } per component each January")
+            .report("forcing.ar6_total_w_m2", "W/m2").report("forcing.ar6_aerosol_w_m2", "W/m2")
+            .asset("ipcc-ar6-erf", "AR6 WG1 Chapter 7 ERF time series, 1750 to 2019")
+            .note("Volcanic forcing after 2019 is held at the 2019 value under hold, which is near zero; a large eruption is not in any assumption here.")
+    }
+}
+
+impl Module for ForcingAr6 {
+    fn name(&self) -> &str { &self.name }
+    fn init(&mut self, ctx: &mut Ctx) { self.emit(ctx); ctx.schedule_with_priority(to_next_year(ctx.now()), 1, "tick", json!(null)); }
+    fn handle(&mut self, ev: &Event, ctx: &mut Ctx) {
+        if ev.topic != "tick" { return; }
+        self.emit(ctx);
+        ctx.schedule_with_priority(to_next_year(ctx.now()), 1, "tick", json!(null));
+    }
+    fn snapshot(&self) -> serde_json::Value { serde_json::to_value(self).unwrap() }
+    fn restore(&mut self, v: serde_json::Value) { let mut m: ForcingAr6 = serde_json::from_value(v).unwrap(); m.load().expect("ar6 reload"); *self = m; }
+}
+
+impl ForcingAr6 {
+    fn emit(&self, ctx: &mut Ctx) {
+        let (y, _) = year_month(ctx.now());
+        let mut total = 0.0;
+        for c in &self.components {
+            let v = self.value(c, y);
+            total += v;
+            ctx.publish("forcing.extra", json!({ "name": format!("ar6_{c}"), "w_m2": v }));
+        }
+        ctx.report("forcing.ar6_total_w_m2", "W/m2", total);
+        if self.components.iter().any(|c| c == "aerosol") { ctx.report("forcing.ar6_aerosol_w_m2", "W/m2", self.value("aerosol", y)); }
+    }
 }
 
 // ---------------------------------------------------------------------------------------

@@ -54,6 +54,7 @@
 
 <div class="floating right-3 top-3 flex items-center gap-3 mono text-xs select-none">
   <a use:link={{ isNew: true }} class="hover:text-brand" title="new project">+ project</a>
+  <a use:link={{ kinds: true }} class="hover:text-brand" title="module kinds">kinds</a>
   <a use:link={{ docs: true }} class="hover:text-brand" title="documentation">docs</a>
   <span class="muted">esim</span>
 </div>

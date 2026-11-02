@@ -1,6 +1,7 @@
 # The planet core, meant to be included: observed emissions into a carbon ledger, the
-# impulse-response carbon cycle, methane and N2O from the records, the two-layer energy
-# balance, thermal sea level, and the scoreboards. A manifest that includes this adds its
+# impulse-response carbon cycle with the Millar 2017 sink feedback, methane and N2O from
+# the records, the IPCC AR6 assessed forcings for everything else (aerosols above all),
+# the two-layer energy balance, thermal sea level, and the scoreboards. A manifest that includes this adds its
 # own [run] and whatever sits on top. See manifests/p4-planet-people.toml.
 
 [run]
@@ -27,6 +28,12 @@ co2_start_ppm = 286.8
 [[module]]
 name = "gases"
 kind = "carbon.gases"
+
+[[module]]
+name = "assessed"
+kind = "forcing.ar6"
+[module.params]
+after_record = "hold"
 
 [[module]]
 name = "energy"

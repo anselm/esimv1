@@ -6,6 +6,7 @@
 //! esim audit <run_dir>                    the independent auditor: spend-down, diversity, shocks, tears
 //! esim project new <area/name> [--manifest f] [--title t] [--description d]   a project folder under projects/
 //! esim project run <area/name> [--variant v] [--set module.param=value ...]   run a project's manifest into its runs/
+//! esim project update <area/name> --manifest f   replace a project's manifest with a re-resolved one
 //! esim projects [--json]                  list projects (and refresh projects/index.json)
 
 use esim_kernel::{Kernel, Manifest, Module};
@@ -257,6 +258,19 @@ fn project_run(path: &str, variant: Option<&str>, extra: &[Override]) -> Result<
     sets.extend(extra.iter().cloned());
     run_with(&dir.join("manifest.toml"), &dir.join("runs"), &sets, variant)?;
     projects_index()?;
+    Ok(())
+}
+
+/// Replace a project's manifest with a (re)resolved one; project.toml and runs are kept.
+/// A project folder stands alone, so a change to a bundle it included does not reach it
+/// until this is run on purpose.
+fn project_update(path: &str, manifest: &Path) -> Result<(), String> {
+    let dir = project_dir(path)?;
+    if !dir.join("project.toml").exists() { return Err(format!("no project at {}", dir.display())); }
+    load(manifest)?;
+    fs::write(dir.join("manifest.toml"), Manifest::resolve_text(manifest)?).map_err(|e| e.to_string())?;
+    projects_index()?;
+    println!("project  {path}: manifest replaced from {}", manifest.display());
     Ok(())
 }
 
@@ -622,6 +636,7 @@ fn main() {
             match (args.get(2).map(String::as_str), args.get(3)) {
                 (Some("new"), Some(p)) => project_new(p, get("--manifest").map(Path::new), get("--title"), get("--description"), get("--by").unwrap_or("cli")),
                 (Some("run"), Some(p)) => project_run(p, get("--variant"), &parse_overrides(&args)),
+                (Some("update"), Some(p)) => match get("--manifest") { Some(m) => project_update(p, Path::new(m)), None => Err("usage: esim project update <area/name> --manifest <file>".into()) },
                 _ => Err("usage: esim project new <area/name> --manifest <file> [--title t] [--description d] [--by who] | esim project run <area/name>".into()),
             }
         }

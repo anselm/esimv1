@@ -34,6 +34,13 @@ kind = "carbon.gases"
 name = "gases"
 
 [[module]]
+kind = "forcing.ar6"
+name = "assessed"
+
+[module.params]
+after_record = "hold"
+
+[[module]]
 kind = "energy.twolayer"
 name = "energy"
 

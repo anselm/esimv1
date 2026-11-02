@@ -53,8 +53,11 @@ how to run it. Not deployed anywhere; it runs on canada1.
 - Country layers (`crates/modules/src/countries.rs`): Natural Earth outlines rasterised at
   2 degrees, UN WPP people (multi-member gzip: use MultiGzDecoder), CRU country temperature
   through the World Bank CCKP API, `data/events/tipping.toml` (every row `recalled`, not
-  yet checked against Armstrong McKay et al. 2022). The planet runs about 0.5 degC warm in
-  2024 (no aerosols, impulse-response sinks); crossing years read early by about 20 years.
+  yet checked against Armstrong McKay et al. 2022). With the AR6 assessed forcings
+  (`forcing.ar6`) and the Millar 2017 sink feedback in `carbon.pools`, the planet is
+  +1.69 degC in 2024 against +1.54 observed and 451 ppm against 425; both recalled
+  parameter sets are to be checked. A project folder's manifest is frozen at creation:
+  `esim project update <path> --manifest f` re-resolves it after a bundle changes.
 - Manifests may `include = ["other.toml"]`; `Manifest::load` resolves, project folders get
   the resolved text. Projects may declare `[[variant]]` sets; runs record `variant.json`.
 - Planetary rungs (`manifests/p1-*`, `crates/modules/src/planet.rs`) are zero-dimensional

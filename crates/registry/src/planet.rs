@@ -131,3 +131,23 @@ pub fn window_mean(s: &BTreeMap<i64, f64>, y0: i64, y1: i64) -> Option<f64> {
     let v: Vec<f64> = s.range(y0..=y1).map(|(_, v)| *v).collect();
     if v.is_empty() { None } else { Some(v.iter().sum::<f64>() / v.len() as f64) }
 }
+
+/// The IPCC AR6 WG1 effective radiative forcing time series, 1750 to 2019, one column per
+/// component (W/m2), from the Chapter 7 author's repository (Smith et al.; the Zenodo
+/// record 10.5281/zenodo.5705391 is the citable copy). Returns column name -> year -> value.
+pub fn ar6_erf(f: &mut Fetcher, url: &str) -> Result<BTreeMap<String, BTreeMap<i64, f64>>, String> {
+    let path = f.fetch("ipcc-ar6/AR6_ERF_1750-2019.csv", url)?;
+    let text = String::from_utf8_lossy(&std::fs::read(&path).map_err(|e| e.to_string())?).into_owned();
+    let mut lines = text.lines();
+    let header: Vec<String> = lines.next().ok_or("ar6 erf: empty")?.split(',').map(|s| s.trim().to_string()).collect();
+    let mut out: BTreeMap<String, BTreeMap<i64, f64>> = BTreeMap::new();
+    for line in lines {
+        let f: Vec<&str> = line.split(',').collect();
+        let Some(Ok(y)) = f.first().map(|s| s.trim().parse::<i64>()) else { continue };
+        for (i, h) in header.iter().enumerate().skip(1) {
+            if let Some(Ok(v)) = f.get(i).map(|s| s.trim().parse::<f64>()) { out.entry(h.clone()).or_default().insert(y, v); }
+        }
+    }
+    if out.is_empty() { return Err("ar6 erf: nothing parsed".into()); }
+    Ok(out)
+}

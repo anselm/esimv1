@@ -52,6 +52,7 @@ pub static KINDS: &[Kind] = &[
     kind!("obs.planet", planet::PlanetObs),
     kind!("carbon.gases", planet::Gases),
     kind!("sea.thermal", planet::SeaThermal),
+    kind!("forcing.ar6", planet::ForcingAr6),
     kind!("people.countries", countries::PeopleCountries),
     kind!("climate.countries", countries::ClimateCountries),
     kind!("people.heat", countries::PeopleHeat),

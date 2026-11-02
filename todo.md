@@ -27,6 +27,19 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
 - Heat mortality with published exposure-response curves and their ranges, last.
 - Check every `confidence = "recalled"` row in `data/events/tipping.toml` against the paper.
 
+## Accounts and the namespace
+
+- Real accounts through attest.monster (passkey identity; the handle is the area; a user
+  may create only under their handle). About a day on the server; do it together with
+  the public deployment, after aerosols and the carbon sinks. `devlog/20261101-docs-and-accounts.md`
+- Crumple the namespace: handles at the top level (`/anselm/planet`, `/anselm/notes`), not
+  under `/projects/`; `docs`, `system`, `runs`, `new`, `kinds`, `api` become reserved
+  top-level names. An area then holds projects and pages alike. Path-based URLs in the
+  viewer first, folders second. Anselm, 2026-11-01: flattening is cognitively simpler
+  even with conceptual collisions.
+- The swear-word filter from his other project, on area and project names only, when
+  names become public.
+
 ## Platform
 
 - A 1 km population layer (WorldPop) in place of people spread evenly over a country.

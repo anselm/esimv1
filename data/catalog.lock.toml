@@ -42,6 +42,12 @@ sha256 = "a1441ab5aef8f3baf43cca417bca271f6d674d4f235ea01129f0432c948882e0"
 bytes = 7022
 fetched = "2026-11-01"
 
+[files."ipcc-ar6/AR6_ERF_1750-2019.csv"]
+url = "https://raw.githubusercontent.com/chrisroadmap/ar6/main/data_output/AR6_ERF_1750-2019.csv"
+sha256 = "420e5b0bb96d6b19eed6bf1f1e890bf6f9e8548f29b6600c628c80a7e66ed63e"
+bytes = 102046
+fetched = "2026-11-02"
+
 [files."modis-13a1/MOD13A1.A2025001.h11v04.061.2025022083854_NDVI.tif"]
 url = "https://modiseuwest.blob.core.windows.net/modis-061-cogs/MOD13A1/11/04/2025001/MOD13A1.A2025001.h11v04.061.2025022083854_500m_16_days_NDVI.tif?st=2026-10-31T03%3A50%3A15Z&se=2026-11-01T04%3A35%3A15Z&sp=rl&sv=2025-07-05&sr=c&skoid=9c8ff44a-6a2c-4dfb-b298-1c9212f64d9a&sktid=72f988bf-86f1-41af-91ab-2d7cd011db47&skt=2026-11-01T03%3A13%3A46Z&ske=2026-11-08T03%3A13%3A46Z&sks=b&skv=2025-07-05&sig=CcaJkQ09h8J2c7oq/IgIS9Sy8VnmhUZAyciF1rhNLFs%3D"
 sha256 = "1649fbea2afbe55a76624f29f9df7375d285c94ead037bbf7192e5d213442865"

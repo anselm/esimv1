@@ -7,7 +7,8 @@
 //   ?new                        the new-project form
 //   ?docs                       the documentation index
 //   ?doc=area/name              one documentation page (doc=new is the new-page form)
-export const route = $state({ project: null, run: null, runs: false, isNew: false, docs: false, doc: null })
+//   ?kinds                      every module kind, from its describe
+export const route = $state({ project: null, run: null, runs: false, isNew: false, docs: false, doc: null, kinds: false })
 
 function read() {
   const q = new URLSearchParams(location.search)
@@ -17,9 +18,10 @@ function read() {
   route.isNew = q.has('new')
   route.docs = q.has('docs')
   route.doc = q.get('doc')
+  route.kinds = q.has('kinds')
 }
 
-export function href({ project = null, run = null, runs = false, isNew = false, docs = false, doc = null } = {}) {
+export function href({ project = null, run = null, runs = false, isNew = false, docs = false, doc = null, kinds = false } = {}) {
   const q = new URLSearchParams()
   if (project) q.set('project', project)
   if (run) q.set('run', run)
@@ -27,6 +29,7 @@ export function href({ project = null, run = null, runs = false, isNew = false, 
   if (isNew) q.set('new', '')
   if (docs) q.set('docs', '')
   if (doc) q.set('doc', doc)
+  if (kinds) q.set('kinds', '')
   const s = q.toString().replace(/=(&|$)/g, '$1')
   return s ? `?${s}` : location.pathname
 }

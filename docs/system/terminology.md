@@ -30,10 +30,13 @@ atmospheric composition, energy balance, abiotic earth systems, biogeochemistry,
 producers, consumers, people and their systems. A layer is a way of talking, not a
 construct in the code; a kind is "in" a layer because of what it reads and owns.
 
-**Patch.** A place-bound set of modules: the Boone River basin with its weather, water,
-crop, animals and farms is a patch. A planetary simulation is patches on one clock,
-coupled through shared global state and boundary fluxes. The country layer is 177 very
-coarse patches.
+**Patch.** Anything bound to one place: a single module that handles an area (the
+Amazon basin as one forest module), or a bundle of modules for an area (the Boone River
+basin with its weather, water, crop, animals and farms). A module need not span the
+planet; a manifest is the grouping. A bundle that includes many patches (Amazon, Congo,
+the boreal belt) is a world-spanning layer another manifest can include for, say, forest
+cover. A planetary simulation is patches on one clock, coupled through shared global
+state and boundary fluxes; the country layer is 177 very coarse ones.
 
 **Manifest.** The TOML document that fully states a simulation: the run window, seed and
 cadences, an optional place, the modules with their parameters, and the audit's
@@ -66,6 +69,8 @@ seed; two runs of the same manifest and seed produce the same digest.
 
 **Ensemble.** Many runs of one manifest with different seeds, kept as bands rather than
 single lines, for the parts of a manifest that are stochastic (hazards, weather members).
+This is the word's meaning in forecasting and it is kept to that here; a group of modules
+is a bundle, not an ensemble, however natural the other use is.
 
 **Record.** A real observation series or layer fetched through the registry: a gauge, a
 station, a reanalysis, an ice core, a census. Never synthetic.

@@ -247,6 +247,8 @@ function docsIndex() {
   return pages
 }
 docsIndex()
+// the kinds, for the static fallback of the kinds page
+kinds().then((ks) => { try { fs.writeFileSync(path.join(DOCS, 'kinds.json'), JSON.stringify(ks)) } catch { /* read-only */ } }).catch(() => {})
 
 // ---- server
 const server = http.createServer(serveStatic)

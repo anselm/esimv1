@@ -7,13 +7,15 @@ holds the history.
 
 ## The planet
 
-- The carbon cycle is an impulse response fitted on a present-day background and keeps
-  too much CO2 airborne: 478 ppm in 2024 against 425 measured. A box carbon cycle with
-  real sinks is the fix, then the hindcast harness.
-- Forcing is CO2, methane and N2O. Aerosols are absent, so the mid-century cooling is
-  missing and the model runs about half a degree warm in 2024 (+2.05 °C against +1.54).
-  Every crossing year the planet runs produce is early by roughly twenty years for that
-  reason.
+- The carbon cycle is an impulse response with the Millar 2017 sink feedback (recalled
+  parameters); it runs 26 ppm high in 2024 (451 against 425 measured, bias +2.8%). A box
+  carbon cycle with real stocks and the hindcast harness are the next steps.
+- Forcing is CO2, methane and N2O computed here, plus the IPCC AR6 assessed series for
+  everything else (aerosols, ozone, the minor gases, land use, volcanoes, the sun), held
+  at their 2019 values after 2019. With aerosols in, the 2024 anomaly is +1.69 °C against
+  +1.54 measured and the hindcast's temperature skill is 0.86; crossing years are a few
+  years early rather than twenty. Holding aerosols flat after 2019 is a warm-side
+  assumption, since they are falling.
 - Nothing feeds back: a tipping element flagged is not tipped; the Amazon does not release
   its carbon; permafrost does not thaw in the run.
 - Sea level is thermal expansion only, a floor.

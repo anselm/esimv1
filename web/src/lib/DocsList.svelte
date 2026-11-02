@@ -37,7 +37,7 @@
 </div>
 
 <h1 class="text-xl font-medium">Documentation</h1>
-<p class="mt-1 max-w-2xl text-sm muted">Pages are Markdown files under <span class="mono">docs/&lt;area&gt;/&lt;name&gt;.md</span>. The <span class="mono">system</span> area describes the simulator; any other area is whoever claims it first, as with projects.</p>
+<p class="mt-1 max-w-2xl text-sm muted">The <a use:link={{ kinds: true }} class="text-brand">kinds</a> page lists every module a manifest can build on. Pages here are Markdown files under <span class="mono">docs/&lt;area&gt;/&lt;name&gt;.md</span>. The <span class="mono">system</span> area describes the simulator; any other area is whoever claims it first, as with projects.</p>
 
 {#if error}
   <p class="mt-6 text-sm text-leak">{error}</p>
