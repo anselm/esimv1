@@ -47,6 +47,7 @@ export default defineConfig({
     tailwindcss(), svelte(),
     serveFolder('/runs/', path.resolve(here, '../runs')),
     serveFolder('/projects/', path.resolve(here, '../projects')),
+    serveFolder('/docs/', path.resolve(here, '../docs')),
   ],
   server: {
     // the project server (server.mjs) speaks socket.io on 5181

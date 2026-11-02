@@ -10,7 +10,9 @@
 //   project.draft {description, title}  -> { manifest, explanation, check, rounds, model }  (calls Claude)
 //   project.check {manifest}            -> { errors, warnings, info }
 //   project.create {path, title, description, manifest, by} -> { path }
-//   project.run {path}                  -> streams project.log {path, line}; ends with { ok, output }
+//   project.run {path, variant?, set?}  -> streams project.log {path, line}; ends with { ok, output }
+//   docs.list                           -> { pages: [{ path, title, order }] } and rewrites docs/index.json
+//   doc.save {path, markdown}           -> writes docs/<area>/<name>.md (first come first served per area)
 // Notices: projects.changed.
 //
 // It also serves the viewer: the built pages from dist/ when `npm run build` has been
@@ -212,6 +214,7 @@ function serveStatic(req, res) {
   }
   if (url.startsWith('/runs/')) return under('/runs/', path.join(ROOT, 'runs'))
   if (url.startsWith('/projects/')) return under('/projects/', path.join(ROOT, 'projects'))
+  if (url.startsWith('/docs/')) return under('/docs/', DOCS)
   if (!fs.existsSync(DIST)) { res.statusCode = 503; return res.end('viewer not built: run `npm run build` in web/, or use the Vite dev server') }
   // the viewer: a file from dist/ when it exists, else index.html (routes are query strings, so this is rare)
   const file = path.resolve(DIST, '.' + (url === '/' ? '/index.html' : url))
@@ -221,6 +224,29 @@ function serveStatic(req, res) {
     sendFile(res, path.join(DIST, 'index.html'), 'no-cache')
   })
 }
+
+// ---- docs: Markdown pages under ../docs/<area>/<name>.md; the index is written for the
+// static fallback. A page's title is its first heading; `<!-- order: n -->` on the first
+// line orders pages within an area.
+const DOCS = path.join(ROOT, 'docs')
+function docsIndex() {
+  const pages = []
+  if (!fs.existsSync(DOCS)) return pages
+  for (const area of fs.readdirSync(DOCS, { withFileTypes: true })) {
+    if (!area.isDirectory()) continue
+    for (const f of fs.readdirSync(path.join(DOCS, area.name))) {
+      if (!f.endsWith('.md')) continue
+      const text = fs.readFileSync(path.join(DOCS, area.name, f), 'utf8')
+      const title = (text.match(/^#\s+(.+)$/m) || [])[1]?.trim() ?? null
+      const order = Number((text.match(/<!--\s*order:\s*(\d+)\s*-->/) || [])[1]) || null
+      pages.push({ path: `${area.name}/${f.slice(0, -3)}`, title, order })
+    }
+  }
+  pages.sort((a, b) => a.path.localeCompare(b.path))
+  try { fs.writeFileSync(path.join(DOCS, 'index.json'), JSON.stringify(pages, null, 2)) } catch { /* read-only checkout */ }
+  return pages
+}
+docsIndex()
 
 // ---- server
 const server = http.createServer(serveStatic)
@@ -241,6 +267,20 @@ io.on('connection', (socket) => {
   }))
 
   socket.on('kinds', (_payload, ack) => reply(ack, async () => ({ kinds: await kinds() })))
+
+  socket.on('docs.list', (_payload, ack) => reply(ack, async () => ({ pages: docsIndex() })))
+
+  socket.on('doc.save', ({ path: p, markdown } = {}, ack) => reply(ack, async () => {
+    if (!validPath(p)) throw new Error('page path must be area/name in lower case letters, digits, - and _')
+    if (typeof markdown !== 'string' || !markdown.trim()) throw new Error('an empty page is not saved')
+    if (markdown.length > 200_000) throw new Error('page too long')
+    const file = path.join(DOCS, `${p}.md`)
+    fs.mkdirSync(path.dirname(file), { recursive: true })
+    fs.writeFileSync(file, markdown.endsWith('\n') ? markdown : markdown + '\n')
+    docsIndex()
+    io.emit('docs.changed', { path: p })
+    return { path: p }
+  }))
 
   socket.on('project.check', ({ manifest } = {}, ack) => reply(ack, async () => ({ check: await checkManifest(String(manifest || '')) })))
 

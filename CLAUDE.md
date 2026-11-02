@@ -15,7 +15,9 @@ how to run it. Not deployed anywhere; it runs on canada1.
 
 - Code: this folder. Repo: `anselm/earth-simulator-1` (private, nothing pushed by agents).
 - Devlog: `devlog/` (dated entries; read the tail first, especially the latest milestone
-  entry and `20261031-fitness.md`).
+  entry and `20261031-fitness.md`). System documentation for users: `docs/system/*.md`
+  (terminology, honesty, modules, layers, manifests, ...); keep `docs/system/limits.md`
+  current when a model's known faults change. `docs/index.json` is written by the server.
 - Deploy: none. See `project.toml`.
 - Runs: `runs/` (gitignored, loose runs) and `projects/<area>/<name>/runs/` (project runs).
   Viewer: `web/`. `node server.mjs` (after `npm run build`) is the whole thing on :5181:

@@ -40,6 +40,9 @@ framework against the use cases as rungs land.
   The folder is the project; the CLI writes it and anyone can run it by hand. A project's
   `[[variant]]` tables name parameter sets (`esim project run a/n --variant held`); each
   run keeps its resolved manifest. Manifests may `include` others (`manifests/planet-core.toml`).
+- `docs/`: the documentation as Markdown pages, `docs/<area>/<name>.md`, served and
+  editable in the viewer; `docs/system/` describes the simulator (start at
+  `overview.md`); `docs/protocol-v0.md` is the module contract.
 - `todo.md`: the open research projects and layers, one line each, pointing into the devlog.
 - `web/`: the viewer (Svelte 5, Vite): projects first, a project's runs, a run with its
   maps under one time cursor, the audit, scores, charts, ledgers; and `server.mjs`, one

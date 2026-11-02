@@ -1,0 +1,82 @@
+[
+  {
+    "path": "system/adding-a-module",
+    "title": "Adding a module",
+    "order": 15
+  },
+  {
+    "path": "system/conversation",
+    "title": "Conversation",
+    "order": 8
+  },
+  {
+    "path": "system/data",
+    "title": "Data",
+    "order": 9
+  },
+  {
+    "path": "system/evolution",
+    "title": "Evolution",
+    "order": 11
+  },
+  {
+    "path": "system/honesty",
+    "title": "Honesty",
+    "order": 3
+  },
+  {
+    "path": "system/layers",
+    "title": "Layers",
+    "order": 5
+  },
+  {
+    "path": "system/limits",
+    "title": "Limits today",
+    "order": 16
+  },
+  {
+    "path": "system/manifests",
+    "title": "Manifests",
+    "order": 6
+  },
+  {
+    "path": "system/modules",
+    "title": "Modules",
+    "order": 4
+  },
+  {
+    "path": "system/overview",
+    "title": "What this is",
+    "order": 1
+  },
+  {
+    "path": "system/projects-and-runs",
+    "title": "Projects and runs",
+    "order": 7
+  },
+  {
+    "path": "system/scoring-and-tearing",
+    "title": "Scoring and tearing",
+    "order": 10
+  },
+  {
+    "path": "system/terminology",
+    "title": "Terminology",
+    "order": 2
+  },
+  {
+    "path": "system/time",
+    "title": "Time",
+    "order": 13
+  },
+  {
+    "path": "system/vocabulary",
+    "title": "Vocabulary",
+    "order": 14
+  },
+  {
+    "path": "system/workspace",
+    "title": "Workspace",
+    "order": 12
+  }
+]

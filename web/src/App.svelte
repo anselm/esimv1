@@ -5,6 +5,8 @@
   import NewProject from './lib/NewProject.svelte'
   import RunList from './lib/RunList.svelte'
   import RunView from './lib/RunView.svelte'
+  import DocsList from './lib/DocsList.svelte'
+  import DocView from './lib/DocView.svelte'
 </script>
 
 <main class="mx-auto max-w-6xl px-4 pb-16 pt-14 sm:px-6">
@@ -22,6 +24,12 @@
     {/key}
   {:else if route.isNew}
     <NewProject />
+  {:else if route.doc}
+    {#key route.doc}
+      <DocView path={route.doc} />
+    {/key}
+  {:else if route.docs}
+    <DocsList />
   {:else if route.runs}
     <RunList />
   {:else}

@@ -5,7 +5,9 @@
 //   ?run=id                     a run in the loose runs/ folder (the old list)
 //   ?runs                       the loose runs/ folder itself
 //   ?new                        the new-project form
-export const route = $state({ project: null, run: null, runs: false, isNew: false })
+//   ?docs                       the documentation index
+//   ?doc=area/name              one documentation page (doc=new is the new-page form)
+export const route = $state({ project: null, run: null, runs: false, isNew: false, docs: false, doc: null })
 
 function read() {
   const q = new URLSearchParams(location.search)
@@ -13,14 +15,18 @@ function read() {
   route.run = q.get('run')
   route.runs = q.has('runs')
   route.isNew = q.has('new')
+  route.docs = q.has('docs')
+  route.doc = q.get('doc')
 }
 
-export function href({ project = null, run = null, runs = false, isNew = false } = {}) {
+export function href({ project = null, run = null, runs = false, isNew = false, docs = false, doc = null } = {}) {
   const q = new URLSearchParams()
   if (project) q.set('project', project)
   if (run) q.set('run', run)
   if (runs) q.set('runs', '')
   if (isNew) q.set('new', '')
+  if (docs) q.set('docs', '')
+  if (doc) q.set('doc', doc)
   const s = q.toString().replace(/=(&|$)/g, '$1')
   return s ? `?${s}` : location.pathname
 }
