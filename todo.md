@@ -24,6 +24,12 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
   harness against Mauna Loa. `devlog/20261101-p1-planet.md`
 - Ice and sea level beyond thermal expansion; a satellite altimetry scoreboard.
 - A rainfall-reading layer, so that forest patches (the Amazon) can hang off it.
+- Soil life and soil carbon as a layer (Anselm, 2026-11-01, after the New Scientist piece
+  on the decline of Earth's microbiome). Honest form: soil organic carbon stocks per
+  country or cell from SoilGrids (one snapshot, anonymous) spent down under cultivation
+  and heat by published rates, with the harvest and the carbon ledger coupled; there is
+  no global time series of microbial biomass to score against, so it would be a stock
+  with a stated response, labelled so, until a record exists.
 - Heat mortality with published exposure-response curves and their ranges, last.
 - Check every `confidence = "recalled"` row in `data/events/tipping.toml` against the paper.
 
