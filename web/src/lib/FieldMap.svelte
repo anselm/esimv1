@@ -1,3 +1,13 @@
+<script module>
+  // shared by every map on the page
+  const frameCache = new Map()      // `${base}/${name}/${i}` -> Promise<Float32Array>
+  let outlinesPromise = null
+  function outlinesOnce() {
+    if (!outlinesPromise) outlinesPromise = fetch('/docs/outlines.json').then((r) => (r.ok ? r.json() : null)).catch(() => null)
+    return outlinesPromise
+  }
+</script>
+
 <script>
   // One field snapshot drawn to a canvas: nearest-neighbour blocks, a colour
   // scale that is either the run-wide min/max (default) or the current frame's
@@ -49,7 +59,10 @@
   let error = $state(null)
   let hover = $state(null)      // { x, y, lat, lon, v }
 
-  const cache = new Map()       // frame index -> Float32Array (this field only)
+  // frames are cached across every map on the page (the same frame is often shown twice),
+  // and once the first frame is up the rest of a field's frames are fetched in the
+  // background so playing the timeline does not wait on the network
+  const cache = frameCache
 
   // country outlines, drawn over grids that span the world (lon from -180): the raster is
   // one value per country at two degrees, the outlines say which country is which
@@ -57,22 +70,33 @@
   let outlines = $state(null)
   $effect(() => {
     if (!world || outlines) return
-    fetch('/docs/outlines.json', { cache: 'force-cache' }).then((r) => (r.ok ? r.json() : null)).then((j) => { outlines = j }).catch(() => {})
+    outlinesOnce().then((j) => { outlines = j })
   })
 
-  async function fetchFrame(i) {
-    if (cache.has(i)) return cache.get(i)
-    const r = await fetch(`${base}/fields/${encodeURIComponent(name)}/${String(i).padStart(5, '0')}.f32`, { cache: 'no-store' })
-    if (!r.ok) throw new Error(`frame ${i}: ${r.status}`)
-    const buf = await r.arrayBuffer()
-    // raw little-endian float32, nx*ny values, row-major from the north edge
-    const dv = new DataView(buf)
-    const n = buf.byteLength >> 2
-    const out = new Float32Array(n)
-    for (let k = 0; k < n; k++) out[k] = dv.getFloat32(k * 4, true)
-    cache.set(i, out)
-    return out
+  function fetchFrame(i) {
+    const key = `${base}/${name}/${i}`
+    if (cache.has(key)) return cache.get(key)
+    const p = fetch(`${base}/fields/${encodeURIComponent(name)}/${String(i).padStart(5, '0')}.f32`).then(async (r) => {
+      if (!r.ok) throw new Error(`frame ${i}: ${r.status}`)
+      const buf = await r.arrayBuffer()
+      // raw little-endian float32, nx*ny values, row-major from the north edge
+      const dv = new DataView(buf)
+      const n = buf.byteLength >> 2
+      const out = new Float32Array(n)
+      for (let k = 0; k < n; k++) out[k] = dv.getFloat32(k * 4, true)
+      return out
+    })
+    p.catch(() => cache.delete(key))
+    cache.set(key, p)
+    return p
   }
+  // after the first frame, warm the rest two at a time
+  let warmed = false
+  $effect(() => {
+    if (!frame || warmed || times.length < 2) return
+    warmed = true
+    ;(async () => { for (let i = 0; i < times.length; i += 2) await Promise.all([fetchFrame(i), i + 1 < times.length ? fetchFrame(i + 1) : null].filter(Boolean)).catch(() => {}) })()
+  })
 
   // Load on demand when the selected frame changes.
   $effect(() => {
