@@ -149,6 +149,8 @@ fn run_with(path: &Path, out_root: &Path, sets: &[Override], variant: Option<&st
     let dir = out_root.join(&id);
     fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
     fs::write(dir.join("manifest.toml"), &mtext).map_err(|e| e.to_string())?;
+    // the modules' describes, in manifest order: what the viewer composes the page from
+    fs::write(dir.join("describe.json"), serde_json::to_string(&r).unwrap()).map_err(|e| e.to_string())?;
     if variant.is_some() || !sets.is_empty() {
         let set: serde_json::Map<String, serde_json::Value> = sets.iter().map(|(k, v)| (k.clone(), serde_json::Value::String(v.clone()))).collect();
         fs::write(dir.join("variant.json"), serde_json::to_string_pretty(&serde_json::json!({ "variant": variant, "set": set })).unwrap()).map_err(|e| e.to_string())?;

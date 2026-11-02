@@ -34,6 +34,11 @@ use serde_json::json;
 use std::collections::BTreeMap;
 use std::path::PathBuf;
 
+/// "1.7 billion", "95 million", "600,000".
+fn people_words(p: f64) -> String {
+    if p >= 1e9 { format!("{:.1} billion", p / 1e9) } else if p >= 1e6 { format!("{:.0} million", p / 1e6) } else { format!("{}", (p as i64).to_string().as_bytes().rchunks(3).rev().map(|c| std::str::from_utf8(c).unwrap()).collect::<Vec<_>>().join(",")) }
+}
+
 fn root() -> PathBuf { std::env::var("ESIM_ROOT").ok().map(PathBuf::from).unwrap_or_else(|| PathBuf::from(".")) }
 fn asset_url(cat: &Catalog, id: &str) -> Result<String, String> { Ok(cat.asset(id).ok_or_else(|| format!("catalog has no {id}"))?.url_template.clone()) }
 fn year_of(t: Time) -> i64 { t.to_iso()[0..4].parse().unwrap() }
@@ -110,6 +115,8 @@ impl PeopleCountries {
             .own("country.index", "index").own("people.density_km2", "1/km2")
             .publish("people.population", "{ year, iso3: persons } each January")
             .report("people.world_total", "persons").report("people.countries_matched", "")
+            .view("counter", "people on Earth", "people.world_total", "the UN's estimates to 2023 and its medium projection after")
+            .view("map", "people per square kilometre", "people_density_km2", "a country's people spread evenly over its land")
             .asset("natural-earth-110m-countries", "outlines, ISO3 codes").asset("un-wpp-2024-total-population", "people per country per year")
             .note("Population is spread evenly over a country's land cells for the density map; a 1 km layer (WorldPop) is the next step.")
     }
@@ -224,6 +231,9 @@ impl ClimateCountries {
             .own("climate.tas_c", "degC").own("climate.hot_month_c", "degC")
             .publish("climate.country_tas", "{ year, by_iso3: { tas_c, hot_month_c, slope, tas_anom_c } } each January; tas_anom_c is the country's warming since the anom window")
             .report("climate.slope_median", "degC/degC").report("climate.countries_fitted", "").report("climate.hottest_country_tas_c", "degC")
+            .view("map", "annual mean temperature by country", "climate_tas_c", "each country's record scaled by the run's warming")
+            .view("map", "hottest month by country", "climate_hot_month_c", "")
+            .view("chart", "hottest country's annual mean", "climate.hottest_country_tas_c", "")
             .asset("worldbank-cckp-cru-tas-annual", "country annual means 1901 to 2022").asset("worldbank-cckp-cru-tas-monthly", "country monthly means for the hottest-month climatology").asset("hadcrut5-global-annual", "the global anomaly the records are regressed on").asset("natural-earth-110m-countries", "the country list")
             .note("A country's variance about the fit is lost; years are given their fitted value, not their weather. Countries missing from the record (Antarctica, a few territories) get no temperature and are counted in climate.countries_fitted.")
     }
@@ -308,6 +318,13 @@ impl PeopleHeat {
             .subscribe("people.population", "{ by_iso3 }").subscribe("climate.country_tas", "{ by_iso3: { tas_c, hot_month_c } }")
             .read("country.index", "index", true, "to draw the map")
             .own("people.outside_niche", "1")
+            .frame("people_outside_niche", "1").frame("people_niche_crossing_year", "year")
+            .view("counter", "people outside the human climate niche", "people.outside_niche", "annual mean above 29 °C where they live; a count, not a toll")
+            .view("counter", "countries outside the niche", "people.countries_outside_niche", "")
+            .view("map", "outside the niche", "people_outside_niche", "")
+            .view("map", "the year each country left the niche", "people_niche_crossing_year", "fills in as the cursor passes each crossing")
+            .view("crossings", "countries crossing", "people.crossing", "the first year a country's mean passes a marker; the source of each marker is in the parameters")
+            .view("chart", "people outside the niche", "people.outside_niche", "")
             .publish("people.crossing", "{ iso3, name, year, kind: niche | hot_month, persons } the first year a country crosses; a country already over a marker in the run's first year is a state of its climate, not a crossing, and is not announced")
             .report("people.outside_niche", "persons").report("people.outside_niche_pct", "%").report("people.hot_month_over", "persons").report("people.countries_outside_niche", "").report("people.crossings_niche", "").report("people.crossings_hot_month", "")
             .asset("natural-earth-110m-countries", "names for the crossing events")
@@ -342,14 +359,20 @@ impl Module for PeopleHeat {
                     per[k] = if out { 1.0 } else if tas.is_some() { 0.0 } else { f32::NAN };
                     // the first evaluated year sets the baseline: a country already over a marker then is
                     // recorded with year 0 and never announced; a crossing is a change from that state
-                    if out { outside += p; n_out += 1; if !self.crossed_niche.contains_key(&c.iso3) { self.crossed_niche.insert(c.iso3.clone(), if self.baseline_done { y } else { 0 }); if self.baseline_done { crossings.push(json!({ "iso3": c.iso3, "name": c.name, "year": y, "kind": "niche", "persons": p, "tas_c": tas })); } } }
-                    if over { hot_over += p; if !self.crossed_hot.contains_key(&c.iso3) { self.crossed_hot.insert(c.iso3.clone(), if self.baseline_done { y } else { 0 }); if self.baseline_done { crossings.push(json!({ "iso3": c.iso3, "name": c.name, "year": y, "kind": "hot_month", "persons": p, "hot_month_c": hot })); } } }
+                    if out { outside += p; n_out += 1; if !self.crossed_niche.contains_key(&c.iso3) { self.crossed_niche.insert(c.iso3.clone(), if self.baseline_done { y } else { 0 }); if self.baseline_done {
+                        let sentence = format!("{}: the annual mean temperature of {} passes {} °C, the hot edge of the climate humans have always lived in. {} people live there.", y, c.name, self.niche_c, people_words(*p));
+                        crossings.push(json!({ "iso3": c.iso3, "name": c.name, "year": y, "kind": "niche", "persons": p, "tas_c": tas, "sentence": sentence, "source": "Xu et al. 2020 (recalled)" })); } } }
+                    if over { hot_over += p; if !self.crossed_hot.contains_key(&c.iso3) { self.crossed_hot.insert(c.iso3.clone(), if self.baseline_done { y } else { 0 }); if self.baseline_done {
+                        let sentence = format!("{}: the hottest month in {} now averages above {} °C. {} people. (A marker with no paper behind it.)", y, c.name, self.hot_month_c, people_words(*p));
+                        crossings.push(json!({ "iso3": c.iso3, "name": c.name, "year": y, "kind": "hot_month", "persons": p, "hot_month_c": hot, "sentence": sentence, "source": "guess" })); } } }
                 }
                 if let Some(index) = index {
                     let mut field = vec![f32::NAN; g.nx * g.ny];
-                    for (i, &k) in index.iter().enumerate() { if !k.is_nan() { field[i] = per[k as usize]; } }
+                    let mut year_field = vec![f32::NAN; g.nx * g.ny];
+                    let year_of_country: Vec<f32> = self.countries.iter().map(|c| self.crossed_niche.get(&c.iso3).map(|yy| if *yy > 0 { *yy as f32 } else { f32::NAN }).unwrap_or(f32::NAN)).collect();
+                    for (i, &k) in index.iter().enumerate() { if !k.is_nan() { field[i] = per[k as usize]; year_field[i] = year_of_country[k as usize]; } }
                     ctx.world_write("people.outside_niche", "1", &g, field.clone());
-                    if y - self.last_frame_year >= self.frame_every_years { ctx.field("people_outside_niche", "1", &g, field); self.last_frame_year = y; }
+                    if y - self.last_frame_year >= self.frame_every_years { ctx.field("people_outside_niche", "1", &g, field); ctx.field("people_niche_crossing_year", "year", &g, year_field); self.last_frame_year = y; }
                 }
                 self.baseline_done = true;
                 for c in crossings { ctx.publish("people.crossing", c); }
@@ -398,6 +421,8 @@ impl Tipping {
             .subscribe("energy.state", "{ gmst_c }")
             .publish("tipping.crossing", "{ id, title, year, level: low | central, threshold_c, gmst_c, timescale, consequence, source, confidence }")
             .report("tipping.elements_past_low", "").report("tipping.elements_past_central", "")
+            .view("counter", "tipping elements past their central estimate", "tipping.elements_past_central", "a flag with a citation, not a tip in this run")
+            .view("crossings", "tipping thresholds passed", "tipping.crossing", "every row of the table is marked recalled until checked against the paper")
             .asset("events/tipping.toml", "the elements and their thresholds, with provenance and confidence per row")
             .note("Passing a threshold does not tip the element in this run; nothing feeds back yet. It is a flag with a citation, which is what the words-only essays lack.")
     }
@@ -415,8 +440,13 @@ impl Module for Tipping {
                     for (level, thr, book) in [("low", e.low_c, &mut self.passed_low), ("central", e.central_c, &mut self.passed_central)] {
                         if self.gmst >= thr && !book.contains_key(&e.id) {
                             book.insert(e.id.clone(), y);
+                            let sentence = if level == "central" {
+                                format!("{}: the warming passes {} °C, the central estimate at which {} becomes likely: {}, over {}.", y, thr, e.title.to_lowercase(), e.consequence, e.timescale)
+                            } else {
+                                format!("{}: the warming enters the range ({} °C and up) in which {} could be triggered.", y, thr, e.title.to_lowercase())
+                            };
                             ctx.publish("tipping.crossing", json!({ "id": e.id, "title": e.title, "year": y, "level": level, "threshold_c": thr, "gmst_c": self.gmst,
-                                "timescale": e.timescale, "consequence": e.consequence, "source": e.source, "confidence": e.confidence }));
+                                "timescale": e.timescale, "consequence": e.consequence, "source": e.source, "confidence": e.confidence, "sentence": sentence }));
                         }
                     }
                 }
@@ -535,6 +565,13 @@ impl PeopleWetBulb {
             .subscribe("people.population", "{ by_iso3 }").subscribe("climate.country_tas", "{ by_iso3: { tas_anom_c } } the country's warming since the observed window")
             .read("country.index", "index", true, "to draw the map")
             .own("wetbulb.days_over_a", "d/yr")
+            .frame("wetbulb_days_over_31", "d/yr").frame("wetbulb_crossing_year", "year")
+            .view("counter", "people whose capital passes 31 °C wet-bulb on three days a year", "wetbulb.people_capital_over_a", "the limit for healthy adults at rest; one station per country")
+            .view("counter", "people whose capital passes 35 °C wet-bulb", "wetbulb.people_capital_over_b", "the theoretical survivability limit")
+            .view("map", "days a year over 31 °C wet-bulb at the capital", "wetbulb_days_over_31", "")
+            .view("map", "the year each capital crossed 31 °C wet-bulb", "wetbulb_crossing_year", "")
+            .view("crossings", "capitals crossing", "people.crossing", "")
+            .view("chart", "people whose capital passes 31 °C wet-bulb", "wetbulb.people_capital_over_a", "")
             .publish("people.crossing", "{ iso3, name, capital, station, year, kind: wetbulb_a | wetbulb_b, persons, days } the first year a capital passes a limit on days_to_cross days")
             .report("wetbulb.people_capital_over_a", "persons").report("wetbulb.people_capital_over_b", "persons").report("wetbulb.people_days_over_a", "person-days/yr").report("wetbulb.capitals_over_a", "").report("wetbulb.capitals_over_b", "").report("wetbulb.capitals_with_data", "")
             .asset("natural-earth-110m-populated-places", "capital per country").asset("noaa-isd-history", "the station nearest each capital").asset("noaa-gsod", "daily maximum temperature and mean dew point at that station")
@@ -566,15 +603,21 @@ impl Module for PeopleWetBulb {
                     per[k] = da as f32;
                     let p = self.pop.get(&c.iso3).copied().unwrap_or(0.0);
                     days_a += da * p;
-                    if da > self.days_to_cross { people_a += p; n_a += 1; if !self.crossed_a.contains_key(&c.iso3) { self.crossed_a.insert(c.iso3.clone(), if self.baseline_done { y } else { 0 }); if self.baseline_done { crossings.push(json!({ "iso3": c.iso3, "name": c.name, "capital": cap, "station": station, "year": y, "kind": "wetbulb_a", "persons": p, "days": da, "limit_c": self.limit_a_c })); } } }
-                    if db > self.days_to_cross { people_b += p; n_b += 1; if !self.crossed_b.contains_key(&c.iso3) { self.crossed_b.insert(c.iso3.clone(), if self.baseline_done { y } else { 0 }); if self.baseline_done { crossings.push(json!({ "iso3": c.iso3, "name": c.name, "capital": cap, "station": station, "year": y, "kind": "wetbulb_b", "persons": p, "days": db, "limit_c": self.limit_b_c })); } } }
+                    if da > self.days_to_cross { people_a += p; n_a += 1; if !self.crossed_a.contains_key(&c.iso3) { self.crossed_a.insert(c.iso3.clone(), if self.baseline_done { y } else { 0 }); if self.baseline_done {
+                        let sentence = format!("{}: {} ({}) passes {} °C wet-bulb on more than {} afternoons a year, the limit past which a healthy adult at rest can no longer shed heat. {} people live in {}.", y, cap, c.name, self.limit_a_c, self.days_to_cross as i64, people_words(p), c.name);
+                        crossings.push(json!({ "iso3": c.iso3, "name": c.name, "capital": cap, "station": station, "year": y, "kind": "wetbulb_a", "persons": p, "days": da, "limit_c": self.limit_a_c, "sentence": sentence, "source": format!("Vecellio et al. 2022 (recalled); station {station}") })); } } }
+                    if db > self.days_to_cross { people_b += p; n_b += 1; if !self.crossed_b.contains_key(&c.iso3) { self.crossed_b.insert(c.iso3.clone(), if self.baseline_done { y } else { 0 }); if self.baseline_done {
+                        let sentence = format!("{}: {} ({}) passes {} °C wet-bulb, the theoretical limit of human survival outdoors, on more than {} afternoons a year. {} people live in {}.", y, cap, c.name, self.limit_b_c, self.days_to_cross as i64, people_words(p), c.name);
+                        crossings.push(json!({ "iso3": c.iso3, "name": c.name, "capital": cap, "station": station, "year": y, "kind": "wetbulb_b", "persons": p, "days": db, "limit_c": self.limit_b_c, "sentence": sentence, "source": format!("Sherwood and Huber 2010 (recalled); station {station}") })); } } }
                 }
                 self.baseline_done = true;
                 if let Some(index) = index {
                     let mut field = vec![f32::NAN; g.nx * g.ny];
-                    for (i, &k) in index.iter().enumerate() { if !k.is_nan() { field[i] = per[k as usize]; } }
+                    let mut year_field = vec![f32::NAN; g.nx * g.ny];
+                    let year_of_country: Vec<f32> = self.countries.iter().map(|c| self.crossed_a.get(&c.iso3).map(|yy| if *yy > 0 { *yy as f32 } else { f32::NAN }).unwrap_or(f32::NAN)).collect();
+                    for (i, &k) in index.iter().enumerate() { if !k.is_nan() { field[i] = per[k as usize]; year_field[i] = year_of_country[k as usize]; } }
                     ctx.world_write("wetbulb.days_over_a", "d/yr", &g, field.clone());
-                    if y - self.last_frame_year >= self.frame_every_years { ctx.field("wetbulb_days_over_31", "d/yr", &g, field); self.last_frame_year = y; }
+                    if y - self.last_frame_year >= self.frame_every_years { ctx.field("wetbulb_days_over_31", "d/yr", &g, field); ctx.field("wetbulb_crossing_year", "year", &g, year_field); self.last_frame_year = y; }
                 }
                 for c in crossings { ctx.publish("people.crossing", c); }
                 ctx.report("wetbulb.people_capital_over_a", "persons", people_a);
@@ -588,4 +631,45 @@ impl Module for PeopleWetBulb {
     }
     fn snapshot(&self) -> serde_json::Value { serde_json::to_value(self).unwrap() }
     fn restore(&mut self, v: serde_json::Value) { let mut m: PeopleWetBulb = serde_json::from_value(v).unwrap(); m.load().expect("wetbulb reload"); *self = m; }
+}
+
+// ---------------------------------------------------------------------------------------
+// story.bottomline: the headline of a planetary run, from what the other layers publish.
+
+#[derive(Serialize, Deserialize)]
+pub struct Story {
+    name: String,
+    headlines: u64,
+    people: f64, outside: f64, wb: f64,
+}
+
+impl Story {
+    pub fn new(name: &str, _p: &toml::Value) -> Result<Story, String> { Ok(Story { name: name.to_string(), headlines: 0, people: 0.0, outside: 0.0, wb: 0.0 }) }
+    pub fn describe(name: &str, _p: &toml::Value) -> Describe {
+        Describe::new("story.bottomline", name, "The bottom line of a planetary run, told as it happens: the headline numbers at the cursor and one plain sentence for every threshold crossed, each sentence written by the module that knows its source. It computes nothing new and it says, in the same place, what this run does not yet measure.")
+            .priority(9).dt("follows the crossing events")
+            .subscribe("people.crossing", "sentences").subscribe("tipping.crossing", "sentences").subscribe("people.population", "the count")
+            .report("story.headlines", "")
+            .view("counter", "people on Earth", "people.world_total", "UN estimates to 2023, the UN medium projection after")
+            .view("counter", "warming since 1850", "energy.gmst_anom_c", "")
+            .view("counter", "people outside the human climate niche", "people.outside_niche", "annual mean above 29 °C where they live")
+            .view("counter", "people whose capital passes the wet-bulb limit", "wetbulb.people_capital_over_a", "31 °C on more than three afternoons a year")
+            .view("counter", "tipping elements past their central estimate", "tipping.elements_past_central", "")
+            .view("counter", "sea level from expansion alone", "sea.thermal_m", "")
+            .view("story", "what has happened so far", "crossing", "one sentence per threshold crossed, newest first; the source is beside each")
+            .view("text", "what this run does not yet measure", "Not in this run, so not in these numbers: deaths from heat (a published exposure-response layer is next), harvests and food prices, forest cover and the carbon it would release, biodiversity, fresh water, sea level from ice, migration, and any response by people to any of it. The population here is the UN's path, which assumes none of the above changes where people live. Every crossing above is a count of people living where a stated limit is passed, not a toll, and the model runs about 0.15 °C warm in 2024.", "")
+    }
+}
+
+impl Module for Story {
+    fn name(&self) -> &str { &self.name }
+    fn init(&mut self, ctx: &mut Ctx) { ctx.subscribe("people.crossing"); ctx.subscribe("tipping.crossing"); ctx.subscribe("people.population"); }
+    fn handle(&mut self, ev: &Event, ctx: &mut Ctx) {
+        match ev.topic.as_str() {
+            "people.crossing" | "tipping.crossing" => { self.headlines += 1; ctx.report("story.headlines", "", self.headlines as f64); }
+            _ => {}
+        }
+    }
+    fn snapshot(&self) -> serde_json::Value { serde_json::to_value(self).unwrap() }
+    fn restore(&mut self, v: serde_json::Value) { *self = serde_json::from_value(v).unwrap(); }
 }

@@ -53,6 +53,7 @@
     "created": "2026-11-02",
     "description": "One project, several assumptions. The planet core (observed emissions into a carbon ledger, impulse-response sinks, methane and N2O, a two-layer energy balance, thermal sea level) with countries on top: people per country from the UN, each country's temperature from its own record scaled by the run's warming, the people living outside the human climate niche, and the tipping elements' thresholds checked against the warming. Variants: the hindcast to 2025; emissions held at the 2024 rate to 2100; emissions to zero by 2050. Each is an assumption, never a forecast.",
     "kinds": [
+      "story.bottomline",
       "carbon.emissions",
       "carbon.pools",
       "carbon.gases",
@@ -69,6 +70,21 @@
     "name": "planet",
     "path": "anselm/planet",
     "runs": [
+      {
+        "all_ledgers_closed": true,
+        "digest": "b60d3cad62770ec1",
+        "end": 4102444800,
+        "events": 27094,
+        "id": "p4-planet-people-19e47ad4-b60d3cad",
+        "name": "p4-planet-people",
+        "seed": 1,
+        "set": {
+          "emissions.after_record": "\"zero_by:2050\""
+        },
+        "start": -3786825600,
+        "variant": "zero-by-2050",
+        "verdict": "holds"
+      },
       {
         "all_ledgers_closed": true,
         "digest": "4f886250965f3f13",
@@ -112,6 +128,36 @@
         },
         "start": -3786825600,
         "variant": "hindcast",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "e4ffa649a6e47bff",
+        "end": 4102444800,
+        "events": 27134,
+        "id": "p4-planet-people-2377227a-e4ffa649",
+        "name": "p4-planet-people",
+        "seed": 1,
+        "set": {
+          "emissions.after_record": "\"grow:1\""
+        },
+        "start": -3786825600,
+        "variant": "growing",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "81db817fdee69cdb",
+        "end": 4102444800,
+        "events": 27122,
+        "id": "p4-planet-people-282435cb-81db817f",
+        "name": "p4-planet-people",
+        "seed": 1,
+        "set": {
+          "emissions.after_record": "\"hold\""
+        },
+        "start": -3786825600,
+        "variant": "held",
         "verdict": "holds"
       },
       {
@@ -161,6 +207,36 @@
       },
       {
         "all_ledgers_closed": true,
+        "digest": "4b8e92ae54a6c68d",
+        "end": 4102444800,
+        "events": 27122,
+        "id": "p4-planet-people-2a788441-4b8e92ae",
+        "name": "p4-planet-people",
+        "seed": 1,
+        "set": {
+          "emissions.after_record": "\"hold\""
+        },
+        "start": -3786825600,
+        "variant": "held",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "a086fec03465cb1f",
+        "end": 1735689600,
+        "events": 18970,
+        "id": "p4-planet-people-33752cdc-a086fec0",
+        "name": "p4-planet-people",
+        "seed": 1,
+        "set": {
+          "run.end": "\"2025-01-01\""
+        },
+        "start": -3786825600,
+        "variant": "hindcast",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
         "digest": "6a409ad29c5b0290",
         "end": 1735689600,
         "events": 18794,
@@ -191,6 +267,36 @@
       },
       {
         "all_ledgers_closed": true,
+        "digest": "694afe16a2b2f8ab",
+        "end": 4102444800,
+        "events": 27094,
+        "id": "p4-planet-people-45b730ff-694afe16",
+        "name": "p4-planet-people",
+        "seed": 1,
+        "set": {
+          "emissions.after_record": "\"zero_by:2050\""
+        },
+        "start": -3786825600,
+        "variant": "zero-by-2050",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "a7d75b98c622e6e6",
+        "end": 4102444800,
+        "events": 27134,
+        "id": "p4-planet-people-7c623e2a-a7d75b98",
+        "name": "p4-planet-people",
+        "seed": 1,
+        "set": {
+          "emissions.after_record": "\"grow:1\""
+        },
+        "start": -3786825600,
+        "variant": "growing",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
         "digest": "7d8431fa81c62a06",
         "end": 4102444800,
         "events": 26867,
@@ -217,7 +323,22 @@
         },
         "start": -3786825600,
         "variant": "hindcast",
-        "verdict": null
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "62208f147a09df2c",
+        "end": 1735689600,
+        "events": 18970,
+        "id": "p4-planet-people-d10740d1-62208f14",
+        "name": "p4-planet-people",
+        "seed": 1,
+        "set": {
+          "run.end": "\"2025-01-01\""
+        },
+        "start": -3786825600,
+        "variant": "hindcast",
+        "verdict": "holds"
       },
       {
         "all_ledgers_closed": true,
@@ -262,6 +383,66 @@
         },
         "start": -3786825600,
         "variant": "held",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "e4ffa649a6e47bff",
+        "end": 4102444800,
+        "events": 27134,
+        "id": "p4-planet-people-e264db6e-e4ffa649",
+        "name": "p4-planet-people",
+        "seed": 1,
+        "set": {
+          "emissions.after_record": "\"grow:1\""
+        },
+        "start": -3786825600,
+        "variant": "growing",
+        "verdict": null
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "a086fec03465cb1f",
+        "end": 1735689600,
+        "events": 18970,
+        "id": "p4-planet-people-e2b98181-a086fec0",
+        "name": "p4-planet-people",
+        "seed": 1,
+        "set": {
+          "run.end": "\"2025-01-01\""
+        },
+        "start": -3786825600,
+        "variant": "hindcast",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "81db817fdee69cdb",
+        "end": 4102444800,
+        "events": 27122,
+        "id": "p4-planet-people-f91ab5b1-81db817f",
+        "name": "p4-planet-people",
+        "seed": 1,
+        "set": {
+          "emissions.after_record": "\"hold\""
+        },
+        "start": -3786825600,
+        "variant": "held",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "694afe16a2b2f8ab",
+        "end": 4102444800,
+        "events": 27094,
+        "id": "p4-planet-people-ffdec6d5-694afe16",
+        "name": "p4-planet-people",
+        "seed": 1,
+        "set": {
+          "emissions.after_record": "\"zero_by:2050\""
+        },
+        "start": -3786825600,
+        "variant": "zero-by-2050",
         "verdict": "holds"
       }
     ],

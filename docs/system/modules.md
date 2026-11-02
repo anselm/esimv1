@@ -66,6 +66,30 @@ every run can be scored against the record; two manifests that differ in one mod
 be run side by side under one cursor. Provenance and scoreboards are how a pool like
 this stays honest without a gatekeeper. See [Evolution](?doc=system/evolution).
 
+## Views: how a module asks to be shown
+
+A run page is composed from the manifest, not written by hand: the kernel's header and
+time cursor first, then each module's section in the manifest's order, then the
+auditor's reading, the scores, the ledgers, and the raw events and manifest behind
+disclosures. Each module's section holds the views its describe declared:
+
+| view | source | shown as |
+|---|---|---|
+| `counter` | a report | one number at the cursor, with a title and a note |
+| `map` | a frame | the frame at or before the cursor, under the page's one cursor |
+| `chart` | a report, optionally with an observed report beside it | a line, the cursor marked |
+| `crossings` | a topic ending in `.crossing` | the crossings so far, newest first |
+| `story` | the word `crossing` | the sentence each crossing event carries, newest first, with its source |
+| `text` | the text itself | prose |
+
+A module that declares no views gets a map per frame and a chart per report. A module
+that computes nothing but exists to be first on the page is allowed, and
+`story.bottomline` is one: the manifest's order is the page's order, so the bottom line
+goes at the top by being listed first. A crossing event carries its own sentence,
+written by the module that knows the source, so the viewer never invents words. Every
+run writes `describe.json` beside `run.json`, and that is what the page is built from;
+there is no module-specific code in the viewer.
+
 ## Granularity
 
 A module should be the size of one idea with its own record: a water balance, a crop's

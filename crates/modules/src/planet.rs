@@ -129,6 +129,7 @@ impl EmissionsIn {
             .publish("carbon.emitted", "{ gtc, fossil_gtc, luc_gtc } for the month just added")
             .ledger(CARBON, "GtC", 1e-6)
             .report("carbon.emissions_gtc_yr", "GtC/yr").report("carbon.cumulative_gtc", "GtC")
+            .view("chart", "emissions", "carbon.emissions_gtc_yr", "the record to 2024, then the assumption")
             .asset("owid-co2-data", "World rows: co2 and land_use_change_co2, Mt CO2 per year")
             .note("Mt CO2 to GtC by 12.011/44.009. The annual total is spread evenly over the twelve months of the year.")
     }
@@ -229,6 +230,9 @@ impl Pools {
             .publish("carbon.co2", "{ ppm } after each monthly step")
             .ledger(CARBON, "GtC", 1e-6)
             .report("carbon.co2_ppm", "ppm").report("carbon.excess_gtc", "GtC").report("carbon.airborne_fraction", "").report("carbon.alpha", "")
+            .view("counter", "CO₂ in the air", "carbon.co2_ppm", "parts per million")
+            .view_vs("CO₂, model against Mauna Loa and the ice core", "carbon.co2_ppm", "obs.co2_ppm", "")
+            .view("chart", "airborne fraction of all emissions so far", "carbon.airborne_fraction", "")
             .note("The ledger makes the turnover-versus-excess distinction concrete: molecules exchange fast, the excess mass drains slowly, and the stock the ledger checks is the excess.")
     }
 }
@@ -335,6 +339,10 @@ impl TwoLayer {
             .ledger(ENERGY, "J", 1e10)
             .report("energy.gmst_anom_c", "degC").report("energy.deep_anom_c", "degC").report("energy.forcing_w_m2", "W/m2")
             .report("energy.imbalance_w_m2", "W/m2").report("energy.stored_zj", "ZJ")
+            .view("counter", "warming since 1850", "energy.gmst_anom_c", "global mean surface, °C")
+            .view("counter", "deep ocean warming", "energy.deep_anom_c", "the part already bought")
+            .view_vs("surface warming, model against HadCRUT5", "energy.gmst_anom_c", "obs.gmst_hadcrut5_c", "")
+            .view("chart", "deep ocean", "energy.deep_anom_c", "").view("chart", "forcing", "energy.forcing_w_m2", "").view("chart", "energy imbalance", "energy.imbalance_w_m2", "")
             .note("Explicit monthly steps; the fastest timescale is C/(lambda+gamma), about four years, so the step is well resolved.")
     }
 }
@@ -527,6 +535,7 @@ impl ForcingAr6 {
             .param("after_record", esim_kernel::manifest::param_str(p, "after_record", "hold"), "", "beyond 2019: hold the 2019 value; mean_last_decade; zero. Aerosols are falling in the real world, so hold is a conservative-warm choice for them and the manifest should say so")
             .publish("forcing.extra", "{ name, w_m2 } per component each January")
             .report("forcing.ar6_total_w_m2", "W/m2").report("forcing.ar6_aerosol_w_m2", "W/m2")
+            .view("chart", "aerosol forcing (assessed)", "forcing.ar6_aerosol_w_m2", "held after 2019")
             .asset("ipcc-ar6-erf", "AR6 WG1 Chapter 7 ERF time series, 1750 to 2019")
             .note("Volcanic forcing after 2019 is held at the 2019 value under hold, which is near zero; a large eruption is not in any assumption here.")
     }
@@ -578,6 +587,7 @@ impl SeaThermal {
             .param("m_per_yj", param_f64(p, "m_per_yj", 0.11), "m/YJ", "expansion efficiency of ocean heat uptake, about 0.11 m per 10^24 J (Kuhlbrodt and Gregory 2012, recalled; to be checked)")
             .subscribe("energy.state", "{ stored_zj }")
             .report("sea.thermal_m", "m")
+            .view("counter", "sea level from expansion alone", "sea.thermal_m", "metres; ice is not here yet")
             .note("Thermal expansion only. No scoreboard yet: a satellite altimetry series has not been fetched.")
     }
 }

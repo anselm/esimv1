@@ -5,7 +5,15 @@
 # the warming. Emissions after 2024 are an assumption; the project's variants state which.
 # Everything the core leaves out (aerosols, sink saturation, feedbacks) is still left out.
 
-include = ["planet-core.toml"]
+# The story module computes nothing; it is first because a manifest's module order is
+# the page order, and the bottom line belongs at the top. The planet core is spliced in
+# after it by the include entry below.
+[[module]]
+name = "story"
+kind = "story.bottomline"
+
+[[module]]
+include = "planet-core.toml"
 
 [run]
 name = "p4-planet-people"

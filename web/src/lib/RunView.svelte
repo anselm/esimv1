@@ -1,7 +1,9 @@
 <script>
-  // One run, maps first. A single time cursor drives every map frame and marks every
-  // chart. Then what the auditor found, the scores, the charts, the ledgers in brief,
-  // and the raw events and manifest behind disclosure.
+  // One run, composed from its manifest: the kernel's header and time cursor first, then
+  // each module's own views in the manifest's order (from describe.json, written by the
+  // run), then the auditor's reading, the scores, the ledgers, and the raw events and
+  // manifest behind disclosures. No module is special-cased here; a module that wants a
+  // counter, a map or a list declares it in its describe.
   import { link } from './router.svelte.js'
   import { isoDate, num, ms } from './fmt.js'
   import Status from './Status.svelte'
@@ -13,6 +15,7 @@
   import EnsembleView from './EnsembleView.svelte'
   import Timeline from './Timeline.svelte'
   import Audit from './Audit.svelte'
+  import ModuleViews from './ModuleViews.svelte'
 
   let { id, base, back = {}, backLabel = 'back' } = $props()
   let cursor = $state(null)
@@ -21,8 +24,9 @@
     const r = await fetch(`${base}/run.json`, { cache: 'no-store' })
     if (!r.ok) throw new Error(`run.json ${r.status}`)
     const run = await r.json()
-    ;[run.scores, run.audit] = await Promise.all([loadJson('scores.json'), loadJson('audit.json')])
-    cursor = run.end
+    ;[run.scores, run.audit, run.describe] = await Promise.all([loadJson('scores.json'), loadJson('audit.json'), loadJson('describe.json')])
+    // the cursor starts at the beginning and plays, so the tip-over is seen, not just the end state
+    cursor = run.start
     return run
   }
   async function loadJson(name) {
@@ -40,29 +44,30 @@
     return r.ok ? r.text() : null
   }
 
-  // A score pairs sim with obs; when both series exist they share one chart,
-  // drawn under the sim's name, and the obs series is not charted on its own.
-  function pairs(run) {
-    const out = new Map()
-    for (const sc of run.scores ?? []) {
-      if (run.series?.[sc.sim] && run.series?.[sc.obs] && !out.has(sc.sim)) out.set(sc.sim, sc.obs)
+  // Frames and series no module's views claimed (older runs without describe.json, or
+  // outputs a describe does not list) are shown after the modules, grouped by unit.
+  function unclaimed(run) {
+    const claimedMaps = new Set(), claimedSeries = new Set()
+    for (const d of run.describe?.modules ?? []) {
+      const vs = d.views?.length ? d.views : [...(d.frames ?? []).map((f) => ({ kind: 'map', source: f.name })), ...(d.reports ?? []).map((r) => ({ kind: 'chart', source: r.name }))]
+      for (const v of vs) { if (v.kind === 'map') claimedMaps.add(v.source); else if (v.kind === 'chart' || v.kind === 'counter') { claimedSeries.add(v.source); if (v.obs) claimedSeries.add(v.obs) } }
+      for (const f of d.frames ?? []) claimedMaps.add(f.name)
+      for (const r of d.reports ?? []) claimedSeries.add(r.name)
     }
-    return out
-  }
-  // Group series by unit so comparable charts sit together.
-  function byUnit(series, paired) {
+    const maps = Object.keys(run.fields ?? {}).filter((f) => !claimedMaps.has(f)).sort()
+    const paired = new Map()
+    for (const sc of run.scores ?? []) if (run.series?.[sc.sim] && run.series?.[sc.obs] && !paired.has(sc.sim)) paired.set(sc.sim, sc.obs)
     const hidden = new Set(paired.values())
     const groups = new Map()
-    for (const [name, s] of Object.entries(series ?? {})) {
-      if (hidden.has(name)) continue
+    for (const [name, s] of Object.entries(run.series ?? {})) {
+      if (claimedSeries.has(name) || hidden.has(name)) continue
       const u = s.unit ?? ''
       if (!groups.has(u)) groups.set(u, [])
       groups.get(u).push({ name, ...s, obs: paired.get(name) ?? null })
     }
     for (const g of groups.values()) g.sort((a, b) => a.name.localeCompare(b.name))
-    return [...groups.entries()].sort(([a], [b]) => a.localeCompare(b))
+    return { maps, series: [...groups.entries()].sort(([a], [b]) => a.localeCompare(b)) }
   }
-  const fieldNames = (run) => Object.keys(run.fields ?? {}).sort()
 </script>
 
 <a use:link={back} class="floating left-3 top-3 hover:text-brand">← {backLabel}</a>
@@ -74,10 +79,10 @@
 {#if run.kind === 'ensemble'}
   <EnsembleView {run} {base} />
 {:else}
-  {@const maps = fieldNames(run)}
-  {@const paired = pairs(run)}
+  {@const rest = unclaimed(run)}
+  {@const crossings = run.audit?.crossings ?? []}
 
-  <!-- facts, one line -->
+  <!-- the kernel: facts, one line -->
   <section class="mb-4">
     <h1 class="text-xl font-medium">{run.name}</h1>
     <div class="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs mono muted">
@@ -91,17 +96,38 @@
   </section>
 
   {#if cursor !== null}
-    <Timeline t0={run.start} t1={run.end} bind:cursor />
+    <Timeline t0={run.start} t1={run.end} bind:cursor autoplay={true} />
   {/if}
 
-  <!-- maps, first -->
-  {#if maps.length}
+  <!-- the modules, in the manifest's order, each with the views it declared -->
+  {#each run.describe?.modules ?? [] as d (d.name)}
+    <ModuleViews describe={d} {run} {base} {cursor} {crossings} />
+  {/each}
+
+  <!-- what no module claimed -->
+  {#if rest.maps.length}
     <section class="mb-10">
-      <div class="grid gap-x-6 gap-y-6 {maps.length === 1 ? '' : maps.length === 2 ? 'sm:grid-cols-2' : 'sm:grid-cols-2 lg:grid-cols-3'}">
-        {#each maps as f (f)}
+      <div class="label mb-3">other maps</div>
+      <div class="grid gap-x-6 gap-y-6 {rest.maps.length === 1 ? '' : rest.maps.length === 2 ? 'sm:grid-cols-2' : 'sm:grid-cols-2 lg:grid-cols-3'}">
+        {#each rest.maps as f (f)}
           <FieldMap name={f} field={run.fields[f]} {base} {cursor} />
         {/each}
       </div>
+    </section>
+  {/if}
+  {#if rest.series.length}
+    <section class="mb-10">
+      <div class="label mb-3">other series</div>
+      {#each rest.series as [unit, list] (unit)}
+        <div class="mb-6">
+          <div class="mono text-xs muted mb-2">{unit}</div>
+          <div class="grid gap-x-6 gap-y-5 sm:grid-cols-2">
+            {#each list as s (s.name)}
+              <Chart name={s.name} unit={s.unit} points={s.points} t0={run.start} t1={run.end} obs={s.obs ? run.series[s.obs].points : null} obsName={s.obs} {cursor} />
+            {/each}
+          </div>
+        </div>
+      {/each}
     </section>
   {/if}
 
@@ -118,26 +144,6 @@
     <section class="mb-10">
       <div class="label mb-3">scores</div>
       <Scores scores={run.scores} series={run.series} />
-    </section>
-  {/if}
-
-  <!-- series -->
-  {#if run.series && Object.keys(run.series).length}
-    <section class="mb-10">
-      <div class="label mb-3">series</div>
-      {#each byUnit(run.series, paired) as [unit, list] (unit)}
-        <div class="mb-6">
-          <div class="mono text-xs muted mb-2">{unit}</div>
-          <div class="grid gap-x-6 gap-y-5 sm:grid-cols-2">
-            {#each list as s (s.name)}
-              <Chart
-                name={s.name} unit={s.unit} points={s.points} t0={run.start} t1={run.end}
-                obs={s.obs ? run.series[s.obs].points : null} obsName={s.obs} {cursor}
-              />
-            {/each}
-          </div>
-        </div>
-      {/each}
     </section>
   {/if}
 

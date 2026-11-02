@@ -3,8 +3,8 @@
   // mark it. A play button walks it forward at a steady pace.
   import { isoTime } from './fmt.js'
 
-  let { t0, t1, cursor = $bindable(t1), steps = 400 } = $props()
-  let playing = $state(false)
+  let { t0, t1, cursor = $bindable(t1), steps = 400, autoplay = false } = $props()
+  let playing = $state(autoplay)
   const span = $derived(Math.max(1, t1 - t0))
   const step = $derived(Math.max(1, Math.round(span / steps)))
 

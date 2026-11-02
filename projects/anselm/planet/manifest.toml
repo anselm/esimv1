@@ -15,6 +15,10 @@ scores = [
 ]
 
 [[module]]
+kind = "story.bottomline"
+name = "story"
+
+[[module]]
 kind = "carbon.emissions"
 name = "emissions"
 

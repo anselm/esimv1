@@ -73,6 +73,13 @@ declare variants, named sets of overrides applied on top of its manifest at run 
 variant and the resolved text. A sweep or a hindcast moves parameters by method over
 ranges; its runs record the values it chose.
 
+## Order is layout
+
+The order of `[[module]]` entries is the order of sections on the run page. A bundle's
+modules come first unless the including manifest restates them; a module that exists to
+summarise (the story) is listed first so it is read first. See the views table in
+[Modules](?doc=system/modules).
+
 ## Checking
 
 `esim check manifest.toml` derives the wiring from the modules' describes and reports

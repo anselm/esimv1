@@ -22,6 +22,10 @@ holds the history.
 - A country has one temperature. India at 1.7 billion people is the loudest case of a mean
   hiding a continent. The niche threshold is on the annual mean and knows nothing of
   humidity, which is what kills. The hottest-month marker is a guess and labelled one.
+- The wet-bulb layer stands one weather station for a country, estimates an afternoon
+  wet-bulb from the day's maximum temperature and mean dew point (a little high), assumes
+  constant relative humidity under warming, and has no station within 80 km for
+  thirteen capitals. Its two limits are recalled from their papers and not yet checked.
 - Population after 2023 is the UN's medium projection, which assumes a world where none of
   the crossings change where people live. Before 1950 it is held flat and called a
   placeholder.

@@ -60,7 +60,8 @@ impl Manifest {
     pub fn resolve_text(path: &std::path::Path) -> Result<String, String> {
         let text = std::fs::read_to_string(path).map_err(|e| format!("{}: {e}", path.display()))?;
         let doc: toml::Value = toml::from_str(&text).map_err(|e| format!("{}: {e}", path.display()))?;
-        if doc.get("include").is_none() { return Ok(text); }
+        let module_includes = doc.get("module").and_then(|m| m.as_array()).map(|a| a.iter().any(|m| m.get("include").is_some())).unwrap_or(false);
+        if doc.get("include").is_none() && !module_includes { return Ok(text); }
         let merged = expand_includes(doc, path.parent().unwrap_or(std::path::Path::new(".")), 0)?;
         toml::to_string_pretty(&merged).map_err(|e| e.to_string())
     }
@@ -84,7 +85,9 @@ impl Manifest {
 
 /// Nested manifests. A document may name `include = ["a.toml", "b.toml"]`; each included
 /// file (itself expandable) contributes its `[place]`, `[audit]` and `[[module]]` entries
-/// first, in order, then the including document's own. The including document's `[run]`
+/// first, in order, then the including document's own. A `[[module]]` entry that is only
+/// `include = "file"` splices that file's modules in at that position instead, which
+/// matters because module order is page order. The including document's `[run]`
 /// stands; an included `[run]` is used only when the includer has none. A module whose
 /// name repeats an included one replaces it, which is how a short manifest restates one
 /// module's parameters on top of a bundle. Keys of `[place]` and `[audit]` merge, the
@@ -113,7 +116,25 @@ pub fn expand_includes(doc: toml::Value, dir: &std::path::Path, depth: usize) ->
         if let Some(toml::Value::Table(au)) = t.get("audit") { for (k, v) in au { audit.insert(k.clone(), v.clone()); } }
         if run.is_none() { run = t.get("run").cloned(); }
     }
-    if let Some(toml::Value::Array(ms)) = table.remove("module") { for m in ms { upsert_module(&mut modules, m); } }
+    // the includer's own modules; a module entry that is only `include = "file"` splices
+    // that file's modules in at its position, so a manifest can order itself around a bundle
+    if let Some(toml::Value::Array(ms)) = table.remove("module") {
+        for m in ms {
+            if let Some(inc) = m.get("include").and_then(|v| v.as_str()) {
+                let p = dir.join(inc);
+                let text = std::fs::read_to_string(&p).map_err(|e| format!("include {}: {e}", p.display()))?;
+                let d: toml::Value = toml::from_str(&text).map_err(|e| format!("include {}: {e}", p.display()))?;
+                let d = expand_includes(d, p.parent().unwrap_or(dir), depth + 1)?;
+                let t = d.as_table().unwrap();
+                if let Some(toml::Value::Array(inner)) = t.get("module") { for im in inner { upsert_module(&mut modules, im.clone()); } }
+                if let Some(toml::Value::Table(pl)) = t.get("place") { for (k, v) in pl { place.entry(k.clone()).or_insert(v.clone()); } }
+                if let Some(toml::Value::Table(au)) = t.get("audit") { for (k, v) in au { audit.entry(k.clone()).or_insert(v.clone()); } }
+                if run.is_none() { run = t.get("run").cloned(); }
+                continue;
+            }
+            upsert_module(&mut modules, m);
+        }
+    }
     if let Some(toml::Value::Table(pl)) = table.remove("place") { for (k, v) in pl { place.insert(k, v); } }
     if let Some(toml::Value::Table(au)) = table.remove("audit") { for (k, v) in au { audit.insert(k, v); } }
     if let Some(r) = table.remove("run") { run = Some(r); }

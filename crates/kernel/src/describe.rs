@@ -34,6 +34,11 @@ pub struct Describe {
     pub frames: Vec<Port>,
     /// Scalar series reported for charts and scoring.
     pub reports: Vec<Port>,
+    /// How this module asks to be shown. A page is composed from the manifest's modules
+    /// in order, each module's views in turn. A module with no views gets one map per
+    /// frame and one chart per report.
+    #[serde(default)]
+    pub views: Vec<View>,
     /// Data this module fetches through the registry: catalog asset ids, or `events/<table>`.
     pub assets: Vec<AssetUse>,
     pub notes: Vec<String>,
@@ -116,6 +121,9 @@ impl Describe {
     pub fn report(mut self, name: &str, unit: &str) -> Self { self.reports.push(port(name, unit, false, "")); self }
     pub fn asset(mut self, key: &str, note: &str) -> Self { self.assets.push(AssetUse { key: key.into(), note: note.into() }); self }
     pub fn note(mut self, s: &str) -> Self { self.notes.push(s.into()); self }
+    pub fn view(mut self, kind: &str, title: &str, source: &str, note: &str) -> Self { self.views.push(View { kind: kind.into(), title: title.into(), source: source.into(), obs: String::new(), note: note.into() }); self }
+    /// A chart of a model series with an observed series beside it.
+    pub fn view_vs(mut self, title: &str, source: &str, obs: &str, note: &str) -> Self { self.views.push(View { kind: "chart".into(), title: title.into(), source: source.into(), obs: obs.into(), note: note.into() }); self }
 }
 
 /// Describes a kind under a name and parameters, without building it.
@@ -123,6 +131,19 @@ pub type Describer = fn(kind: &str, name: &str, params: &toml::Value) -> Result<
 
 /// Topics the kernel itself emits; subscribing to them needs no publisher.
 pub const KERNEL_TOPICS: &[&str] = &["kernel.close", "kernel.snapshot", "world.write"];
+
+/// One widget a module asks for. `kind` is one of: `map` (source is a frame name),
+/// `chart` (a report name; `obs` an observed report drawn beside it), `counter` (a
+/// report shown as one number at the cursor), `crossings` (a topic ending in `.crossing`,
+/// shown as the list of crossings so far), `text` (source is the text itself).
+#[derive(Clone, Debug, Serialize, Deserialize, Default)]
+pub struct View {
+    pub kind: String,
+    pub title: String,
+    pub source: String,
+    #[serde(default)] pub obs: String,
+    #[serde(default)] pub note: String,
+}
 
 #[derive(Clone, Debug, Serialize, Deserialize, Default)]
 pub struct CheckReport {

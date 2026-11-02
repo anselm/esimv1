@@ -264,9 +264,33 @@ sha256 = "e157924d61e383376ee43ca01545d29cdf9dbbb63b2f2c881139eea71fb9c53b"
 bytes = 81704
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2014/02975099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/02975099999.csv"
+sha256 = "83ab130f0ad93f1cba9f492061aaa3362cb4e0da4ecc4b6b67b519a5b4fcc82e"
+bytes = 83829
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2014/03768399999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/03768399999.csv"
+sha256 = "cbe6805505a920cc58f0d172465738c473d7c572aef8ad1c2e8d6babe2443be3"
+bytes = 80609
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2014/03969099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/03969099999.csv"
 sha256 = "ba74659a1a73d38aaf9cfb35cabff028f0cd2fd16fec54b5a813c4355c4e0a8c"
+bytes = 82069
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2014/04030099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/04030099999.csv"
+sha256 = "9e07c75487f8afda1b07ea62d2f211223ed0370de07b17ef81cbbb44687bd2cb"
+bytes = 82069
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2014/06180099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/06180099999.csv"
+sha256 = "506b807e1c4d56076e8bfef90218ec14d7d857763878bb70b1a836ac1fc5e07e"
 bytes = 82069
 fetched = "2026-11-02"
 
@@ -324,16 +348,64 @@ sha256 = "66e4f0d0b3b4a34fd0f15c772682b4cae2c63db05e955723a364ba896916b30d"
 bytes = 83529
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2014/11423299999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/11423299999.csv"
+sha256 = "8d80950760fbbb551b06c5ecef81b0a27edeb155dc0214542a36954808de2537"
+bytes = 81481
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2014/11816099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/11816099999.csv"
+sha256 = "1ce43d3b97f2134acdcdb1da2e857011ba1824515952b716679216cc801350c9"
+bytes = 84624
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2014/12105199999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/12105199999.csv"
 sha256 = "36ca8ba5b687d5511f0558cbdc7b2d1a082253bef6fc587f2cc276465a226e25"
 bytes = 78834
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2014/13272099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/13272099999.csv"
+sha256 = "1cc562a7bc715447e8c904815fc0f1a7d5f8d3198077639d424f05a57654ead7"
+bytes = 82434
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2014/13353099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/13353099999.csv"
+sha256 = "60799172f55fd638488d2efd16a21f747a24ffe976ef1664022720367eed13ec"
+bytes = 83164
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2014/13462499999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/13462499999.csv"
+sha256 = "0aaa099587fe216535299223ba8f1899d7321b25b53c097899fc17179ad28148"
+bytes = 86814
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2014/13481199999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/13481199999.csv"
+sha256 = "0c934f58916f4e7be263d7a327112266055f77c435988e30dbeb66bc55b49151"
+bytes = 79879
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2014/13586099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/13586099999.csv"
+sha256 = "3a73be52cafc59cb365e8211744ffb7d97060699e1d58a52e699adceeec76f86"
+bytes = 82434
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2014/13615099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/13615099999.csv"
 sha256 = "13a1e40d2029ee3e600dedd5d909fbb9acef94ffad6d6f1a8179428b9e92e545"
 bytes = 83894
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2014/14014099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/14014099999.csv"
+sha256 = "e3043fb845cd31a7fd4b0e1fe5dd055daa5a3e4a8e289eea792af0a0678bcb81"
+bytes = 83529
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2014/14240099999.csv"]
@@ -426,6 +498,12 @@ sha256 = "35e4a8f3e4669f987d3caa266f6c5a4b871f9443d4a342e027c8bd632e2d1bfe"
 bytes = 83529
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2014/37864099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/37864099999.csv"
+sha256 = "ea5c22cabe87d370ab2e13b5f52fd4331efb5f492ae2cf6f6350faf6d37f02b1"
+bytes = 83529
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2014/38353199999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/38353199999.csv"
 sha256 = "edd4fa4edc886b714816ca12be15b18f3f633b632ee7686efca8c0ad27fa86cd"
@@ -474,6 +552,12 @@ sha256 = "ec2355a337aa117fecc0ce810d681b9f8db5a1c51298b97c05a0319d22c5eccd"
 bytes = 87179
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2014/40437099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/40437099999.csv"
+sha256 = "798a4b9d62c76d1a5e9c630ccaaf9859dd9f30595a12f81155995f9a87c792e7"
+bytes = 89004
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2014/40582099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/40582099999.csv"
 sha256 = "94fd4c9f3f0499a3a4af91e1987945364d5e5bb54297482562ea1adf49e428ff"
@@ -508,6 +592,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/41258099999.csv"
 sha256 = "14f9a3635d098a97b2f140655e5271d5893c13c8592ec77c2e78f94b9ad56418"
 bytes = 70401
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2014/41399099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/41399099999.csv"
+sha256 = "4aae9d0ddf2d2de809e2d67a7050c593c7cb0c071669e5bc2a1e83bbfbcca8ca"
+bytes = 3445
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2014/41571099999.csv"]
@@ -564,6 +654,12 @@ sha256 = "b651cdb2b102ec440a678a087333da913cefac33b480a3ebd8dcd6d8e7eea4ca"
 bytes = 84259
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2014/47662099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/47662099999.csv"
+sha256 = "dfb517e2b15fbfd98b4bf4c10acf0e3a055aa274cb131e1881359dcdc2166a59"
+bytes = 82434
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2014/48097099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/48097099999.csv"
 sha256 = "1a13feca894062b85ec6993fa4fddfaacf42edee60a2b849db69969a8e1b41f9"
@@ -574,6 +670,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/48456099999.csv"
 sha256 = "ea85cea2de0e2bb7ac47a5083afc7b1f7a040bd3e9cf6914e17e682ce7bdc321"
 bytes = 87179
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2014/48647099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/48647099999.csv"
+sha256 = "746556995f6ed17bc73549e7db773a0e9d5f51012cd83df9ecc231639ba868a8"
+bytes = 93019
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2014/48820099999.csv"]
@@ -654,10 +756,40 @@ sha256 = "ebfea46a0f65ac95e599579c26137dce88381b25b294db3a6e58760973b183a0"
 bytes = 77925
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2014/62052599999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/62052599999.csv"
+sha256 = "f68c1831886edde91175ffbc04db78375f5b7fb584f359548c3735195743d544"
+bytes = 57990
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2014/62366099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/62366099999.csv"
+sha256 = "cf8a58d8c0e5132a03b9f9235fa841429ec39536d2ba80f1524d22584bd00e77"
+bytes = 87179
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2014/62721099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/62721099999.csv"
 sha256 = "9f5504155422ff90eedb3b7bf8346aaa18241e427ea2e82509f5f72392c97725"
 bytes = 83164
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2014/63125299999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/63125299999.csv"
+sha256 = "7a8f0e301499586eeddc6b67b976abb4ee4eafa242cd0f84729b16c1dea27e68"
+bytes = 63559
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2014/63450099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/63450099999.csv"
+sha256 = "65e2925a3826911b6bb2896d56c8c7edc19f71b79ba103b4cd423cd36f7ff569"
+bytes = 82074
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2014/63680099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/63680099999.csv"
+sha256 = "bbb3b9754545d335040dc5206d5f2b9cc7206be94aa6cfb7df6b1203df2acc31"
+bytes = 536
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2014/63742099999.csv"]
@@ -676,6 +808,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/64211099999.csv"
 sha256 = "2ecb84e6b8f20522746a529e89896b1e4b9ac1badcc8cc0baa2e8fec0c9b4b42"
 bytes = 2189
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2014/64387099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/64387099999.csv"
+sha256 = "bcd7019fbc416e09c255b5fc12f273f7b94f0de60a034bb84eca610ccd961b4d"
+bytes = 85871
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2014/64390099999.csv"]
@@ -924,6 +1062,12 @@ sha256 = "041fc79cb6fe0407b287cadcdf16ad2d1c4ada0eb423afe351c4c2fc587c9f35"
 bytes = 93749
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2014/86218099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/86218099999.csv"
+sha256 = "4f2846a8a4266feff720802bbb3df75be43f638c4d1e6f165c067b0206ce8b06"
+bytes = 91194
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2014/86575099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/86575099999.csv"
 sha256 = "0e7ebbb4ddbcddc2fbeed839c1ecb274c17cb943330f651990a7dd7e585fc106"
@@ -966,10 +1110,22 @@ sha256 = "efde45034a537144be16de0c199fe15f95defdce7b5d1b7e14034558f02706fb"
 bytes = 82799
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2014/96315099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/96315099999.csv"
+sha256 = "bb32f906005bd51a45f34ebac1e2c912f28836f1eea35b1331302fea8c1eb7eb"
+bytes = 86449
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2014/96749599999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/96749599999.csv"
 sha256 = "0fa27ad28b8355707ba5164b28e6778223b2428944faa864678c74b7caf0dbff"
 bytes = 74354
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2014/98429099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2014/98429099999.csv"
+sha256 = "7522260cdddd11b5fdd6d27fb3fe5fed86b04e2380390f31f5067c2a95647e1a"
+bytes = 89489
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2015/01492099999.csv"]
@@ -984,9 +1140,33 @@ sha256 = "1561756c6221e2ae76df04f99f734f1575ae571b37dc728a02f6b248c0855a3e"
 bytes = 81704
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2015/02975099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/02975099999.csv"
+sha256 = "c4cd86f4106dc52c6b96bb2ef0fcc287ab33e2c70dc38ed9777e0a76322f8b88"
+bytes = 84989
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2015/03768399999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/03768399999.csv"
+sha256 = "a54cbb21ce2c212d70a0686d44dc602748af05ec49fa8c64eabb3fa091451e30"
+bytes = 80609
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2015/03969099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/03969099999.csv"
 sha256 = "a9d34633d04187e1ae508855cd9a72b8fcc476f118c4d790244206f0a35b4601"
+bytes = 82069
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2015/04030099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/04030099999.csv"
+sha256 = "f70ee14f4d7ed46b49ee9aef878c37c9fca94f4b7043c0d11bec6beff0cf644d"
+bytes = 82069
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2015/06180099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/06180099999.csv"
+sha256 = "17659667d02a38cbcbc79d5a97e24a781d637283b5629f1e8f126cc28132b167"
 bytes = 82069
 fetched = "2026-11-02"
 
@@ -1044,16 +1224,64 @@ sha256 = "742ccece557c796f5d79412dd44b5b423e813dd80dc09bbd7c40be46d758a300"
 bytes = 83529
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2015/11423299999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/11423299999.csv"
+sha256 = "72817bb561fe6219e2e9aacac4c6dada921e8ce81efb7b763a4da8412d624016"
+bytes = 81258
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2015/11816099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/11816099999.csv"
+sha256 = "dd6f3a346256a4a68636aa61bb4102597959254f08b9d961a8b31cffec1e2f7e"
+bytes = 84624
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2015/12105199999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/12105199999.csv"
 sha256 = "dc03afd7d9c96b402741c7964eda8934281489ff1248c2f4a39a10995e8d14d2"
 bytes = 78159
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2015/13272099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/13272099999.csv"
+sha256 = "977ebdd617cfa08e2f9c1f46df6bbd01c357b2bcb30c729a43c9ccc3d57c62d2"
+bytes = 82434
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2015/13353099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/13353099999.csv"
+sha256 = "3ad5c8c8841208d2b16864d66815a2ae858a22c3ecae414a9a9a6a267730de03"
+bytes = 83164
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2015/13462499999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/13462499999.csv"
+sha256 = "b11e84ed470ddeb922f0f03e73c4a32e031e3629779deb6c53345069f68fb16e"
+bytes = 86814
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2015/13481199999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/13481199999.csv"
+sha256 = "5b1801423f778c09feb39a8c8135b8a1e788900c7431f2960b421a62f7df0a6b"
+bytes = 79879
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2015/13586099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/13586099999.csv"
+sha256 = "4b4f8c6c2aa56d048fdc22ca54e4f13cf66e0637b27a6f66e0df666194ac0e52"
+bytes = 82434
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2015/13615099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/13615099999.csv"
 sha256 = "96d5847b56b5098f549e56330944f6af3bc64ce11f24d3e15fe9400f22f316c4"
 bytes = 83894
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2015/14014099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/14014099999.csv"
+sha256 = "6f2e60d183fdf3c4dbd0477f4fa86f62b6d57ffbcc66e83024ea54875d1d4292"
+bytes = 83529
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2015/14240099999.csv"]
@@ -1090,6 +1318,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/17131099999.csv"
 sha256 = "1edf17904e2097b868e0bf2e1b933f9d5156efb36eae4292d032a6cd015f32aa"
 bytes = 83436
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2015/17607099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/17607099999.csv"
+sha256 = "a801e5401f0c6e957f02ffc11f8f69d732ee76219d4f0251da4e78b7b523a9a4"
+bytes = 535
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2015/26038099999.csv"]
@@ -1146,6 +1380,18 @@ sha256 = "653e4310a792499361f31c6a8d3bbaa24449a98b7ea512c2795d63bf98de59d3"
 bytes = 83529
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2015/37549099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/37549099999.csv"
+sha256 = "c951302d04e49c9a215218a4b4600829991e9f6bf21ef29b024bad2d32cc403c"
+bytes = 65283
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2015/37864099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/37864099999.csv"
+sha256 = "6789e27c7ea96820581ee1ba7a85c18a8793d3ab2d868c2bb1c81644b2d424fd"
+bytes = 83529
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2015/38353199999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/38353199999.csv"
 sha256 = "db2d555b2e7c2cbb05718025de49934b1ec8da965406a7261f8baba1a7d4a004"
@@ -1194,6 +1440,12 @@ sha256 = "5610b78f358b7ad99d68ccc36fe8aacc463987be3366ab0d3264ada76e8aea3c"
 bytes = 87179
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2015/40437099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/40437099999.csv"
+sha256 = "79f0dc68ad37ab2cf986c2ad8f7db40bed26709f054047334f688962bbbf872f"
+bytes = 89004
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2015/40582099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/40582099999.csv"
 sha256 = "437b41e6e2d6fec68cedd013f2a3f08651ae3d85dbc34710b23bcb869cdfc4ed"
@@ -1228,6 +1480,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/41258099999.csv"
 sha256 = "96b2956b99708893603a42c5f2880dd362e4515355b532acd8e69a75b66e1b79"
 bytes = 79841
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2015/41399099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/41399099999.csv"
+sha256 = "0150f94681d67a0a44beb424fe6e210bd612583ae674c5e8c9ef0b117ffcc0db"
+bytes = 2997
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2015/41571099999.csv"]
@@ -1290,6 +1548,12 @@ sha256 = "584aa42b036e01523ac0f099de1287f1edb8af06ed811116e978d63dc1b7c292"
 bytes = 84259
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2015/47662099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/47662099999.csv"
+sha256 = "82ab35a59b5e02a1d40fb92cc7959499fb213a927938709debdd8ad096974c51"
+bytes = 82434
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2015/48097099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/48097099999.csv"
 sha256 = "da70acbdfce38be39d8f29cd78cd267221c2b3a668f4185849b379b5d73de592"
@@ -1300,6 +1564,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/48456099999.csv"
 sha256 = "91d0642c5863f438f153effe3fef4822ad90b1127ccea8a80faa0ed64eb48cdc"
 bytes = 87179
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2015/48647099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/48647099999.csv"
+sha256 = "8dca7e0f6d38ba6d0ddc493abe49fa391f9a6a5b9072497f2f668ee1ed8a083b"
+bytes = 93019
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2015/48820099999.csv"]
@@ -1324,6 +1594,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/54511099999.csv"
 sha256 = "9ecbc2656b8f8e2d8860ab297d3a3d9b2b11728fadfc588b87a6774bcd9fb0d3"
 bytes = 93749
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2015/60135099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/60135099999.csv"
+sha256 = "42e5d920a4a273374b10987908c9e69e52550353ad0b559e4be0dffc4b331343"
+bytes = 81339
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2015/60390099999.csv"]
@@ -1386,10 +1662,46 @@ sha256 = "d1e19978e84610043f567620e48b1aa9ee4eb4c79cb3832f5b78e7e9562f8a32"
 bytes = 68223
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2015/62052599999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/62052599999.csv"
+sha256 = "a0a21e44b45e0b8c02ebb196e8b27055d7dd8778313ff8fb21773ced99c43d2b"
+bytes = 75670
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2015/62366099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/62366099999.csv"
+sha256 = "78296c2dd3f8907f195ab26cd3f321bdaf50f33a3e517099e27e39e1ad0d984c"
+bytes = 87179
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2015/62721099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/62721099999.csv"
 sha256 = "26ad682cd697609dfff87842069930d3f4e6555e508d9c7ed4e74e05c447ca72"
 bytes = 83164
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2015/62941099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/62941099999.csv"
+sha256 = "c7738597b17f8ba1cb9d02647ad34d1ef38c0a627639e0b1d2b364d571eb86ef"
+bytes = 13887
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2015/63125299999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/63125299999.csv"
+sha256 = "3cea179c64db2904b80321600937dc3d7c490590209685f7578b363a4f73d4ab"
+bytes = 62179
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2015/63450099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/63450099999.csv"
+sha256 = "4acf5626879f6c92fd0d5407490b2ddd0349858c980dcf78a40b5cd9bec39607"
+bytes = 79941
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2015/63680099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/63680099999.csv"
+sha256 = "d62e4f09bdd2275ec2daca44afabb43f4670cd6b42933a8d331d18a494a02e27"
+bytes = 4168
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2015/63742099999.csv"]
@@ -1408,6 +1720,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/64211099999.csv"
 sha256 = "b6ecaacb6c953ea92ca86ec6aa1f5de11072753600fecc8a21b7e254c580699a"
 bytes = 779
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2015/64387099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/64387099999.csv"
+sha256 = "86622b8c4036a1994e7ad9f776bce7c32fe3c6477c70a514577c111b6dddf1df"
+bytes = 87544
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2015/64390099999.csv"]
@@ -1632,6 +1950,12 @@ sha256 = "eb39e6e3b707abd78f97557926edb8da9ee95803bd989af126cdccd7ab965fed"
 bytes = 62781
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2015/78970011634.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/78970011634.csv"
+sha256 = "a941f5bdbcaca7a18f700e4fecc73002ade9ce8f6af5afd81867c64c53338b8f"
+bytes = 88274
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2015/80222099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/80222099999.csv"
 sha256 = "bfacc02f3e55be5ede498a1a0dc0d06b84cf1babc30741085e32cb326b8122ab"
@@ -1686,6 +2010,12 @@ sha256 = "6dbcb4d72401b7f61b2b8e5d03ff932e78435b972765121992dd4fd1d02fddc1"
 bytes = 92469
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2015/86218099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/86218099999.csv"
+sha256 = "6bb9330a190dfa905800f6e72fabb7d61df74279dccd8abbbe12d93d3cea89d2"
+bytes = 91194
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2015/86575099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/86575099999.csv"
 sha256 = "c59c4fd26220654c5f6a7754c002c3a8e098347ac9f532714c9065f1e671196b"
@@ -1728,10 +2058,22 @@ sha256 = "4137b72614a95da1fdb4ca2d4d5b2ea1d5339db69dee1d0910bc1712decb4378"
 bytes = 82799
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2015/96315099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/96315099999.csv"
+sha256 = "33217bbb73a4033f43b6496d24ca0c222fc2d42a38f9d6bcb03987d6a9fb1c22"
+bytes = 86449
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2015/96749599999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/96749599999.csv"
 sha256 = "fe6e7262ee0f6a313a26bb1982a2c9c7dbfb8de0b96300d859bb2f29be6b0da2"
 bytes = 90669
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2015/98429099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2015/98429099999.csv"
+sha256 = "458ffbe07a109cfcdcd800879b856e0ba1bd10184140a5aaf907b6eff80b0cb1"
+bytes = 89734
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2016/01492099999.csv"]
@@ -1746,9 +2088,33 @@ sha256 = "66afa9290bfce0d4f0530f68c5a4d1a1dea1b3641ccff40e33baf97f26f8b883"
 bytes = 81927
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2016/02975099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/02975099999.csv"
+sha256 = "7f1001d575c9d3473a7a96c201f24c2d178300ff9bfd139085a08b8954b8f29c"
+bytes = 85221
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2016/03768399999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/03768399999.csv"
+sha256 = "946a95e056a18118c4ebd14ba3aee6f9a97669ec43aaf07a1250661a9818d94f"
+bytes = 80829
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2016/03969099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/03969099999.csv"
 sha256 = "a4b5db700d3e596af71d390c4cb53298b523f214c43aec176fdcbf1240632e39"
+bytes = 82293
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2016/04030099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/04030099999.csv"
+sha256 = "02f86902d54c50be1766783b7076a01adff54d499a0ac52b515b9480e72129c5"
+bytes = 82293
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2016/06180099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/06180099999.csv"
+sha256 = "677b95df5b1641bb58120b01c1b447b58f07d109404daa1a2fb471441b158aab"
 bytes = 82293
 fetched = "2026-11-02"
 
@@ -1806,16 +2172,64 @@ sha256 = "f7d298128d2f93c744644e3a465b4ad3029abccb453c1c7e905e7744d4a206bb"
 bytes = 83757
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2016/11423299999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/11423299999.csv"
+sha256 = "dc9509dc22a4a621f9a281aefedd28c6120cce9543d9b8c33c2a648cf40bd7cb"
+bytes = 81927
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2016/11816099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/11816099999.csv"
+sha256 = "d87456fd42136d11e62dfeced404bfcd5284d90d923b2332aa50cf4b56d4e123"
+bytes = 84855
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2016/12105199999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/12105199999.csv"
 sha256 = "4ca164b096049cdcf91cec4e90175d0f050ba85eb2fd0847ad29d0fb3400893d"
 bytes = 82209
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2016/13272099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/13272099999.csv"
+sha256 = "8d9607311f0409e51a66ac940bac0e576d060ad264f4182ef66f9fe1d6046971"
+bytes = 82659
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2016/13353099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/13353099999.csv"
+sha256 = "de0c29922b567eaa5de37a4206cfc417f9b2952279c541d7efa138f98a9a0f6a"
+bytes = 83391
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2016/13462499999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/13462499999.csv"
+sha256 = "16ddc7e97cdc5b15a80e203c29bb79e95ff50dbfb2cd890aa50b91a4089d15ad"
+bytes = 87051
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2016/13481199999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/13481199999.csv"
+sha256 = "073454ab3069089f1664a9a7333bd4bc1aaa2eaf3338068481d1a9b92a0ab09f"
+bytes = 80097
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2016/13586099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/13586099999.csv"
+sha256 = "5cb79cceb52905ee0247b03dac394fb68fb6bed291dacb4c73723a43990d34e9"
+bytes = 82659
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2016/13615099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/13615099999.csv"
 sha256 = "45ed561adbf68b5b085585f601f81fdaa7e492f82a808df2cbed0c314d077d98"
 bytes = 84123
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2016/14014099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/14014099999.csv"
+sha256 = "6b7be1cfafc4de9302b56897f3d76a376baa5c8fa986bc9ee5fa088b75469ce0"
+bytes = 83757
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2016/14240099999.csv"]
@@ -1908,6 +2322,18 @@ sha256 = "06f5cfe1190d5f3c72a712fae4953a48c69003e4b2d893e6c0d2a5ba1d58d3f3"
 bytes = 83757
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2016/37549099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/37549099999.csv"
+sha256 = "38b95917832e8daf23bbfbf59e75e8d16956bd7336bdebb7d462c6695af58f37"
+bytes = 87417
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2016/37864099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/37864099999.csv"
+sha256 = "cffe23c35866d882c93a6947a27e56ed817d0d4f4a9b170a57ee603f3af65c42"
+bytes = 83757
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2016/38353199999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/38353199999.csv"
 sha256 = "7b4d424b7be1f5ce38c7a487cddd4f88fb415fb741639eae3341624602473f98"
@@ -1954,6 +2380,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/40270099999.csv"
 sha256 = "3fc4ef35a17b29d9185e8809058447e31fbfbd5f029356ac4dc8a5b410b3af7a"
 bytes = 87417
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2016/40437099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/40437099999.csv"
+sha256 = "b886e07c82ea4d30e4b8df25d8c1f6195ccc76f11e1049f86649165ae0a32831"
+bytes = 89247
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2016/40582099999.csv"]
@@ -2052,6 +2484,12 @@ sha256 = "f2969c554a9ae465e580a13cde4983a239209e0ef771018e8e5e018ac1f4249d"
 bytes = 84489
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2016/47662099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/47662099999.csv"
+sha256 = "855b1bd3fdef24bb5638178dd3a7998f11fc3425a8fe332838456ea10b0a9f9f"
+bytes = 82659
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2016/48097099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/48097099999.csv"
 sha256 = "411a93e82bb84841d3a5844d317b9e2a8863f1c03c9a9e752e2968142715a6b1"
@@ -2062,6 +2500,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/48456099999.csv"
 sha256 = "cf39acf3012e6c58f76ce210cc62345b88475d9eb3e34d462c1bbd34d36e4eb3"
 bytes = 87417
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2016/48647099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/48647099999.csv"
+sha256 = "fc15dca7dc6fe64c1ff8fd052427e8487586ae26d498142374d106b4fd64fbcc"
+bytes = 93273
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2016/48820099999.csv"]
@@ -2086,6 +2530,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/54511099999.csv"
 sha256 = "ba3db65d1b3efacaacf621de9ad41141128a68054a4101ed96127a03c0accb83"
 bytes = 94005
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2016/60135099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/60135099999.csv"
+sha256 = "924d9daf3463227aa5e9947e232a64eb5865292d7c19d933b0607719237aa6cc"
+bytes = 81561
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2016/60390099999.csv"]
@@ -2148,16 +2598,52 @@ sha256 = "b17f37d761382a49fceafc487c866a4a86fc7b1b8fa4037828ee03dadd16077c"
 bytes = 61986
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2016/62052599999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/62052599999.csv"
+sha256 = "85ae2cddb942a2e339008d677d50e2faeceb2157e440d84b2ef266d0bb629fbc"
+bytes = 75670
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2016/62366099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/62366099999.csv"
+sha256 = "1d9132cfedad3eda0b3b5af2901c8c9b2779556fbeac1ad37a246406153a57aa"
+bytes = 86941
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2016/62721099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/62721099999.csv"
 sha256 = "e67ffe92e3c290538820f250ec01118b4f666cc8fa08982ca0e833a25c4457a7"
 bytes = 82937
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2016/62941099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/62941099999.csv"
+sha256 = "cbd70a3f91c100fcc2db9ceedc1b287df72cac71b072802cc196af12c7e6e262"
+bytes = 15858
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2016/63125299999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/63125299999.csv"
+sha256 = "e83fadc928dc8a13f0668144dc86cf1bb8591403ca54efc4b67bf51e7c90e273"
+bytes = 74599
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2016/63260099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/63260099999.csv"
 sha256 = "474aa7c514a2688daf47b1383c24edc7721294363fe41da73dc932ddc6884ef1"
 bytes = 18873
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2016/63450099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/63450099999.csv"
+sha256 = "a89ccd7561996e8c4ba89933f04e11fe2cc98dc29690cf40c74dd117012b2e4e"
+bytes = 86577
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2016/63680099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/63680099999.csv"
+sha256 = "7c9c3c9b59cc092ed8a9564932b8d64dbd20e773eda1bf8b198c66ec11704eae"
+bytes = 36629
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2016/63742099999.csv"]
@@ -2176,6 +2662,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/64211099999.csv"
 sha256 = "dc9b7189329db768954bfde8587286bb1d1d526c3d913b109bb1e6e6d36dfa9e"
 bytes = 2659
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2016/64387099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/64387099999.csv"
+sha256 = "d0ff1b0e47da3c4db6f3d9943ea22f62abe6589464a6ab72d9095228f3abe173"
+bytes = 87305
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2016/64390099999.csv"]
@@ -2394,6 +2886,12 @@ sha256 = "737eb2798a64d0955cfae762491c0ef83f637b92d3c2924de9a8386709e2c3fc"
 bytes = 79881
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2016/78970011634.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/78970011634.csv"
+sha256 = "8cb584818096a65cc8d925dbd30ce7c740ea18e39b0162dc3cee558be0dfd47b"
+bytes = 88515
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2016/80222099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/80222099999.csv"
 sha256 = "58b15d54673807fec6cfc41d2c8a0c85ef3053ede40a723e0051b3ed3e21e67b"
@@ -2442,6 +2940,12 @@ sha256 = "e41c66fcefc87bb7e7f48a463c4d4a7f80399a2ac2affde06111b99ea8bba6e4"
 bytes = 94005
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2016/86218099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/86218099999.csv"
+sha256 = "856f778fb4407df0b94d52bbbe350de1b5f33f784142cbfb57cc2ba3277baad8"
+bytes = 91443
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2016/86575099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/86575099999.csv"
 sha256 = "0d970b5fec9d7f6fec64f095121126893448c562213fd2c70df8148cc79b9756"
@@ -2484,10 +2988,22 @@ sha256 = "47a0279b50fed21992dbc4146ec213f418adc6d127dadf5f5e536bde7476f56a"
 bytes = 83025
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2016/96315099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/96315099999.csv"
+sha256 = "6be96ea99e021c7655dfa085e17e103aef2951e181ab0e038282a8fab4a8ad00"
+bytes = 86685
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2016/96749599999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/96749599999.csv"
 sha256 = "3cff035eeba8fdf184dadbc9d1a08b2e12047f9baf36ea8f312620a3485c88a0"
 bytes = 85147
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2016/98429099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2016/98429099999.csv"
+sha256 = "53afdaf8a5239500e12af0c6768cfea5160cde1f47df5e13d3f60c871f6fae99"
+bytes = 89979
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2017/01492099999.csv"]
@@ -2502,9 +3018,33 @@ sha256 = "0fd924e7597fbb819e5965393ac0239cc292953184413bdc23b66ad06f7e933f"
 bytes = 81704
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2017/02975099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/02975099999.csv"
+sha256 = "7037be4d58c3073becba35d319cdfcd61450efb2ad55913e451344e17f443bdf"
+bytes = 15389
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2017/03768399999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/03768399999.csv"
+sha256 = "cf1c6de9251debbdda7df4c12439e663a20164c22d3a3107dd7d5843ffcd9fd4"
+bytes = 80609
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2017/03969099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/03969099999.csv"
 sha256 = "e094c52a96fa94e3e5b48e020b6dcd92165aa6e0b1529a88a27125575689a88c"
+bytes = 82069
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2017/04030099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/04030099999.csv"
+sha256 = "85a18562cd347b68754ce792c0564576f0db13a208f382f2096be2804ba6a4ab"
+bytes = 82069
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2017/06180099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/06180099999.csv"
+sha256 = "fe997e64076d7092c7c5e8fd5a94704f4ea963f57c410d49bbd869bb7066cd5c"
 bytes = 82069
 fetched = "2026-11-02"
 
@@ -2562,16 +3102,64 @@ sha256 = "2e49135e9df62ddc3367ef4a281ab40f27494523a41a78ae749508fa507c5f56"
 bytes = 83529
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2017/11423299999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/11423299999.csv"
+sha256 = "6adc3a378e64a7359aad9f0145fe4854dbb03a0a23e7828ea6f96e56b7884f4c"
+bytes = 81258
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2017/11816099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/11816099999.csv"
+sha256 = "393511e33318dd3d024431d2d02a5eb0027f8dd62554e3ff668e919d63894448"
+bytes = 84624
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2017/12105199999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/12105199999.csv"
 sha256 = "4a049620992703f4db52d5726d650dc20d00594450345b70f84d08cb6ada581e"
 bytes = 80859
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2017/13272099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/13272099999.csv"
+sha256 = "59d15161df9a6bcb7f02a357071062df37e219345e754411326ff03271176956"
+bytes = 82434
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2017/13353099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/13353099999.csv"
+sha256 = "667db49411a624d8dc0b5a00b18cb451423517eb7e885a51e29b4ee5ebef062f"
+bytes = 83164
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2017/13462499999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/13462499999.csv"
+sha256 = "39bdb28648afde594db558c2ebbc2cfbc73f78930a0ab81427c37e8b7c3873ae"
+bytes = 86814
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2017/13481199999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/13481199999.csv"
+sha256 = "30c5ccacd4bb7880abe89811df05751e185bc7f76b30d7b6f02e12316d8a4060"
+bytes = 79879
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2017/13586099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/13586099999.csv"
+sha256 = "d4a817d3e98698c487b00e94ceb6bfabdd6aaa56dcb7dad99fa5c5f354bbc72d"
+bytes = 82434
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2017/13615099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/13615099999.csv"
 sha256 = "34b3bd3e26941eec20f45ba867f1228a75283bac66b5e16bb6bf72d887c6cb57"
 bytes = 83894
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2017/14014099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/14014099999.csv"
+sha256 = "7ca88de86377261597f59932486f2550faf1e2e6aefc655fa42679c8f28ea4b7"
+bytes = 83529
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2017/14240099999.csv"]
@@ -2592,6 +3180,12 @@ sha256 = "147c7b8227614d2d226c424a3675b5efb6f9f3f3515f14ba395fbd32aaecd9d1"
 bytes = 82069
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2017/16235099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/16235099999.csv"
+sha256 = "731c0c4f176b5e3b478fe97fc39c7b575695310054c509834a7158dcd559f36b"
+bytes = 80673
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2017/16716099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/16716099999.csv"
 sha256 = "b0354ce551d294449eaabcf5e282e020243acee30e57ce5895c08159c0d0db47"
@@ -2602,6 +3196,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/17131099999.csv"
 sha256 = "03d6253e13d31df204eb3767c0a0e03aa9beaf4f0925c0f03d0b2c68209a0499"
 bytes = 83894
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2017/17607099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/17607099999.csv"
+sha256 = "c42ae8bae8776e1c08b329394f98b2539d0eee77d61baee5a531664a4db54e88"
+bytes = 1891
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2017/26038099999.csv"]
@@ -2658,6 +3258,18 @@ sha256 = "f9985d512c2e854e11b2e2fd1d9d04605c5fc12cd3a8839f917e31b4a7b6c521"
 bytes = 83529
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2017/37549099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/37549099999.csv"
+sha256 = "5ecf4781efeed3680dbc13c3c5de270480de26810794ceba22b8d42e23e0edab"
+bytes = 87179
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2017/37864099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/37864099999.csv"
+sha256 = "8c1117f61b56c4d7590a9582ba965dffdbc7ad4d364ce39f755855554f10b61f"
+bytes = 83529
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2017/38353199999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/38353199999.csv"
 sha256 = "55384b9d96ed2ec501749eba3708fe1d27d1034cd90867ab9db67589f36d1d6e"
@@ -2704,6 +3316,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/40270099999.csv"
 sha256 = "391a06a5dc74b0f42d59be908e8345df9cb9aecab860329815641f37880f3cc5"
 bytes = 87179
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2017/40437099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/40437099999.csv"
+sha256 = "8b4da9aeb374799555b6c20e15906ebdca34a268849b6d3fc30dcfcb3397dc86"
+bytes = 89004
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2017/40582099999.csv"]
@@ -2802,6 +3420,12 @@ sha256 = "3e0434716bdf7cd0c9729f31a7a46ed126851de95d0fc515bddedf987dde46c0"
 bytes = 84259
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2017/47662099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/47662099999.csv"
+sha256 = "7fa832292f23d1b32122b09005d64fc4429aa77c6ae16abfede683f802e61cfa"
+bytes = 82434
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2017/48097099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/48097099999.csv"
 sha256 = "9c4bf0511f6514459ed221929840d3fcf1ab9a57da402d7c9660d5f236d66ebd"
@@ -2812,6 +3436,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/48456099999.csv"
 sha256 = "07aa61659c11787c2ea0c4d7c240462e7924184df954f9a38b3288ee97ab55fc"
 bytes = 87179
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2017/48647099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/48647099999.csv"
+sha256 = "953515e66cd7eff3ba12337a6f90c0ec7260b0e333c8a266a6d64151854bdb74"
+bytes = 93019
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2017/48820099999.csv"]
@@ -2836,6 +3466,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/54511099999.csv"
 sha256 = "f428c76985ab3c5106343361f423d0f86aa637dd1a7a83928bc9600c0800f6cb"
 bytes = 93749
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2017/60135099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/60135099999.csv"
+sha256 = "82f8e896cf16ffdab3d1d9dd731175c0dfb339576f52b68b25b07982492d2182"
+bytes = 81339
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2017/60390099999.csv"]
@@ -2898,16 +3534,52 @@ sha256 = "a5377860eb3ea7f48ff0103b365f4e5a1b985cc6000a1f3a98f8ac41072f884c"
 bytes = 75153
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2017/62052599999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/62052599999.csv"
+sha256 = "7db1616dc3bfdc2c196b82dafea29a5e3dc3a58be884f2bcccbfdaeec2d672bb"
+bytes = 79427
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2017/62366099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/62366099999.csv"
+sha256 = "455dd04ec1fc9dba424e1e4bee8cc60a8e90fed0cdaef3122bd173cddbd44e1f"
+bytes = 87179
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2017/62721099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/62721099999.csv"
 sha256 = "aace54ad3083bef9a1dbaf69039000e5ed1c00b654b485169583c25e71dd652a"
 bytes = 83164
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2017/62941099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/62941099999.csv"
+sha256 = "7b7195c1314b5386c2a8751dc64408498490ed53607f9f9ba042d5adfc4c04e2"
+bytes = 7536
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2017/63125299999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/63125299999.csv"
+sha256 = "72afb0427861428ffacf712c27b5dff693aba8b6be7703b4f18eb01348402063"
+bytes = 63789
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2017/63260099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/63260099999.csv"
 sha256 = "2b134ceb3be69babd08e481facbae43bfa81732139a1c1c5ff5407c8f87152c1"
 bytes = 78764
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2017/63450099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/63450099999.csv"
+sha256 = "227efa7bff87ae534c40a80d975ddd10a0722057659538eee96c083585aca559"
+bytes = 85629
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2017/63680099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/63680099999.csv"
+sha256 = "d76e428f774cba38f647e7c560446ad3f51128864cb1eccebac22ad9e776efbe"
+bytes = 48206
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2017/63742099999.csv"]
@@ -2926,6 +3598,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/64211099999.csv"
 sha256 = "f00b8bb54946d4ac089ad9c9cdabaed03e71cf8a1ef15e6300a4b4918c80a3db"
 bytes = 5949
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2017/64387099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/64387099999.csv"
+sha256 = "7bff4b723a0b97de9ff0921763ca2f384e635caebfeb8731486058a34a841d73"
+bytes = 87544
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2017/64390099999.csv"]
@@ -3138,6 +3816,12 @@ sha256 = "a4dcda0949e599654e09a6a6cbbdc36d2b0e7126d142317196bec6319a3fcae0"
 bytes = 66429
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2017/78970011634.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/78970011634.csv"
+sha256 = "f8f24a8c9b90cee35684c4609d28ffbe41836412289ce218e69555e0720440d3"
+bytes = 88274
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2017/80222099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/80222099999.csv"
 sha256 = "5888420a0d19e3f117ee108bf8e076615218dfe1cd1e633ba322304271b52954"
@@ -3178,6 +3862,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/85574099999.csv"
 sha256 = "81d00f7ca397b67e614902d72a562075749d6a93baeee61b6a1ef83b905a9aa4"
 bytes = 93749
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2017/86218099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/86218099999.csv"
+sha256 = "9a81918f8c2afe3e146bd47ddacf5aeaf69578a8e8ca198e2dfa562bd7719d29"
+bytes = 91194
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2017/86575099999.csv"]
@@ -3222,10 +3912,22 @@ sha256 = "89cc3af56841c2d34c8ad4f23e7e38b7f2bcbc5cc945f4648cdf24a26a724c4a"
 bytes = 82799
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2017/96315099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/96315099999.csv"
+sha256 = "dff9690f8f4e80cd09ab9b55309c5e42def658cd12737de48e49c4d315b7fc4b"
+bytes = 86449
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2017/96749599999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/96749599999.csv"
 sha256 = "cc0846ed367159c192d763754ef046858f5446053c1caf7925d98729e1391618"
 bytes = 87155
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2017/98429099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2017/98429099999.csv"
+sha256 = "14efc7f78951991efddf997f19fb3140d7d540f6dc776f7a8d4c6234fb5167dc"
+bytes = 89734
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2018/01492099999.csv"]
@@ -3240,10 +3942,28 @@ sha256 = "78fbe7ca9d9606e1116f54efeec7888f93b8d9764d52365b426803c9848eac83"
 bytes = 81704
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2018/03768399999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/03768399999.csv"
+sha256 = "37243d8458fe315fbb598c56ed412fbed21ec6b11ff24eb2b6fe9c8b14a48006"
+bytes = 80609
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2018/03969099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/03969099999.csv"
 sha256 = "6daaa9754aac1ac3019bb45b2b3bc2453e9a56c34aa4212cfca69dce141c6e7f"
 bytes = 82069
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2018/04030099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/04030099999.csv"
+sha256 = "aafe5746e8177d7c4b3cd9b57e0b698fd06a76dd3bc61317b36c4e28446315f5"
+bytes = 82069
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2018/06180099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/06180099999.csv"
+sha256 = "12c926adf2c579211f4704ecb65004b33e56479f2da2fed140414f8ba71c8dfa"
+bytes = 81845
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2018/06344099999.csv"]
@@ -3300,16 +4020,64 @@ sha256 = "4f6afa20a400f2409deccaa6fbada7789bd11800f9ff4ddb6d6de1e88ef0369f"
 bytes = 83529
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2018/11423299999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/11423299999.csv"
+sha256 = "40f6e803422104780bd9ccfb85f65f4e0f80edc0aa467e151c3ed6e0de097075"
+bytes = 80366
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2018/11816099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/11816099999.csv"
+sha256 = "a4a70a3b763fea129515b1411ca15a0f99c38212631b0c0de6f9ce5118b92dcc"
+bytes = 84624
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2018/12105199999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/12105199999.csv"
 sha256 = "527894af58599cd496696a698abebdb9bac464e30dd25c3d686850e12dc1066d"
 bytes = 79509
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2018/13272099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/13272099999.csv"
+sha256 = "eb544f670cb6c483b001d9c58ffb22486dc588c884cee9a1343c4dbd113bfa57"
+bytes = 82434
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2018/13353099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/13353099999.csv"
+sha256 = "cf79c0b75d38f6056d76e1deb9138afa8dbe11d040547217df9a95de445d9784"
+bytes = 83164
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2018/13462499999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/13462499999.csv"
+sha256 = "4504d4082229f4960afc04648f34ac33dbe8046424c7f78eb8c4cfd124d33e7d"
+bytes = 86814
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2018/13481199999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/13481199999.csv"
+sha256 = "fadf1820c91745db03e9740491a543876485de0c063721d7f196dc722d18aaff"
+bytes = 79661
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2018/13586099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/13586099999.csv"
+sha256 = "7fe319ce83741070814c9859c84f314e3da08381dff7cfbffab6f7583fcfc37a"
+bytes = 82434
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2018/13615099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/13615099999.csv"
 sha256 = "b0775d11a7e8ac6cd89973d1d338a0949d06cb0418f91a7d60fe7e8e8fc9afd9"
 bytes = 83665
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2018/14014099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/14014099999.csv"
+sha256 = "d98cb0771e42918a442c4c9aa171cbc374e5087b6ec7e0826c0fa546ce5345c7"
+bytes = 83529
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2018/14240099999.csv"]
@@ -3330,6 +4098,12 @@ sha256 = "1e61f804cc05e13c7f5542f45ddfee47cc917fa2c5ee2ab0fffab94f6cae56a6"
 bytes = 82069
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2018/16235099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/16235099999.csv"
+sha256 = "fbdf6b60fb01b1c9a7064a8afb0128677c5e0ec2c27a1687b5098a4baee4b1e1"
+bytes = 80229
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2018/16716099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/16716099999.csv"
 sha256 = "dce9a295f19f55b1cc4a811d13477c818283422ebb86770a6270551719e7ab98"
@@ -3340,6 +4114,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/17131099999.csv"
 sha256 = "2d109becc981aa271e735a5c157ea88828afcdd5e762dc8446bc08a7c6b5c64a"
 bytes = 83665
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2018/17607099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/17607099999.csv"
+sha256 = "9ce0f29b2e6e654c59836f8e3c9e3fe495a1a3e5c23aae5561576cf21ddbb3ae"
+bytes = 535
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2018/26038099999.csv"]
@@ -3396,6 +4176,18 @@ sha256 = "afd3b74c3fdfa7ae560523c011aca25ac52890ebbd3c7d85dcb6a42dcb960398"
 bytes = 83529
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2018/37549099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/37549099999.csv"
+sha256 = "f24791173eff21a9258edeb2e88371ffb6ad1e0668811cad9cd718128d5965cb"
+bytes = 86941
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2018/37864099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/37864099999.csv"
+sha256 = "8877f1d014181a184facdc4536082652c8f3a110328c3e67fe11903e78c02db8"
+bytes = 83529
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2018/38353199999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/38353199999.csv"
 sha256 = "281d8472466c40232b4a8c365a25850ea73a50f4eeb3ebd2cd5c0184a2889eb0"
@@ -3442,6 +4234,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/40270099999.csv"
 sha256 = "1b8b126cc65f2d6b0aa28a1211f3db9ffd849ec8d2467f6b9840fe8c08489593"
 bytes = 87179
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2018/40437099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/40437099999.csv"
+sha256 = "05c60c9bb3994c9ec08e3ae185a55f25bf38767d9c5dd6fe0b093aa2d2f0bcd9"
+bytes = 88761
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2018/40582099999.csv"]
@@ -3540,6 +4338,12 @@ sha256 = "fc454ee139175a249dce545fb61ca07a1911a2da7ceba8f565c91b74d546efa5"
 bytes = 84259
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2018/47662099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/47662099999.csv"
+sha256 = "79d8195093bdcefe45c5bf350f7d5f5299aa082fb09edf5d03f6f6344ccdea63"
+bytes = 82434
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2018/48097099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/48097099999.csv"
 sha256 = "6e03bdce99c7fe970856d4695ac4ca900f42173d4570410efdffc1eedb8aa8c5"
@@ -3550,6 +4354,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/48456099999.csv"
 sha256 = "3c50521eff893c3527d25a3fbf3fec5e6cb3914618a18ee94420091964181241"
 bytes = 87179
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2018/48647099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/48647099999.csv"
+sha256 = "67e2bbb1605bb32882b4683bf9420b91e3ed9f5cfb6d408a7e503cfc1b4a9fd8"
+bytes = 92765
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2018/48820099999.csv"]
@@ -3574,6 +4384,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/54511099999.csv"
 sha256 = "dc564a01576f0c578bf7fdc8bff48b9212eb77a0606e543249a1930723bd17f6"
 bytes = 93749
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2018/60135099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/60135099999.csv"
+sha256 = "967269bb5db1fccf19b7d087329efa4e91ed80034b39d3e6c0edd189bceb9c22"
+bytes = 81339
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2018/60390099999.csv"]
@@ -3636,16 +4452,52 @@ sha256 = "c5c209f7b463c3c817fd47c55acc6295d15db392c6617e8f6a1c3a1206f54a60"
 bytes = 64065
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2018/62052599999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/62052599999.csv"
+sha256 = "6eb263efd3d8ff3fe925b01850f59cb38d50126c8a3db54cb4d891aed0240970"
+bytes = 53349
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2018/62366099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/62366099999.csv"
+sha256 = "e290fdbfec6bcf0a2c4a94e786728980d81d1e62c49b8f679d0de3182cf00af2"
+bytes = 86941
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2018/62721099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/62721099999.csv"
 sha256 = "454073ad51eb140afaca081ef54460c4cc706512be0e953d04c741744d21baa5"
 bytes = 83164
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2018/62941099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/62941099999.csv"
+sha256 = "01db6a772a7633bd8764daae98809fdd8831c985e31c23e6dff97068988d2c75"
+bytes = 4251
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2018/63125299999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/63125299999.csv"
+sha256 = "7869f1972aaf88a1e0a84640f3031d16185197efa64fdae449fac05db5f7dfd1"
+bytes = 78739
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2018/63260099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/63260099999.csv"
 sha256 = "6aef25102db03facc95816751f88cbf5e66d1569a01393c3df191215803fa41b"
 bytes = 80090
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2018/63450099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/63450099999.csv"
+sha256 = "e086480e678082a7995c52d3dc2a2d0c7385ca4934c5cc14d18c4239c0ababb7"
+bytes = 70461
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2018/63680099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/63680099999.csv"
+sha256 = "35d4c9faafbcfe3cdc30627d0e41fa969677b8190a242c796f56bda63763f821"
+bytes = 47071
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2018/63742099999.csv"]
@@ -3664,6 +4516,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/64211099999.csv"
 sha256 = "f438c3b371b02199a5406d956d2703e9a76119958270d5198561d08f2fe0deff"
 bytes = 3129
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2018/64387099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/64387099999.csv"
+sha256 = "36241376694cada64c5d283d07123f7e24d8662abc6b14350a8f51a2b10c4060"
+bytes = 87066
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2018/64390099999.csv"]
@@ -3882,6 +4740,12 @@ sha256 = "378b25f2fc8f35aabf5a6f6cad12cf1b1c7471e4a423cd2bc122e1f4941b8e42"
 bytes = 74181
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2018/78970011634.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/78970011634.csv"
+sha256 = "75570bc6ef535b65deb3b93f524522d6fe279fe87f81e7d05d295796eb6553ea"
+bytes = 88274
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2018/80222099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/80222099999.csv"
 sha256 = "28ea4e198bb2b1dad504290a274c0e60222ecfdf199d0f750f8f25c820908851"
@@ -3922,6 +4786,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/85574099999.csv"
 sha256 = "125cb1ce673513415e2b4359da2bc48b7c9bfdd88e82bd08291fb9d08e5d8425"
 bytes = 93749
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2018/86218099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/86218099999.csv"
+sha256 = "19e3914db9232b57b17eead792bb92986756a16291d41429c2cbff109c6f8b95"
+bytes = 91194
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2018/86575099999.csv"]
@@ -3966,10 +4836,22 @@ sha256 = "d93d61aa3f27b5ffa377497e9cb140042da4d49b8b499391c6303cf8ef4c321a"
 bytes = 82799
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2018/96315099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/96315099999.csv"
+sha256 = "cfa2e72d499ef5af89fce0bf1729a9c516f668067705cdbac9fe76b8d1dda70e"
+bytes = 86449
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2018/96749599999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/96749599999.csv"
 sha256 = "9dadd10487f6f0948b0013c9b238998cb71cb2b8e22ef3248c652ed222cd5bcf"
 bytes = 58541
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2018/98429099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2018/98429099999.csv"
+sha256 = "e378a60c03fc799595d548eb8cb76c3399e49d98bf04cef72907fdbce14ec0ba"
+bytes = 89734
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2019/01492099999.csv"]
@@ -3984,9 +4866,27 @@ sha256 = "44bc435de75271163ad62009eb22cd35a2eb0453088de1271cb130ff5217144b"
 bytes = 81704
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2019/03768399999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/03768399999.csv"
+sha256 = "ff798f99803f86ac5e14f2b289f1fcdb774b626b7ab550d6e069dfee0a0e0a8a"
+bytes = 80609
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2019/03969099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/03969099999.csv"
 sha256 = "ded583031facfe3d0f775198ef854121dd70800424593cbadf9865a918640472"
+bytes = 82069
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2019/04030099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/04030099999.csv"
+sha256 = "863d222b456bd307a0b78ff1bbf86463915ceb5be7dead27af05badf244ae8c7"
+bytes = 82069
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2019/06180099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/06180099999.csv"
+sha256 = "edb2fd12b0a67d78a2ea9cf63048e3008252d8b29926137856bd8adb52c2dca5"
 bytes = 82069
 fetched = "2026-11-02"
 
@@ -4044,9 +4944,51 @@ sha256 = "2918b85230c9a565f1b56c6f3f505fb9d67a7a189f1745cbc166a7ece7753ece"
 bytes = 83529
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2019/11423299999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/11423299999.csv"
+sha256 = "10254923980ec67e9a8e26a1dee78b7b272a11ba5579226609e1be1e42301711"
+bytes = 81704
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2019/11816099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/11816099999.csv"
+sha256 = "bd12b40de20a069666545bb841b5591ff17210d54243ddece383fd6b28f92964"
+bytes = 84624
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2019/12105199999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/12105199999.csv"
 sha256 = "24e7a681e7239e8b89a91f6f740c428882ef277644c4da6c3b88884dec05a929"
+bytes = 82434
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2019/13272099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/13272099999.csv"
+sha256 = "58b23677792ed3ffd1b70c02c014abdc059339d7b02441bd66da330553f4438d"
+bytes = 82434
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2019/13353099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/13353099999.csv"
+sha256 = "9a6415b5047e4a6cc1a2e3ace932f22f00f772d2b38af1f6d7e7c56e613d286d"
+bytes = 83164
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2019/13462499999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/13462499999.csv"
+sha256 = "84a466bc058a1b2fbbbd9451dc424e3ad8f7aeb26012df6deb81e81468163a92"
+bytes = 86814
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2019/13481199999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/13481199999.csv"
+sha256 = "d53d1fd8ec520a05fd544547f95758c179e04043d84a46bea05cbceff5ffd654"
+bytes = 79879
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2019/13586099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/13586099999.csv"
+sha256 = "6ec0880b58189f73d22fb2fca699da5d19045d0e4d7c275e8d8975d42bf294aa"
 bytes = 82434
 fetched = "2026-11-02"
 
@@ -4054,6 +4996,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/13615099999.csv"
 sha256 = "f7676476d037035c59301e6b6eea27eb5e885a80bc82c8cf3a3995eaee7adea8"
 bytes = 83894
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2019/14014099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/14014099999.csv"
+sha256 = "51e0c6cc9c22670c1225c45b7b4f588ba9eca2b0a949ea593218f73c39bfe10e"
+bytes = 83529
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2019/14240099999.csv"]
@@ -4072,6 +5020,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/15614099999.csv"
 sha256 = "1e1a2a45e300f94a81df1e4fa93c75bbb9454164b10326844f03e903cdc3c7b8"
 bytes = 82069
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2019/16235099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/16235099999.csv"
+sha256 = "8c5df67893f4b18d13fc07b6fc429d11eb30047bf554f1ca8356f3fd4d7a9c83"
+bytes = 81339
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2019/16716099999.csv"]
@@ -4140,6 +5094,18 @@ sha256 = "820db6229aa6fc6bc27a6d86200f6bb348f90d621ad90c97b9faa4d749530299"
 bytes = 83529
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2019/37549099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/37549099999.csv"
+sha256 = "83fa7b8c477a5ca4f9cbec514dcfb0dda4359facf94689100a0b83f3386e738c"
+bytes = 87179
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2019/37864099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/37864099999.csv"
+sha256 = "941a0b4b7af8314405382d8c79f0a7702c7d9bd731b16a5ea25db434a51af529"
+bytes = 83529
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2019/38353199999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/38353199999.csv"
 sha256 = "1e3724accfd0af7cdb0f0271d97083058c067bf01e9c42fd26e29ae3329acdfb"
@@ -4186,6 +5152,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/40270099999.csv"
 sha256 = "35bddbb0d7b4cd5ac215d4c361737bfbd1b10f6d12ba45a14ec194639e61f3c2"
 bytes = 87179
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2019/40437099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/40437099999.csv"
+sha256 = "a9b198df33757d7a1e55da9ae9128def4c2504a27ec655f647874866cde02c22"
+bytes = 89004
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2019/40582099999.csv"]
@@ -4284,6 +5256,12 @@ sha256 = "43533415916dc4cc7268be62a57bf6d52b5fcb66490f2a6185f627dc83ded9f6"
 bytes = 84259
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2019/47662099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/47662099999.csv"
+sha256 = "8a039e6cd6cc7ddfd05082c4f3f2457e1680e8662a901f0daf6ff0f286ae01e2"
+bytes = 82434
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2019/48097099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/48097099999.csv"
 sha256 = "b6e3867d479d37266e0538379d5ed5f62851bc2c4a7803de849476e638956398"
@@ -4294,6 +5272,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/48456099999.csv"
 sha256 = "7f8f7ff82cdd2d96b1f758d906348620857f00e5faefcf58dd115d969d11eef8"
 bytes = 87179
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2019/48647099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/48647099999.csv"
+sha256 = "70a8fbf068048528b146bec66a79012745f62a3e081e1d4718789237bac5970b"
+bytes = 93019
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2019/48820099999.csv"]
@@ -4318,6 +5302,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/54511099999.csv"
 sha256 = "7864e03a4cb970b15ffb807f671bff75702875c7a5cda39418e80a658bf89e07"
 bytes = 93749
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2019/60135099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/60135099999.csv"
+sha256 = "00f1afd4bd665996bd9bf076fbc6f34c94bf399415ddd83618a2007a3945a400"
+bytes = 81339
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2019/60390099999.csv"]
@@ -4380,16 +5370,52 @@ sha256 = "4d6b602da8ea4fe187b32b0ec2a09a96fc28fce4f9fee71292dccf3e4fba45dc"
 bytes = 72612
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2019/62052599999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/62052599999.csv"
+sha256 = "9cbf8b68529878e01af1733f092ffa9525ef1fbcc29ff1a011c28d35dcdd79e6"
+bytes = 2077
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2019/62366099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/62366099999.csv"
+sha256 = "2575555f33b7ef0fe6159d74c6859a780542cf97076547223fd703ecd265397f"
+bytes = 87179
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2019/62721099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/62721099999.csv"
 sha256 = "709d09fd247981cbd7731f45da3f11072345d171f8155907689f907bef392b30"
 bytes = 82483
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2019/62941099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/62941099999.csv"
+sha256 = "6f9e746fa21cfe276876ca32c90c50504c95e8fed64114d582d55056f8942c50"
+bytes = 4908
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2019/63125299999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/63125299999.csv"
+sha256 = "8bc5dc3ff51ae9d49b089019f3fb1312c1893a75d5c4e6210e90dc3017ce7b4f"
+bytes = 76899
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2019/63260099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/63260099999.csv"
 sha256 = "c08186e32718b4725eb9cc8ac38137d9e34571bc1b206250a7d43114a19ba017"
 bytes = 80974
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2019/63450099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/63450099999.csv"
+sha256 = "d8ed938f1736d9380bf1c11099f0bd106989dc92019b96354c245ec9c96f36ce"
+bytes = 83970
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2019/63680099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/63680099999.csv"
+sha256 = "1c31e47fbb0c42b3a90420abea90b30f8a16abe0f36233141198431d4767661d"
+bytes = 19831
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2019/63742099999.csv"]
@@ -4408,6 +5434,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/64211099999.csv"
 sha256 = "d9385b8dea6ffbbccac0b4e3223825d6698e5e0a894283d75527c90eff7c5334"
 bytes = 1954
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2019/64387099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/64387099999.csv"
+sha256 = "fa2ecd7f67341518473f48f8d0c70a027fe5e8ff7abe38e73a0cb2abaa2dc5cf"
+bytes = 87544
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2019/64390099999.csv"]
@@ -4626,6 +5658,12 @@ sha256 = "b5bb3f580dbe3f562a42d74aaef8bfeb053bac5da7c882ee885be3bc8bb5f874"
 bytes = 82389
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2019/78970011634.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/78970011634.csv"
+sha256 = "cc4243ee4b7f4665b73f5c9396e4121638c4e0fdfb763be771461a22d071c285"
+bytes = 88274
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2019/80222099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/80222099999.csv"
 sha256 = "9e26e6ba13a9fe5baac8f5de299cd10f3669295a0a895655ea318ff557ada79d"
@@ -4674,6 +5712,12 @@ sha256 = "82d40df20485801521bf67604b9e82a8071a3eb8ff0f5ef45c347e60c30a501b"
 bytes = 93749
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2019/86218099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/86218099999.csv"
+sha256 = "558fd7feb50546fe3ac736a771760f1fa3056de610ce18a93d2c41512a7ba061"
+bytes = 91194
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2019/86575099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/86575099999.csv"
 sha256 = "8ee5e922f304aa288ff7fa4e11256c4c316546e69f723acbfd26f9b6fb950420"
@@ -4716,10 +5760,22 @@ sha256 = "61bf1515c0bc8c1c2ad61c9e1c958b4f678797cca9366052a9b23314ea5a531a"
 bytes = 82799
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2019/96315099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/96315099999.csv"
+sha256 = "937eb76ce910d2b3fa829715673d13bc46f52f88a2962f56c1b142633ede8f11"
+bytes = 86449
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2019/96749599999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/96749599999.csv"
 sha256 = "87166a14303c5fe24e693717b29187548ef0e4dcc1939ecae20bde93ba1a063d"
 bytes = 83390
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2019/98429099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2019/98429099999.csv"
+sha256 = "e3197fa8a6f89815b517700ffafb0a59ec2c49cbff00e1215f68b35c75924917"
+bytes = 89734
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2020/01492099999.csv"]
@@ -4734,9 +5790,27 @@ sha256 = "d5f30ed8f520c38d71b5e9b31731dc83be1115616b003755961374bd077623d5"
 bytes = 81927
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2020/03768399999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/03768399999.csv"
+sha256 = "33dd33a5405b9ebf16cc8357eb39d7d4d06640e6c82df914224627f0b7af2c45"
+bytes = 80829
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2020/03969099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/03969099999.csv"
 sha256 = "a24e9c39d3c82d3efc0479826254c037d7d250f33cd7441dbdec50ca488005ec"
+bytes = 82293
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2020/04030099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/04030099999.csv"
+sha256 = "1c5e736a1b9cb5defa1788df34ea046860fe975e2bb3524fe0fbd1920083f471"
+bytes = 82293
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2020/06180099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/06180099999.csv"
+sha256 = "57f6539739dc7684b8e812dce1dd1d6b6695295e07f30390d6f9b81323dc1ce0"
 bytes = 82293
 fetched = "2026-11-02"
 
@@ -4794,16 +5868,64 @@ sha256 = "7dcb3a31fc0d5bd5420121bf41c37fc5a912b98df55964b303d95d3f04292f53"
 bytes = 83757
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2020/11423299999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/11423299999.csv"
+sha256 = "2ead0822434bf686766f0f3cbeeb31990ffbcdd3a260d3847bdf8e1efb281aa6"
+bytes = 81927
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2020/11816099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/11816099999.csv"
+sha256 = "4a6dea3c23a3176b64f2d71aebaa90a08e98513578f9f75f10a712848905ca6b"
+bytes = 84855
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2020/12105199999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/12105199999.csv"
 sha256 = "6e1c5c81bdb8ea5ca012adc630652132ccffa42de34c51e888cb9dde4d09bf32"
 bytes = 80859
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2020/13272099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/13272099999.csv"
+sha256 = "372c9b0c7d2cca3f76d943af2665e364b62e336b5ba7fc2422b48252c97140c8"
+bytes = 82659
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2020/13353099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/13353099999.csv"
+sha256 = "3dcb9655638e5078fd4ef1edc6633cc50fbbffd08abfae3e6ab1418da0bc16e8"
+bytes = 83391
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2020/13462499999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/13462499999.csv"
+sha256 = "c2a4bd23cdebc87ed8c69d1fb020db0823d2cb5950de27ad141998450dd042d9"
+bytes = 87051
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2020/13481199999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/13481199999.csv"
+sha256 = "0ec7710b0df3885557810d3ab28152602a5252d51239985bb8ca85522e6aa9d2"
+bytes = 80097
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2020/13586099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/13586099999.csv"
+sha256 = "212553a6b116552702fc5cca97b8eabe592e045bf2f665e39d9d2947f544ef71"
+bytes = 82659
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2020/13615099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/13615099999.csv"
 sha256 = "c516781fdac534a03bbaea5bbbfd568e48973b6b6f5c94595e5bf54123531e8d"
 bytes = 84123
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2020/14014099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/14014099999.csv"
+sha256 = "f8ea784a195a2a6aecaeef85182886b7441b40c6672bc4c368b40df853ca4dcf"
+bytes = 83757
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2020/14240099999.csv"]
@@ -4824,6 +5946,12 @@ sha256 = "5af580d7b39608e6ae62bb7e95de2a2af4f7a3588f62699d4dadcf48e04b3a97"
 bytes = 82293
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2020/16235099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/16235099999.csv"
+sha256 = "5a08f020de1b9085bbc4e5b8bf047bd8b22583fdec22d621e73cbc375188e736"
+bytes = 81561
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2020/16716099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/16716099999.csv"
 sha256 = "772f40e090ccf03b116d921c46a54854d7514eec26c0d57b88c138bc43541dd9"
@@ -4834,6 +5962,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/17131099999.csv"
 sha256 = "127feb63f1274c7c4fa0f3736ca613c6b0cc5d05f5057bf7990ae005f91c3b98"
 bytes = 84123
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2020/17607099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/17607099999.csv"
+sha256 = "8f88489d53290543e90d6b4e33e57302bdb01deede0d47e47d1cc7ba51e3f549"
+bytes = 761
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2020/26038099999.csv"]
@@ -4890,6 +6024,18 @@ sha256 = "be466f82f9b769af36e39dff3775a3002a62fe490bee63fb821fccfd80ba8648"
 bytes = 83757
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2020/37549099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/37549099999.csv"
+sha256 = "6d2ebd9899ff95a1e7319fd1982d40f253b287ecb7df705361d065abb91bef22"
+bytes = 87417
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2020/37864099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/37864099999.csv"
+sha256 = "51a142bdfe7def2efdf30f44de3b0b453779756d583a3901cbe59750917a185a"
+bytes = 83757
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2020/38353199999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/38353199999.csv"
 sha256 = "ff811560d22455668412f9edfec6a33adedb57fc39ac94c4a57ab68d1a1b58bd"
@@ -4936,6 +6082,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/40270099999.csv"
 sha256 = "b49451b79350bca3055d0673e039e376f8cff29f7397c9b1241d9734587fc616"
 bytes = 87417
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2020/40437099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/40437099999.csv"
+sha256 = "be12ab6d4e22643febbb0dc1a9f844f052afd59962e343e5aa2c67383588bed4"
+bytes = 89247
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2020/40582099999.csv"]
@@ -5028,6 +6180,12 @@ sha256 = "c24c1a6cf9717dd3e8a821c2032eb7bba2e7e17c9ab809c334b851e330835c02"
 bytes = 84489
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2020/47662099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/47662099999.csv"
+sha256 = "4beff537d2736a329b6d6529cd00787245abb2c5395d9575f8c0c44638eb3c3f"
+bytes = 82659
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2020/48097099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/48097099999.csv"
 sha256 = "fc3c6f88f3f987616b6a5328dcd55b7baa39361a73732c217fdbbfbd6e2e87da"
@@ -5038,6 +6196,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/48456099999.csv"
 sha256 = "ee885d971c4689b8827aaa01f490d8b67210ea09239d4713a1785620dfdb6536"
 bytes = 87417
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2020/48647099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/48647099999.csv"
+sha256 = "aa7d2967abf9ad5a40b194c8c9115704ea34d663081e82cd0bd766b18c52b485"
+bytes = 93273
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2020/48820099999.csv"]
@@ -5062,6 +6226,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/54511099999.csv"
 sha256 = "bf757899ff4f9c87affe78a9331daca6ad42ffd7174d962343963955f0727fc4"
 bytes = 94005
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2020/60135099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/60135099999.csv"
+sha256 = "66d158fc3fbba9d62b162d8d3d2cc50a36a1bd1d30198461d76cf99ec2bb0e94"
+bytes = 81561
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2020/60390099999.csv"]
@@ -5124,16 +6294,40 @@ sha256 = "b1d1f77a445789ddebd4b7988f0a27b99ebc7d7ae82a1cff558f21f5b0dba777"
 bytes = 55287
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2020/62366099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/62366099999.csv"
+sha256 = "c0c503c7629a425ba91fc2911debb09df9b612fc9da8b53f1f2427789df7cec1"
+bytes = 87417
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2020/62721099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/62721099999.csv"
 sha256 = "9d071fdbdbdf46dc32d9c192f9bd6c8bc293c51f971e8ccb5ed2abc7c700850d"
 bytes = 83391
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2020/63125299999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/63125299999.csv"
+sha256 = "8ffddc1367167845cfc71de3b4a65a104a43cf4c7a25965ae386d8fe9507d6a9"
+bytes = 67239
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2020/63260099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/63260099999.csv"
 sha256 = "9a1be517793e2b226ac7142dde7dee0ea5c3a9cd0f381ef6b362b08050d2db1c"
 bytes = 81195
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2020/63450099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/63450099999.csv"
+sha256 = "f61cc1c947cff601aadba5dbb4f83982dd280fb2c6f9f7d363def6d4b7d2e095"
+bytes = 86577
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2020/63680099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/63680099999.csv"
+sha256 = "8910052ba138af4812d82879c97ce3663b0ed386b4c4dc2b83ba3458d828fc75"
+bytes = 11886
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2020/63742099999.csv"]
@@ -5146,6 +6340,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/63894099999.csv"
 sha256 = "5737fc2868129e42b9152085b299acb0c53fe815f891481e29b2777951f8ca0f"
 bytes = 94005
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2020/64387099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/64387099999.csv"
+sha256 = "d231fed3afc258df91c86c598b487134112ad035b0d7bd9b31b633933ddfb03f"
+bytes = 87783
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2020/64390099999.csv"]
@@ -5364,6 +6564,12 @@ sha256 = "281c73fb087c6eaf33a29f58163be99ad11a11ffb311ddd593a33995c78c587b"
 bytes = 83757
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2020/78970011634.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/78970011634.csv"
+sha256 = "9bc3ba54521b474b6a2f796e70620775aa5554985b7cf7ad5e7d3e609045c3d3"
+bytes = 88274
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2020/80222099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/80222099999.csv"
 sha256 = "d4bfa085547513ec4e7da9fb6cb68bf4d35736774fdbc2e9a659c6638228ef05"
@@ -5412,6 +6618,12 @@ sha256 = "e8ec4f31f4f267dec38b1967da8e45fce3394fa80a013dd3bccdce78f8075ad4"
 bytes = 94005
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2020/86218099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/86218099999.csv"
+sha256 = "270960b0b0ed53f7c96e0e502879407b844eecae1753438651501102c9ffb12a"
+bytes = 91443
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2020/86575099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/86575099999.csv"
 sha256 = "2f6e382a09c1174591485e2737e8cc6e95639b517a4be4dc9913f968de70aee0"
@@ -5454,10 +6666,22 @@ sha256 = "3914550e8ec6d04968492aa62ff9540394f17e58cd7e5400390cf4edde876de3"
 bytes = 83025
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2020/96315099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/96315099999.csv"
+sha256 = "b4db80d29dca0b27562fe1eac3cd8047eeb6fc51081c26941d71bece3a9b9358"
+bytes = 86685
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2020/96749599999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/96749599999.csv"
 sha256 = "7af6cfde546c74ade39e9793901a225cd5bbca7a70f45c83a6fedf6007e3cb64"
 bytes = 88410
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2020/98429099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2020/98429099999.csv"
+sha256 = "55b0c5302f2ac2d98355a3586c10e4a398ad3515ce78a2330cf046f2f9febf75"
+bytes = 89489
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2021/01492099999.csv"]
@@ -5472,10 +6696,28 @@ sha256 = "72b49d7607773e76dbd6d79cc150cc6fec74c5fe00784c196d5e15dec9b6c4e4"
 bytes = 81258
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2021/03768399999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/03768399999.csv"
+sha256 = "e1477c6bb3dad3476a4724775fac552da2d1f973fb6b6b0009a366c8f60080cd"
+bytes = 79949
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2021/03969099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/03969099999.csv"
 sha256 = "0a847346e5d5e0d030ccd4b9d86e875304ce018017ad0de293cdf3b42e02445c"
 bytes = 81621
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2021/04030099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/04030099999.csv"
+sha256 = "a6b6414c5b9824ad1586e8bb953c291714415b1e08393e44074906d2ff4bf5b6"
+bytes = 81397
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2021/06180099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/06180099999.csv"
+sha256 = "5b4eec02cc8f112a5a9aa0d8072e6cc8630f0c39489352d739f1c68b97f2115a"
+bytes = 81397
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2021/06344099999.csv"]
@@ -5532,6 +6774,18 @@ sha256 = "d58885c358184f9fa06e18342c454129ae435e8395bb30c6356afc5fc7ac322a"
 bytes = 83073
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2021/11423299999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/11423299999.csv"
+sha256 = "1546a2fa218fa1aac634c5ecbefd5128fc8f9a400486b5f5b6c64a7b9e1e9b4e"
+bytes = 81035
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2021/11816099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/11816099999.csv"
+sha256 = "89cd978f93795e7c79082c8feb4bb31b10d77684fd28dec8afb2cfef203f7e1b"
+bytes = 83931
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2021/12105199999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/12105199999.csv"
 sha256 = "8707140170b00c16f2b8d498a014757b6cc183af191c24829250663de462c619"
@@ -5544,10 +6798,46 @@ sha256 = "c654ef72ec60ab6aea1a066f83981285a4b2c69a5e21d1d5f43b6b9780598e39"
 bytes = 68424
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2021/13272099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/13272099999.csv"
+sha256 = "a6acad39dedc2aa89f0984f0cb18e707ffca4fb3305fcb077720d6670f4b5128"
+bytes = 81759
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2021/13353099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/13353099999.csv"
+sha256 = "cbab33b273035889b422b47ab4dc6ae839bdff0ab2ba4444e4d8b7f9c3d87184"
+bytes = 82483
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2021/13462499999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/13462499999.csv"
+sha256 = "9ec984d31e38b987aa12f049a4bb32164359941218de54947487aa9aed4c1dd4"
+bytes = 85155
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2021/13481199999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/13481199999.csv"
+sha256 = "0bd4b097ce5b474e4bd51875da8ac9eb7906a68002625a16a9193a359f60c972"
+bytes = 79225
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2021/13586099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/13586099999.csv"
+sha256 = "bac81a2d1eb62c529e217ab7058d6450b96db6c1229610f8b105bc54b1cf9beb"
+bytes = 81759
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2021/13615099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/13615099999.csv"
 sha256 = "238822bfb46ea08df8fda0f55b03a5485926e871244859ece6ba43b5b7754e2f"
 bytes = 83207
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2021/14014099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/14014099999.csv"
+sha256 = "95410e8b44d5b2705441e9af348d6abe2505b59a0dc544a7bfdf1454beff31ef"
+bytes = 83073
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2021/14240099999.csv"]
@@ -5566,6 +6856,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/15614099999.csv"
 sha256 = "02fba5a14af781c95b7a083c42d9eb884acac9dd977608d169a00a59f5ba25e3"
 bytes = 81397
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2021/16235099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/16235099999.csv"
+sha256 = "798c373ce9fedae4e773e85f80f5f97d689cdf5bba3867226610dff97d998eef"
+bytes = 79785
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2021/16716099999.csv"]
@@ -5634,6 +6930,18 @@ sha256 = "ff1c8dc4c3644eb8cdd289721674ca0f7a6cef9c4fd40cf3c7d003d947af14c9"
 bytes = 82845
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2021/37549099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/37549099999.csv"
+sha256 = "b157f5ae2550e4ffee538ca36e2f1f8895c242a43ff9ab1289997368a81bf8c0"
+bytes = 86465
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2021/37864099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/37864099999.csv"
+sha256 = "37df6fc329829bb9e9615b5f23a1a6f1e515cef4ffb737161a35c0e7779751f8"
+bytes = 82845
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2021/38353199999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/38353199999.csv"
 sha256 = "cd97d10c6742c24820491746b69a302f7cf2bbdf0f8ad3d7a6f03abbfdf6ffc1"
@@ -5680,6 +6988,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/40270099999.csv"
 sha256 = "008fb936e694d21760e1673629ea1c729562c0b75e9c7c6442762046a22a7b74"
 bytes = 86465
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2021/40437099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/40437099999.csv"
+sha256 = "92880184c067d73c04898a2792d0204cf73dd9e26bc42f21c98dea5cd370ffd3"
+bytes = 88275
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2021/40582099999.csv"]
@@ -5778,6 +7092,12 @@ sha256 = "9d7225c337d447f6d0a34eb708767960f595536a1aeab2820a94bed8ed6fc5c4"
 bytes = 83569
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2021/47662099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/47662099999.csv"
+sha256 = "d33cd25852bb2aab84b848666d0049ab233f9bc901224f9528e0197debc57aa4"
+bytes = 81759
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2021/48097099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/48097099999.csv"
 sha256 = "499259a5f37fcb753d2eae6550420a87251d7a1a547e9850d19c5aa06e3aa66c"
@@ -5788,6 +7108,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/48456099999.csv"
 sha256 = "55df7bee74cd67a41583211fbef45b6731e376453dfed3d7d1fd8b7127819d80"
 bytes = 86465
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2021/48647099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/48647099999.csv"
+sha256 = "deb610c7a87d8f6df66b0c8afd47ceb865f56c7958e57f776d626f44da81240d"
+bytes = 92257
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2021/48820099999.csv"]
@@ -5812,6 +7138,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/54511099999.csv"
 sha256 = "13f7d6d420a517a0b10eb3990c6baddf2efc24c4e059b92f037219bc9cdd3bb4"
 bytes = 92981
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2021/60135099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/60135099999.csv"
+sha256 = "59ec14cfc505e957dd124f83d3d40d047666be39b9975ef2e1e518cf70880021"
+bytes = 80673
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2021/60390099999.csv"]
@@ -5874,16 +7206,46 @@ sha256 = "a1850631efa8b790b164b5791bbf5034feb435c6dfbdf9367f2fed0bd2c52ebf"
 bytes = 37731
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2021/62366099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/62366099999.csv"
+sha256 = "139d21809e30dc60d63096b80fa8f9b50ad93397b8f48aea07ae133feb3d8430"
+bytes = 85989
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2021/62721099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/62721099999.csv"
 sha256 = "2d5dab4c100b2dba4da8116d1afe6af4e6dd2552b432a69860eb5251f25a6d17"
 bytes = 78624
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2021/62941099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/62941099999.csv"
+sha256 = "18166862440925cd8e52a03b64d99d2528b2d98032e354698f27f7841017eea8"
+bytes = 1404
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2021/63125299999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/63125299999.csv"
+sha256 = "fff5c8663877f00b3cb609266f5b8d0bcfc3c19b80658dd6f537bcf1935f4744"
+bytes = 57809
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2021/63260099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/63260099999.csv"
 sha256 = "6a9f27032e793af876d97f903ca6edc15cd55c0bfff4b1d2d97ad2b28997b211"
 bytes = 79648
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2021/63450099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/63450099999.csv"
+sha256 = "72c899b26af5bf62a541de5cc3f081e485e4e1f77fd7a8c4917eab12c76054c0"
+bytes = 58848
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2021/63680099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/63680099999.csv"
+sha256 = "3ee0aa183c66709b197643bce08639f90ac48196354ce2e3558f53f32436c50e"
+bytes = 3941
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2021/63742099999.csv"]
@@ -5902,6 +7264,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/64211099999.csv"
 sha256 = "86700a54c958f3b23cc0ea96e595b2617dfd9998e8e5c17534395327a37df718"
 bytes = 544
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2021/64387099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/64387099999.csv"
+sha256 = "1c6385cea1dd42838744c5a7a558e6d4211cae8429b582dccf84f02388149269"
+bytes = 85154
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2021/64390099999.csv"]
@@ -6114,6 +7482,12 @@ sha256 = "fa87b77f91346f9757e2b873c2f3048445ad4a45615d4fc53673f00552ba74b3"
 bytes = 81249
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2021/78970011634.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/78970011634.csv"
+sha256 = "c71b0d9bd960b8a65af6fdaf7bf1fc605caa9879dcffd232a3d3fae2a55b466e"
+bytes = 88033
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2021/80222099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/80222099999.csv"
 sha256 = "b05c8fb70133afac0ccce84acc12494f6d798f34b42483eee6e6450e9e3ead13"
@@ -6162,6 +7536,12 @@ sha256 = "37c1722856ec56af4f6f3081e199a7081e05ba385ab0860d206c03346cf4170d"
 bytes = 92981
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2021/86218099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/86218099999.csv"
+sha256 = "0d4d3880a8394c9567bbe60058482c9b68bce84dfba46caed893eec3e6d9435a"
+bytes = 90696
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2021/86575099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/86575099999.csv"
 sha256 = "9aff6aab816909d006cb3a37aab94a603e4409c6cb8be87857ad9ae9b42f6f13"
@@ -6204,10 +7584,22 @@ sha256 = "d2ff8413ead1364034d9f096d3126b91d9a256971fb6c91f3b4e05f7555392ba"
 bytes = 82121
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2021/96315099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/96315099999.csv"
+sha256 = "0cf86244e989740d713982714eb41b4b1b92e201c9e0ce395aede160baa34e18"
+bytes = 85741
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2021/96749599999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/96749599999.csv"
 sha256 = "1880fcb7fb13037fef8f261dbc54bc3f5d2f49dee0c43facf15f8c69b104e79d"
 bytes = 87908
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2021/98429099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2021/98429099999.csv"
+sha256 = "3d2ede358b299e2983c809e2c25ee5e6ef07c839bdf612c210ed401458f63f9f"
+bytes = 88999
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2022/01492099999.csv"]
@@ -6222,9 +7614,27 @@ sha256 = "f41599307ab53b1f09826c49c04f730bd14d56a89db44b837fc2107fbf27c81a"
 bytes = 81704
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2022/03768399999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/03768399999.csv"
+sha256 = "463710a1753d876109205389c2a8c66dc5d847e77081acf847cdad5ae089d362"
+bytes = 80609
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2022/03969099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/03969099999.csv"
 sha256 = "f1d6082b026224aca82af157385ba108f9c95c956b74fa1a6756aa366b7293dd"
+bytes = 82069
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2022/04030099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/04030099999.csv"
+sha256 = "bbd3796449cf543028e80452798406110e2ab5c15cf3300e58c67d50b39cd95d"
+bytes = 82069
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2022/06180099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/06180099999.csv"
+sha256 = "ad37b3a1b7ef9de345ac8d3429e19141249cdd71a4bc3276084b6a5349b8cc8d"
 bytes = 82069
 fetched = "2026-11-02"
 
@@ -6282,6 +7692,18 @@ sha256 = "d8a78fe68203f165eb318a1a214222e826112da859f496d8135142e33c548f7e"
 bytes = 83529
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2022/11423299999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/11423299999.csv"
+sha256 = "e389d4b04bf603d79ea0544070c8febaa47855a07e736dc1846f886e52ea711c"
+bytes = 81704
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2022/11816099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/11816099999.csv"
+sha256 = "8a2784cd84c17dcb30cff2826cf0eae530ea1083ee7894f099502eba500432bb"
+bytes = 84624
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2022/12105199999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/12105199999.csv"
 sha256 = "2658355d7c5f867a2b7a27ea9e6bd6c15e0e0d55c43c0c4c9b0a0ae2fe13907b"
@@ -6294,10 +7716,46 @@ sha256 = "40582f3295b04ad6985e5dde86b563148c73d68582401f73535dfbea6f029e6a"
 bytes = 25643
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2022/13272099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/13272099999.csv"
+sha256 = "4c4ef4486c499dd5ed4c39837f212098b058a7370f41f63a75b1d76a39ddaf53"
+bytes = 82434
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2022/13353099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/13353099999.csv"
+sha256 = "ff1583b0e26e124131340b5cfb9ccd53c8e4edea569c238d766a9e8389546887"
+bytes = 83164
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2022/13462499999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/13462499999.csv"
+sha256 = "30d6760e85a698a4b037a5931d8ab265bfea57ea56454709e45e343d47fdaf5b"
+bytes = 86814
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2022/13481199999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/13481199999.csv"
+sha256 = "a041b27b9d337eae14a82ec475107db0c91dffdefd4df07a9ac82c7241f561be"
+bytes = 79879
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2022/13586099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/13586099999.csv"
+sha256 = "cf65baf28ed2bc718ec698fd69c66c3fa5524dcb52150589ae83e71a1d3d781b"
+bytes = 82434
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2022/13615099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/13615099999.csv"
 sha256 = "ba1702bd6684fcb62865b24b6018c8f049ad1f7333af1ae17f05ec28bcd1b521"
 bytes = 83894
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2022/14014099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/14014099999.csv"
+sha256 = "e22cc725483c9103fb148b1cf075b8bc1f8f811e41778c83809a075540c3f823"
+bytes = 83529
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2022/14240099999.csv"]
@@ -6316,6 +7774,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/15614099999.csv"
 sha256 = "c13950b3ee1fbd6c9b4029b548fe556cf1f6f83f256a0c5c26fe16274de8209d"
 bytes = 82069
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2022/16235099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/16235099999.csv"
+sha256 = "c3fcf869d509bb6d396ca48b55467bd1640c5f1a43dfb050ec513369063c88d0"
+bytes = 81339
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2022/16716099999.csv"]
@@ -6384,6 +7848,18 @@ sha256 = "5b8535892eba7122ed2490ada9ccc3e0f28f4f7131627be62f198969b86d4014"
 bytes = 83529
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2022/37549099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/37549099999.csv"
+sha256 = "201aa91fba6e031facc35ad483c9c6d9fa4950c1ee4309582e9e2e87a95f669a"
+bytes = 87179
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2022/37864099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/37864099999.csv"
+sha256 = "cb4a674b6491da98108c9969352d49482420270630b6b74dcf35b8b7e205d8cb"
+bytes = 83529
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2022/38353199999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/38353199999.csv"
 sha256 = "d3b452614f206e662133dda77e1031e0d87e3143632b1f5fe90c2bf7cb37d5a2"
@@ -6430,6 +7906,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/40270099999.csv"
 sha256 = "7b2499bc2fad8c4832371975ff9f64ab054eacf48e271b261a502335a66c9b08"
 bytes = 87179
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2022/40437099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/40437099999.csv"
+sha256 = "523c3127d619012726647f51c48ed20f4350031f45b3cc77213bf918cc598b55"
+bytes = 89004
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2022/40582099999.csv"]
@@ -6528,6 +8010,12 @@ sha256 = "546443920ab1255136fc3dd5696fc79e274179ebeaed604d1a76d50b1b74e1b6"
 bytes = 84259
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2022/47662099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/47662099999.csv"
+sha256 = "0adca0a6d326d9f6a2a9ef6b2e62209926cbbe0a4d917c4bc25f7ccfe59348e7"
+bytes = 82434
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2022/48097099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/48097099999.csv"
 sha256 = "75e8e9546bb4bf857ae25dccd50a3ff9fe4cf557b050a180fad47eaabccc918c"
@@ -6538,6 +8026,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/48456099999.csv"
 sha256 = "24bc962361bf1dbcc60b2c91c191d8b350e216bd2b17625aa57b2f94a3b81ca8"
 bytes = 87179
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2022/48647099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/48647099999.csv"
+sha256 = "2265e71e9e4f3841bda80b79591142bf14a86db69bbd63005d074e52f9c1a12a"
+bytes = 93019
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2022/48820099999.csv"]
@@ -6562,6 +8056,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/54511099999.csv"
 sha256 = "2568a41add104a399b8260a5326ff9a0fe67e7af9fbe973cc593a43a88089c88"
 bytes = 93749
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2022/60135099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/60135099999.csv"
+sha256 = "9ce062d042ad068e3a672c3289af1f066698b0c9643e7df1e76dbe5fee74e3dd"
+bytes = 81339
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2022/60390099999.csv"]
@@ -6624,16 +8124,46 @@ sha256 = "79b613e5f6b6fcc1e9f2c31c7baed21f5900de71096fbbf206e74327a74c748d"
 bytes = 71457
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2022/62366099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/62366099999.csv"
+sha256 = "9a488deda7cca3269558e3fb4c7c44e561d31fa1b31f56cd3afdd1e91e8735ff"
+bytes = 87179
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2022/62721099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/62721099999.csv"
 sha256 = "427e4d22099718ff3c9342c144010ef5c85d3552c9c078825867d1561245cb08"
 bytes = 80440
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2022/62941099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/62941099999.csv"
+sha256 = "a3a933f0f4440a8c3dc56d59699c1b25806889613483c4bdb525fbde171a14e0"
+bytes = 1185
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2022/63125299999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/63125299999.csv"
+sha256 = "adfae8bde77ee53af12497b086f2ba6c5a814857aafeee366c7870972ca1a2ad"
+bytes = 55739
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2022/63260099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/63260099999.csv"
 sha256 = "a2b3505db5526abfd8a2b70ece8ddf461c09840e8d6da35520b810860833364d"
 bytes = 80974
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2022/63450099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/63450099999.csv"
+sha256 = "89ee5ae18c58e3bdd56745ad90b3fa8982a317155c417aa235c8ec7e4e052c06"
+bytes = 70224
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2022/63680099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/63680099999.csv"
+sha256 = "48c63264c66d0837a5991ff76f610952bddafcbebc49fa63c41ecfb706857d36"
+bytes = 23917
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2022/63742099999.csv"]
@@ -6652,6 +8182,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/64211099999.csv"
 sha256 = "a290b5e4e324bd71b33b08f87e2342d702b3080289174ad041fb55d4b34af26a"
 bytes = 1954
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2022/64387099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/64387099999.csv"
+sha256 = "80f29c6766a156955122a1b32925d2210c068592b39041cee3a9b53ebd3c769d"
+bytes = 87544
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2022/64390099999.csv"]
@@ -6870,6 +8406,12 @@ sha256 = "5ba3acba784d92673f2651ee0e8c221a6ea97244300ea20b6a561afd9f5894f5"
 bytes = 83301
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2022/78970011634.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/78970011634.csv"
+sha256 = "94d8039e4d47fde3689d287281f37640558650933ecd004a3dcf5057c0554033"
+bytes = 88274
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2022/80222099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/80222099999.csv"
 sha256 = "1b5e1c4f374531c85e8066ddf61fe981a1476d55f45937784b87fe0f95f4f879"
@@ -6918,6 +8460,12 @@ sha256 = "e3865670f9387522a638867868fb8b73493e486803214342988d3de2c1d19981"
 bytes = 93749
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2022/86218099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/86218099999.csv"
+sha256 = "fe0789ceef4f212b519413492dcc5d4e6debe0a80038d46b69f8ee94caf823bf"
+bytes = 91194
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2022/86575099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/86575099999.csv"
 sha256 = "dd7b606515bcb25fa1f44a44ec1b8ac27276278367629ad20620b7d53839b61a"
@@ -6960,10 +8508,22 @@ sha256 = "deecef57f88585c6132f1596b67b6e31382f5b1979d9cacf084ce8eb91be554b"
 bytes = 82799
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2022/96315099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/96315099999.csv"
+sha256 = "624b14717f9c43a6537861893d6ed6d3b1e87de7081b2e8ce9240f3975f0702e"
+bytes = 86449
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2022/96749599999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/96749599999.csv"
 sha256 = "fbbbcda6cbaabb9dd66aa8b4f2958fed7aba438d2312b004e28e58ba52f10e3c"
 bytes = 46744
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2022/98429099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2022/98429099999.csv"
+sha256 = "ccc684f2db1d64b772f0913d8b84e6a53f36ddfdf8c1ed60b04ed222129a8f38"
+bytes = 89734
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2023/01492099999.csv"]
@@ -6978,9 +8538,27 @@ sha256 = "396ddb79c0c99eac32fe0884537a6392f117c0f4f29518f1236fe3ebc62cd6e1"
 bytes = 81704
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2023/03768399999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/03768399999.csv"
+sha256 = "652bd86c1ad26403acc1ec122c5f79ce27b05751cf9cae78f5fe4b99a0d4d0c3"
+bytes = 80609
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2023/03969099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/03969099999.csv"
 sha256 = "a4031cd0d7930ce1ea7b8a4281b3391173cb32043e0c02654dc2ac62b9ca1e78"
+bytes = 82069
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2023/04030099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/04030099999.csv"
+sha256 = "3ed95ef83272ff422f05c2b3437a6fa52b0e307264cba81afa53ccf01ac1395b"
+bytes = 82069
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2023/06180099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/06180099999.csv"
+sha256 = "f2426aff2c96182dc7e860b57e47815a249acc4fa16819b4aa89507a522e690c"
 bytes = 82069
 fetched = "2026-11-02"
 
@@ -7038,6 +8616,18 @@ sha256 = "c4968e0ef5dd52fdfcac8286eef53a6d98e093ea6b1e0c58be22fb6c573f75bb"
 bytes = 83529
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2023/11423299999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/11423299999.csv"
+sha256 = "1e550c6b91b50e4783b0c874a5a7a5fe85357ec15a07e0ff03bc39bbbea8cdaf"
+bytes = 81704
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2023/11816099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/11816099999.csv"
+sha256 = "bf6c62958dcbf754c4e3736ec4064ed1be6de36d4d29477428c04335df81bdf4"
+bytes = 84624
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2023/12105199999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/12105199999.csv"
 sha256 = "365ee88dc7692368899bb354a3dbe1fdf0cae80e76f3684b6b3467ceecc0051a"
@@ -7050,10 +8640,46 @@ sha256 = "454d717f1ecaf2b8caf4742c8aab9f1df46a001fe0bd844aaa64959d97f09220"
 bytes = 61971
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2023/13272099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/13272099999.csv"
+sha256 = "96f3cac306356669b6155601d36e3061b82469e3ce127af92d86d4fa7c62fd99"
+bytes = 82434
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2023/13353099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/13353099999.csv"
+sha256 = "4863e99edd310523e17cf5c048939ca7bd0f6cfd7344b6d0e42591b68dcc2a82"
+bytes = 83164
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2023/13462499999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/13462499999.csv"
+sha256 = "8416d01165ca5380f7f5d090a777a6dc7a7d67a85c98d1e58bb37780a34ada92"
+bytes = 86814
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2023/13481199999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/13481199999.csv"
+sha256 = "24b3784566c67599a3887c98ec5ed542a6f17658f2021258f8c56ab4c95aa940"
+bytes = 79879
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2023/13586099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/13586099999.csv"
+sha256 = "8f090766814b1cc14e1ec3c460aa5a8c83236cecbebc3a4e4e52e20969d23383"
+bytes = 82434
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2023/13615099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/13615099999.csv"
 sha256 = "e3ef2ab99566c8b28ea94be080f58a934bf7e8b8366ce9645b323bd385539a71"
 bytes = 83894
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2023/14014099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/14014099999.csv"
+sha256 = "4cd90b024206c762411f26549667ad7055acf0d884fd3e8a5ef720ce650fe381"
+bytes = 83529
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2023/14240099999.csv"]
@@ -7072,6 +8698,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/15614099999.csv"
 sha256 = "d5e6a659562dc7f8d3dbf2f5f4fefc648962d608f24d658a6b1ab3d292df624c"
 bytes = 82069
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2023/16235099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/16235099999.csv"
+sha256 = "ebed477c01682c117bc7525651f5c84be5908717377411953009075c03fbc699"
+bytes = 81339
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2023/16716099999.csv"]
@@ -7140,6 +8772,18 @@ sha256 = "b736773e49675c6c9cf3df5ebc9d93ce8f89e5bff851d38ad3da9f019e56c492"
 bytes = 83529
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2023/37549099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/37549099999.csv"
+sha256 = "3cbeda98464b49ea33e935df244ece542584a35c634a163ca24da6e832ed44d2"
+bytes = 87179
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2023/37864099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/37864099999.csv"
+sha256 = "a3a6c04fc1e3058b95c5d6b9bb037aed8ff02568d24dd6f749ee26d94d10c02a"
+bytes = 83529
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2023/38353199999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/38353199999.csv"
 sha256 = "9ff24805613ffdc6e9892a293a9d38c2f0f083294f663c160d49d468ef087960"
@@ -7186,6 +8830,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/40270099999.csv"
 sha256 = "0338cc4090a9176ddf0b28d470847292f6ec4c754a3661435e0aa3e8256ca463"
 bytes = 87179
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2023/40437099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/40437099999.csv"
+sha256 = "283e72310076223cf4aa34f085f1945d97ede7e232d769820226d3cbee44bdc4"
+bytes = 89004
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2023/40582099999.csv"]
@@ -7284,6 +8934,12 @@ sha256 = "a2008f06df3a093e194cbfd37aa543bb3d1c86474b6b569b88bf93bec9cbf337"
 bytes = 84259
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2023/47662099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/47662099999.csv"
+sha256 = "28c49b1ee029a264aa6d34c730c299330b9c18a06555b8ae481f5eb13f049540"
+bytes = 82434
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2023/48097099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/48097099999.csv"
 sha256 = "a2cf7bc992ebe026e419d1489758734b7982f15bf4a00a7d56a3a77003920d38"
@@ -7294,6 +8950,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/48456099999.csv"
 sha256 = "61980757c546968b628f6488c84d2a3d943fe24567a08fa0a74284ac1b239f4d"
 bytes = 87179
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2023/48647099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/48647099999.csv"
+sha256 = "dcb680fd009d7c6ac5925bdc42e623dfdbd895ca42d8e28061a1619a33c4e6cb"
+bytes = 93019
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2023/48820099999.csv"]
@@ -7318,6 +8980,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/54511099999.csv"
 sha256 = "5de9a8ed28e6f634e79385c8ed1e6f394ac11941722ae07763dc26731e918b3c"
 bytes = 93749
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2023/60135099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/60135099999.csv"
+sha256 = "bf03eb6e4e895a95ee6b7f34097a994a6be110738d4aaec78f011759cac70108"
+bytes = 81339
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2023/60390099999.csv"]
@@ -7380,16 +9048,52 @@ sha256 = "d78fb3d25b992805be88de13a53fd30fa7b14e4d32154c50cc55d6eac71d8e6d"
 bytes = 82545
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2023/62052599999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/62052599999.csv"
+sha256 = "dd63b8bb79572b2f5233cd89388768bd8c93345a416020dd4b4247150a594b38"
+bytes = 530
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2023/62366099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/62366099999.csv"
+sha256 = "03ae0fa4db87e68fc67ff583c2d58c77681a88a785892c5526d4a3ce2bb45863"
+bytes = 87179
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2023/62721099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/62721099999.csv"
 sha256 = "f1a59bad5717c22a0017123b9f543e82f45ae7c2881d80d115fec76d98611f26"
 bytes = 19377
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2023/62941099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/62941099999.csv"
+sha256 = "4e2c1a3b30a30321bdb2f0b497da1cc1e7531df981efc3807de1ccd7adc4a84d"
+bytes = 4032
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2023/63125299999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/63125299999.csv"
+sha256 = "3acd9d27107a43851078ed97d60b0670308c0efdb0fd1d5997cdf5c749cfd337"
+bytes = 76669
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2023/63260099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/63260099999.csv"
 sha256 = "81fd50e83c8c09d43bf06015758631bed60a32df34d4cff7fe69a6222ed5df4b"
 bytes = 80974
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2023/63450099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/63450099999.csv"
+sha256 = "2e80d65b1013bdd2ef582f8410cd11e580fb3702ad41cfe24555999eb9efc284"
+bytes = 86340
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2023/63680099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/63680099999.csv"
+sha256 = "49f5cb336c773cfdb7c78893ba50e7dc94a85c870de0fa789bd8ed89e5a47538"
+bytes = 10751
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2023/63742099999.csv"]
@@ -7408,6 +9112,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/64211099999.csv"
 sha256 = "afa6ffc406fdecb6427249bab950ae4dbee3939fd00b9f56efd6e43764a5ab1b"
 bytes = 5244
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2023/64387099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/64387099999.csv"
+sha256 = "2d1856f624b93a9d43ed869188f8485a81deb0fe96b3167bf661fb048d24b4dd"
+bytes = 87544
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2023/64390099999.csv"]
@@ -7626,6 +9336,12 @@ sha256 = "1d7869107471b5bc5425410a375b95b7f2edd8b45a0b014ed74c3a1fbe6e959f"
 bytes = 83529
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2023/78970011634.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/78970011634.csv"
+sha256 = "caf569f9f827453effaa63e60cbd8e888ee0d8cb9952d4c369b6fa9b25ebe031"
+bytes = 88274
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2023/80222099999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/80222099999.csv"
 sha256 = "61490528320c9a1a5ad437a9ea1cc06f515a693f5dcf4a8aec60f3948472ce85"
@@ -7666,6 +9382,12 @@ fetched = "2026-11-02"
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/85574099999.csv"
 sha256 = "4237e72acf7303d959f544cfc0311414c7991b92e11a5454e29038323300bdcc"
 bytes = 93749
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2023/86218099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/86218099999.csv"
+sha256 = "6b970827a36bd626613569aefcc33807b5c8f79e1fc968b2c22ec627765050c4"
+bytes = 91194
 fetched = "2026-11-02"
 
 [files."noaa-gsod/2023/86575099999.csv"]
@@ -7710,10 +9432,22 @@ sha256 = "37bb8e64b916484ea03053f78f80006ccdf1f17cccc469da0d5b4f69bd4c2b83"
 bytes = 82799
 fetched = "2026-11-02"
 
+[files."noaa-gsod/2023/96315099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/96315099999.csv"
+sha256 = "4bf2ffbcf87495264c8690bc318be3a823bd7d9b20ca2d0f4d42069dd18a0c9d"
+bytes = 86449
+fetched = "2026-11-02"
+
 [files."noaa-gsod/2023/96749599999.csv"]
 url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/96749599999.csv"
 sha256 = "2ecb009652a8540e18ed3a54dffdd46ffc8193ff854be9a4d2655a0f92d58897"
 bytes = 86402
+fetched = "2026-11-02"
+
+[files."noaa-gsod/2023/98429099999.csv"]
+url = "https://noaa-gsod-pds.s3.amazonaws.com/2023/98429099999.csv"
+sha256 = "0259aaf5a545036067fe4e3ac61f2b3173463dbab1cfc689def26cd6de9d3f81"
+bytes = 89734
 fetched = "2026-11-02"
 
 [files."noaa-isd/isd-history.csv"]
