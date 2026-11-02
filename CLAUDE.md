@@ -9,7 +9,7 @@ A whole-system simulator in Rust: fields, networks, populations, agents and rule
 clock, with ledgers that must close at every seam, replayable runs, ensembles, and a
 sparse web viewer. Anselm's design brief is `devlog/20261031-design-brief.md`; the
 milestone ladder is `devlog/20261031-milestones.md`; `README.md` says what exists and
-how to run it. Not deployed anywhere; it runs on canada1.
+how to run it. Development runs on canada1; a read-only copy is deployed to esimv1.exe.xyz (since 2026-11-01).
 
 ## Where things are
 
@@ -20,7 +20,9 @@ how to run it. Not deployed anywhere; it runs on canada1.
   entry and `20261031-fitness.md`). System documentation for users: `docs/system/*.md`
   (terminology, honesty, modules, layers, manifests, ...); keep `docs/system/limits.md`
   current when a model's known faults change. `docs/index.json` is written by the server.
-- Deploy: none. See `project.toml`.
+- Deploy: a read-only copy at https://esimv1.exe.xyz/ (exe.dev VM `esimv1`, unit `esim.service`),
+  by hand with `deploy/deploy.sh esimv1` on Anselm's say; push is not deploy. The VM has Node
+  only: no Rust, no data cache; it serves the pages, projects, runs and docs that were rsynced.
 - Runs: `runs/` (gitignored, loose runs) and `projects/<area>/<name>/runs/` (project runs).
   Viewer: `web/`. `node server.mjs` (after `npm run build`) is the whole thing on :5181:
   built pages, `/runs/`, `/projects/`, socket.io over the CLI. `npm run dev` is for hot

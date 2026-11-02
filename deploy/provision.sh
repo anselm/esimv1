@@ -7,12 +7,14 @@
 #   deploy/provision.sh esimv1
 set -euo pipefail
 VM=${1:?vm name}
-SSH="ssh -o ServerAliveInterval=5 exe.dev ssh $VM"
+# direct ssh, not the gateway relay: the relay flattens newlines
+SSH="ssh -o ServerAliveInterval=5 -o StrictHostKeyChecking=accept-new exedev@$VM.exe.xyz"
 
-$SSH 'set -e
-  command -v node >/dev/null || { curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash - && sudo apt-get install -y nodejs; }
-  sudo mkdir -p /srv/esim && sudo chown -R $USER:$USER /srv/esim
-  sudo tee /etc/systemd/system/esim.service >/dev/null <<UNIT
+$SSH 'bash -s' <<'REMOTE'
+set -e
+command -v node >/dev/null || { curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash - && sudo apt-get install -y nodejs; }
+sudo mkdir -p /srv/esim && sudo chown -R $USER:$USER /srv/esim
+sudo tee /etc/systemd/system/esim.service >/dev/null <<UNIT
 [Unit]
 Description=esim read-only viewer and project server
 After=network.target
@@ -30,9 +32,10 @@ RestartSec=3
 [Install]
 WantedBy=multi-user.target
 UNIT
-  sudo systemctl daemon-reload
-  sudo systemctl enable esim.service
-  node --version'
+sudo systemctl daemon-reload
+sudo systemctl enable esim.service
+node --version
+REMOTE
 ssh -o ServerAliveInterval=5 exe.dev share port "$VM" 5181
 ssh -o ServerAliveInterval=5 exe.dev share set-public "$VM"
 echo "provisioned $VM; now deploy/deploy.sh $VM"

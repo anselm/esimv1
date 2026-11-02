@@ -8,13 +8,13 @@ set -euo pipefail
 VM=${1:?vm name}
 HERE=$(cd "$(dirname "$0")/.." && pwd)
 HOST="exedev@$VM.exe.xyz"
-RS="rsync -az --delete -e 'ssh -o ServerAliveInterval=5'"
+RS="rsync -az --delete -e 'ssh -o ServerAliveInterval=5 -o StrictHostKeyChecking=accept-new'"
 
 (cd "$HERE/web" && npm run build >/dev/null)
 # the static fallbacks the read-only server reads: kinds, projects index, outlines
 (cd "$HERE" && ./target/release/esim kinds --json > docs/kinds.json && ./target/release/esim projects --json > projects/index.json && ./target/release/esim sources --write >/dev/null)
 
-ssh -o ServerAliveInterval=5 "$HOST" 'mkdir -p /srv/esim/web'
+ssh -o ServerAliveInterval=5 -o StrictHostKeyChecking=accept-new "$HOST" 'mkdir -p /srv/esim/web'
 eval $RS "$HERE/web/dist" "$HERE/web/server.mjs" "$HERE/web/package.json" "$HOST:/srv/esim/web/"
 eval $RS --exclude='fields/*/*.f32.tmp' "$HERE/projects/" "$HOST:/srv/esim/projects/"
 eval $RS "$HERE/docs/" "$HOST:/srv/esim/docs/"
