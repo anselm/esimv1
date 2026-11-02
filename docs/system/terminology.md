@@ -85,6 +85,20 @@ efficiency, Kling-Gupta efficiency, correlation, bias, root mean square error.
 built, diversity, shocks and recovery, crossings, tears, and a verdict of holds,
 stretching or tearing.
 
+**Stretching.** A system absorbing a shock and returning: a stock that drops after a
+shock and is back within a band of its pre-shock level before the next shock arrives.
+Measured by the auditor on ledger stocks against shock episodes in the log; the measure
+is recovery time against recurrence interval and needs no model of the system.
+
+**Tearing.** A shock a system does not recover from: a stock that has not returned to
+its band before the next shock, or a year on with no shock following; an extinction; a
+ledger that fails to close. Recovery slower than recurrence is the definition, and the
+verdict "tearing" is given only on that evidence. A crossing of a published threshold is
+reported beside it, with its source, but is not itself called a tear until something in
+the run fails to recover.
+
+**Holds.** Neither: no shocks, or shocks that moved nothing.
+
 **Crossing.** An event a module publishes the first time a stated threshold is passed: a
 country leaving the human climate niche, the warming entering a tipping element's
 range. Always with a source and a confidence.
