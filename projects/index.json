@@ -67,8 +67,8 @@
       "people.wetbulb",
       "tipping.elements"
     ],
-    "name": "planet",
-    "path": "anselm/planet",
+    "name": "planet-2100",
+    "path": "anselm/planet-2100",
     "runs": [
       {
         "all_ledgers_closed": true,

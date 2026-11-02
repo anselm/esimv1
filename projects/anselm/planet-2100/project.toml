@@ -1,6 +1,6 @@
 # A project: who asked for what, in their words, and the manifest beside it.
 area = "anselm"
-name = "planet"
+name = "planet-2100"
 title = "The planet, with people on it"
 description = "One project, several assumptions. The planet core (observed emissions into a carbon ledger, impulse-response sinks, methane and N2O, a two-layer energy balance, thermal sea level) with countries on top: people per country from the UN, each country's temperature from its own record scaled by the run's warming, the people living outside the human climate niche, and the tipping elements' thresholds checked against the warming. Variants: the hindcast to 2025; emissions held at the 2024 rate to 2100; emissions to zero by 2050. Each is an assumption, never a forecast."
 created = "2026-11-02"

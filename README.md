@@ -31,7 +31,7 @@ framework against the use cases as rungs land.
   thermal sea level; and the first layers above the climate with the country as the unit:
   people per country (UN), each country's temperature from its own record scaled by the
   run's warming, people outside the human climate niche, and the tipping elements'
-  published thresholds checked against the warming. One project, `anselm/planet`, with
+  published thresholds checked against the warming. One project, `anselm/planet-2100`, with
   variants for the hindcast, emissions held at the 2024 rate, and emissions to zero by
   2050: each an assumption, never a forecast.
 - `crates/audit`: the independent auditor of a finished run: spend-down of every ledger
