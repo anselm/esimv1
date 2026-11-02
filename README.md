@@ -1,4 +1,6 @@
-# earth-simulator-1
+# esim, version 1
+
+Repository `anselm/esimv1` (the folder on canada1 is still `earth-simulator-1`). Version 0.1.0.
 
 A whole-system simulator: many representations (fields, networks, populations, agents,
 rules), many rates, one shared world state, with conservation checked at every seam by

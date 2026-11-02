@@ -1,4 +1,5 @@
 <script>
+  import Badge from './Badge.svelte'
   import { link } from './router.svelte.js'
   import { isoDate, num } from './fmt.js'
   import Status from './Status.svelte'
@@ -45,7 +46,7 @@
 </script>
 
 <a use:link={{}} class="floating left-3 top-3 hover:text-brand">← projects</a>
-<div class="floating right-3 top-3 mono text-xs muted select-none">esim</div>
+<div class="floating right-3 top-3 mono text-xs select-none"><Badge /></div>
 
 {#await load()}
   <p class="muted text-sm">loading…</p>

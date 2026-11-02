@@ -1,4 +1,5 @@
 <script>
+  import Badge from './Badge.svelte'
   // One documentation page, rendered from its Markdown; an edit mode that saves through
   // the server. `doc=new` is the form for a new page.
   import { link, go } from './router.svelte.js'
@@ -42,7 +43,7 @@
   {#if !isNew && md !== null}
     <button class="hover:text-brand" onclick={() => { editing = !editing; draft = md }}>{editing ? 'cancel' : 'edit'}</button>
   {/if}
-  <span class="muted">esim</span>
+  <Badge />
 </div>
 
 {#if error && md === null}

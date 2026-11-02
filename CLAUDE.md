@@ -1,4 +1,4 @@
-# earth-simulator-1
+# esimv1 (folder: earth-simulator-1)
 
 Project-specific orientation only. House policy (devlog, git, UX, writing, deploy) comes
 from the harness and is not repeated here.
@@ -13,7 +13,9 @@ how to run it. Not deployed anywhere; it runs on canada1.
 
 ## Where things are
 
-- Code: this folder. Repo: `anselm/earth-simulator-1` (private, nothing pushed by agents).
+- Code: this folder. Repo: `anselm/esimv1` (renamed from earth-simulator-1 on 2026-11-01; GitHub
+  redirects the old name). The local folder is still `earth-simulator-1` until Anselm moves it
+  from the manager; the room, the memory index and the harness registry key on the folder.
 - Devlog: `devlog/` (dated entries; read the tail first, especially the latest milestone
   entry and `20261031-fitness.md`). System documentation for users: `docs/system/*.md`
   (terminology, honesty, modules, layers, manifests, ...); keep `docs/system/limits.md`

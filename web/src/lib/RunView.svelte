@@ -1,4 +1,5 @@
 <script>
+  import Badge from './Badge.svelte'
   // One run, composed from its manifest: the kernel's header and time cursor first, then
   // each module's own views in the manifest's order (from describe.json, written by the
   // run), then the auditor's reading, the scores, the ledgers, and the raw events and
@@ -71,7 +72,7 @@
 </script>
 
 <a use:link={back} class="floating left-3 top-3 hover:text-brand">← {backLabel}</a>
-<div class="floating right-3 top-3 mono text-xs muted select-none">esim</div>
+<div class="floating right-3 top-3 mono text-xs select-none"><Badge /></div>
 
 {#await load()}
   <p class="muted text-sm">loading…</p>

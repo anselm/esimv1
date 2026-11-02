@@ -1,4 +1,5 @@
 <script>
+  import Badge from './Badge.svelte'
   // A new project: a path, a title, a description in the person's words. Claude drafts
   // a manifest from the description against the kinds the kernel knows; the kernel checks
   // it; the person can edit the TOML or paste their own; then the folder is created.
@@ -52,7 +53,7 @@
 </script>
 
 <a use:link={{}} class="floating left-3 top-3 hover:text-brand">← projects</a>
-<div class="floating right-3 top-3 mono text-xs muted select-none">esim</div>
+<div class="floating right-3 top-3 mono text-xs select-none"><Badge /></div>
 
 <section class="max-w-3xl">
   <h1 class="text-xl font-medium">New project</h1>

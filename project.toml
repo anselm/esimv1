@@ -1,6 +1,6 @@
 name = "earth-simulator-1"
 horizon = "2026"
-repo = "anselm/earth-simulator-1"
+repo = "anselm/esimv1"
 code = "local"
 deploy = "none"
 status = "active"        # active | parked (struck through on the dashboard) | archived (hidden)

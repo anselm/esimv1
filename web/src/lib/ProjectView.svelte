@@ -1,4 +1,5 @@
 <script>
+  import Badge from './Badge.svelte'
   // One project: what was asked, the manifest, the runs, and a button to run it again.
   import { link, go } from './router.svelte.js'
   import { req, onLog, onChanged } from './socket.js'
@@ -79,7 +80,7 @@
 </script>
 
 <a use:link={{}} class="floating left-3 top-3 hover:text-brand">← projects</a>
-<div class="floating right-3 top-3 mono text-xs muted select-none">esim</div>
+<div class="floating right-3 top-3 mono text-xs select-none"><Badge /></div>
 
 {#if error && !meta}
   <p class="text-sm text-leak">{error}</p>

@@ -35,6 +35,7 @@ const here = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.resolve(here, '..')
 const ESIM = process.env.ESIM_BIN || path.join(ROOT, 'target/release/esim')
 const PORT = Number(process.env.PORT || 5181)
+const VERSION = JSON.parse(fs.readFileSync(path.join(here, 'package.json'), 'utf8')).version
 const MODEL = process.env.ESIM_MODEL || 'claude-opus-5-5'
 // Second tier when the Anthropic API is not usable (no key, no credit): a local model
 // through ollama, labelled as such in the answer. Third tier is the person's own TOML.
@@ -331,5 +332,5 @@ io.on('connection', (socket) => {
 })
 
 server.listen(PORT, '0.0.0.0', () => {
-  console.log(`esim on :${PORT}, root ${ROOT}, esim ${ESIM}, viewer ${fs.existsSync(DIST) ? 'from dist/' : 'NOT BUILT (npm run build)'}, model ${MODEL} (key ${process.env.ANTHROPIC_API_KEY ? 'set' : 'missing'}), local ${LOCAL_MODEL} at ${OLLAMA}`)
+  console.log(`esim ${VERSION} on :${PORT}, root ${ROOT}, esim ${ESIM}, viewer ${fs.existsSync(DIST) ? 'from dist/' : 'NOT BUILT (npm run build)'}, model ${MODEL} (key ${process.env.ANTHROPIC_API_KEY ? 'set' : 'missing'}), local ${LOCAL_MODEL} at ${OLLAMA}`)
 })

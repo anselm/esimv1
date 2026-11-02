@@ -601,6 +601,7 @@ fn parse_sets(args: &[String]) -> Result<Vec<(String, String, f64, f64)>, String
 fn main() {
     let args: Vec<String> = std::env::args().collect();
     let res = match args.get(1).map(String::as_str) {
+        Some("--version") | Some("version") => { println!("esim {}", env!("CARGO_PKG_VERSION")); Ok(()) }
         Some("run") => {
             let path = args.get(2).map(PathBuf::from);
             let out = args.iter().position(|a| a == "--out").and_then(|i| args.get(i + 1)).map(PathBuf::from).unwrap_or_else(|| PathBuf::from("runs"));

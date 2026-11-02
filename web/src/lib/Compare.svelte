@@ -1,4 +1,5 @@
 <script>
+  import Badge from './Badge.svelte'
   // Two futures side by side: a project's variants, latest run each, under one cursor.
   // Big counters that move with the cursor, the maps, the crossings so far, and a country
   // picker that draws one country's path from the run logs. Built for the 2100 question.
@@ -110,7 +111,7 @@
 </script>
 
 <a use:link={{ project: path }} class="floating left-3 top-3 hover:text-brand">← {path}</a>
-<div class="floating right-3 top-3 mono text-xs muted select-none">esim</div>
+<div class="floating right-3 top-3 mono text-xs select-none"><Badge /></div>
 
 {#if error}
   <p class="text-sm text-leak">{error}</p>

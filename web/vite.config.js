@@ -4,8 +4,13 @@ import tailwindcss from '@tailwindcss/vite'
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { execSync } from 'node:child_process'
+import { createRequire } from 'node:module'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
+const pkg = createRequire(import.meta.url)('./package.json')
+let commit = ''
+try { commit = execSync('git rev-parse --short HEAD', { cwd: here }).toString().trim() } catch { /* no git */ }
 
 // Serve the sibling ../runs and ../projects folders at /runs/ and /projects/ in dev and
 // preview. A production deploy copies them into dist/ (not done here).
@@ -43,6 +48,7 @@ function serveFolder(prefix, root) {
 }
 
 export default defineConfig({
+  define: { __ESIM_VERSION__: JSON.stringify(pkg.version), __ESIM_COMMIT__: JSON.stringify(commit) },
   plugins: [
     tailwindcss(), svelte(),
     serveFolder('/runs/', path.resolve(here, '../runs')),

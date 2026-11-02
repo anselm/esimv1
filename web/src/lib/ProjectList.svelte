@@ -1,4 +1,5 @@
 <script>
+  import Badge from './Badge.svelte'
   // The front page: projects, each a folder under projects/<area>/<name>. Read from the
   // project server when it is up, from the static index otherwise.
   import { link, go } from './router.svelte.js'
@@ -56,7 +57,7 @@
   <a use:link={{ isNew: true }} class="hover:text-brand" title="new project">+ project</a>
   <a use:link={{ kinds: true }} class="hover:text-brand" title="module kinds">kinds</a>
   <a use:link={{ docs: true }} class="hover:text-brand" title="documentation">docs</a>
-  <span class="muted">esim</span>
+  <Badge />
 </div>
 
 {#if error}
