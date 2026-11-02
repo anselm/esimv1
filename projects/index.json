@@ -77,6 +77,60 @@
   {
     "area": "anselm",
     "by": "anselm, via claude 2026-11-01",
+    "created": "2026-11-02",
+    "description": "The one-box planet run on to 2100 under one stated assumption: the world keeps emitting at the 2024 rate. Not a forecast; the question 'what if nothing changes'. CO2 only, with the P1 caveats: the carbon cycle keeps too much airborne and the other gases and aerosols are absent.",
+    "kinds": [
+      "carbon.emissions",
+      "carbon.pools",
+      "energy.twolayer",
+      "obs.planet"
+    ],
+    "name": "planet-co2-1850-2100",
+    "path": "anselm/planet-co2-1850-2100",
+    "runs": [
+      {
+        "all_ledgers_closed": true,
+        "digest": "c32a05f0e7a5d9ad",
+        "end": 4102444800,
+        "events": 18293,
+        "id": "p2-planet-co2-held-2100-a055ed99-c32a05f0",
+        "name": "p2-planet-co2-held-2100",
+        "seed": 1,
+        "start": -3786825600
+      }
+    ],
+    "title": "The 2100 scenario: emissions held at the 2024 rate"
+  },
+  {
+    "area": "anselm",
+    "by": "anselm, via claude 2026-11-01",
+    "created": "2026-11-02",
+    "description": "The same planet with emissions falling in a straight line from the 2024 rate to zero in 2050. Not a forecast; the question 'what if the fastest plausible turn happened'. Same caveats as P1.",
+    "kinds": [
+      "carbon.emissions",
+      "carbon.pools",
+      "energy.twolayer",
+      "obs.planet"
+    ],
+    "name": "planet-co2-zero-2050",
+    "path": "anselm/planet-co2-zero-2050",
+    "runs": [
+      {
+        "all_ledgers_closed": true,
+        "digest": "c0059f98dbf812bc",
+        "end": 4102444800,
+        "events": 18293,
+        "id": "p3-planet-co2-zero-2050-2c752f0a-c0059f98",
+        "name": "p3-planet-co2-zero-2050",
+        "seed": 1,
+        "start": -3786825600
+      }
+    ],
+    "title": "The other 2100: emissions to zero by 2050"
+  },
+  {
+    "area": "anselm",
+    "by": "anselm, via claude 2026-11-01",
     "created": "2026-11-01",
     "description": "The trivial rung: a source feeding two leaky buckets at different rates; the water ledger must close. A formula check, labelled as one.",
     "kinds": [

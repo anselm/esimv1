@@ -1,0 +1,7 @@
+# A project: who asked for what, in their words, and the manifest beside it.
+area = "anselm"
+name = "planet-co2-1850-2100"
+title = "The 2100 scenario: emissions held at the 2024 rate"
+description = "The one-box planet run on to 2100 under one stated assumption: the world keeps emitting at the 2024 rate. Not a forecast; the question 'what if nothing changes'. CO2 only, with the P1 caveats: the carbon cycle keeps too much airborne and the other gases and aerosols are absent."
+created = "2026-11-02"
+by = "anselm, via claude 2026-11-01"

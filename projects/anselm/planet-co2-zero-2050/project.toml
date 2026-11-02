@@ -1,0 +1,7 @@
+# A project: who asked for what, in their words, and the manifest beside it.
+area = "anselm"
+name = "planet-co2-zero-2050"
+title = "The other 2100: emissions to zero by 2050"
+description = "The same planet with emissions falling in a straight line from the 2024 rate to zero in 2050. Not a forecast; the question 'what if the fastest plausible turn happened'. Same caveats as P1."
+created = "2026-11-02"
+by = "anselm, via claude 2026-11-01"

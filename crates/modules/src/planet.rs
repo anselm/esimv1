@@ -68,6 +68,9 @@ pub struct EmissionsIn {
     name: String,
     include_land_use: bool,
     hold_last: bool,
+    /// What to assume after the record ends: "hold" (the last year's rate), "stop", or
+    /// "zero_by:YYYY" (a straight line from the last recorded rate to zero in that year).
+    after_record: String,
     last_tick: Option<Time>,
     fossil_total: f64, luc_total: f64,
     #[serde(skip)] data: Emissions,
@@ -79,6 +82,7 @@ impl EmissionsIn {
             name: name.to_string(),
             include_land_use: p.get("include_land_use").and_then(|v| v.as_bool()).unwrap_or(true),
             hold_last: p.get("hold_last").and_then(|v| v.as_bool()).unwrap_or(true),
+            after_record: esim_kernel::manifest::param_str(p, "after_record", "hold").to_string(),
             last_tick: None, fossil_total: 0.0, luc_total: 0.0, data: Emissions::default(),
         };
         e.load()?;
@@ -91,19 +95,28 @@ impl EmissionsIn {
         self.data = planet::owid_world_emissions(&mut f, &asset_url(&cat, "owid-co2-data")?)?;
         Ok(())
     }
-    /// Annual rate for a year; beyond the record, the last year's value if `hold_last`.
+    /// Annual rate for a year; beyond the record, the stated assumption. This is the one
+    /// place a planetary run stops being a hindcast, and the manifest must say which.
     fn rate(&self, s: &BTreeMap<i64, f64>, y: i64) -> f64 {
-        match s.get(&y) {
-            Some(v) => *v,
-            None if self.hold_last => s.iter().next_back().map(|(_, v)| *v).unwrap_or(0.0),
-            None => 0.0,
+        if let Some(v) = s.get(&y) { return *v; }
+        let Some((&ly, &lv)) = s.iter().next_back() else { return 0.0 };
+        if y < ly { return 0.0; } // before the record: nothing (the start concentration carries it)
+        if !self.hold_last { return 0.0; }
+        match self.after_record.split_once(':') {
+            Some(("zero_by", yr)) => {
+                let target: f64 = yr.parse().unwrap_or(ly as f64);
+                if target <= ly as f64 { 0.0 } else { (lv * (1.0 - (y as f64 - ly as f64) / (target - ly as f64))).max(0.0) }
+            }
+            _ if self.after_record == "stop" => 0.0,
+            _ => lv,
         }
     }
     pub fn describe(name: &str, p: &toml::Value) -> Describe {
         Describe::new("carbon.emissions", name, "Observed global CO2 emissions (Global Carbon Project via Our World in Data) released into the atmosphere month by month, fossil and land-use change as separate ledger sources. Nothing is modelled; this is the forcing that the record says happened.")
             .priority(0).dt("1 month (calendar)")
             .param("include_land_use", p.get("include_land_use").and_then(|v| v.as_bool()).unwrap_or(true), "", "land-use-change CO2 (deforestation etc.) as a second source account")
-            .param("hold_last", p.get("hold_last").and_then(|v| v.as_bool()).unwrap_or(true), "", "beyond the record, keep emitting at the last year's rate; false stops emissions")
+            .param("hold_last", p.get("hold_last").and_then(|v| v.as_bool()).unwrap_or(true), "", "false stops emissions when the record ends, whatever after_record says")
+            .param("after_record", esim_kernel::manifest::param_str(p, "after_record", "hold"), "", "assumption after the record's last year (2024): hold = the last rate for good; stop; zero_by:YYYY = a straight line to zero in that year. An assumption, never a forecast; the manifest notes must say which was chosen and why")
             .publish("carbon.emitted", "{ gtc, fossil_gtc, luc_gtc } for the month just added")
             .ledger(CARBON, "GtC", 1e-6)
             .report("carbon.emissions_gtc_yr", "GtC/yr").report("carbon.cumulative_gtc", "GtC")

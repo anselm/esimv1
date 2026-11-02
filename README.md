@@ -25,7 +25,9 @@ framework against the use cases as rungs land.
   cohort-to-individuals zoom), fire hazard, farm agents, calendar rules, nitrogen; and
   the first planetary rung, zero-dimensional: observed emissions into a carbon ledger,
   impulse-response sinks, a two-layer energy balance, and the records (Mauna Loa, Law
-  Dome, HadCRUT5, GISTEMP) as scoreboards.
+  Dome, HadCRUT5, GISTEMP) as scoreboards; and two 2100 scenarios on top of it, each a
+  stated assumption about emissions after the record (held at the 2024 rate; to zero by
+  2050), never a forecast.
 - `crates/audit`: the independent auditor of a finished run: spend-down of every ledger
   stock, diversity of populations, shocks and recovery, tears, a verdict.
 - `crates/cli`: `esim run | verify | ensemble | sweep | score | audit | check | describe |

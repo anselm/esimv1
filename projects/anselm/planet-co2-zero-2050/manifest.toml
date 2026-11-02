@@ -1,0 +1,46 @@
+# P3, the other 2100 scenario: the P1 planet run on to 2100 under the assumption that
+# emissions fall in a straight line from the 2024 rate to zero in 2050 and stay there.
+# That is not a forecast either; it is the question "what if the fastest plausible
+# turn happened". The hindcast part (1850 to
+# 2024) is scored against the records as in P1. Everything P1 leaves out is still left
+# out: other greenhouse gases, aerosols, sink saturation, climate-carbon feedback, and
+# the impulse-response carbon cycle is known to keep too much CO2 airborne (devlog
+# 20261101-p1-planet.md). The numbers after 2024 are therefore an upper-leaning sketch of
+# the CO2-only commitment, and the project says so on its page.
+
+[run]
+name = "p3-planet-co2-zero-2050"
+start = "1850-01-01"
+end = "2100-01-01"
+seed = 1
+close_every = "30d"
+notes = "Zero-dimensional planet, 1850 to 2100, monthly steps. After 2024 emissions fall in a straight line to zero in 2050: an assumption, not a forecast. CO2 only."
+
+[audit]
+scores = [["carbon.co2_ppm", "obs.co2_ppm"], ["energy.gmst_anom_c", "obs.gmst_hadcrut5_c"], ["energy.gmst_anom_c", "obs.gmst_gistemp_c"]]
+
+[[module]]
+name = "emissions"
+kind = "carbon.emissions"
+[module.params]
+include_land_use = true
+after_record = "zero_by:2050"
+
+[[module]]
+name = "carbon"
+kind = "carbon.pools"
+[module.params]
+co2_start_ppm = 286.8
+
+[[module]]
+name = "energy"
+kind = "energy.twolayer"
+[module.params]
+co2_ref_ppm = 286.8
+
+[[module]]
+name = "obs"
+kind = "obs.planet"
+[module.params]
+baseline_from = 1850
+baseline_to = 1900
