@@ -5,7 +5,8 @@
   import { link, go } from './router.svelte.js'
   import { req, onChanged, hello } from './socket.js'
   let writable = $state(false)
-  hello().then((h) => { writable = !h.readonly })
+  let readonly = $state(false)
+  hello().then((h) => { writable = !h.readonly; readonly = Boolean(h.readonly && !h.offline) })
   import { isoDate } from './fmt.js'
   import Verdict from './Verdict.svelte'
 
@@ -103,6 +104,6 @@
 {/if}
 
 <p class="mt-12 text-xs muted">
-  <a use:link={{ runs: true }} class="hover:text-brand">loose runs</a>
-  {#if source === 'static'} · project server is down; showing the files{/if}
+  {#if !readonly}<a use:link={{ runs: true }} class="hover:text-brand">loose runs</a>{/if}
+  {#if readonly} a read-only copy: clone <a class="hover:text-brand" href="https://github.com/anselm/esimv1">anselm/esimv1</a> to create, run or edit{/if}
 </p>

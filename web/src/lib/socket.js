@@ -19,7 +19,7 @@ export function req(name, payload = {}, timeoutMs = 600_000) {
       const t0 = Date.now()
       const wait = () => {
         if (s.connected) return send()
-        if (Date.now() - t0 > 4000) { clearTimeout(timer); return reject(new Error('project server not reachable')) }
+        if (Date.now() - t0 > 8000) { clearTimeout(timer); return reject(new Error('project server not reachable')) }
         setTimeout(wait, 100)
       }
       return wait()
