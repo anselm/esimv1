@@ -1,0 +1,165 @@
+# Climate tipping elements: the global warming (deg C above pre-industrial) at which an
+# assessment judged each likely to tip, as a central estimate with a range, and the
+# timescale of the change once triggered. Read by the tipping.elements module, which flags
+# the year a run's global anomaly passes each threshold. Nothing here feeds back yet.
+#
+# PROVENANCE: every row below was written from the agent's memory of Armstrong McKay et
+# al. 2022, "Exceeding 1.5 degrees C global warming could trigger multiple climate tipping
+# points", Science 377, eabn7950, Table 1. The numbers have NOT been checked against the
+# paper from this machine. confidence = "recalled" means exactly that; promote a row to
+# "checked" only after reading the paper's table, and correct it if it differs. The
+# consequence column is a one-line paraphrase, not a quotation.
+
+[[element]]
+id = "greenland-ice-sheet"
+title = "Greenland ice sheet collapse"
+low_c = 0.8
+central_c = 1.5
+high_c = 3.0
+timescale = "about 10,000 years (1,000 to 15,000)"
+consequence = "about seven metres of sea level over millennia"
+source = "Armstrong McKay et al. 2022, Table 1"
+confidence = "recalled"
+
+[[element]]
+id = "west-antarctic-ice-sheet"
+title = "West Antarctic ice sheet collapse"
+low_c = 1.0
+central_c = 1.5
+high_c = 3.0
+timescale = "about 2,000 years (500 to 13,000)"
+consequence = "about three metres of sea level over centuries to millennia"
+source = "Armstrong McKay et al. 2022, Table 1"
+confidence = "recalled"
+
+[[element]]
+id = "low-latitude-coral-reefs"
+title = "Low-latitude coral reef die-off"
+low_c = 1.0
+central_c = 1.5
+high_c = 2.0
+timescale = "about 10 years"
+consequence = "loss of reefs and the fisheries and coasts that depend on them"
+source = "Armstrong McKay et al. 2022, Table 1"
+confidence = "recalled"
+
+[[element]]
+id = "boreal-permafrost-abrupt-thaw"
+title = "Boreal permafrost abrupt thaw"
+low_c = 1.0
+central_c = 1.5
+high_c = 2.3
+timescale = "about 200 years (100 to 300)"
+consequence = "additional carbon and methane to the atmosphere"
+source = "Armstrong McKay et al. 2022, Table 1"
+confidence = "recalled"
+
+[[element]]
+id = "barents-sea-ice"
+title = "Barents Sea winter ice loss"
+low_c = 1.5
+central_c = 1.6
+high_c = 1.7
+timescale = "about 25 years"
+consequence = "regional; may alter northern hemisphere winter circulation"
+source = "Armstrong McKay et al. 2022, Table 1"
+confidence = "recalled"
+
+[[element]]
+id = "labrador-sea-convection"
+title = "Labrador-Irminger Sea convection collapse"
+low_c = 1.1
+central_c = 1.8
+high_c = 3.8
+timescale = "about 10 years (5 to 50)"
+consequence = "regional cooling around the North Atlantic; shifts in storm tracks"
+source = "Armstrong McKay et al. 2022, Table 1"
+confidence = "recalled"
+
+[[element]]
+id = "mountain-glaciers"
+title = "Extra-polar mountain glacier loss"
+low_c = 1.5
+central_c = 2.0
+high_c = 3.0
+timescale = "about 200 years (50 to 1,000)"
+consequence = "loss of seasonal water storage for the rivers below them"
+source = "Armstrong McKay et al. 2022, Table 1"
+confidence = "recalled"
+
+[[element]]
+id = "sahel-west-african-monsoon"
+title = "Sahel and West African monsoon shift"
+low_c = 2.0
+central_c = 2.8
+high_c = 3.5
+timescale = "about 50 years (10 to 500)"
+consequence = "a wetter or drier Sahel; either way a different one"
+source = "Armstrong McKay et al. 2022, Table 1"
+confidence = "recalled"
+
+[[element]]
+id = "east-antarctic-subglacial-basins"
+title = "East Antarctic subglacial basins collapse"
+low_c = 2.0
+central_c = 3.0
+high_c = 6.0
+timescale = "about 2,000 years (500 to 10,000)"
+consequence = "several metres of sea level over millennia"
+source = "Armstrong McKay et al. 2022, Table 1"
+confidence = "recalled"
+
+[[element]]
+id = "amazon-rainforest"
+title = "Amazon rainforest dieback"
+low_c = 2.0
+central_c = 3.5
+high_c = 6.0
+timescale = "about 100 years (50 to 200)"
+consequence = "forest to savanna over a large part of the basin; carbon released; regional rainfall lost"
+source = "Armstrong McKay et al. 2022, Table 1"
+confidence = "recalled"
+
+[[element]]
+id = "boreal-forest-southern-dieback"
+title = "Boreal forest southern dieback"
+low_c = 1.4
+central_c = 4.0
+high_c = 5.0
+timescale = "about 100 years (50 to unknown)"
+consequence = "forest retreats at its southern edge; carbon released"
+source = "Armstrong McKay et al. 2022, Table 1"
+confidence = "recalled"
+
+[[element]]
+id = "amoc"
+title = "Atlantic meridional overturning circulation collapse"
+low_c = 1.4
+central_c = 4.0
+high_c = 8.0
+timescale = "about 50 years (15 to 300)"
+consequence = "cooling around the North Atlantic, shifted tropical rain belts and monsoons, faster sea level rise on the American east coast"
+source = "Armstrong McKay et al. 2022, Table 1"
+confidence = "recalled"
+
+[[element]]
+id = "arctic-winter-sea-ice"
+title = "Arctic winter sea ice collapse"
+low_c = 4.5
+central_c = 6.3
+high_c = 8.7
+timescale = "about 20 years (10 to 100)"
+consequence = "an ice-free Arctic in winter; strong further warming of the north"
+source = "Armstrong McKay et al. 2022, Table 1"
+confidence = "recalled"
+
+[[element]]
+id = "east-antarctic-ice-sheet"
+title = "East Antarctic ice sheet collapse"
+low_c = 5.0
+central_c = 7.5
+high_c = 10.0
+timescale = "about 10,000 years"
+consequence = "tens of metres of sea level over many millennia"
+source = "Armstrong McKay et al. 2022, Table 1"
+confidence = "recalled"

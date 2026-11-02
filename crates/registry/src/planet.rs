@@ -59,7 +59,13 @@ pub fn mauna_loa_annual(f: &mut Fetcher, url: &str) -> Result<BTreeMap<i64, f64>
 }
 
 /// Law Dome spline CO2 (ppm) by year AD, columns 5 and 6 of the data table.
-pub fn law_dome_co2(f: &mut Fetcher, url: &str) -> Result<BTreeMap<i64, f64>, String> {
+pub fn law_dome_co2(f: &mut Fetcher, url: &str) -> Result<BTreeMap<i64, f64>, String> { law_dome(f, url, 4, 5) }
+/// Law Dome spline CH4 (ppb): columns 1 and 2.
+pub fn law_dome_ch4(f: &mut Fetcher, url: &str) -> Result<BTreeMap<i64, f64>, String> { law_dome(f, url, 0, 1) }
+/// Law Dome spline N2O (ppb): columns 8 and 9.
+pub fn law_dome_n2o(f: &mut Fetcher, url: &str) -> Result<BTreeMap<i64, f64>, String> { law_dome(f, url, 7, 8) }
+
+fn law_dome(f: &mut Fetcher, url: &str, ycol: usize, vcol: usize) -> Result<BTreeMap<i64, f64>, String> {
     let path = f.fetch("noaa-paleo/law2006.txt", url)?;
     let text = String::from_utf8_lossy(&std::fs::read(&path).map_err(|e| e.to_string())?).into_owned();
     let mut out = BTreeMap::new();
@@ -68,11 +74,25 @@ pub fn law_dome_co2(f: &mut Fetcher, url: &str) -> Result<BTreeMap<i64, f64>, St
         if line.starts_with("YearAD") { in_table = true; continue; }
         if !in_table { continue; }
         let f: Vec<&str> = line.split_whitespace().collect();
-        if f.len() < 6 { continue; }
-        let (Ok(y), Ok(v)) = (f[4].parse::<f64>(), f[5].parse::<f64>()) else { continue };
+        if f.len() <= vcol.max(ycol) { continue; }
+        let (Ok(y), Ok(v)) = (f[ycol].parse::<f64>(), f[vcol].parse::<f64>()) else { continue };
         out.insert(y.round() as i64, v);
     }
     if out.is_empty() { return Err("law dome: nothing parsed".into()); }
+    Ok(out)
+}
+
+/// NOAA GML global annual mean of a gas (ppb for CH4 and N2O), same layout as Mauna Loa.
+pub fn gml_annual(f: &mut Fetcher, key: &str, url: &str) -> Result<BTreeMap<i64, f64>, String> {
+    let path = f.fetch(key, url)?;
+    let text = String::from_utf8_lossy(&std::fs::read(&path).map_err(|e| e.to_string())?).into_owned();
+    let mut out = BTreeMap::new();
+    for line in text.lines() {
+        if line.starts_with('#') || line.starts_with("year") { continue; }
+        let f: Vec<&str> = line.split(',').collect();
+        if let (Some(Ok(y)), Some(Ok(v))) = (f.first().map(|s| s.parse::<i64>()), f.get(1).map(|s| s.parse::<f64>())) { out.insert(y, v); }
+    }
+    if out.is_empty() { return Err(format!("{key}: nothing parsed")); }
     Ok(out)
 }
 

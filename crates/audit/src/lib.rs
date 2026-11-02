@@ -39,6 +39,9 @@ pub struct Audit {
     pub diversity: Option<Diversity>,
     pub shocks: Vec<Shock>,
     pub tears: Vec<Tear>,
+    /// Threshold crossings modules published (topics ending in `.crossing`): a country
+    /// leaving the human niche, a tipping element's range entered. Listed, not judged.
+    pub crossings: Vec<Crossing>,
     pub scores: Vec<Value>,
     pub silent: Vec<String>,
     pub settings: Settings,
@@ -65,6 +68,9 @@ pub struct Response { pub series: String, pub baseline: f64, pub min: f64, pub m
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Tear { pub kind: String, pub subject: String, pub t: i64, pub note: String }
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct Crossing { pub t: i64, pub topic: String, pub src: String, pub data: Value }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Settings {
@@ -211,6 +217,9 @@ pub fn audit(run: &Value, manifest: &str, scores: Vec<Value>, log: Option<&str>)
                 let Ok(ev) = serde_json::from_str::<Value>(line) else { continue };
                 let topic = ev["topic"].as_str().unwrap_or("");
                 if is_shock(topic, &settings) { if let Some(t) = ev["t"].as_i64() { hits.push((t, topic.to_string())); } }
+                if topic.ends_with(".crossing") {
+                    a.crossings.push(Crossing { t: ev["t"].as_i64().unwrap_or(0), topic: topic.to_string(), src: ev["src"].as_str().unwrap_or("").to_string(), data: ev["data"].clone() });
+                }
             }
             hits.sort();
             // group into episodes
@@ -271,6 +280,14 @@ pub fn audit(run: &Value, manifest: &str, scores: Vec<Value>, log: Option<&str>)
     } else {
         a.verdict = "holds".into();
         if a.shocks.is_empty() { a.reasons.push("no shocks in the record".into()); }
+    }
+    if !a.crossings.is_empty() {
+        let tips = a.crossings.iter().filter(|c| c.topic == "tipping.crossing" && c.data["level"] == "central").count();
+        let niche = a.crossings.iter().filter(|c| c.topic == "people.crossing" && c.data["kind"] == "niche").count();
+        let mut parts = Vec::new();
+        if tips > 0 { parts.push(format!("{tips} tipping element{} past the central estimate", if tips == 1 { "" } else { "s" })); }
+        if niche > 0 { parts.push(format!("{niche} countr{} left the human climate niche", if niche == 1 { "y" } else { "ies" })); }
+        if !parts.is_empty() { a.reasons.push(parts.join("; ")); }
     }
     let spent: Vec<&Stock> = a.stocks.iter().filter(|s| s.verdict == "spent down").collect();
     if !spent.is_empty() { a.reasons.push(format!("{} stock{} being spent down: {}", spent.len(), if spent.len() == 1 { "" } else { "s" }, spent.iter().map(|s| format!("{}/{} {:+.0}%", s.ledger, s.account, s.change_pct.unwrap_or(0.0))).collect::<Vec<_>>().join(", "))); }

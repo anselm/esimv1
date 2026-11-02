@@ -1,0 +1,426 @@
+//! The planetary stack above the climate, with the country as the coarse unit. Three
+//! kinds, each a layer with its own record and a stated response, and one that reads a
+//! table of published thresholds:
+//!
+//! - `people.countries`: outlines (Natural Earth) rasterised to a coarse world grid, and
+//!   people per country per year (UN World Population Prospects: estimates to 2023, the
+//!   UN's medium projection after, labelled as such). A data layer; nothing modelled.
+//! - `climate.countries`: each country's mean temperature from its own record (CRU TS
+//!   through the World Bank portal) regressed on the global anomaly over 1901 to 2022.
+//!   The slope is the country's observed share of global warming; the run's global
+//!   anomaly times the slope gives the country's future. Pattern scaling from the record,
+//!   with the stated assumption that the pattern persists.
+//! - `people.heat`: people living in countries whose annual mean has left the human
+//!   climate niche (Xu et al. 2020: mean annual temperature above 29 °C), and a second
+//!   marker on the hottest month that has no paper behind it and says so. Publishes a
+//!   `people.crossing` event the first year a country crosses, which the auditor lists.
+//! - `tipping.elements`: `data/events/tipping.toml`, the climate tipping elements with the
+//!   warming at which each is assessed likely to tip (central and range), checked
+//!   against the run's global anomaly; a `tipping.crossing` event when the range's low end
+//!   and the central estimate are passed.
+//!
+//! Countries are a crude unit and the modules say so: a whole country is in or out of
+//! the niche at once, and a half-degree record averaged over a country hides its deserts
+//! and its mountains. The unit was chosen because borders are where people's options
+//! change, and because the records exist at this unit today.
+
+use esim_kernel::describe::Describe;
+use esim_kernel::manifest::param_f64;
+use esim_kernel::{Ctx, Duration, Event, LatLonGrid, Module, Time};
+use esim_registry::countries::{self, Country};
+use esim_registry::{Catalog, Fetcher};
+use serde::{Deserialize, Serialize};
+use serde_json::json;
+use std::collections::BTreeMap;
+use std::path::PathBuf;
+
+fn root() -> PathBuf { std::env::var("ESIM_ROOT").ok().map(PathBuf::from).unwrap_or_else(|| PathBuf::from(".")) }
+fn asset_url(cat: &Catalog, id: &str) -> Result<String, String> { Ok(cat.asset(id).ok_or_else(|| format!("catalog has no {id}"))?.url_template.clone()) }
+fn year_of(t: Time) -> i64 { t.to_iso()[0..4].parse().unwrap() }
+fn to_next_year(now: Time) -> Duration { Time::parse(&format!("{:04}-01-01", year_of(now) + 1)).unwrap().since(now) }
+fn world_grid(res_deg: f64) -> LatLonGrid {
+    LatLonGrid { nx: (360.0 / res_deg).round() as usize, ny: (180.0 / res_deg).round() as usize, dlon: res_deg, dlat: res_deg, lon_w: -180.0, lat_n: 90.0 }
+}
+fn load_countries() -> Result<Vec<Country>, String> {
+    let root = root();
+    let cat = Catalog::load(&root.join("data/catalog.toml"))?;
+    let mut f = Fetcher::default_for(&root)?;
+    countries::natural_earth_countries(&mut f, &asset_url(&cat, "natural-earth-110m-countries")?)
+}
+
+// ---------------------------------------------------------------------------------------
+// people.countries
+
+#[derive(Serialize, Deserialize)]
+pub struct PeopleCountries {
+    name: String,
+    res_deg: f64, frame_every_years: i64, hold_before_record: bool,
+    #[serde(skip)] countries: Vec<Country>,
+    #[serde(skip)] index: Vec<f32>,        // country index per cell, NaN for sea
+    #[serde(skip)] land_km2: Vec<f64>,     // per country, from the raster
+    #[serde(skip)] pop: BTreeMap<String, BTreeMap<i64, f64>>,
+    last_frame_year: i64,
+}
+
+impl PeopleCountries {
+    pub fn new(name: &str, p: &toml::Value) -> Result<PeopleCountries, String> {
+        let mut m = PeopleCountries {
+            name: name.to_string(), res_deg: param_f64(p, "res_deg", 2.0), frame_every_years: param_f64(p, "frame_every_years", 5.0) as i64,
+            hold_before_record: p.get("hold_before_record").and_then(|v| v.as_bool()).unwrap_or(true),
+            countries: Vec::new(), index: Vec::new(), land_km2: Vec::new(), pop: BTreeMap::new(), last_frame_year: -1_000_000,
+        };
+        m.load()?;
+        Ok(m)
+    }
+    fn load(&mut self) -> Result<(), String> {
+        let root = root();
+        let cat = Catalog::load(&root.join("data/catalog.toml"))?;
+        let mut f = Fetcher::default_for(&root)?;
+        self.countries = load_countries()?;
+        self.pop = countries::un_wpp_population(&mut f, &asset_url(&cat, "un-wpp-2024-total-population")?)?;
+        let g = world_grid(self.res_deg);
+        self.index = vec![f32::NAN; g.nx * g.ny];
+        self.land_km2 = vec![0.0; self.countries.len()];
+        for row in 0..g.ny {
+            let lat = g.lat_n - (row as f64 + 0.5) * g.dlat;
+            let area_km2 = g.row_area(row) / 1e6;
+            for col in 0..g.nx {
+                let lon = g.lon_w + (col as f64 + 0.5) * g.dlon;
+                if let Some(k) = self.countries.iter().position(|c| c.contains(lon, lat)) {
+                    self.index[row * g.nx + col] = k as f32;
+                    self.land_km2[k] += area_km2;
+                }
+            }
+        }
+        Ok(())
+    }
+    fn population(&self, iso3: &str, y: i64) -> Option<f64> {
+        let s = self.pop.get(iso3)?;
+        if let Some(v) = s.get(&y) { return Some(*v); }
+        let (&first, &fv) = s.iter().next()?;
+        if y < first && self.hold_before_record { return Some(fv); }
+        s.range(..y).next_back().map(|(_, v)| *v)
+    }
+    pub fn describe(name: &str, p: &toml::Value) -> Describe {
+        Describe::new("people.countries", name, "Countries as a coarse world raster (Natural Earth outlines) and people per country per year (UN World Population Prospects 2024: estimates to 2023, the UN medium projection after, which is the UN's assumption and labelled so). A data layer: nothing is modelled, people are read.")
+            .priority(0).dt("1 year (1 January)")
+            .param("res_deg", param_f64(p, "res_deg", 2.0), "deg", "world grid cell for the maps; 2 degrees is 16,200 cells")
+            .param("frame_every_years", param_f64(p, "frame_every_years", 5.0), "yr", "map frames are written this often")
+            .param("hold_before_record", p.get("hold_before_record").and_then(|v| v.as_bool()).unwrap_or(true), "", "before 1950 the UN has no numbers; hold 1950 flat (a placeholder, not history; HYDE would be the record)")
+            .own("country.index", "index").own("people.density_km2", "1/km2")
+            .publish("people.population", "{ year, iso3: persons } each January")
+            .report("people.world_total", "persons").report("people.countries_matched", "")
+            .asset("natural-earth-110m-countries", "outlines, ISO3 codes").asset("un-wpp-2024-total-population", "people per country per year")
+            .note("Population is spread evenly over a country's land cells for the density map; a 1 km layer (WorldPop) is the next step.")
+    }
+}
+
+impl Module for PeopleCountries {
+    fn name(&self) -> &str { &self.name }
+    fn init(&mut self, ctx: &mut Ctx) {
+        let g = world_grid(self.res_deg);
+        ctx.world_write("country.index", "index", &g, self.index.clone());
+        ctx.field("country_index", "index", &g, self.index.clone());
+        self.emit(ctx);
+        ctx.schedule_with_priority(to_next_year(ctx.now()), 0, "tick", json!(null));
+    }
+    fn handle(&mut self, ev: &Event, ctx: &mut Ctx) {
+        if ev.topic != "tick" { return; }
+        self.emit(ctx);
+        ctx.schedule_with_priority(to_next_year(ctx.now()), 0, "tick", json!(null));
+    }
+    fn snapshot(&self) -> serde_json::Value { serde_json::to_value(self).unwrap() }
+    fn restore(&mut self, v: serde_json::Value) { let mut m: PeopleCountries = serde_json::from_value(v).unwrap(); m.load().expect("people reload"); *self = m; }
+}
+
+impl PeopleCountries {
+    fn emit(&mut self, ctx: &mut Ctx) {
+        let y = year_of(ctx.now());
+        let g = world_grid(self.res_deg);
+        let mut table = serde_json::Map::new();
+        let mut per_country = vec![0.0f64; self.countries.len()];
+        let (mut total, mut matched) = (0.0, 0usize);
+        for (k, c) in self.countries.iter().enumerate() {
+            if let Some(p) = self.population(&c.iso3, y) { per_country[k] = p; total += p; matched += 1; table.insert(c.iso3.clone(), json!(p)); }
+        }
+        let mut density = vec![f32::NAN; g.nx * g.ny];
+        for (i, &k) in self.index.iter().enumerate() {
+            if k.is_nan() { continue; }
+            let k = k as usize;
+            density[i] = if self.land_km2[k] > 0.0 { (per_country[k] / self.land_km2[k]) as f32 } else { 0.0 };
+        }
+        ctx.world_write("people.density_km2", "1/km2", &g, density.clone());
+        if y - self.last_frame_year >= self.frame_every_years { ctx.field("people_density_km2", "1/km2", &g, density); self.last_frame_year = y; }
+        ctx.publish("people.population", json!({ "year": y, "by_iso3": table }));
+        ctx.report("people.world_total", "persons", total);
+        ctx.report("people.countries_matched", "", matched as f64);
+    }
+}
+
+// ---------------------------------------------------------------------------------------
+// climate.countries
+
+#[derive(Serialize, Deserialize)]
+pub struct ClimateCountries {
+    name: String,
+    res_deg: f64, frame_every_years: i64, fit_from: i64, fit_to: i64, clim_from: i64, clim_to: i64,
+    gmst: f64,
+    #[serde(skip)] countries: Vec<Country>,
+    #[serde(skip)] fit: Vec<Option<(f64, f64, usize)>>,   // slope, intercept, n per country
+    #[serde(skip)] hot_clim: Vec<Option<f64>>,            // hottest month's climatological mean
+    #[serde(skip)] g_clim: f64,                           // global anomaly's mean over the climatology window
+    last_frame_year: i64,
+}
+
+impl ClimateCountries {
+    pub fn new(name: &str, p: &toml::Value) -> Result<ClimateCountries, String> {
+        let mut m = ClimateCountries {
+            name: name.to_string(), res_deg: param_f64(p, "res_deg", 2.0), frame_every_years: param_f64(p, "frame_every_years", 5.0) as i64,
+            fit_from: param_f64(p, "fit_from", 1901.0) as i64, fit_to: param_f64(p, "fit_to", 2022.0) as i64,
+            clim_from: param_f64(p, "clim_from", 1991.0) as i64, clim_to: param_f64(p, "clim_to", 2020.0) as i64,
+            gmst: 0.0, countries: Vec::new(), fit: Vec::new(), hot_clim: Vec::new(), g_clim: 0.0, last_frame_year: -1_000_000,
+        };
+        m.load()?;
+        Ok(m)
+    }
+    fn load(&mut self) -> Result<(), String> {
+        let root = root();
+        let cat = Catalog::load(&root.join("data/catalog.toml"))?;
+        let mut f = Fetcher::default_for(&root)?;
+        self.countries = load_countries()?;
+        let annual = countries::cckp_country_annual_tas(&mut f, &asset_url(&cat, "worldbank-cckp-cru-tas-annual")?)?;
+        let monthly = countries::cckp_country_monthly_tas(&mut f, &asset_url(&cat, "worldbank-cckp-cru-tas-monthly")?)?;
+        let had = esim_registry::planet::hadcrut5_annual(&mut f, &asset_url(&cat, "hadcrut5-global-annual")?)?;
+        let base = esim_registry::planet::window_mean(&had, 1850, 1900).unwrap_or(0.0);
+        let g: BTreeMap<i64, f64> = had.iter().filter(|(y, _)| **y >= self.fit_from && **y <= self.fit_to).map(|(y, v)| (*y, v - base)).collect();
+        self.g_clim = esim_registry::planet::window_mean(&g, self.clim_from, self.clim_to).unwrap_or(0.0);
+        // both series smoothed over eleven years before the fit: year-to-year noise in the
+        // regressor would otherwise pull every slope toward zero
+        let gs = countries::smooth(&g, 11);
+        self.fit = self.countries.iter().map(|c| annual.get(&c.iso3).and_then(|s| countries::regress(&gs, &countries::smooth(s, 11)))).collect();
+        self.hot_clim = self.countries.iter().map(|c| {
+            let m = monthly.get(&c.iso3)?;
+            // climatological mean per calendar month over the window, then the hottest
+            let mut sum = [0.0f64; 12]; let mut n = [0usize; 12];
+            for ((y, mo), t) in m { if *y >= self.clim_from && *y <= self.clim_to { sum[(*mo - 1) as usize] += t; n[(*mo - 1) as usize] += 1; } }
+            (0..12).filter(|i| n[*i] > 0).map(|i| sum[i] / n[i] as f64).fold(None, |acc: Option<f64>, v| Some(acc.map_or(v, |a| a.max(v))))
+        }).collect();
+        Ok(())
+    }
+    pub fn describe(name: &str, p: &toml::Value) -> Describe {
+        Describe::new("climate.countries", name, "Each country's mean temperature from its own record (CRU TS 4.07, 1901 to 2022, via the World Bank portal) regressed on the global anomaly (HadCRUT5, re-zeroed to 1850 to 1900): the slope is the country's observed share of global warming, the intercept its level. The run's global anomaly from the energy module times the slope gives the country's annual mean each year; the hottest month moves by the same slope from its 1991 to 2020 mean. Pattern scaling from the record; the stated assumption is that the pattern persists.")
+            .priority(3).dt("1 year (1 January), on the latest energy.state")
+            .param("res_deg", param_f64(p, "res_deg", 2.0), "deg", "must match people.countries").param("frame_every_years", param_f64(p, "frame_every_years", 5.0), "yr", "")
+            .param("fit_from", param_f64(p, "fit_from", 1901.0), "yr", "regression window").param("fit_to", param_f64(p, "fit_to", 2022.0), "yr", "")
+            .param("clim_from", param_f64(p, "clim_from", 1991.0), "yr", "climatology window for the hottest month").param("clim_to", param_f64(p, "clim_to", 2020.0), "yr", "")
+            .subscribe("energy.state", "{ gmst_c } the global anomaly")
+            .read("country.index", "index", true, "which cell is which country")
+            .own("climate.tas_c", "degC").own("climate.hot_month_c", "degC")
+            .publish("climate.country_tas", "{ year, by_iso3: { tas_c, hot_month_c, slope } } each January")
+            .report("climate.slope_median", "degC/degC").report("climate.countries_fitted", "").report("climate.hottest_country_tas_c", "degC")
+            .asset("worldbank-cckp-cru-tas-annual", "country annual means 1901 to 2022").asset("worldbank-cckp-cru-tas-monthly", "country monthly means for the hottest-month climatology").asset("hadcrut5-global-annual", "the global anomaly the records are regressed on").asset("natural-earth-110m-countries", "the country list")
+            .note("A country's variance about the fit is lost; years are given their fitted value, not their weather. Countries missing from the record (Antarctica, a few territories) get no temperature and are counted in climate.countries_fitted.")
+    }
+}
+
+impl Module for ClimateCountries {
+    fn name(&self) -> &str { &self.name }
+    fn init(&mut self, ctx: &mut Ctx) {
+        ctx.subscribe("energy.state");
+        ctx.schedule_with_priority(to_next_year(ctx.now()), 3, "tick", json!(null));
+    }
+    fn handle(&mut self, ev: &Event, ctx: &mut Ctx) {
+        match ev.topic.as_str() {
+            "energy.state" => { if let Some(g) = ev.data.get("gmst_c").and_then(|v| v.as_f64()) { self.gmst = g; } }
+            "tick" => {
+                let y = year_of(ctx.now());
+                let g = world_grid(self.res_deg);
+                let Some(index) = ctx.world_read_on("country.index", &g).map(|f| f.data.clone()) else { return };
+                let mut tas = vec![f32::NAN; g.nx * g.ny];
+                let mut hot = vec![f32::NAN; g.nx * g.ny];
+                let mut by = serde_json::Map::new();
+                let mut per_tas = vec![f32::NAN; self.countries.len()];
+                let mut per_hot = vec![f32::NAN; self.countries.len()];
+                let mut slopes = Vec::new();
+                let mut hottest = f64::NEG_INFINITY;
+                for (k, c) in self.countries.iter().enumerate() {
+                    let Some((slope, intercept, _)) = self.fit[k] else { continue };
+                    let t = intercept + slope * self.gmst;
+                    let h = self.hot_clim[k].map(|hc| hc + slope * (self.gmst - self.g_clim));
+                    per_tas[k] = t as f32; per_hot[k] = h.map(|v| v as f32).unwrap_or(f32::NAN);
+                    slopes.push(slope); hottest = hottest.max(t);
+                    by.insert(c.iso3.clone(), json!({ "tas_c": t, "hot_month_c": h, "slope": slope }));
+                }
+                for (i, &k) in index.iter().enumerate() { if !k.is_nan() { tas[i] = per_tas[k as usize]; hot[i] = per_hot[k as usize]; } }
+                ctx.world_write("climate.tas_c", "degC", &g, tas.clone());
+                ctx.world_write("climate.hot_month_c", "degC", &g, hot.clone());
+                if y - self.last_frame_year >= self.frame_every_years { ctx.field("climate_tas_c", "degC", &g, tas); ctx.field("climate_hot_month_c", "degC", &g, hot); self.last_frame_year = y; }
+                ctx.publish("climate.country_tas", json!({ "year": y, "gmst_c": self.gmst, "by_iso3": by }));
+                slopes.sort_by(|a, b| a.partial_cmp(b).unwrap());
+                if !slopes.is_empty() { ctx.report("climate.slope_median", "degC/degC", slopes[slopes.len() / 2]); }
+                ctx.report("climate.countries_fitted", "", slopes.len() as f64);
+                if hottest.is_finite() { ctx.report("climate.hottest_country_tas_c", "degC", hottest); }
+                ctx.schedule_with_priority(to_next_year(ctx.now()), 3, "tick", json!(null));
+            }
+            _ => {}
+        }
+    }
+    fn snapshot(&self) -> serde_json::Value { serde_json::to_value(self).unwrap() }
+    fn restore(&mut self, v: serde_json::Value) { let mut m: ClimateCountries = serde_json::from_value(v).unwrap(); m.load().expect("climate reload"); *self = m; }
+}
+
+// ---------------------------------------------------------------------------------------
+// people.heat
+
+#[derive(Serialize, Deserialize)]
+pub struct PeopleHeat {
+    name: String,
+    res_deg: f64, frame_every_years: i64, niche_c: f64, hot_month_c: f64,
+    pop: BTreeMap<String, f64>,
+    crossed_niche: BTreeMap<String, i64>,
+    crossed_hot: BTreeMap<String, i64>,
+    /// countries over a marker in the first year evaluated: a state of the climatology, not a change
+    baseline_done: bool,
+    #[serde(skip)] countries: Vec<Country>,
+    last_frame_year: i64,
+}
+
+impl PeopleHeat {
+    pub fn new(name: &str, p: &toml::Value) -> Result<PeopleHeat, String> {
+        Ok(PeopleHeat {
+            name: name.to_string(), res_deg: param_f64(p, "res_deg", 2.0), frame_every_years: param_f64(p, "frame_every_years", 5.0) as i64,
+            niche_c: param_f64(p, "niche_c", 29.0), hot_month_c: param_f64(p, "hot_month_c", 32.0),
+            pop: BTreeMap::new(), crossed_niche: BTreeMap::new(), crossed_hot: BTreeMap::new(), baseline_done: false, countries: load_countries()?, last_frame_year: -1_000_000,
+        })
+    }
+    pub fn describe(name: &str, p: &toml::Value) -> Describe {
+        Describe::new("people.heat", name, "People living in countries whose annual mean temperature has left the human climate niche, and in countries whose hottest month passes a second marker. Counts, not deaths: exposure from a population layer and a temperature layer. A country crosses whole, because the temperature is a country mean; the first year it crosses, a people.crossing event is published for the auditor.")
+            .priority(4).dt("follows climate.country_tas")
+            .param("res_deg", param_f64(p, "res_deg", 2.0), "deg", "must match people.countries").param("frame_every_years", param_f64(p, "frame_every_years", 5.0), "yr", "")
+            .param("niche_c", param_f64(p, "niche_c", 29.0), "degC", "mean annual temperature at the hot edge of the human climate niche, Xu et al. 2020 PNAS (recalled; to be checked)")
+            .param("hot_month_c", param_f64(p, "hot_month_c", 32.0), "degC", "a hottest-month mean marker with no paper behind it: a guess, kept to show the shape until a wet-bulb layer exists")
+            .subscribe("people.population", "{ by_iso3 }").subscribe("climate.country_tas", "{ by_iso3: { tas_c, hot_month_c } }")
+            .read("country.index", "index", true, "to draw the map")
+            .own("people.outside_niche", "1")
+            .publish("people.crossing", "{ iso3, name, year, kind: niche | hot_month, persons } the first year a country crosses; a country already over a marker in the run's first year is a state of its climate, not a crossing, and is not announced")
+            .report("people.outside_niche", "persons").report("people.outside_niche_pct", "%").report("people.hot_month_over", "persons").report("people.countries_outside_niche", "").report("people.crossings_niche", "").report("people.crossings_hot_month", "")
+            .asset("natural-earth-110m-countries", "names for the crossing events")
+            .note("No mortality here on purpose; a mortality layer with published exposure-response curves and their ranges is a separate, later module.")
+    }
+}
+
+impl Module for PeopleHeat {
+    fn name(&self) -> &str { &self.name }
+    fn init(&mut self, ctx: &mut Ctx) { ctx.subscribe("people.population"); ctx.subscribe("climate.country_tas"); }
+    fn handle(&mut self, ev: &Event, ctx: &mut Ctx) {
+        match ev.topic.as_str() {
+            "people.population" => {
+                if let Some(t) = ev.data.get("by_iso3").and_then(|v| v.as_object()) { self.pop = t.iter().filter_map(|(k, v)| v.as_f64().map(|p| (k.clone(), p))).collect(); }
+            }
+            "climate.country_tas" => {
+                let y = ev.data.get("year").and_then(|v| v.as_i64()).unwrap_or(year_of(ctx.now()));
+                let Some(by) = ev.data.get("by_iso3").and_then(|v| v.as_object()) else { return };
+                let g = world_grid(self.res_deg);
+                let index = ctx.world_read_on("country.index", &g).map(|f| f.data.clone());
+                let mut per = vec![f32::NAN; self.countries.len()];
+                let (mut outside, mut hot_over, mut total, mut n_out) = (0.0f64, 0.0f64, 0.0f64, 0usize);
+                let mut crossings = Vec::new();
+                for (k, c) in self.countries.iter().enumerate() {
+                    let Some(p) = self.pop.get(&c.iso3) else { continue };
+                    total += p;
+                    let Some(e) = by.get(&c.iso3) else { continue };
+                    let tas = e.get("tas_c").and_then(|v| v.as_f64());
+                    let hot = e.get("hot_month_c").and_then(|v| v.as_f64());
+                    let out = tas.map(|t| t > self.niche_c).unwrap_or(false);
+                    let over = hot.map(|h| h > self.hot_month_c).unwrap_or(false);
+                    per[k] = if out { 1.0 } else if tas.is_some() { 0.0 } else { f32::NAN };
+                    // the first evaluated year sets the baseline: a country already over a marker then is
+                    // recorded with year 0 and never announced; a crossing is a change from that state
+                    if out { outside += p; n_out += 1; if !self.crossed_niche.contains_key(&c.iso3) { self.crossed_niche.insert(c.iso3.clone(), if self.baseline_done { y } else { 0 }); if self.baseline_done { crossings.push(json!({ "iso3": c.iso3, "name": c.name, "year": y, "kind": "niche", "persons": p, "tas_c": tas })); } } }
+                    if over { hot_over += p; if !self.crossed_hot.contains_key(&c.iso3) { self.crossed_hot.insert(c.iso3.clone(), if self.baseline_done { y } else { 0 }); if self.baseline_done { crossings.push(json!({ "iso3": c.iso3, "name": c.name, "year": y, "kind": "hot_month", "persons": p, "hot_month_c": hot })); } } }
+                }
+                if let Some(index) = index {
+                    let mut field = vec![f32::NAN; g.nx * g.ny];
+                    for (i, &k) in index.iter().enumerate() { if !k.is_nan() { field[i] = per[k as usize]; } }
+                    ctx.world_write("people.outside_niche", "1", &g, field.clone());
+                    if y - self.last_frame_year >= self.frame_every_years { ctx.field("people_outside_niche", "1", &g, field); self.last_frame_year = y; }
+                }
+                self.baseline_done = true;
+                for c in crossings { ctx.publish("people.crossing", c); }
+                ctx.report("people.outside_niche", "persons", outside);
+                if total > 0.0 { ctx.report("people.outside_niche_pct", "%", 100.0 * outside / total); }
+                ctx.report("people.hot_month_over", "persons", hot_over);
+                ctx.report("people.countries_outside_niche", "", n_out as f64);
+                ctx.report("people.crossings_niche", "", self.crossed_niche.values().filter(|y| **y > 0).count() as f64);
+                ctx.report("people.crossings_hot_month", "", self.crossed_hot.values().filter(|y| **y > 0).count() as f64);
+            }
+            _ => {}
+        }
+    }
+    fn snapshot(&self) -> serde_json::Value { serde_json::to_value(self).unwrap() }
+    fn restore(&mut self, v: serde_json::Value) { let mut m: PeopleHeat = serde_json::from_value(v).unwrap(); m.countries = load_countries().expect("countries"); *self = m; }
+}
+
+// ---------------------------------------------------------------------------------------
+// tipping.elements
+
+#[derive(Clone, Serialize, Deserialize)]
+struct Element { id: String, title: String, low_c: f64, central_c: f64, high_c: f64, timescale: String, consequence: String, source: String, confidence: String }
+
+#[derive(Serialize, Deserialize)]
+pub struct Tipping {
+    name: String,
+    elements: Vec<Element>,
+    passed_low: BTreeMap<String, i64>,
+    passed_central: BTreeMap<String, i64>,
+    gmst: f64,
+}
+
+impl Tipping {
+    pub fn new(name: &str, _p: &toml::Value) -> Result<Tipping, String> {
+        let path = root().join("data/events/tipping.toml");
+        let text = std::fs::read_to_string(&path).map_err(|e| format!("{}: {e}", path.display()))?;
+        let v: toml::Value = toml::from_str(&text).map_err(|e| format!("tipping.toml: {e}"))?;
+        let elements: Vec<Element> = v.get("element").and_then(|a| a.as_array()).into_iter().flatten()
+            .map(|e| e.clone().try_into::<Element>().map_err(|err| format!("tipping.toml element: {err}"))).collect::<Result<_, _>>()?;
+        if elements.is_empty() { return Err("tipping.toml has no elements".into()); }
+        Ok(Tipping { name: name.to_string(), elements, passed_low: BTreeMap::new(), passed_central: BTreeMap::new(), gmst: 0.0 })
+    }
+    pub fn describe(name: &str, _p: &toml::Value) -> Describe {
+        Describe::new("tipping.elements", name, "The climate tipping elements from data/events/tipping.toml, each with the global warming at which an assessment judged it likely to tip (a central estimate and a range) and its timescale, checked every year against the run's global anomaly. A tipping.crossing event the first year the run passes an element's low end and again its central estimate. The table is the claim; the module only compares.")
+            .priority(5).dt("follows energy.state, once a year")
+            .subscribe("energy.state", "{ gmst_c }")
+            .publish("tipping.crossing", "{ id, title, year, level: low | central, threshold_c, gmst_c, timescale, consequence, source, confidence }")
+            .report("tipping.elements_past_low", "").report("tipping.elements_past_central", "")
+            .asset("events/tipping.toml", "the elements and their thresholds, with provenance and confidence per row")
+            .note("Passing a threshold does not tip the element in this run; nothing feeds back yet. It is a flag with a citation, which is what the words-only essays lack.")
+    }
+}
+
+impl Module for Tipping {
+    fn name(&self) -> &str { &self.name }
+    fn init(&mut self, ctx: &mut Ctx) { ctx.subscribe("energy.state"); ctx.schedule_with_priority(to_next_year(ctx.now()), 5, "tick", json!(null)); }
+    fn handle(&mut self, ev: &Event, ctx: &mut Ctx) {
+        match ev.topic.as_str() {
+            "energy.state" => { if let Some(g) = ev.data.get("gmst_c").and_then(|v| v.as_f64()) { self.gmst = g; } }
+            "tick" => {
+                let y = year_of(ctx.now());
+                for e in &self.elements {
+                    for (level, thr, book) in [("low", e.low_c, &mut self.passed_low), ("central", e.central_c, &mut self.passed_central)] {
+                        if self.gmst >= thr && !book.contains_key(&e.id) {
+                            book.insert(e.id.clone(), y);
+                            ctx.publish("tipping.crossing", json!({ "id": e.id, "title": e.title, "year": y, "level": level, "threshold_c": thr, "gmst_c": self.gmst,
+                                "timescale": e.timescale, "consequence": e.consequence, "source": e.source, "confidence": e.confidence }));
+                        }
+                    }
+                }
+                ctx.report("tipping.elements_past_low", "", self.passed_low.len() as f64);
+                ctx.report("tipping.elements_past_central", "", self.passed_central.len() as f64);
+                ctx.schedule_with_priority(to_next_year(ctx.now()), 5, "tick", json!(null));
+            }
+            _ => {}
+        }
+    }
+    fn snapshot(&self) -> serde_json::Value { serde_json::to_value(self).unwrap() }
+    fn restore(&mut self, v: serde_json::Value) { *self = serde_json::from_value(v).unwrap(); }
+}

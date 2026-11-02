@@ -14,7 +14,7 @@ fn root() -> PathBuf { [env!("CARGO_MANIFEST_DIR"), "..", ".."].iter().collect()
 
 fn load(file: &str) -> Manifest {
     let path = root().join("manifests").join(file);
-    let mut m = Manifest::parse(&std::fs::read_to_string(&path).unwrap()).unwrap();
+    let mut m = Manifest::load(&path).unwrap();
     for e in &mut m.modules {
         if let toml::Value::Table(t) = &mut e.params { t.insert("kind".into(), toml::Value::String(e.kind.clone())); }
     }
@@ -35,7 +35,7 @@ fn every_manifest_checks_clean() {
     for entry in std::fs::read_dir(&dir).unwrap() {
         let p = entry.unwrap().path();
         if p.extension().and_then(|e| e.to_str()) != Some("toml") { continue; }
-        let m = Manifest::parse(&std::fs::read_to_string(&p).unwrap()).unwrap();
+        let m = Manifest::load(&p).unwrap();
         let r = esim_kernel::check(&m, esim_modules::describe);
         assert!(r.errors.is_empty(), "{}: {:?}", p.display(), r.errors);
         for w in &r.warnings { eprintln!("{}: warning: {w}", p.file_name().unwrap().to_string_lossy()); }

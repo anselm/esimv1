@@ -1,0 +1,91 @@
+[audit]
+scores = [
+    [
+    "carbon.co2_ppm",
+    "obs.co2_ppm",
+],
+    [
+    "energy.gmst_anom_c",
+    "obs.gmst_hadcrut5_c",
+],
+    [
+    "energy.gmst_anom_c",
+    "obs.gmst_gistemp_c",
+],
+]
+
+[[module]]
+kind = "carbon.emissions"
+name = "emissions"
+
+[module.params]
+after_record = "hold"
+include_land_use = true
+
+[[module]]
+kind = "carbon.pools"
+name = "carbon"
+
+[module.params]
+co2_start_ppm = 286.8
+
+[[module]]
+kind = "carbon.gases"
+name = "gases"
+
+[[module]]
+kind = "energy.twolayer"
+name = "energy"
+
+[module.params]
+co2_ref_ppm = 286.8
+
+[[module]]
+kind = "sea.thermal"
+name = "sea"
+
+[[module]]
+kind = "obs.planet"
+name = "obs"
+
+[module.params]
+baseline_from = 1850
+baseline_to = 1900
+
+[[module]]
+kind = "people.countries"
+name = "people"
+
+[module.params]
+frame_every_years = 5
+res_deg = 2.0
+
+[[module]]
+kind = "climate.countries"
+name = "climate"
+
+[module.params]
+frame_every_years = 5
+res_deg = 2.0
+
+[[module]]
+kind = "people.heat"
+name = "heat"
+
+[module.params]
+frame_every_years = 5
+hot_month_c = 32.0
+niche_c = 29.0
+res_deg = 2.0
+
+[[module]]
+kind = "tipping.elements"
+name = "tipping"
+
+[run]
+close_every = "30d"
+end = "2100-01-01"
+name = "p4-planet-people"
+notes = "Planet core plus countries, people, heat exposure and tipping thresholds, 1850 to 2100. After 2024 emissions follow the variant's assumption (default: held at the 2024 rate). CO2, CH4 and N2O forcing; no aerosols; no feedbacks."
+seed = 1
+start = "1850-01-01"

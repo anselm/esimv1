@@ -1,0 +1,28 @@
+# A project: who asked for what, in their words, and the manifest beside it.
+area = "anselm"
+name = "planet"
+title = "The planet, with people on it"
+description = "One project, several assumptions. The planet core (observed emissions into a carbon ledger, impulse-response sinks, methane and N2O, a two-layer energy balance, thermal sea level) with countries on top: people per country from the UN, each country's temperature from its own record scaled by the run's warming, the people living outside the human climate niche, and the tipping elements' thresholds checked against the warming. Variants: the hindcast to 2025; emissions held at the 2024 rate to 2100; emissions to zero by 2050. Each is an assumption, never a forecast."
+created = "2026-11-02"
+by = "anselm, via claude 2026-11-01"
+
+# Variants: named parameter sets applied on top of the manifest. `esim project run
+# anselm/planet --variant held`. Keys are run.<field> or <module>.<param>.
+
+[[variant]]
+name = "hindcast"
+title = "The record, 1850 to 2025"
+[variant.set]
+"run.end" = "2025-01-01"
+
+[[variant]]
+name = "held"
+title = "Emissions held at the 2024 rate to 2100"
+[variant.set]
+"emissions.after_record" = "hold"
+
+[[variant]]
+name = "zero-by-2050"
+title = "Emissions to zero by 2050"
+[variant.set]
+"emissions.after_record" = "zero_by:2050"

@@ -15,12 +15,23 @@
   let running = $state(false)
   let log = $state([])
 
-  // project.toml is small and flat: key = "value" lines
+  // project.toml is small: flat key = "value" lines, then [[variant]] tables with a
+  // [variant.set] of "module.param" = value lines.
   function parseMeta(text) {
-    const out = {}
-    for (const line of text.split('\n')) {
-      const m = line.match(/^(\w+)\s*=\s*"(.*)"\s*$/)
-      if (m) out[m[1]] = m[2].replace(/\\"/g, '"').replace(/\\n/g, '\n').replace(/\\\\/g, '\\')
+    const out = { variants: [] }
+    let cur = null, inSet = false
+    const unq = (v) => v.replace(/^"(.*)"$/s, '$1').replace(/\\"/g, '"').replace(/\\n/g, '\n').replace(/\\\\/g, '\\')
+    for (const raw of text.split('\n')) {
+      const line = raw.trim()
+      if (!line || line.startsWith('#')) continue
+      if (line === '[[variant]]') { cur = { set: {} }; out.variants.push(cur); inSet = false; continue }
+      if (line === '[variant.set]') { inSet = true; continue }
+      const m = line.match(/^("?)([\w.\-]+)\1\s*=\s*(.*)$/)
+      if (!m) continue
+      const [, , k, v] = m
+      if (cur && inSet) cur.set[k] = unq(v)
+      else if (cur) cur[k] = unq(v)
+      else out[k] = unq(v)
     }
     return out
   }
@@ -49,10 +60,10 @@
     runs = runs
   }
 
-  async function runNow() {
+  async function runNow(variant = null) {
     running = true; log = []; error = null
     try {
-      const r = await req('project.run', { path })
+      const r = await req('project.run', { path, variant })
       if (!r.ran) error = 'the run failed; see the log'
       await load()
     } catch (e) { error = e.message } finally { running = false }
@@ -89,10 +100,28 @@
   </section>
 
   <section class="mb-8">
+    {#if meta.variants?.length}
+      <div class="label mb-2">variants</div>
+      <ul class="mb-6 divide-y divide-neutral-200 dark:divide-neutral-800">
+        {#each meta.variants as v (v.name)}
+          <li class="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 py-2">
+            <div class="min-w-0">
+              <span class="font-medium">{v.title ?? v.name}</span>
+              <span class="mono ml-2 text-xs muted">{v.name}</span>
+              <div class="mono text-xs muted">{Object.entries(v.set).map(([k, x]) => `${k} = ${x}`).join(' · ')}</div>
+            </div>
+            <span class="flex items-center gap-3 text-xs">
+              <span class="mono muted">{runs.filter((r) => r.variant === v.name).length} runs</span>
+              {#if live}<button class="rounded-[3px] bg-brand px-2.5 py-1 text-white disabled:opacity-50" onclick={() => runNow(v.name)} disabled={running}>{running ? '…' : 'Run'}</button>{/if}
+            </span>
+          </li>
+        {/each}
+      </ul>
+    {/if}
     <div class="mb-2 flex flex-wrap items-center justify-between gap-3">
       <div class="label">{runs.length} {runs.length === 1 ? 'run' : 'runs'}</div>
       {#if live}
-        <button class="rounded-[3px] bg-brand px-3 py-1 text-sm text-white disabled:opacity-50" onclick={runNow} disabled={running}>{running ? 'running…' : 'Run'}</button>
+        <button class="rounded-[3px] px-3 py-1 text-sm ring-1 ring-neutral-300 disabled:opacity-50 dark:ring-neutral-700" onclick={() => runNow(null)} disabled={running}>{running ? 'running…' : meta.variants?.length ? 'Run as written' : 'Run'}</button>
       {/if}
     </div>
     {#if log.length}
@@ -105,9 +134,10 @@
       <ul class="divide-y divide-neutral-200 dark:divide-neutral-800">
         {#each runs as r (r.id)}
           <li>
-            <a use:link={{ project: path, run: r.id }} class="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 py-2.5 -mx-2 px-2 rounded-[3px] hover:bg-brand-soft/40 sm:grid-cols-[auto_1fr_auto_auto] sm:items-center">
+            <a use:link={{ project: path, run: r.id }} class="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 py-2.5 -mx-2 px-2 rounded-[3px] hover:bg-brand-soft/40 sm:grid-cols-[auto_auto_1fr_auto_auto] sm:items-center">
+              <span class="text-sm font-medium">{r.variant ?? (r.set && Object.keys(r.set).length ? 'custom' : 'as written')}</span>
               <span class="mono text-xs">{isoDate(r.start)} → {isoDate(r.end)}</span>
-              <span class="mono text-xs muted truncate">{r.digest}</span>
+              <span class="mono text-xs muted truncate">{r.set && Object.keys(r.set).length ? Object.entries(r.set).map(([k, x]) => `${k}=${x}`).join(' ') : r.digest}</span>
               <span class="mono text-xs muted">{num(r.events)} events</span>
               <span class="flex items-center gap-3">
                 {#if r.audit}<Verdict verdict={r.audit.verdict} />{/if}

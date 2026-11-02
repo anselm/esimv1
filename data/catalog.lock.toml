@@ -216,11 +216,29 @@ sha256 = "30a1809cca1ca788f680a8f1363542e306984f6d98866c48f7abc6c2448226e2"
 bytes = 11193086
 fetched = "2026-11-01"
 
+[files."natural-earth/ne_110m_admin_0_countries.geojson"]
+url = "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_admin_0_countries.geojson"
+sha256 = "6866c877d39cba9c357620878839b336d569f8c662d3cfab4cb1dbe2d39c977f"
+bytes = 838726
+fetched = "2026-11-02"
+
+[files."noaa-gml/ch4_annmean_gl.csv"]
+url = "https://gml.noaa.gov/webdata/ccgg/trends/ch4/ch4_annmean_gl.csv"
+sha256 = "e3aa85c175b5deca25a121f4ba0c48979a650304830650543230fda1835a774b"
+bytes = 2786
+fetched = "2026-11-02"
+
 [files."noaa-gml/co2_annmean_mlo.csv"]
 url = "https://gml.noaa.gov/webdata/ccgg/trends/co2/co2_annmean_mlo.csv"
 sha256 = "bdd956e8d7e05ebc3c61ac1f8f8c8cea4a505df56724fba5200b4eb1e0089b2b"
 bytes = 3134
 fetched = "2026-11-01"
+
+[files."noaa-gml/n2o_annmean_gl.csv"]
+url = "https://gml.noaa.gov/webdata/ccgg/trends/n2o/n2o_annmean_gl.csv"
+sha256 = "fdc99f462233e9f8acba3e7eab90a972eef1dec6ded65173ed395fd74f82b71b"
+bytes = 2455
+fetched = "2026-11-02"
 
 [files."noaa-paleo/law2006.txt"]
 url = "https://www.ncei.noaa.gov/pub/data/paleo/icecore/antarctica/law/law2006.txt"
@@ -294,6 +312,12 @@ sha256 = "7f78e2b218ce4bb8c538bbec04fdc9a7982e8d40bff972e650df603899edd5f6"
 bytes = 14377942
 fetched = "2026-11-01"
 
+[files."un-wpp/WPP2024_TotalPopulationBySex.csv.gz"]
+url = "https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_TotalPopulationBySex.csv.gz"
+sha256 = "66b84489fd7875b62de9b40d960b803b8c8439367c98deab89c2f770970925b9"
+bytes = 16980593
+fetched = "2026-11-02"
+
 [files."usgs-dv/05481000-00060-1940-01-01-2026-12-31.rdb"]
 url = "https://waterservices.usgs.gov/nwis/dv/?format=rdb&sites=05481000&parameterCd=00060&statCd=00003&startDT=1940-01-01&endDT=2026-12-31"
 sha256 = "edbe0bb5b639a8c8ece755c5a68bb4d31ff044d0277ee8352c86d56ffcfd7693"
@@ -305,3 +329,15 @@ url = "https://waterservices.usgs.gov/nwis/dv/?format=rdb&sites=05481000&paramet
 sha256 = "0fec8ede36183f9c16ee2dbfda91017dfc7e0544974bb4b12a5a1c9921128c1b"
 bytes = 41672
 fetched = "2026-11-01"
+
+[files."worldbank-cckp/cru_tas_annual_all_countries.json"]
+url = "https://cckpapi.worldbank.org/cckp/v1/cru-x0.5_timeseries_tas_timeseries_annual_1901-2022_mean_historical_cru_ts4.07_mean/all_countries?_format=json"
+sha256 = "d4eab520f1249c5d9fbbe6d4b9ce2a8a135d9fe604f760555511edf9cafd1086"
+bytes = 473229
+fetched = "2026-11-02"
+
+[files."worldbank-cckp/cru_tas_monthly_all_countries.json"]
+url = "https://cckpapi.worldbank.org/cckp/v1/cru-x0.5_timeseries_tas_timeseries_monthly_1901-2022_mean_historical_cru_ts4.07_mean/all_countries?_format=json"
+sha256 = "4784dcc368449e691622a4f5cf0a68bf6269b8bd92ef6fbf4df1eac18f592c82"
+bytes = 5635629
+fetched = "2026-11-02"

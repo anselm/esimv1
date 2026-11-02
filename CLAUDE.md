@@ -48,6 +48,13 @@ how to run it. Not deployed anywhere; it runs on canada1.
   or asset, update its describe; `crates/modules/tests/describe.rs` compares declarations
   against real run logs and fails otherwise. `esim run` refuses a manifest whose wiring
   does not check. The contract is `docs/protocol-v0.md`.
+- Country layers (`crates/modules/src/countries.rs`): Natural Earth outlines rasterised at
+  2 degrees, UN WPP people (multi-member gzip: use MultiGzDecoder), CRU country temperature
+  through the World Bank CCKP API, `data/events/tipping.toml` (every row `recalled`, not
+  yet checked against Armstrong McKay et al. 2022). The planet runs about 0.5 degC warm in
+  2024 (no aerosols, impulse-response sinks); crossing years read early by about 20 years.
+- Manifests may `include = ["other.toml"]`; `Manifest::load` resolves, project folders get
+  the resolved text. Projects may declare `[[variant]]` sets; runs record `variant.json`.
 - Planetary rungs (`manifests/p1-*`, `crates/modules/src/planet.rs`) are zero-dimensional
   and read five small global records listed in the catalog (OWID emissions, Mauna Loa,
   Law Dome, HadCRUT5, GISTEMP); NOAA's ocean heat content server was down on 2026-11-01,

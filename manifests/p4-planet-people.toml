@@ -1,0 +1,43 @@
+# P4: the planet core with people on it, to 2100. Countries as the coarse unit: people per
+# country from the UN (its medium projection after 2023, labelled), each country's
+# temperature from its own record scaled by the run's global anomaly, the people living
+# outside the human climate niche, and the tipping elements' thresholds checked against
+# the warming. Emissions after 2024 are an assumption; the project's variants state which.
+# Everything the core leaves out (aerosols, sink saturation, feedbacks) is still left out.
+
+include = ["planet-core.toml"]
+
+[run]
+name = "p4-planet-people"
+start = "1850-01-01"
+end = "2100-01-01"
+seed = 1
+close_every = "30d"
+notes = "Planet core plus countries, people, heat exposure and tipping thresholds, 1850 to 2100. After 2024 emissions follow the variant's assumption (default: held at the 2024 rate). CO2, CH4 and N2O forcing; no aerosols; no feedbacks."
+
+[[module]]
+name = "people"
+kind = "people.countries"
+[module.params]
+res_deg = 2.0
+frame_every_years = 5
+
+[[module]]
+name = "climate"
+kind = "climate.countries"
+[module.params]
+res_deg = 2.0
+frame_every_years = 5
+
+[[module]]
+name = "heat"
+kind = "people.heat"
+[module.params]
+res_deg = 2.0
+frame_every_years = 5
+niche_c = 29.0
+hot_month_c = 32.0
+
+[[module]]
+name = "tipping"
+kind = "tipping.elements"

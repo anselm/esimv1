@@ -268,9 +268,15 @@ io.on('connection', (socket) => {
     }
   }))
 
-  socket.on('project.run', ({ path: p } = {}, ack) => reply(ack, async () => {
+  socket.on('project.run', ({ path: p, variant, set } = {}, ack) => reply(ack, async () => {
     if (!validPath(p)) throw new Error('bad project path')
-    const r = await esim(['project', 'run', p], (line) => socket.emit('project.log', { path: p, line }))
+    const args = ['project', 'run', p]
+    if (variant) { if (!/^[a-z0-9][a-z0-9_-]*$/.test(variant)) throw new Error('bad variant name'); args.push('--variant', variant) }
+    for (const [k, v] of Object.entries(set || {})) {
+      if (!/^[a-z0-9_.-]+$/i.test(k) || String(v).length > 200) throw new Error(`bad override ${k}`)
+      args.push('--set', `${k}=${v}`)
+    }
+    const r = await esim(args, (line) => socket.emit('project.log', { path: p, line }))
     io.emit('projects.changed', { path: p })
     return { ran: r.ok, output: r.output }
   }))

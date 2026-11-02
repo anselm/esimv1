@@ -5,7 +5,7 @@
 //! esim kinds [--json]                     list module kinds, or describe each under default parameters
 //! esim audit <run_dir>                    the independent auditor: spend-down, diversity, shocks, tears
 //! esim project new <area/name> [--manifest f] [--title t] [--description d]   a project folder under projects/
-//! esim project run <area/name>            run a project's manifest into its runs/
+//! esim project run <area/name> [--variant v] [--set module.param=value ...]   run a project's manifest into its runs/
 //! esim projects [--json]                  list projects (and refresh projects/index.json)
 
 use esim_kernel::{Kernel, Manifest, Module};
@@ -20,8 +20,7 @@ fn factory(name: &str, params: &toml::Value) -> Result<Box<dyn Module>, String> 
 /// The kernel's factory takes params only; fold each entry's kind into its params.
 /// Every load checks the wiring first: errors refuse the run, warnings go to stderr.
 fn load(path: &Path) -> Result<Manifest, String> {
-    let text = fs::read_to_string(path).map_err(|e| format!("{}: {e}", path.display()))?;
-    let mut m = Manifest::parse(&text)?;
+    let mut m = Manifest::load(path)?;
     let r = check_report(&m);
     for w in &r.warnings { eprintln!("warning: {w}"); }
     if !r.errors.is_empty() {
@@ -57,8 +56,7 @@ fn check_report(m: &Manifest) -> esim_kernel::CheckReport {
 
 /// esim check <manifest>: print the wiring report; exit 1 on errors.
 fn check(path: &Path) -> Result<(), String> {
-    let text = fs::read_to_string(path).map_err(|e| format!("{}: {e}", path.display()))?;
-    let m = Manifest::parse(&text)?;
+    let m = Manifest::load(path)?;
     let r = check_report(&m);
     println!("{}  {} -> {}  {} modules", m.run.name, m.run.start, m.run.end, r.modules.len());
     for d in &r.modules {
@@ -79,8 +77,7 @@ fn check(path: &Path) -> Result<(), String> {
 /// esim describe <manifest>: the wired modules' full descriptions and findings as JSON,
 /// for a facade or a person who wants everything.
 fn describe(path: &Path) -> Result<(), String> {
-    let text = fs::read_to_string(path).map_err(|e| format!("{}: {e}", path.display()))?;
-    let m = Manifest::parse(&text)?;
+    let m = Manifest::load(path)?;
     let r = check_report(&m);
     println!("{}", serde_json::to_string_pretty(&r).unwrap());
     Ok(())
@@ -107,18 +104,54 @@ fn fold_params(m: &mut Manifest) {
     }
 }
 
-fn run(path: &Path, out_root: &Path) -> Result<PathBuf, String> {
-    let manifest = load(path)?;
+/// A parameter override: "run.end" or "module.param", and a value given as text.
+pub type Override = (String, String);
+
+/// Apply overrides to a manifest document: `run.<key>` sets a run field, anything else
+/// is `<module name>.<param>`. The value text is read as TOML (number, bool, string).
+fn apply_overrides(text: &str, sets: &[Override]) -> Result<String, String> {
+    if sets.is_empty() { return Ok(text.to_string()); }
+    let mut doc: toml::Value = toml::from_str(text).map_err(|e| format!("manifest: {e}"))?;
+    for (key, val) in sets {
+        let v: toml::Value = toml::from_str::<toml::Value>(&format!("v = {val}")).ok().and_then(|t| t.get("v").cloned())
+            .unwrap_or(toml::Value::String(val.clone()));
+        let (head, param) = key.split_once('.').ok_or_else(|| format!("--set {key}: expected run.<key> or <module>.<param>"))?;
+        if head == "run" {
+            doc.get_mut("run").and_then(|r| r.as_table_mut()).ok_or("manifest has no [run]")?.insert(param.to_string(), v);
+        } else {
+            let mods = doc.get_mut("module").and_then(|m| m.as_array_mut()).ok_or("manifest has no [[module]]")?;
+            let m = mods.iter_mut().find(|m| m.get("name").and_then(|n| n.as_str()) == Some(head)).ok_or_else(|| format!("--set {key}: no module named {head}"))?;
+            let t = m.as_table_mut().ok_or("module entry is not a table")?;
+            let params = t.entry("params").or_insert(toml::Value::Table(Default::default()));
+            params.as_table_mut().ok_or("module.params is not a table")?.insert(param.to_string(), v);
+        }
+    }
+    toml::to_string_pretty(&doc).map_err(|e| e.to_string())
+}
+
+fn run(path: &Path, out_root: &Path) -> Result<PathBuf, String> { run_with(path, out_root, &[], None) }
+
+fn run_with(path: &Path, out_root: &Path, sets: &[Override], variant: Option<&str>) -> Result<PathBuf, String> {
+    let original = Manifest::resolve_text(path)?;
+    let mtext = apply_overrides(&original, sets)?;
+    let mut manifest = Manifest::parse(&mtext)?;
+    let r = check_report(&manifest);
+    for w in &r.warnings { eprintln!("warning: {w}"); }
+    if !r.errors.is_empty() { return Err(format!("manifest does not wire up:\n  {}", r.errors.join("\n  "))); }
+    fold_params(&mut manifest);
     let mut k = Kernel::new(manifest.clone(), factory)?;
     let out = k.run();
     // The log digest alone does not see parameters that change only ledger and series
-    // values, so the run id also hashes the manifest text.
-    let mtext = fs::read_to_string(path).map_err(|e| e.to_string())?;
+    // values, so the run id also hashes the resolved manifest text.
     let mhash = esim_kernel::hash::fnv1a(mtext.as_bytes());
     let id = format!("{}-{:08x}-{}", out.name, (mhash >> 32) as u32, &out.log_digest[..8]);
     let dir = out_root.join(&id);
     fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
-    fs::copy(path, dir.join("manifest.toml")).map_err(|e| e.to_string())?;
+    fs::write(dir.join("manifest.toml"), &mtext).map_err(|e| e.to_string())?;
+    if variant.is_some() || !sets.is_empty() {
+        let set: serde_json::Map<String, serde_json::Value> = sets.iter().map(|(k, v)| (k.clone(), serde_json::Value::String(v.clone()))).collect();
+        fs::write(dir.join("variant.json"), serde_json::to_string_pretty(&serde_json::json!({ "variant": variant, "set": set })).unwrap()).map_err(|e| e.to_string())?;
+    }
     let f = fs::File::create(dir.join("log.jsonl")).map_err(|e| e.to_string())?;
     k.log.write_jsonl(std::io::BufWriter::new(f)).map_err(|e| e.to_string())?;
     fs::write(dir.join("run.json"), serde_json::to_string_pretty(&out).unwrap()).map_err(|e| e.to_string())?;
@@ -184,7 +217,8 @@ fn project_new(path: &str, manifest: Option<&Path>, title: Option<&str>, descrip
     if dir.exists() { return Err(format!("project {path} exists at {}", dir.display())); }
     let m = match manifest { Some(p) => load(p)?, None => return Err("a manifest is required (--manifest file)".into()) };
     fs::create_dir_all(dir.join("runs")).map_err(|e| e.to_string())?;
-    fs::copy(manifest.unwrap(), dir.join("manifest.toml")).map_err(|e| e.to_string())?;
+    // the project folder stands alone: includes are folded in before the copy
+    fs::write(dir.join("manifest.toml"), Manifest::resolve_text(manifest.unwrap())?).map_err(|e| e.to_string())?;
     let (area, name) = path.trim_matches('/').split_once('/').unwrap();
     let meta = format!(
         "# A project: who asked for what, in their words, and the manifest beside it.
@@ -205,12 +239,33 @@ by = {}
     Ok(())
 }
 
-fn project_run(path: &str) -> Result<(), String> {
+/// Run a project: its manifest, with a named variant's overrides from project.toml
+/// (`[[variant]] name = ..., [variant.set] "module.param" = value`) and any --set on top.
+fn project_run(path: &str, variant: Option<&str>, extra: &[Override]) -> Result<(), String> {
     let dir = project_dir(path)?;
     if !dir.join("manifest.toml").exists() { return Err(format!("no project at {}", dir.display())); }
-    run(&dir.join("manifest.toml"), &dir.join("runs"))?;
+    let mut sets: Vec<Override> = Vec::new();
+    if let Some(v) = variant {
+        let meta: toml::Value = toml::from_str(&fs::read_to_string(dir.join("project.toml")).map_err(|e| e.to_string())?).map_err(|e| e.to_string())?;
+        let found = meta.get("variant").and_then(|a| a.as_array()).into_iter().flatten()
+            .find(|e| e.get("name").and_then(|n| n.as_str()) == Some(v)).ok_or_else(|| format!("project {path} has no variant {v}"))?;
+        for (k, val) in found.get("set").and_then(|t| t.as_table()).into_iter().flatten() {
+            let text = match val { toml::Value::String(s) => format!("{s:?}"), other => other.to_string() };
+            sets.push((k.clone(), text));
+        }
+    }
+    sets.extend(extra.iter().cloned());
+    run_with(&dir.join("manifest.toml"), &dir.join("runs"), &sets, variant)?;
     projects_index()?;
     Ok(())
+}
+
+fn parse_overrides(args: &[String]) -> Vec<Override> {
+    let mut out = Vec::new();
+    for (i, a) in args.iter().enumerate() {
+        if a == "--set" { if let Some((k, v)) = args.get(i + 1).and_then(|s| s.split_once('=')) { out.push((k.to_string(), v.to_string())); } }
+    }
+    out
 }
 
 /// projects/index.json: every project with its metadata and its runs' index rows.
@@ -244,7 +299,8 @@ fn projects(json: bool) -> Result<(), String> {
     let rows = projects_index()?;
     if json { println!("{}", serde_json::to_string_pretty(&rows).unwrap()); return Ok(()); }
     for r in &rows {
-        println!("{:40} {:3} runs  {}", r["path"].as_str().unwrap_or(""), r["runs"].as_array().map(|a| a.len()).unwrap_or(0), r["title"].as_str().unwrap_or(""));
+        let variants: Vec<&str> = r["variant"].as_array().into_iter().flatten().filter_map(|v| v["name"].as_str()).collect();
+        println!("{:40} {:3} runs  {}{}", r["path"].as_str().unwrap_or(""), r["runs"].as_array().map(|a| a.len()).unwrap_or(0), r["title"].as_str().unwrap_or(""), if variants.is_empty() { String::new() } else { format!("  [{}]", variants.join(", ")) });
     }
     Ok(())
 }
@@ -257,11 +313,14 @@ fn update_index(root: &Path) -> Result<(), String> {
         let p = e.path().join("run.json");
         if let Ok(text) = fs::read_to_string(&p) {
             if let Ok(v) = serde_json::from_str::<serde_json::Value>(&text) {
+                let variant: serde_json::Value = fs::read_to_string(e.path().join("variant.json")).ok().and_then(|t| serde_json::from_str(&t).ok()).unwrap_or(serde_json::Value::Null);
+                let audit: serde_json::Value = fs::read_to_string(e.path().join("audit.json")).ok().and_then(|t| serde_json::from_str(&t).ok()).unwrap_or(serde_json::Value::Null);
                 rows.push(serde_json::json!({
                     "id": e.file_name().to_string_lossy(),
                     "name": v["name"], "start": v["start"], "end": v["end"], "seed": v["seed"],
                     "events": v["events"], "all_ledgers_closed": v["all_ledgers_closed"],
                     "digest": v["log_digest"],
+                    "variant": variant["variant"], "set": variant["set"], "verdict": audit["verdict"],
                 }));
             }
         }
@@ -562,7 +621,7 @@ fn main() {
             let get = |flag: &str| args.iter().position(|a| a == flag).and_then(|i| args.get(i + 1)).map(String::as_str);
             match (args.get(2).map(String::as_str), args.get(3)) {
                 (Some("new"), Some(p)) => project_new(p, get("--manifest").map(Path::new), get("--title"), get("--description"), get("--by").unwrap_or("cli")),
-                (Some("run"), Some(p)) => project_run(p),
+                (Some("run"), Some(p)) => project_run(p, get("--variant"), &parse_overrides(&args)),
                 _ => Err("usage: esim project new <area/name> --manifest <file> [--title t] [--description d] [--by who] | esim project run <area/name>".into()),
             }
         }

@@ -250,6 +250,8 @@ impl Module for Pools {
 pub struct TwoLayer {
     name: String,
     co2_ref_ppm: f64, alpha: f64, lambda: f64, gamma: f64, c_surface: f64, c_deep: f64, extra_forcing: f64,
+    /// forcings other modules publish on `forcing.extra`, by name, W/m2
+    extra: BTreeMap<String, f64>,
     ppm: f64,
     /// stored heat relative to the start, J
     h_surface: f64, h_deep: f64,
@@ -264,6 +266,7 @@ impl TwoLayer {
             alpha: param_f64(p, "alpha_w_m2", 5.35), lambda: param_f64(p, "lambda_w_m2_k", 1.13), gamma: param_f64(p, "gamma_w_m2_k", 0.73),
             c_surface: param_f64(p, "c_surface_w_yr_m2_k", 7.3), c_deep: param_f64(p, "c_deep_w_yr_m2_k", 91.0),
             extra_forcing: param_f64(p, "extra_forcing_w_m2", 0.0),
+            extra: BTreeMap::new(),
             ppm: co2_ref_ppm, h_surface: 0.0, h_deep: 0.0, last_tick: None,
         })
     }
@@ -272,7 +275,7 @@ impl TwoLayer {
     fn cap_deep(&self) -> f64 { self.c_deep * SECS_PER_YEAR * EARTH_AREA_M2 }
     fn t_surface(&self) -> f64 { self.h_surface / self.cap_surface() }
     fn t_deep(&self) -> f64 { self.h_deep / self.cap_deep() }
-    fn forcing(&self) -> f64 { self.alpha * (self.ppm / self.co2_ref_ppm).ln() + self.extra_forcing }
+    fn forcing(&self) -> f64 { self.alpha * (self.ppm / self.co2_ref_ppm).ln() + self.extra_forcing + self.extra.values().sum::<f64>() }
     pub fn describe(name: &str, p: &toml::Value) -> Describe {
         Describe::new("energy.twolayer", name, "Global energy balance in two layers (Held et al. 2010; Geoffroy et al. 2013): CO2 forcing 5.35 ln(C/C0) warms a surface layer that radiates in proportion to its anomaly and exchanges heat with a deep ocean. Energy ledger in joules: forcing in from space, response out to space, uptake into the deep. CO2 only; other greenhouse gases and aerosols enter only through extra_forcing_w_m2.")
             .priority(2).dt("1 month (calendar)")
@@ -284,6 +287,8 @@ impl TwoLayer {
             .param("c_deep_w_yr_m2_k", param_f64(p, "c_deep_w_yr_m2_k", 91.0), "W yr/m2/K", "deep ocean heat capacity; same source and caveat")
             .param("extra_forcing_w_m2", param_f64(p, "extra_forcing_w_m2", 0.0), "W/m2", "constant non-CO2 forcing; zero means CO2 only")
             .subscribe("carbon.co2", "{ ppm } sets the forcing for the next step")
+            .subscribe("forcing.extra", "{ name, w_m2 } from other modules (methane, N2O, aerosols), summed by name")
+            .publish("energy.state", "{ gmst_c, deep_c, forcing_w_m2, imbalance_w_m2, stored_zj } after each step, for modules downstream of the climate")
             .ledger(ENERGY, "J", 1e10)
             .report("energy.gmst_anom_c", "degC").report("energy.deep_anom_c", "degC").report("energy.forcing_w_m2", "W/m2")
             .report("energy.imbalance_w_m2", "W/m2").report("energy.stored_zj", "ZJ")
@@ -298,12 +303,16 @@ impl Module for TwoLayer {
         ctx.declare_stock(ENERGY, "surface_heat", self.h_surface);
         ctx.declare_stock(ENERGY, "deep_heat", self.h_deep);
         ctx.subscribe("carbon.co2");
+        ctx.subscribe("forcing.extra");
         self.last_tick = Some(ctx.now());
         ctx.schedule_with_priority(to_next_month(ctx.now()), 2, "tick", json!(null));
     }
     fn handle(&mut self, ev: &Event, ctx: &mut Ctx) {
         match ev.topic.as_str() {
             "carbon.co2" => { if let Some(p) = ev.data.get("ppm").and_then(|v| v.as_f64()) { self.ppm = p; } }
+            "forcing.extra" => {
+                if let (Some(n), Some(w)) = (ev.data.get("name").and_then(|v| v.as_str()), ev.data.get("w_m2").and_then(|v| v.as_f64())) { self.extra.insert(n.to_string(), w); }
+            }
             "tick" => {
                 let dt = ctx.now().since(self.last_tick.unwrap_or(ctx.now())).as_secs_f64();
                 let (ts, td) = (self.t_surface(), self.t_deep());
@@ -323,11 +332,142 @@ impl Module for TwoLayer {
                 ctx.report("energy.forcing_w_m2", "W/m2", f);
                 ctx.report("energy.imbalance_w_m2", "W/m2", (in_j - out_j) / (EARTH_AREA_M2 * dt));
                 ctx.report("energy.stored_zj", "ZJ", (self.h_surface + self.h_deep) / 1e21);
+                for (n, w) in &self.extra { ctx.report(&format!("energy.forcing_{n}_w_m2"), "W/m2", *w); }
+                ctx.publish("energy.state", json!({ "gmst_c": self.t_surface(), "deep_c": self.t_deep(), "forcing_w_m2": f,
+                    "imbalance_w_m2": (in_j - out_j) / (EARTH_AREA_M2 * dt), "stored_zj": (self.h_surface + self.h_deep) / 1e21 }));
                 self.last_tick = Some(ctx.now());
                 ctx.schedule_with_priority(to_next_month(ctx.now()), 2, "tick", json!(null));
             }
             _ => {}
         }
+    }
+    fn snapshot(&self) -> serde_json::Value { serde_json::to_value(self).unwrap() }
+    fn restore(&mut self, v: serde_json::Value) { *self = serde_json::from_value(v).unwrap(); }
+}
+
+// ---------------------------------------------------------------------------------------
+// carbon.gases: methane and nitrous oxide from the records, as forcing for the energy module.
+
+#[derive(Serialize, Deserialize)]
+pub struct Gases {
+    name: String,
+    ch4_0: f64, n2o_0: f64,
+    #[serde(skip)] ch4: BTreeMap<i64, f64>,
+    #[serde(skip)] n2o: BTreeMap<i64, f64>,
+}
+
+/// The CH4 and N2O overlap term of the simplified expressions (IPCC TAR Table 6.2, after
+/// Myhre et al. 1998). M and N in ppb.
+fn overlap(m: f64, n: f64) -> f64 { 0.47 * (1.0 + 2.01e-5 * (m * n).powf(0.75) + 5.31e-15 * m * (m * n).powf(1.52)).ln() }
+
+impl Gases {
+    pub fn new(name: &str, p: &toml::Value) -> Result<Gases, String> {
+        let mut g = Gases { name: name.to_string(), ch4_0: param_f64(p, "ch4_preindustrial_ppb", 722.0), n2o_0: param_f64(p, "n2o_preindustrial_ppb", 270.0), ch4: BTreeMap::new(), n2o: BTreeMap::new() };
+        g.load()?;
+        Ok(g)
+    }
+    fn load(&mut self) -> Result<(), String> {
+        let root = root();
+        let cat = Catalog::load(&root.join("data/catalog.toml"))?;
+        let mut f = Fetcher::default_for(&root)?;
+        let law = asset_url(&cat, "law-dome-2006")?;
+        // ice core until the instrument records begin, then NOAA GML
+        self.ch4 = planet::law_dome_ch4(&mut f, &law)?;
+        let gml_ch4 = planet::gml_annual(&mut f, "noaa-gml/ch4_annmean_gl.csv", &asset_url(&cat, "noaa-gml-ch4-annmean-gl")?)?;
+        let first = *gml_ch4.keys().next().unwrap(); self.ch4.retain(|y, _| *y < first); self.ch4.extend(gml_ch4);
+        self.n2o = planet::law_dome_n2o(&mut f, &law)?;
+        let gml_n2o = planet::gml_annual(&mut f, "noaa-gml/n2o_annmean_gl.csv", &asset_url(&cat, "noaa-gml-n2o-annmean-gl")?)?;
+        let first = *gml_n2o.keys().next().unwrap(); self.n2o.retain(|y, _| *y < first); self.n2o.extend(gml_n2o);
+        Ok(())
+    }
+    /// Value for a year: the record, else the last recorded value (held), else the first.
+    fn at(s: &BTreeMap<i64, f64>, y: i64) -> f64 {
+        if let Some(v) = s.get(&y) { return *v; }
+        match (s.range(..y).next_back(), s.range(y..).next()) { (Some((_, v)), _) => *v, (None, Some((_, v))) => *v, _ => 0.0 }
+    }
+    fn forcings(&self, y: i64) -> (f64, f64, f64, f64) {
+        let (m, n) = (Self::at(&self.ch4, y), Self::at(&self.n2o, y));
+        let (m0, n0) = (self.ch4_0, self.n2o_0);
+        let f_ch4 = 0.036 * (m.sqrt() - m0.sqrt()) - (overlap(m, n0) - overlap(m0, n0));
+        let f_n2o = 0.12 * (n.sqrt() - n0.sqrt()) - (overlap(m0, n) - overlap(m0, n0));
+        (m, n, f_ch4, f_n2o)
+    }
+    pub fn describe(name: &str, p: &toml::Value) -> Describe {
+        Describe::new("carbon.gases", name, "Methane and nitrous oxide concentrations from the records (Law Dome ice core until the NOAA global means begin in 1984 and 2001), turned into radiative forcing by the simplified expressions of Myhre et al. 1998 with the CH4-N2O overlap, and published to the energy module. Beyond the record the last value is held: an assumption. No emissions and no chemistry; concentrations are read, not modelled.")
+            .priority(1).dt("1 year (1 January)")
+            .param("ch4_preindustrial_ppb", param_f64(p, "ch4_preindustrial_ppb", 722.0), "ppb", "IPCC AR5 value, recalled")
+            .param("n2o_preindustrial_ppb", param_f64(p, "n2o_preindustrial_ppb", 270.0), "ppb", "IPCC AR5 value, recalled")
+            .publish("forcing.extra", "{ name: methane | n2o, w_m2 } each January")
+            .report("gases.ch4_ppb", "ppb").report("gases.n2o_ppb", "ppb").report("gases.forcing_ch4_w_m2", "W/m2").report("gases.forcing_n2o_w_m2", "W/m2")
+            .asset("law-dome-2006", "CH4 and N2O splines before the instrument records").asset("noaa-gml-ch4-annmean-gl", "global annual mean CH4 from 1984").asset("noaa-gml-n2o-annmean-gl", "global annual mean N2O from 2001")
+            .note("The expressions are IPCC TAR Table 6.2 (Myhre et al. 1998); Etminan et al. 2016 revised methane upward by about a quarter and is the next step. Aerosols are still absent.")
+    }
+}
+
+impl Module for Gases {
+    fn name(&self) -> &str { &self.name }
+    fn init(&mut self, ctx: &mut Ctx) {
+        self.emit(ctx);
+        ctx.schedule_with_priority(to_next_year(ctx.now()), 1, "tick", json!(null));
+    }
+    fn handle(&mut self, ev: &Event, ctx: &mut Ctx) {
+        if ev.topic != "tick" { return; }
+        self.emit(ctx);
+        ctx.schedule_with_priority(to_next_year(ctx.now()), 1, "tick", json!(null));
+    }
+    fn snapshot(&self) -> serde_json::Value { serde_json::to_value(self).unwrap() }
+    fn restore(&mut self, v: serde_json::Value) { let mut g: Gases = serde_json::from_value(v).unwrap(); g.load().expect("gases reload"); *self = g; }
+}
+
+impl Gases {
+    fn emit(&self, ctx: &mut Ctx) {
+        let (y, _) = year_month(ctx.now());
+        let (m, n, f_ch4, f_n2o) = self.forcings(y);
+        ctx.publish("forcing.extra", json!({ "name": "methane", "w_m2": f_ch4 }));
+        ctx.publish("forcing.extra", json!({ "name": "n2o", "w_m2": f_n2o }));
+        ctx.report("gases.ch4_ppb", "ppb", m); ctx.report("gases.n2o_ppb", "ppb", n);
+        ctx.report("gases.forcing_ch4_w_m2", "W/m2", f_ch4); ctx.report("gases.forcing_n2o_w_m2", "W/m2", f_n2o);
+    }
+}
+
+/// Seconds from `now` to the next 1 January strictly after now.
+fn to_next_year(now: Time) -> Duration {
+    let (y, _) = year_month(now);
+    Time::parse(&format!("{:04}-01-01", y + 1)).unwrap().since(now)
+}
+
+// ---------------------------------------------------------------------------------------
+// sea.thermal: sea level from the heat the energy ledger has stored.
+
+#[derive(Serialize, Deserialize)]
+pub struct SeaThermal {
+    name: String,
+    m_per_yj: f64,
+    last_m: f64,
+}
+
+impl SeaThermal {
+    pub fn new(name: &str, p: &toml::Value) -> Result<SeaThermal, String> {
+        Ok(SeaThermal { name: name.to_string(), m_per_yj: param_f64(p, "m_per_yj", 0.11), last_m: 0.0 })
+    }
+    pub fn describe(name: &str, p: &toml::Value) -> Describe {
+        Describe::new("sea.thermal", name, "Global mean sea level rise from thermal expansion alone: the energy module's stored heat times an expansion efficiency. Ice sheets and glaciers, which are the larger term this century, are not here yet; the number is a floor, and the describe says so.")
+            .priority(3).dt("follows energy.state")
+            .param("m_per_yj", param_f64(p, "m_per_yj", 0.11), "m/YJ", "expansion efficiency of ocean heat uptake, about 0.11 m per 10^24 J (Kuhlbrodt and Gregory 2012, recalled; to be checked)")
+            .subscribe("energy.state", "{ stored_zj }")
+            .report("sea.thermal_m", "m")
+            .note("Thermal expansion only. No scoreboard yet: a satellite altimetry series has not been fetched.")
+    }
+}
+
+impl Module for SeaThermal {
+    fn name(&self) -> &str { &self.name }
+    fn init(&mut self, ctx: &mut Ctx) { ctx.subscribe("energy.state"); }
+    fn handle(&mut self, ev: &Event, ctx: &mut Ctx) {
+        if ev.topic != "energy.state" { return; }
+        let Some(zj) = ev.data.get("stored_zj").and_then(|v| v.as_f64()) else { return };
+        self.last_m = zj / 1000.0 * self.m_per_yj;
+        ctx.report("sea.thermal_m", "m", self.last_m);
     }
     fn snapshot(&self) -> serde_json::Value { serde_json::to_value(self).unwrap() }
     fn restore(&mut self, v: serde_json::Value) { *self = serde_json::from_value(v).unwrap(); }

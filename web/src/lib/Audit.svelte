@@ -28,6 +28,48 @@
   </div>
 {/if}
 
+{#if audit.crossings?.length}
+  {@const tips = audit.crossings.filter((c) => c.topic === 'tipping.crossing')}
+  {@const people = audit.crossings.filter((c) => c.topic === 'people.crossing')}
+  <div class="mt-4 grid gap-x-8 gap-y-4 lg:grid-cols-2">
+    {#if tips.length}
+      <div>
+        <div class="label mb-1">tipping thresholds passed</div>
+        <table class="mono w-full text-xs">
+          <tbody>
+            {#each tips as c, i (i)}
+              <tr class="border-t border-neutral-100 dark:border-neutral-900">
+                <td class="whitespace-nowrap pr-3 py-0.5">{isoDate(c.t).slice(0, 4)}</td>
+                <td class="pr-3 py-0.5">{c.data.title}</td>
+                <td class="whitespace-nowrap pr-3 py-0.5 {c.data.level === 'central' ? 'text-leak' : 'muted'}">{c.data.level} {c.data.threshold_c}°</td>
+                <td class="py-0.5 muted" title={c.data.source}>{c.data.confidence}</td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+        <p class="mt-1 text-[11px] muted">a flag with a citation, not a tip in this run: nothing feeds back yet</p>
+      </div>
+    {/if}
+    {#if people.length}
+      <div>
+        <div class="label mb-1">countries crossing</div>
+        <table class="mono w-full text-xs">
+          <tbody>
+            {#each people as c, i (i)}
+              <tr class="border-t border-neutral-100 dark:border-neutral-900">
+                <td class="whitespace-nowrap pr-3 py-0.5">{isoDate(c.t).slice(0, 4)}</td>
+                <td class="pr-3 py-0.5">{c.data.name}</td>
+                <td class="whitespace-nowrap pr-3 py-0.5 {c.data.kind === 'niche' ? 'text-leak' : 'muted'}">{c.data.kind === 'niche' ? 'outside the niche' : 'hottest month'}</td>
+                <td class="whitespace-nowrap py-0.5 text-right">{num(Math.round((c.data.persons ?? 0) / 1e6))} M</td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      </div>
+    {/if}
+  </div>
+{/if}
+
 {#if audit.shocks?.length}
   <div class="mt-4">
     <div class="label mb-1">shocks and recovery</div>

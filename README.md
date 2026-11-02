@@ -25,15 +25,22 @@ framework against the use cases as rungs land.
   cohort-to-individuals zoom), fire hazard, farm agents, calendar rules, nitrogen; and
   the first planetary rung, zero-dimensional: observed emissions into a carbon ledger,
   impulse-response sinks, a two-layer energy balance, and the records (Mauna Loa, Law
-  Dome, HadCRUT5, GISTEMP) as scoreboards; and two 2100 scenarios on top of it, each a
-  stated assumption about emissions after the record (held at the 2024 rate; to zero by
-  2050), never a forecast.
+  Dome, HadCRUT5, GISTEMP) as scoreboards; methane and N2O forcing from the records;
+  thermal sea level; and the first layers above the climate with the country as the unit:
+  people per country (UN), each country's temperature from its own record scaled by the
+  run's warming, people outside the human climate niche, and the tipping elements'
+  published thresholds checked against the warming. One project, `anselm/planet`, with
+  variants for the hindcast, emissions held at the 2024 rate, and emissions to zero by
+  2050: each an assumption, never a forecast.
 - `crates/audit`: the independent auditor of a finished run: spend-down of every ledger
   stock, diversity of populations, shocks and recovery, tears, a verdict.
 - `crates/cli`: `esim run | verify | ensemble | sweep | score | audit | check | describe |
   kinds | project new/run | projects`.
 - `projects/`: a folder per project, `<area>/<name>/{project.toml, manifest.toml, runs/}`.
-  The folder is the project; the CLI writes it and anyone can run it by hand.
+  The folder is the project; the CLI writes it and anyone can run it by hand. A project's
+  `[[variant]]` tables name parameter sets (`esim project run a/n --variant held`); each
+  run keeps its resolved manifest. Manifests may `include` others (`manifests/planet-core.toml`).
+- `todo.md`: the open research projects and layers, one line each, pointing into the devlog.
 - `web/`: the viewer (Svelte 5, Vite): projects first, a project's runs, a run with its
   maps under one time cursor, the audit, scores, charts, ledgers; and `server.mjs`, one
   Node process that serves the built viewer and the run and project folders and speaks
