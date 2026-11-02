@@ -7,6 +7,7 @@
 //! esim project new <area/name> [--manifest f] [--title t] [--description d]   a project folder under projects/
 //! esim project run <area/name> [--variant v] [--set module.param=value ...]   run a project's manifest into its runs/
 //! esim project update <area/name> --manifest f   replace a project's manifest with a re-resolved one
+//! esim project prune <area/name> [--keep 1]    keep the newest run per variant, remove the rest
 //! esim projects [--json]                  list projects (and refresh projects/index.json)
 
 use esim_kernel::{Kernel, Manifest, Module};
@@ -273,6 +274,35 @@ fn project_update(path: &str, manifest: &Path) -> Result<(), String> {
     fs::write(dir.join("manifest.toml"), Manifest::resolve_text(manifest)?).map_err(|e| e.to_string())?;
     projects_index()?;
     println!("project  {path}: manifest replaced from {}", manifest.display());
+    Ok(())
+}
+
+/// Keep the newest `keep` runs per variant (and per "as written") and remove the rest.
+/// Runs are artifacts a manifest and a seed reproduce; this frees disk before a deploy.
+fn project_prune(path: &str, keep: usize) -> Result<(), String> {
+    let dir = project_dir(path)?;
+    let runs = dir.join("runs");
+    let mut groups: std::collections::BTreeMap<String, Vec<(std::time::SystemTime, PathBuf)>> = Default::default();
+    for e in fs::read_dir(&runs).map_err(|e| e.to_string())?.flatten() {
+        let p = e.path();
+        if !p.join("run.json").exists() { continue; }
+        let variant = fs::read_to_string(p.join("variant.json")).ok().and_then(|t| serde_json::from_str::<serde_json::Value>(&t).ok())
+            .and_then(|v| v["variant"].as_str().map(String::from)).unwrap_or_else(|| "as-written".into());
+        let t = fs::metadata(p.join("run.json")).and_then(|m| m.modified()).map_err(|e| e.to_string())?;
+        groups.entry(variant).or_default().push((t, p));
+    }
+    let mut removed = 0;
+    for (variant, mut list) in groups {
+        list.sort_by(|a, b| b.0.cmp(&a.0));
+        for (_, p) in list.into_iter().skip(keep) {
+            fs::remove_dir_all(&p).map_err(|e| format!("{}: {e}", p.display()))?;
+            removed += 1;
+            println!("removed  {variant}: {}", p.file_name().unwrap().to_string_lossy());
+        }
+    }
+    update_index(&runs)?;
+    projects_index()?;
+    println!("pruned   {path}: {removed} run folders removed, {keep} kept per variant");
     Ok(())
 }
 
@@ -639,6 +669,7 @@ fn main() {
             match (args.get(2).map(String::as_str), args.get(3)) {
                 (Some("new"), Some(p)) => project_new(p, get("--manifest").map(Path::new), get("--title"), get("--description"), get("--by").unwrap_or("cli")),
                 (Some("run"), Some(p)) => project_run(p, get("--variant"), &parse_overrides(&args)),
+                (Some("prune"), Some(p)) => project_prune(p, get("--keep").and_then(|k| k.parse().ok()).unwrap_or(1)),
                 (Some("update"), Some(p)) => match get("--manifest") { Some(m) => project_update(p, Path::new(m)), None => Err("usage: esim project update <area/name> --manifest <file>".into()) },
                 _ => Err("usage: esim project new <area/name> --manifest <file> [--title t] [--description d] [--by who] | esim project run <area/name>".into()),
             }

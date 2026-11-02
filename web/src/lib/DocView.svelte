@@ -3,7 +3,9 @@
   // One documentation page, rendered from its Markdown; an edit mode that saves through
   // the server. `doc=new` is the form for a new page.
   import { link, go } from './router.svelte.js'
-  import { req } from './socket.js'
+  import { req, hello } from './socket.js'
+  let writable = $state(false)
+  hello().then((h) => { writable = !h.readonly })
   import { render, titleOf } from './markdown.js'
 
   let { path } = $props()
@@ -40,7 +42,7 @@
 
 <a use:link={{ docs: true }} class="floating left-3 top-3 hover:text-brand">← docs</a>
 <div class="floating right-3 top-3 flex items-center gap-3 mono text-xs select-none">
-  {#if !isNew && md !== null}
+  {#if !isNew && md !== null && writable}
     <button class="hover:text-brand" onclick={() => { editing = !editing; draft = md }}>{editing ? 'cancel' : 'edit'}</button>
   {/if}
   <Badge />

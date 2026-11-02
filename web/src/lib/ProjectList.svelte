@@ -3,7 +3,9 @@
   // The front page: projects, each a folder under projects/<area>/<name>. Read from the
   // project server when it is up, from the static index otherwise.
   import { link, go } from './router.svelte.js'
-  import { req, onChanged } from './socket.js'
+  import { req, onChanged, hello } from './socket.js'
+  let writable = $state(false)
+  hello().then((h) => { writable = !h.readonly })
   import { isoDate } from './fmt.js'
   import Verdict from './Verdict.svelte'
 
@@ -54,7 +56,7 @@
 </script>
 
 <div class="floating right-3 top-3 flex items-center gap-3 mono text-xs select-none">
-  <a use:link={{ isNew: true }} class="hover:text-brand" title="new project">+ project</a>
+  {#if writable}<a use:link={{ isNew: true }} class="hover:text-brand" title="new project">+ project</a>{/if}
   <a use:link={{ kinds: true }} class="hover:text-brand" title="module kinds">kinds</a>
   <a use:link={{ docs: true }} class="hover:text-brand" title="documentation">docs</a>
   <Badge />

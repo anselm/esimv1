@@ -47,3 +47,10 @@ export function onChanged(fn) {
   s.on('projects.changed', fn)
   return () => s.off('projects.changed', fn)
 }
+
+// What the server is: version and whether this copy is read-only. Resolved once.
+let helloPromise = null
+export function hello() {
+  if (!helloPromise) helloPromise = req('hello', {}, 5000).catch(() => ({ ok: false, readonly: true, offline: true }))
+  return helloPromise
+}

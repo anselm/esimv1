@@ -2,7 +2,7 @@
   import Badge from './Badge.svelte'
   // One project: what was asked, the manifest, the runs, and a button to run it again.
   import { link, go } from './router.svelte.js'
-  import { req, onLog, onChanged } from './socket.js'
+  import { req, onLog, onChanged, hello } from './socket.js'
   import { isoDate, num } from './fmt.js'
   import Status from './Status.svelte'
   import Verdict from './Verdict.svelte'
@@ -40,7 +40,7 @@
   async function load() {
     try {
       const r = await req('project.get', { path })
-      meta = parseMeta(r.meta); manifest = r.manifest; runs = r.runs; live = true
+      meta = parseMeta(r.meta); manifest = r.manifest; runs = r.runs; live = !(await hello()).readonly
     } catch (e) {
       try {
         const [m, t, rr] = await Promise.all([

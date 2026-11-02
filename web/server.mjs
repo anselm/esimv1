@@ -37,6 +37,11 @@ const ESIM = process.env.ESIM_BIN || path.join(ROOT, 'target/release/esim')
 const PORT = Number(process.env.PORT || 5181)
 const VERSION = JSON.parse(fs.readFileSync(path.join(here, 'package.json'), 'utf8')).version
 const MODEL = process.env.ESIM_MODEL || 'claude-opus-5-5'
+// ESIM_READONLY=1: a public copy. Lists, pages, runs and docs are served; creating,
+// running, drafting and editing are refused with a plain message. No esim binary is
+// needed in this mode: kinds and projects come from the files the last run wrote.
+const READONLY = process.env.ESIM_READONLY === '1'
+const HAVE_ESIM = fs.existsSync(ESIM)
 // Second tier when the Anthropic API is not usable (no key, no credit): a local model
 // through ollama, labelled as such in the answer. Third tier is the person's own TOML.
 const OLLAMA = process.env.OLLAMA_URL || 'http://127.0.0.1:11434'
@@ -69,9 +74,17 @@ function esimJson(args) {
 
 let kindsCache = null
 async function kinds() {
-  if (!kindsCache) kindsCache = await esimJson(['kinds', '--json'])
+  if (!kindsCache) {
+    if (HAVE_ESIM) kindsCache = await esimJson(['kinds', '--json'])
+    else kindsCache = JSON.parse(fs.readFileSync(path.join(ROOT, 'docs/kinds.json'), 'utf8'))
+  }
   return kindsCache
 }
+async function projectsList() {
+  if (HAVE_ESIM && !READONLY) return esimJson(['projects', '--json'])
+  return JSON.parse(fs.readFileSync(path.join(ROOT, 'projects/index.json'), 'utf8'))
+}
+const refuse = () => { throw new Error('this copy is read-only: clone the repository to create, run or edit') }
 
 const validPath = (p) => /^[a-z0-9][a-z0-9_-]*\/[a-z0-9][a-z0-9_-]*$/.test(p)
 
@@ -260,8 +273,8 @@ try {
   }
   fs.writeFileSync(path.join(DOCS, 'outlines.json'), JSON.stringify(rings))
 } catch { /* not fetched yet */ }
-// the kinds, for the static fallback of the kinds page
-kinds().then((ks) => { try { fs.writeFileSync(path.join(DOCS, 'kinds.json'), JSON.stringify(ks)) } catch { /* read-only */ } }).catch(() => {})
+// the kinds, for the static fallback of the kinds page (written only where esim exists)
+if (HAVE_ESIM) kinds().then((ks) => { try { fs.writeFileSync(path.join(DOCS, 'kinds.json'), JSON.stringify(ks)) } catch { /* read-only */ } }).catch(() => {})
 
 // ---- server
 const server = http.createServer(serveStatic)
@@ -270,7 +283,9 @@ const io = new Server(server, { cors: { origin: true } })
 io.on('connection', (socket) => {
   const reply = (ack, fn) => Promise.resolve().then(fn).then((v) => ack?.({ ok: true, ...v }), (e) => ack?.({ ok: false, error: e.message || String(e) }))
 
-  socket.on('projects.list', (_payload, ack) => reply(ack, async () => ({ projects: await esimJson(['projects', '--json']) })))
+  socket.on('hello', (_payload, ack) => reply(ack, async () => ({ version: VERSION, readonly: READONLY, drafts: !READONLY && (Boolean(process.env.ANTHROPIC_API_KEY) || true) })))
+
+  socket.on('projects.list', (_payload, ack) => reply(ack, async () => ({ projects: await projectsList() })))
 
   socket.on('project.get', ({ path: p } = {}, ack) => reply(ack, async () => {
     if (!validPath(p)) throw new Error('bad project path')
@@ -286,6 +301,7 @@ io.on('connection', (socket) => {
   socket.on('docs.list', (_payload, ack) => reply(ack, async () => ({ pages: docsIndex() })))
 
   socket.on('doc.save', ({ path: p, markdown } = {}, ack) => reply(ack, async () => {
+    if (READONLY) refuse()
     if (!validPath(p)) throw new Error('page path must be area/name in lower case letters, digits, - and _')
     if (typeof markdown !== 'string' || !markdown.trim()) throw new Error('an empty page is not saved')
     if (markdown.length > 200_000) throw new Error('page too long')
@@ -297,14 +313,16 @@ io.on('connection', (socket) => {
     return { path: p }
   }))
 
-  socket.on('project.check', ({ manifest } = {}, ack) => reply(ack, async () => ({ check: await checkManifest(String(manifest || '')) })))
+  socket.on('project.check', ({ manifest } = {}, ack) => reply(ack, async () => { if (READONLY) refuse(); return { check: await checkManifest(String(manifest || '')) } }))
 
   socket.on('project.draft', ({ description, title } = {}, ack) => reply(ack, async () => {
+    if (READONLY) refuse()
     if (!description || String(description).trim().length < 10) throw new Error('describe the project in a sentence or more')
     return draft(String(description), String(title || ''), (line) => socket.emit('project.log', { path: null, line }))
   }))
 
   socket.on('project.create', ({ path: p, title, description, manifest, by } = {}, ack) => reply(ack, async () => {
+    if (READONLY) refuse()
     if (!validPath(p)) throw new Error('project path must be area/name in lower case letters, digits, - and _')
     if (!manifest) throw new Error('a manifest is required')
     const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'esim-new-'))
@@ -324,6 +342,7 @@ io.on('connection', (socket) => {
   }))
 
   socket.on('project.run', ({ path: p, variant, set } = {}, ack) => reply(ack, async () => {
+    if (READONLY) refuse()
     if (!validPath(p)) throw new Error('bad project path')
     const args = ['project', 'run', p]
     if (variant) { if (!/^[a-z0-9][a-z0-9_-]*$/.test(variant)) throw new Error('bad variant name'); args.push('--variant', variant) }
@@ -338,5 +357,5 @@ io.on('connection', (socket) => {
 })
 
 server.listen(PORT, '0.0.0.0', () => {
-  console.log(`esim ${VERSION} on :${PORT}, root ${ROOT}, esim ${ESIM}, viewer ${fs.existsSync(DIST) ? 'from dist/' : 'NOT BUILT (npm run build)'}, model ${MODEL} (key ${process.env.ANTHROPIC_API_KEY ? 'set' : 'missing'}), local ${LOCAL_MODEL} at ${OLLAMA}`)
+  console.log(`esim ${VERSION}${READONLY ? ' (read-only)' : ''} on :${PORT}, root ${ROOT}, esim ${ESIM}, viewer ${fs.existsSync(DIST) ? 'from dist/' : 'NOT BUILT (npm run build)'}, model ${MODEL} (key ${process.env.ANTHROPIC_API_KEY ? 'set' : 'missing'}), local ${LOCAL_MODEL} at ${OLLAMA}`)
 })
