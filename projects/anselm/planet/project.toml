@@ -26,3 +26,15 @@ name = "zero-by-2050"
 title = "Emissions to zero by 2050"
 [variant.set]
 "emissions.after_record" = "zero_by:2050"
+
+[[variant]]
+name = "trend"
+title = "Emissions continue the record's last-decade growth (about 0.3% a year)"
+[variant.set]
+"emissions.after_record" = "trend:10"
+
+[[variant]]
+name = "growing"
+title = "Emissions grow 1% a year to 2100"
+[variant.set]
+"emissions.after_record" = "grow:1"

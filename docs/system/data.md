@@ -14,8 +14,10 @@ fetched, so a run's inputs can be checked byte for byte later. The cache
 Sources today, all anonymous: Copernicus elevation tiles; USGS gauges; GHCN-Daily
 stations; ERA5 and GEFS through Open-Meteo; MODIS vegetation through the Planetary
 Computer; Global Carbon Project emissions through Our World in Data; Mauna Loa, methane
-and nitrous oxide from NOAA; Law Dome ice cores; HadCRUT5 and GISTEMP; Natural Earth
-outlines; UN population; CRU country temperatures through the World Bank portal. Each
+and nitrous oxide from NOAA; Law Dome ice cores; HadCRUT5 and GISTEMP; the IPCC AR6
+assessed forcings; Natural Earth outlines and capitals; UN population; CRU country
+temperatures through the World Bank portal; NOAA's station history and daily station
+summaries (GSOD) for the weather station nearest each capital. Each
 catalog entry says what was verified and what licence text still has to be fetched and
 stored before any public use.
 
@@ -23,13 +25,17 @@ stored before any public use.
 
 A basin stage warms about half a gigabyte of cache: four elevation tiles, a year of
 hourly weather at a dozen points, vegetation composites, gauge and station records. The
-planetary layers add about 25 MB of small files. Three habits keep this workable:
+planetary layers add about 25 MB of small files. Four habits keep this workable:
 
 - **Fetch once, hash, reuse.** Nothing is downloaded twice; ensembles warm the cache
   before they spawn threads.
 - **Resolve to what the question needs.** The basin runs at 30 arc-seconds; the country
   layer at two degrees. Finer is four times the cost per halving and rarely more
   truthful than the record behind it.
+- **Mind the other side's limits.** Open-Meteo weights large hourly requests heavily and
+  rate-limited the capitals' ten-year hourly fetch after twenty; the wet-bulb layer uses
+  NOAA's daily station summaries instead, 1,700 small files from a bucket with no such
+  limit. When a source throttles, change the source or the resolution, not the record.
 - **Thin the output, not the state.** Modules write map frames on a stated cadence
   (every five years for a 250-year run) while integrating at their own step. Series are
   kept at full resolution because they are small.

@@ -237,3 +237,38 @@ source = "IPCC AR6 WG1 Chapter 7 (Forster et al. 2021), time series produced by 
 licence = "Zenodo record 5705391 (AR6 WG1 Annex III Extended Data, Smith et al.) states CC BY 4.0, read from the record API on 2026-11-01; the GitHub repository's own licence file to be read and stored before promotion"
 verified = "2026-11-01 from canada1: 270 rows 1750 to 2019; aerosol 2019 = see the run's forcing.ar6_aerosol_w_m2 series"
 notes = "An assessment, not an observation: these are the IPCC's best-estimate forcings. Used for the components the model does not compute (everything but CO2, CH4, N2O), with the stated assumption after 2019."
+
+[[asset]]
+id = "natural-earth-110m-populated-places"
+title = "Natural Earth 1:110m populated places (capitals), GeoJSON"
+kind = "vector"
+crs = "EPSG:4326"
+format = "GeoJSON points; FEATURECLA 'Admin-0 capital' rows with ADM0_A3, NAME, LATITUDE, LONGITUDE, POP_MAX"
+url_template = "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_populated_places.geojson"
+source = "Natural Earth, from the project's GitHub mirror"
+licence = "Natural Earth is public domain"
+verified = "2026-11-01 from canada1: 243 places, 215 capitals; nine 110m countries have no capital point (Antarctica, Greenland, Puerto Rico, South Sudan among them)"
+notes = "One point per country for the wet-bulb layer; the capital stands for the country, which the layer says."
+
+[[asset]]
+id = "noaa-isd-history"
+title = "NOAA Integrated Surface Database station history"
+kind = "station-list"
+format = "CSV: USAF, WBAN, STATION NAME, CTRY, STATE, ICAO, LAT, LON, ELEV(M), BEGIN, END"
+url_template = "https://www.ncei.noaa.gov/pub/data/noaa/isd-history.csv"
+source = "NOAA NCEI"
+licence = "US federal public domain"
+verified = "2026-11-01 from canada1: 2.9 MB"
+notes = "Used to find the reporting station nearest each capital; the GSOD station id is USAF followed by WBAN."
+
+[[asset]]
+id = "noaa-gsod"
+title = "NOAA Global Surface Summary of the Day, by station and year"
+kind = "observation-series"
+units = "TEMP, DEWP, MAX, MIN in deg F in the file; the reader converts to deg C; 9999.9 is missing"
+format = "CSV per station-year: STATION, DATE, LATITUDE, LONGITUDE, ELEVATION, NAME, TEMP, DEWP, SLP, STP, VISIB, WDSP, MXSPD, GUST, MAX, MIN, PRCP, SNDP, FRSHTT with attribute columns"
+url_template = "https://noaa-gsod-pds.s3.amazonaws.com/{year}/{station}.csv"
+source = "NOAA NCEI, distributed on the AWS Open Data registry (bucket noaa-gsod-pds)"
+licence = "US federal public domain"
+verified = "2026-11-01 from canada1: 2023/41184099999.csv (Ras Al Khaimah) 90 KB, 365 rows"
+notes = "Daily summaries of station observations; the wet-bulb layer estimates an afternoon wet-bulb from MAX and DEWP."

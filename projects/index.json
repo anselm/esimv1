@@ -63,6 +63,7 @@
       "people.countries",
       "climate.countries",
       "people.heat",
+      "people.wetbulb",
       "tipping.elements"
     ],
     "name": "planet",
@@ -186,7 +187,7 @@
         },
         "start": -3786825600,
         "variant": "zero-by-2050",
-        "verdict": null
+        "verdict": "holds"
       },
       {
         "all_ledgers_closed": true,
@@ -202,6 +203,21 @@
         "start": -3786825600,
         "variant": "held",
         "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "5baaf5af30f5e4d7",
+        "end": 1735689600,
+        "events": 18969,
+        "id": "p4-planet-people-d10740d1-5baaf5af",
+        "name": "p4-planet-people",
+        "seed": 1,
+        "set": {
+          "run.end": "\"2025-01-01\""
+        },
+        "start": -3786825600,
+        "variant": "hindcast",
+        "verdict": null
       },
       {
         "all_ledgers_closed": true,
@@ -271,6 +287,20 @@
           "emissions.after_record": "zero_by:2050"
         },
         "title": "Emissions to zero by 2050"
+      },
+      {
+        "name": "trend",
+        "set": {
+          "emissions.after_record": "trend:10"
+        },
+        "title": "Emissions continue the record's last-decade growth (about 0.3% a year)"
+      },
+      {
+        "name": "growing",
+        "set": {
+          "emissions.after_record": "grow:1"
+        },
+        "title": "Emissions grow 1% a year to 2100"
       }
     ]
   },

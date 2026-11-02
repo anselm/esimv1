@@ -101,7 +101,10 @@
 
   <section class="mb-8">
     {#if meta.variants?.length}
-      <div class="label mb-2">variants</div>
+      <div class="mb-2 flex flex-wrap items-center justify-between gap-3">
+        <div class="label">variants</div>
+        <a use:link={{ compare: path }} class="text-sm text-brand">compare the futures →</a>
+      </div>
       <ul class="mb-6 divide-y divide-neutral-200 dark:divide-neutral-800">
         {#each meta.variants as v (v.name)}
           <li class="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 py-2">

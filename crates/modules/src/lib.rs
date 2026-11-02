@@ -56,6 +56,7 @@ pub static KINDS: &[Kind] = &[
     kind!("people.countries", countries::PeopleCountries),
     kind!("climate.countries", countries::ClimateCountries),
     kind!("people.heat", countries::PeopleHeat),
+    kind!("people.wetbulb", countries::PeopleWetBulb),
     kind!("tipping.elements", countries::Tipping),
 ];
 

@@ -8,7 +8,8 @@
 //   ?docs                       the documentation index
 //   ?doc=area/name              one documentation page (doc=new is the new-page form)
 //   ?kinds                      every module kind, from its describe
-export const route = $state({ project: null, run: null, runs: false, isNew: false, docs: false, doc: null, kinds: false })
+//   ?compare=area/name          a project's variants side by side under one cursor
+export const route = $state({ project: null, run: null, runs: false, isNew: false, docs: false, doc: null, kinds: false, compare: null })
 
 function read() {
   const q = new URLSearchParams(location.search)
@@ -19,9 +20,10 @@ function read() {
   route.docs = q.has('docs')
   route.doc = q.get('doc')
   route.kinds = q.has('kinds')
+  route.compare = q.get('compare')
 }
 
-export function href({ project = null, run = null, runs = false, isNew = false, docs = false, doc = null, kinds = false } = {}) {
+export function href({ project = null, run = null, runs = false, isNew = false, docs = false, doc = null, kinds = false, compare = null } = {}) {
   const q = new URLSearchParams()
   if (project) q.set('project', project)
   if (run) q.set('run', run)
@@ -30,6 +32,7 @@ export function href({ project = null, run = null, runs = false, isNew = false, 
   if (docs) q.set('docs', '')
   if (doc) q.set('doc', doc)
   if (kinds) q.set('kinds', '')
+  if (compare) q.set('compare', compare)
   const s = q.toString().replace(/=(&|$)/g, '$1')
   return s ? `?${s}` : location.pathname
 }

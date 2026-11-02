@@ -86,6 +86,14 @@ niche_c = 29.0
 res_deg = 2.0
 
 [[module]]
+kind = "people.wetbulb"
+name = "wetbulb"
+
+[module.params]
+frame_every_years = 5
+res_deg = 2.0
+
+[[module]]
 kind = "tipping.elements"
 name = "tipping"
 

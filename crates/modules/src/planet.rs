@@ -107,6 +107,15 @@ impl EmissionsIn {
                 let target: f64 = yr.parse().unwrap_or(ly as f64);
                 if target <= ly as f64 { 0.0 } else { (lv * (1.0 - (y as f64 - ly as f64) / (target - ly as f64))).max(0.0) }
             }
+            // grow:<percent per year> compounds from the last recorded rate
+            Some(("grow", pct)) => { let r: f64 = pct.parse().unwrap_or(0.0) / 100.0; lv * (1.0 + r).powi((y - ly) as i32) }
+            // trend:<years> continues the record's mean growth rate over its last N years
+            Some(("trend", n)) => {
+                let n: i64 = n.parse().unwrap_or(10);
+                let first = s.get(&(ly - n)).copied().unwrap_or(lv);
+                let r = if first > 0.0 && n > 0 { (lv / first).powf(1.0 / n as f64) - 1.0 } else { 0.0 };
+                lv * (1.0 + r).powi((y - ly) as i32)
+            }
             _ if self.after_record == "stop" => 0.0,
             _ => lv,
         }
@@ -116,7 +125,7 @@ impl EmissionsIn {
             .priority(0).dt("1 month (calendar)")
             .param("include_land_use", p.get("include_land_use").and_then(|v| v.as_bool()).unwrap_or(true), "", "land-use-change CO2 (deforestation etc.) as a second source account")
             .param("hold_last", p.get("hold_last").and_then(|v| v.as_bool()).unwrap_or(true), "", "false stops emissions when the record ends, whatever after_record says")
-            .param("after_record", esim_kernel::manifest::param_str(p, "after_record", "hold"), "", "assumption after the record's last year (2024): hold = the last rate for good; stop; zero_by:YYYY = a straight line to zero in that year. An assumption, never a forecast; the manifest notes must say which was chosen and why")
+            .param("after_record", esim_kernel::manifest::param_str(p, "after_record", "hold"), "", "assumption after the record's last year (2024): hold = the last rate for good; stop; zero_by:YYYY = a straight line to zero in that year; grow:P = compound growth of P percent a year; trend:N = the record's own mean growth over its last N years, continued. An assumption, never a forecast; the manifest notes must say which was chosen and why")
             .publish("carbon.emitted", "{ gtc, fossil_gtc, luc_gtc } for the month just added")
             .ledger(CARBON, "GtC", 1e-6)
             .report("carbon.emissions_gtc_yr", "GtC/yr").report("carbon.cumulative_gtc", "GtC")

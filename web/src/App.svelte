@@ -8,6 +8,7 @@
   import DocsList from './lib/DocsList.svelte'
   import DocView from './lib/DocView.svelte'
   import Kinds from './lib/Kinds.svelte'
+  import Compare from './lib/Compare.svelte'
 </script>
 
 <main class="mx-auto max-w-6xl px-4 pb-16 pt-14 sm:px-6">
@@ -33,6 +34,10 @@
     <DocsList />
   {:else if route.kinds}
     <Kinds />
+  {:else if route.compare}
+    {#key route.compare}
+      <Compare path={route.compare} />
+    {/key}
   {:else if route.runs}
     <RunList />
   {:else}

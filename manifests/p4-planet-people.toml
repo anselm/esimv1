@@ -39,5 +39,12 @@ niche_c = 29.0
 hot_month_c = 32.0
 
 [[module]]
+name = "wetbulb"
+kind = "people.wetbulb"
+[module.params]
+res_deg = 2.0
+frame_every_years = 5
+
+[[module]]
 name = "tipping"
 kind = "tipping.elements"

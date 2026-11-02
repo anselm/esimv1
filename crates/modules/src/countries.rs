@@ -164,7 +164,9 @@ impl PeopleCountries {
 pub struct ClimateCountries {
     name: String,
     res_deg: f64, frame_every_years: i64, fit_from: i64, fit_to: i64, clim_from: i64, clim_to: i64,
+    anom_from: i64, anom_to: i64,
     gmst: f64,
+    #[serde(skip)] g_anom: f64,                           // global anomaly's observed mean over the anomaly window
     #[serde(skip)] countries: Vec<Country>,
     #[serde(skip)] fit: Vec<Option<(f64, f64, usize)>>,   // slope, intercept, n per country
     #[serde(skip)] hot_clim: Vec<Option<f64>>,            // hottest month's climatological mean
@@ -178,7 +180,8 @@ impl ClimateCountries {
             name: name.to_string(), res_deg: param_f64(p, "res_deg", 2.0), frame_every_years: param_f64(p, "frame_every_years", 5.0) as i64,
             fit_from: param_f64(p, "fit_from", 1901.0) as i64, fit_to: param_f64(p, "fit_to", 2022.0) as i64,
             clim_from: param_f64(p, "clim_from", 1991.0) as i64, clim_to: param_f64(p, "clim_to", 2020.0) as i64,
-            gmst: 0.0, countries: Vec::new(), fit: Vec::new(), hot_clim: Vec::new(), g_clim: 0.0, last_frame_year: -1_000_000,
+            anom_from: param_f64(p, "anom_from", 2014.0) as i64, anom_to: param_f64(p, "anom_to", 2023.0) as i64,
+            gmst: 0.0, g_anom: 0.0, countries: Vec::new(), fit: Vec::new(), hot_clim: Vec::new(), g_clim: 0.0, last_frame_year: -1_000_000,
         };
         m.load()?;
         Ok(m)
@@ -194,6 +197,8 @@ impl ClimateCountries {
         let base = esim_registry::planet::window_mean(&had, 1850, 1900).unwrap_or(0.0);
         let g: BTreeMap<i64, f64> = had.iter().filter(|(y, _)| **y >= self.fit_from && **y <= self.fit_to).map(|(y, v)| (*y, v - base)).collect();
         self.g_clim = esim_registry::planet::window_mean(&g, self.clim_from, self.clim_to).unwrap_or(0.0);
+        let g_all: BTreeMap<i64, f64> = had.iter().map(|(y, v)| (*y, v - base)).collect();
+        self.g_anom = esim_registry::planet::window_mean(&g_all, self.anom_from, self.anom_to).unwrap_or(0.0);
         // both series smoothed over eleven years before the fit: year-to-year noise in the
         // regressor would otherwise pull every slope toward zero
         let gs = countries::smooth(&g, 11);
@@ -213,10 +218,11 @@ impl ClimateCountries {
             .param("res_deg", param_f64(p, "res_deg", 2.0), "deg", "must match people.countries").param("frame_every_years", param_f64(p, "frame_every_years", 5.0), "yr", "")
             .param("fit_from", param_f64(p, "fit_from", 1901.0), "yr", "regression window").param("fit_to", param_f64(p, "fit_to", 2022.0), "yr", "")
             .param("clim_from", param_f64(p, "clim_from", 1991.0), "yr", "climatology window for the hottest month").param("clim_to", param_f64(p, "clim_to", 2020.0), "yr", "")
+            .param("anom_from", param_f64(p, "anom_from", 2014.0), "yr", "window the per-country anomaly (tas_anom_c) is measured against; the wet-bulb layer's observed years").param("anom_to", param_f64(p, "anom_to", 2023.0), "yr", "")
             .subscribe("energy.state", "{ gmst_c } the global anomaly")
             .read("country.index", "index", true, "which cell is which country")
             .own("climate.tas_c", "degC").own("climate.hot_month_c", "degC")
-            .publish("climate.country_tas", "{ year, by_iso3: { tas_c, hot_month_c, slope } } each January")
+            .publish("climate.country_tas", "{ year, by_iso3: { tas_c, hot_month_c, slope, tas_anom_c } } each January; tas_anom_c is the country's warming since the anom window")
             .report("climate.slope_median", "degC/degC").report("climate.countries_fitted", "").report("climate.hottest_country_tas_c", "degC")
             .asset("worldbank-cckp-cru-tas-annual", "country annual means 1901 to 2022").asset("worldbank-cckp-cru-tas-monthly", "country monthly means for the hottest-month climatology").asset("hadcrut5-global-annual", "the global anomaly the records are regressed on").asset("natural-earth-110m-countries", "the country list")
             .note("A country's variance about the fit is lost; years are given their fitted value, not their weather. Countries missing from the record (Antarctica, a few territories) get no temperature and are counted in climate.countries_fitted.")
@@ -249,7 +255,7 @@ impl Module for ClimateCountries {
                     let h = self.hot_clim[k].map(|hc| hc + slope * (self.gmst - self.g_clim));
                     per_tas[k] = t as f32; per_hot[k] = h.map(|v| v as f32).unwrap_or(f32::NAN);
                     slopes.push(slope); hottest = hottest.max(t);
-                    by.insert(c.iso3.clone(), json!({ "tas_c": t, "hot_month_c": h, "slope": slope }));
+                    by.insert(c.iso3.clone(), json!({ "tas_c": t, "hot_month_c": h, "slope": slope, "tas_anom_c": slope * (self.gmst - self.g_anom) }));
                 }
                 for (i, &k) in index.iter().enumerate() { if !k.is_nan() { tas[i] = per_tas[k as usize]; hot[i] = per_hot[k as usize]; } }
                 ctx.world_write("climate.tas_c", "degC", &g, tas.clone());
@@ -423,4 +429,163 @@ impl Module for Tipping {
     }
     fn snapshot(&self) -> serde_json::Value { serde_json::to_value(self).unwrap() }
     fn restore(&mut self, v: serde_json::Value) { *self = serde_json::from_value(v).unwrap(); }
+}
+
+// ---------------------------------------------------------------------------------------
+// people.wetbulb
+
+#[derive(Serialize, Deserialize)]
+pub struct PeopleWetBulb {
+    name: String,
+    res_deg: f64, frame_every_years: i64, year_from: i64, year_to: i64,
+    limit_a_c: f64, limit_b_c: f64, days_to_cross: f64, delta_max_c: f64, delta_step_c: f64, station_max_km: f64,
+    pop: BTreeMap<String, f64>,
+    crossed_a: BTreeMap<String, i64>, crossed_b: BTreeMap<String, i64>,
+    baseline_done: bool,
+    #[serde(skip)] countries: Vec<Country>,
+    /// per country: the capital's name and the station that stands for it
+    #[serde(skip)] capital: Vec<Option<(String, String, f64)>>,
+    /// per country: days per year over each limit, tabulated against the warming delta
+    #[serde(skip)] table_a: Vec<Vec<f32>>,
+    #[serde(skip)] table_b: Vec<Vec<f32>>,
+    #[serde(skip)] max_wb_base: Vec<f32>,
+    last_frame_year: i64,
+}
+
+impl PeopleWetBulb {
+    pub fn new(name: &str, p: &toml::Value) -> Result<PeopleWetBulb, String> {
+        let mut m = PeopleWetBulb {
+            name: name.to_string(), res_deg: param_f64(p, "res_deg", 2.0), frame_every_years: param_f64(p, "frame_every_years", 5.0) as i64,
+            year_from: param_f64(p, "year_from", 2014.0) as i64, year_to: param_f64(p, "year_to", 2023.0) as i64,
+            limit_a_c: param_f64(p, "limit_a_c", 31.0), limit_b_c: param_f64(p, "limit_b_c", 35.0),
+            days_to_cross: param_f64(p, "days_to_cross", 3.0), delta_max_c: param_f64(p, "delta_max_c", 8.0), delta_step_c: param_f64(p, "delta_step_c", 0.1),
+            station_max_km: param_f64(p, "station_max_km", 80.0),
+            pop: BTreeMap::new(), crossed_a: BTreeMap::new(), crossed_b: BTreeMap::new(), baseline_done: false,
+            countries: Vec::new(), capital: Vec::new(), table_a: Vec::new(), table_b: Vec::new(), max_wb_base: Vec::new(), last_frame_year: -1_000_000,
+        };
+        m.load()?;
+        Ok(m)
+    }
+    fn load(&mut self) -> Result<(), String> {
+        let root = root();
+        let cat = Catalog::load(&root.join("data/catalog.toml"))?;
+        let mut f = Fetcher::default_for(&root)?;
+        self.countries = load_countries()?;
+        let caps = countries::natural_earth_capitals(&mut f, &asset_url(&cat, "natural-earth-110m-populated-places")?)?;
+        let stations = countries::isd_history(&mut f, &asset_url(&cat, "noaa-isd-history")?)?;
+        let years = (self.year_to - self.year_from + 1) as f64;
+        let steps = (self.delta_max_c / self.delta_step_c).round() as usize + 1;
+        self.capital = Vec::new(); self.table_a = Vec::new(); self.table_b = Vec::new(); self.max_wb_base = Vec::new();
+        let skip = |me: &mut Self| { me.capital.push(None); me.table_a.push(Vec::new()); me.table_b.push(Vec::new()); me.max_wb_base.push(f32::NAN); };
+        for ci in 0..self.countries.len() {
+            let c = self.countries[ci].clone();
+            let Some((cname, lat, lon)) = caps.get(&c.iso3).cloned() else { skip(self); continue };
+            let Some((station, sname, dist_km)) = countries::nearest_station(&stations, lat, lon, self.year_from, self.year_to, self.station_max_km) else {
+                eprintln!("wetbulb: {} ({cname}): no station reporting {}..{} within {} km; left out", c.iso3, self.year_from, self.year_to, self.station_max_km); skip(self); continue };
+            // the daily record: max temperature and mean dew point, giving an afternoon wet-bulb
+            let mut days: Vec<(f64, f64)> = Vec::new(); // (tmax, rh at tmax)
+            let mut got_years = 0;
+            for y in self.year_from..=self.year_to {
+                match countries::gsod_year(&mut f, &station, y) {
+                    Ok(rows) => { if !rows.is_empty() { got_years += 1; } for (_, tmax, dew) in rows { days.push((tmax, countries::rh_from_dewpoint(tmax, dew))); } }
+                    Err(e) => eprintln!("wetbulb: {} {station} {y}: {e}", c.iso3),
+                }
+            }
+            if days.len() < 200 { eprintln!("wetbulb: {} ({cname}, {sname}): only {} days in {got_years} years; left out", c.iso3, days.len()); skip(self); continue }
+            // Stull at constant humidity: the humidity-only terms are fixed per day
+            let k: Vec<(f64, f64, f64, f64)> = days.iter().map(|&(t, r)| { let r = r.clamp(5.0, 100.0); (t, r, (0.151977 * (r + 8.313659).sqrt()).atan(), -(r - 1.676331).atan() + 0.00391838 * r.powf(1.5) * (0.023101 * r).atan() - 4.686035) }).collect();
+            let scale = years * days.len() as f64 / (365.25 * years).max(1.0) / years; // days per year, corrected for missing days
+            let per_year = |n: usize| if days.is_empty() { 0.0 } else { n as f64 / (days.len() as f64 / 365.25) };
+            let _ = scale;
+            let mut ta = vec![0.0f32; steps]; let mut tb = vec![0.0f32; steps];
+            let mut max_base = f64::NEG_INFINITY;
+            for s_i in 0..steps {
+                let d = s_i as f64 * self.delta_step_c;
+                let (mut na, mut nb) = (0usize, 0usize);
+                for &(t, r, c1, c2) in &k {
+                    let tp = t + d;
+                    let wb = tp * c1 + (tp + r).atan() + c2;
+                    if s_i == 0 && wb > max_base { max_base = wb; }
+                    if wb >= self.limit_a_c { na += 1; }
+                    if wb >= self.limit_b_c { nb += 1; }
+                }
+                ta[s_i] = per_year(na) as f32; tb[s_i] = per_year(nb) as f32;
+            }
+            self.capital.push(Some((cname, format!("{sname} ({dist_km:.0} km)"), dist_km))); self.table_a.push(ta); self.table_b.push(tb); self.max_wb_base.push(max_base as f32);
+        }
+        Ok(())
+    }
+    fn days(&self, table: &[f32], delta: f64) -> f64 {
+        if table.is_empty() { return f64::NAN; }
+        let x = (delta.max(0.0) / self.delta_step_c).min((table.len() - 1) as f64);
+        let (i, fr) = (x.floor() as usize, x - x.floor());
+        if i + 1 >= table.len() { return table[table.len() - 1] as f64; }
+        table[i] as f64 * (1.0 - fr) + table[i + 1] as f64 * fr
+    }
+    pub fn describe(name: &str, p: &toml::Value) -> Describe {
+        Describe::new("people.wetbulb", name, "Days per year of dangerous afternoon wet-bulb temperature at each country's capital, and the people in those countries. Ten observed years of daily maximum temperature and mean dew point at the weather station nearest the capital (NOAA GSOD) give a daily afternoon wet-bulb (Stull 2011); each is shifted by the country's warming at constant relative humidity and the days over two published limits counted. Exposure at one city per country, not a death toll; a crossing event the first year a capital passes a limit on more than days_to_cross days.")
+            .priority(4).dt("follows climate.country_tas")
+            .param("res_deg", param_f64(p, "res_deg", 2.0), "deg", "must match people.countries").param("frame_every_years", param_f64(p, "frame_every_years", 5.0), "yr", "")
+            .param("year_from", param_f64(p, "year_from", 2014.0), "yr", "observed daily window at the station").param("year_to", param_f64(p, "year_to", 2023.0), "yr", "ten station-years, about 90 KB each")
+            .param("station_max_km", param_f64(p, "station_max_km", 80.0), "km", "a capital with no reporting station this close is left out and counted")
+            .param("limit_a_c", param_f64(p, "limit_a_c", 31.0), "degC wet-bulb", "the limit for young healthy adults at rest found in chamber studies, Vecellio et al. 2022 J Appl Physiol (recalled; to be checked)")
+            .param("limit_b_c", param_f64(p, "limit_b_c", 35.0), "degC wet-bulb", "the theoretical survivability limit, Sherwood and Huber 2010 PNAS (recalled)")
+            .param("days_to_cross", param_f64(p, "days_to_cross", 3.0), "d/yr", "a capital crosses a limit when its afternoon wet-bulb exceeds it on more than this many days in a year")
+            .param("delta_max_c", param_f64(p, "delta_max_c", 8.0), "degC", "warming range tabulated at load").param("delta_step_c", param_f64(p, "delta_step_c", 0.1), "degC", "")
+            .subscribe("people.population", "{ by_iso3 }").subscribe("climate.country_tas", "{ by_iso3: { tas_anom_c } } the country's warming since the observed window")
+            .read("country.index", "index", true, "to draw the map")
+            .own("wetbulb.days_over_a", "d/yr")
+            .publish("people.crossing", "{ iso3, name, capital, station, year, kind: wetbulb_a | wetbulb_b, persons, days } the first year a capital passes a limit on days_to_cross days")
+            .report("wetbulb.people_capital_over_a", "persons").report("wetbulb.people_capital_over_b", "persons").report("wetbulb.people_days_over_a", "person-days/yr").report("wetbulb.capitals_over_a", "").report("wetbulb.capitals_over_b", "").report("wetbulb.capitals_with_data", "")
+            .asset("natural-earth-110m-populated-places", "capital per country").asset("noaa-isd-history", "the station nearest each capital").asset("noaa-gsod", "daily maximum temperature and mean dew point at that station")
+            .note("The afternoon wet-bulb is estimated from the day's maximum temperature and the day's mean dew point, which runs a little high; constant relative humidity under warming is the standard first-order assumption and is stated as one. One station stands for a country; the Gulf and South Asia are where this is least wrong and most alarming. Hourly reanalysis at every capital (Open-Meteo) was tried first and rate-limited after twenty capitals.")
+    }
+}
+
+impl Module for PeopleWetBulb {
+    fn name(&self) -> &str { &self.name }
+    fn init(&mut self, ctx: &mut Ctx) { ctx.subscribe("people.population"); ctx.subscribe("climate.country_tas"); ctx.report("wetbulb.capitals_with_data", "", self.capital.iter().filter(|c| c.is_some()).count() as f64); }
+    fn handle(&mut self, ev: &Event, ctx: &mut Ctx) {
+        match ev.topic.as_str() {
+            "people.population" => {
+                if let Some(t) = ev.data.get("by_iso3").and_then(|v| v.as_object()) { self.pop = t.iter().filter_map(|(k, v)| v.as_f64().map(|p| (k.clone(), p))).collect(); }
+            }
+            "climate.country_tas" => {
+                let y = ev.data.get("year").and_then(|v| v.as_i64()).unwrap_or(year_of(ctx.now()));
+                let Some(by) = ev.data.get("by_iso3").and_then(|v| v.as_object()) else { return };
+                let g = world_grid(self.res_deg);
+                let index = ctx.world_read_on("country.index", &g).map(|f| f.data.clone());
+                let mut per = vec![f32::NAN; self.countries.len()];
+                let (mut people_a, mut people_b, mut days_a, mut n_a, mut n_b) = (0.0f64, 0.0f64, 0.0f64, 0usize, 0usize);
+                let mut crossings = Vec::new();
+                for (k, c) in self.countries.iter().enumerate() {
+                    let Some((cap, station, _)) = &self.capital[k] else { continue };
+                    let Some(e) = by.get(&c.iso3) else { continue };
+                    let Some(d) = e.get("tas_anom_c").and_then(|v| v.as_f64()) else { continue };
+                    let (da, db) = (self.days(&self.table_a[k], d), self.days(&self.table_b[k], d));
+                    per[k] = da as f32;
+                    let p = self.pop.get(&c.iso3).copied().unwrap_or(0.0);
+                    days_a += da * p;
+                    if da > self.days_to_cross { people_a += p; n_a += 1; if !self.crossed_a.contains_key(&c.iso3) { self.crossed_a.insert(c.iso3.clone(), if self.baseline_done { y } else { 0 }); if self.baseline_done { crossings.push(json!({ "iso3": c.iso3, "name": c.name, "capital": cap, "station": station, "year": y, "kind": "wetbulb_a", "persons": p, "days": da, "limit_c": self.limit_a_c })); } } }
+                    if db > self.days_to_cross { people_b += p; n_b += 1; if !self.crossed_b.contains_key(&c.iso3) { self.crossed_b.insert(c.iso3.clone(), if self.baseline_done { y } else { 0 }); if self.baseline_done { crossings.push(json!({ "iso3": c.iso3, "name": c.name, "capital": cap, "station": station, "year": y, "kind": "wetbulb_b", "persons": p, "days": db, "limit_c": self.limit_b_c })); } } }
+                }
+                self.baseline_done = true;
+                if let Some(index) = index {
+                    let mut field = vec![f32::NAN; g.nx * g.ny];
+                    for (i, &k) in index.iter().enumerate() { if !k.is_nan() { field[i] = per[k as usize]; } }
+                    ctx.world_write("wetbulb.days_over_a", "d/yr", &g, field.clone());
+                    if y - self.last_frame_year >= self.frame_every_years { ctx.field("wetbulb_days_over_31", "d/yr", &g, field); self.last_frame_year = y; }
+                }
+                for c in crossings { ctx.publish("people.crossing", c); }
+                ctx.report("wetbulb.people_capital_over_a", "persons", people_a);
+                ctx.report("wetbulb.people_capital_over_b", "persons", people_b);
+                ctx.report("wetbulb.people_days_over_a", "person-days/yr", days_a);
+                ctx.report("wetbulb.capitals_over_a", "", n_a as f64);
+                ctx.report("wetbulb.capitals_over_b", "", n_b as f64);
+            }
+            _ => {}
+        }
+    }
+    fn snapshot(&self) -> serde_json::Value { serde_json::to_value(self).unwrap() }
+    fn restore(&mut self, v: serde_json::Value) { let mut m: PeopleWetBulb = serde_json::from_value(v).unwrap(); m.load().expect("wetbulb reload"); *self = m; }
 }
