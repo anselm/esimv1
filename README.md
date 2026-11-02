@@ -124,3 +124,10 @@ rather than inventing a number. Output: `audit.json` beside `run.json`.
 - Nothing is calibrated by hand. Parameters are named, their provenance is stated
   ("guess" when it is one), and the hindcast harness (M12) will move them by method.
 - Durable thinking goes in dated `devlog/` entries. Status lives there, not here.
+
+## Licence
+
+The code is MIT (see `LICENSE`). The records the simulator reads are not in this
+repository; each is fetched from its publisher under its own terms, listed in
+`data/catalog.toml` and on the Sources page, and several are free for non-commercial use
+only.
