@@ -33,10 +33,11 @@ framework against the use cases as rungs land.
 - `projects/`: a folder per project, `<area>/<name>/{project.toml, manifest.toml, runs/}`.
   The folder is the project; the CLI writes it and anyone can run it by hand.
 - `web/`: the viewer (Svelte 5, Vite): projects first, a project's runs, a run with its
-  maps under one time cursor, the audit, scores, charts, ledgers; and `server.mjs`, a
-  thin socket.io layer over the CLI that lists projects, drafts a manifest from a
-  description (Claude, or a local model through ollama when the API is not usable),
-  checks it, creates the folder and runs it.
+  maps under one time cursor, the audit, scores, charts, ledgers; and `server.mjs`, one
+  Node process that serves the built viewer and the run and project folders and speaks
+  socket.io over the CLI: list projects, draft a manifest from a description (Claude, or
+  a local model through ollama when the API is not usable), check it, create the folder,
+  run it.
 - `data/`: `catalog.toml` (assets and places), `catalog.lock.toml` (hashes of fetched
   files), `events/` (calendar and hazards), `cache/` (fetched bytes, not in git).
 
@@ -59,8 +60,8 @@ cargo test --release                                              # ~30 s with t
 ./target/release/esim project new me/first --manifest manifests/m0-buckets.toml
 ./target/release/esim project run me/first                         # into projects/me/first/runs
 ./target/release/esim audit projects/me/first/runs/<id>            # the auditor's verdict
-cd web && npm install && npm run dev                              # viewer at http://localhost:5173
-cd web && node server.mjs                                         # project server on :5181 (needs ANTHROPIC_API_KEY for drafts)
+cd web && npm install && npm run build && node server.mjs         # the whole thing on :5181 (ANTHROPIC_API_KEY for drafts)
+cd web && npm run dev                                             # development only: hot reload on :5173, socket proxied to :5181
 ```
 
 First runs fetch about 200 MB (four elevation tiles, weather, MODIS composites, gauge

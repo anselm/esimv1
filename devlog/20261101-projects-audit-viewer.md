@@ -66,7 +66,10 @@ and the projects list, which wants a place in the manifest first.
 
 `web/server.mjs` is a thin socket.io layer over the CLI (the house prefers one socket
 with structured requests to REST): list, get, draft, check, create, run, with log lines
-streamed back. The form asks for an area, a name, a title and a description in the
+streamed back. Anselm asked why two servers; it now also serves the built viewer from
+`dist/` and the run and project folders, so one Node process is the whole thing and Vite
+is for hot reload only. Plain `http` rather than fastify: it serves files and one socket,
+and a dependency for that was not earned. Traversal checked with raw paths. The form asks for an area, a name, a title and a description in the
 person's words. "Draft a manifest" sends the description with `esim kinds --json` and a
 short grammar to a model; the answer's TOML goes through `esim check`; errors go back to
 the model for up to three rounds; the person can edit the TOML or paste their own; Create

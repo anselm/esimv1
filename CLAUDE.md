@@ -18,9 +18,10 @@ how to run it. Not deployed anywhere; it runs on canada1.
   entry and `20261031-fitness.md`).
 - Deploy: none. See `project.toml`.
 - Runs: `runs/` (gitignored, loose runs) and `projects/<area>/<name>/runs/` (project runs).
-  Viewer: `web/` (`npm run dev` serves `../runs` and `../projects`; `node server.mjs` is the
-  project server on :5181, socket.io, proxied by Vite). On canada1 both are usually left
-  running: Vite on :5180, the server on :5181 (PIDs in the session scratchpad, kill by PID).
+  Viewer: `web/`. `node server.mjs` (after `npm run build`) is the whole thing on :5181:
+  built pages, `/runs/`, `/projects/`, socket.io over the CLI. `npm run dev` is for hot
+  reload only and proxies the socket to :5181. On canada1 the server is left running on
+  :5181 and Vite on :5180 (PIDs in the session scratchpad; kill by PID, never pkill -f).
 - Data: `data/catalog.toml` is the registry's index; `data/cache/` holds fetched bytes
   (gitignored, about 200 MB when warm); `data/catalog.lock.toml` holds their hashes and
   is committed; `data/events/` holds the calendar and hazard tables.

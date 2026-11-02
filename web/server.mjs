@@ -13,6 +13,11 @@
 //   project.run {path}                  -> streams project.log {path, line}; ends with { ok, output }
 // Notices: projects.changed.
 //
+// It also serves the viewer: the built pages from dist/ when `npm run build` has been
+// run, and the ../runs and ../projects folders at /runs/ and /projects/. So one process
+// is the whole thing in production; in development Vite serves the pages with hot
+// reload and proxies the socket here.
+//
 // Start: node server.mjs   (port 5181; ANTHROPIC_API_KEY in the environment for drafts)
 
 import http from 'node:http'
@@ -181,8 +186,44 @@ async function draft(description, title, log) {
   return { manifest, explanation, check, rounds, model, tier }
 }
 
+// ---- static files: dist/ (the built viewer), ../runs, ../projects
+const DIST = path.join(here, 'dist')
+const TYPES = {
+  '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8',
+  '.json': 'application/json', '.jsonl': 'application/x-ndjson', '.toml': 'application/toml; charset=utf-8',
+  '.f32': 'application/octet-stream', '.md': 'text/markdown; charset=utf-8', '.svg': 'image/svg+xml',
+  '.png': 'image/png', '.ico': 'image/x-icon', '.woff2': 'font/woff2', '.map': 'application/json',
+}
+function sendFile(res, file, cache) {
+  fs.stat(file, (err, st) => {
+    if (err || !st.isFile()) { res.statusCode = 404; return res.end('not found') }
+    res.setHeader('Content-Type', TYPES[path.extname(file)] || 'application/octet-stream')
+    res.setHeader('Cache-Control', cache)
+    fs.createReadStream(file).pipe(res)
+  })
+}
+function serveStatic(req, res) {
+  const url = decodeURIComponent((req.url || '/').split('?')[0])
+  const under = (prefix, root) => {
+    const file = path.resolve(root, url.slice(prefix.length))
+    if (!file.startsWith(root + path.sep) && file !== root) { res.statusCode = 403; res.end('forbidden'); return true }
+    sendFile(res, file, 'no-store')
+    return true
+  }
+  if (url.startsWith('/runs/')) return under('/runs/', path.join(ROOT, 'runs'))
+  if (url.startsWith('/projects/')) return under('/projects/', path.join(ROOT, 'projects'))
+  if (!fs.existsSync(DIST)) { res.statusCode = 503; return res.end('viewer not built: run `npm run build` in web/, or use the Vite dev server') }
+  // the viewer: a file from dist/ when it exists, else index.html (routes are query strings, so this is rare)
+  const file = path.resolve(DIST, '.' + (url === '/' ? '/index.html' : url))
+  if (!file.startsWith(DIST + path.sep)) { res.statusCode = 403; return res.end('forbidden') }
+  fs.stat(file, (err, st) => {
+    if (!err && st.isFile()) return sendFile(res, file, url.startsWith('/assets/') ? 'public, max-age=31536000, immutable' : 'no-cache')
+    sendFile(res, path.join(DIST, 'index.html'), 'no-cache')
+  })
+}
+
 // ---- server
-const server = http.createServer((req, res) => { res.statusCode = 404; res.end('esim project server: socket.io only') })
+const server = http.createServer(serveStatic)
 const io = new Server(server, { cors: { origin: true } })
 
 io.on('connection', (socket) => {
@@ -236,5 +277,5 @@ io.on('connection', (socket) => {
 })
 
 server.listen(PORT, '0.0.0.0', () => {
-  console.log(`esim project server on :${PORT}, root ${ROOT}, esim ${ESIM}, model ${MODEL} (key ${process.env.ANTHROPIC_API_KEY ? 'set' : 'missing'}), local ${LOCAL_MODEL} at ${OLLAMA}`)
+  console.log(`esim on :${PORT}, root ${ROOT}, esim ${ESIM}, viewer ${fs.existsSync(DIST) ? 'from dist/' : 'NOT BUILT (npm run build)'}, model ${MODEL} (key ${process.env.ANTHROPIC_API_KEY ? 'set' : 'missing'}), local ${LOCAL_MODEL} at ${OLLAMA}`)
 })
