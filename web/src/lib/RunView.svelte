@@ -20,6 +20,7 @@
 
   let { id, base, back = {}, backLabel = 'back' } = $props()
   let cursor = $state(null)
+  let wantLog = $state(false)   // the event log is ten megabytes; fetched when its panel opens
 
   async function load() {
     const r = await fetch(`${base}/run.json`, { cache: 'no-store' })
@@ -161,18 +162,20 @@
   {/if}
 
   <!-- events, behind a disclosure -->
-  <details class="mb-6">
-    <summary class="label cursor-pointer">events</summary>
+  <details class="mb-6" ontoggle={(e) => { if (e.currentTarget.open) wantLog = true }}>
+    <summary class="label cursor-pointer">events <span class="mono normal-case tracking-normal muted">· {num(run.events)} lines, loaded when opened</span></summary>
     <div class="mt-3">
-      {#await loadText('log.jsonl')}
-        <p class="muted text-sm">loading log…</p>
-      {:then text}
-        {#if text === null}
-          <p class="muted text-sm">no log</p>
-        {:else}
-          <EventLog {text} />
-        {/if}
-      {/await}
+      {#if wantLog}
+        {#await loadText('log.jsonl')}
+          <p class="muted text-sm">loading log…</p>
+        {:then text}
+          {#if text === null}
+            <p class="muted text-sm">no log</p>
+          {:else}
+            <EventLog {text} />
+          {/if}
+        {/await}
+      {/if}
     </div>
   </details>
 {/if}

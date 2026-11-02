@@ -27,6 +27,7 @@ import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import { spawn, execFile } from 'node:child_process'
+import zlib from 'node:zlib'
 import { fileURLToPath } from 'node:url'
 import { Server } from 'socket.io'
 import Anthropic from '@anthropic-ai/sdk'
@@ -210,12 +211,17 @@ const TYPES = {
   '.f32': 'application/octet-stream', '.md': 'text/markdown; charset=utf-8', '.svg': 'image/svg+xml',
   '.png': 'image/png', '.ico': 'image/x-icon', '.woff2': 'font/woff2', '.map': 'application/json',
 }
-function sendFile(res, file, cache) {
+// Text and raw-float files compress five to ten times; a run page is 18 MB uncompressed.
+const COMPRESSIBLE = new Set(['.json', '.jsonl', '.toml', '.md', '.f32', '.js', '.css', '.html', '.svg'])
+function sendFile(req, res, file, cache) {
   fs.stat(file, (err, st) => {
     if (err || !st.isFile()) { res.statusCode = 404; return res.end('not found') }
     res.setHeader('Content-Type', TYPES[path.extname(file)] || 'application/octet-stream')
     res.setHeader('Cache-Control', cache)
-    fs.createReadStream(file).pipe(res)
+    res.setHeader('Vary', 'Accept-Encoding')
+    const gz = COMPRESSIBLE.has(path.extname(file)) && /\bgzip\b/.test(req.headers['accept-encoding'] || '') && st.size > 1024
+    if (gz) { res.setHeader('Content-Encoding', 'gzip'); fs.createReadStream(file).pipe(zlib.createGzip({ level: 6 })).pipe(res) }
+    else { res.setHeader('Content-Length', st.size); fs.createReadStream(file).pipe(res) }
   })
 }
 function serveStatic(req, res) {
@@ -223,7 +229,10 @@ function serveStatic(req, res) {
   const under = (prefix, root) => {
     const file = path.resolve(root, url.slice(prefix.length))
     if (!file.startsWith(root + path.sep) && file !== root) { res.statusCode = 403; res.end('forbidden'); return true }
-    sendFile(res, file, 'no-store')
+    // a run folder is named by its content hashes and never changes: cache it for a year;
+    // indexes, projects and docs change and are revalidated
+    const immutable = /\/runs\/[^/]+\/(?!index\.json)/.test(url)
+    sendFile(req, res, file, immutable ? 'public, max-age=31536000, immutable' : 'no-cache')
     return true
   }
   if (url.startsWith('/runs/')) return under('/runs/', path.join(ROOT, 'runs'))
@@ -234,8 +243,8 @@ function serveStatic(req, res) {
   const file = path.resolve(DIST, '.' + (url === '/' ? '/index.html' : url))
   if (!file.startsWith(DIST + path.sep)) { res.statusCode = 403; return res.end('forbidden') }
   fs.stat(file, (err, st) => {
-    if (!err && st.isFile()) return sendFile(res, file, url.startsWith('/assets/') ? 'public, max-age=31536000, immutable' : 'no-cache')
-    sendFile(res, path.join(DIST, 'index.html'), 'no-cache')
+    if (!err && st.isFile()) return sendFile(req, res, file, url.startsWith('/assets/') ? 'public, max-age=31536000, immutable' : 'no-cache')
+    sendFile(req, res, path.join(DIST, 'index.html'), 'no-cache')
   })
 }
 

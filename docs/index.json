@@ -60,6 +60,11 @@
     "order": 10
   },
   {
+    "path": "system/sources",
+    "title": "Sources",
+    "order": 17
+  },
+  {
     "path": "system/terminology",
     "title": "Terminology",
     "order": 2
