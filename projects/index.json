@@ -398,7 +398,7 @@
         },
         "start": -3786825600,
         "variant": "growing",
-        "verdict": null
+        "verdict": "holds"
       },
       {
         "all_ledgers_closed": true,

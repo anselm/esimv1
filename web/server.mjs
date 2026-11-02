@@ -253,6 +253,12 @@ try {
   const gj = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/cache/natural-earth_ne_110m_admin_0_countries.geojson'), 'utf8'))
   const list = gj.features.map((f) => ({ iso3: f.properties.ISO_A3 === '-99' ? f.properties.ADM0_A3 : f.properties.ISO_A3, name: f.properties.NAME }))
   fs.writeFileSync(path.join(DOCS, 'countries.json'), JSON.stringify(list))
+  const rings = []
+  for (const f of gj.features) {
+    const polys = f.geometry.type === 'Polygon' ? [f.geometry.coordinates] : f.geometry.type === 'MultiPolygon' ? f.geometry.coordinates : []
+    for (const poly of polys) for (const ring of poly) rings.push(ring.map(([x, y]) => [Math.round(x * 20) / 20, Math.round(y * 20) / 20]))
+  }
+  fs.writeFileSync(path.join(DOCS, 'outlines.json'), JSON.stringify(rings))
 } catch { /* not fetched yet */ }
 // the kinds, for the static fallback of the kinds page
 kinds().then((ks) => { try { fs.writeFileSync(path.join(DOCS, 'kinds.json'), JSON.stringify(ks)) } catch { /* read-only */ } }).catch(() => {})

@@ -51,6 +51,15 @@
 
   const cache = new Map()       // frame index -> Float32Array (this field only)
 
+  // country outlines, drawn over grids that span the world (lon from -180): the raster is
+  // one value per country at two degrees, the outlines say which country is which
+  const world = $derived(grid.lon_w <= -179 && grid.nx * grid.dlon >= 359)
+  let outlines = $state(null)
+  $effect(() => {
+    if (!world || outlines) return
+    fetch('/docs/outlines.json', { cache: 'force-cache' }).then((r) => (r.ok ? r.json() : null)).then((j) => { outlines = j }).catch(() => {})
+  })
+
   async function fetchFrame(i) {
     if (cache.has(i)) return cache.get(i)
     const r = await fetch(`${base}/fields/${encodeURIComponent(name)}/${String(i).padStart(5, '0')}.f32`, { cache: 'no-store' })
@@ -103,6 +112,19 @@
     ctx.clearRect(0, 0, W, H)
     ctx.imageSmoothingEnabled = false
     ctx.drawImage(off, 0, 0, W, H)
+    if (world && outlines) {
+      const dark = matchMedia('(prefers-color-scheme: dark)').matches
+      ctx.strokeStyle = dark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.35)'
+      ctx.lineWidth = Math.max(0.6, 0.6 * dpr)
+      const sx = (lon) => ((lon - grid.lon_w) / (grid.nx * grid.dlon)) * W
+      const sy = (lat) => ((grid.lat_n - lat) / (grid.ny * grid.dlat)) * H
+      for (const ring of outlines) {
+        ctx.beginPath()
+        ring.forEach(([lon, lat], i) => (i ? ctx.lineTo(sx(lon), sy(lat)) : ctx.moveTo(sx(lon), sy(lat))))
+        ctx.closePath()
+        ctx.stroke()
+      }
+    }
   })
 
   function cellAt(e) {

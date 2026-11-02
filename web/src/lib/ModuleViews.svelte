@@ -59,6 +59,17 @@
     </div>
     {#if describe.summary}<p class="mt-1 max-w-3xl text-sm muted">{describe.summary}</p>{/if}
 
+    {#if maps.length}
+      <div class="mt-5 grid gap-x-6 gap-y-6 {grid(maps.length)}">
+        {#each maps as v (v.source)}
+          <div>
+            <div class="mb-1 text-sm">{v.title}{#if v.note} <span class="muted">· {v.note}</span>{/if}</div>
+            <FieldMap name={v.source} field={run.fields[v.source]} {base} {cursor} />
+          </div>
+        {/each}
+      </div>
+    {/if}
+
     {#if counters.length}
       <div class="mt-4 grid gap-x-6 gap-y-3 sm:grid-cols-2 lg:grid-cols-4">
         {#each counters as v (v.source)}
@@ -72,34 +83,31 @@
     {/if}
 
     {#each stories as v (v.title)}
-      <div class="mt-5">
-        <div class="mb-2 text-sm">{v.title} <span class="mono muted">· {sentences.length}</span>{#if v.note} <span class="muted">· {v.note}</span>{/if}</div>
+      <div class="mt-5 max-w-3xl">
         {#if sentences.length === 0}
           <p class="text-sm muted">Nothing crossed yet at this point in the run.</p>
         {:else}
-          <ol class="max-w-3xl space-y-2">
-            {#each sentences.slice(0, 14) as c, i (c.t + c.topic + (c.data.iso3 ?? c.data.id ?? i))}
+          <ol class="space-y-2">
+            {#each sentences.slice(0, 3) as c, i (c.t + c.topic + (c.data.iso3 ?? c.data.id ?? i))}
               <li class="text-[15px] leading-relaxed {i === 0 ? 'font-medium' : ''}">
                 {c.data.sentence}
                 {#if c.data.source || c.data.confidence}<span class="mono text-xs muted"> {c.data.source ?? ''}{c.data.confidence ? ` · ${c.data.confidence}` : ''}</span>{/if}
               </li>
             {/each}
           </ol>
-          {#if sentences.length > 14}<p class="mt-2 text-xs muted">and {sentences.length - 14} earlier</p>{/if}
+          {#if sentences.length > 3}
+            <details class="mt-2">
+              <summary class="cursor-pointer text-sm muted">{v.title} · {sentences.length - 3} earlier{#if v.note} · {v.note}{/if}</summary>
+              <ol class="mt-2 space-y-2">
+                {#each sentences.slice(3) as c, i (c.t + c.topic + (c.data.iso3 ?? c.data.id ?? i))}
+                  <li class="text-sm leading-relaxed">{c.data.sentence}{#if c.data.source || c.data.confidence}<span class="mono text-xs muted"> {c.data.source ?? ''}{c.data.confidence ? ` · ${c.data.confidence}` : ''}</span>{/if}</li>
+                {/each}
+              </ol>
+            </details>
+          {/if}
         {/if}
       </div>
     {/each}
-
-    {#if maps.length}
-      <div class="mt-5 grid gap-x-6 gap-y-6 {grid(maps.length)}">
-        {#each maps as v (v.source)}
-          <div>
-            <div class="mb-1 text-sm">{v.title}{#if v.note} <span class="muted">· {v.note}</span>{/if}</div>
-            <FieldMap name={v.source} field={run.fields[v.source]} {base} {cursor} />
-          </div>
-        {/each}
-      </div>
-    {/if}
 
     {#if crossViews.length}
       <div class="mt-5 grid gap-x-8 gap-y-4 lg:grid-cols-2">
