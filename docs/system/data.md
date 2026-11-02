@@ -19,7 +19,7 @@ assessed forcings; Natural Earth outlines and capitals; UN population; CRU count
 temperatures through the World Bank portal; NOAA's station history and daily station
 summaries (GSOD) for the weather station nearest each capital. Each
 catalog entry says what was verified and what licence text still has to be fetched and
-stored before any public use.
+stored before any public use; [Sources](?doc=system/sources) is that list as a page.
 
 ## Sizes and how they are kept in hand
 

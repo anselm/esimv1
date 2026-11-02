@@ -12,7 +12,7 @@ RS="rsync -az --delete -e 'ssh -o ServerAliveInterval=5'"
 
 (cd "$HERE/web" && npm run build >/dev/null)
 # the static fallbacks the read-only server reads: kinds, projects index, outlines
-(cd "$HERE" && ./target/release/esim kinds --json > docs/kinds.json && ./target/release/esim projects --json > projects/index.json)
+(cd "$HERE" && ./target/release/esim kinds --json > docs/kinds.json && ./target/release/esim projects --json > projects/index.json && ./target/release/esim sources --write >/dev/null)
 
 ssh -o ServerAliveInterval=5 "$HOST" 'mkdir -p /srv/esim/web'
 eval $RS "$HERE/web/dist" "$HERE/web/server.mjs" "$HERE/web/package.json" "$HOST:/srv/esim/web/"
