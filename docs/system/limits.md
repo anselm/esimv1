@@ -63,3 +63,4 @@ the scores for how its layer did against the record, read the audit for what the
 auditor could and could not measure, and read this page for what is known to be wrong.
 If the number still looks important, it is a question for the next module, not a
 finding.
+- **One station per country makes steps.** The wet-bulb count of people is the whole country's population once its capital's station crosses, so a populous country crossing moves the count by a billion in a year (seen in the `falling` variant between 2050 and 2075). The step is the layer's granularity, not a cliff in the world.

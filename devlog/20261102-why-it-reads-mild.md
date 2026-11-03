@@ -88,3 +88,40 @@ sideways there; it does not shrink).
 Not done: the records-to-date first screen, the ice-core axis, the extremes layer, the
 coincidence count and the consequence modules, all on `todo.md` under a new heading.
 Nothing deployed; push is his call.
+
+## Addendum, later the same day: a 2009 article as a regression test
+
+Anselm sent George Monbiot's "A self-fulfilling prophecy" (Guardian, 2009-03-16; "take
+with a grain of salt"). The merit of a seventeen-year-old piece is that its claims have
+matured into checkable ones. Against the record and against this model:
+
+- "Four degrees is a best case on current trends." Emissions grew from 10.4 GtC in 2009
+  to 11.8 in 2024 in the OWID record, about 0.85% a year, not the 3% the piece implies.
+  In this model, emissions growing 1% a year to 2100 give +3.9 °C and emissions held give
+  +3.3 °C, so four degrees was a fair reading of the trend continued for ninety years.
+  "Best case" was wrong: emissions to zero by 2050 give +2.1 °C here.
+- Anderson and Bows (2008): cuts of 3% a year from 2020 still lead to about four
+  degrees. Added as the project variant `falling` (3% a year from 2025, since the record
+  now runs to 2024): +2.45 °C in 2099, 504 ppm, 7 tipping elements past their central
+  estimate. This model disagrees with their four degrees by a wide margin. I recall their
+  figure sat at the high end of the sensitivity range and carried non-CO2 assumptions,
+  but I have not read the paper; it is on the list to check before saying who is right.
+- Solomon et al. (2009, PNAS): temperature stays roughly constant for a thousand years
+  after emissions stop. In the zero-by-2050 variant the warming is 2.06 °C in 2050 and
+  2.09 °C in 2099 with CO2 falling from 473 to 448 ppm: flat, as the paper says. That is
+  the zero-emissions-commitment result and this model reproduces it without having been
+  built to; a good sign about the carbon response and the two-layer balance together.
+- Sea level "two or three times the IPCC's predictions". Out of reach here: this model
+  has thermal expansion only, a known fault on the limits page.
+- Vegetation a net carbon source above about 3 °C, food production down above about
+  3 °C. The first is the land-sink reversal, which this model has only as a smooth
+  feedback (Millar) and as the Amazon row of the tipping table; the second is the
+  harvest layer on the todo. Both are couplings, not framings.
+- The aid, reparations and politics are out of scope for a simulator.
+
+One thing the `falling` run exposed: the count of people whose capital passes the
+wet-bulb limit jumps from 34 million in 2050 to 1.7 billion in 2075 in a single step,
+because one very populous country's capital crosses and the layer counts the whole
+country by its capital's station. The step is an artefact of one station per country,
+not a cliff in the world; the 1 km population layer and more than one station per
+country are the fix and were already on the todo. The page should say so until then.

@@ -75,6 +75,21 @@
     "runs": [
       {
         "all_ledgers_closed": true,
+        "digest": "811d09043412e25a",
+        "end": 4102444800,
+        "events": 27103,
+        "id": "p4-planet-people-0564184d-811d0904",
+        "name": "p4-planet-people",
+        "seed": 1,
+        "set": {
+          "emissions.after_record": "\"grow:-3\""
+        },
+        "start": -3786825600,
+        "variant": "falling",
+        "verdict": null
+      },
+      {
+        "all_ledgers_closed": true,
         "digest": "a086fec03465cb1f",
         "end": 1735689600,
         "events": 18970,
@@ -170,6 +185,13 @@
           "emissions.after_record": "grow:1"
         },
         "title": "Emissions grow 1% a year to 2100"
+      },
+      {
+        "name": "falling",
+        "set": {
+          "emissions.after_record": "grow:-3"
+        },
+        "title": "Emissions fall 3% a year from 2025"
       }
     ]
   },

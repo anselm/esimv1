@@ -38,3 +38,12 @@ name = "growing"
 title = "Emissions grow 1% a year to 2100"
 [variant.set]
 "emissions.after_record" = "grow:1"
+
+[[variant]]
+name = "falling"
+title = "Emissions fall 3% a year from 2025"
+# The cut rate Anderson and Bows (2008, Phil. Trans. R. Soc. A) examined, which Monbiot
+# (Guardian, 2009-03-16) reported as still leading to about four degrees by 2100; added
+# 2026-11-02 so that claim can be checked against this model. Their start year was 2020.
+[variant.set]
+"emissions.after_record" = "grow:-3"
