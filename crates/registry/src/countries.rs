@@ -41,7 +41,8 @@ impl Country {
 /// Natural Earth admin-0 countries from the project's GeoJSON. `ISO_A3` is -99 for a few
 /// entries (France, Norway, Kosovo among them); `ADM0_A3` is then used.
 pub fn natural_earth_countries(f: &mut Fetcher, url: &str) -> Result<Vec<Country>, String> {
-    let path = f.fetch("natural-earth/ne_110m_admin_0_countries.geojson", url)?;
+    let file = url.rsplit('/').next().unwrap_or("ne_110m_admin_0_countries.geojson");
+    let path = f.fetch(&format!("natural-earth/{file}"), url)?;
     let text = std::fs::read_to_string(&path).map_err(|e| e.to_string())?;
     let v: serde_json::Value = serde_json::from_str(&text).map_err(|e| format!("geojson: {e}"))?;
     let mut out = Vec::new();

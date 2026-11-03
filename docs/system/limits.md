@@ -19,17 +19,25 @@ holds the history.
 - Nothing feeds back: a tipping element flagged is not tipped; the Amazon does not release
   its carbon; permafrost does not thaw in the run.
 - Sea level is thermal expansion only, a floor.
-- A country has one temperature. India at 1.7 billion people is the loudest case of a mean
-  hiding a continent. The niche threshold is on the annual mean and knows nothing of
-  humidity, which is what kills. The hottest-month marker is a guess and labelled one.
-- The wet-bulb layer stands one weather station for a country, estimates an afternoon
-  wet-bulb from the day's maximum temperature and mean dew point (a little high), assumes
-  constant relative humidity under warming, and has no station within 80 km for
-  thirteen capitals. Its two limits are recalled from their papers and not yet checked.
-- One station per country also makes steps: the wet-bulb count of people is a whole
-  country's population once its capital's station crosses, so a populous country
-  crossing moves the count by a billion in a year (the `falling` variant between 2050
-  and 2075). The step is the layer's granularity, not a cliff in the world.
+- The warming applied to a place is its country's. People now sit on half-degree cells
+  (WorldPop's 2020 pattern, the UN's count), each populated cell has its own climatological
+  mean and its own baseline decade of daily heat and humidity from the MERRA-2 reanalysis
+  (NASA POWER), and exposure is computed cell by cell before it is summed; but the warming
+  added to every cell of a country is one number from the country's record regressed on
+  the global anomaly. Deserts and mountains keep their climatology and share their
+  country's trend. A gridded warming pattern is the next step. The niche threshold is on
+  the annual mean and knows nothing of humidity or season; the 2020 settlement pattern is
+  held for every year.
+- The wet-bulb layer's baseline is a reanalysis, not a measurement: MERRA-2 at about 50 km,
+  daily maximum temperature and the day's dew point (standing for the afternoon's, which
+  runs a little high), ten years, constant relative humidity under warming (the standard
+  first-order assumption, stated as one). Its two limits are recalled from their papers
+  and not yet checked. The one-station-per-capital form is kept as `source = station`
+  and is the check on it.
+- A country "crosses" a limit when half its people live where the limit is passed on more
+  than three days a year. The counts of people and person-days are continuous; the
+  country event is a stated rule on them, chosen so that a sentence can be written, and
+  the half is a choice, not a finding.
 - Population after 2023 is the UN's medium projection, which assumes a world where none of
   the crossings change where people live. Before 1950 it is held flat and called a
   placeholder.

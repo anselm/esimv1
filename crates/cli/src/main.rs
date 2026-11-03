@@ -310,6 +310,37 @@ fn project_prune(path: &str, keep: usize) -> Result<(), String> {
 /// esim sources: the catalog as a Markdown page, every record with its source, licence,
 /// verification and URL, so the credits page is generated from the registry and never
 /// drifts from it. Writes docs/system/sources.md when --write is given.
+/// esim warm cells: fetch what the cell layers read (WorldPop's 1 km count summed to the
+/// grid, then NASA POWER's climatology and daily maximum temperature and dew point for
+/// every 10-degree box with people in it, one request per box, parameter and year), so a
+/// first run does not spend an hour on the network. Resumable: every answer is cached.
+fn warm_cells(res_deg: f64, from: i64, to: i64) -> Result<(), String> {
+    use esim_registry::{cells, Catalog, Fetcher};
+    let root = std::env::current_dir().map_err(|e| e.to_string())?;
+    let cat = Catalog::load(&root.join("data/catalog.toml"))?;
+    let mut f = Fetcher::default_for(&root)?;
+    let url = |id: &str| cat.asset(id).map(|a| a.url_template.clone()).ok_or_else(|| format!("catalog has no {id}"));
+    let t0 = std::time::Instant::now();
+    let count = cells::worldpop_count(&mut f, &url("worldpop-2020-1km")?, res_deg)?;
+    let nx = (360.0 / res_deg).round() as usize;
+    let total: f64 = count.iter().map(|v| *v as f64).sum();
+    let populated = count.iter().filter(|v| **v > 0.0).count();
+    println!("worldpop  {:.3} billion people in {} cells of {} deg ({} with people), {:.1} s", total / 1e9, count.len(), res_deg, populated, t0.elapsed().as_secs_f64());
+    let boxes = cells::power_boxes(res_deg, |c, r| count[r * nx + c] > 0.0);
+    println!("power     {} boxes of 10 degrees hold people; {} requests to make", boxes.len(), boxes.len() * (1 + 2 * (to - from + 1) as usize));
+    let mut n = 0usize;
+    for (i, &(lat0, lon0)) in boxes.iter().enumerate() {
+        cells::power_climatology_box(&mut f, "T2M", lat0, lon0)?; n += 1;
+        for y in from..=to {
+            cells::power_daily_box(&mut f, "T2M_MAX", lat0, lon0, y)?; n += 1;
+            cells::power_daily_box(&mut f, "T2MDEW", lat0, lon0, y)?; n += 1;
+        }
+        if i % 10 == 9 || i + 1 == boxes.len() { println!("  {}/{} boxes ({} answers), {:.0} s", i + 1, boxes.len(), n, t0.elapsed().as_secs_f64()); }
+    }
+    println!("warm      done in {:.0} s", t0.elapsed().as_secs_f64());
+    Ok(())
+}
+
 fn sources(write: bool) -> Result<(), String> {
     let cat = esim_registry::Catalog::load(&esim_root().join("data/catalog.toml"))?;
     let mut md = String::new();
@@ -700,6 +731,13 @@ fn main() {
         Some("audit") => match args.get(2) { Some(d) => audit(Path::new(d)), None => Err("usage: esim audit <run_dir>".into()) },
         Some("projects") => projects(args.iter().any(|a| a == "--json")),
         Some("sources") => sources(args.iter().any(|a| a == "--write")),
+        Some("warm") => {
+            let get = |k: &str| args.iter().position(|a| a == k).and_then(|i| args.get(i + 1)).map(|s| s.as_str());
+            match args.get(2).map(|s| s.as_str()) {
+                Some("cells") => warm_cells(get("--res").and_then(|v| v.parse().ok()).unwrap_or(0.5), get("--from").and_then(|v| v.parse().ok()).unwrap_or(2011), get("--to").and_then(|v| v.parse().ok()).unwrap_or(2020)),
+                _ => Err("usage: esim warm cells [--res 0.5] [--from 2011] [--to 2020]".into()),
+            }
+        }
         Some("project") => {
             let get = |flag: &str| args.iter().position(|a| a == flag).and_then(|i| args.get(i + 1)).map(String::as_str);
             match (args.get(2).map(String::as_str), args.get(3)) {
@@ -712,7 +750,7 @@ fn main() {
         }
         Some("check") => match args.get(2) { Some(p) => check(Path::new(p)), None => Err("usage: esim check <manifest.toml>".into()) },
         Some("describe") => match args.get(2) { Some(p) => describe(Path::new(p)), None => Err("usage: esim describe <manifest.toml>".into()) },
-        _ => Err("usage: esim run|verify|ensemble|sweep|score|audit|check|describe|kinds|project|projects".into()),
+        _ => Err("usage: esim run|verify|ensemble|sweep|score|audit|check|describe|kinds|project|projects|sources|warm".into()),
     };
     if let Err(e) = res { eprintln!("error: {e}"); std::process::exit(1); }
 }

@@ -1,9 +1,16 @@
-# P4: the planet core with people on it, to 2100. Countries as the coarse unit: people per
-# country from the UN (its medium projection after 2023, labelled), each country's
-# temperature from its own record scaled by the run's global anomaly, the people living
-# outside the human climate niche, and the tipping elements' thresholds checked against
-# the warming. Emissions after 2024 are an assumption; the project's variants state which.
-# Everything the core leaves out (aerosols, sink saturation, feedbacks) is still left out.
+# P4: the planet core with people on it, to 2100. People on half-degree cells (WorldPop's
+# 1 km pattern, the UN's count per country, its medium projection after 2023, labelled);
+# each country's temperature from its own record scaled by the run's global anomaly and
+# applied to its cells; each populated cell's own climatology and baseline decade of daily
+# heat and humidity from the MERRA-2 reanalysis (NASA POWER); the people living where the
+# human climate niche and the wet-bulb limits are passed, cell by cell; the tipping
+# elements' thresholds checked against the warming. Emissions after 2024 are an
+# assumption; the project's variants state which. Everything the core leaves out
+# (aerosols, sink saturation, feedbacks) is still left out. Since 2026-11-02; before that
+# the same manifest ran on 2-degree countries with one station per capital (the modules'
+# default modes, kept for comparison).
+#
+# First run: `esim warm cells` fetches the reanalysis boxes (about two hours, once).
 
 # The story module computes nothing; it is first because a manifest's module order is
 # the page order, and the bottom line belongs at the top. The planet core is spliced in
@@ -21,37 +28,57 @@ start = "1850-01-01"
 end = "2100-01-01"
 seed = 1
 close_every = "30d"
-notes = "Planet core plus countries, people, heat exposure and tipping thresholds, 1850 to 2100. After 2024 emissions follow the variant's assumption (default: held at the 2024 rate). CO2, CH4 and N2O forcing; no aerosols; no feedbacks."
+notes = "Planet core plus people on half-degree cells, each country's warming from its record, heat and wet-bulb exposure cell by cell from a reanalysis baseline, and tipping thresholds, 1850 to 2100. After 2024 emissions follow the variant's assumption (default: held at the 2024 rate). CO2, CH4 and N2O forcing; the AR6 assessed series held after 2019; the Millar sink feedback; nothing else feeds back."
 
 [[module]]
 name = "people"
 kind = "people.countries"
 [module.params]
-res_deg = 2.0
-frame_every_years = 5
+res_deg = 0.5
+frame_res_deg = 1.0
+frame_every_years = 10
+scale = "50m"
+distribution = "worldpop"
 
 [[module]]
 name = "climate"
 kind = "climate.countries"
 [module.params]
-res_deg = 2.0
-frame_every_years = 5
+res_deg = 0.5
+frame_res_deg = 1.0
+frame_every_years = 10
+scale = "50m"
+# the wet-bulb cells' observed decade, so tas_anom_c is the warming since it
+anom_from = 2011
+anom_to = 2020
+# POWER's climatology period, so tas_anom_cells_c is the warming since it
+cells_clim_from = 2001
+cells_clim_to = 2025
 
 [[module]]
 name = "heat"
 kind = "people.heat"
 [module.params]
-res_deg = 2.0
-frame_every_years = 5
+res_deg = 0.5
+frame_res_deg = 1.0
+frame_every_years = 10
+scale = "50m"
+baseline = "cells"
 niche_c = 29.0
-hot_month_c = 32.0
+crossing_share = 0.5
 
 [[module]]
 name = "wetbulb"
 kind = "people.wetbulb"
 [module.params]
-res_deg = 2.0
-frame_every_years = 5
+res_deg = 0.5
+frame_res_deg = 1.0
+frame_every_years = 10
+scale = "50m"
+source = "cells"
+year_from = 2011
+year_to = 2020
+crossing_share = 0.5
 
 [[module]]
 name = "tipping"

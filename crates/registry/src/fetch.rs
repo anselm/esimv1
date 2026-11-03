@@ -75,6 +75,39 @@ impl Fetcher {
         Ok(path)
     }
 
+    /// Fetch `url`, hash the raw bytes into the lock, but keep only `reduce(raw)` in the
+    /// cache: for sources whose answer is large and mostly structure (a 2 MB JSON for
+    /// 6,000 numbers). The lock records the raw bytes a run used; the cache holds what the
+    /// reader needs. Retries politely on 429 and 5xx.
+    pub fn fetch_reduced(&mut self, key: &str, url: &str, reduce: &dyn Fn(&[u8]) -> Result<Vec<u8>, String>) -> Result<PathBuf, String> {
+        let name = key.replace(['/', ' '], "_");
+        let path = self.cache_dir.join(&name);
+        if path.exists() { return Ok(path); }
+        let mut raw = Vec::new();
+        let mut wait = 2u64;
+        for attempt in 0..6 {
+            match ureq::get(url).call() {
+                Ok(resp) => { resp.into_reader().read_to_end(&mut raw).map_err(|e| e.to_string())?; break; }
+                Err(ureq::Error::Status(code, _)) if (code == 429 || code >= 500) && attempt < 5 => {
+                    eprintln!("fetch: {url}: {code}; waiting {wait}s"); std::thread::sleep(std::time::Duration::from_secs(wait)); wait *= 2;
+                }
+                Err(e) => return Err(format!("GET {url}: {e}")),
+            }
+        }
+        if raw.is_empty() { return Err(format!("GET {url}: no bytes")); }
+        let sha = format!("{:x}", Sha256::digest(&raw));
+        match self.lock.files.get(key) {
+            Some(e) if e.sha256 != sha => return Err(format!("{key}: sha256 {sha} does not match lock {}", e.sha256)),
+            Some(_) => {}
+            None => { self.lock.files.insert(key.to_string(), Entry { url: url.to_string(), sha256: sha, bytes: raw.len() as u64, fetched: today() }); self.save_lock()?; }
+        }
+        let reduced = reduce(&raw)?;
+        let tmp = self.cache_dir.join(format!("{name}.part"));
+        std::fs::write(&tmp, &reduced).map_err(|e| e.to_string())?;
+        std::fs::rename(&tmp, &path).map_err(|e| e.to_string())?;
+        Ok(path)
+    }
+
     fn save_lock(&self) -> Result<(), String> {
         let text = toml::to_string_pretty(&self.lock).map_err(|e| e.to_string())?;
         std::fs::write(&self.lock_path, format!("# Written by the fetcher. One entry per fetched file: the bytes a run used.\n\n{text}")).map_err(|e| e.to_string())

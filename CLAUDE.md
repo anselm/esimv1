@@ -62,6 +62,14 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   +1.69 degC in 2024 against +1.54 observed and 451 ppm against 425; both recalled
   parameter sets are to be checked. A project folder's manifest is frozen at creation:
   `esim project update <path> --manifest f` re-resolves it after a bundle changes.
+- Cells mode (2026-11-02): `people.countries` with `distribution = "worldpop"` and `scale = "50m"`,
+  `people.heat` with `baseline = "cells"`, `people.wetbulb` with `source = "cells"`, all at
+  `res_deg = 0.5` with `frame_res_deg = 1.0`. Data: WorldPop 2020 1 km (870 MB GeoTIFF, LZW,
+  read tile by tile; the sum per cell is cached beside it) and NASA POWER (MERRA-2) regional
+  boxes, 10 degrees and one year per request, about 7,200 answers for 343 populated boxes,
+  reduced to tenths-of-a-degree tables (`fetch_reduced`). `esim warm cells` fetches them ahead
+  (about 100 minutes at one request a second); the cache is then about 2.5 GB. The country
+  modes are the defaults and still reproduce the old runs.
 - Manifests may `include = ["other.toml"]`; `Manifest::load` resolves, project folders get
   the resolved text. Projects may declare `[[variant]]` sets; runs record `variant.json`.
 - Planetary rungs (`manifests/p1-*`, `crates/modules/src/planet.rs`) are zero-dimensional

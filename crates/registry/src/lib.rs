@@ -11,6 +11,7 @@ pub mod modis;
 pub mod events;
 pub mod planet;
 pub mod countries;
+pub mod cells;
 
 pub const EARTH_RADIUS_M: f64 = 6_371_008.8;
 

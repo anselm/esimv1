@@ -135,8 +135,8 @@
           <dt class="muted">warming since 1850</dt><dd class="mono text-right text-lg tabular-nums">{deg(at(o.run, 'energy.gmst_anom_c'))}</dd>
           <dt class="muted">CO₂</dt><dd class="mono text-right tabular-nums">{at(o.run, 'carbon.co2_ppm') === null ? '—' : `${Math.round(at(o.run, 'carbon.co2_ppm'))} ppm`}</dd>
           <dt class="muted">people outside the human climate niche</dt><dd class="mono text-right text-lg tabular-nums text-leak">{M(at(o.run, 'people.outside_niche'))}</dd>
-          <dt class="muted">people whose capital passes 31 °C wet-bulb for a day a year</dt><dd class="mono text-right text-lg tabular-nums text-leak">{M(at(o.run, 'wetbulb.people_capital_over_a'))}</dd>
-          <dt class="muted">people whose capital passes 35 °C wet-bulb</dt><dd class="mono text-right tabular-nums">{M(at(o.run, 'wetbulb.people_capital_over_b'))}</dd>
+          <dt class="muted">people living where 31 °C wet-bulb is passed on three days a year</dt><dd class="mono text-right text-lg tabular-nums text-leak">{M(at(o.run, 'wetbulb.people_over_a') ?? at(o.run, 'wetbulb.people_capital_over_a'))}</dd>
+          <dt class="muted">people living where 35 °C wet-bulb is passed</dt><dd class="mono text-right tabular-nums">{M(at(o.run, 'wetbulb.people_over_b') ?? at(o.run, 'wetbulb.people_capital_over_b'))}</dd>
           <dt class="muted">countries outside the niche</dt><dd class="mono text-right tabular-nums">{at(o.run, 'people.countries_outside_niche') ?? '—'}</dd>
           <dt class="muted">tipping elements past their central estimate</dt><dd class="mono text-right tabular-nums">{at(o.run, 'tipping.elements_past_central') ?? '—'}</dd>
           <dt class="muted">deep ocean warming</dt><dd class="mono text-right tabular-nums">{deg(at(o.run, 'energy.deep_anom_c'))}</dd>

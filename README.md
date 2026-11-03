@@ -37,10 +37,11 @@ what the run does not yet measure.
   gauge, a crop, herbivore and predator cohorts, fire, farm agents, calendar rules, soil
   nitrogen to the river. For the planet: observed emissions into a carbon ledger, a carbon
   cycle with sink feedback, methane and nitrous oxide, the IPCC assessed forcings, a
-  two-layer energy balance, thermal sea level, the records as scoreboards; then countries
-  as the coarse unit: people per country, each country's temperature from its own record,
-  the human climate niche, wet-bulb days at each capital, the tipping elements' thresholds,
-  and a bottom-line module that tells the run as sentences with sources.
+  two-layer energy balance, thermal sea level, the records as scoreboards; then people on
+  half-degree cells: WorldPop's pattern at the UN's count, each country's temperature from
+  its own record, the human climate niche and the wet-bulb limits checked cell by cell
+  against a reanalysis baseline, the tipping elements' thresholds, and a bottom-line module
+  that tells the run as sentences with sources.
 - **Auditor** (`crates/audit`): reads a finished run and never the live one: every stock
   spent or built, diversity, shocks and recovery against recurrence, crossings, tears,
   and a verdict of holds, stretching or tearing. It lists what it could not measure.
@@ -75,6 +76,7 @@ cargo build --release
 ./target/release/esim kinds                                        # the module kinds
 ./target/release/esim check manifests/p4-planet-people.toml        # wiring from the describes
 ./target/release/esim run manifests/p1-planet-co2-1850-2025.toml   # 175 years of planet, about a second
+./target/release/esim warm cells                                   # once, ~100 min: the 1 km people and the reanalysis boxes the planet-2100 project reads
 ./target/release/esim run manifests/m3-water-boone.toml            # a year of basin hydrology, about 40 s
 ./target/release/esim verify manifests/m2-heat-boone-week.toml     # determinism and replay
 cargo test --release                                               # about 40 s with the data cached
@@ -111,8 +113,8 @@ todo.md        open research projects and layers, one line each
 
 The basin stack reproduces the shape of the gauge record and runs high on nitrate; the
 planet hindcast is within a few percent of Mauna Loa and about 0.15 °C warm in 2024
-against HadCRUT5; the country layers count people living where stated limits are
-passed, with one temperature per country and one station per capital. The known faults
+against HadCRUT5; the cell layers count people living where stated limits are
+passed, with the warming still applied per country. The known faults
 are on the Limits page and in the devlog, which is the project's memory: start with
 `devlog/20261031-design-brief.md`, then the milestone entries, then the latest day.
 
