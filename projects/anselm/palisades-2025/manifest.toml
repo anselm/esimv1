@@ -1,0 +1,43 @@
+# F2: the Palisades fire, Los Angeles, January 2025, as a hindcast. Rothermel's spread
+# model on the 30 m terrain of the Santa Monica Mountains with fuel from land cover and
+# the hour's wind from the ERA5 archive, ignited where and when the record says, run with
+# no suppression; the incident's mapped perimeters score the burned area as they were
+# current. The window takes in the final perimeter with a margin on every side; the sea
+# is water and does not burn.
+
+[run]
+name = "f2-palisades-2025"
+start = "2025-01-07T18:00:00Z"
+end = "2025-01-12T00:00:00Z"
+seed = 1
+close_every = "1d"
+snapshot_every = "1d"
+notes = "The Palisades fire's first four days under reanalysis wind, unsuppressed; scored against NIFC's daily perimeters. Fuel parameters recalled from Scott and Burgan 2005 and not yet checked; the reanalysis under-reads Santa Ana gusts."
+
+[place]
+lat_s = 34.0
+lat_n = 34.16
+lon_w = -118.72
+lon_e = -118.46
+res_arcsec = 1
+
+[[module]]
+name = "fire"
+kind = "fire.rothermel"
+[module.params]
+ignition_time = "2025-01-07T18:30:00Z"
+ignition_lat = 34.0723
+ignition_lon = -118.5451
+wind_start = "2025-01-06"
+wind_end = "2025-01-14"
+
+[[module]]
+name = "obs"
+kind = "obs.perimeters"
+[module.params]
+incident = "Palisades"
+year = 2025
+irwin = "{A7EA5D21-F882-44B8-BF64-44AB11059DC1}"
+
+[audit]
+scores = [["sim.acres", "obs.acres"]]

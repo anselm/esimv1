@@ -1,0 +1,136 @@
+# Surface fuel models for Rothermel's spread model, and the land-cover classes that map
+# to them. Read by fire.rothermel. Loads in tons per acre, surface-area-to-volume ratios in
+# 1/ft, depth in ft, dead moisture of extinction in percent, as the fuel model literature
+# states them.
+#
+# PROVENANCE: the rows are Scott and Burgan 2005, "Standard fire behavior fuel models: a
+# comprehensive set for use with Rothermel's surface fire spread model" (USDA Forest
+# Service RMRS-GTR-153), written from memory on 2026-11-03 and NOT yet checked against the
+# report's tables; every row says so. The URB row is not a fuel model at all: it is a
+# guessed rate for fire moving through built-up land, which Rothermel's model does not
+# describe, and a variant can turn it off. Check the numbers before trusting a result
+# that depends on the shrub rows; the Santa Monica Mountains burn as chaparral (SH5, SH7).
+
+[[fuel]]
+id = "GR1"
+title = "Short, sparse dry climate grass (Scott and Burgan fuel model 101)"
+dead_1h_t_ac = 0.10
+dead_10h_t_ac = 0.0
+dead_100h_t_ac = 0.0
+live_herb_t_ac = 0.30
+live_woody_t_ac = 0.0
+sav_1h = 2200
+sav_herb = 2000
+sav_woody = 9999
+depth_ft = 0.4
+mx_dead_pct = 15
+confidence = "recalled"
+source = "Scott and Burgan 2005, GR1; recalled, not checked"
+
+[[fuel]]
+id = "GR2"
+title = "Low load, dry climate grass (Scott and Burgan fuel model 102)"
+dead_1h_t_ac = 0.10
+dead_10h_t_ac = 0.0
+dead_100h_t_ac = 0.0
+live_herb_t_ac = 1.0
+live_woody_t_ac = 0.0
+sav_1h = 2000
+sav_herb = 1800
+sav_woody = 9999
+depth_ft = 1.0
+mx_dead_pct = 15
+confidence = "recalled"
+source = "Scott and Burgan 2005, GR2; recalled, not checked"
+
+[[fuel]]
+id = "SH5"
+title = "High load, dry climate shrub (Scott and Burgan fuel model 145)"
+dead_1h_t_ac = 3.6
+dead_10h_t_ac = 2.1
+dead_100h_t_ac = 0.0
+live_herb_t_ac = 0.0
+live_woody_t_ac = 2.9
+sav_1h = 750
+sav_herb = 9999
+sav_woody = 1600
+depth_ft = 6.0
+mx_dead_pct = 15
+confidence = "recalled"
+source = "Scott and Burgan 2005, SH5; recalled, not checked"
+
+[[fuel]]
+id = "SH7"
+title = "Very high load, dry climate shrub (Scott and Burgan fuel model 147)"
+dead_1h_t_ac = 3.5
+dead_10h_t_ac = 5.3
+dead_100h_t_ac = 2.2
+live_herb_t_ac = 0.0
+live_woody_t_ac = 3.4
+sav_1h = 750
+sav_herb = 9999
+sav_woody = 1600
+depth_ft = 6.0
+mx_dead_pct = 15
+confidence = "recalled"
+source = "Scott and Burgan 2005, SH7; recalled, not checked"
+
+[[fuel]]
+id = "TU1"
+title = "Low load, dry climate timber-grass-shrub (Scott and Burgan fuel model 161)"
+dead_1h_t_ac = 0.2
+dead_10h_t_ac = 0.9
+dead_100h_t_ac = 1.5
+live_herb_t_ac = 0.2
+live_woody_t_ac = 0.9
+sav_1h = 2000
+sav_herb = 1800
+sav_woody = 1600
+depth_ft = 0.6
+mx_dead_pct = 20
+confidence = "recalled"
+source = "Scott and Burgan 2005, TU1; recalled, not checked"
+
+[[fuel]]
+id = "URB"
+title = "Built-up land: fire carried from structure to structure, not a fuel model"
+dead_1h_t_ac = 0.0
+dead_10h_t_ac = 0.0
+dead_100h_t_ac = 0.0
+live_herb_t_ac = 0.0
+live_woody_t_ac = 0.0
+sav_1h = 0
+sav_herb = 0
+sav_woody = 0
+depth_ft = 0
+mx_dead_pct = 0
+confidence = "guess"
+source = "Not Rothermel: the module moves fire through built-up cells at built_ros_m_min scaled by the wind, a guessed parameter the manifest can set to zero"
+
+# Land-cover class (ESA WorldCover code) to fuel model. Classes not listed do not burn.
+[[cover]]
+code = 10
+cover = "tree cover"
+fuel = "TU1"
+note = "in the Santa Monica Mountains mostly oak, sycamore and planted trees among houses; TU1 is a guess at the understorey"
+[[cover]]
+code = 20
+cover = "shrubland"
+fuel = "SH5"
+note = "chaparral and coastal sage scrub; SH7 for the oldest, heaviest stands"
+[[cover]]
+code = 30
+cover = "grassland"
+fuel = "GR2"
+[[cover]]
+code = 40
+cover = "cropland"
+fuel = "GR1"
+[[cover]]
+code = 50
+cover = "built-up"
+fuel = "URB"
+[[cover]]
+code = 90
+cover = "herbaceous wetland"
+fuel = "GR1"

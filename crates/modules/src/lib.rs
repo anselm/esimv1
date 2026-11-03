@@ -16,6 +16,7 @@ pub mod rules;
 pub mod nitrogen;
 pub mod planet;
 pub mod countries;
+pub mod wildfire;
 
 use esim_kernel::describe::Describe;
 use esim_kernel::Module;
@@ -60,6 +61,8 @@ pub static KINDS: &[Kind] = &[
     kind!("tipping.elements", countries::Tipping),
     kind!("carbon.tipped", countries::TippedCarbon),
     kind!("story.bottomline", countries::Story),
+    kind!("fire.rothermel", wildfire::Rothermel),
+    kind!("obs.perimeters", wildfire::Perimeters),
 ];
 
 fn find(kind: &str) -> Result<&'static Kind, String> {

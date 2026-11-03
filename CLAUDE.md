@@ -105,6 +105,19 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   `packages/handle-guard`), not here. `web/scripts/attest-e2e.mjs` runs the whole flow against a
   local attest with a scratch database (18 checks). `web/lib/attest-verify.mjs` is a copy of
   attest's verifier until that package is on npm. The live esimv1 copy is read-only and unaffected.
+- The Palisades fire (2026-11-03): `fire.rothermel` and `obs.perimeters` in
+  `crates/modules/src/wildfire.rs`, data through `crates/registry/src/wildfire.rs` (WorldCover
+  2021 by 3-degree tile, read windowed by `cog::read_window_u8`; ERA5 hourly wind with direction
+  and gusts at one point; NIFC's daily perimeters by IRWIN id and the WFIGS perimeter of record,
+  all anonymous). Fuel models in `data/events/fuels.toml`, every row recalled from Scott and
+  Burgan 2005 and unchecked. Project `anselm/palisades-2025` (manifest `f2-palisades-2025`,
+  variants reanalysis, gusts, built-barrier, sh7) runs in about 15 s and overruns the record
+  about fourfold at 27 hours: an upper bound with no barriers or suppression. The first mapped
+  perimeter is a hand-drawn triangle. Fire reaches three cells along 32 directions; progress is
+  per approach direction (summing over neighbours ran the front several times too fast).
+- Front page and covers (2026-11-03): `featured = true` in project.toml puts a project on the
+  front page as a card; `cover` and `cover_caption` name a picture beside the manifest.
+  Earth 2100 (renamed from "The planet, with people on it") and the Palisades fire are featured.
 - Planetary rungs (`manifests/p1-*`, `crates/modules/src/planet.rs`) are zero-dimensional
   and read five small global records listed in the catalog (OWID emissions, Mauna Loa,
   Law Dome, HadCRUT5, GISTEMP); NOAA's ocean heat content server was down on 2026-11-01,

@@ -10,8 +10,13 @@ first stages are a river basin in Iowa and the planet to 2100.
 
 The planet pages to start with:
 
-- [The planet, with people on it](https://esimv1.exe.xyz/?project=anselm/planet-2100): one
-  project, five assumptions about emissions after 2024, each a variant.
+- [Earth 2100](https://esimv1.exe.xyz/?project=anselm/planet-2100): one project, six
+  assumptions about emissions after 2024, each a variant, read against the tipping
+  thresholds in the project's own README.
+- [The Palisades fire, January 2025](https://esimv1.exe.xyz/?project=anselm/palisades-2025):
+  a known fire run again on its own ground, unsuppressed, and scored against the
+  perimeters its mapping teams drew; the first local scenario, and the model's first
+  honest overrun.
 - [Two futures, one clock](https://esimv1.exe.xyz/?compare=anselm/planet-2100): emissions
   held at today's rate beside emissions to zero by 2050, under one time cursor.
 - [Documentation](https://esimv1.exe.xyz/?docs) and [the module kinds](https://esimv1.exe.xyz/?kinds).
@@ -37,10 +42,11 @@ what the run does not yet measure.
   gauges, stations, reanalyses, satellite vegetation, emissions, ice cores, temperature
   records, population, country outlines and the station network. Nothing synthetic,
   including in tests.
-- **Modules** (`crates/modules`): twenty-seven kinds today. For a basin: solar irradiance
+- **Modules** (`crates/modules`): twenty-nine kinds today. For a basin: solar irradiance
   on terrain, a surface heat slab, reanalysis weather, a water balance routed to the
   gauge, a crop, herbivore and predator cohorts, fire, farm agents, calendar rules, soil
-  nitrogen to the river. For the planet: observed emissions into a carbon ledger, a carbon
+  nitrogen to the river. For a wildfire: Rothermel's spread on 30 m terrain with fuel from
+  land cover and the hour's wind, scored against the incident's mapped perimeters. For the planet: observed emissions into a carbon ledger, a carbon
   cycle with sink feedback, methane and nitrous oxide, the IPCC assessed forcings, a
   two-layer energy balance, thermal sea level, the records as scoreboards; then people on
   half-degree cells: WorldPop's pattern at the UN's count, each country's temperature from

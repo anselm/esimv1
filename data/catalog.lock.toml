@@ -1,5 +1,11 @@
 # Written by the fetcher. One entry per fetched file: the bytes a run used.
 
+[files."copernicus-dem-glo30/N34_W119.tif"]
+url = "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N34_00_W119_00_DEM/Copernicus_DSM_COG_10_N34_00_W119_00_DEM.tif"
+sha256 = "eb5f76ce3183a33c76e24d00fd854598b490523f6cb325e3f234203a3bc011a8"
+bytes = 42718799
+fetched = "2026-11-03"
+
 [files."copernicus-dem-glo30/N42_W094.tif"]
 url = "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N42_00_W094_00_DEM/Copernicus_DSM_COG_10_N42_00_W094_00_DEM.tif"
 sha256 = "ed03509b743e06be040cb2ec8e8e623270a12d7232fcc9da09e23938d6a44fa0"
@@ -23,6 +29,12 @@ url = "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N43_00_
 sha256 = "fd13c2041ea3a133effeb9cdff3d02c8baf668d8e9dab24cb441840156fa190e"
 bytes = 39189738
 fetched = "2026-11-01"
+
+[files."esa-worldcover-2021/N33W120.tif"]
+url = "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N33W120_Map.tif"
+sha256 = "61e0909a51e2e76a6f153599316753370be937d0ce150261d023006a80613385"
+bytes = 101202142
+fetched = "2026-11-03"
 
 [files."ghcn-daily/USC00138806.csv"]
 url = "https://noaa-ghcn-pds.s3.amazonaws.com/csv/by_station/USC00138806.csv"
@@ -238,6 +250,18 @@ fetched = "2026-11-02"
 url = "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_50m_admin_0_countries.geojson"
 sha256 = "3e458fc036ad0a66411f2c1e6cac49c5d7bfb81cb1123bc513b22511a2b7fdeb"
 bytes = 3083490
+fetched = "2026-11-03"
+
+[files."nifc-operational-archive/2025_a7ea5d21-f882-44b8-bf64-44ab11059dc1.geojson"]
+url = "https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/Operational_Data_Archive_2025/FeatureServer/6/query?where=IRWINID%20%3D%20%27%7BA7EA5D21-F882-44B8-BF64-44AB11059DC1%7D%27%20AND%20FeatureCategory%20%3D%20%27Wildfire%20Daily%20Fire%20Perimeter%27&outFields=*&outSR=4326&f=geojson"
+sha256 = "e3a74e6a5b1013032f6045480971e97a9082815b4d990474f65e27ccf4ecbdd7"
+bytes = 4964026
+fetched = "2026-11-03"
+
+[files."nifc-wfigs-perimeters/palisades_2025.geojson"]
+url = "https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_Interagency_Perimeters/FeatureServer/0/query?where=UPPER%28poly_IncidentName%29%20LIKE%20%27%25PALISADES%25%27%20AND%20attr_FireDiscoveryDateTime%20%3E%3D%20DATE%20%272025-01-01%27%20AND%20attr_FireDiscoveryDateTime%20%3C%20DATE%20%272026-01-01%27&outFields=*&outSR=4326&f=geojson"
+sha256 = "a88cb3a7785ad1b108c3edc84ddb948885a5a03c291e18a28e3d16a0bb45c6ba"
+bytes = 390394
 fetched = "2026-11-03"
 
 [files."noaa-gml/ch4_annmean_gl.csv"]
@@ -9467,6 +9491,12 @@ url = "https://www.ncei.noaa.gov/pub/data/paleo/icecore/antarctica/law/law2006.t
 sha256 = "19ac7863487268e9ebf046cfc0c4fc481858469d82b6388ceee786181b1b5f05"
 bytes = 251543
 fetched = "2026-11-01"
+
+[files."open-meteo-era5-wind/34.08_-118.59_2025-01-06_2025-01-14.json"]
+url = "https://archive-api.open-meteo.com/v1/archive?latitude=34.08&longitude=-118.59&start_date=2025-01-06&end_date=2025-01-14&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m&models=era5&timezone=UTC&wind_speed_unit=ms"
+sha256 = "3c822295af91f990533ed8daf2d12117d420a45f8c82d41f43b8f03290cb3658"
+bytes = 9092
+fetched = "2026-11-03"
 
 [files."open-meteo-era5/42.3_43.2_-94.2_-93.5_0.25deg_2013-01-01_2013-12-31.json"]
 url = "https://archive-api.open-meteo.com/v1/archive?latitude=42.375,42.375,42.375,42.625,42.625,42.625,42.875,42.875,42.875,43.125,43.125,43.125&longitude=-94.125,-93.875,-93.625,-94.125,-93.875,-93.625,-94.125,-93.875,-93.625,-94.125,-93.875,-93.625&start_date=2013-01-01&end_date=2013-12-31&hourly=temperature_2m,precipitation,shortwave_radiation,relative_humidity_2m,wind_speed_10m&models=era5&timezone=UTC&wind_speed_unit=ms"

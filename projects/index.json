@@ -52,6 +52,114 @@
   },
   {
     "area": "anselm",
+    "by": "anselm, via claude 2026-11-03",
+    "cover": "cover.png",
+    "cover_caption": "Where the model's unsuppressed fire had reached 27 hours after ignition, coloured by the hour it arrived (yellow first, red last), on the reanalysis wind; in white the first infrared perimeter the incident mapped at that hour (15,824 acres), in blue the final perimeter (23,448 acres). Land cover beneath: trees, shrub, grass, built-up, the sea. Drawn from the run's own frames, 2026-11-03.",
+    "created": "2026-11-03",
+    "description": "The Palisades fire of 7 January 2025 run again on its own ground: Rothermel's spread model on 30 m terrain, fuel from land cover, the hour's wind from the ERA5 reanalysis, ignited where and when the record says, with no one fighting it. NIFC's mapped perimeters score the burned area as each was current. Variants: the reanalysis wind as read; its gusts; built-up land as a barrier; the heavier shrub model. A hindcast of a known event, not a forecast.",
+    "featured": true,
+    "kinds": [
+      "fire.rothermel",
+      "obs.perimeters"
+    ],
+    "name": "palisades-2025",
+    "path": "anselm/palisades-2025",
+    "runs": [
+      {
+        "all_ledgers_closed": true,
+        "digest": "9b67271aa09ea463",
+        "end": 1736640000,
+        "events": 253,
+        "id": "f2-palisades-2025-0bff2d8a-9b67271a",
+        "name": "f2-palisades-2025",
+        "seed": 1,
+        "set": {
+          "fire.wind_source": "\"mean\""
+        },
+        "start": 1736272800,
+        "variant": "reanalysis",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "c7f9f04d0f99cd19",
+        "end": 1736640000,
+        "events": 253,
+        "id": "f2-palisades-2025-0e5f009e-c7f9f04d",
+        "name": "f2-palisades-2025",
+        "seed": 1,
+        "set": {
+          "fire.built_ros_m_min": "0"
+        },
+        "start": 1736272800,
+        "variant": "built-barrier",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "4137e17769dc384d",
+        "end": 1736640000,
+        "events": 253,
+        "id": "f2-palisades-2025-4d6d802d-4137e177",
+        "name": "f2-palisades-2025",
+        "seed": 1,
+        "set": {
+          "fire.wind_source": "\"gust\""
+        },
+        "start": 1736272800,
+        "variant": "gusts",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "085333618c77c254",
+        "end": 1736640000,
+        "events": 253,
+        "id": "f2-palisades-2025-8f17f073-08533361",
+        "name": "f2-palisades-2025",
+        "seed": 1,
+        "set": {
+          "fire.shrub_fuel": "\"SH7\""
+        },
+        "start": 1736272800,
+        "variant": "sh7",
+        "verdict": null
+      }
+    ],
+    "title": "The Palisades fire, January 2025",
+    "variant": [
+      {
+        "name": "reanalysis",
+        "set": {
+          "fire.wind_source": "mean"
+        },
+        "title": "The ERA5 wind as read, 25 km, at the window's centre"
+      },
+      {
+        "name": "gusts",
+        "set": {
+          "fire.wind_source": "gust"
+        },
+        "title": "The ERA5 hourly gust as the wind: the upper bound the reanalysis allows"
+      },
+      {
+        "name": "built-barrier",
+        "set": {
+          "fire.built_ros_m_min": 0
+        },
+        "title": "Built-up land does not carry fire"
+      },
+      {
+        "name": "sh7",
+        "set": {
+          "fire.shrub_fuel": "SH7"
+        },
+        "title": "Shrubland as the very high load model SH7"
+      }
+    ]
+  },
+  {
+    "area": "anselm",
     "by": "anselm, via claude 2026-11-01",
     "cover": "cover.png",
     "cover_caption": "People living outside the human climate niche in 2091 with emissions held at the 2024 rate: the held run's own field, one-degree cells, log scale, drawn 2026-11-03.",
@@ -290,21 +398,6 @@
       }
     ],
     "title": "Two buckets and a tap"
-  },
-  {
-    "area": "es37z6x",
-    "by": "@es37z6x via attest, web",
-    "created": "2026-11-03",
-    "description": "Kernel seed proof: source (1h) -> upper bucket (6h) -> lower bucket (1d) -> sea.",
-    "kinds": [
-      "water.source",
-      "water.bucket",
-      "water.bucket"
-    ],
-    "name": "e2e-buckets",
-    "path": "es37z6x/e2e-buckets",
-    "runs": [],
-    "title": "m0-buckets"
   },
   {
     "area": "guest",

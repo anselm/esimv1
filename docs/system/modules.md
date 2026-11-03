@@ -112,3 +112,8 @@ in doubt, split at the point where two different people would hold different opi
 
 `crates/modules/src/`, one file per layer or per place, registered in a table of kinds.
 [Adding a module](?doc=system/adding-a-module) is the recipe.
+- `fire.rothermel` and `obs.perimeters` (`crates/modules/src/wildfire.rs`, 2026-11-03): a
+  wildfire hindcast on a one-arc-second window, Rothermel's spread with fuel from
+  WorldCover land cover and the hour's wind from the ERA5 archive, scored against the
+  incident's mapped perimeters from NIFC as each was current. The first local scenario
+  after the Boone basin; the Palisades fire of January 2025 is the case.

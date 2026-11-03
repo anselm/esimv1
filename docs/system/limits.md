@@ -90,6 +90,33 @@ holds the history.
 - Fire spread rates are not a fire model's; a season's drying confounds the auditor's
   recovery measure.
 
+## The fire
+
+- Rothermel's spread model with no suppression, no roads, no fuel breaks and no burn scars,
+  on land cover where every classified cell carries fuel, is an upper bound. On the
+  Palisades fire (2026-11-03) it burns about four times the mapped area at 27 hours
+  (79,000 acres against 15,800 on the reanalysis wind) and fills the window by the second
+  day; at the first mapped figure, eleven and a half hours in, it has more than twenty times
+  the acreage. The gust, barrier and heavy-shrub
+  variants do not close the gap. The missing things are known: barriers, suppression, the
+  fuel table.
+- Every fuel parameter (`data/events/fuels.toml`) is recalled from Scott and Burgan 2005
+  and not yet checked; the moisture, wind-adjustment and ellipse equations are recalled
+  too. The ellipse's wind is in m/s with the FARSITE coefficients, which is consistent with
+  the mile-per-hour form by the ratio of the coefficients and otherwise unverified.
+- The wind is one ERA5 point at 25 km for the whole window, which reads a Santa Ana event
+  at a third of the gusts news reports put on the ridges (recalled, not fetched); the gust variant is the upper bound the
+  reanalysis allows, not the wind that blew.
+- WorldCover calls most of the Santa Monica Mountains "tree cover" (196 of 427 km² in the
+  window; shrubland 45), so chaparral is partly modelled as a light timber-and-shrub
+  understorey. A fuel map made for fire (LANDFIRE) needs an email to fetch and is not used.
+- Fire moves along 32 lattice directions within three cells; a narrow wind-driven ellipse
+  still loses rate between them, and the arrival map shows striping along lattice
+  directions. The first mapped perimeter (06:00Z on 8 January) is a hand-drawn triangle
+  with a typed acreage, not a map; the first infrared perimeter is 27 hours in.
+- Built-up land carries fire at a guessed rate; nothing about structures is physical.
+  No spotting, no crown fire, no fire weather of the fire's own, no evacuation, no people.
+
 ## The system
 
 - Modules are compiled in; the wire binding is specified and not built, so a kind from

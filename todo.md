@@ -82,6 +82,20 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
   records (GSOD) for the Yangtze and North China plains, and the Indus plain's absence
   explained by the pattern or the baseline, one or the other.
 
+## The fire (Anselm, 2026-11-03; `devlog/20261103-the-front-door-and-the-fire.md`)
+
+- Check `data/events/fuels.toml` line by line against Scott and Burgan 2005 (RMRS-GTR-153); the
+  SH5 row decides the Palisades result.
+- Barriers: roads and ridgelines from OpenStreetMap, the 2021 Palisades burn scar from the fire
+  history, as unburnable cells; then the model's first night against the 2,920-acre figure.
+- Suppression as an agent: engines, dozers, aircraft placed by rule, holding lines where the
+  record says they held; the daily perimeters are the test.
+- A fuel map made for fire (LANDFIRE, needs an email) beside WorldCover's "tree cover".
+- Spotting, and the lattice striping (a Huygens front instead of lattice directions).
+- Evacuation and the people: WorldPop cells, roads, a clearance time per neighbourhood.
+- The speed test, answered: one fire day at 30 m runs in about three seconds; operator-in-the-loop
+  is a surface question (live wind, a clock, decisions injected).
+
 ## Before release (Anselm, 2026-11-03; `devlog/20261103-before-release.md`)
 
 - The front page as a gallery: each project leads with one picture made from its own runs
@@ -89,11 +103,7 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
 - Maps that look like places: coastlines, a graticule, a quantile stretch, a basemap under
   the basin fields; the README page given more air than the run pages.
 - A README figure that plays its cursor when scrolled into view.
-- A second scenario on the local axis: a forest fire with a known ending, scored against a
-  daily perimeter record; the wall-clock to simulate one fire day measured, which decides
-  whether operator-in-the-loop is a surface question or a model question. Needs Rothermel
-  spread, a fuel map, slope from the DEM, hourly wind. Data doors to check first: FIRMS,
-  the NIFC perimeter service, MTBS (recalled, not fetched).
+- The fire scenario: built 2026-11-03 (see The fire above); what remains is making it right.
 - Whether the held-low variant belongs on the public compare page: Anselm's call.
 - Accounts and the crumpled namespace: see below.
 

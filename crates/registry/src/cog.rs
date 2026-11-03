@@ -281,6 +281,68 @@ pub fn for_each_tile(buf: &[u8], mut visit: impl FnMut(&TiledInfo, usize, usize,
     Ok(info)
 }
 
+
+/// A window of a tiled single-band Byte GeoTIFF (a land-cover map): only the tiles that
+/// overlap `[lon_w, lon_e] x [lat_s, lat_n]` are decoded, so a 36,000-pixel-square tile
+/// costs what the window needs. `col0, row0` place the window in the image; `x0, y0, dx,
+/// dy` are the image's georeference.
+pub struct ByteWindow { pub col0: usize, pub row0: usize, pub width: usize, pub height: usize, pub x0: f64, pub y0: f64, pub dx: f64, pub dy: f64, pub nodata: Option<u8>, pub data: Vec<u8> }
+pub fn read_window_u8(buf: &[u8], lon_w: f64, lon_e: f64, lat_s: f64, lat_n: f64) -> Result<ByteWindow, String> {
+    if buf.len() < 8 { return Err("not a tiff".into()); }
+    let le = match &buf[..2] { b"II" => true, b"MM" => false, _ => return Err("not a tiff".into()) };
+    if rd16(&buf[2..], le) != 42 { return Err("bigtiff not supported".into()); }
+    let ifd = Ifd::parse(buf, le, rd32(&buf[4..], le) as usize)?;
+    let width = ifd.u32(256, le, 0) as usize;
+    let height = ifd.u32(257, le, 0) as usize;
+    let bits = ifd.u32(258, le, 0);
+    let comp = ifd.u32(259, le, 1);
+    let pred = ifd.u32(317, le, 1);
+    let fmt = ifd.u32(339, le, 1);
+    if ifd.u32(277, le, 1) != 1 { return Err("only single band supported".into()); }
+    if (fmt, bits) != (1, 8) { return Err(format!("sample format {fmt} with {bits} bits: only Byte here")); }
+    let nodata = ifd.ascii(42113).and_then(|s| s.trim().parse::<u8>().ok());
+    let scale = ifd.f64s(33550, le);
+    let tie = ifd.f64s(33922, le);
+    let (dx, dy) = (scale.first().copied().unwrap_or(1.0), scale.get(1).copied().unwrap_or(1.0));
+    let (mut x0, mut y0) = if tie.len() >= 6 { (tie[3] - tie[0] * dx, tie[4] + tie[1] * dy) } else { (0.0, 0.0) };
+    if raster_type(&ifd, le) == 2 { x0 -= dx / 2.0; y0 += dy / 2.0; }
+    let (tw, th) = (ifd.u32(322, le, 0) as usize, ifd.u32(323, le, 0) as usize);
+    if tw == 0 { return Err("not tiled".into()); }
+    // the pixel window, clipped to the image
+    let c0 = (((lon_w - x0) / dx).floor().max(0.0) as usize).min(width);
+    let c1 = (((lon_e - x0) / dx).ceil().max(0.0) as usize).min(width);
+    let r0 = (((y0 - lat_n) / dy).floor().max(0.0) as usize).min(height);
+    let r1 = (((y0 - lat_s) / dy).ceil().max(0.0) as usize).min(height);
+    let (w, h) = (c1.saturating_sub(c0), r1.saturating_sub(r0));
+    let mut data = vec![nodata.unwrap_or(0); w * h];
+    if w == 0 || h == 0 { return Ok(ByteWindow { col0: c0, row0: r0, width: w, height: h, x0, y0, dx, dy, nodata, data }); }
+    let offs = ifd.u32s(324, le);
+    let counts = ifd.u32s(325, le);
+    let tiles_across = width.div_ceil(tw);
+    for ty in r0 / th..=(r1 - 1) / th {
+        for tx in c0 / tw..=(c1 - 1) / tw {
+            let i = ty * tiles_across + tx;
+            let (Some(&o), Some(&c)) = (offs.get(i), counts.get(i)) else { continue };
+            if c == 0 { continue; }
+            let raw = buf.get(o as usize..(o + c) as usize).ok_or("tile out of range")?;
+            let mut block = decompress(raw, comp, tw * th)?;
+            if block.len() < tw * th { block.resize(tw * th, 0); }
+            if pred == 2 { for r in 0..th { let row = &mut block[r * tw..(r + 1) * tw]; for k in 1..tw { row[k] = row[k].wrapping_add(row[k - 1]); } } }
+            else if pred != 1 { return Err(format!("predictor {pred} not supported for bytes")); }
+            for r in 0..th {
+                let row = ty * th + r;
+                if row < r0 || row >= r1 { continue; }
+                for k in 0..tw {
+                    let col = tx * tw + k;
+                    if col < c0 || col >= c1 { continue; }
+                    data[(row - r0) * w + (col - c0)] = block[r * tw + k];
+                }
+            }
+        }
+    }
+    Ok(ByteWindow { col0: c0, row0: r0, width: w, height: h, x0, y0, dx, dy, nodata, data })
+}
+
 /// Undo TIFF predictors in place. 2 = horizontal differencing on samples, 3 = floating
 /// point: bytes of each row are stored as byte planes (most significant first) with
 /// horizontal differencing over the byte stream; undo the differencing, then gather.

@@ -5,6 +5,7 @@
   //   ```esim
   //   ladder                          the tipping thresholds against the variants' warming
   //   table 2099 series... [=label]   each variant's value of the named series at the start of that year
+  //   table 2025-01-08T21:24Z series...  or at a date and time
   //   ```
   //
   // Figures draw from the project's runs and from nothing else: the author writes the
@@ -49,6 +50,7 @@
     const unit = run.series?.[name]?.unit ?? ''
     if (unit === 'degC') return `${v >= 0 ? '+' : ''}${v.toFixed(2)} °C`
     if (unit === 'ppm') return `${Math.round(v)} ppm`
+    if (unit === 'acres') return Math.round(v).toLocaleString('en-US')
     if (unit === 'persons') return v >= 1e9 ? `${(v / 1e9).toFixed(2)} bn` : v >= 1e6 ? `${Math.round(v / 1e6)} M` : Math.round(v).toLocaleString('en-US')
     if (unit === '%') return `${v.toFixed(1)}%`
     if (unit === 'GtC') return `${v.toFixed(1)} GtC`
@@ -69,9 +71,9 @@
     {:else if s.kind === 'ladder'}
       <Ladder {runs} {elements} />
     {:else if s.kind === 'table'}
-      {@const year = +s.args[0]}
+      {@const year = s.args[0]}
       {@const cols = columns(s.args)}
-      {@const t = yearStart(year)}
+      {@const t = /^\d{4}$/.test(year) ? yearStart(+year) : Math.floor(Date.parse(year) / 1000)}
       <figure class="overflow-x-auto">
         <table class="mono text-xs tabular-nums">
           <thead><tr><th class="label py-1 pr-3 text-left font-normal normal-case tracking-normal">{year}</th>{#each cols as c (c.name)}<th class="label py-1 pr-3 text-right font-normal normal-case tracking-normal">{c.label}</th>{/each}</tr></thead>
