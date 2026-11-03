@@ -82,6 +82,21 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
   records (GSOD) for the Yangtze and North China plains, and the Indus plain's absence
   explained by the pattern or the baseline, one or the other.
 
+## Before release (Anselm, 2026-11-03; `devlog/20261103-before-release.md`)
+
+- The front page as a gallery: each project leads with one picture made from its own runs
+  (the ladder, a map at a date) and one sentence, not a text list.
+- Maps that look like places: coastlines, a graticule, a quantile stretch, a basemap under
+  the basin fields; the README page given more air than the run pages.
+- A README figure that plays its cursor when scrolled into view.
+- A second scenario on the local axis: a forest fire with a known ending, scored against a
+  daily perimeter record; the wall-clock to simulate one fire day measured, which decides
+  whether operator-in-the-loop is a surface question or a model question. Needs Rothermel
+  spread, a fuel map, slope from the DEM, hourly wind. Data doors to check first: FIRMS,
+  the NIFC perimeter service, MTBS (recalled, not fetched).
+- Whether the held-low variant belongs on the public compare page: Anselm's call.
+- Accounts and the crumpled namespace: see below.
+
 ## Platform
 
 - A model-ensemble warming pattern in place of one fitted slope per country: WorldClim's
