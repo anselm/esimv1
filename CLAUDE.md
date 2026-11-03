@@ -119,7 +119,7 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   budget on 1-arcsec cells with buildings (LA County LARIAC footprints with heights, paged
   anonymously), roads as breaks (OSM context), HRRR 3 km wind each hour (`crates/registry/src/grib.rs`
   reads templates 3.30 and 5.0/5.3 by byte range from the open bucket; `Fetcher::fetch_range_reduced`;
-  cross-checked with GDAL), spotting, a declared `ignite_scale` knob. Project `anselm/palisades-engine`
+  cross-checked with GDAL), spotting, a declared `ignite_scale` knob. Project `anselm/palisades-cells`
   (manifest `f3-palisades-cells`; variants scale-2..6 and near-2..4 with reach 45 m). `obs.dins`
   (CAL FIRE's 12,081 inspections) scores structures. A `scene` view renders in 3D (`Scene3D.svelte`,
   three.js 0.170, needs `terrain_elev_m` and `building_height` frames); headless screenshots need the

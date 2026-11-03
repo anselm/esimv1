@@ -316,6 +316,45 @@ Every record this simulator reads, from `data/catalog.toml`, with the publisher,
 - **url** `https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/Operational_Data_Archive_{year}/FeatureServer/6/query?where={where}&outFields=*&outSR=4326&f=geojson`
 - **notes** DateCurrent is the time to use; PolygonDateTime is frozen on the infrared rows.
 
+### OpenStreetMap through the Overpass API: roads, place names and city limits inside a window
+
+- **id** `osm-overpass`
+- **publisher** OpenStreetMap contributors
+- **licence** ODbL 1.0; attribution 'OpenStreetMap contributors' on any map that shows it
+- **verified** 2026-11-03 from canada1: see the registry's wildfire::context; the Palisades window answered
+- **url** `https://overpass-api.de/api/interpreter?data={query}`
+- **notes** A public instance with usage limits; one request per window, cached. Context only: nothing in a run's physics reads it.
+
+### CAL FIRE Damage Inspection (DINS) points for the 2025 Palisades fire, public view
+
+- **id** `cal-fire-dins-2025-palisades`
+- **publisher** CAL FIRE Damage Inspection program (service owner dins.CALFIRE); a data-share view with the full inspection form and LA County's building footprints with the same damage exist beside it
+- **licence** No licence text on the service; California public records. Attribute CAL FIRE DINS.
+- **verified** 2026-11-03 from canada1: 12,081 points, anonymous; Destroyed 6,845, Major 72, Minor 171, Affected 732, No Damage 4,261; bbox lon -118.6859 to -118.4989, lat 34.0298 to 34.1288; inspections dated 2025-01-09 to 2025-02-19
+- **url** `https://services1.arcgis.com/jUJYIo9tSA7EHvfZ/arcgis/rest/services/DINS_2025_Palisades_Public_View/FeatureServer/0/query?where=1%3D1&outFields=DAMAGE,STRUCTURETYPE&outSR=4326&f=geojson&resultOffset={offset}&resultRecordCount=2000`
+- **notes** The destroyed count equals CAL FIRE's incident figure of 6,845 structures.
+
+### LA County building footprints for the 2025 fires, with heights and CAL FIRE's damage inspection joined
+
+- **id** `lacounty-lariac-buildings-2025-fires`
+- **publisher** Los Angeles County Assessor (LARIAC footprints), damage from CAL FIRE DINS
+- **licence** The sibling service states copyright LARIAC, County of Los Angeles, Pictometry, EagleView, CalFIRE; no licence text on this one. Attribute them; do not redistribute the footprints as a dataset.
+- **verified** 2026-11-03 from canada1: Incident_Name LIKE '%Palisades%' answered 13,292 polygons; maximum damage Destroyed 6,352, No Damage 3,780, blank 2,250, Affected 687, Minor 159, Major 64; heights 0.75 to 96, mean 21
+- **url** `https://services.arcgis.com/RmCCgQtiZLDCtblq/arcgis/rest/services/2025_WildFire_LARIAC_BUILDINGS_100M_Plus_DINS_MaxMin_DAMAGE_NEW/FeatureServer/0/query?where={where}&outFields=HEIGHT,DINS_MaximumDamage&outSR=4326&f=geojson&resultOffset={offset}&resultRecordCount=2000`
+- **notes** The fire engine rasterises the footprints to a cell fraction and a mean height; the 3D view extrudes them.
+
+## weather grid
+
+### NOAA HRRR 3 km analysis (f00), hourly, by byte range from the open bucket
+
+- **id** `noaa-hrrr`
+- **publisher** NOAA National Centers for Environmental Prediction, High-Resolution Rapid Refresh, on the AWS Open Data registry (bucket noaa-hrrr-bdp-pds)
+- **licence** US federal public domain
+- **units** UGRD, VGRD 10 m above ground m/s; GUST surface m/s; TMP 2 m K (the reader gives degC); RH 2 m %
+- **verified** 2026-11-03 from canada1: 18Z on 2025-01-07 answered 150 MB with a 9 KB index; the 10 m wind at the Palisades ignition point read 9.9 m/s from 36 degrees with a 20.6 m/s gust, against the 25 km reanalysis's 6.9 and 13; the reader's values were cross-checked with GDAL
+- **url** `https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.{yyyymmdd}/conus/hrrr.t{hh}z.wrfsfcf00.grib2 (and .idx)`
+- **notes** Only the window's block of each record is kept in the cache; the lock holds the raw record's hash and byte range.
+
 ## Places
 
 - **Boone River above Webster City, Iowa**: The stage for the milestone ladder: tile-drained Corn Belt, a USGS gauge with daily discharge since 1940, MODIS coverage, farms, drains to the Des Moines, Mississippi and the Gulf. Gauge: USGS 05481000 Boone River near Webster City, IA; 42.4319722 N, 93.8059444 W; drainage area 844 sq mi; HUC 07100005; daily discharge (00060) 1940-03-09 to present.

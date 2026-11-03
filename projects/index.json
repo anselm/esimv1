@@ -171,8 +171,8 @@
       "obs.perimeters",
       "obs.dins"
     ],
-    "name": "palisades-engine",
-    "path": "anselm/palisades-engine",
+    "name": "palisades-cells",
+    "path": "anselm/palisades-cells",
     "runs": [
       {
         "all_ledgers_closed": true,
@@ -222,6 +222,24 @@
       },
       {
         "all_ledgers_closed": true,
+        "digest": "1b526276c5285a5b",
+        "end": 1736640000,
+        "events": 1034,
+        "id": "f3-palisades-cells-8cbeb05c-1b526276",
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.built_to_built_gain": "2.5",
+          "fire.ember_built_p": "0.5",
+          "fire.ignite_scale": "4",
+          "fire.reach_m": "45"
+        },
+        "start": 1736272800,
+        "variant": "houses",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
         "digest": "67d399978cfca794",
         "end": 1736640000,
         "events": 1048,
@@ -234,7 +252,7 @@
         },
         "start": 1736272800,
         "variant": "near-4",
-        "verdict": null
+        "verdict": "holds"
       },
       {
         "all_ledgers_closed": true,
@@ -281,9 +299,28 @@
         "start": 1736272800,
         "variant": "scale-4",
         "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "5320fc77829f4fb5",
+        "end": 1736640000,
+        "events": 1098,
+        "id": "f3-palisades-cells-f2c6427a-5320fc77",
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.built_to_built_gain": "2.5",
+          "fire.ember_built_p": "0.5",
+          "fire.ignite_scale": "4",
+          "fire.reach_m": "45",
+          "fire.threshold_jitter": "0.6"
+        },
+        "start": 1736272800,
+        "variant": "houses-jitter",
+        "verdict": null
       }
     ],
-    "title": "The Palisades fire on our own engine",
+    "title": "The Palisades fire, cell by cell",
     "variant": [
       {
         "name": "scale-2",
@@ -336,6 +373,27 @@
           "fire.reach_m": 45
         },
         "title": "Heat felt only by the next cell (reach 45 m), thresholds times 4"
+      },
+      {
+        "name": "houses",
+        "set": {
+          "fire.built_to_built_gain": 2.5,
+          "fire.ember_built_p": 0.5,
+          "fire.ignite_scale": 4,
+          "fire.reach_m": 45
+        },
+        "title": "Near reach, thresholds times 4, embers light houses, house to house"
+      },
+      {
+        "name": "houses-jitter",
+        "set": {
+          "fire.built_to_built_gain": 2.5,
+          "fire.ember_built_p": 0.5,
+          "fire.ignite_scale": 4,
+          "fire.reach_m": 45,
+          "fire.threshold_jitter": 0.6
+        },
+        "title": "As houses, with micro-conditions: each cell's threshold jittered by a fixed factor (sigma 0.6)"
       }
     ]
   },

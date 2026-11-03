@@ -120,3 +120,34 @@ scene itself.
 Push and deploy are his call. The book he pointed at (*Fire Weather*, Fort McMurray 2016) is
 in the todo as the second fire. The front page still features only Earth 2100 and the first
 Palisades project; the engine project is reachable from "all projects".
+
+## Later the same evening: the houses, first pass
+
+Anselm, landed: "I just want more granular control. Your comments about eaves is good - the
+fire behaved in non linear ways - skipping some buildings and burning others - due to micro
+conditions - slight variations in slope, building composition and so on. We can grind on this
+over time iteratively to get closer to the historical regression." And: is the "engine
+project" a fire model or a 3D engine? It is neither in particular: `fire.cells` is a module
+like any other, and the project was only a second scenario folder that runs it. Renamed
+`anselm/palisades-cells`, "The Palisades fire, cell by cell", so the folder says what it is.
+
+Three knobs added to `fire.cells`, each a guess and each declared: `ember_built_p`, the
+chance an ember landing on a built cell lights it, times the cell's built fraction;
+`built_to_built_gain`, how much further heat reaches from a burning built cell into the next
+built cell (house to house); `threshold_jitter`, a fixed log-normal factor on each cell's
+ignition threshold from a hash of its index, so a run is reproducible and a house can be
+easier or harder to light than its twin: the micro-conditions nobody mapped. Two variants on
+top of near-4:
+
+| variant | 27 h acres | 96 h acres | destroyed reached | undamaged overrun | precision |
+|---|---|---|---|---|---|
+| near-4 | 22,431 | 50,340 | 835 (0.12) | 1,251 | 0.36 |
+| houses (embers 0.5, house to house 2.5) | 23,093 | 50,842 | 2,211 (0.32) | 2,242 | 0.45 |
+| houses-jitter (sigma 0.6) | 22,844 | 50,577 | 1,642 (0.24) | 1,508 | 0.47 |
+
+The houses move it the right way without changing the acreage: recall from a tenth to a
+third, precision up. Jitter buys precision at recall's expense, as a scatter should. Still a
+long way from 6,845. What the engine lacks for the next pass: the real first-night wind in
+the village (HRRR is 3 km; the canyons funnel), structures as individual bodies rather than
+a cell's built fraction, and something that stops the fire on days two to four, which in the
+record was crews.

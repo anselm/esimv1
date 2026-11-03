@@ -84,9 +84,10 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
 
 ## The fire (Anselm, 2026-11-03; `devlog/20261103-the-front-door-and-the-fire.md`, `devlog/20261103-our-own-engine.md`)
 
-- The engine's structure physics: embers into houses, a house as the next house's fuel, a
-  structure's ignition from radiant exposure; the Palisades village burned house to house on
-  the first evening and the engine walks around it.
+- The engine's structure physics, continued: a first pass (embers into houses, house to house,
+  per-cell jitter) took destroyed-structure recall from 0.12 to 0.32; next, structures as
+  individual bodies from the footprints, ignition by radiant exposure and ember load, the
+  building's material where the inspection form states it (the data-share view has it).
 - Fit the engine's constants to the perimeters and the inspections with the Eaton fire (same
   day, same wind, 14,021 acres, DINS exists) held back as the test; a parameter sweep through
   `esim ensemble --set`.

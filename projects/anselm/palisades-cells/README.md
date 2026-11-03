@@ -1,4 +1,4 @@
-# The same fire, on an engine of our own
+# The same fire, cell by cell
 
 The first Palisades project runs a 1972 spread formula and overruns the record fourfold.
 This one starts from the facts instead and asks what the simplest engine built on them

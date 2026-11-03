@@ -47,6 +47,9 @@ pub struct Cells {
     built_ignite: f64, built_intensity: f64, built_burn_min: f64,
     cool_min: f64,
     ignite_scale: f64,
+    threshold_jitter: f64,
+    ember_built_p: f64,
+    built_to_built_gain: f64,
     spot_rate: f64, spot_mean_m: f64, spot_land_p: f64, spot_min_intensity: f64,
     road_widths_m: String,
     // state
@@ -76,6 +79,7 @@ pub struct Cells {
     #[serde(skip)] era5: Option<WindSeries>,
     #[serde(skip)] cell_wind: Vec<(f32, f32)>,   // this hour: (speed m/s, direction the wind blows TOWARD, rad)
     #[serde(skip)] cell_moist: Vec<f32>,
+    #[serde(skip)] jitter: Vec<f32>,        // per-cell multiplier on the ignition threshold: the micro-conditions nobody mapped
     #[serde(skip)] offsets: Vec<(isize, isize, f32, f32)>, // dc, dr, distance factor (cells), bearing rad
 }
 
@@ -107,12 +111,15 @@ impl Cells {
             built_ignite: param_f64(p, "built_ignite", 4.0), built_intensity: param_f64(p, "built_intensity", 3.0), built_burn_min: param_f64(p, "built_burn_min", 90.0),
             cool_min: param_f64(p, "cool_min", 15.0),
             ignite_scale: param_f64(p, "ignite_scale", 1.0),
+            threshold_jitter: param_f64(p, "threshold_jitter", 0.0),
+            ember_built_p: param_f64(p, "ember_built_p", 0.0),
+            built_to_built_gain: param_f64(p, "built_to_built_gain", 1.0),
             spot_rate: param_f64(p, "spot_rate", 0.003), spot_mean_m: param_f64(p, "spot_mean_m", 25.0), spot_land_p: param_f64(p, "spot_land_p", 0.3), spot_min_intensity: param_f64(p, "spot_min_intensity", 2.0),
             road_widths_m: param_str(p, "road_widths_m", "motorway=30,trunk=20,primary=14,secondary=10,tertiary=8").to_string(),
             ignited: false, since_ignition_s: 0.0, last_frame: i64::MIN / 4,
             t_ign: Vec::new(), t_out: Vec::new(), heat: Vec::new(), heat_t: Vec::new(), active: Vec::new(), spots: 0,
             grid: None, frame_grid: None, elev: Vec::new(), slope: Vec::new(), aspect: Vec::new(), cover: Vec::new(), built_frac: Vec::new(), built_height: Vec::new(), road: Vec::new(), kind: Vec::new(),
-            area_m2: Vec::new(), metres: Vec::new(), hrrr: Vec::new(), hrrr_t0: 0, era5: None, cell_wind: Vec::new(), cell_moist: Vec::new(), offsets: Vec::new(),
+            area_m2: Vec::new(), metres: Vec::new(), hrrr: Vec::new(), hrrr_t0: 0, era5: None, cell_wind: Vec::new(), cell_moist: Vec::new(), jitter: Vec::new(), offsets: Vec::new(),
         };
         c.load()?;
         Ok(c)
@@ -219,6 +226,15 @@ impl Cells {
             .filter_map(|(dc, dr)| { let (ex, ny_m) = (dc as f64 * mx, -(dr as f64) * my); let d = (ex * ex + ny_m * ny_m).sqrt(); if d <= self.reach_m { Some((dc, dr, d as f32, ex.atan2(ny_m) as f32)) } else { None } }).collect();
         if self.t_ign.len() != n { self.t_ign = vec![f32::NAN; n]; self.t_out = vec![0.0; n]; self.heat = vec![0.0; n]; self.heat_t = vec![0.0; n]; }
         self.cell_wind = vec![(0.0, 0.0); n]; self.cell_moist = vec![0.05; n];
+        // micro-conditions: a fixed log-normal factor per cell from a hash of its index, so a run is reproducible and a
+        // neighbour can be easier or harder to light than its twin; sigma is the knob
+        self.jitter = (0..n).map(|k| {
+            if self.threshold_jitter <= 0.0 { return 1.0; }
+            let mut x = (k as u64).wrapping_mul(0x9E3779B97F4A7C15) ^ 0xD1B54A32D192ED03; x ^= x >> 29; x = x.wrapping_mul(0xBF58476D1CE4E5B9); x ^= x >> 32;
+            let u1 = ((x & 0xFFFF_FFFF) as f64 + 0.5) / 4294967296.0; let u2 = (((x >> 32) & 0xFFFF_FFFF) as f64 + 0.5) / 4294967296.0;
+            let z = (-2.0 * u1.ln()).sqrt() * (std::f64::consts::TAU * u2).cos();
+            (self.threshold_jitter * z).exp() as f32
+        }).collect();
         let k = (self.frame_res_arcsec / self.res_arcsec).round().max(1.0) as usize;
         self.frame_grid = Some(LatLonGrid { nx: grid.nx.div_ceil(k), ny: grid.ny.div_ceil(k), dlon: grid.dlon * k as f64, dlat: grid.dlat * k as f64, lon_w: grid.lon_w, lat_n: grid.lat_n });
         self.slope = slope; self.aspect = aspect; self.grid = Some(grid);
@@ -344,12 +360,13 @@ impl Module for Cells {
                         let mut lambda = self.lambda_m as f32 * (1.0 + self.wind_gain as f32 * wspd * along);
                         let asp = self.aspect[n];
                         if asp.is_finite() { let up = (theta - (asp + std::f32::consts::PI)).cos().max(0.0); lambda *= 1.0 + self.slope_gain as f32 * self.slope[n].tan() * up; }
+                        if self.kind[b] == 4 && self.kind[n] == 4 { lambda *= self.built_to_built_gain as f32; }
                         let q = ib * (-d / lambda).exp() * dt / 60.0;
                         // the cell cools between contributions
                         let elapsed = t - self.heat_t[n];
                         if elapsed > 0.0 { self.heat[n] *= (-(elapsed / 60.0) / self.cool_min as f32).exp(); self.heat_t[n] = t; }
                         self.heat[n] += q;
-                        let need = self.ignite_scale as f32 * self.fuel(self.kind[n]).ignite * (1.0 + self.moisture_gain as f32 * self.cell_moist[n]) * if self.kind[n] == 4 { 1.0 } else { 1.0 + self.live_moisture_pct as f32 / 200.0 * (self.kind[n] == 2) as u8 as f32 };
+                        let need = self.jitter[n] * self.ignite_scale as f32 * self.fuel(self.kind[n]).ignite * (1.0 + self.moisture_gain as f32 * self.cell_moist[n]) * if self.kind[n] == 4 { 1.0 } else { 1.0 + self.live_moisture_pct as f32 / 200.0 * (self.kind[n] == 2) as u8 as f32 };
                         if self.heat[n] >= need { self.ignite(n, t + dt); newly += 1; }
                     }
                     // embers
@@ -362,7 +379,8 @@ impl Module for Cells {
                             let (lc, lr) = (bc + ((dist * dir.sin()) / mx as f32).round() as isize, br - ((dist * dir.cos()) / my as f32).round() as isize);
                             if lc >= 0 && lr >= 0 && lc < g.nx as isize && lr < g.ny as isize {
                                 let l = lr as usize * g.nx + lc as usize;
-                                if self.t_ign[l].is_nan() && self.kind[l] != 0 && ctx.rng().f64() < (self.spot_land_p as f32 * (1.0 - 4.0 * self.cell_moist[l]).max(0.0)) as f64 {
+                                let p_land = if self.kind[l] == 4 && self.ember_built_p > 0.0 { self.ember_built_p as f32 * self.built_frac[l].clamp(0.2, 1.0) } else { self.spot_land_p as f32 * (1.0 - 4.0 * self.cell_moist[l]).max(0.0) };
+                                if self.t_ign[l].is_nan() && self.kind[l] != 0 && ctx.rng().f64() < p_land as f64 {
                                     self.ignite(l, t + dt); self.spots += 1; spots_hour += 1; newly += 1;
                                     ctx.publish_at(l, "fire.spot", json!({ "from": b, "distance_m": dist }));
                                 }
@@ -422,6 +440,9 @@ impl Cells {
             .param("built_ignite", 4.0, "heat", "guess: a structure's threshold, scaled by nothing yet").param("built_intensity", 3.0, "heat/min", "guess, scaled by the cell's built fraction").param("built_burn_min", 90.0, "min", "guess, scaled by the built fraction")
             .param("cool_min", 15.0, "min", "guess: a cell's received heat decays with this e-folding time")
             .param("ignite_scale", 1.0, "", "one multiplier on every ignition threshold: the single number fitted to the record (the first infrared perimeter's acreage), declared as such; everything else is the test")
+            .param("threshold_jitter", 0.0, "", "sigma of a fixed log-normal factor on each cell's ignition threshold: the micro-conditions nobody mapped (slope detail, what a house is made of); 0 is none")
+            .param("ember_built_p", 0.0, "", "chance an ember landing on a built cell lights it, times the cell's built fraction; 0 uses the ordinary landing chance")
+            .param("built_to_built_gain", 1.0, "", "heat reaches this many times further from a burning built cell into the next built cell: house to house")
             .param("spot_rate", 0.003, "1/min", "guess: embers per burning cell per minute at 10 m/s, times (wind/10)^2").param("spot_mean_m", 25.0, "m per m/s", "guess: mean ember flight per m/s of wind").param("spot_land_p", 0.3, "", "guess: chance a landed ember lights dry fuel").param("spot_min_intensity", 2.0, "heat/min", "")
             .param("road_widths_m", "motorway=30,trunk=20,primary=14,secondary=10,tertiary=8", "", "roads this wide carry no fuel")
             .publish("ground.loaded", "cell counts by fuel kind, road cells, HRRR hours").publish("fire.ignition", "at a cell").publish("fire.spot", "at a cell: { from, distance_m }")
