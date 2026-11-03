@@ -45,8 +45,8 @@
     return num(+x.toPrecision(4)) + (unit ? ` ${unit}` : '')
   }
   const soFar = (topic) => crossings.filter((c) => c.topic === topic && c.t <= cursor)
-  const label = (c) => c.topic === 'tipping.crossing' ? `${c.data.level} ${c.data.threshold_c}°` : c.data.kind === 'niche' ? 'left the niche' : c.data.kind === 'wetbulb_a' ? '31° wet-bulb' : c.data.kind === 'wetbulb_b' ? '35° wet-bulb' : 'hottest month'
-  const who = (c) => c.topic === 'tipping.crossing' ? c.data.title : `${c.data.name}${c.data.capital ? ` (${c.data.capital})` : ''}`
+  const label = (c) => c.topic === 'tipping.crossing' ? `${c.data.level} ${c.data.threshold_c}°` : c.topic === 'carbon.crossing' ? `releases ${Math.round(c.data.gtc_target)} GtC` : c.data.kind === 'niche' ? 'left the niche' : c.data.kind === 'wetbulb_a' ? '31° wet-bulb' : c.data.kind === 'wetbulb_b' ? '35° wet-bulb' : 'hottest month'
+  const who = (c) => c.topic === 'tipping.crossing' || c.topic === 'carbon.crossing' ? c.data.title : `${c.data.name}${c.data.capital ? ` (${c.data.capital})` : ''}`
   const persons = (c) => (c.data.persons ? `${Math.round(c.data.persons / 1e6)} M` : '')
   const grid = (n) => (n === 1 ? '' : n === 2 ? 'sm:grid-cols-2' : 'sm:grid-cols-2 lg:grid-cols-3')
 </script>

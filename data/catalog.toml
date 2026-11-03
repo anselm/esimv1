@@ -320,3 +320,15 @@ source = "NASA POWER Climatology API v2.10.1; the answer's header gives the peri
 licence = "as nasa-power-daily-regional"
 verified = "2026-11-02 from canada1: the India box, 357 points, 98 KB"
 notes = "The annual mean per cell is the niche layer's baseline on cells; the country's warming since the same period is added to it."
+
+[[asset]]
+id = "nasa-power-monthly-regional"
+title = "NASA POWER monthly regional: MERRA-2 2 m temperature monthly and annual means per year, 1981 to 2025, by 10-degree box"
+kind = "reanalysis-series"
+units = "degC"
+format = "JSON (features per grid point with properties.parameter.T2M.YYYYMM for twelve months and YYYY13, the annual mean); reduced as the daily boxes are, thirteen columns a year"
+url_template = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters={param}&community=RE&longitude-min={lon0}&longitude-max={lon1}&latitude-min={lat0}&latitude-max={lat1}&start={from}&end={to}&format=JSON"
+source = "NASA POWER Monthly and Annual API v2.10.0; MERRA-2; the answer's header gives the window (19810101 to 20251231 on 2026-11-03)"
+licence = "as nasa-power-daily-regional"
+verified = "2026-11-03 from canada1: the India box for 1981 to 2025, 357 points, 585 columns, 3.2 MB in 0.8 s"
+notes = "The cells' warming pattern: each populated cell's annual mean regressed on the global record over these years gives its local warming per degree of global warming, in place of one slope per country."

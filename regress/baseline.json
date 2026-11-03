@@ -1,6 +1,6 @@
 {
   "accepted": "2026-11-03",
-  "commit": "6aa6e32",
+  "commit": "2a8b276",
   "rungs": {
     "boone-water": {
       "digest": "f29cfb63bbc61c5f",
@@ -47,26 +47,26 @@
       }
     },
     "planet-people-hindcast": {
-      "digest": "e93b1a6891364792",
+      "digest": "31d0141b0be24bf3",
       "manifest": "manifests/p4-planet-people.toml",
       "scores": {
         "carbon.co2_ppm vs obs.co2_ppm": {
-          "kge": 0.8105068096073026,
-          "nse": 0.9012874047130484,
-          "pbias_pct": 2.798492460294572,
-          "rmse": 11.48797474832807
+          "kge": 0.8099385153292212,
+          "nse": 0.9009781006859952,
+          "pbias_pct": 2.8009363551822157,
+          "rmse": 11.505958764212952
         },
         "energy.gmst_anom_c vs obs.gmst_gistemp_c": {
-          "kge": 0.6861493240893559,
-          "nse": 0.8106734938422085,
-          "pbias_pct": 25.146237687674308,
-          "rmse": 0.1692233047929574
+          "kge": 0.6859826478696174,
+          "nse": 0.8105684257257388,
+          "pbias_pct": 25.15450101561217,
+          "rmse": 0.16927025412974353
         },
         "energy.gmst_anom_c vs obs.gmst_hadcrut5_c": {
-          "kge": 0.8507701921082413,
-          "nse": 0.8626333764017602,
-          "pbias_pct": 6.763187630767066,
-          "rmse": 0.14405824376629348
+          "kge": 0.8506072555519197,
+          "nse": 0.8625599704974627,
+          "pbias_pct": 6.7700795292807445,
+          "rmse": 0.14409672950986951
         }
       },
       "set": [
@@ -76,8 +76,8 @@
         "people.countries_outside_niche": 4.0,
         "people.outside_niche": 152407575.22503862,
         "tipping.elements_past_central": 5.0,
-        "tipping.elements_past_low": 9.0,
-        "wetbulb.people_days_over_a": 96604385.16216488,
+        "tipping.elements_past_low": 10.0,
+        "wetbulb.people_days_over_a": 96922867.23114005,
         "wetbulb.people_over_a": 7564420.688657284
       }
     }

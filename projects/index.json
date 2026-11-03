@@ -68,47 +68,18 @@
       "climate.countries",
       "people.heat",
       "people.wetbulb",
-      "tipping.elements"
+      "tipping.elements",
+      "carbon.tipped"
     ],
     "name": "planet-2100",
     "path": "anselm/planet-2100",
     "runs": [
       {
         "all_ledgers_closed": true,
-        "digest": "f88d2dc56f553268",
-        "end": 4102444800,
-        "events": 27362,
-        "id": "p4-planet-people-749698b0-f88d2dc5",
-        "name": "p4-planet-people",
-        "seed": 1,
-        "set": {
-          "emissions.after_record": "\"trend:10\""
-        },
-        "start": -3786825600,
-        "variant": "trend",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "ad33fa4f10e4d2eb",
-        "end": 4102444800,
-        "events": 27338,
-        "id": "p4-planet-people-882648c5-ad33fa4f",
-        "name": "p4-planet-people",
-        "seed": 1,
-        "set": {
-          "emissions.after_record": "\"zero_by:2050\""
-        },
-        "start": -3786825600,
-        "variant": "zero-by-2050",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "e93b1a6891364792",
+        "digest": "31d0141b0be24bf3",
         "end": 1735689600,
-        "events": 19139,
-        "id": "p4-planet-people-8e466a7c-e93b1a68",
+        "events": 19323,
+        "id": "p4-planet-people-5542b920-31d0141b",
         "name": "p4-planet-people",
         "seed": 1,
         "set": {
@@ -120,10 +91,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "75db8c34fa1c7659",
+        "digest": "68ceabef17fc8b27",
         "end": 4102444800,
-        "events": 27344,
-        "id": "p4-planet-people-ca851dc5-75db8c34",
+        "events": 27678,
+        "id": "p4-planet-people-80093f75-68ceabef",
         "name": "p4-planet-people",
         "seed": 1,
         "set": {
@@ -135,10 +106,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "8ea6022cca25c4ae",
+        "digest": "ddbcca7a8924ec33",
         "end": 4102444800,
-        "events": 27367,
-        "id": "p4-planet-people-d8814657-8ea6022c",
+        "events": 27718,
+        "id": "p4-planet-people-bb4ff15f-ddbcca7a",
         "name": "p4-planet-people",
         "seed": 1,
         "set": {
@@ -150,10 +121,41 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "28fac5421aae0c2f",
+        "digest": "645026d26889ca2f",
         "end": 4102444800,
-        "events": 27353,
-        "id": "p4-planet-people-f21efebf-28fac542",
+        "events": 27672,
+        "id": "p4-planet-people-c847b1ba-645026d2",
+        "name": "p4-planet-people",
+        "seed": 1,
+        "set": {
+          "emissions.after_record": "\"zero_by:2050\""
+        },
+        "start": -3786825600,
+        "variant": "zero-by-2050",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "1a19dbf5b69c0928",
+        "end": 4102444800,
+        "events": 27790,
+        "id": "p4-planet-people-c8efea17-1a19dbf5",
+        "name": "p4-planet-people",
+        "seed": 1,
+        "set": {
+          "emissions.after_record": "\"hold\"",
+          "tipped.trigger": "\"low\""
+        },
+        "start": -3786825600,
+        "variant": "held-low",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "c9d3c90032d8af44",
+        "end": 4102444800,
+        "events": 27688,
+        "id": "p4-planet-people-cfbf4887-c9d3c900",
         "name": "p4-planet-people",
         "seed": 1,
         "set": {
@@ -161,6 +163,21 @@
         },
         "start": -3786825600,
         "variant": "held",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "91c73859e8053bfc",
+        "end": 4102444800,
+        "events": 27706,
+        "id": "p4-planet-people-f82e8bc4-91c73859",
+        "name": "p4-planet-people",
+        "seed": 1,
+        "set": {
+          "emissions.after_record": "\"trend:10\""
+        },
+        "start": -3786825600,
+        "variant": "trend",
         "verdict": "holds"
       }
     ],
@@ -200,6 +217,14 @@
           "emissions.after_record": "grow:1"
         },
         "title": "Emissions grow 1% a year to 2100"
+      },
+      {
+        "name": "held-low",
+        "set": {
+          "emissions.after_record": "hold",
+          "tipped.trigger": "low"
+        },
+        "title": "Emissions held; tipping elements release carbon from the low end of their ranges"
       },
       {
         "name": "falling",

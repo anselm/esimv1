@@ -328,10 +328,12 @@ fn warm_cells(res_deg: f64, from: i64, to: i64) -> Result<(), String> {
     let populated = count.iter().filter(|v| **v > 0.0).count();
     println!("worldpop  {:.3} billion people in {} cells of {} deg ({} with people), {:.1} s", total / 1e9, count.len(), res_deg, populated, t0.elapsed().as_secs_f64());
     let boxes = cells::power_boxes(res_deg, |c, r| count[r * nx + c] > 0.0);
-    println!("power     {} boxes of 10 degrees hold people; {} requests to make", boxes.len(), boxes.len() * (1 + 2 * (to - from + 1) as usize));
+    println!("power     {} boxes of 10 degrees hold people; {} requests to make", boxes.len(), boxes.len() * (2 + 2 * (to - from + 1) as usize));
     let mut n = 0usize;
     for (i, &(lat0, lon0)) in boxes.iter().enumerate() {
         cells::power_climatology_box(&mut f, "T2M", lat0, lon0)?; n += 1;
+        // the annual means 1981 to 2025, for the warming pattern (climate.countries pattern = "cells")
+        cells::power_monthly_box(&mut f, "T2M", lat0, lon0, 1981, 2025)?; n += 1;
         for y in from..=to {
             cells::power_daily_box(&mut f, "T2M_MAX", lat0, lon0, y)?; n += 1;
             cells::power_daily_box(&mut f, "T2MDEW", lat0, lon0, y)?; n += 1;

@@ -56,6 +56,13 @@ subscribes to. A relationship the world has and the run lacks is a missing coupl
 changes CO2, which changes warming. The basin has several; the planet stack, as of
 2026-11-02, has one.
 
+**Cascade.** A coupling with a consequence: a crossing that moves a stock someone reads,
+rather than a flag. The first one is `carbon.tipped`, which turns a tipping element's
+crossing into carbon in the carbon ledger, which the pools module turns into CO2, which
+the energy module turns into warming, which the tipping module checks again. Each step is
+a module's own, declared, auditable at its ledger; the cascade is the path through them,
+and the wiring graph draws it as a loop.
+
 **Wiring.** All the couplings of a manifest, derived from the describes before anything
 runs. `esim check` reports the wiring as errors, warnings and information; the run page
 draws it as a graph, modules as boxes, couplings as arrows, ledgers as shared books,

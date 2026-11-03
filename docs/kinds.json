@@ -1,1 +1,4045 @@
-[{"kind":"water.source","name":"water.source","summary":"Pours water at a constant rate from a ledger account into a named module, every tick.","priority":0,"dt":"1h","params":[{"name":"rate_m3_s","default":1,"unit":"m3/s"},{"name":"dt","default":"1h"},{"name":"from","default":"atmosphere","note":"ledger account the water is drawn from"},{"name":"into","default":"bucket","note":"module that accepts `inflow`"}],"publishes":[],"sends":[{"to":"bucket","topic":"inflow"}],"accepts":[],"subscribes":[],"fields_owned":[],"fields_read":[],"ledgers":[{"name":"water","unit":"m3","tolerance":0.000001}],"frames":[],"reports":[{"name":"water.source.poured_m3","unit":"m3","required":false}],"views":[],"assets":[],"notes":[]},{"kind":"water.bucket","name":"water.bucket","summary":"A linear reservoir: accepts inflow, drains at a rate proportional to its volume to an account or another bucket.","priority":0,"dt":"6h","params":[{"name":"volume_m3","default":0,"unit":"m3","note":"opening stock"},{"name":"k_per_s","default":0.00001,"unit":"1/s","note":"drain rate constant"},{"name":"dt","default":"6h"},{"name":"outlet","default":"sea","note":"ledger account, or a module when outlet_is_module"},{"name":"outlet_is_module","default":false},{"name":"leak","default":0,"unit":"fraction","note":"a deliberate leak per tick, so the ledger test can fail on purpose"}],"publishes":[],"sends":[],"accepts":[{"name":"inflow","required":false,"note":"{ m3 }"}],"subscribes":[],"fields_owned":[],"fields_read":[],"ledgers":[{"name":"water","unit":"m3","tolerance":0.000001}],"frames":[],"reports":[{"name":"water.bucket.volume_m3","unit":"m3","required":false},{"name":"water.bucket.outflow_m3_s","unit":"m3/s","required":false}],"views":[],"assets":[],"notes":[]},{"kind":"sun.irradiance","name":"sun.irradiance","summary":"Clear-sky solar irradiance on real terrain every tick: sun position, air mass, slope incidence and horizon shadow; absorbed energy through the energy ledger.","priority":0,"dt":"1h","params":[{"name":"lat_s","default":42.3,"unit":"deg"},{"name":"lat_n","default":43.2,"unit":"deg"},{"name":"lon_w","default":-94.2,"unit":"deg"},{"name":"lon_e","default":-93.5,"unit":"deg"},{"name":"res_arcsec","default":30,"unit":"arcsec","note":"grid cell; the DEM is aggregated to it; every module in a manifest must use one window and resolution, so state them once in [place]"},{"name":"dt","default":"1h"},{"name":"report_every","default":"1d"},{"name":"horizon_azimuths","default":16},{"name":"horizon_km","default":20,"unit":"km","note":"how far the horizon search looks"},{"name":"transmittance","default":0.7,"note":"Meinel clear-sky placeholder; winter clearness above one exposed it (devlog 20261101-m4-weather)"},{"name":"diffuse_fraction","default":0.1,"note":"placeholder"},{"name":"data_root","default":"","note":"overrides ESIM_ROOT"}],"publishes":[],"sends":[],"accepts":[],"subscribes":[],"fields_owned":[{"name":"sun.incident_j","unit":"J","required":false}],"fields_read":[],"ledgers":[{"name":"energy","unit":"J","tolerance":1000000}],"frames":[{"name":"elevation","unit":"m","required":false},{"name":"slope","unit":"rad","required":false},{"name":"irradiance_daily_mean","unit":"W/m2","required":false}],"reports":[{"name":"sun.ghi_mean_w_m2","unit":"W/m2","required":false},{"name":"sun.irradiance_daily_mean_w_m2","unit":"W/m2","required":false}],"views":[],"assets":[{"key":"copernicus-dem-glo30","note":"terrain window, slope, aspect and horizons"}],"notes":["Parameter provenance: devlog/20261101-m1-sun.md"]},{"kind":"heat.slab","name":"heat.slab","summary":"A surface heat slab: absorbs the incident energy field, radiates to a sky temperature, keeps the energy ledger closed at a different rate from the sun.","priority":1,"dt":"15m","params":[{"name":"source","default":"sun.incident_j","note":"world field of incident energy per cell per source tick"},{"name":"dt","default":"15m"},{"name":"report_every","default":"1d"},{"name":"albedo","default":0.2},{"name":"emissivity","default":0.95},{"name":"heat_capacity_j_m2_k","default":300000,"unit":"J/m2/K"},{"name":"t_sky_k","default":255,"unit":"K"},{"name":"t_init_c","default":0,"unit":"degC"}],"publishes":[],"sends":[],"accepts":[],"subscribes":[],"fields_owned":[],"fields_read":[{"name":"sun.incident_j","unit":"J","required":true}],"ledgers":[{"name":"energy","unit":"J","tolerance":1000000}],"frames":[{"name":"t_surface_daily_mean","unit":"degC","required":false}],"reports":[{"name":"heat.t_surface_mean_c","unit":"degC","required":false}],"views":[],"assets":[],"notes":["Parameter provenance: devlog/20261101-m2-heat.md"]},{"kind":"water.basin","name":"water.basin","summary":"A gauged basin delineated from the DEM: rain or snow from a station or the weather fields, a soil bucket with sun-driven evapotranspiration, drainage routed down the D8 network to the gauge, a nitrate tracer riding the drainage; scored against the USGS record.","priority":2,"dt":"1h","params":[{"name":"station","default":"USC00138806","note":"GHCN-Daily station for rain and temperature (forcing = station)"},{"name":"usgs_site","default":"05481000","note":"USGS site for observed discharge and nitrate"},{"name":"lat_s","default":42.3,"unit":"deg"},{"name":"lat_n","default":43.2,"unit":"deg"},{"name":"lon_w","default":-94.2,"unit":"deg"},{"name":"lon_e","default":-93.5,"unit":"deg"},{"name":"res_arcsec","default":30,"unit":"arcsec"},{"name":"gauge_lat","default":42.4319722,"unit":"deg","note":"USGS 05481000"},{"name":"gauge_lon","default":-93.8059444,"unit":"deg","note":"USGS 05481000"},{"name":"snap_radius","default":3,"unit":"cells","note":"gauge snapped to the highest accumulation within this radius"},{"name":"obs_hour_utc","default":13,"unit":"h","note":"daily total booked at the station's observation time"},{"name":"local_offset_h","default":-6,"unit":"h"},{"name":"dt","default":"1h"},{"name":"report_every","default":"1d"},{"name":"soil_capacity_mm","default":150,"unit":"mm"},{"name":"drain_per_day","default":0.03,"unit":"1/d"},{"name":"pet_factor","default":0.7},{"name":"snow_t_c","default":0,"unit":"degC"},{"name":"ddf_mm_per_c_day","default":3,"unit":"mm/degC/d","note":"degree-day melt factor"},{"name":"channel_km2","default":2,"unit":"km2","note":"accumulation above which a cell is channel"},{"name":"v_channel_m_s","default":0.4,"unit":"m/s"},{"name":"v_hill_m_s","default":0.02,"unit":"m/s"},{"name":"energy_source","default":"sun.incident_j","note":"world field driving evapotranspiration"},{"name":"forcing","default":"station","note":"station | wx"},{"name":"lai_coupling","default":true,"note":"read veg.lai to scale evapotranspiration"},{"name":"perennial_capacity_factor","default":1.3,"note":"soil capacity multiplier under a no-crop rule (a guess)"},{"name":"nitrate_param","default":"99133","note":"USGS parameter for observed nitrate; empty disables"}],"publishes":[],"sends":[],"accepts":[],"subscribes":[{"name":"nitrogen.leached","required":false,"note":"the nitrogen module's daily leaching"}],"fields_owned":[{"name":"water.drain_daily_mm","unit":"mm","required":false},{"name":"water.soil_mm","unit":"mm","required":false},{"name":"water.snow_mm","unit":"mm","required":false}],"fields_read":[{"name":"sun.incident_j","unit":"J","required":false,"note":"evapotranspiration energy"},{"name":"rules.no_crop","required":false,"note":"perennial cover changes soil capacity"},{"name":"nitrogen.leached_kg","unit":"kgN","required":false,"on":"nitrogen.leached","note":"tracer source"},{"name":"veg.lai","unit":"m2/m2","required":false,"note":"cover factor on evapotranspiration"}],"ledgers":[{"name":"water","unit":"m3","tolerance":1},{"name":"nitrogen","unit":"kgN","tolerance":0.001}],"frames":[{"name":"basin","unit":"1","required":false},{"name":"flow_accum_log10_km2","unit":"log10 km2","required":false},{"name":"soil_daily_mean_mm","unit":"mm","required":false}],"reports":[{"name":"basin.area_km2","unit":"km2","required":false},{"name":"hydro.q_outlet_m3_s","unit":"m3/s","required":false},{"name":"hydro.q_sim_daily_m3_s","unit":"m3/s","required":false},{"name":"hydro.q_obs_daily_m3_s","unit":"m3/s","required":false},{"name":"hydro.precip_daily_mm","unit":"mm","required":false},{"name":"hydro.snowpack_mean_mm","unit":"mm","required":false},{"name":"hydro.soil_mean_mm","unit":"mm","required":false},{"name":"hydro.no3_load_kg_day","unit":"kgN/day","required":false},{"name":"hydro.no3_sim_mg_l","unit":"mgN/L","required":false},{"name":"hydro.no3_obs_mg_l","unit":"mgN/L","required":false}],"views":[],"assets":[{"key":"copernicus-dem-glo30","note":"window, priority-flood fill, D8, accumulation, basin delineation"},{"key":"ghcn-daily","note":"station USC00138806: precipitation and temperature"},{"key":"usgs-nwis-daily","note":"site 05481000: discharge 00060 and nitrate 99133"}],"notes":["Parameter provenance: devlog/20261101-m3-water.md and 20261101-m12-sweep.md (a 64-sample sweep found no better set)"]},{"kind":"weather.era5","name":"weather.era5","summary":"Observed weather as fields: ERA5 reanalysis hourly on a point grid, bilinear to the cells; with source = chain, ERA5 up to the archive's edge then one GEFS ensemble member chosen by the seed.","priority":-1,"dt":"1h","params":[{"name":"lat_s","default":42.3,"unit":"deg"},{"name":"lat_n","default":43.2,"unit":"deg"},{"name":"lon_w","default":-94.2,"unit":"deg"},{"name":"lon_e","default":-93.5,"unit":"deg"},{"name":"res_arcsec","default":30,"unit":"arcsec"},{"name":"point_step_deg","default":0.25,"unit":"deg","note":"spacing of the Open-Meteo points"},{"name":"dt","default":"1h"},{"name":"start","default":"2025-01-01","unit":"date"},{"name":"end","default":"2025-12-31","unit":"date"},{"name":"source","default":"era5","note":"era5 | chain"},{"name":"past_days","default":10,"unit":"d","note":"chain: GEFS past days"},{"name":"forecast_days","default":10,"unit":"d","note":"chain: GEFS horizon"},{"name":"seed","default":1,"note":"folded in from the run seed; chain picks the GEFS member from it"}],"publishes":[],"sends":[],"accepts":[],"subscribes":[],"fields_owned":[{"name":"wx.t2m_c","unit":"degC","required":false},{"name":"wx.precip_mm","unit":"mm","required":false},{"name":"wx.sw_w_m2","unit":"W/m2","required":false},{"name":"wx.rh_pct","unit":"%","required":false},{"name":"wx.wind_m_s","unit":"m/s","required":false}],"fields_read":[],"ledgers":[],"frames":[],"reports":[{"name":"wx.points","unit":"1","required":false},{"name":"wx.source","unit":"0=era5 1=member","required":false},{"name":"wx.sw_mean_w_m2","unit":"W/m2","required":false},{"name":"wx.t2m_mean_c","unit":"degC","required":false},{"name":"wx.precip_mean_mm","unit":"mm","required":false}],"views":[],"assets":[{"key":"copernicus-dem-glo30","note":"the cell grid"},{"key":"open-meteo-era5","note":"hourly archive; lags about five days"}],"notes":[]},{"kind":"veg.crop","name":"veg.crop","summary":"A crop canopy per basin cell: planting by date and warmth or by the farms' orders, phenology by growing degree days, light-use-efficiency growth under water stress, senescence, harvest and export, litter; answers grazing and burning; scored against MODIS NDVI.","priority":3,"dt":"1h","params":[{"name":"lat_s","default":42.3,"unit":"deg"},{"name":"lat_n","default":43.2,"unit":"deg"},{"name":"lon_w","default":-94.2,"unit":"deg"},{"name":"lon_e","default":-93.5,"unit":"deg"},{"name":"res_arcsec","default":30,"unit":"arcsec"},{"name":"gauge_lat","default":42.4319722,"unit":"deg"},{"name":"gauge_lon","default":-93.8059444,"unit":"deg"},{"name":"snap_radius","default":3,"unit":"cells"},{"name":"dt","default":"1h"},{"name":"energy_source","default":"sun.incident_j"},{"name":"soil_source","default":"water.soil_mm"},{"name":"soil_capacity_mm","default":150,"unit":"mm"},{"name":"modis_start","default":"2025-01-01","unit":"date","note":"MODIS MOD13A1 composites to fetch for scoring; \"none\" disables"},{"name":"modis_end","default":"2025-12-31","unit":"date"},{"name":"plant_after_doy","default":110,"unit":"doy"},{"name":"plant_t_c","default":10,"unit":"degC"},{"name":"gdd_base_c","default":10,"unit":"degC"},{"name":"gdd_emerge","default":80,"unit":"degC d"},{"name":"gdd_senesce","default":1300,"unit":"degC d"},{"name":"gdd_harvest","default":1650,"unit":"degC d"},{"name":"frost_c","default":-2,"unit":"degC"},{"name":"lue_gc_per_mj","default":1.6,"unit":"gC/MJ"},{"name":"par_fraction","default":0.48},{"name":"k_light","default":0.5},{"name":"sla_m2_per_gc","default":0.025,"unit":"m2/gC"},{"name":"leaf_fraction","default":0.45},{"name":"lai_max","default":5.5,"unit":"m2/m2"},{"name":"lai_emerge","default":0.3,"unit":"m2/m2","note":"seeded from the import account at emergence"},{"name":"snow_ndvi_mm","default":5,"unit":"mm","note":"snow above this reads as NDVI zero"},{"name":"ra_fraction","default":0.5},{"name":"grain_fraction","default":0.45},{"name":"k_litter_per_day","default":0.003,"unit":"1/d"},{"name":"ndvi_soil","default":0.18},{"name":"ndvi_max","default":0.88},{"name":"k_ndvi","default":0.7},{"name":"graze_max_frac","default":0.3},{"name":"burn_biomass_frac","default":0.9},{"name":"burn_litter_frac","default":0.7},{"name":"soy_lue_factor","default":0.75},{"name":"soy_gdd_factor","default":0.85},{"name":"soy_grain_fraction","default":0.4},{"name":"grass_lai","default":2,"unit":"m2/m2"}],"publishes":[{"name":"graze.done","required":false,"note":"{ by }"},{"name":"harvest.done","required":false,"note":"{ by }"}],"sends":[],"accepts":[],"subscribes":[{"name":"graze.request","required":false,"note":"herbivores ask for forage"},{"name":"fire.burn","required":false,"note":"cells burning today"}],"fields_owned":[{"name":"veg.lai","unit":"m2/m2","required":false},{"name":"veg.biomass_gc_m2","unit":"gC/m2","required":false},{"name":"veg.grazed_kgc","unit":"kgC","required":false},{"name":"veg.grain_export_kgc","unit":"kgC","required":false}],"fields_read":[{"name":"sun.incident_j","unit":"J","required":true,"note":"light for growth"},{"name":"wx.t2m_c","unit":"degC","required":true,"note":"degree days and frost"},{"name":"water.soil_mm","unit":"mm","required":false,"note":"water stress"},{"name":"water.snow_mm","unit":"mm","required":false,"note":"snow hides the canopy from the satellite"},{"name":"agents.plant_now","required":false,"note":"farms' planting orders"},{"name":"agents.crop_kind","required":false,"note":"corn, soy or grass per cell"},{"name":"fire.burned_frac","unit":"1","required":false,"on":"fire.burn"},{"name":"fauna.herb_demand_kgc","unit":"kgC","required":false,"on":"graze.request"}],"ledgers":[{"name":"carbon","unit":"kgC","tolerance":0.001}],"frames":[{"name":"lai","unit":"m2/m2","required":false},{"name":"ndvi_modis","unit":"1","required":false},{"name":"ndvi_sim","unit":"1","required":false}],"reports":[{"name":"veg.modis_composites","unit":"1","required":false},{"name":"veg.lai_mean","unit":"m2/m2","required":false},{"name":"veg.ndvi_sim_daily","unit":"1","required":false},{"name":"veg.biomass_mean_gc_m2","unit":"gC/m2","required":false},{"name":"veg.gpp_basin_tc_day","unit":"tC/day","required":false},{"name":"veg.ndvi_obs_16d","unit":"1","required":false},{"name":"veg.ndvi_sim_16d","unit":"1","required":false},{"name":"veg.grazed_kgc_day","unit":"kgC/day","required":false},{"name":"veg.fire_emissions_kgc_day","unit":"kgC/day","required":false}],"views":[],"assets":[{"key":"copernicus-dem-glo30","note":"basin cells"},{"key":"modis-mod13a1","note":"16-day NDVI composites for scoring, via Planetary Computer"}],"notes":["Parameter provenance: devlog/20261101-m5-green.md; the canopy greens a month late and reaches a third of a real crop's biomass"]},{"kind":"fauna.herbivore","name":"fauna.herbivore","summary":"Herbivore cohorts per basin cell: graze the crop by request, Holling type II intake, births, deaths, starvation, migration toward forage, flight and mortality in fire, predation by request; can zoom a window to individuals and back with residues so the count is conserved.","priority":4,"dt":"1d","params":[{"name":"lat_s","default":42.3,"unit":"deg"},{"name":"lat_n","default":43.2,"unit":"deg"},{"name":"lon_w","default":-94.2,"unit":"deg"},{"name":"lon_e","default":-93.5,"unit":"deg"},{"name":"res_arcsec","default":30,"unit":"arcsec"},{"name":"gauge_lat","default":42.4319722,"unit":"deg"},{"name":"gauge_lon","default":-93.8059444,"unit":"deg"},{"name":"snap_radius","default":3,"unit":"cells"},{"name":"dt","default":"1d"},{"name":"veg_module","default":"veg"},{"name":"c_ind_kgc","default":5,"unit":"kgC","note":"carbon per individual"},{"name":"init_density_km2","default":6,"unit":"1/km2"},{"name":"intake_max_kgc_day","default":0.5,"unit":"kgC/d"},{"name":"maintenance_kgc_day","default":0.3,"unit":"kgC/d"},{"name":"assimilation","default":0.5},{"name":"birth_per_day","default":0.002,"unit":"1/d"},{"name":"mortality_per_day","default":0.0007,"unit":"1/d"},{"name":"starvation_per_day","default":0.01,"unit":"1/d"},{"name":"move_frac","default":0.1},{"name":"browse_kgc_ind_day","default":0.2,"unit":"kgC/d"},{"name":"flee_frac","default":0.8},{"name":"fire_mortality","default":0.3},{"name":"zoom_lat_s","default":0,"unit":"deg","note":"zoom window; zero disables"},{"name":"zoom_lat_n","default":0,"unit":"deg"},{"name":"zoom_lon_w","default":0,"unit":"deg"},{"name":"zoom_lon_e","default":0,"unit":"deg"},{"name":"zoom_from","default":"","unit":"date"},{"name":"zoom_to","default":"","unit":"date"},{"name":"step_m_per_day","default":400,"unit":"m/d","note":"individual step while zoomed"}],"publishes":[{"name":"graze.request","required":false,"note":"{ by }"},{"name":"predation.done","required":false,"note":"{ by }"},{"name":"zoom.in","required":false,"note":"{ module, individuals }"},{"name":"zoom.out","required":false,"note":"{ module }"}],"sends":[],"accepts":[],"subscribes":[{"name":"graze.done","required":false,"note":"forage granted"},{"name":"predation.request","required":false,"note":"predators' kill requests"},{"name":"fire.burn","required":false,"note":"cells burning"},{"name":"fire.ignition","required":false,"note":"at the basin cells only"}],"fields_owned":[{"name":"fauna.herb_n","unit":"individuals","required":false},{"name":"fauna.herb_demand_kgc","unit":"kgC","required":false},{"name":"fauna.prey_taken","unit":"individuals","required":false},{"name":"fauna.prey_c_per_kill","unit":"kgC","required":false}],"fields_read":[{"name":"veg.grazed_kgc","unit":"kgC","required":true,"on":"graze.done","note":"what the crop gave"},{"name":"veg.biomass_gc_m2","unit":"gC/m2","required":false,"note":"where to move"},{"name":"fire.burned_frac","unit":"1","required":false,"on":"fire.burn"},{"name":"fauna.pred_kills","unit":"individuals","required":false,"on":"predation.request"}],"ledgers":[{"name":"animals","unit":"individuals","tolerance":0.000001},{"name":"carbon","unit":"kgC","tolerance":0.001}],"frames":[{"name":"herbivore_density_km2","unit":"1/km2","required":false}],"reports":[{"name":"fauna.herb_total","unit":"individuals","required":false},{"name":"fauna.herb_grazed_kgc_day","unit":"kgC/day","required":false},{"name":"fauna.herb_births_day","unit":"1/day","required":false},{"name":"fauna.herb_deaths_day","unit":"1/day","required":false},{"name":"fauna.herb_killed_day","unit":"1/day","required":false},{"name":"fauna.herb_fled","unit":"individuals","required":false},{"name":"fauna.herb_fire_deaths","unit":"individuals","required":false},{"name":"fauna.zoom_individuals","unit":"individuals","required":false},{"name":"fauna.zoom_switch_error","unit":"individuals","required":false},{"name":"fauna.zoom_folded_out","unit":"individuals","required":false},{"name":"fauna.zoom_lat_sd_km","unit":"km","required":false}],"views":[],"assets":[{"key":"copernicus-dem-glo30","note":"basin cells"}],"notes":["Parameter provenance: devlog/20261101-m6-eaters.md and 20261101-m8-zoom.md"]},{"kind":"fauna.predator","name":"fauna.predator","summary":"Predator cohorts per basin cell: Holling type II attack on the herbivore field, kills by request, births, deaths, starvation, movement toward prey.","priority":5,"dt":"1d","params":[{"name":"lat_s","default":42.3,"unit":"deg"},{"name":"lat_n","default":43.2,"unit":"deg"},{"name":"lon_w","default":-94.2,"unit":"deg"},{"name":"lon_e","default":-93.5,"unit":"deg"},{"name":"res_arcsec","default":30,"unit":"arcsec"},{"name":"gauge_lat","default":42.4319722,"unit":"deg"},{"name":"gauge_lon","default":-93.8059444,"unit":"deg"},{"name":"snap_radius","default":3,"unit":"cells"},{"name":"dt","default":"1d"},{"name":"c_ind_kgc","default":1.5,"unit":"kgC"},{"name":"init_density_km2","default":0.3,"unit":"1/km2"},{"name":"attack_km2_day","default":0.02,"unit":"km2/d"},{"name":"handling_days","default":20,"unit":"d"},{"name":"need_kgc_day","default":0.1,"unit":"kgC/d"},{"name":"assimilation","default":0.8},{"name":"birth_per_day","default":0.002,"unit":"1/d"},{"name":"mortality_per_day","default":0.001,"unit":"1/d"},{"name":"starvation_per_day","default":0.01,"unit":"1/d"},{"name":"move_frac","default":0.1}],"publishes":[{"name":"predation.request","required":false,"note":"{ by }"}],"sends":[],"accepts":[],"subscribes":[{"name":"predation.done","required":false,"note":"kills granted"}],"fields_owned":[{"name":"fauna.pred_kills","unit":"individuals","required":false}],"fields_read":[{"name":"fauna.herb_n","unit":"individuals","required":true,"note":"prey density"},{"name":"fauna.prey_taken","unit":"individuals","required":true,"on":"predation.done"},{"name":"fauna.prey_c_per_kill","unit":"kgC","required":true,"on":"predation.done"}],"ledgers":[{"name":"animals","unit":"individuals","tolerance":0.000001},{"name":"carbon","unit":"kgC","tolerance":0.001}],"frames":[{"name":"predator_density_km2","unit":"1/km2","required":false}],"reports":[{"name":"fauna.pred_total","unit":"individuals","required":false},{"name":"fauna.pred_intake_kgc_day","unit":"kgC/day","required":false}],"views":[],"assets":[{"key":"copernicus-dem-glo30","note":"basin cells"}],"notes":["Parameter provenance: devlog/20261101-m6-eaters.md"]},{"kind":"hazard.fire","name":"hazard.fire","summary":"Cropland fire as a cellular automaton over the basin: ignition by chance, or forced on a date from the hazards table, spread to neighbours by fuel, dryness, warmth and wind, a refractory period after burning; publishes burning cells for the crop and the animals.","priority":6,"dt":"1d","params":[{"name":"lat_s","default":42.3,"unit":"deg"},{"name":"lat_n","default":43.2,"unit":"deg"},{"name":"lon_w","default":-94.2,"unit":"deg"},{"name":"lon_e","default":-93.5,"unit":"deg"},{"name":"res_arcsec","default":30,"unit":"arcsec"},{"name":"gauge_lat","default":42.4319722,"unit":"deg"},{"name":"gauge_lon","default":-93.8059444,"unit":"deg"},{"name":"snap_radius","default":3,"unit":"cells"},{"name":"dt","default":"1d"},{"name":"hazard_id","default":"cropland-fire-corn-belt","note":"row in data/events/hazards.toml"},{"name":"setting","default":"","note":"off | on | forced; empty means the table's default"},{"name":"forced_date","default":"","unit":"date"},{"name":"forced_lat","default":42.7,"unit":"deg"},{"name":"forced_lon","default":-93.85,"unit":"deg"},{"name":"ignition_per_cell_day","default":0.000002,"unit":"1/d"},{"name":"spread_base","default":0.35,"note":"subcritical by default; 0.9 in the what-if"},{"name":"fuel_min_gc_m2","default":60,"unit":"gC/m2"},{"name":"soil_capacity_mm","default":150,"unit":"mm"},{"name":"burn_days","default":1,"unit":"d"},{"name":"refractory_days","default":60,"unit":"d"}],"publishes":[{"name":"hazard.loaded","required":false,"note":"{ id, title, setting, confidence }"},{"name":"fire.ignition","required":false,"note":"at a cell: { hazard, setting, lat, lon }"},{"name":"fire.burn","required":false,"note":"{ cells, km2 }"}],"sends":[],"accepts":[],"subscribes":[],"fields_owned":[{"name":"fire.burned_frac","unit":"1","required":false}],"fields_read":[{"name":"water.soil_mm","unit":"mm","required":false,"note":"dryness"},{"name":"veg.biomass_gc_m2","unit":"gC/m2","required":false,"note":"fuel"},{"name":"wx.t2m_c","unit":"degC","required":false,"note":"warmth"},{"name":"wx.wind_m_s","unit":"m/s","required":false,"note":"spread"}],"ledgers":[],"frames":[{"name":"fire_burning","unit":"1","required":false}],"reports":[{"name":"fire.setting","unit":"0=off 1=on 2=forced","required":false},{"name":"fire.ignitions_day","unit":"1/day","required":false},{"name":"fire.burning_km2","unit":"km2","required":false},{"name":"fire.burned_km2_total","unit":"km2","required":false}],"views":[],"assets":[{"key":"copernicus-dem-glo30","note":"basin cells"},{"key":"events/hazards.toml","note":"row cropland-fire-corn-belt"}],"notes":["Parameter provenance: devlog/20261101-m7-tearing.md"]},{"kind":"agents.farms","name":"agents.farms","summary":"Farm agents on blocks of basin cells: choose corn or soy each spring by expected margin and rotation, plant when the soil is warm and workable and no rule forbids, pay costs, sell the harvest, keep a money ledger; write their orders as fields the crop and the nitrogen module read.","priority":2,"dt":"1d","params":[{"name":"lat_s","default":42.3,"unit":"deg"},{"name":"lat_n","default":43.2,"unit":"deg"},{"name":"lon_w","default":-94.2,"unit":"deg"},{"name":"lon_e","default":-93.5,"unit":"deg"},{"name":"res_arcsec","default":30,"unit":"arcsec"},{"name":"gauge_lat","default":42.4319722,"unit":"deg"},{"name":"gauge_lon","default":-93.8059444,"unit":"deg"},{"name":"snap_radius","default":3,"unit":"cells"},{"name":"dt","default":"1d"},{"name":"block_cells","default":4,"unit":"cells","note":"cells on a side of one farm block"},{"name":"price_corn_usd_bu","default":4.3,"unit":"USD/bu"},{"name":"price_soy_usd_bu","default":10.2,"unit":"USD/bu"},{"name":"cost_corn_usd_ha","default":1100,"unit":"USD/ha"},{"name":"cost_soy_usd_ha","default":700,"unit":"USD/ha"},{"name":"land_cost_usd_ha","default":650,"unit":"USD/ha"},{"name":"expect_corn_bu_ac","default":200,"unit":"bu/ac"},{"name":"expect_soy_bu_ac","default":58,"unit":"bu/ac"},{"name":"rotation_bonus_bu_ac","default":12,"unit":"bu/ac"},{"name":"corn_on_corn_penalty_bu_ac","default":20,"unit":"bu/ac","note":"so the basin rotates about half and half"},{"name":"n_rate_corn_kg_ha","default":170,"unit":"kgN/ha"},{"name":"n_rate_soy_kg_ha","default":0,"unit":"kgN/ha"},{"name":"n_price_usd_kg","default":1.1,"unit":"USD/kg"},{"name":"kgc_per_bu_corn","default":9,"unit":"kgC/bu"},{"name":"kgc_per_bu_soy","default":12,"unit":"kgC/bu"},{"name":"plant_after_doy","default":105,"unit":"doy"},{"name":"plant_t_c","default":10,"unit":"degC"},{"name":"workable_soil_frac","default":0.85,"note":"of soil capacity"},{"name":"soil_capacity_mm","default":150,"unit":"mm"}],"publishes":[],"sends":[],"accepts":[],"subscribes":[{"name":"harvest.done","required":false,"note":"the crop has exported grain"}],"fields_owned":[{"name":"agents.crop_kind","unit":"0 none 1 corn 2 soy 3 grass","required":false},{"name":"agents.plant_now","unit":"1","required":false},{"name":"agents.n_rate_kg_ha","unit":"kgN/ha","required":false}],"fields_read":[{"name":"wx.t2m_c","unit":"degC","required":true,"note":"warm days before planting"},{"name":"water.soil_mm","unit":"mm","required":false,"note":"workable soil"},{"name":"rules.no_crop","required":false,"note":"cells a rule closes to crops"},{"name":"veg.grain_export_kgc","unit":"kgC","required":false,"on":"harvest.done","note":"revenue"}],"ledgers":[{"name":"money","unit":"USD","tolerance":0.001}],"frames":[],"reports":[{"name":"agents.farm_blocks","unit":"1","required":false},{"name":"agents.blocks_planted_day","unit":"1/day","required":false},{"name":"agents.cash_total_usd","unit":"USD","required":false},{"name":"agents.corn_ha","unit":"ha","required":false},{"name":"agents.soy_ha","unit":"ha","required":false},{"name":"agents.revenue_usd_day","unit":"USD/day","required":false},{"name":"agents.corn_bu_day","unit":"bu/day","required":false},{"name":"agents.soy_bu_day","unit":"bu/day","required":false}],"views":[],"assets":[{"key":"copernicus-dem-glo30","note":"basin cells"}],"notes":["Parameter provenance: devlog/20261101-m9-takers.md; prices and costs are round numbers, not quotes"]},{"kind":"rules.calendar","name":"rules.calendar","summary":"A dated land-use rule from the calendar table: from its effective date, cells within a buffer of the channel network are closed to crops; the field it writes is obeyed by the farms, the crop and the water module.","priority":1,"dt":"1d","params":[{"name":"lat_s","default":42.3,"unit":"deg"},{"name":"lat_n","default":43.2,"unit":"deg"},{"name":"lon_w","default":-94.2,"unit":"deg"},{"name":"lon_e","default":-93.5,"unit":"deg"},{"name":"res_arcsec","default":30,"unit":"arcsec"},{"name":"gauge_lat","default":42.4319722,"unit":"deg"},{"name":"gauge_lon","default":-93.8059444,"unit":"deg"},{"name":"snap_radius","default":3,"unit":"cells"},{"name":"dt","default":"1d"},{"name":"rule_id","default":"whatif-riparian-buffer-boone-2025","note":"row in data/events/calendar.toml"},{"name":"buffer_cells","default":1,"unit":"cells"},{"name":"channel_km2","default":2,"unit":"km2","note":"streams draining more than this get the buffer; 20 fits the Boone"}],"publishes":[{"name":"rule.loaded","required":false,"note":"{ id, title, effective, confidence }"},{"name":"rule.effective","required":false,"note":"{ id, cells }"}],"sends":[],"accepts":[],"subscribes":[],"fields_owned":[{"name":"rules.no_crop","unit":"1","required":false}],"fields_read":[],"ledgers":[],"frames":[{"name":"rule_no_crop","unit":"1","required":false}],"reports":[{"name":"rules.buffer_cells","unit":"1","required":false},{"name":"rules.effective","unit":"1","required":false}],"views":[],"assets":[{"key":"copernicus-dem-glo30","note":"channel network"},{"key":"events/calendar.toml","note":"row whatif-riparian-buffer-boone-2025"}],"notes":["Provenance: devlog/20261101-m10-rules.md"]},{"kind":"nitrogen.basin","name":"nitrogen.basin","summary":"Soil nitrogen per basin cell: mineral and organic pools, fertiliser at the farms' rate on planting, mineralisation, crop uptake from biomass growth, soybean fixation, denitrification, leaching with drainage into the water module's tracer; harvest export; one ledger closed across two modules.","priority":7,"dt":"1d","params":[{"name":"lat_s","default":42.3,"unit":"deg"},{"name":"lat_n","default":43.2,"unit":"deg"},{"name":"lon_w","default":-94.2,"unit":"deg"},{"name":"lon_e","default":-93.5,"unit":"deg"},{"name":"res_arcsec","default":30,"unit":"arcsec"},{"name":"gauge_lat","default":42.4319722,"unit":"deg"},{"name":"gauge_lon","default":-93.8059444,"unit":"deg"},{"name":"snap_radius","default":3,"unit":"cells"},{"name":"dt","default":"1d"},{"name":"init_mineral_kg_ha","default":40,"unit":"kgN/ha"},{"name":"init_organic_kg_ha","default":8000,"unit":"kgN/ha"},{"name":"mineralisation_per_day","default":0.00004,"unit":"1/d"},{"name":"denitrification_per_day","default":0.004,"unit":"1/d"},{"name":"n_per_c_biomass","default":0.025,"unit":"kgN/kgC"},{"name":"n_per_c_grain","default":0.03,"unit":"kgN/kgC"},{"name":"soy_fixation_frac","default":0.5},{"name":"leach_efficiency","default":1},{"name":"soil_capacity_mm","default":150,"unit":"mm"}],"publishes":[{"name":"nitrogen.leached","required":false,"note":"{ kg }"}],"sends":[],"accepts":[],"subscribes":[{"name":"harvest.done","required":false,"note":"export the grain's nitrogen"}],"fields_owned":[{"name":"nitrogen.leached_kg","unit":"kgN","required":false}],"fields_read":[{"name":"water.soil_mm","unit":"mm","required":true,"note":"concentration"},{"name":"water.drain_daily_mm","unit":"mm","required":true,"note":"leaching"},{"name":"agents.plant_now","required":false,"note":"fertiliser on planting"},{"name":"agents.n_rate_kg_ha","unit":"kgN/ha","required":false},{"name":"agents.crop_kind","required":false,"note":"soy fixes"},{"name":"veg.biomass_gc_m2","unit":"gC/m2","required":false,"note":"uptake from growth"},{"name":"wx.t2m_c","unit":"degC","required":false},{"name":"veg.grain_export_kgc","unit":"kgC","required":false,"on":"harvest.done"}],"ledgers":[{"name":"nitrogen","unit":"kgN","tolerance":0.001}],"frames":[],"reports":[{"name":"nitrogen.soil_mineral_kg_ha","unit":"kgN/ha","required":false},{"name":"nitrogen.leached_kg_day","unit":"kgN/day","required":false},{"name":"nitrogen.fertilizer_kg_day","unit":"kgN/day","required":false},{"name":"nitrogen.uptake_kg_day","unit":"kgN/day","required":false},{"name":"nitrogen.mineralised_kg_day","unit":"kgN/day","required":false},{"name":"nitrogen.harvest_export_kg","unit":"kgN","required":false}],"views":[],"assets":[{"key":"copernicus-dem-glo30","note":"basin cells"}],"notes":["Parameter provenance: devlog/20261101-m11-nitrogen.md; nitrate comes out at twice the observed concentration because the crop takes up too little"]},{"kind":"carbon.emissions","name":"carbon.emissions","summary":"Observed global CO2 emissions (Global Carbon Project via Our World in Data) released into the atmosphere month by month, fossil and land-use change as separate ledger sources. Nothing is modelled; this is the forcing that the record says happened.","priority":0,"dt":"1 month (calendar)","params":[{"name":"include_land_use","default":true,"note":"land-use-change CO2 (deforestation etc.) as a second source account"},{"name":"hold_last","default":true,"note":"false stops emissions when the record ends, whatever after_record says"},{"name":"after_record","default":"hold","note":"assumption after the record's last year (2024): hold = the last rate for good; stop; zero_by:YYYY = a straight line to zero in that year; grow:P = compound growth of P percent a year; trend:N = the record's own mean growth over its last N years, continued. An assumption, never a forecast; the manifest notes must say which was chosen and why"}],"publishes":[{"name":"carbon.emitted","required":false,"note":"{ gtc, fossil_gtc, luc_gtc } for the month just added"}],"sends":[],"accepts":[],"subscribes":[],"fields_owned":[],"fields_read":[],"ledgers":[{"name":"carbon","unit":"GtC","tolerance":0.000001}],"frames":[],"reports":[{"name":"carbon.emissions_gtc_yr","unit":"GtC/yr","required":false},{"name":"carbon.cumulative_gtc","unit":"GtC","required":false}],"views":[{"kind":"chart","title":"emissions","source":"carbon.emissions_gtc_yr","obs":"","note":"the record to 2024, then the assumption"}],"assets":[{"key":"owid-co2-data","note":"World rows: co2 and land_use_change_co2, Mt CO2 per year"}],"notes":["Mt CO2 to GtC by 12.011/44.009. The annual total is spread evenly over the twelve months of the year."]},{"kind":"carbon.pools","name":"carbon.pools","summary":"Atmospheric CO2 as a mass ledger: emissions arrive as events, a fixed fraction stays for good and three fractions decay to the land-and-ocean sinks on three timescales (the Joos et al. 2013 multi-model impulse response). Reports the airborne concentration in ppm. Linear: sink saturation and climate-carbon feedback are not represented.","priority":1,"dt":"1 month (calendar)","params":[{"name":"co2_start_ppm","default":286.8,"unit":"ppm","note":"Law Dome spline at 1850 (MacFarling Meure et al. 2006): 286.8"},{"name":"gtc_per_ppm","default":2.124,"unit":"GtC/ppm","note":"2.124, the conversion used by the Global Carbon Budget"},{"name":"a0","default":0.2173,"note":"fraction never removed on these timescales; Joos et al. 2013 multi-model mean as tabulated in IPCC AR5 8.SM, recalled from memory and to be checked against the paper"},{"name":"a1","default":0.224,"note":"fraction on tau1"},{"name":"a2","default":0.2824,"note":"fraction on tau2"},{"name":"a3","default":0.2763,"note":"fraction on tau3"},{"name":"tau1_yr","default":394.4,"unit":"yr"},{"name":"tau2_yr","default":36.54,"unit":"yr"},{"name":"tau3_yr","default":4.304,"unit":"yr"},{"name":"feedback","default":true,"note":"scale the timescales each year so the 100-year integrated response equals r0 + rc * uptake + rt * T (Millar et al. 2017, the FaIR v1 carbon scheme); false is the fixed Joos response"},{"name":"r0_yr","default":35,"unit":"yr","note":"pre-industrial 100-year integrated response; Millar et al. 2017 (recalled; to be checked)"},{"name":"rc_yr_per_gtc","default":0.019,"unit":"yr/GtC","note":"sensitivity to cumulative uptake; same source and caveat"},{"name":"rt_yr_per_k","default":4.165,"unit":"yr/K","note":"sensitivity to warming; same source and caveat"}],"publishes":[{"name":"carbon.co2","required":false,"note":"{ ppm } after each monthly step"}],"sends":[],"accepts":[],"subscribes":[{"name":"energy.state","required":false,"note":"{ gmst_c } for the temperature feedback"},{"name":"carbon.emitted","required":false,"note":"{ gtc } added to the four pools by their fractions"}],"fields_owned":[],"fields_read":[],"ledgers":[{"name":"carbon","unit":"GtC","tolerance":0.000001}],"frames":[],"reports":[{"name":"carbon.co2_ppm","unit":"ppm","required":false},{"name":"carbon.excess_gtc","unit":"GtC","required":false},{"name":"carbon.airborne_fraction","required":false},{"name":"carbon.alpha","required":false}],"views":[{"kind":"counter","title":"CO₂ in the air","source":"carbon.co2_ppm","obs":"","note":"parts per million"},{"kind":"chart","title":"CO₂, model against Mauna Loa and the ice core","source":"carbon.co2_ppm","obs":"obs.co2_ppm","note":""},{"kind":"chart","title":"airborne fraction of all emissions so far","source":"carbon.airborne_fraction","obs":"","note":""}],"assets":[],"notes":["The ledger makes the turnover-versus-excess distinction concrete: molecules exchange fast, the excess mass drains slowly, and the stock the ledger checks is the excess."]},{"kind":"energy.twolayer","name":"energy.twolayer","summary":"Global energy balance in two layers (Held et al. 2010; Geoffroy et al. 2013): CO2 forcing 5.35 ln(C/C0) warms a surface layer that radiates in proportion to its anomaly and exchanges heat with a deep ocean. Energy ledger in joules: forcing in from space, response out to space, uptake into the deep. CO2 only; other greenhouse gases and aerosols enter only through extra_forcing_w_m2.","priority":2,"dt":"1 month (calendar)","params":[{"name":"co2_ref_ppm","default":286.8,"unit":"ppm","note":"concentration at which forcing is zero; the carbon module's start"},{"name":"alpha_w_m2","default":5.35,"unit":"W/m2","note":"Myhre et al. 1998 simplified expression for CO2"},{"name":"lambda_w_m2_k","default":1.13,"unit":"W/m2/K","note":"climate feedback parameter; Geoffroy et al. 2013 CMIP5 multi-model mean, recalled from memory and to be checked"},{"name":"gamma_w_m2_k","default":0.73,"unit":"W/m2/K","note":"deep ocean heat exchange coefficient; same source and caveat"},{"name":"c_surface_w_yr_m2_k","default":7.3,"unit":"W yr/m2/K","note":"surface layer heat capacity; same source and caveat"},{"name":"c_deep_w_yr_m2_k","default":91,"unit":"W yr/m2/K","note":"deep ocean heat capacity; same source and caveat"},{"name":"extra_forcing_w_m2","default":0,"unit":"W/m2","note":"constant non-CO2 forcing; zero means CO2 only"}],"publishes":[{"name":"energy.state","required":false,"note":"{ gmst_c, deep_c, forcing_w_m2, imbalance_w_m2, stored_zj } after each step, for modules downstream of the climate"}],"sends":[],"accepts":[],"subscribes":[{"name":"carbon.co2","required":false,"note":"{ ppm } sets the forcing for the next step"},{"name":"forcing.extra","required":false,"note":"{ name, w_m2 } from other modules (methane, N2O, aerosols), summed by name"}],"fields_owned":[],"fields_read":[],"ledgers":[{"name":"energy","unit":"J","tolerance":10000000000}],"frames":[],"reports":[{"name":"energy.gmst_anom_c","unit":"degC","required":false},{"name":"energy.deep_anom_c","unit":"degC","required":false},{"name":"energy.forcing_w_m2","unit":"W/m2","required":false},{"name":"energy.imbalance_w_m2","unit":"W/m2","required":false},{"name":"energy.stored_zj","unit":"ZJ","required":false}],"views":[{"kind":"counter","title":"warming since 1850","source":"energy.gmst_anom_c","obs":"","note":"global mean surface, °C"},{"kind":"counter","title":"deep ocean warming","source":"energy.deep_anom_c","obs":"","note":"the part already bought"},{"kind":"chart","title":"surface warming, model against HadCRUT5","source":"energy.gmst_anom_c","obs":"obs.gmst_hadcrut5_c","note":""},{"kind":"chart","title":"deep ocean","source":"energy.deep_anom_c","obs":"","note":""},{"kind":"chart","title":"forcing","source":"energy.forcing_w_m2","obs":"","note":""},{"kind":"chart","title":"energy imbalance","source":"energy.imbalance_w_m2","obs":"","note":""}],"assets":[],"notes":["Explicit monthly steps; the fastest timescale is C/(lambda+gamma), about four years, so the step is well resolved."]},{"kind":"obs.planet","name":"obs.planet","summary":"The planetary scoreboards as series: CO2 from the Law Dome ice-core spline until Mauna Loa begins in 1959, then Mauna Loa annual means; global mean surface temperature from HadCRUT5 and GISTEMP, each shifted to a zero mean over the baseline years so they compare with a model that starts at zero. Reported on 1 July of each year.","priority":3,"dt":"1 year (1 July)","params":[{"name":"baseline_from","default":1850,"unit":"yr","note":"temperature anomalies are re-zeroed over this window"},{"name":"baseline_to","default":1900,"unit":"yr","note":"GISTEMP starts in 1880, so its baseline is the overlap"}],"publishes":[],"sends":[],"accepts":[],"subscribes":[],"fields_owned":[],"fields_read":[],"ledgers":[],"frames":[],"reports":[{"name":"obs.co2_ppm","unit":"ppm","required":false},{"name":"obs.gmst_hadcrut5_c","unit":"degC","required":false},{"name":"obs.gmst_gistemp_c","unit":"degC","required":false}],"views":[],"assets":[{"key":"law-dome-2006","note":"CO2 spline, years before Mauna Loa"},{"key":"noaa-gml-co2-annmean-mlo","note":"annual mean CO2 from 1959"},{"key":"hadcrut5-global-annual","note":"annual anomaly vs 1961-1990"},{"key":"gistemp-global-annual","note":"annual anomaly vs 1951-1980, J-D column"}],"notes":["A series reported here is an observation, never a model output; score a model series against it with esim score."]},{"kind":"carbon.gases","name":"carbon.gases","summary":"Methane and nitrous oxide concentrations from the records (Law Dome ice core until the NOAA global means begin in 1984 and 2001), turned into radiative forcing by the simplified expressions of Myhre et al. 1998 with the CH4-N2O overlap, and published to the energy module. Beyond the record the last value is held: an assumption. No emissions and no chemistry; concentrations are read, not modelled.","priority":1,"dt":"1 year (1 January)","params":[{"name":"ch4_preindustrial_ppb","default":722,"unit":"ppb","note":"IPCC AR5 value, recalled"},{"name":"n2o_preindustrial_ppb","default":270,"unit":"ppb","note":"IPCC AR5 value, recalled"}],"publishes":[{"name":"forcing.extra","required":false,"note":"{ name: methane | n2o, w_m2 } each January"}],"sends":[],"accepts":[],"subscribes":[],"fields_owned":[],"fields_read":[],"ledgers":[],"frames":[],"reports":[{"name":"gases.ch4_ppb","unit":"ppb","required":false},{"name":"gases.n2o_ppb","unit":"ppb","required":false},{"name":"gases.forcing_ch4_w_m2","unit":"W/m2","required":false},{"name":"gases.forcing_n2o_w_m2","unit":"W/m2","required":false}],"views":[],"assets":[{"key":"law-dome-2006","note":"CH4 and N2O splines before the instrument records"},{"key":"noaa-gml-ch4-annmean-gl","note":"global annual mean CH4 from 1984"},{"key":"noaa-gml-n2o-annmean-gl","note":"global annual mean N2O from 2001"}],"notes":["The expressions are IPCC TAR Table 6.2 (Myhre et al. 1998); Etminan et al. 2016 revised methane upward by about a quarter and is the next step. Aerosols are still absent."]},{"kind":"sea.thermal","name":"sea.thermal","summary":"Global mean sea level rise from thermal expansion alone: the energy module's stored heat times an expansion efficiency. Ice sheets and glaciers, which are the larger term this century, are not here yet; the number is a floor, and the describe says so.","priority":3,"dt":"follows energy.state","params":[{"name":"m_per_yj","default":0.11,"unit":"m/YJ","note":"expansion efficiency of ocean heat uptake, about 0.11 m per 10^24 J (Kuhlbrodt and Gregory 2012, recalled; to be checked)"}],"publishes":[],"sends":[],"accepts":[],"subscribes":[{"name":"energy.state","required":false,"note":"{ stored_zj }"}],"fields_owned":[],"fields_read":[],"ledgers":[],"frames":[],"reports":[{"name":"sea.thermal_m","unit":"m","required":false}],"views":[{"kind":"counter","title":"sea level from expansion alone","source":"sea.thermal_m","obs":"","note":"metres; ice is not here yet"}],"assets":[],"notes":["Thermal expansion only. No scoreboard yet: a satellite altimetry series has not been fetched."]},{"kind":"forcing.ar6","name":"forcing.ar6","summary":"The IPCC AR6 assessed effective radiative forcing time series (1750 to 2019) for the components this model does not compute: aerosols (radiation and cloud interactions together), ozone, the other well-mixed greenhouse gases, stratospheric water vapour, contrails, black carbon on snow, land use, volcanoes and the sun, each published to the energy module by name. Read, not modelled. Beyond 2019 the stated assumption applies.","priority":1,"dt":"1 year (1 January)","params":[{"name":"components","default":["aerosol","o3","other_wmghg","h2o_stratospheric","contrails","bc_on_snow","land_use","volcanic","solar"],"note":"columns of the AR6 file to carry; co2, ch4 and n2o are left to the carbon modules"},{"name":"after_record","default":"hold","note":"beyond 2019: hold the 2019 value; mean_last_decade; zero. Aerosols are falling in the real world, so hold is a conservative-warm choice for them and the manifest should say so"}],"publishes":[{"name":"forcing.extra","required":false,"note":"{ name, w_m2 } per component each January"}],"sends":[],"accepts":[],"subscribes":[],"fields_owned":[],"fields_read":[],"ledgers":[],"frames":[],"reports":[{"name":"forcing.ar6_total_w_m2","unit":"W/m2","required":false},{"name":"forcing.ar6_aerosol_w_m2","unit":"W/m2","required":false}],"views":[{"kind":"chart","title":"aerosol forcing (assessed)","source":"forcing.ar6_aerosol_w_m2","obs":"","note":"held after 2019"}],"assets":[{"key":"ipcc-ar6-erf","note":"AR6 WG1 Chapter 7 ERF time series, 1750 to 2019"}],"notes":["Volcanic forcing after 2019 is held at the 2019 value under hold, which is near zero; a large eruption is not in any assumption here."]},{"kind":"people.countries","name":"people.countries","summary":"Countries as a coarse world raster (Natural Earth outlines) and people per country per year (UN World Population Prospects 2024: estimates to 2023, the UN medium projection after, which is the UN's assumption and labelled so). A data layer: nothing is modelled, people are read.","priority":0,"dt":"1 year (1 January)","params":[{"name":"res_deg","default":2,"unit":"deg","note":"world grid cell for the maps; 2 degrees is 16,200 cells"},{"name":"frame_every_years","default":5,"unit":"yr","note":"map frames are written this often"},{"name":"hold_before_record","default":true,"note":"before 1950 the UN has no numbers; hold 1950 flat (a placeholder, not history; HYDE would be the record)"}],"publishes":[{"name":"people.population","required":false,"note":"{ year, iso3: persons } each January"}],"sends":[],"accepts":[],"subscribes":[],"fields_owned":[{"name":"country.index","unit":"index","required":false},{"name":"people.density_km2","unit":"1/km2","required":false}],"fields_read":[],"ledgers":[],"frames":[],"reports":[{"name":"people.world_total","unit":"persons","required":false},{"name":"people.countries_matched","required":false}],"views":[{"kind":"counter","title":"people on Earth","source":"people.world_total","obs":"","note":"the UN's estimates to 2023 and its medium projection after"},{"kind":"map","title":"people per square kilometre","source":"people_density_km2","obs":"","note":"a country's people spread evenly over its land"}],"assets":[{"key":"natural-earth-110m-countries","note":"outlines, ISO3 codes"},{"key":"un-wpp-2024-total-population","note":"people per country per year"}],"notes":["Population is spread evenly over a country's land cells for the density map; a 1 km layer (WorldPop) is the next step."]},{"kind":"climate.countries","name":"climate.countries","summary":"Each country's mean temperature from its own record (CRU TS 4.07, 1901 to 2022, via the World Bank portal) regressed on the global anomaly (HadCRUT5, re-zeroed to 1850 to 1900): the slope is the country's observed share of global warming, the intercept its level. The run's global anomaly from the energy module times the slope gives the country's annual mean each year; the hottest month moves by the same slope from its 1991 to 2020 mean. Pattern scaling from the record; the stated assumption is that the pattern persists.","priority":3,"dt":"1 year (1 January), on the latest energy.state","params":[{"name":"res_deg","default":2,"unit":"deg","note":"must match people.countries"},{"name":"frame_every_years","default":5,"unit":"yr"},{"name":"fit_from","default":1901,"unit":"yr","note":"regression window"},{"name":"fit_to","default":2022,"unit":"yr"},{"name":"clim_from","default":1991,"unit":"yr","note":"climatology window for the hottest month"},{"name":"clim_to","default":2020,"unit":"yr"},{"name":"anom_from","default":2014,"unit":"yr","note":"window the per-country anomaly (tas_anom_c) is measured against; the wet-bulb layer's observed years"},{"name":"anom_to","default":2023,"unit":"yr"}],"publishes":[{"name":"climate.country_tas","required":false,"note":"{ year, by_iso3: { tas_c, hot_month_c, slope, tas_anom_c } } each January; tas_anom_c is the country's warming since the anom window"}],"sends":[],"accepts":[],"subscribes":[{"name":"energy.state","required":false,"note":"{ gmst_c } the global anomaly"}],"fields_owned":[{"name":"climate.tas_c","unit":"degC","required":false},{"name":"climate.hot_month_c","unit":"degC","required":false}],"fields_read":[{"name":"country.index","unit":"index","required":true,"note":"which cell is which country"}],"ledgers":[],"frames":[],"reports":[{"name":"climate.slope_median","unit":"degC/degC","required":false},{"name":"climate.countries_fitted","required":false},{"name":"climate.hottest_country_tas_c","unit":"degC","required":false}],"views":[{"kind":"map","title":"annual mean temperature by country","source":"climate_tas_c","obs":"","note":"each country's record scaled by the run's warming"},{"kind":"map","title":"hottest month by country","source":"climate_hot_month_c","obs":"","note":""},{"kind":"chart","title":"hottest country's annual mean","source":"climate.hottest_country_tas_c","obs":"","note":""}],"assets":[{"key":"worldbank-cckp-cru-tas-annual","note":"country annual means 1901 to 2022"},{"key":"worldbank-cckp-cru-tas-monthly","note":"country monthly means for the hottest-month climatology"},{"key":"hadcrut5-global-annual","note":"the global anomaly the records are regressed on"},{"key":"natural-earth-110m-countries","note":"the country list"}],"notes":["A country's variance about the fit is lost; years are given their fitted value, not their weather. Countries missing from the record (Antarctica, a few territories) get no temperature and are counted in climate.countries_fitted."]},{"kind":"people.heat","name":"people.heat","summary":"People living in countries whose annual mean temperature has left the human climate niche, and in countries whose hottest month passes a second marker. Counts, not deaths: exposure from a population layer and a temperature layer. A country crosses whole, because the temperature is a country mean; the first year it crosses, a people.crossing event is published for the auditor.","priority":4,"dt":"follows climate.country_tas","params":[{"name":"res_deg","default":2,"unit":"deg","note":"must match people.countries"},{"name":"frame_every_years","default":5,"unit":"yr"},{"name":"niche_c","default":29,"unit":"degC","note":"mean annual temperature at the hot edge of the human climate niche, Xu et al. 2020 PNAS (recalled; to be checked)"},{"name":"hot_month_c","default":32,"unit":"degC","note":"a hottest-month mean marker with no paper behind it: a guess, kept to show the shape until a wet-bulb layer exists"}],"publishes":[{"name":"people.crossing","required":false,"note":"{ iso3, name, year, kind: niche | hot_month, persons } the first year a country crosses; a country already over a marker in the run's first year is a state of its climate, not a crossing, and is not announced"}],"sends":[],"accepts":[],"subscribes":[{"name":"people.population","required":false,"note":"{ by_iso3 }"},{"name":"climate.country_tas","required":false,"note":"{ by_iso3: { tas_c, hot_month_c } }"}],"fields_owned":[{"name":"people.outside_niche","unit":"1","required":false}],"fields_read":[{"name":"country.index","unit":"index","required":true,"note":"to draw the map"}],"ledgers":[],"frames":[{"name":"people_outside_niche","unit":"1","required":false},{"name":"people_niche_crossing_year","unit":"year","required":false}],"reports":[{"name":"people.outside_niche","unit":"persons","required":false},{"name":"people.outside_niche_pct","unit":"%","required":false},{"name":"people.hot_month_over","unit":"persons","required":false},{"name":"people.countries_outside_niche","required":false},{"name":"people.crossings_niche","required":false},{"name":"people.crossings_hot_month","required":false}],"views":[{"kind":"counter","title":"people outside the human climate niche","source":"people.outside_niche","obs":"","note":"annual mean above 29 °C where they live; a count, not a toll"},{"kind":"counter","title":"countries outside the niche","source":"people.countries_outside_niche","obs":"","note":""},{"kind":"map","title":"outside the niche","source":"people_outside_niche","obs":"","note":""},{"kind":"map","title":"the year each country left the niche","source":"people_niche_crossing_year","obs":"","note":"fills in as the cursor passes each crossing"},{"kind":"crossings","title":"countries crossing","source":"people.crossing","obs":"","note":"the first year a country's mean passes a marker; the source of each marker is in the parameters"},{"kind":"chart","title":"people outside the niche","source":"people.outside_niche","obs":"","note":""}],"assets":[{"key":"natural-earth-110m-countries","note":"names for the crossing events"}],"notes":["No mortality here on purpose; a mortality layer with published exposure-response curves and their ranges is a separate, later module."]},{"kind":"people.wetbulb","name":"people.wetbulb","summary":"Days per year of dangerous afternoon wet-bulb temperature at each country's capital, and the people in those countries. Ten observed years of daily maximum temperature and mean dew point at the weather station nearest the capital (NOAA GSOD) give a daily afternoon wet-bulb (Stull 2011); each is shifted by the country's warming at constant relative humidity and the days over two published limits counted. Exposure at one city per country, not a death toll; a crossing event the first year a capital passes a limit on more than days_to_cross days.","priority":4,"dt":"follows climate.country_tas","params":[{"name":"res_deg","default":2,"unit":"deg","note":"must match people.countries"},{"name":"frame_every_years","default":5,"unit":"yr"},{"name":"year_from","default":2014,"unit":"yr","note":"observed daily window at the station"},{"name":"year_to","default":2023,"unit":"yr","note":"ten station-years, about 90 KB each"},{"name":"station_max_km","default":80,"unit":"km","note":"a capital with no reporting station this close is left out and counted"},{"name":"limit_a_c","default":31,"unit":"degC wet-bulb","note":"the limit for young healthy adults at rest found in chamber studies, Vecellio et al. 2022 J Appl Physiol (recalled; to be checked)"},{"name":"limit_b_c","default":35,"unit":"degC wet-bulb","note":"the theoretical survivability limit, Sherwood and Huber 2010 PNAS (recalled)"},{"name":"days_to_cross","default":3,"unit":"d/yr","note":"a capital crosses a limit when its afternoon wet-bulb exceeds it on more than this many days in a year"},{"name":"delta_max_c","default":8,"unit":"degC","note":"warming range tabulated at load"},{"name":"delta_step_c","default":0.1,"unit":"degC"}],"publishes":[{"name":"people.crossing","required":false,"note":"{ iso3, name, capital, station, year, kind: wetbulb_a | wetbulb_b, persons, days } the first year a capital passes a limit on days_to_cross days"}],"sends":[],"accepts":[],"subscribes":[{"name":"people.population","required":false,"note":"{ by_iso3 }"},{"name":"climate.country_tas","required":false,"note":"{ by_iso3: { tas_anom_c } } the country's warming since the observed window"}],"fields_owned":[{"name":"wetbulb.days_over_a","unit":"d/yr","required":false}],"fields_read":[{"name":"country.index","unit":"index","required":true,"note":"to draw the map"}],"ledgers":[],"frames":[{"name":"wetbulb_days_over_31","unit":"d/yr","required":false},{"name":"wetbulb_crossing_year","unit":"year","required":false}],"reports":[{"name":"wetbulb.people_capital_over_a","unit":"persons","required":false},{"name":"wetbulb.people_capital_over_b","unit":"persons","required":false},{"name":"wetbulb.people_days_over_a","unit":"person-days/yr","required":false},{"name":"wetbulb.capitals_over_a","required":false},{"name":"wetbulb.capitals_over_b","required":false},{"name":"wetbulb.capitals_with_data","required":false}],"views":[{"kind":"counter","title":"people whose capital passes 31 °C wet-bulb on three days a year","source":"wetbulb.people_capital_over_a","obs":"","note":"the limit for healthy adults at rest; one station per country"},{"kind":"counter","title":"people whose capital passes 35 °C wet-bulb","source":"wetbulb.people_capital_over_b","obs":"","note":"the theoretical survivability limit"},{"kind":"map","title":"days a year over 31 °C wet-bulb at the capital","source":"wetbulb_days_over_31","obs":"","note":""},{"kind":"map","title":"the year each capital crossed 31 °C wet-bulb","source":"wetbulb_crossing_year","obs":"","note":""},{"kind":"crossings","title":"capitals crossing","source":"people.crossing","obs":"","note":""},{"kind":"chart","title":"people whose capital passes 31 °C wet-bulb","source":"wetbulb.people_capital_over_a","obs":"","note":""}],"assets":[{"key":"natural-earth-110m-populated-places","note":"capital per country"},{"key":"noaa-isd-history","note":"the station nearest each capital"},{"key":"noaa-gsod","note":"daily maximum temperature and mean dew point at that station"}],"notes":["The afternoon wet-bulb is estimated from the day's maximum temperature and the day's mean dew point, which runs a little high; constant relative humidity under warming is the standard first-order assumption and is stated as one. One station stands for a country; the Gulf and South Asia are where this is least wrong and most alarming. Hourly reanalysis at every capital (Open-Meteo) was tried first and rate-limited after twenty capitals."]},{"kind":"tipping.elements","name":"tipping.elements","summary":"The climate tipping elements from data/events/tipping.toml, each with the global warming at which an assessment judged it likely to tip (a central estimate and a range) and its timescale, checked every year against the run's global anomaly. A tipping.crossing event the first year the run passes an element's low end and again its central estimate. The table is the claim; the module only compares.","priority":5,"dt":"follows energy.state, once a year","params":[],"publishes":[{"name":"tipping.crossing","required":false,"note":"{ id, title, year, level: low | central, threshold_c, gmst_c, timescale, consequence, source, confidence }"}],"sends":[],"accepts":[],"subscribes":[{"name":"energy.state","required":false,"note":"{ gmst_c }"}],"fields_owned":[],"fields_read":[],"ledgers":[],"frames":[],"reports":[{"name":"tipping.elements_past_low","required":false},{"name":"tipping.elements_past_central","required":false}],"views":[{"kind":"counter","title":"tipping elements past their central estimate","source":"tipping.elements_past_central","obs":"","note":"a flag with a citation, not a tip in this run"},{"kind":"crossings","title":"tipping thresholds passed","source":"tipping.crossing","obs":"","note":"every row of the table is marked recalled until checked against the paper"}],"assets":[{"key":"events/tipping.toml","note":"the elements and their thresholds, with provenance and confidence per row"}],"notes":["Passing a threshold does not tip the element in this run; nothing feeds back yet. It is a flag with a citation, which is what the words-only essays lack."]},{"kind":"story.bottomline","name":"story.bottomline","summary":"The bottom line of a planetary run, told as it happens: the headline numbers at the cursor and one plain sentence for every threshold crossed, each sentence written by the module that knows its source. It computes nothing new and it says, in the same place, what this run does not yet measure.","priority":9,"dt":"follows the crossing events","params":[],"publishes":[],"sends":[],"accepts":[],"subscribes":[{"name":"people.crossing","required":false,"note":"sentences"},{"name":"tipping.crossing","required":false,"note":"sentences"},{"name":"people.population","required":false,"note":"the count"}],"fields_owned":[],"fields_read":[],"ledgers":[],"frames":[],"reports":[{"name":"story.headlines","required":false}],"views":[{"kind":"map","title":"people living outside the human climate niche","source":"people_outside_niche","obs":"","note":"annual mean above 29 °C"},{"kind":"map","title":"days a year over 31 °C wet-bulb at the capital","source":"wetbulb_days_over_31","obs":"","note":"one station per country"},{"kind":"map","title":"the year each capital crossed 31 °C wet-bulb","source":"wetbulb_crossing_year","obs":"","note":""},{"kind":"counter","title":"people on Earth","source":"people.world_total","obs":"","note":"UN estimates to 2023, the UN medium projection after"},{"kind":"counter","title":"warming since 1850","source":"energy.gmst_anom_c","obs":"","note":""},{"kind":"counter","title":"people outside the human climate niche","source":"people.outside_niche","obs":"","note":"annual mean above 29 °C where they live"},{"kind":"counter","title":"people whose capital passes the wet-bulb limit","source":"wetbulb.people_capital_over_a","obs":"","note":"31 °C on more than three afternoons a year"},{"kind":"counter","title":"tipping elements past their central estimate","source":"tipping.elements_past_central","obs":"","note":""},{"kind":"counter","title":"sea level from expansion alone","source":"sea.thermal_m","obs":"","note":""},{"kind":"story","title":"what has happened so far","source":"crossing","obs":"","note":"one sentence per threshold crossed, newest first; the source is beside each"},{"kind":"text","title":"what this run does not yet measure","source":"Not in this run, so not in these numbers: deaths from heat (a published exposure-response layer is next), harvests and food prices, forest cover and the carbon it would release, biodiversity, fresh water, sea level from ice, migration, and any response by people to any of it. The population here is the UN's path, which assumes none of the above changes where people live. Every crossing above is a count of people living where a stated limit is passed, not a toll, and the model runs about 0.15 °C warm in 2024.","obs":"","note":""}],"assets":[],"notes":[]}]
+[
+  {
+    "kind": "water.source",
+    "name": "water.source",
+    "summary": "Pours water at a constant rate from a ledger account into a named module, every tick.",
+    "priority": 0,
+    "dt": "1h",
+    "params": [
+      {
+        "name": "rate_m3_s",
+        "default": 1.0,
+        "unit": "m3/s"
+      },
+      {
+        "name": "dt",
+        "default": "1h"
+      },
+      {
+        "name": "from",
+        "default": "atmosphere",
+        "note": "ledger account the water is drawn from"
+      },
+      {
+        "name": "into",
+        "default": "bucket",
+        "note": "module that accepts `inflow`"
+      }
+    ],
+    "publishes": [],
+    "sends": [
+      {
+        "to": "bucket",
+        "topic": "inflow"
+      }
+    ],
+    "accepts": [],
+    "subscribes": [],
+    "fields_owned": [],
+    "fields_read": [],
+    "ledgers": [
+      {
+        "name": "water",
+        "unit": "m3",
+        "tolerance": 1e-6
+      }
+    ],
+    "frames": [],
+    "reports": [
+      {
+        "name": "water.source.poured_m3",
+        "unit": "m3",
+        "required": false
+      }
+    ],
+    "views": [],
+    "assets": [],
+    "notes": []
+  },
+  {
+    "kind": "water.bucket",
+    "name": "water.bucket",
+    "summary": "A linear reservoir: accepts inflow, drains at a rate proportional to its volume to an account or another bucket.",
+    "priority": 0,
+    "dt": "6h",
+    "params": [
+      {
+        "name": "volume_m3",
+        "default": 0.0,
+        "unit": "m3",
+        "note": "opening stock"
+      },
+      {
+        "name": "k_per_s",
+        "default": 0.00001,
+        "unit": "1/s",
+        "note": "drain rate constant"
+      },
+      {
+        "name": "dt",
+        "default": "6h"
+      },
+      {
+        "name": "outlet",
+        "default": "sea",
+        "note": "ledger account, or a module when outlet_is_module"
+      },
+      {
+        "name": "outlet_is_module",
+        "default": false
+      },
+      {
+        "name": "leak",
+        "default": 0.0,
+        "unit": "fraction",
+        "note": "a deliberate leak per tick, so the ledger test can fail on purpose"
+      }
+    ],
+    "publishes": [],
+    "sends": [],
+    "accepts": [
+      {
+        "name": "inflow",
+        "required": false,
+        "note": "{ m3 }"
+      }
+    ],
+    "subscribes": [],
+    "fields_owned": [],
+    "fields_read": [],
+    "ledgers": [
+      {
+        "name": "water",
+        "unit": "m3",
+        "tolerance": 1e-6
+      }
+    ],
+    "frames": [],
+    "reports": [
+      {
+        "name": "water.bucket.volume_m3",
+        "unit": "m3",
+        "required": false
+      },
+      {
+        "name": "water.bucket.outflow_m3_s",
+        "unit": "m3/s",
+        "required": false
+      }
+    ],
+    "views": [],
+    "assets": [],
+    "notes": []
+  },
+  {
+    "kind": "sun.irradiance",
+    "name": "sun.irradiance",
+    "summary": "Clear-sky solar irradiance on real terrain every tick: sun position, air mass, slope incidence and horizon shadow; absorbed energy through the energy ledger.",
+    "priority": 0,
+    "dt": "1h",
+    "params": [
+      {
+        "name": "lat_s",
+        "default": 42.3,
+        "unit": "deg"
+      },
+      {
+        "name": "lat_n",
+        "default": 43.2,
+        "unit": "deg"
+      },
+      {
+        "name": "lon_w",
+        "default": -94.2,
+        "unit": "deg"
+      },
+      {
+        "name": "lon_e",
+        "default": -93.5,
+        "unit": "deg"
+      },
+      {
+        "name": "res_arcsec",
+        "default": 30.0,
+        "unit": "arcsec",
+        "note": "grid cell; the DEM is aggregated to it; every module in a manifest must use one window and resolution, so state them once in [place]"
+      },
+      {
+        "name": "dt",
+        "default": "1h"
+      },
+      {
+        "name": "report_every",
+        "default": "1d"
+      },
+      {
+        "name": "horizon_azimuths",
+        "default": 16
+      },
+      {
+        "name": "horizon_km",
+        "default": 20.0,
+        "unit": "km",
+        "note": "how far the horizon search looks"
+      },
+      {
+        "name": "transmittance",
+        "default": 0.7,
+        "note": "Meinel clear-sky placeholder; winter clearness above one exposed it (devlog 20261101-m4-weather)"
+      },
+      {
+        "name": "diffuse_fraction",
+        "default": 0.1,
+        "note": "placeholder"
+      },
+      {
+        "name": "data_root",
+        "default": "",
+        "note": "overrides ESIM_ROOT"
+      }
+    ],
+    "publishes": [],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [],
+    "fields_owned": [
+      {
+        "name": "sun.incident_j",
+        "unit": "J",
+        "required": false
+      }
+    ],
+    "fields_read": [],
+    "ledgers": [
+      {
+        "name": "energy",
+        "unit": "J",
+        "tolerance": 1000000.0
+      }
+    ],
+    "frames": [
+      {
+        "name": "elevation",
+        "unit": "m",
+        "required": false
+      },
+      {
+        "name": "slope",
+        "unit": "rad",
+        "required": false
+      },
+      {
+        "name": "irradiance_daily_mean",
+        "unit": "W/m2",
+        "required": false
+      }
+    ],
+    "reports": [
+      {
+        "name": "sun.ghi_mean_w_m2",
+        "unit": "W/m2",
+        "required": false
+      },
+      {
+        "name": "sun.irradiance_daily_mean_w_m2",
+        "unit": "W/m2",
+        "required": false
+      }
+    ],
+    "views": [],
+    "assets": [
+      {
+        "key": "copernicus-dem-glo30",
+        "note": "terrain window, slope, aspect and horizons"
+      }
+    ],
+    "notes": [
+      "Parameter provenance: devlog/20261101-m1-sun.md"
+    ]
+  },
+  {
+    "kind": "heat.slab",
+    "name": "heat.slab",
+    "summary": "A surface heat slab: absorbs the incident energy field, radiates to a sky temperature, keeps the energy ledger closed at a different rate from the sun.",
+    "priority": 1,
+    "dt": "15m",
+    "params": [
+      {
+        "name": "source",
+        "default": "sun.incident_j",
+        "note": "world field of incident energy per cell per source tick"
+      },
+      {
+        "name": "dt",
+        "default": "15m"
+      },
+      {
+        "name": "report_every",
+        "default": "1d"
+      },
+      {
+        "name": "albedo",
+        "default": 0.2
+      },
+      {
+        "name": "emissivity",
+        "default": 0.95
+      },
+      {
+        "name": "heat_capacity_j_m2_k",
+        "default": 300000.0,
+        "unit": "J/m2/K"
+      },
+      {
+        "name": "t_sky_k",
+        "default": 255.0,
+        "unit": "K"
+      },
+      {
+        "name": "t_init_c",
+        "default": 0.0,
+        "unit": "degC"
+      }
+    ],
+    "publishes": [],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [],
+    "fields_owned": [],
+    "fields_read": [
+      {
+        "name": "sun.incident_j",
+        "unit": "J",
+        "required": true
+      }
+    ],
+    "ledgers": [
+      {
+        "name": "energy",
+        "unit": "J",
+        "tolerance": 1000000.0
+      }
+    ],
+    "frames": [
+      {
+        "name": "t_surface_daily_mean",
+        "unit": "degC",
+        "required": false
+      }
+    ],
+    "reports": [
+      {
+        "name": "heat.t_surface_mean_c",
+        "unit": "degC",
+        "required": false
+      }
+    ],
+    "views": [],
+    "assets": [],
+    "notes": [
+      "Parameter provenance: devlog/20261101-m2-heat.md"
+    ]
+  },
+  {
+    "kind": "water.basin",
+    "name": "water.basin",
+    "summary": "A gauged basin delineated from the DEM: rain or snow from a station or the weather fields, a soil bucket with sun-driven evapotranspiration, drainage routed down the D8 network to the gauge, a nitrate tracer riding the drainage; scored against the USGS record.",
+    "priority": 2,
+    "dt": "1h",
+    "params": [
+      {
+        "name": "station",
+        "default": "USC00138806",
+        "note": "GHCN-Daily station for rain and temperature (forcing = station)"
+      },
+      {
+        "name": "usgs_site",
+        "default": "05481000",
+        "note": "USGS site for observed discharge and nitrate"
+      },
+      {
+        "name": "lat_s",
+        "default": 42.3,
+        "unit": "deg"
+      },
+      {
+        "name": "lat_n",
+        "default": 43.2,
+        "unit": "deg"
+      },
+      {
+        "name": "lon_w",
+        "default": -94.2,
+        "unit": "deg"
+      },
+      {
+        "name": "lon_e",
+        "default": -93.5,
+        "unit": "deg"
+      },
+      {
+        "name": "res_arcsec",
+        "default": 30.0,
+        "unit": "arcsec"
+      },
+      {
+        "name": "gauge_lat",
+        "default": 42.4319722,
+        "unit": "deg",
+        "note": "USGS 05481000"
+      },
+      {
+        "name": "gauge_lon",
+        "default": -93.8059444,
+        "unit": "deg",
+        "note": "USGS 05481000"
+      },
+      {
+        "name": "snap_radius",
+        "default": 3,
+        "unit": "cells",
+        "note": "gauge snapped to the highest accumulation within this radius"
+      },
+      {
+        "name": "obs_hour_utc",
+        "default": 13,
+        "unit": "h",
+        "note": "daily total booked at the station's observation time"
+      },
+      {
+        "name": "local_offset_h",
+        "default": -6,
+        "unit": "h"
+      },
+      {
+        "name": "dt",
+        "default": "1h"
+      },
+      {
+        "name": "report_every",
+        "default": "1d"
+      },
+      {
+        "name": "soil_capacity_mm",
+        "default": 150.0,
+        "unit": "mm"
+      },
+      {
+        "name": "drain_per_day",
+        "default": 0.03,
+        "unit": "1/d"
+      },
+      {
+        "name": "pet_factor",
+        "default": 0.7
+      },
+      {
+        "name": "snow_t_c",
+        "default": 0.0,
+        "unit": "degC"
+      },
+      {
+        "name": "ddf_mm_per_c_day",
+        "default": 3.0,
+        "unit": "mm/degC/d",
+        "note": "degree-day melt factor"
+      },
+      {
+        "name": "channel_km2",
+        "default": 2.0,
+        "unit": "km2",
+        "note": "accumulation above which a cell is channel"
+      },
+      {
+        "name": "v_channel_m_s",
+        "default": 0.4,
+        "unit": "m/s"
+      },
+      {
+        "name": "v_hill_m_s",
+        "default": 0.02,
+        "unit": "m/s"
+      },
+      {
+        "name": "energy_source",
+        "default": "sun.incident_j",
+        "note": "world field driving evapotranspiration"
+      },
+      {
+        "name": "forcing",
+        "default": "station",
+        "note": "station | wx"
+      },
+      {
+        "name": "lai_coupling",
+        "default": true,
+        "note": "read veg.lai to scale evapotranspiration"
+      },
+      {
+        "name": "perennial_capacity_factor",
+        "default": 1.3,
+        "note": "soil capacity multiplier under a no-crop rule (a guess)"
+      },
+      {
+        "name": "nitrate_param",
+        "default": "99133",
+        "note": "USGS parameter for observed nitrate; empty disables"
+      }
+    ],
+    "publishes": [],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [
+      {
+        "name": "nitrogen.leached",
+        "required": false,
+        "note": "the nitrogen module's daily leaching"
+      }
+    ],
+    "fields_owned": [
+      {
+        "name": "water.drain_daily_mm",
+        "unit": "mm",
+        "required": false
+      },
+      {
+        "name": "water.soil_mm",
+        "unit": "mm",
+        "required": false
+      },
+      {
+        "name": "water.snow_mm",
+        "unit": "mm",
+        "required": false
+      }
+    ],
+    "fields_read": [
+      {
+        "name": "sun.incident_j",
+        "unit": "J",
+        "required": false,
+        "note": "evapotranspiration energy"
+      },
+      {
+        "name": "rules.no_crop",
+        "required": false,
+        "note": "perennial cover changes soil capacity"
+      },
+      {
+        "name": "nitrogen.leached_kg",
+        "unit": "kgN",
+        "required": false,
+        "on": "nitrogen.leached",
+        "note": "tracer source"
+      },
+      {
+        "name": "veg.lai",
+        "unit": "m2/m2",
+        "required": false,
+        "note": "cover factor on evapotranspiration"
+      }
+    ],
+    "ledgers": [
+      {
+        "name": "water",
+        "unit": "m3",
+        "tolerance": 1.0
+      },
+      {
+        "name": "nitrogen",
+        "unit": "kgN",
+        "tolerance": 0.001
+      }
+    ],
+    "frames": [
+      {
+        "name": "basin",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "flow_accum_log10_km2",
+        "unit": "log10 km2",
+        "required": false
+      },
+      {
+        "name": "soil_daily_mean_mm",
+        "unit": "mm",
+        "required": false
+      }
+    ],
+    "reports": [
+      {
+        "name": "basin.area_km2",
+        "unit": "km2",
+        "required": false
+      },
+      {
+        "name": "hydro.q_outlet_m3_s",
+        "unit": "m3/s",
+        "required": false
+      },
+      {
+        "name": "hydro.q_sim_daily_m3_s",
+        "unit": "m3/s",
+        "required": false
+      },
+      {
+        "name": "hydro.q_obs_daily_m3_s",
+        "unit": "m3/s",
+        "required": false
+      },
+      {
+        "name": "hydro.precip_daily_mm",
+        "unit": "mm",
+        "required": false
+      },
+      {
+        "name": "hydro.snowpack_mean_mm",
+        "unit": "mm",
+        "required": false
+      },
+      {
+        "name": "hydro.soil_mean_mm",
+        "unit": "mm",
+        "required": false
+      },
+      {
+        "name": "hydro.no3_load_kg_day",
+        "unit": "kgN/day",
+        "required": false
+      },
+      {
+        "name": "hydro.no3_sim_mg_l",
+        "unit": "mgN/L",
+        "required": false
+      },
+      {
+        "name": "hydro.no3_obs_mg_l",
+        "unit": "mgN/L",
+        "required": false
+      }
+    ],
+    "views": [],
+    "assets": [
+      {
+        "key": "copernicus-dem-glo30",
+        "note": "window, priority-flood fill, D8, accumulation, basin delineation"
+      },
+      {
+        "key": "ghcn-daily",
+        "note": "station USC00138806: precipitation and temperature"
+      },
+      {
+        "key": "usgs-nwis-daily",
+        "note": "site 05481000: discharge 00060 and nitrate 99133"
+      }
+    ],
+    "notes": [
+      "Parameter provenance: devlog/20261101-m3-water.md and 20261101-m12-sweep.md (a 64-sample sweep found no better set)"
+    ]
+  },
+  {
+    "kind": "weather.era5",
+    "name": "weather.era5",
+    "summary": "Observed weather as fields: ERA5 reanalysis hourly on a point grid, bilinear to the cells; with source = chain, ERA5 up to the archive's edge then one GEFS ensemble member chosen by the seed.",
+    "priority": -1,
+    "dt": "1h",
+    "params": [
+      {
+        "name": "lat_s",
+        "default": 42.3,
+        "unit": "deg"
+      },
+      {
+        "name": "lat_n",
+        "default": 43.2,
+        "unit": "deg"
+      },
+      {
+        "name": "lon_w",
+        "default": -94.2,
+        "unit": "deg"
+      },
+      {
+        "name": "lon_e",
+        "default": -93.5,
+        "unit": "deg"
+      },
+      {
+        "name": "res_arcsec",
+        "default": 30.0,
+        "unit": "arcsec"
+      },
+      {
+        "name": "point_step_deg",
+        "default": 0.25,
+        "unit": "deg",
+        "note": "spacing of the Open-Meteo points"
+      },
+      {
+        "name": "dt",
+        "default": "1h"
+      },
+      {
+        "name": "start",
+        "default": "2025-01-01",
+        "unit": "date"
+      },
+      {
+        "name": "end",
+        "default": "2025-12-31",
+        "unit": "date"
+      },
+      {
+        "name": "source",
+        "default": "era5",
+        "note": "era5 | chain"
+      },
+      {
+        "name": "past_days",
+        "default": 10,
+        "unit": "d",
+        "note": "chain: GEFS past days"
+      },
+      {
+        "name": "forecast_days",
+        "default": 10,
+        "unit": "d",
+        "note": "chain: GEFS horizon"
+      },
+      {
+        "name": "seed",
+        "default": 1,
+        "note": "folded in from the run seed; chain picks the GEFS member from it"
+      }
+    ],
+    "publishes": [],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [],
+    "fields_owned": [
+      {
+        "name": "wx.t2m_c",
+        "unit": "degC",
+        "required": false
+      },
+      {
+        "name": "wx.precip_mm",
+        "unit": "mm",
+        "required": false
+      },
+      {
+        "name": "wx.sw_w_m2",
+        "unit": "W/m2",
+        "required": false
+      },
+      {
+        "name": "wx.rh_pct",
+        "unit": "%",
+        "required": false
+      },
+      {
+        "name": "wx.wind_m_s",
+        "unit": "m/s",
+        "required": false
+      }
+    ],
+    "fields_read": [],
+    "ledgers": [],
+    "frames": [],
+    "reports": [
+      {
+        "name": "wx.points",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "wx.source",
+        "unit": "0=era5 1=member",
+        "required": false
+      },
+      {
+        "name": "wx.sw_mean_w_m2",
+        "unit": "W/m2",
+        "required": false
+      },
+      {
+        "name": "wx.t2m_mean_c",
+        "unit": "degC",
+        "required": false
+      },
+      {
+        "name": "wx.precip_mean_mm",
+        "unit": "mm",
+        "required": false
+      }
+    ],
+    "views": [],
+    "assets": [
+      {
+        "key": "copernicus-dem-glo30",
+        "note": "the cell grid"
+      },
+      {
+        "key": "open-meteo-era5",
+        "note": "hourly archive; lags about five days"
+      }
+    ],
+    "notes": []
+  },
+  {
+    "kind": "veg.crop",
+    "name": "veg.crop",
+    "summary": "A crop canopy per basin cell: planting by date and warmth or by the farms' orders, phenology by growing degree days, light-use-efficiency growth under water stress, senescence, harvest and export, litter; answers grazing and burning; scored against MODIS NDVI.",
+    "priority": 3,
+    "dt": "1h",
+    "params": [
+      {
+        "name": "lat_s",
+        "default": 42.3,
+        "unit": "deg"
+      },
+      {
+        "name": "lat_n",
+        "default": 43.2,
+        "unit": "deg"
+      },
+      {
+        "name": "lon_w",
+        "default": -94.2,
+        "unit": "deg"
+      },
+      {
+        "name": "lon_e",
+        "default": -93.5,
+        "unit": "deg"
+      },
+      {
+        "name": "res_arcsec",
+        "default": 30.0,
+        "unit": "arcsec"
+      },
+      {
+        "name": "gauge_lat",
+        "default": 42.4319722,
+        "unit": "deg"
+      },
+      {
+        "name": "gauge_lon",
+        "default": -93.8059444,
+        "unit": "deg"
+      },
+      {
+        "name": "snap_radius",
+        "default": 3,
+        "unit": "cells"
+      },
+      {
+        "name": "dt",
+        "default": "1h"
+      },
+      {
+        "name": "energy_source",
+        "default": "sun.incident_j"
+      },
+      {
+        "name": "soil_source",
+        "default": "water.soil_mm"
+      },
+      {
+        "name": "soil_capacity_mm",
+        "default": 150.0,
+        "unit": "mm"
+      },
+      {
+        "name": "modis_start",
+        "default": "2025-01-01",
+        "unit": "date",
+        "note": "MODIS MOD13A1 composites to fetch for scoring; \"none\" disables"
+      },
+      {
+        "name": "modis_end",
+        "default": "2025-12-31",
+        "unit": "date"
+      },
+      {
+        "name": "plant_after_doy",
+        "default": 110,
+        "unit": "doy"
+      },
+      {
+        "name": "plant_t_c",
+        "default": 10.0,
+        "unit": "degC"
+      },
+      {
+        "name": "gdd_base_c",
+        "default": 10.0,
+        "unit": "degC"
+      },
+      {
+        "name": "gdd_emerge",
+        "default": 80.0,
+        "unit": "degC d"
+      },
+      {
+        "name": "gdd_senesce",
+        "default": 1300.0,
+        "unit": "degC d"
+      },
+      {
+        "name": "gdd_harvest",
+        "default": 1650.0,
+        "unit": "degC d"
+      },
+      {
+        "name": "frost_c",
+        "default": -2.0,
+        "unit": "degC"
+      },
+      {
+        "name": "lue_gc_per_mj",
+        "default": 1.6,
+        "unit": "gC/MJ"
+      },
+      {
+        "name": "par_fraction",
+        "default": 0.48
+      },
+      {
+        "name": "k_light",
+        "default": 0.5
+      },
+      {
+        "name": "sla_m2_per_gc",
+        "default": 0.025,
+        "unit": "m2/gC"
+      },
+      {
+        "name": "leaf_fraction",
+        "default": 0.45
+      },
+      {
+        "name": "lai_max",
+        "default": 5.5,
+        "unit": "m2/m2"
+      },
+      {
+        "name": "lai_emerge",
+        "default": 0.3,
+        "unit": "m2/m2",
+        "note": "seeded from the import account at emergence"
+      },
+      {
+        "name": "snow_ndvi_mm",
+        "default": 5.0,
+        "unit": "mm",
+        "note": "snow above this reads as NDVI zero"
+      },
+      {
+        "name": "ra_fraction",
+        "default": 0.5
+      },
+      {
+        "name": "grain_fraction",
+        "default": 0.45
+      },
+      {
+        "name": "k_litter_per_day",
+        "default": 0.003,
+        "unit": "1/d"
+      },
+      {
+        "name": "ndvi_soil",
+        "default": 0.18
+      },
+      {
+        "name": "ndvi_max",
+        "default": 0.88
+      },
+      {
+        "name": "k_ndvi",
+        "default": 0.7
+      },
+      {
+        "name": "graze_max_frac",
+        "default": 0.3
+      },
+      {
+        "name": "burn_biomass_frac",
+        "default": 0.9
+      },
+      {
+        "name": "burn_litter_frac",
+        "default": 0.7
+      },
+      {
+        "name": "soy_lue_factor",
+        "default": 0.75
+      },
+      {
+        "name": "soy_gdd_factor",
+        "default": 0.85
+      },
+      {
+        "name": "soy_grain_fraction",
+        "default": 0.4
+      },
+      {
+        "name": "grass_lai",
+        "default": 2.0,
+        "unit": "m2/m2"
+      }
+    ],
+    "publishes": [
+      {
+        "name": "graze.done",
+        "required": false,
+        "note": "{ by }"
+      },
+      {
+        "name": "harvest.done",
+        "required": false,
+        "note": "{ by }"
+      }
+    ],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [
+      {
+        "name": "graze.request",
+        "required": false,
+        "note": "herbivores ask for forage"
+      },
+      {
+        "name": "fire.burn",
+        "required": false,
+        "note": "cells burning today"
+      }
+    ],
+    "fields_owned": [
+      {
+        "name": "veg.lai",
+        "unit": "m2/m2",
+        "required": false
+      },
+      {
+        "name": "veg.biomass_gc_m2",
+        "unit": "gC/m2",
+        "required": false
+      },
+      {
+        "name": "veg.grazed_kgc",
+        "unit": "kgC",
+        "required": false
+      },
+      {
+        "name": "veg.grain_export_kgc",
+        "unit": "kgC",
+        "required": false
+      }
+    ],
+    "fields_read": [
+      {
+        "name": "sun.incident_j",
+        "unit": "J",
+        "required": true,
+        "note": "light for growth"
+      },
+      {
+        "name": "wx.t2m_c",
+        "unit": "degC",
+        "required": true,
+        "note": "degree days and frost"
+      },
+      {
+        "name": "water.soil_mm",
+        "unit": "mm",
+        "required": false,
+        "note": "water stress"
+      },
+      {
+        "name": "water.snow_mm",
+        "unit": "mm",
+        "required": false,
+        "note": "snow hides the canopy from the satellite"
+      },
+      {
+        "name": "agents.plant_now",
+        "required": false,
+        "note": "farms' planting orders"
+      },
+      {
+        "name": "agents.crop_kind",
+        "required": false,
+        "note": "corn, soy or grass per cell"
+      },
+      {
+        "name": "fire.burned_frac",
+        "unit": "1",
+        "required": false,
+        "on": "fire.burn"
+      },
+      {
+        "name": "fauna.herb_demand_kgc",
+        "unit": "kgC",
+        "required": false,
+        "on": "graze.request"
+      }
+    ],
+    "ledgers": [
+      {
+        "name": "carbon",
+        "unit": "kgC",
+        "tolerance": 0.001
+      }
+    ],
+    "frames": [
+      {
+        "name": "lai",
+        "unit": "m2/m2",
+        "required": false
+      },
+      {
+        "name": "ndvi_modis",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "ndvi_sim",
+        "unit": "1",
+        "required": false
+      }
+    ],
+    "reports": [
+      {
+        "name": "veg.modis_composites",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "veg.lai_mean",
+        "unit": "m2/m2",
+        "required": false
+      },
+      {
+        "name": "veg.ndvi_sim_daily",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "veg.biomass_mean_gc_m2",
+        "unit": "gC/m2",
+        "required": false
+      },
+      {
+        "name": "veg.gpp_basin_tc_day",
+        "unit": "tC/day",
+        "required": false
+      },
+      {
+        "name": "veg.ndvi_obs_16d",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "veg.ndvi_sim_16d",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "veg.grazed_kgc_day",
+        "unit": "kgC/day",
+        "required": false
+      },
+      {
+        "name": "veg.fire_emissions_kgc_day",
+        "unit": "kgC/day",
+        "required": false
+      }
+    ],
+    "views": [],
+    "assets": [
+      {
+        "key": "copernicus-dem-glo30",
+        "note": "basin cells"
+      },
+      {
+        "key": "modis-mod13a1",
+        "note": "16-day NDVI composites for scoring, via Planetary Computer"
+      }
+    ],
+    "notes": [
+      "Parameter provenance: devlog/20261101-m5-green.md; the canopy greens a month late and reaches a third of a real crop's biomass"
+    ]
+  },
+  {
+    "kind": "fauna.herbivore",
+    "name": "fauna.herbivore",
+    "summary": "Herbivore cohorts per basin cell: graze the crop by request, Holling type II intake, births, deaths, starvation, migration toward forage, flight and mortality in fire, predation by request; can zoom a window to individuals and back with residues so the count is conserved.",
+    "priority": 4,
+    "dt": "1d",
+    "params": [
+      {
+        "name": "lat_s",
+        "default": 42.3,
+        "unit": "deg"
+      },
+      {
+        "name": "lat_n",
+        "default": 43.2,
+        "unit": "deg"
+      },
+      {
+        "name": "lon_w",
+        "default": -94.2,
+        "unit": "deg"
+      },
+      {
+        "name": "lon_e",
+        "default": -93.5,
+        "unit": "deg"
+      },
+      {
+        "name": "res_arcsec",
+        "default": 30.0,
+        "unit": "arcsec"
+      },
+      {
+        "name": "gauge_lat",
+        "default": 42.4319722,
+        "unit": "deg"
+      },
+      {
+        "name": "gauge_lon",
+        "default": -93.8059444,
+        "unit": "deg"
+      },
+      {
+        "name": "snap_radius",
+        "default": 3,
+        "unit": "cells"
+      },
+      {
+        "name": "dt",
+        "default": "1d"
+      },
+      {
+        "name": "veg_module",
+        "default": "veg"
+      },
+      {
+        "name": "c_ind_kgc",
+        "default": 5.0,
+        "unit": "kgC",
+        "note": "carbon per individual"
+      },
+      {
+        "name": "init_density_km2",
+        "default": 6.0,
+        "unit": "1/km2"
+      },
+      {
+        "name": "intake_max_kgc_day",
+        "default": 0.5,
+        "unit": "kgC/d"
+      },
+      {
+        "name": "maintenance_kgc_day",
+        "default": 0.3,
+        "unit": "kgC/d"
+      },
+      {
+        "name": "assimilation",
+        "default": 0.5
+      },
+      {
+        "name": "birth_per_day",
+        "default": 0.002,
+        "unit": "1/d"
+      },
+      {
+        "name": "mortality_per_day",
+        "default": 0.0007,
+        "unit": "1/d"
+      },
+      {
+        "name": "starvation_per_day",
+        "default": 0.01,
+        "unit": "1/d"
+      },
+      {
+        "name": "move_frac",
+        "default": 0.1
+      },
+      {
+        "name": "browse_kgc_ind_day",
+        "default": 0.2,
+        "unit": "kgC/d"
+      },
+      {
+        "name": "flee_frac",
+        "default": 0.8
+      },
+      {
+        "name": "fire_mortality",
+        "default": 0.3
+      },
+      {
+        "name": "zoom_lat_s",
+        "default": 0.0,
+        "unit": "deg",
+        "note": "zoom window; zero disables"
+      },
+      {
+        "name": "zoom_lat_n",
+        "default": 0.0,
+        "unit": "deg"
+      },
+      {
+        "name": "zoom_lon_w",
+        "default": 0.0,
+        "unit": "deg"
+      },
+      {
+        "name": "zoom_lon_e",
+        "default": 0.0,
+        "unit": "deg"
+      },
+      {
+        "name": "zoom_from",
+        "default": "",
+        "unit": "date"
+      },
+      {
+        "name": "zoom_to",
+        "default": "",
+        "unit": "date"
+      },
+      {
+        "name": "step_m_per_day",
+        "default": 400.0,
+        "unit": "m/d",
+        "note": "individual step while zoomed"
+      }
+    ],
+    "publishes": [
+      {
+        "name": "graze.request",
+        "required": false,
+        "note": "{ by }"
+      },
+      {
+        "name": "predation.done",
+        "required": false,
+        "note": "{ by }"
+      },
+      {
+        "name": "zoom.in",
+        "required": false,
+        "note": "{ module, individuals }"
+      },
+      {
+        "name": "zoom.out",
+        "required": false,
+        "note": "{ module }"
+      }
+    ],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [
+      {
+        "name": "graze.done",
+        "required": false,
+        "note": "forage granted"
+      },
+      {
+        "name": "predation.request",
+        "required": false,
+        "note": "predators' kill requests"
+      },
+      {
+        "name": "fire.burn",
+        "required": false,
+        "note": "cells burning"
+      },
+      {
+        "name": "fire.ignition",
+        "required": false,
+        "note": "at the basin cells only"
+      }
+    ],
+    "fields_owned": [
+      {
+        "name": "fauna.herb_n",
+        "unit": "individuals",
+        "required": false
+      },
+      {
+        "name": "fauna.herb_demand_kgc",
+        "unit": "kgC",
+        "required": false
+      },
+      {
+        "name": "fauna.prey_taken",
+        "unit": "individuals",
+        "required": false
+      },
+      {
+        "name": "fauna.prey_c_per_kill",
+        "unit": "kgC",
+        "required": false
+      }
+    ],
+    "fields_read": [
+      {
+        "name": "veg.grazed_kgc",
+        "unit": "kgC",
+        "required": true,
+        "on": "graze.done",
+        "note": "what the crop gave"
+      },
+      {
+        "name": "veg.biomass_gc_m2",
+        "unit": "gC/m2",
+        "required": false,
+        "note": "where to move"
+      },
+      {
+        "name": "fire.burned_frac",
+        "unit": "1",
+        "required": false,
+        "on": "fire.burn"
+      },
+      {
+        "name": "fauna.pred_kills",
+        "unit": "individuals",
+        "required": false,
+        "on": "predation.request"
+      }
+    ],
+    "ledgers": [
+      {
+        "name": "animals",
+        "unit": "individuals",
+        "tolerance": 1e-6
+      },
+      {
+        "name": "carbon",
+        "unit": "kgC",
+        "tolerance": 0.001
+      }
+    ],
+    "frames": [
+      {
+        "name": "herbivore_density_km2",
+        "unit": "1/km2",
+        "required": false
+      }
+    ],
+    "reports": [
+      {
+        "name": "fauna.herb_total",
+        "unit": "individuals",
+        "required": false
+      },
+      {
+        "name": "fauna.herb_grazed_kgc_day",
+        "unit": "kgC/day",
+        "required": false
+      },
+      {
+        "name": "fauna.herb_births_day",
+        "unit": "1/day",
+        "required": false
+      },
+      {
+        "name": "fauna.herb_deaths_day",
+        "unit": "1/day",
+        "required": false
+      },
+      {
+        "name": "fauna.herb_killed_day",
+        "unit": "1/day",
+        "required": false
+      },
+      {
+        "name": "fauna.herb_fled",
+        "unit": "individuals",
+        "required": false
+      },
+      {
+        "name": "fauna.herb_fire_deaths",
+        "unit": "individuals",
+        "required": false
+      },
+      {
+        "name": "fauna.zoom_individuals",
+        "unit": "individuals",
+        "required": false
+      },
+      {
+        "name": "fauna.zoom_switch_error",
+        "unit": "individuals",
+        "required": false
+      },
+      {
+        "name": "fauna.zoom_folded_out",
+        "unit": "individuals",
+        "required": false
+      },
+      {
+        "name": "fauna.zoom_lat_sd_km",
+        "unit": "km",
+        "required": false
+      }
+    ],
+    "views": [],
+    "assets": [
+      {
+        "key": "copernicus-dem-glo30",
+        "note": "basin cells"
+      }
+    ],
+    "notes": [
+      "Parameter provenance: devlog/20261101-m6-eaters.md and 20261101-m8-zoom.md"
+    ]
+  },
+  {
+    "kind": "fauna.predator",
+    "name": "fauna.predator",
+    "summary": "Predator cohorts per basin cell: Holling type II attack on the herbivore field, kills by request, births, deaths, starvation, movement toward prey.",
+    "priority": 5,
+    "dt": "1d",
+    "params": [
+      {
+        "name": "lat_s",
+        "default": 42.3,
+        "unit": "deg"
+      },
+      {
+        "name": "lat_n",
+        "default": 43.2,
+        "unit": "deg"
+      },
+      {
+        "name": "lon_w",
+        "default": -94.2,
+        "unit": "deg"
+      },
+      {
+        "name": "lon_e",
+        "default": -93.5,
+        "unit": "deg"
+      },
+      {
+        "name": "res_arcsec",
+        "default": 30.0,
+        "unit": "arcsec"
+      },
+      {
+        "name": "gauge_lat",
+        "default": 42.4319722,
+        "unit": "deg"
+      },
+      {
+        "name": "gauge_lon",
+        "default": -93.8059444,
+        "unit": "deg"
+      },
+      {
+        "name": "snap_radius",
+        "default": 3,
+        "unit": "cells"
+      },
+      {
+        "name": "dt",
+        "default": "1d"
+      },
+      {
+        "name": "c_ind_kgc",
+        "default": 1.5,
+        "unit": "kgC"
+      },
+      {
+        "name": "init_density_km2",
+        "default": 0.3,
+        "unit": "1/km2"
+      },
+      {
+        "name": "attack_km2_day",
+        "default": 0.02,
+        "unit": "km2/d"
+      },
+      {
+        "name": "handling_days",
+        "default": 20.0,
+        "unit": "d"
+      },
+      {
+        "name": "need_kgc_day",
+        "default": 0.1,
+        "unit": "kgC/d"
+      },
+      {
+        "name": "assimilation",
+        "default": 0.8
+      },
+      {
+        "name": "birth_per_day",
+        "default": 0.002,
+        "unit": "1/d"
+      },
+      {
+        "name": "mortality_per_day",
+        "default": 0.001,
+        "unit": "1/d"
+      },
+      {
+        "name": "starvation_per_day",
+        "default": 0.01,
+        "unit": "1/d"
+      },
+      {
+        "name": "move_frac",
+        "default": 0.1
+      }
+    ],
+    "publishes": [
+      {
+        "name": "predation.request",
+        "required": false,
+        "note": "{ by }"
+      }
+    ],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [
+      {
+        "name": "predation.done",
+        "required": false,
+        "note": "kills granted"
+      }
+    ],
+    "fields_owned": [
+      {
+        "name": "fauna.pred_kills",
+        "unit": "individuals",
+        "required": false
+      }
+    ],
+    "fields_read": [
+      {
+        "name": "fauna.herb_n",
+        "unit": "individuals",
+        "required": true,
+        "note": "prey density"
+      },
+      {
+        "name": "fauna.prey_taken",
+        "unit": "individuals",
+        "required": true,
+        "on": "predation.done"
+      },
+      {
+        "name": "fauna.prey_c_per_kill",
+        "unit": "kgC",
+        "required": true,
+        "on": "predation.done"
+      }
+    ],
+    "ledgers": [
+      {
+        "name": "animals",
+        "unit": "individuals",
+        "tolerance": 1e-6
+      },
+      {
+        "name": "carbon",
+        "unit": "kgC",
+        "tolerance": 0.001
+      }
+    ],
+    "frames": [
+      {
+        "name": "predator_density_km2",
+        "unit": "1/km2",
+        "required": false
+      }
+    ],
+    "reports": [
+      {
+        "name": "fauna.pred_total",
+        "unit": "individuals",
+        "required": false
+      },
+      {
+        "name": "fauna.pred_intake_kgc_day",
+        "unit": "kgC/day",
+        "required": false
+      }
+    ],
+    "views": [],
+    "assets": [
+      {
+        "key": "copernicus-dem-glo30",
+        "note": "basin cells"
+      }
+    ],
+    "notes": [
+      "Parameter provenance: devlog/20261101-m6-eaters.md"
+    ]
+  },
+  {
+    "kind": "hazard.fire",
+    "name": "hazard.fire",
+    "summary": "Cropland fire as a cellular automaton over the basin: ignition by chance, or forced on a date from the hazards table, spread to neighbours by fuel, dryness, warmth and wind, a refractory period after burning; publishes burning cells for the crop and the animals.",
+    "priority": 6,
+    "dt": "1d",
+    "params": [
+      {
+        "name": "lat_s",
+        "default": 42.3,
+        "unit": "deg"
+      },
+      {
+        "name": "lat_n",
+        "default": 43.2,
+        "unit": "deg"
+      },
+      {
+        "name": "lon_w",
+        "default": -94.2,
+        "unit": "deg"
+      },
+      {
+        "name": "lon_e",
+        "default": -93.5,
+        "unit": "deg"
+      },
+      {
+        "name": "res_arcsec",
+        "default": 30.0,
+        "unit": "arcsec"
+      },
+      {
+        "name": "gauge_lat",
+        "default": 42.4319722,
+        "unit": "deg"
+      },
+      {
+        "name": "gauge_lon",
+        "default": -93.8059444,
+        "unit": "deg"
+      },
+      {
+        "name": "snap_radius",
+        "default": 3,
+        "unit": "cells"
+      },
+      {
+        "name": "dt",
+        "default": "1d"
+      },
+      {
+        "name": "hazard_id",
+        "default": "cropland-fire-corn-belt",
+        "note": "row in data/events/hazards.toml"
+      },
+      {
+        "name": "setting",
+        "default": "",
+        "note": "off | on | forced; empty means the table's default"
+      },
+      {
+        "name": "forced_date",
+        "default": "",
+        "unit": "date"
+      },
+      {
+        "name": "forced_lat",
+        "default": 42.7,
+        "unit": "deg"
+      },
+      {
+        "name": "forced_lon",
+        "default": -93.85,
+        "unit": "deg"
+      },
+      {
+        "name": "ignition_per_cell_day",
+        "default": 2e-6,
+        "unit": "1/d"
+      },
+      {
+        "name": "spread_base",
+        "default": 0.35,
+        "note": "subcritical by default; 0.9 in the what-if"
+      },
+      {
+        "name": "fuel_min_gc_m2",
+        "default": 60.0,
+        "unit": "gC/m2"
+      },
+      {
+        "name": "soil_capacity_mm",
+        "default": 150.0,
+        "unit": "mm"
+      },
+      {
+        "name": "burn_days",
+        "default": 1,
+        "unit": "d"
+      },
+      {
+        "name": "refractory_days",
+        "default": 60,
+        "unit": "d"
+      }
+    ],
+    "publishes": [
+      {
+        "name": "hazard.loaded",
+        "required": false,
+        "note": "{ id, title, setting, confidence }"
+      },
+      {
+        "name": "fire.ignition",
+        "required": false,
+        "note": "at a cell: { hazard, setting, lat, lon }"
+      },
+      {
+        "name": "fire.burn",
+        "required": false,
+        "note": "{ cells, km2 }"
+      }
+    ],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [],
+    "fields_owned": [
+      {
+        "name": "fire.burned_frac",
+        "unit": "1",
+        "required": false
+      }
+    ],
+    "fields_read": [
+      {
+        "name": "water.soil_mm",
+        "unit": "mm",
+        "required": false,
+        "note": "dryness"
+      },
+      {
+        "name": "veg.biomass_gc_m2",
+        "unit": "gC/m2",
+        "required": false,
+        "note": "fuel"
+      },
+      {
+        "name": "wx.t2m_c",
+        "unit": "degC",
+        "required": false,
+        "note": "warmth"
+      },
+      {
+        "name": "wx.wind_m_s",
+        "unit": "m/s",
+        "required": false,
+        "note": "spread"
+      }
+    ],
+    "ledgers": [],
+    "frames": [
+      {
+        "name": "fire_burning",
+        "unit": "1",
+        "required": false
+      }
+    ],
+    "reports": [
+      {
+        "name": "fire.setting",
+        "unit": "0=off 1=on 2=forced",
+        "required": false
+      },
+      {
+        "name": "fire.ignitions_day",
+        "unit": "1/day",
+        "required": false
+      },
+      {
+        "name": "fire.burning_km2",
+        "unit": "km2",
+        "required": false
+      },
+      {
+        "name": "fire.burned_km2_total",
+        "unit": "km2",
+        "required": false
+      }
+    ],
+    "views": [],
+    "assets": [
+      {
+        "key": "copernicus-dem-glo30",
+        "note": "basin cells"
+      },
+      {
+        "key": "events/hazards.toml",
+        "note": "row cropland-fire-corn-belt"
+      }
+    ],
+    "notes": [
+      "Parameter provenance: devlog/20261101-m7-tearing.md"
+    ]
+  },
+  {
+    "kind": "agents.farms",
+    "name": "agents.farms",
+    "summary": "Farm agents on blocks of basin cells: choose corn or soy each spring by expected margin and rotation, plant when the soil is warm and workable and no rule forbids, pay costs, sell the harvest, keep a money ledger; write their orders as fields the crop and the nitrogen module read.",
+    "priority": 2,
+    "dt": "1d",
+    "params": [
+      {
+        "name": "lat_s",
+        "default": 42.3,
+        "unit": "deg"
+      },
+      {
+        "name": "lat_n",
+        "default": 43.2,
+        "unit": "deg"
+      },
+      {
+        "name": "lon_w",
+        "default": -94.2,
+        "unit": "deg"
+      },
+      {
+        "name": "lon_e",
+        "default": -93.5,
+        "unit": "deg"
+      },
+      {
+        "name": "res_arcsec",
+        "default": 30.0,
+        "unit": "arcsec"
+      },
+      {
+        "name": "gauge_lat",
+        "default": 42.4319722,
+        "unit": "deg"
+      },
+      {
+        "name": "gauge_lon",
+        "default": -93.8059444,
+        "unit": "deg"
+      },
+      {
+        "name": "snap_radius",
+        "default": 3,
+        "unit": "cells"
+      },
+      {
+        "name": "dt",
+        "default": "1d"
+      },
+      {
+        "name": "block_cells",
+        "default": 4,
+        "unit": "cells",
+        "note": "cells on a side of one farm block"
+      },
+      {
+        "name": "price_corn_usd_bu",
+        "default": 4.3,
+        "unit": "USD/bu"
+      },
+      {
+        "name": "price_soy_usd_bu",
+        "default": 10.2,
+        "unit": "USD/bu"
+      },
+      {
+        "name": "cost_corn_usd_ha",
+        "default": 1100.0,
+        "unit": "USD/ha"
+      },
+      {
+        "name": "cost_soy_usd_ha",
+        "default": 700.0,
+        "unit": "USD/ha"
+      },
+      {
+        "name": "land_cost_usd_ha",
+        "default": 650.0,
+        "unit": "USD/ha"
+      },
+      {
+        "name": "expect_corn_bu_ac",
+        "default": 200.0,
+        "unit": "bu/ac"
+      },
+      {
+        "name": "expect_soy_bu_ac",
+        "default": 58.0,
+        "unit": "bu/ac"
+      },
+      {
+        "name": "rotation_bonus_bu_ac",
+        "default": 12.0,
+        "unit": "bu/ac"
+      },
+      {
+        "name": "corn_on_corn_penalty_bu_ac",
+        "default": 20.0,
+        "unit": "bu/ac",
+        "note": "so the basin rotates about half and half"
+      },
+      {
+        "name": "n_rate_corn_kg_ha",
+        "default": 170.0,
+        "unit": "kgN/ha"
+      },
+      {
+        "name": "n_rate_soy_kg_ha",
+        "default": 0.0,
+        "unit": "kgN/ha"
+      },
+      {
+        "name": "n_price_usd_kg",
+        "default": 1.1,
+        "unit": "USD/kg"
+      },
+      {
+        "name": "kgc_per_bu_corn",
+        "default": 9.0,
+        "unit": "kgC/bu"
+      },
+      {
+        "name": "kgc_per_bu_soy",
+        "default": 12.0,
+        "unit": "kgC/bu"
+      },
+      {
+        "name": "plant_after_doy",
+        "default": 105,
+        "unit": "doy"
+      },
+      {
+        "name": "plant_t_c",
+        "default": 10.0,
+        "unit": "degC"
+      },
+      {
+        "name": "workable_soil_frac",
+        "default": 0.85,
+        "note": "of soil capacity"
+      },
+      {
+        "name": "soil_capacity_mm",
+        "default": 150.0,
+        "unit": "mm"
+      }
+    ],
+    "publishes": [],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [
+      {
+        "name": "harvest.done",
+        "required": false,
+        "note": "the crop has exported grain"
+      }
+    ],
+    "fields_owned": [
+      {
+        "name": "agents.crop_kind",
+        "unit": "0 none 1 corn 2 soy 3 grass",
+        "required": false
+      },
+      {
+        "name": "agents.plant_now",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "agents.n_rate_kg_ha",
+        "unit": "kgN/ha",
+        "required": false
+      }
+    ],
+    "fields_read": [
+      {
+        "name": "wx.t2m_c",
+        "unit": "degC",
+        "required": true,
+        "note": "warm days before planting"
+      },
+      {
+        "name": "water.soil_mm",
+        "unit": "mm",
+        "required": false,
+        "note": "workable soil"
+      },
+      {
+        "name": "rules.no_crop",
+        "required": false,
+        "note": "cells a rule closes to crops"
+      },
+      {
+        "name": "veg.grain_export_kgc",
+        "unit": "kgC",
+        "required": false,
+        "on": "harvest.done",
+        "note": "revenue"
+      }
+    ],
+    "ledgers": [
+      {
+        "name": "money",
+        "unit": "USD",
+        "tolerance": 0.001
+      }
+    ],
+    "frames": [],
+    "reports": [
+      {
+        "name": "agents.farm_blocks",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "agents.blocks_planted_day",
+        "unit": "1/day",
+        "required": false
+      },
+      {
+        "name": "agents.cash_total_usd",
+        "unit": "USD",
+        "required": false
+      },
+      {
+        "name": "agents.corn_ha",
+        "unit": "ha",
+        "required": false
+      },
+      {
+        "name": "agents.soy_ha",
+        "unit": "ha",
+        "required": false
+      },
+      {
+        "name": "agents.revenue_usd_day",
+        "unit": "USD/day",
+        "required": false
+      },
+      {
+        "name": "agents.corn_bu_day",
+        "unit": "bu/day",
+        "required": false
+      },
+      {
+        "name": "agents.soy_bu_day",
+        "unit": "bu/day",
+        "required": false
+      }
+    ],
+    "views": [],
+    "assets": [
+      {
+        "key": "copernicus-dem-glo30",
+        "note": "basin cells"
+      }
+    ],
+    "notes": [
+      "Parameter provenance: devlog/20261101-m9-takers.md; prices and costs are round numbers, not quotes"
+    ]
+  },
+  {
+    "kind": "rules.calendar",
+    "name": "rules.calendar",
+    "summary": "A dated land-use rule from the calendar table: from its effective date, cells within a buffer of the channel network are closed to crops; the field it writes is obeyed by the farms, the crop and the water module.",
+    "priority": 1,
+    "dt": "1d",
+    "params": [
+      {
+        "name": "lat_s",
+        "default": 42.3,
+        "unit": "deg"
+      },
+      {
+        "name": "lat_n",
+        "default": 43.2,
+        "unit": "deg"
+      },
+      {
+        "name": "lon_w",
+        "default": -94.2,
+        "unit": "deg"
+      },
+      {
+        "name": "lon_e",
+        "default": -93.5,
+        "unit": "deg"
+      },
+      {
+        "name": "res_arcsec",
+        "default": 30.0,
+        "unit": "arcsec"
+      },
+      {
+        "name": "gauge_lat",
+        "default": 42.4319722,
+        "unit": "deg"
+      },
+      {
+        "name": "gauge_lon",
+        "default": -93.8059444,
+        "unit": "deg"
+      },
+      {
+        "name": "snap_radius",
+        "default": 3,
+        "unit": "cells"
+      },
+      {
+        "name": "dt",
+        "default": "1d"
+      },
+      {
+        "name": "rule_id",
+        "default": "whatif-riparian-buffer-boone-2025",
+        "note": "row in data/events/calendar.toml"
+      },
+      {
+        "name": "buffer_cells",
+        "default": 1,
+        "unit": "cells"
+      },
+      {
+        "name": "channel_km2",
+        "default": 2.0,
+        "unit": "km2",
+        "note": "streams draining more than this get the buffer; 20 fits the Boone"
+      }
+    ],
+    "publishes": [
+      {
+        "name": "rule.loaded",
+        "required": false,
+        "note": "{ id, title, effective, confidence }"
+      },
+      {
+        "name": "rule.effective",
+        "required": false,
+        "note": "{ id, cells }"
+      }
+    ],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [],
+    "fields_owned": [
+      {
+        "name": "rules.no_crop",
+        "unit": "1",
+        "required": false
+      }
+    ],
+    "fields_read": [],
+    "ledgers": [],
+    "frames": [
+      {
+        "name": "rule_no_crop",
+        "unit": "1",
+        "required": false
+      }
+    ],
+    "reports": [
+      {
+        "name": "rules.buffer_cells",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "rules.effective",
+        "unit": "1",
+        "required": false
+      }
+    ],
+    "views": [],
+    "assets": [
+      {
+        "key": "copernicus-dem-glo30",
+        "note": "channel network"
+      },
+      {
+        "key": "events/calendar.toml",
+        "note": "row whatif-riparian-buffer-boone-2025"
+      }
+    ],
+    "notes": [
+      "Provenance: devlog/20261101-m10-rules.md"
+    ]
+  },
+  {
+    "kind": "nitrogen.basin",
+    "name": "nitrogen.basin",
+    "summary": "Soil nitrogen per basin cell: mineral and organic pools, fertiliser at the farms' rate on planting, mineralisation, crop uptake from biomass growth, soybean fixation, denitrification, leaching with drainage into the water module's tracer; harvest export; one ledger closed across two modules.",
+    "priority": 7,
+    "dt": "1d",
+    "params": [
+      {
+        "name": "lat_s",
+        "default": 42.3,
+        "unit": "deg"
+      },
+      {
+        "name": "lat_n",
+        "default": 43.2,
+        "unit": "deg"
+      },
+      {
+        "name": "lon_w",
+        "default": -94.2,
+        "unit": "deg"
+      },
+      {
+        "name": "lon_e",
+        "default": -93.5,
+        "unit": "deg"
+      },
+      {
+        "name": "res_arcsec",
+        "default": 30.0,
+        "unit": "arcsec"
+      },
+      {
+        "name": "gauge_lat",
+        "default": 42.4319722,
+        "unit": "deg"
+      },
+      {
+        "name": "gauge_lon",
+        "default": -93.8059444,
+        "unit": "deg"
+      },
+      {
+        "name": "snap_radius",
+        "default": 3,
+        "unit": "cells"
+      },
+      {
+        "name": "dt",
+        "default": "1d"
+      },
+      {
+        "name": "init_mineral_kg_ha",
+        "default": 40.0,
+        "unit": "kgN/ha"
+      },
+      {
+        "name": "init_organic_kg_ha",
+        "default": 8000.0,
+        "unit": "kgN/ha"
+      },
+      {
+        "name": "mineralisation_per_day",
+        "default": 0.00004,
+        "unit": "1/d"
+      },
+      {
+        "name": "denitrification_per_day",
+        "default": 0.004,
+        "unit": "1/d"
+      },
+      {
+        "name": "n_per_c_biomass",
+        "default": 0.025,
+        "unit": "kgN/kgC"
+      },
+      {
+        "name": "n_per_c_grain",
+        "default": 0.03,
+        "unit": "kgN/kgC"
+      },
+      {
+        "name": "soy_fixation_frac",
+        "default": 0.5
+      },
+      {
+        "name": "leach_efficiency",
+        "default": 1.0
+      },
+      {
+        "name": "soil_capacity_mm",
+        "default": 150.0,
+        "unit": "mm"
+      }
+    ],
+    "publishes": [
+      {
+        "name": "nitrogen.leached",
+        "required": false,
+        "note": "{ kg }"
+      }
+    ],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [
+      {
+        "name": "harvest.done",
+        "required": false,
+        "note": "export the grain's nitrogen"
+      }
+    ],
+    "fields_owned": [
+      {
+        "name": "nitrogen.leached_kg",
+        "unit": "kgN",
+        "required": false
+      }
+    ],
+    "fields_read": [
+      {
+        "name": "water.soil_mm",
+        "unit": "mm",
+        "required": true,
+        "note": "concentration"
+      },
+      {
+        "name": "water.drain_daily_mm",
+        "unit": "mm",
+        "required": true,
+        "note": "leaching"
+      },
+      {
+        "name": "agents.plant_now",
+        "required": false,
+        "note": "fertiliser on planting"
+      },
+      {
+        "name": "agents.n_rate_kg_ha",
+        "unit": "kgN/ha",
+        "required": false
+      },
+      {
+        "name": "agents.crop_kind",
+        "required": false,
+        "note": "soy fixes"
+      },
+      {
+        "name": "veg.biomass_gc_m2",
+        "unit": "gC/m2",
+        "required": false,
+        "note": "uptake from growth"
+      },
+      {
+        "name": "wx.t2m_c",
+        "unit": "degC",
+        "required": false
+      },
+      {
+        "name": "veg.grain_export_kgc",
+        "unit": "kgC",
+        "required": false,
+        "on": "harvest.done"
+      }
+    ],
+    "ledgers": [
+      {
+        "name": "nitrogen",
+        "unit": "kgN",
+        "tolerance": 0.001
+      }
+    ],
+    "frames": [],
+    "reports": [
+      {
+        "name": "nitrogen.soil_mineral_kg_ha",
+        "unit": "kgN/ha",
+        "required": false
+      },
+      {
+        "name": "nitrogen.leached_kg_day",
+        "unit": "kgN/day",
+        "required": false
+      },
+      {
+        "name": "nitrogen.fertilizer_kg_day",
+        "unit": "kgN/day",
+        "required": false
+      },
+      {
+        "name": "nitrogen.uptake_kg_day",
+        "unit": "kgN/day",
+        "required": false
+      },
+      {
+        "name": "nitrogen.mineralised_kg_day",
+        "unit": "kgN/day",
+        "required": false
+      },
+      {
+        "name": "nitrogen.harvest_export_kg",
+        "unit": "kgN",
+        "required": false
+      }
+    ],
+    "views": [],
+    "assets": [
+      {
+        "key": "copernicus-dem-glo30",
+        "note": "basin cells"
+      }
+    ],
+    "notes": [
+      "Parameter provenance: devlog/20261101-m11-nitrogen.md; nitrate comes out at twice the observed concentration because the crop takes up too little"
+    ]
+  },
+  {
+    "kind": "carbon.emissions",
+    "name": "carbon.emissions",
+    "summary": "Observed global CO2 emissions (Global Carbon Project via Our World in Data) released into the atmosphere month by month, fossil and land-use change as separate ledger sources. Nothing is modelled; this is the forcing that the record says happened.",
+    "priority": 0,
+    "dt": "1 month (calendar)",
+    "params": [
+      {
+        "name": "include_land_use",
+        "default": true,
+        "note": "land-use-change CO2 (deforestation etc.) as a second source account"
+      },
+      {
+        "name": "hold_last",
+        "default": true,
+        "note": "false stops emissions when the record ends, whatever after_record says"
+      },
+      {
+        "name": "after_record",
+        "default": "hold",
+        "note": "assumption after the record's last year (2024): hold = the last rate for good; stop; zero_by:YYYY = a straight line to zero in that year; grow:P = compound growth of P percent a year; trend:N = the record's own mean growth over its last N years, continued. An assumption, never a forecast; the manifest notes must say which was chosen and why"
+      }
+    ],
+    "publishes": [
+      {
+        "name": "carbon.emitted",
+        "required": false,
+        "note": "{ gtc, fossil_gtc, luc_gtc } for the month just added"
+      }
+    ],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [],
+    "fields_owned": [],
+    "fields_read": [],
+    "ledgers": [
+      {
+        "name": "carbon",
+        "unit": "GtC",
+        "tolerance": 1e-6
+      }
+    ],
+    "frames": [],
+    "reports": [
+      {
+        "name": "carbon.emissions_gtc_yr",
+        "unit": "GtC/yr",
+        "required": false
+      },
+      {
+        "name": "carbon.cumulative_gtc",
+        "unit": "GtC",
+        "required": false
+      }
+    ],
+    "views": [
+      {
+        "kind": "chart",
+        "title": "emissions",
+        "source": "carbon.emissions_gtc_yr",
+        "obs": "",
+        "note": "the record to 2024, then the assumption"
+      }
+    ],
+    "assets": [
+      {
+        "key": "owid-co2-data",
+        "note": "World rows: co2 and land_use_change_co2, Mt CO2 per year"
+      }
+    ],
+    "notes": [
+      "Mt CO2 to GtC by 12.011/44.009. The annual total is spread evenly over the twelve months of the year."
+    ]
+  },
+  {
+    "kind": "carbon.pools",
+    "name": "carbon.pools",
+    "summary": "Atmospheric CO2 as a mass ledger: emissions arrive as events, a fixed fraction stays for good and three fractions decay to the land-and-ocean sinks on three timescales (the Joos et al. 2013 multi-model impulse response). Reports the airborne concentration in ppm. Linear: sink saturation and climate-carbon feedback are not represented.",
+    "priority": 1,
+    "dt": "1 month (calendar)",
+    "params": [
+      {
+        "name": "co2_start_ppm",
+        "default": 286.8,
+        "unit": "ppm",
+        "note": "Law Dome spline at 1850 (MacFarling Meure et al. 2006): 286.8"
+      },
+      {
+        "name": "gtc_per_ppm",
+        "default": 2.124,
+        "unit": "GtC/ppm",
+        "note": "2.124, the conversion used by the Global Carbon Budget"
+      },
+      {
+        "name": "a0",
+        "default": 0.2173,
+        "note": "fraction never removed on these timescales; Joos et al. 2013 multi-model mean as tabulated in IPCC AR5 8.SM, recalled from memory and to be checked against the paper"
+      },
+      {
+        "name": "a1",
+        "default": 0.224,
+        "note": "fraction on tau1"
+      },
+      {
+        "name": "a2",
+        "default": 0.2824,
+        "note": "fraction on tau2"
+      },
+      {
+        "name": "a3",
+        "default": 0.2763,
+        "note": "fraction on tau3"
+      },
+      {
+        "name": "tau1_yr",
+        "default": 394.4,
+        "unit": "yr"
+      },
+      {
+        "name": "tau2_yr",
+        "default": 36.54,
+        "unit": "yr"
+      },
+      {
+        "name": "tau3_yr",
+        "default": 4.304,
+        "unit": "yr"
+      },
+      {
+        "name": "feedback",
+        "default": true,
+        "note": "scale the timescales each year so the 100-year integrated response equals r0 + rc * uptake + rt * T (Millar et al. 2017, the FaIR v1 carbon scheme); false is the fixed Joos response"
+      },
+      {
+        "name": "r0_yr",
+        "default": 35.0,
+        "unit": "yr",
+        "note": "pre-industrial 100-year integrated response; Millar et al. 2017 (recalled; to be checked)"
+      },
+      {
+        "name": "rc_yr_per_gtc",
+        "default": 0.019,
+        "unit": "yr/GtC",
+        "note": "sensitivity to cumulative uptake; same source and caveat"
+      },
+      {
+        "name": "rt_yr_per_k",
+        "default": 4.165,
+        "unit": "yr/K",
+        "note": "sensitivity to warming; same source and caveat"
+      }
+    ],
+    "publishes": [
+      {
+        "name": "carbon.co2",
+        "required": false,
+        "note": "{ ppm } after each monthly step"
+      }
+    ],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [
+      {
+        "name": "energy.state",
+        "required": false,
+        "note": "{ gmst_c } for the temperature feedback"
+      },
+      {
+        "name": "carbon.emitted",
+        "required": false,
+        "note": "{ gtc } added to the four pools by their fractions"
+      }
+    ],
+    "fields_owned": [],
+    "fields_read": [],
+    "ledgers": [
+      {
+        "name": "carbon",
+        "unit": "GtC",
+        "tolerance": 1e-6
+      }
+    ],
+    "frames": [],
+    "reports": [
+      {
+        "name": "carbon.co2_ppm",
+        "unit": "ppm",
+        "required": false
+      },
+      {
+        "name": "carbon.excess_gtc",
+        "unit": "GtC",
+        "required": false
+      },
+      {
+        "name": "carbon.airborne_fraction",
+        "required": false
+      },
+      {
+        "name": "carbon.alpha",
+        "required": false
+      }
+    ],
+    "views": [
+      {
+        "kind": "counter",
+        "title": "CO₂ in the air",
+        "source": "carbon.co2_ppm",
+        "obs": "",
+        "note": "parts per million"
+      },
+      {
+        "kind": "chart",
+        "title": "CO₂, model against Mauna Loa and the ice core",
+        "source": "carbon.co2_ppm",
+        "obs": "obs.co2_ppm",
+        "note": ""
+      },
+      {
+        "kind": "chart",
+        "title": "airborne fraction of all emissions so far",
+        "source": "carbon.airborne_fraction",
+        "obs": "",
+        "note": ""
+      }
+    ],
+    "assets": [],
+    "notes": [
+      "The ledger makes the turnover-versus-excess distinction concrete: molecules exchange fast, the excess mass drains slowly, and the stock the ledger checks is the excess."
+    ]
+  },
+  {
+    "kind": "energy.twolayer",
+    "name": "energy.twolayer",
+    "summary": "Global energy balance in two layers (Held et al. 2010; Geoffroy et al. 2013): CO2 forcing 5.35 ln(C/C0) warms a surface layer that radiates in proportion to its anomaly and exchanges heat with a deep ocean. Energy ledger in joules: forcing in from space, response out to space, uptake into the deep. CO2 only; other greenhouse gases and aerosols enter only through extra_forcing_w_m2.",
+    "priority": 2,
+    "dt": "1 month (calendar)",
+    "params": [
+      {
+        "name": "co2_ref_ppm",
+        "default": 286.8,
+        "unit": "ppm",
+        "note": "concentration at which forcing is zero; the carbon module's start"
+      },
+      {
+        "name": "alpha_w_m2",
+        "default": 5.35,
+        "unit": "W/m2",
+        "note": "Myhre et al. 1998 simplified expression for CO2"
+      },
+      {
+        "name": "lambda_w_m2_k",
+        "default": 1.13,
+        "unit": "W/m2/K",
+        "note": "climate feedback parameter; Geoffroy et al. 2013 CMIP5 multi-model mean, recalled from memory and to be checked"
+      },
+      {
+        "name": "gamma_w_m2_k",
+        "default": 0.73,
+        "unit": "W/m2/K",
+        "note": "deep ocean heat exchange coefficient; same source and caveat"
+      },
+      {
+        "name": "c_surface_w_yr_m2_k",
+        "default": 7.3,
+        "unit": "W yr/m2/K",
+        "note": "surface layer heat capacity; same source and caveat"
+      },
+      {
+        "name": "c_deep_w_yr_m2_k",
+        "default": 91.0,
+        "unit": "W yr/m2/K",
+        "note": "deep ocean heat capacity; same source and caveat"
+      },
+      {
+        "name": "extra_forcing_w_m2",
+        "default": 0.0,
+        "unit": "W/m2",
+        "note": "constant non-CO2 forcing; zero means CO2 only"
+      }
+    ],
+    "publishes": [
+      {
+        "name": "energy.state",
+        "required": false,
+        "note": "{ gmst_c, deep_c, forcing_w_m2, imbalance_w_m2, stored_zj } after each step, for modules downstream of the climate"
+      }
+    ],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [
+      {
+        "name": "carbon.co2",
+        "required": false,
+        "note": "{ ppm } sets the forcing for the next step"
+      },
+      {
+        "name": "forcing.extra",
+        "required": false,
+        "note": "{ name, w_m2 } from other modules (methane, N2O, aerosols), summed by name"
+      }
+    ],
+    "fields_owned": [],
+    "fields_read": [],
+    "ledgers": [
+      {
+        "name": "energy",
+        "unit": "J",
+        "tolerance": 10000000000.0
+      }
+    ],
+    "frames": [],
+    "reports": [
+      {
+        "name": "energy.gmst_anom_c",
+        "unit": "degC",
+        "required": false
+      },
+      {
+        "name": "energy.deep_anom_c",
+        "unit": "degC",
+        "required": false
+      },
+      {
+        "name": "energy.forcing_w_m2",
+        "unit": "W/m2",
+        "required": false
+      },
+      {
+        "name": "energy.imbalance_w_m2",
+        "unit": "W/m2",
+        "required": false
+      },
+      {
+        "name": "energy.stored_zj",
+        "unit": "ZJ",
+        "required": false
+      }
+    ],
+    "views": [
+      {
+        "kind": "counter",
+        "title": "warming since 1850",
+        "source": "energy.gmst_anom_c",
+        "obs": "",
+        "note": "global mean surface, °C"
+      },
+      {
+        "kind": "counter",
+        "title": "deep ocean warming",
+        "source": "energy.deep_anom_c",
+        "obs": "",
+        "note": "the part already bought"
+      },
+      {
+        "kind": "chart",
+        "title": "surface warming, model against HadCRUT5",
+        "source": "energy.gmst_anom_c",
+        "obs": "obs.gmst_hadcrut5_c",
+        "note": ""
+      },
+      {
+        "kind": "chart",
+        "title": "deep ocean",
+        "source": "energy.deep_anom_c",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "chart",
+        "title": "forcing",
+        "source": "energy.forcing_w_m2",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "chart",
+        "title": "energy imbalance",
+        "source": "energy.imbalance_w_m2",
+        "obs": "",
+        "note": ""
+      }
+    ],
+    "assets": [],
+    "notes": [
+      "Explicit monthly steps; the fastest timescale is C/(lambda+gamma), about four years, so the step is well resolved."
+    ]
+  },
+  {
+    "kind": "obs.planet",
+    "name": "obs.planet",
+    "summary": "The planetary scoreboards as series: CO2 from the Law Dome ice-core spline until Mauna Loa begins in 1959, then Mauna Loa annual means; global mean surface temperature from HadCRUT5 and GISTEMP, each shifted to a zero mean over the baseline years so they compare with a model that starts at zero. Reported on 1 July of each year.",
+    "priority": 3,
+    "dt": "1 year (1 July)",
+    "params": [
+      {
+        "name": "baseline_from",
+        "default": 1850.0,
+        "unit": "yr",
+        "note": "temperature anomalies are re-zeroed over this window"
+      },
+      {
+        "name": "baseline_to",
+        "default": 1900.0,
+        "unit": "yr",
+        "note": "GISTEMP starts in 1880, so its baseline is the overlap"
+      }
+    ],
+    "publishes": [],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [],
+    "fields_owned": [],
+    "fields_read": [],
+    "ledgers": [],
+    "frames": [],
+    "reports": [
+      {
+        "name": "obs.co2_ppm",
+        "unit": "ppm",
+        "required": false
+      },
+      {
+        "name": "obs.gmst_hadcrut5_c",
+        "unit": "degC",
+        "required": false
+      },
+      {
+        "name": "obs.gmst_gistemp_c",
+        "unit": "degC",
+        "required": false
+      }
+    ],
+    "views": [],
+    "assets": [
+      {
+        "key": "law-dome-2006",
+        "note": "CO2 spline, years before Mauna Loa"
+      },
+      {
+        "key": "noaa-gml-co2-annmean-mlo",
+        "note": "annual mean CO2 from 1959"
+      },
+      {
+        "key": "hadcrut5-global-annual",
+        "note": "annual anomaly vs 1961-1990"
+      },
+      {
+        "key": "gistemp-global-annual",
+        "note": "annual anomaly vs 1951-1980, J-D column"
+      }
+    ],
+    "notes": [
+      "A series reported here is an observation, never a model output; score a model series against it with esim score."
+    ]
+  },
+  {
+    "kind": "carbon.gases",
+    "name": "carbon.gases",
+    "summary": "Methane and nitrous oxide concentrations from the records (Law Dome ice core until the NOAA global means begin in 1984 and 2001), turned into radiative forcing by the simplified expressions of Myhre et al. 1998 with the CH4-N2O overlap, and published to the energy module. Beyond the record the last value is held: an assumption. No emissions and no chemistry; concentrations are read, not modelled.",
+    "priority": 1,
+    "dt": "1 year (1 January)",
+    "params": [
+      {
+        "name": "ch4_preindustrial_ppb",
+        "default": 722.0,
+        "unit": "ppb",
+        "note": "IPCC AR5 value, recalled"
+      },
+      {
+        "name": "n2o_preindustrial_ppb",
+        "default": 270.0,
+        "unit": "ppb",
+        "note": "IPCC AR5 value, recalled"
+      }
+    ],
+    "publishes": [
+      {
+        "name": "forcing.extra",
+        "required": false,
+        "note": "{ name: methane | n2o, w_m2 } each January"
+      }
+    ],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [],
+    "fields_owned": [],
+    "fields_read": [],
+    "ledgers": [],
+    "frames": [],
+    "reports": [
+      {
+        "name": "gases.ch4_ppb",
+        "unit": "ppb",
+        "required": false
+      },
+      {
+        "name": "gases.n2o_ppb",
+        "unit": "ppb",
+        "required": false
+      },
+      {
+        "name": "gases.forcing_ch4_w_m2",
+        "unit": "W/m2",
+        "required": false
+      },
+      {
+        "name": "gases.forcing_n2o_w_m2",
+        "unit": "W/m2",
+        "required": false
+      }
+    ],
+    "views": [],
+    "assets": [
+      {
+        "key": "law-dome-2006",
+        "note": "CH4 and N2O splines before the instrument records"
+      },
+      {
+        "key": "noaa-gml-ch4-annmean-gl",
+        "note": "global annual mean CH4 from 1984"
+      },
+      {
+        "key": "noaa-gml-n2o-annmean-gl",
+        "note": "global annual mean N2O from 2001"
+      }
+    ],
+    "notes": [
+      "The expressions are IPCC TAR Table 6.2 (Myhre et al. 1998); Etminan et al. 2016 revised methane upward by about a quarter and is the next step. Aerosols are still absent."
+    ]
+  },
+  {
+    "kind": "sea.thermal",
+    "name": "sea.thermal",
+    "summary": "Global mean sea level rise from thermal expansion alone: the energy module's stored heat times an expansion efficiency. Ice sheets and glaciers, which are the larger term this century, are not here yet; the number is a floor, and the describe says so.",
+    "priority": 3,
+    "dt": "follows energy.state",
+    "params": [
+      {
+        "name": "m_per_yj",
+        "default": 0.11,
+        "unit": "m/YJ",
+        "note": "expansion efficiency of ocean heat uptake, about 0.11 m per 10^24 J (Kuhlbrodt and Gregory 2012, recalled; to be checked)"
+      }
+    ],
+    "publishes": [],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [
+      {
+        "name": "energy.state",
+        "required": false,
+        "note": "{ stored_zj }"
+      }
+    ],
+    "fields_owned": [],
+    "fields_read": [],
+    "ledgers": [],
+    "frames": [],
+    "reports": [
+      {
+        "name": "sea.thermal_m",
+        "unit": "m",
+        "required": false
+      }
+    ],
+    "views": [
+      {
+        "kind": "counter",
+        "title": "sea level from expansion alone",
+        "source": "sea.thermal_m",
+        "obs": "",
+        "note": "metres; ice is not here yet"
+      }
+    ],
+    "assets": [],
+    "notes": [
+      "Thermal expansion only. No scoreboard yet: a satellite altimetry series has not been fetched."
+    ]
+  },
+  {
+    "kind": "forcing.ar6",
+    "name": "forcing.ar6",
+    "summary": "The IPCC AR6 assessed effective radiative forcing time series (1750 to 2019) for the components this model does not compute: aerosols (radiation and cloud interactions together), ozone, the other well-mixed greenhouse gases, stratospheric water vapour, contrails, black carbon on snow, land use, volcanoes and the sun, each published to the energy module by name. Read, not modelled. Beyond 2019 the stated assumption applies.",
+    "priority": 1,
+    "dt": "1 year (1 January)",
+    "params": [
+      {
+        "name": "components",
+        "default": [
+          "aerosol",
+          "o3",
+          "other_wmghg",
+          "h2o_stratospheric",
+          "contrails",
+          "bc_on_snow",
+          "land_use",
+          "volcanic",
+          "solar"
+        ],
+        "note": "columns of the AR6 file to carry; co2, ch4 and n2o are left to the carbon modules"
+      },
+      {
+        "name": "after_record",
+        "default": "hold",
+        "note": "beyond 2019: hold the 2019 value; mean_last_decade; zero. Aerosols are falling in the real world, so hold is a conservative-warm choice for them and the manifest should say so"
+      }
+    ],
+    "publishes": [
+      {
+        "name": "forcing.extra",
+        "required": false,
+        "note": "{ name, w_m2 } per component each January"
+      }
+    ],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [],
+    "fields_owned": [],
+    "fields_read": [],
+    "ledgers": [],
+    "frames": [],
+    "reports": [
+      {
+        "name": "forcing.ar6_total_w_m2",
+        "unit": "W/m2",
+        "required": false
+      },
+      {
+        "name": "forcing.ar6_aerosol_w_m2",
+        "unit": "W/m2",
+        "required": false
+      }
+    ],
+    "views": [
+      {
+        "kind": "chart",
+        "title": "aerosol forcing (assessed)",
+        "source": "forcing.ar6_aerosol_w_m2",
+        "obs": "",
+        "note": "held after 2019"
+      }
+    ],
+    "assets": [
+      {
+        "key": "ipcc-ar6-erf",
+        "note": "AR6 WG1 Chapter 7 ERF time series, 1750 to 2019"
+      }
+    ],
+    "notes": [
+      "Volcanic forcing after 2019 is held at the 2019 value under hold, which is near zero; a large eruption is not in any assumption here."
+    ]
+  },
+  {
+    "kind": "people.countries",
+    "name": "people.countries",
+    "summary": "Countries as a world raster (Natural Earth outlines) and people per country per year (UN World Population Prospects 2024: estimates to 2023, the UN medium projection after, which is the UN's assumption and labelled so), placed on the cells of each country either evenly by area or, in the worldpop distribution, in proportion to WorldPop's 1 km count of 2020. A data layer: nothing is modelled, people are read; WorldPop gives the pattern, the UN the count.",
+    "priority": 0,
+    "dt": "1 year (1 January)",
+    "params": [
+      {
+        "name": "res_deg",
+        "default": 2.0,
+        "unit": "deg",
+        "note": "world grid cell; 2 degrees is 16,200 cells, 0.5 is 259,200"
+      },
+      {
+        "name": "frame_res_deg",
+        "default": 2.0,
+        "unit": "deg",
+        "note": "map frames are folded to this coarser grid for the page"
+      },
+      {
+        "name": "frame_every_years",
+        "default": 5.0,
+        "unit": "yr",
+        "note": "map frames are written this often"
+      },
+      {
+        "name": "hold_before_record",
+        "default": true,
+        "note": "before 1950 the UN has no numbers; hold 1950 flat (a placeholder, not history; HYDE would be the record)"
+      },
+      {
+        "name": "scale",
+        "default": "110m",
+        "note": "Natural Earth scale for the outlines: 110m or 50m; use 50m below 2 degrees or small island states vanish"
+      },
+      {
+        "name": "distribution",
+        "default": "even",
+        "note": "even: a country's people spread evenly over its land cells; worldpop: in proportion to WorldPop's 1 km count"
+      }
+    ],
+    "publishes": [
+      {
+        "name": "people.population",
+        "required": false,
+        "note": "{ year, iso3: persons } each January"
+      }
+    ],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [],
+    "fields_owned": [
+      {
+        "name": "country.index",
+        "unit": "index",
+        "required": false
+      },
+      {
+        "name": "people.count",
+        "unit": "persons",
+        "required": false
+      },
+      {
+        "name": "people.density_km2",
+        "unit": "1/km2",
+        "required": false
+      }
+    ],
+    "fields_read": [],
+    "ledgers": [],
+    "frames": [],
+    "reports": [
+      {
+        "name": "people.world_total",
+        "unit": "persons",
+        "required": false
+      },
+      {
+        "name": "people.countries_matched",
+        "required": false
+      }
+    ],
+    "views": [
+      {
+        "kind": "counter",
+        "title": "people on Earth",
+        "source": "people.world_total",
+        "obs": "",
+        "note": "the UN's estimates to 2023 and its medium projection after"
+      },
+      {
+        "kind": "map",
+        "title": "people per square kilometre",
+        "source": "people_density_km2",
+        "obs": "",
+        "note": "a country's people spread evenly over its land"
+      }
+    ],
+    "assets": [
+      {
+        "key": "natural-earth-110m-countries",
+        "note": "outlines, ISO3 codes"
+      },
+      {
+        "key": "un-wpp-2024-total-population",
+        "note": "people per country per year"
+      }
+    ],
+    "notes": [
+      "Population is spread evenly over a country's land cells for the density map; distribution = worldpop places it by the 1 km count."
+    ]
+  },
+  {
+    "kind": "climate.countries",
+    "name": "climate.countries",
+    "summary": "Each country's mean temperature from its own record (CRU TS 4.07, 1901 to 2022, via the World Bank portal) regressed on the global anomaly (HadCRUT5, re-zeroed to 1850 to 1900): the slope is the country's observed share of global warming, the intercept its level. The run's global anomaly from the energy module times the slope gives the country's annual mean each year; the hottest month moves by the same slope from its 1991 to 2020 mean. Pattern scaling from the record; the stated assumption is that the pattern persists.",
+    "priority": 3,
+    "dt": "1 year (1 January), on the latest energy.state",
+    "params": [
+      {
+        "name": "res_deg",
+        "default": 2.0,
+        "unit": "deg",
+        "note": "must match people.countries"
+      },
+      {
+        "name": "frame_res_deg",
+        "default": 2.0,
+        "unit": "deg",
+        "note": "frames folded to this grid"
+      },
+      {
+        "name": "frame_every_years",
+        "default": 5.0,
+        "unit": "yr"
+      },
+      {
+        "name": "scale",
+        "default": "110m",
+        "note": "must match people.countries"
+      },
+      {
+        "name": "fit_from",
+        "default": 1901.0,
+        "unit": "yr",
+        "note": "regression window"
+      },
+      {
+        "name": "fit_to",
+        "default": 2022.0,
+        "unit": "yr"
+      },
+      {
+        "name": "clim_from",
+        "default": 1991.0,
+        "unit": "yr",
+        "note": "climatology window for the hottest month"
+      },
+      {
+        "name": "clim_to",
+        "default": 2020.0,
+        "unit": "yr"
+      },
+      {
+        "name": "anom_from",
+        "default": 2014.0,
+        "unit": "yr",
+        "note": "window the per-country anomaly (tas_anom_c) is measured against; the wet-bulb layer's observed years"
+      },
+      {
+        "name": "anom_to",
+        "default": 2023.0,
+        "unit": "yr"
+      },
+      {
+        "name": "cells_clim_from",
+        "default": 2001.0,
+        "unit": "yr",
+        "note": "window of the cells' baseline climatology (NASA POWER's, 2001 to 2025); tas_anom_cells_c is measured against it"
+      },
+      {
+        "name": "cells_clim_to",
+        "default": 2025.0,
+        "unit": "yr"
+      }
+    ],
+    "publishes": [
+      {
+        "name": "climate.country_tas",
+        "required": false,
+        "note": "{ year, by_iso3: { tas_c, hot_month_c, slope, tas_anom_c, tas_anom_cells_c } } each January; tas_anom_c is the country's warming since the anom window, tas_anom_cells_c since the cells' climatology window"
+      }
+    ],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [
+      {
+        "name": "energy.state",
+        "required": false,
+        "note": "{ gmst_c } the global anomaly"
+      }
+    ],
+    "fields_owned": [
+      {
+        "name": "climate.tas_c",
+        "unit": "degC",
+        "required": false
+      },
+      {
+        "name": "climate.hot_month_c",
+        "unit": "degC",
+        "required": false
+      }
+    ],
+    "fields_read": [
+      {
+        "name": "country.index",
+        "unit": "index",
+        "required": true,
+        "note": "which cell is which country"
+      }
+    ],
+    "ledgers": [],
+    "frames": [],
+    "reports": [
+      {
+        "name": "climate.slope_median",
+        "unit": "degC/degC",
+        "required": false
+      },
+      {
+        "name": "climate.countries_fitted",
+        "required": false
+      },
+      {
+        "name": "climate.hottest_country_tas_c",
+        "unit": "degC",
+        "required": false
+      }
+    ],
+    "views": [
+      {
+        "kind": "map",
+        "title": "annual mean temperature by country",
+        "source": "climate_tas_c",
+        "obs": "",
+        "note": "each country's record scaled by the run's warming"
+      },
+      {
+        "kind": "map",
+        "title": "hottest month by country",
+        "source": "climate_hot_month_c",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "chart",
+        "title": "hottest country's annual mean",
+        "source": "climate.hottest_country_tas_c",
+        "obs": "",
+        "note": ""
+      }
+    ],
+    "assets": [
+      {
+        "key": "worldbank-cckp-cru-tas-annual",
+        "note": "country annual means 1901 to 2022"
+      },
+      {
+        "key": "worldbank-cckp-cru-tas-monthly",
+        "note": "country monthly means for the hottest-month climatology"
+      },
+      {
+        "key": "hadcrut5-global-annual",
+        "note": "the global anomaly the records are regressed on"
+      },
+      {
+        "key": "natural-earth-110m-countries",
+        "note": "the country list"
+      }
+    ],
+    "notes": [
+      "A country's variance about the fit is lost; years are given their fitted value, not their weather. Countries missing from the record (Antarctica, a few territories) get no temperature and are counted in climate.countries_fitted."
+    ]
+  },
+  {
+    "kind": "people.heat",
+    "name": "people.heat",
+    "summary": "People living in countries whose annual mean temperature has left the human climate niche, and in countries whose hottest month passes a second marker. Counts, not deaths: exposure from a population layer and a temperature layer. A country crosses whole, because the temperature is a country mean; the first year it crosses, a people.crossing event is published for the auditor.",
+    "priority": 4,
+    "dt": "follows climate.country_tas",
+    "params": [
+      {
+        "name": "res_deg",
+        "default": 2.0,
+        "unit": "deg",
+        "note": "must match people.countries"
+      },
+      {
+        "name": "frame_res_deg",
+        "default": 2.0,
+        "unit": "deg",
+        "note": "frames folded to this grid"
+      },
+      {
+        "name": "frame_every_years",
+        "default": 5.0,
+        "unit": "yr"
+      },
+      {
+        "name": "baseline",
+        "default": "country",
+        "note": "country: one annual mean per country from its record; cells: each populated cell's own climatological mean from the reanalysis, shifted by its country's warming"
+      },
+      {
+        "name": "scale",
+        "default": "110m",
+        "note": "must match people.countries"
+      },
+      {
+        "name": "niche_c",
+        "default": 29.0,
+        "unit": "degC",
+        "note": "mean annual temperature at the hot edge of the human climate niche, Xu et al. 2020 PNAS (recalled; to be checked)"
+      },
+      {
+        "name": "hot_month_c",
+        "default": 32.0,
+        "unit": "degC",
+        "note": "a hottest-month mean marker with no paper behind it: a guess, kept to show the shape until a wet-bulb layer exists"
+      }
+    ],
+    "publishes": [
+      {
+        "name": "people.crossing",
+        "required": false,
+        "note": "{ iso3, name, year, kind: niche | hot_month, persons } the first year a country crosses; a country already over a marker in the run's first year is a state of its climate, not a crossing, and is not announced"
+      }
+    ],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [
+      {
+        "name": "people.population",
+        "required": false,
+        "note": "{ by_iso3 }"
+      },
+      {
+        "name": "climate.country_tas",
+        "required": false,
+        "note": "{ by_iso3: { tas_c, hot_month_c, tas_anom_cells_c } }"
+      }
+    ],
+    "fields_owned": [
+      {
+        "name": "people.outside_niche",
+        "unit": "1",
+        "required": false
+      }
+    ],
+    "fields_read": [
+      {
+        "name": "country.index",
+        "unit": "index",
+        "required": true,
+        "note": "which cell is which country"
+      }
+    ],
+    "ledgers": [],
+    "frames": [
+      {
+        "name": "people_outside_niche",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "people_niche_crossing_year",
+        "unit": "year",
+        "required": false
+      }
+    ],
+    "reports": [
+      {
+        "name": "people.outside_niche",
+        "unit": "persons",
+        "required": false
+      },
+      {
+        "name": "people.outside_niche_pct",
+        "unit": "%",
+        "required": false
+      },
+      {
+        "name": "people.countries_outside_niche",
+        "required": false
+      },
+      {
+        "name": "people.crossings_niche",
+        "required": false
+      },
+      {
+        "name": "people.hot_month_over",
+        "unit": "persons",
+        "required": false
+      },
+      {
+        "name": "people.crossings_hot_month",
+        "required": false
+      }
+    ],
+    "views": [
+      {
+        "kind": "counter",
+        "title": "people outside the human climate niche",
+        "source": "people.outside_niche",
+        "obs": "",
+        "note": "annual mean above 29 °C where they live; a count, not a toll"
+      },
+      {
+        "kind": "counter",
+        "title": "countries outside the niche",
+        "source": "people.countries_outside_niche",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "map",
+        "title": "outside the niche",
+        "source": "people_outside_niche",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "map",
+        "title": "the year each country left the niche",
+        "source": "people_niche_crossing_year",
+        "obs": "",
+        "note": "fills in as the cursor passes each crossing"
+      },
+      {
+        "kind": "crossings",
+        "title": "countries crossing",
+        "source": "people.crossing",
+        "obs": "",
+        "note": "the first year a country passes a marker; the source of each marker is in the parameters"
+      },
+      {
+        "kind": "chart",
+        "title": "people outside the niche",
+        "source": "people.outside_niche",
+        "obs": "",
+        "note": ""
+      }
+    ],
+    "assets": [
+      {
+        "key": "natural-earth-110m-countries",
+        "note": "names for the crossing events"
+      }
+    ],
+    "notes": [
+      "No mortality here on purpose; a mortality layer with published exposure-response curves and their ranges is a separate, later module."
+    ]
+  },
+  {
+    "kind": "people.wetbulb",
+    "name": "people.wetbulb",
+    "summary": "Days per year of dangerous afternoon wet-bulb temperature at each country's capital, and the people in those countries. Ten observed years of daily maximum temperature and mean dew point at the weather station nearest the capital (NOAA GSOD) give a daily afternoon wet-bulb (Stull 2011); each is shifted by the country's warming at constant relative humidity and the days over two published limits counted. Exposure at one city per country, not a death toll; a crossing event the first year a capital passes a limit on more than days_to_cross days.",
+    "priority": 4,
+    "dt": "follows climate.country_tas",
+    "params": [
+      {
+        "name": "res_deg",
+        "default": 2.0,
+        "unit": "deg",
+        "note": "must match people.countries"
+      },
+      {
+        "name": "frame_res_deg",
+        "default": 2.0,
+        "unit": "deg",
+        "note": "frames folded to this grid"
+      },
+      {
+        "name": "frame_every_years",
+        "default": 5.0,
+        "unit": "yr"
+      },
+      {
+        "name": "source",
+        "default": "station",
+        "note": "station: one GSOD station per capital; cells: the reanalysis at every populated cell"
+      },
+      {
+        "name": "scale",
+        "default": "110m",
+        "note": "must match people.countries"
+      },
+      {
+        "name": "year_from",
+        "default": 2014.0,
+        "unit": "yr",
+        "note": "observed daily window"
+      },
+      {
+        "name": "year_to",
+        "default": 2023.0,
+        "unit": "yr",
+        "note": "ten station-years, about 90 KB each"
+      },
+      {
+        "name": "limit_a_c",
+        "default": 31.0,
+        "unit": "degC wet-bulb",
+        "note": "the limit for young healthy adults at rest found in chamber studies, Vecellio et al. 2022 J Appl Physiol (recalled; to be checked)"
+      },
+      {
+        "name": "limit_b_c",
+        "default": 35.0,
+        "unit": "degC wet-bulb",
+        "note": "the theoretical survivability limit, Sherwood and Huber 2010 PNAS (recalled)"
+      },
+      {
+        "name": "days_to_cross",
+        "default": 3.0,
+        "unit": "d/yr",
+        "note": "a place passes a limit when its afternoon wet-bulb exceeds it on more than this many days in a year"
+      },
+      {
+        "name": "delta_max_c",
+        "default": 8.0,
+        "unit": "degC",
+        "note": "warming range tabulated at load"
+      },
+      {
+        "name": "delta_step_c",
+        "default": 0.1,
+        "unit": "degC"
+      },
+      {
+        "name": "station_max_km",
+        "default": 80.0,
+        "unit": "km",
+        "note": "a capital with no reporting station this close is left out and counted"
+      }
+    ],
+    "publishes": [
+      {
+        "name": "people.crossing",
+        "required": false,
+        "note": "{ iso3, name, capital, station, year, kind: wetbulb_a | wetbulb_b, persons, days } the first year a capital passes a limit on days_to_cross days"
+      }
+    ],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [
+      {
+        "name": "people.population",
+        "required": false,
+        "note": "{ by_iso3 }"
+      },
+      {
+        "name": "climate.country_tas",
+        "required": false,
+        "note": "{ by_iso3: { tas_anom_c } } the country's warming since the observed window"
+      }
+    ],
+    "fields_owned": [
+      {
+        "name": "wetbulb.days_over_a",
+        "unit": "d/yr",
+        "required": false
+      }
+    ],
+    "fields_read": [
+      {
+        "name": "country.index",
+        "unit": "index",
+        "required": true,
+        "note": "which cell is which country"
+      }
+    ],
+    "ledgers": [],
+    "frames": [
+      {
+        "name": "wetbulb_days_over_31",
+        "unit": "d/yr",
+        "required": false
+      },
+      {
+        "name": "wetbulb_crossing_year",
+        "unit": "year",
+        "required": false
+      }
+    ],
+    "reports": [
+      {
+        "name": "wetbulb.people_over_a",
+        "unit": "persons",
+        "required": false
+      },
+      {
+        "name": "wetbulb.people_over_b",
+        "unit": "persons",
+        "required": false
+      },
+      {
+        "name": "wetbulb.people_days_over_a",
+        "unit": "person-days/yr",
+        "required": false
+      },
+      {
+        "name": "wetbulb.people_capital_over_a",
+        "unit": "persons",
+        "required": false
+      },
+      {
+        "name": "wetbulb.people_capital_over_b",
+        "unit": "persons",
+        "required": false
+      },
+      {
+        "name": "wetbulb.capitals_over_a",
+        "required": false
+      },
+      {
+        "name": "wetbulb.capitals_over_b",
+        "required": false
+      },
+      {
+        "name": "wetbulb.capitals_with_data",
+        "required": false
+      }
+    ],
+    "views": [
+      {
+        "kind": "counter",
+        "title": "people whose capital passes 31 °C wet-bulb on three days a year",
+        "source": "wetbulb.people_over_a",
+        "obs": "",
+        "note": "the limit for healthy adults at rest; one station per country"
+      },
+      {
+        "kind": "counter",
+        "title": "people whose capital passes 35 °C wet-bulb",
+        "source": "wetbulb.people_over_b",
+        "obs": "",
+        "note": "the theoretical survivability limit"
+      },
+      {
+        "kind": "map",
+        "title": "days a year over 31 °C wet-bulb at the capital",
+        "source": "wetbulb_days_over_31",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "map",
+        "title": "the year each capital crossed 31 °C wet-bulb",
+        "source": "wetbulb_crossing_year",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "crossings",
+        "title": "capitals crossing",
+        "source": "people.crossing",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "chart",
+        "title": "people whose capital passes 31 °C wet-bulb",
+        "source": "wetbulb.people_over_a",
+        "obs": "",
+        "note": ""
+      }
+    ],
+    "assets": [
+      {
+        "key": "natural-earth-110m-countries",
+        "note": "names for the crossing events"
+      },
+      {
+        "key": "natural-earth-110m-populated-places",
+        "note": "capital per country"
+      },
+      {
+        "key": "noaa-isd-history",
+        "note": "the station nearest each capital"
+      },
+      {
+        "key": "noaa-gsod",
+        "note": "daily maximum temperature and mean dew point at that station"
+      }
+    ],
+    "notes": [
+      "The afternoon wet-bulb is estimated from the day's maximum temperature and the day's mean dew point, which runs a little high; constant relative humidity under warming is the standard first-order assumption and is stated as one. One station stands for a country, so a populous country crossing moves the count by its whole population in one year; source = cells removes that step."
+    ]
+  },
+  {
+    "kind": "tipping.elements",
+    "name": "tipping.elements",
+    "summary": "The climate tipping elements from data/events/tipping.toml, each with the global warming at which an assessment judged it likely to tip (a central estimate and a range) and its timescale, checked every year against the run's global anomaly. A tipping.crossing event the first year the run passes an element's low end and again its central estimate. The table is the claim; the module only compares.",
+    "priority": 5,
+    "dt": "follows energy.state, once a year",
+    "params": [],
+    "publishes": [
+      {
+        "name": "tipping.crossing",
+        "required": false,
+        "note": "{ id, title, year, level: low | central, threshold_c, gmst_c, timescale, consequence, source, confidence }"
+      }
+    ],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [
+      {
+        "name": "energy.state",
+        "required": false,
+        "note": "{ gmst_c }"
+      }
+    ],
+    "fields_owned": [],
+    "fields_read": [],
+    "ledgers": [],
+    "frames": [],
+    "reports": [
+      {
+        "name": "tipping.elements_past_low",
+        "required": false
+      },
+      {
+        "name": "tipping.elements_past_central",
+        "required": false
+      }
+    ],
+    "views": [
+      {
+        "kind": "counter",
+        "title": "tipping elements past their central estimate",
+        "source": "tipping.elements_past_central",
+        "obs": "",
+        "note": "a flag with a citation, not a tip in this run"
+      },
+      {
+        "kind": "crossings",
+        "title": "tipping thresholds passed",
+        "source": "tipping.crossing",
+        "obs": "",
+        "note": "every row of the table is marked recalled until checked against the paper"
+      }
+    ],
+    "assets": [
+      {
+        "key": "events/tipping.toml",
+        "note": "the elements and their thresholds, with provenance and confidence per row"
+      }
+    ],
+    "notes": [
+      "Passing a threshold does not tip the element in this run; nothing feeds back yet. It is a flag with a citation, which is what the words-only essays lack."
+    ]
+  },
+  {
+    "kind": "story.bottomline",
+    "name": "story.bottomline",
+    "summary": "The bottom line of a planetary run, told as it happens: the headline numbers at the cursor and one plain sentence for every threshold crossed, each sentence written by the module that knows its source. It computes nothing new and it says, in the same place, what this run does not yet measure.",
+    "priority": 9,
+    "dt": "follows the crossing events",
+    "params": [],
+    "publishes": [],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [
+      {
+        "name": "people.crossing",
+        "required": false,
+        "note": "sentences"
+      },
+      {
+        "name": "tipping.crossing",
+        "required": false,
+        "note": "sentences"
+      },
+      {
+        "name": "people.population",
+        "required": false,
+        "note": "the count"
+      }
+    ],
+    "fields_owned": [],
+    "fields_read": [],
+    "ledgers": [],
+    "frames": [],
+    "reports": [
+      {
+        "name": "story.headlines",
+        "required": false
+      }
+    ],
+    "views": [
+      {
+        "kind": "map",
+        "title": "people living outside the human climate niche",
+        "source": "people_outside_niche",
+        "obs": "",
+        "note": "annual mean above 29 °C"
+      },
+      {
+        "kind": "map",
+        "title": "days a year over 31 °C wet-bulb",
+        "source": "wetbulb_days_over_31",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "map",
+        "title": "the year each place crossed 31 °C wet-bulb",
+        "source": "wetbulb_crossing_year",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "counter",
+        "title": "people on Earth",
+        "source": "people.world_total",
+        "obs": "",
+        "note": "UN estimates to 2023, the UN medium projection after"
+      },
+      {
+        "kind": "counter",
+        "title": "warming since 1850",
+        "source": "energy.gmst_anom_c",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "counter",
+        "title": "people outside the human climate niche",
+        "source": "people.outside_niche",
+        "obs": "",
+        "note": "annual mean above 29 °C where they live"
+      },
+      {
+        "kind": "counter",
+        "title": "people living where the wet-bulb limit is passed",
+        "source": "wetbulb.people_over_a",
+        "obs": "",
+        "note": "31 °C on more than three afternoons a year"
+      },
+      {
+        "kind": "counter",
+        "title": "person-days a year over the wet-bulb limit",
+        "source": "wetbulb.people_days_over_a",
+        "obs": "",
+        "note": "people times days"
+      },
+      {
+        "kind": "counter",
+        "title": "tipping elements past their central estimate",
+        "source": "tipping.elements_past_central",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "counter",
+        "title": "sea level from expansion alone",
+        "source": "sea.thermal_m",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "story",
+        "title": "what has happened so far",
+        "source": "crossing",
+        "obs": "",
+        "note": "one sentence per threshold crossed, newest first; the source is beside each"
+      },
+      {
+        "kind": "text",
+        "title": "what this run does not yet measure",
+        "source": "Not in this run, so not in these numbers: deaths from heat (a published exposure-response layer is next), harvests and food prices, forest cover and the carbon it would release, biodiversity, fresh water, sea level from ice, migration, and any response by people to any of it. The population here is the UN's path, which assumes none of the above changes where people live. Every crossing above is a count of people living where a stated limit is passed, not a toll, and the model runs about 0.15 °C warm in 2024. The warming applied to a place is its country's, from the country record: within a country, the pattern of the recent past is held.",
+        "obs": "",
+        "note": ""
+      }
+    ],
+    "assets": [],
+    "notes": []
+  }
+]

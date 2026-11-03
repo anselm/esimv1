@@ -66,14 +66,28 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   `people.heat` with `baseline = "cells"`, `people.wetbulb` with `source = "cells"`, all at
   `res_deg = 0.5` with `frame_res_deg = 1.0`. Data: WorldPop 2020 1 km (870 MB GeoTIFF, LZW,
   read tile by tile; the sum per cell is cached beside it) and NASA POWER (MERRA-2) regional
-  boxes, 10 degrees and one year per request, about 7,200 answers for 343 populated boxes,
+  boxes, 10 degrees and one year per request, about 7,550 answers for 343 populated boxes (daily boxes, climatology and the 1981 to 2025 monthly means),
   reduced to tenths-of-a-degree tables (`fetch_reduced`). `esim warm cells` fetches them ahead
   (105 minutes on 2026-11-03, about one request a second); the cache is then 3.3 GB. POWER's
   reduced tables keep keys in string order, so a climatology's columns run ANN, APR, AUG, ...;
   read them by name (`cells::clim_index`), never by position (the annual mean was read as
   September until 2026-11-03). The per-country warming slope fitted to CRU runs high for small
   islands and Gulf states (Puerto Rico 1.78, Qatar 1.75 °C per °C global); a gridded pattern
-  is the planned replacement. The country modes are the defaults and still reproduce the old runs.
+  was tried as a replacement by a per-cell pattern from MERRA-2's own 1981 to 2025 trend
+  (`pattern = "cells"`, `cells::warming_pattern`, 5-degree blocks): it fails over South Asia,
+  where MERRA-2 cools while the globe warms, so `climate.countries` draws the map for the record
+  and the cell layers keep `pattern = "country"`; a CMIP6 pattern (WorldClim's downscaled
+  tiles) is the noted next route. The country modes are the defaults and still reproduce the old runs.
+- The regression ladder (2026-11-03): `esim regress` runs `regress/ladder.toml` (planet to 2025
+  with and without people, the Boone year) against `regress/baseline.json` within stated
+  tolerances and fails on drift; `--accept` records a new baseline, which is a decision to
+  explain in the devlog. Run it before committing anything that touches a planet or basin module.
+- The first cascade (2026-11-03): `carbon.tipped` releases the carbon a `[element.carbon]` table
+  in `data/events/tipping.toml` states (permafrost abrupt thaw per degree, Amazon 30 GtC,
+  permafrost collapse 125 GtC; Armstrong McKay et al. 2022, checked) into the carbon ledger
+  once the element is past its central estimate (`trigger = "low"` for the range's bottom, the
+  project's `held-low` variant). It comes to about +5 ppm and +0.02 °C by 2099 in the held
+  variant, +0.1 °C at the low end. Every tipping row is now `checked` against the paper's Table 1.
 - Manifests may `include = ["other.toml"]`; `Manifest::load` resolves, project folders get
   the resolved text. Projects may declare `[[variant]]` sets; runs record `variant.json`.
 - Planetary rungs (`manifests/p1-*`, `crates/modules/src/planet.rs`) are zero-dimensional

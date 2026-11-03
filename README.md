@@ -32,7 +32,7 @@ what the run does not yet measure.
   gauges, stations, reanalyses, satellite vegetation, emissions, ice cores, temperature
   records, population, country outlines and the station network. Nothing synthetic,
   including in tests.
-- **Modules** (`crates/modules`): twenty-six kinds today. For a basin: solar irradiance
+- **Modules** (`crates/modules`): twenty-seven kinds today. For a basin: solar irradiance
   on terrain, a surface heat slab, reanalysis weather, a water balance routed to the
   gauge, a crop, herbivore and predator cohorts, fire, farm agents, calendar rules, soil
   nitrogen to the river. For the planet: observed emissions into a carbon ledger, a carbon
@@ -40,13 +40,16 @@ what the run does not yet measure.
   two-layer energy balance, thermal sea level, the records as scoreboards; then people on
   half-degree cells: WorldPop's pattern at the UN's count, each country's temperature from
   its own record, the human climate niche and the wet-bulb limits checked cell by cell
-  against a reanalysis baseline, the tipping elements' thresholds, and a bottom-line module
-  that tells the run as sentences with sources.
+  against a reanalysis baseline, the tipping elements' thresholds (every row checked against
+  the assessment's table), the first cascade (permafrost and Amazon carbon released into the
+  carbon ledger once an element is past its threshold), and a bottom-line module that tells
+  the run as sentences with sources.
 - **Auditor** (`crates/audit`): reads a finished run and never the live one: every stock
   spent or built, diversity, shocks and recovery against recurrence, crossings, tears,
   and a verdict of holds, stretching or tearing. It lists what it could not measure.
 - **Command line** (`crates/cli`, binary `esim`): run, verify, ensemble, sweep, score,
-  audit, check, describe, kinds, projects, sources.
+  audit, check, describe, kinds, projects, sources, regress (the hindcast ladder, which
+  every coupling must leave where it was or move on purpose).
 - **Viewer and server** (`web/`): Svelte pages composed from each module's own declared
   views in the manifest's order, maps under one time cursor; a Node server that serves
   the pages and folders and, when not read-only, lists, drafts (with a model), checks,
@@ -59,7 +62,9 @@ They are the point of the system and are enforced by code where code can:
 - Real records or nothing; a formula check is labelled as one.
 - Every parameter is named, defaulted and sourced; a guess says "guess"; a number recalled
   from memory and not yet checked against its paper says "recalled".
-- Nothing is tuned by hand; the hindcast harness moves parameters by method.
+- Nothing is tuned by hand; the hindcast harness moves parameters by method, and the
+  regression ladder fails any change that moves a hindcast score unless it is accepted
+  by hand with its reason in the devlog.
 - A run past a record is an assumption, named in the manifest, never a forecast.
 - Accounts balance: a ledger leak above tolerance fails the run.
 - Runs are reproducible: the same manifest and seed give the same digest; a run folder
@@ -79,6 +84,7 @@ cargo build --release
 ./target/release/esim warm cells                                   # once, ~100 min: the 1 km people and the reanalysis boxes the planet-2100 project reads
 ./target/release/esim run manifests/m3-water-boone.toml            # a year of basin hydrology, about 40 s
 ./target/release/esim verify manifests/m2-heat-boone-week.toml     # determinism and replay
+./target/release/esim regress                                      # the hindcast ladder against regress/baseline.json; --accept records a new one
 cargo test --release                                               # about 40 s with the data cached
 
 # projects: a folder with a manifest, a description and runs; variants are named overrides
@@ -102,6 +108,7 @@ kernel check it before anything runs.
 crates/        kernel, registry, modules, audit, cli
 manifests/     the ladder, from two buckets to the planet; bundles to include
 projects/      <area>/<name>/{project.toml, manifest.toml, runs/}   (runs are not in git)
+regress/       ladder.toml, the hindcast rungs; baseline.json, their accepted scores
 docs/          documentation pages, docs/<area>/<name>.md; docs/system/ is the simulator's own
 data/          catalog.toml, catalog.lock.toml, events/ tables      (cache/ is not in git)
 devlog/        dated entries: the design brief and every decision since
@@ -114,7 +121,9 @@ todo.md        open research projects and layers, one line each
 The basin stack reproduces the shape of the gauge record and runs high on nitrate; the
 planet hindcast is within a few percent of Mauna Loa and about 0.15 °C warm in 2024
 against HadCRUT5; the cell layers count people living where stated limits are
-passed, with the warming still applied per country. The known faults
+passed, with the warming still applied per country (the reanalysis's own trend was tried
+as a pattern and fails over South Asia); the first cascade moves the assessment's
+permafrost and Amazon carbon and comes to a tenth of a degree by 2100. The known faults
 are on the Limits page and in the devlog, which is the project's memory: start with
 `devlog/20261031-design-brief.md`, then the milestone entries, then the latest day.
 

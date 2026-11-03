@@ -29,8 +29,9 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
   sentence, instead of planet-sized totals alone.
 - Coincidence: the count of stated limits a country has crossed this year, mapped zero to
   five; the stress board on the platform list is this.
-- Cascade: consequence modules that subscribe to crossings and move a stock someone reads,
-  in this order: permafrost and Amazon crossings into the carbon ledger; ice-sheet
+- Cascade: consequence modules that subscribe to crossings and move a stock someone reads.
+  Done 2026-11-03: permafrost and Amazon carbon into the carbon ledger (`carbon.tipped`;
+  a tenth of a degree by 2100 at the low end). Next, in this order: ice-sheet
   crossings into sea level; AMOC into regional temperature (its sign differs; keep it for
   that reason); country temperature into harvest; harvest and heat into migration and
   migration into who lives under which heat. Every parameter recalled until checked, and
@@ -70,13 +71,14 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
 
 ## Platform
 
-- A gridded warming pattern (pattern scaling from an ensemble, or the reanalysis's own trend
-  per cell) in place of one fitted slope per country: small islands and Gulf states fit at
-  1.4 to 1.8 °C per °C global and cross the niche on the slope, not the heat (2026-11-03,
-  `devlog/20261102-why-it-reads-mild.md`).
-- Check the niche counts against Lenton et al. 2023 (read the paper: their baseline, their
-  population path, their India), and the wet-bulb baseline against Gulf stations (Raymond
-  et al. 2020); both are recalled comparisons today.
+- A model-ensemble warming pattern in place of one fitted slope per country: WorldClim's
+  CMIP6 downscaled annual means (2081 to 2100, anonymous GeoTIFFs) minus its 1970 to 2000
+  baseline, per model, divided by that model's global warming (which must come from
+  somewhere other than the land-only tiles). The reanalysis's own trend was tried and fails
+  over South Asia; small islands and Gulf states still cross the niche on the fitted slope,
+  not the heat. `devlog/20261103-ladder-pattern-cascade.md`
+- Lenton et al. 2023's per-country table (Supplementary Data, not fetched) against ours, once
+  the pattern is a model's; the India gap is the pattern.
 - A log or quantile colour stretch for sparse people maps; under the run-wide stretch one
   Dhaka cell sets the top and the rest reads faint.
 - A per-source lock shard: the POWER entries are 7,200 of the lock file's 3 MB.

@@ -1,14 +1,21 @@
 # Climate tipping elements: the global warming (deg C above pre-industrial) at which an
 # assessment judged each likely to tip, as a central estimate with a range, and the
 # timescale of the change once triggered. Read by the tipping.elements module, which flags
-# the year a run's global anomaly passes each threshold. Nothing here feeds back yet.
+# the year a run's global anomaly passes each threshold, and by carbon.tipped, which
+# releases the carbon a [element.carbon] table states once the element is past its
+# threshold.
 #
-# PROVENANCE: every row below was written from the agent's memory of Armstrong McKay et
-# al. 2022, "Exceeding 1.5 degrees C global warming could trigger multiple climate tipping
-# points", Science 377, eabn7950, Table 1. The numbers have NOT been checked against the
-# paper from this machine. confidence = "recalled" means exactly that; promote a row to
-# "checked" only after reading the paper's table, and correct it if it differs. The
-# consequence column is a one-line paraphrase, not a quotation.
+# PROVENANCE: Armstrong McKay et al. 2022, "Exceeding 1.5 degrees C global warming could
+# trigger multiple climate tipping points", Science 377, eabn7950, Table 1. The rows were
+# first written from memory (2026-11-01) and checked cell by cell against the published
+# Table 1 on 2026-11-03 (a reading agent read the publisher's PDF and the first author's
+# reproduction of the table; the checks agreed). Every threshold agreed; the East Antarctic
+# ice sheet's timescale was corrected (the paper gives ">10,000 years" with no central
+# estimate); two elements the file lacked were added (boreal permafrost collapse, boreal
+# forest northern expansion). The paper means by the thresholds: crossing is "possible"
+# beyond the minimum and "likely" beyond the central estimate. The consequence column is a
+# one-line paraphrase, not a quotation; the paper's Table 1 gives no sea-level metres, so
+# the ice-sheet rows name no figure. The carbon tables quote the paper's own numbers.
 
 [[element]]
 id = "greenland-ice-sheet"
@@ -17,9 +24,10 @@ low_c = 0.8
 central_c = 1.5
 high_c = 3.0
 timescale = "about 10,000 years (1,000 to 15,000)"
-consequence = "about seven metres of sea level over millennia"
+consequence = "sea level rising over millennia (the paper names 3.5 m as the irreversible-loss equivalent)"
 source = "Armstrong McKay et al. 2022, Table 1"
-confidence = "recalled"
+confidence = "checked"
+checked = "2026-11-03, against Table 1 of the paper"
 
 [[element]]
 id = "west-antarctic-ice-sheet"
@@ -28,9 +36,10 @@ low_c = 1.0
 central_c = 1.5
 high_c = 3.0
 timescale = "about 2,000 years (500 to 13,000)"
-consequence = "about three metres of sea level over centuries to millennia"
+consequence = "sea level rising over centuries to millennia"
 source = "Armstrong McKay et al. 2022, Table 1"
-confidence = "recalled"
+confidence = "checked"
+checked = "2026-11-03, against Table 1 of the paper"
 
 [[element]]
 id = "low-latitude-coral-reefs"
@@ -41,10 +50,16 @@ high_c = 2.0
 timescale = "about 10 years"
 consequence = "loss of reefs and the fisheries and coasts that depend on them"
 source = "Armstrong McKay et al. 2022, Table 1"
-confidence = "recalled"
+confidence = "checked"
+checked = "2026-11-03, against Table 1 of the paper"
 
 [[element]]
 id = "boreal-permafrost-abrupt-thaw"
+# "an additional ~50% emissions beyond gradual thaw (~10 to 25 GtC per °C) (medium confidence)";
+# Table 1: 10 GtC per °C by 2100, 25 GtC per °C by 2300, "declines with further degrees of
+# warming (by ~21% per °C)". Read here as a stock of 25 GtC for every degree of global warming
+# above pre-industrial, released on the element's timescale once it is past its threshold.
+carbon = { gtc_per_degree = 25.0, decline_per_degree = 0.21, timescale_yr = 200, stock = "permafrost", confidence = "medium", source = "Armstrong McKay et al. 2022, Table 1 and text" }
 title = "Boreal permafrost abrupt thaw"
 low_c = 1.0
 central_c = 1.5
@@ -52,7 +67,8 @@ high_c = 2.3
 timescale = "about 200 years (100 to 300)"
 consequence = "additional carbon and methane to the atmosphere"
 source = "Armstrong McKay et al. 2022, Table 1"
-confidence = "recalled"
+confidence = "checked"
+checked = "2026-11-03, against Table 1 of the paper"
 
 [[element]]
 id = "barents-sea-ice"
@@ -63,7 +79,8 @@ high_c = 1.7
 timescale = "about 25 years"
 consequence = "regional; may alter northern hemisphere winter circulation"
 source = "Armstrong McKay et al. 2022, Table 1"
-confidence = "recalled"
+confidence = "checked"
+checked = "2026-11-03, against Table 1 of the paper"
 
 [[element]]
 id = "labrador-sea-convection"
@@ -74,7 +91,8 @@ high_c = 3.8
 timescale = "about 10 years (5 to 50)"
 consequence = "regional cooling around the North Atlantic; shifts in storm tracks"
 source = "Armstrong McKay et al. 2022, Table 1"
-confidence = "recalled"
+confidence = "checked"
+checked = "2026-11-03, against Table 1 of the paper"
 
 [[element]]
 id = "mountain-glaciers"
@@ -85,7 +103,8 @@ high_c = 3.0
 timescale = "about 200 years (50 to 1,000)"
 consequence = "loss of seasonal water storage for the rivers below them"
 source = "Armstrong McKay et al. 2022, Table 1"
-confidence = "recalled"
+confidence = "checked"
+checked = "2026-11-03, against Table 1 of the paper"
 
 [[element]]
 id = "sahel-west-african-monsoon"
@@ -96,7 +115,8 @@ high_c = 3.5
 timescale = "about 50 years (10 to 500)"
 consequence = "a wetter or drier Sahel; either way a different one"
 source = "Armstrong McKay et al. 2022, Table 1"
-confidence = "recalled"
+confidence = "checked"
+checked = "2026-11-03, against Table 1 of the paper"
 
 [[element]]
 id = "east-antarctic-subglacial-basins"
@@ -105,12 +125,16 @@ low_c = 2.0
 central_c = 3.0
 high_c = 6.0
 timescale = "about 2,000 years (500 to 10,000)"
-consequence = "several metres of sea level over millennia"
+consequence = "sea level rising over millennia"
 source = "Armstrong McKay et al. 2022, Table 1"
-confidence = "recalled"
+confidence = "checked"
+checked = "2026-11-03, against Table 1 of the paper"
 
 [[element]]
 id = "amazon-rainforest"
+# "partial dieback of 40% (i.e., current bistable area) leading to emissions of ~30 GtC ... to a
+# GMST feedback of ~+0.1° (medium confidence)"; Table 1 adds "Total: 75 GtC / 0.2°C".
+carbon = { gtc = 30.0, timescale_yr = 100, stock = "amazon", confidence = "medium", source = "Armstrong McKay et al. 2022, Table 1 and text" }
 title = "Amazon rainforest dieback"
 low_c = 2.0
 central_c = 3.5
@@ -118,7 +142,8 @@ high_c = 6.0
 timescale = "about 100 years (50 to 200)"
 consequence = "forest to savanna over a large part of the basin; carbon released; regional rainfall lost"
 source = "Armstrong McKay et al. 2022, Table 1"
-confidence = "recalled"
+confidence = "checked"
+checked = "2026-11-03, against Table 1 of the paper"
 
 [[element]]
 id = "boreal-forest-southern-dieback"
@@ -129,7 +154,8 @@ high_c = 5.0
 timescale = "about 100 years (50 to unknown)"
 consequence = "forest retreats at its southern edge; carbon released"
 source = "Armstrong McKay et al. 2022, Table 1"
-confidence = "recalled"
+confidence = "checked"
+checked = "2026-11-03, against Table 1 of the paper"
 
 [[element]]
 id = "amoc"
@@ -140,7 +166,8 @@ high_c = 8.0
 timescale = "about 50 years (15 to 300)"
 consequence = "cooling around the North Atlantic, shifted tropical rain belts and monsoons, faster sea level rise on the American east coast"
 source = "Armstrong McKay et al. 2022, Table 1"
-confidence = "recalled"
+confidence = "checked"
+checked = "2026-11-03, against Table 1 of the paper"
 
 [[element]]
 id = "arctic-winter-sea-ice"
@@ -151,7 +178,8 @@ high_c = 8.7
 timescale = "about 20 years (10 to 100)"
 consequence = "an ice-free Arctic in winter; strong further warming of the north"
 source = "Armstrong McKay et al. 2022, Table 1"
-confidence = "recalled"
+confidence = "checked"
+checked = "2026-11-03, against Table 1 of the paper"
 
 [[element]]
 id = "east-antarctic-ice-sheet"
@@ -159,7 +187,35 @@ title = "East Antarctic ice sheet collapse"
 low_c = 5.0
 central_c = 7.5
 high_c = 10.0
-timescale = "about 10,000 years"
-consequence = "tens of metres of sea level over many millennia"
+timescale = "more than 10,000 years (no central estimate given)"
+consequence = "sea level rising over many millennia (the paper gives about 50 m of potential)"
 source = "Armstrong McKay et al. 2022, Table 1"
-confidence = "recalled"
+confidence = "checked"
+checked = "2026-11-03, against Table 1 of the paper"
+
+[[element]]
+id = "boreal-permafrost-collapse"
+title = "Boreal permafrost collapse"
+low_c = 3.0
+central_c = 4.0
+high_c = 6.0
+timescale = "about 50 years (10 to 300)"
+consequence = "the deep, carbon-rich Yedoma permafrost thaws; carbon on the order of 125 to 250 GtC"
+source = "Armstrong McKay et al. 2022, Table 1"
+confidence = "checked"
+checked = "2026-11-03, against Table 1 of the paper"
+# "emissions on the order of ~125 to 250 GtC (ΔGMST ~+0.2 to 0.4°C) (low confidence)"; the low end is used
+carbon = { gtc = 125.0, timescale_yr = 50, stock = "permafrost", confidence = "low", source = "Armstrong McKay et al. 2022, Table 1 and text" }
+
+[[element]]
+id = "boreal-forest-northern-expansion"
+title = "Boreal forest northern expansion"
+low_c = 1.5
+central_c = 4.0
+high_c = 7.2
+timescale = "about 100 years (40 to unknown)"
+consequence = "forest advances into tundra; a small carbon uptake (about 6 GtC) outweighed by a darker surface, net warming"
+source = "Armstrong McKay et al. 2022, Table 1"
+confidence = "checked"
+checked = "2026-11-03, against Table 1 of the paper"
+# no carbon table: the paper's net effect (+0.14 °C) is the albedo's, which this model has no term for

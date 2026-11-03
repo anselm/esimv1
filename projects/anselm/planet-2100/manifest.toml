@@ -85,6 +85,7 @@ cells_clim_from = 2001
 cells_clim_to = 2025
 frame_every_years = 10
 frame_res_deg = 1.0
+pattern = "cells"
 res_deg = 0.5
 scale = "50m"
 
@@ -98,6 +99,7 @@ crossing_share = 0.5
 frame_every_years = 10
 frame_res_deg = 1.0
 niche_c = 29.0
+pattern = "country"
 res_deg = 0.5
 scale = "50m"
 
@@ -109,6 +111,7 @@ name = "wetbulb"
 crossing_share = 0.5
 frame_every_years = 10
 frame_res_deg = 1.0
+pattern = "country"
 res_deg = 0.5
 scale = "50m"
 source = "cells"
@@ -119,10 +122,17 @@ year_to = 2020
 kind = "tipping.elements"
 name = "tipping"
 
+[[module]]
+kind = "carbon.tipped"
+name = "tipped"
+
+[module.params]
+trigger = "central"
+
 [run]
 close_every = "30d"
 end = "2100-01-01"
 name = "p4-planet-people"
-notes = "Planet core plus people on half-degree cells, each country's warming from its record, heat and wet-bulb exposure cell by cell from a reanalysis baseline, and tipping thresholds, 1850 to 2100. After 2024 emissions follow the variant's assumption (default: held at the 2024 rate). CO2, CH4 and N2O forcing; the AR6 assessed series held after 2019; the Millar sink feedback; nothing else feeds back."
+notes = "Planet core plus people on half-degree cells, each country's warming from its record, heat and wet-bulb exposure cell by cell from a reanalysis baseline, and tipping thresholds, 1850 to 2100. After 2024 emissions follow the variant's assumption (default: held at the 2024 rate). CO2, CH4 and N2O forcing; the AR6 assessed series held after 2019; the Millar sink feedback; of the tipping elements, the carbon of permafrost and the Amazon feeds back once the run passes the assessment's central estimates, the rest are flags. The warming applied to each cell is its country's fitted slope times the run's global anomaly; the reanalysis's own trend map is drawn but not applied."
 seed = 1
 start = "1850-01-01"

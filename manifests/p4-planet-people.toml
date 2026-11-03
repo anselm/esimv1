@@ -28,7 +28,7 @@ start = "1850-01-01"
 end = "2100-01-01"
 seed = 1
 close_every = "30d"
-notes = "Planet core plus people on half-degree cells, each country's warming from its record, heat and wet-bulb exposure cell by cell from a reanalysis baseline, and tipping thresholds, 1850 to 2100. After 2024 emissions follow the variant's assumption (default: held at the 2024 rate). CO2, CH4 and N2O forcing; the AR6 assessed series held after 2019; the Millar sink feedback; nothing else feeds back."
+notes = "Planet core plus people on half-degree cells, each country's warming from its record, heat and wet-bulb exposure cell by cell from a reanalysis baseline, and tipping thresholds, 1850 to 2100. After 2024 emissions follow the variant's assumption (default: held at the 2024 rate). CO2, CH4 and N2O forcing; the AR6 assessed series held after 2019; the Millar sink feedback; of the tipping elements, the carbon of permafrost and the Amazon feeds back once the run passes the assessment's central estimates, the rest are flags. The warming applied to each cell is its country's fitted slope times the run's global anomaly; the reanalysis's own trend map is drawn but not applied."
 
 [[module]]
 name = "people"
@@ -54,6 +54,9 @@ anom_to = 2020
 # POWER's climatology period, so tas_anom_cells_c is the warming since it
 cells_clim_from = 2001
 cells_clim_to = 2025
+# the reanalysis's own 1981 to 2025 trend per cell, drawn as a map for the record only: over South
+# Asia MERRA-2 cools while the globe warms, so the cell layers below keep the country slope (2026-11-03)
+pattern = "cells"
 
 [[module]]
 name = "heat"
@@ -64,6 +67,7 @@ frame_res_deg = 1.0
 frame_every_years = 10
 scale = "50m"
 baseline = "cells"
+pattern = "country"   # "cells" would use the reanalysis trend map, which fails over South Asia; see the devlog
 niche_c = 29.0
 crossing_share = 0.5
 
@@ -76,6 +80,7 @@ frame_res_deg = 1.0
 frame_every_years = 10
 scale = "50m"
 source = "cells"
+pattern = "country"   # as above
 year_from = 2011
 year_to = 2020
 crossing_share = 0.5
@@ -83,3 +88,11 @@ crossing_share = 0.5
 [[module]]
 name = "tipping"
 kind = "tipping.elements"
+
+# the first cascade: permafrost and Amazon carbon into the carbon ledger once past the
+# assessment's central estimates (trigger = "low" for the sensitivity case)
+[[module]]
+name = "tipped"
+kind = "carbon.tipped"
+[module.params]
+trigger = "central"

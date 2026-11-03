@@ -15,7 +15,7 @@ not a structure in the code; the kernel sees only modules, topics and fields.
 | 5 producers | plants | `veg.crop` | MODIS NDVI |
 | 6 consumers | animals and their food webs | `fauna.herbivore`, `fauna.predator`, `hazard.fire` | none yet |
 | 7 people | population, land use, rules, exposure | `agents.farms`, `rules.calendar`, `people.countries`, `climate.countries`, `people.heat`, `people.wetbulb` | UN population, WorldPop 1 km, CRU country temperatures, MERRA-2 daily heat and humidity (NASA POWER), NOAA GSOD stations |
-| across | thresholds and their sources | `tipping.elements` | the assessment table |
+| across | thresholds and their sources, and what crossing them moves | `tipping.elements`, `carbon.tipped` | the assessment table, checked row by row against the paper |
 
 ## How the layers couple
 

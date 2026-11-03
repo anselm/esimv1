@@ -52968,6 +52968,2064 @@ sha256 = "5bd208c4d8246bfb211058a80b572e37e8c37fea76972e0d87d80b0457238a79"
 bytes = 2277846
 fetched = "2026-11-03"
 
+[files."power/monthly_T2M_-10_-100_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-100&longitude-max=-90&latitude-min=-10&latitude-max=0&start=1981&end=2025&format=JSON"
+sha256 = "7bc0aabc619ea1b359c4a2d42b3d52e09f414770085c0b8a8e52963666ef67dc"
+bytes = 3153582
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-10_-140_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-140&longitude-max=-130&latitude-min=-10&latitude-max=0&start=1981&end=2025&format=JSON"
+sha256 = "4a6391a072b2358e3389b84a29e5bbc572f88653b2c4e9d4ea258b625c2d904b"
+bytes = 3154103
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-10_-150_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-150&longitude-max=-140&latitude-min=-10&latitude-max=0&start=1981&end=2025&format=JSON"
+sha256 = "1bc004392235049648ea0596dbf66b5b19433752fc46663af0f621ef966985ba"
+bytes = 3153849
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-10_-160_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-160&longitude-max=-150&latitude-min=-10&latitude-max=0&start=1981&end=2025&format=JSON"
+sha256 = "d96f4695a961412a03680506f76fed22dd396b38724008b5891bcfa15059dc32"
+bytes = 3154047
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-10_-170_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-170&longitude-max=-160&latitude-min=-10&latitude-max=0&start=1981&end=2025&format=JSON"
+sha256 = "ccd0a52ec1be0832d2d859a5c532d3e14cbd22b50dda14c0e42a0ac4ac0f3fe6"
+bytes = 3154164
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-10_-180_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-180&longitude-max=-170&latitude-min=-10&latitude-max=0&start=1981&end=2025&format=JSON"
+sha256 = "4cb7dd02bd48283fae8a55730647786b9d2fd261fc39f59f65d93c8c40fd413e"
+bytes = 3154154
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-10_-20_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-20&longitude-max=-10&latitude-min=-10&latitude-max=0&start=1981&end=2025&format=JSON"
+sha256 = "f977be3e84f01d81fa6e01ea1087ddea57cf3b9d26c94123f610e69bf4f8b85b"
+bytes = 3153928
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-10_-40_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-40&longitude-max=-30&latitude-min=-10&latitude-max=0&start=1981&end=2025&format=JSON"
+sha256 = "bc5207ff4de848ffe8a5f038a2cf5dbd6906183b9d90a0428413c1351a8ba7ea"
+bytes = 3153924
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-10_-50_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-50&longitude-max=-40&latitude-min=-10&latitude-max=0&start=1981&end=2025&format=JSON"
+sha256 = "1da265c72a89173a51b089926db7d32376051dc5b855c9345a5b8eaa16325045"
+bytes = 3154226
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-10_-60_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-60&longitude-max=-50&latitude-min=-10&latitude-max=0&start=1981&end=2025&format=JSON"
+sha256 = "bd9540b83a81b9aafd0bf395ead393dfc9d5dc028fad6c0720e0d00dc037893e"
+bytes = 3154481
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-10_-70_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-70&longitude-max=-60&latitude-min=-10&latitude-max=0&start=1981&end=2025&format=JSON"
+sha256 = "becbf7c90d12a69118c27ba0827d95e2efc9a8d298e14b0d29746eb57f91dc73"
+bytes = 3154773
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-10_-80_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-80&longitude-max=-70&latitude-min=-10&latitude-max=0&start=1981&end=2025&format=JSON"
+sha256 = "f8dc1266b197ec1a9f8853ed02297ff7b0d8788fe1dd8468a7e1980b080c1524"
+bytes = 3150705
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-10_-90_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-90&longitude-max=-80&latitude-min=-10&latitude-max=0&start=1981&end=2025&format=JSON"
+sha256 = "fec7ab758c27e53a0d878b0ba30099049ca2f556faea188c3dcc3a08bc84767a"
+bytes = 3153913
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-10_0_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=0&longitude-max=10&latitude-min=-10&latitude-max=0&start=1981&end=2025&format=JSON"
+sha256 = "31cd4839303a03428362cce728b64cc06309b4b3901ea74d45a678e00133194c"
+bytes = 2967381
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-10_100_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=100&longitude-max=110&latitude-min=-10&latitude-max=0&start=1981&end=2025&format=JSON"
+sha256 = "5914ee1216f86165aad3fa53683ede15b95d219a08fb643569283ef76b621d6a"
+bytes = 3154272
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-10_10_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=10&longitude-max=20&latitude-min=-10&latitude-max=0&start=1981&end=2025&format=JSON"
+sha256 = "2a024bca2f84abe07e7a3d1e7c2d8da9f0f371f0b5d7048a886b54f1b40a0208"
+bytes = 3154395
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-10_110_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=110&longitude-max=120&latitude-min=-10&latitude-max=0&start=1981&end=2025&format=JSON"
+sha256 = "f4048a39fe81a84d0525b0e89aeb72ad93023788900e13b60018132f3718c046"
+bytes = 3153873
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-10_120_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=120&longitude-max=130&latitude-min=-10&latitude-max=0&start=1981&end=2025&format=JSON"
+sha256 = "8533829a79e8063db959f095126bc8f1274bf2cc783a2e2bd2557325848a732b"
+bytes = 3153883
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-10_130_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=130&longitude-max=140&latitude-min=-10&latitude-max=0&start=1981&end=2025&format=JSON"
+sha256 = "eb152a34fa0680972379dcb92d9d411d9d1e0e841c61a29e441d06d7e4b37680"
+bytes = 3154036
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-10_140_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=140&longitude-max=150&latitude-min=-10&latitude-max=0&start=1981&end=2025&format=JSON"
+sha256 = "d453485b2da908236dac50a370f9968e6456fac42591f69c293c114386063cbc"
+bytes = 3154295
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-10_150_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=150&longitude-max=160&latitude-min=-10&latitude-max=0&start=1981&end=2025&format=JSON"
+sha256 = "d5b9d35b7a74fa2f1eb987749d8c4df2ac188d289ed987d9580ded2a22936607"
+bytes = 3153908
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-10_160_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=160&longitude-max=170&latitude-min=-10&latitude-max=0&start=1981&end=2025&format=JSON"
+sha256 = "521f2591039828e473c083400736f94b2745572e7aa9d62f569b6b3b087a8fe3"
+bytes = 3153801
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-10_170_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=170&longitude-max=180&latitude-min=-10&latitude-max=0&start=1981&end=2025&format=JSON"
+sha256 = "92d47f660878cc17217cb7b4c08a24dc5d6d4f31df84d45bfe7ed0b1a116a8f9"
+bytes = 2968192
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-10_20_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=20&longitude-max=30&latitude-min=-10&latitude-max=0&start=1981&end=2025&format=JSON"
+sha256 = "bb40b7fa5527fd41d26e31324553ba4923b96adbab7b03f43d0af7592edd2a86"
+bytes = 3154504
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-10_30_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=30&longitude-max=40&latitude-min=-10&latitude-max=0&start=1981&end=2025&format=JSON"
+sha256 = "a045c0d6885a837267ae4869897e19e8e35b21779949843ced5b0bf5afefba37"
+bytes = 3154576
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-10_40_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=40&longitude-max=50&latitude-min=-10&latitude-max=0&start=1981&end=2025&format=JSON"
+sha256 = "ec1989f40f03594da3a757493bc5e2af1ffd167a07359e7e35cfd98716097c2b"
+bytes = 3153398
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-10_50_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=50&longitude-max=60&latitude-min=-10&latitude-max=0&start=1981&end=2025&format=JSON"
+sha256 = "14678915d9741351ffba58e2116f5b6830c566d75d5391bfbb476f4afcedf930"
+bytes = 3153337
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-10_70_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=70&longitude-max=80&latitude-min=-10&latitude-max=0&start=1981&end=2025&format=JSON"
+sha256 = "7a10f9648f5bb292d55a301e9a76e430929a58464e2ef55c4558618242f1cd7f"
+bytes = 3153177
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-10_90_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=90&longitude-max=100&latitude-min=-10&latitude-max=0&start=1981&end=2025&format=JSON"
+sha256 = "2777c42680be3a4caa2ae6bf0dc63dec50a0a222fb7ec12caec05628a2a86512"
+bytes = 3153387
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-20_-10_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-10&longitude-max=0&latitude-min=-20&latitude-max=-10&start=1981&end=2025&format=JSON"
+sha256 = "8bc12c24b204b50a9a90071a47381257512efe3f250e885f147ae4724bdc998c"
+bytes = 3153615
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-20_-140_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-140&longitude-max=-130&latitude-min=-20&latitude-max=-10&start=1981&end=2025&format=JSON"
+sha256 = "af8c81272b42ea4fd6018ed4812030b5d1a85873818f29e177289fdd1fc6e1cd"
+bytes = 3154376
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-20_-150_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-150&longitude-max=-140&latitude-min=-20&latitude-max=-10&start=1981&end=2025&format=JSON"
+sha256 = "4cff04aa29adfc2e6ed62eecab77e11eeb03d0f1627437354bbe5c028214ee99"
+bytes = 3154481
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-20_-160_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-160&longitude-max=-150&latitude-min=-20&latitude-max=-10&start=1981&end=2025&format=JSON"
+sha256 = "80fbf4c74e1ea9040039c4d6f39f84421057e16f9e7b544d07b5d2dfb8c722cd"
+bytes = 3154304
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-20_-170_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-170&longitude-max=-160&latitude-min=-20&latitude-max=-10&start=1981&end=2025&format=JSON"
+sha256 = "428ebfd0938063d0121c1d4c1b412f2a5f7fbf72cf3ed8a3e6d678d5feb19945"
+bytes = 3154489
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-20_-180_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-180&longitude-max=-170&latitude-min=-20&latitude-max=-10&start=1981&end=2025&format=JSON"
+sha256 = "b3f0c914c8c234197de61a2052606b23932ef6a085fae3302f6cb26281a1c6e7"
+bytes = 3154381
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-20_-40_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-40&longitude-max=-30&latitude-min=-20&latitude-max=-10&start=1981&end=2025&format=JSON"
+sha256 = "be6f3a46c5adc36fec40ddc4a55582bc8f01deef91292bd48059476732744d8e"
+bytes = 3154066
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-20_-50_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-50&longitude-max=-40&latitude-min=-20&latitude-max=-10&start=1981&end=2025&format=JSON"
+sha256 = "5b1318843c256ce0395b1802d28eb27bbb0eb5f07b3354b5cbcf553185222fa1"
+bytes = 3155223
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-20_-60_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-60&longitude-max=-50&latitude-min=-20&latitude-max=-10&start=1981&end=2025&format=JSON"
+sha256 = "75da67b2ea4b3f3f4a29502695cd31e1b29917ce8718c5c1c32fd5c226f2955c"
+bytes = 3155304
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-20_-70_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-70&longitude-max=-60&latitude-min=-20&latitude-max=-10&start=1981&end=2025&format=JSON"
+sha256 = "35391409172e855b9c0a3f9a161b51e2b855439392c844670b32ba72b93dd931"
+bytes = 3128089
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-20_-80_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-80&longitude-max=-70&latitude-min=-20&latitude-max=-10&start=1981&end=2025&format=JSON"
+sha256 = "a68f82081b24a69a19087490a42d22e6107ae0f36f76908321702a83e512449c"
+bytes = 3123289
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-20_100_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=100&longitude-max=110&latitude-min=-20&latitude-max=-10&start=1981&end=2025&format=JSON"
+sha256 = "6d218b43002f614c30c4722d22420c4ea6e8d40ff9763ee43acdb8262a64b5a6"
+bytes = 3154210
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-20_10_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=10&longitude-max=20&latitude-min=-20&latitude-max=-10&start=1981&end=2025&format=JSON"
+sha256 = "af4bed99fef6b7b509316532b2ff0d6c888d15dd67cb8152c2a269125df3c889"
+bytes = 3154692
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-20_110_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=110&longitude-max=120&latitude-min=-20&latitude-max=-10&start=1981&end=2025&format=JSON"
+sha256 = "d0d9c83cced4f402bd71471a17bb1c80ab317c8ed3211beb577baa9778e864d2"
+bytes = 3154146
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-20_120_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=120&longitude-max=130&latitude-min=-20&latitude-max=-10&start=1981&end=2025&format=JSON"
+sha256 = "a7c4183ab927f931e41fe2a2dfd875d3fb28852847078781c4966cb0394c5c3c"
+bytes = 3154418
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-20_130_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=130&longitude-max=140&latitude-min=-20&latitude-max=-10&start=1981&end=2025&format=JSON"
+sha256 = "7f4d12f28774c6cb6ccb43678a64085f2cf5f816ac9b44017728eba0a0f40978"
+bytes = 3154669
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-20_140_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=140&longitude-max=150&latitude-min=-20&latitude-max=-10&start=1981&end=2025&format=JSON"
+sha256 = "a9a1c1663a5474fe8f6f11716f23ac248e1f1a32dca61fea23ef76280e77a590"
+bytes = 3154173
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-20_150_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=150&longitude-max=160&latitude-min=-20&latitude-max=-10&start=1981&end=2025&format=JSON"
+sha256 = "3293622c229794d404a7243db2ad06fa45e32e4c34be97a4b8e467af7e41082d"
+bytes = 3154028
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-20_160_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=160&longitude-max=170&latitude-min=-20&latitude-max=-10&start=1981&end=2025&format=JSON"
+sha256 = "f9a2d821d94a71ebcbda5833f4f5850d55fe144eeda93aef4788db2ebbdfe5e9"
+bytes = 3153943
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-20_170_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=170&longitude-max=180&latitude-min=-20&latitude-max=-10&start=1981&end=2025&format=JSON"
+sha256 = "258e563f1d11a50e291c5baa6c61efdd0e5a27df01a6eaeb2e8b562f30715362"
+bytes = 2968628
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-20_20_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=20&longitude-max=30&latitude-min=-20&latitude-max=-10&start=1981&end=2025&format=JSON"
+sha256 = "5d929df0f1145c539fe97f89c843fb3e24b1f4fd8f3597bcf65708118f67ec29"
+bytes = 3155176
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-20_30_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=30&longitude-max=40&latitude-min=-20&latitude-max=-10&start=1981&end=2025&format=JSON"
+sha256 = "22dba5e8ae9a51c654308eada5363b57959c5355b9ee2bcad1866f5e9843dbe5"
+bytes = 3154913
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-20_40_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=40&longitude-max=50&latitude-min=-20&latitude-max=-10&start=1981&end=2025&format=JSON"
+sha256 = "3cace5285204b7a80ab287bbb612e4d77f2ee57a5383de568c95efa3b5b260da"
+bytes = 3154238
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-20_50_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=50&longitude-max=60&latitude-min=-20&latitude-max=-10&start=1981&end=2025&format=JSON"
+sha256 = "45799d7b6d430df3d2ebed8496d7bb8c196c66b228d9161cb3420b27f8337691"
+bytes = 3153670
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-20_60_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=60&longitude-max=70&latitude-min=-20&latitude-max=-10&start=1981&end=2025&format=JSON"
+sha256 = "14e9256403e2ca14de7307c944ef38e4d7064096a0aaf0cb3a569e6633487bcd"
+bytes = 3153737
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-20_90_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=90&longitude-max=100&latitude-min=-20&latitude-max=-10&start=1981&end=2025&format=JSON"
+sha256 = "1a193ced11297178fea7b750434e7417b113860047ddab236801058f390f845d"
+bytes = 3153457
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-30_-110_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-110&longitude-max=-100&latitude-min=-30&latitude-max=-20&start=1981&end=2025&format=JSON"
+sha256 = "03db693de7911132ebfeb6343c68e426fa817f9cad5566384ebd559431f7fce9"
+bytes = 3154498
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-30_-130_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-130&longitude-max=-120&latitude-min=-30&latitude-max=-20&start=1981&end=2025&format=JSON"
+sha256 = "5281d3d384ab67cac60abba7fd288330a7eadf5dd3b03cd48acc9b5871c4fa3d"
+bytes = 3154347
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-30_-140_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-140&longitude-max=-130&latitude-min=-30&latitude-max=-20&start=1981&end=2025&format=JSON"
+sha256 = "5cdc147c283c7544f109d1b4878d7132dd050dcae5b220f08360b0e7e24e9499"
+bytes = 3154494
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-30_-150_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-150&longitude-max=-140&latitude-min=-30&latitude-max=-20&start=1981&end=2025&format=JSON"
+sha256 = "a2f635815591847d8da2bb56b5897a8a7a6bfd58fba1437b2f65c22f78f1b90b"
+bytes = 3154259
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-30_-160_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-160&longitude-max=-150&latitude-min=-30&latitude-max=-20&start=1981&end=2025&format=JSON"
+sha256 = "541fadf4fbe7beeed3465b07b62afa6a190c8c24ebd526b52ef7a7e94e8ee800"
+bytes = 3154312
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-30_-180_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-180&longitude-max=-170&latitude-min=-30&latitude-max=-20&start=1981&end=2025&format=JSON"
+sha256 = "2aa7fb55add3dad71230dd8a889a69e9f5ea9c86526395575be30f3e1f15dc71"
+bytes = 3154567
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-30_-50_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-50&longitude-max=-40&latitude-min=-30&latitude-max=-20&start=1981&end=2025&format=JSON"
+sha256 = "ba0ca20a4a77a953a269daea4aa7548dda3d9b320fbf0d4fd359c8a029713dde"
+bytes = 3154320
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-30_-60_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-60&longitude-max=-50&latitude-min=-30&latitude-max=-20&start=1981&end=2025&format=JSON"
+sha256 = "9a5a9fa150c01b9b9343bf66158d79278ce33b7d185d2f7e53e7cb584a347d93"
+bytes = 3154488
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-30_-70_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-70&longitude-max=-60&latitude-min=-30&latitude-max=-20&start=1981&end=2025&format=JSON"
+sha256 = "f5ee7a62776cc40c4bab7eac5f7fad0e8233cf205f84191ac89ef2ef0ee72664"
+bytes = 3111600
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-30_-80_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-80&longitude-max=-70&latitude-min=-30&latitude-max=-20&start=1981&end=2025&format=JSON"
+sha256 = "676029e843737bb1796119c368632dcdac680e094fe269e37e6ff73965b2eecf"
+bytes = 3152234
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-30_-90_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-90&longitude-max=-80&latitude-min=-30&latitude-max=-20&start=1981&end=2025&format=JSON"
+sha256 = "ea4eebd07d85ad5e02a620051458709da1445b0c963259d3871e742a42d02f63"
+bytes = 3153688
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-30_10_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=10&longitude-max=20&latitude-min=-30&latitude-max=-20&start=1981&end=2025&format=JSON"
+sha256 = "863754ba41fec99d3f36d70067f75fd213e7194369872cc180f659dab0148402"
+bytes = 3153814
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-30_110_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=110&longitude-max=120&latitude-min=-30&latitude-max=-20&start=1981&end=2025&format=JSON"
+sha256 = "859732c9aca0a905aace4caf65f1f3e97daa93dd4941553fa7cf17f9d5d9c029"
+bytes = 3154356
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-30_120_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=120&longitude-max=130&latitude-min=-30&latitude-max=-20&start=1981&end=2025&format=JSON"
+sha256 = "2fdd5faa339f0b03f93854642c62ab984fed6b596c673f377a440ce06c9bea3b"
+bytes = 3154534
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-30_130_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=130&longitude-max=140&latitude-min=-30&latitude-max=-20&start=1981&end=2025&format=JSON"
+sha256 = "b8b4a4084dae48d874ca5b2f7b5815b6ef03a192e172da442d2c4c79d90665cc"
+bytes = 3154225
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-30_140_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=140&longitude-max=150&latitude-min=-30&latitude-max=-20&start=1981&end=2025&format=JSON"
+sha256 = "c18c197035982789890af9230cf6a933a4c92d952876a8d001f48722eb1b81d7"
+bytes = 3154557
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-30_150_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=150&longitude-max=160&latitude-min=-30&latitude-max=-20&start=1981&end=2025&format=JSON"
+sha256 = "f7d7e755a825ecb20c486cb64130c0472ffad25a18e7d4b180100481c0badaee"
+bytes = 3152966
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-30_160_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=160&longitude-max=170&latitude-min=-30&latitude-max=-20&start=1981&end=2025&format=JSON"
+sha256 = "05c79fb7cae86f0054914a23b9d59f37dbf4b6782f7d8ff5d63acfcd53942341"
+bytes = 3154160
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-30_170_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=170&longitude-max=180&latitude-min=-30&latitude-max=-20&start=1981&end=2025&format=JSON"
+sha256 = "a3f4fe885dca1dfdc0a5ab3e21a5c6bcbd2bc7f278bfbcc15cb4fa964f4849c6"
+bytes = 2968702
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-30_20_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=20&longitude-max=30&latitude-min=-30&latitude-max=-20&start=1981&end=2025&format=JSON"
+sha256 = "a4a6445db1db91a63505ca2da348aa0907245ef3110acd0372b3ea9fc3223b19"
+bytes = 3145974
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-30_30_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=30&longitude-max=40&latitude-min=-30&latitude-max=-20&start=1981&end=2025&format=JSON"
+sha256 = "5023da45c88a42ee4562808fe69fd84fa9b25799c4c3a9a30fdb981656e7fe7c"
+bytes = 3153040
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-30_40_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=40&longitude-max=50&latitude-min=-30&latitude-max=-20&start=1981&end=2025&format=JSON"
+sha256 = "4691e5ef8f1b17b482a5c52a4b5f70dabb9081b837ae344ee605f23ec54bbc43"
+bytes = 3153938
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-30_50_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=50&longitude-max=60&latitude-min=-30&latitude-max=-20&start=1981&end=2025&format=JSON"
+sha256 = "4115da0f5aa13e7e4e886caa25d5778a3196463ab8169f6613e55585cf9b7e19"
+bytes = 3153668
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-40_-20_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-20&longitude-max=-10&latitude-min=-40&latitude-max=-30&start=1981&end=2025&format=JSON"
+sha256 = "2bc9628da75447610b0bf6f5674623e4b58a6b0cfa7a1e8e12ee1166a035577f"
+bytes = 3153369
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-40_-60_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-60&longitude-max=-50&latitude-min=-40&latitude-max=-30&start=1981&end=2025&format=JSON"
+sha256 = "be9367d97f75c1742b3ebad849df33966b70adde49358b1f7c7dbf8c16dd9aa8"
+bytes = 3138267
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-40_-70_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-70&longitude-max=-60&latitude-min=-40&latitude-max=-30&start=1981&end=2025&format=JSON"
+sha256 = "35a910439667968877b4a77d238beaeac97e3bce503be5d6124f05d9439b4d44"
+bytes = 3110483
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-40_-80_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-80&longitude-max=-70&latitude-min=-40&latitude-max=-30&start=1981&end=2025&format=JSON"
+sha256 = "07342a56c5efff068b18f6f677559be207dd5c23179f6230ebc032410eb57b9d"
+bytes = 3130567
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-40_-90_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-90&longitude-max=-80&latitude-min=-40&latitude-max=-30&start=1981&end=2025&format=JSON"
+sha256 = "5021effaad6db5de7e7cbc22a5f970598daf7f6b4d16454eee4a4b95811370c3"
+bytes = 3153476
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-40_10_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=10&longitude-max=20&latitude-min=-40&latitude-max=-30&start=1981&end=2025&format=JSON"
+sha256 = "c4dc90abc5af370a9efd34b022efcf19d2743a6a208d5f762cb65229cdda1693"
+bytes = 3151924
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-40_110_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=110&longitude-max=120&latitude-min=-40&latitude-max=-30&start=1981&end=2025&format=JSON"
+sha256 = "f45ca51c5b76787d472f84e11b31d372b457090dc8b15b673c296d15dbdd6b00"
+bytes = 3151242
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-40_120_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=120&longitude-max=130&latitude-min=-40&latitude-max=-30&start=1981&end=2025&format=JSON"
+sha256 = "c65fc8d901499fb1e3c51bcc753974da89a946cc57ecbd0acee016c5b14a1844"
+bytes = 3152958
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-40_130_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=130&longitude-max=140&latitude-min=-40&latitude-max=-30&start=1981&end=2025&format=JSON"
+sha256 = "b4f64461ec9bad46643266186f136295d8002435104c9fda062aeeb90fd329be"
+bytes = 3151256
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-40_140_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=140&longitude-max=150&latitude-min=-40&latitude-max=-30&start=1981&end=2025&format=JSON"
+sha256 = "48632df39247dd57752ba758db7a336be4552d62f1d0e8e69f769ddfac658c4a"
+bytes = 3127449
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-40_150_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=150&longitude-max=160&latitude-min=-40&latitude-max=-30&start=1981&end=2025&format=JSON"
+sha256 = "24dde18dbcde8bb425410a9cc82fc0f7110dca47a09531c2fe91f9c9522f7feb"
+bytes = 3149933
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-40_170_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=170&longitude-max=180&latitude-min=-40&latitude-max=-30&start=1981&end=2025&format=JSON"
+sha256 = "d4f32b9ac5b112a5a8610d8b6e4b2dc6dc89cc64d97d8b3947a7009b73c54659"
+bytes = 2963966
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-40_20_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=20&longitude-max=30&latitude-min=-40&latitude-max=-30&start=1981&end=2025&format=JSON"
+sha256 = "aed1c475534856b6c0bde9469e28cfc28a7f6082d26ddac87d26fce632916c87"
+bytes = 3143883
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-40_30_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=30&longitude-max=40&latitude-min=-40&latitude-max=-30&start=1981&end=2025&format=JSON"
+sha256 = "ddbb3a47d794151abfda573efc2b6a1135b6bfa98727ab4ee4fa8446a25c8d79"
+bytes = 3153455
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-50_-180_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-180&longitude-max=-170&latitude-min=-50&latitude-max=-40&start=1981&end=2025&format=JSON"
+sha256 = "34c2645cc4999c9a03cce13cfa3fa11784c282997327d8ae5a514f1bda30e122"
+bytes = 3095315
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-50_-70_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-70&longitude-max=-60&latitude-min=-50&latitude-max=-40&start=1981&end=2025&format=JSON"
+sha256 = "9cae54ae9894334874a3d579fc29ba010057b03fe2244341263a5d7ef3bc229f"
+bytes = 3057024
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-50_-80_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-80&longitude-max=-70&latitude-min=-50&latitude-max=-40&start=1981&end=2025&format=JSON"
+sha256 = "a6102baaae071abe3dbce76bc15c7d0e18957adb1ce6ae31602f846eef1ef4c0"
+bytes = 3039720
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-50_140_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=140&longitude-max=150&latitude-min=-50&latitude-max=-40&start=1981&end=2025&format=JSON"
+sha256 = "1f487111dc1bb5c2856fbd2c4b2332ef8627097b3c181761dac6fceb63897df4"
+bytes = 3075235
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-50_160_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=160&longitude-max=170&latitude-min=-50&latitude-max=-40&start=1981&end=2025&format=JSON"
+sha256 = "dc1a3ca301e60bb6c27622228bfddac58825ff91f9d737698482552a0daa76ff"
+bytes = 3096205
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-50_170_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=170&longitude-max=180&latitude-min=-50&latitude-max=-40&start=1981&end=2025&format=JSON"
+sha256 = "dfa99e91c9148eeeb47233a58d39cd0d5ae9f5f7fc72ddad5c7c15490d22e926"
+bytes = 2887593
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-60_-60_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-60&longitude-max=-50&latitude-min=-60&latitude-max=-50&start=1981&end=2025&format=JSON"
+sha256 = "25f2c2504cb030c8476264009a32136e6b52ace4351848c596456b6d780c82fb"
+bytes = 2974583
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-60_-70_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-70&longitude-max=-60&latitude-min=-60&latitude-max=-50&start=1981&end=2025&format=JSON"
+sha256 = "be1e9a16f13cbed33e61d06442db90f2abf4b2184ab54a757d3881642d30ba7c"
+bytes = 2966684
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_-60_-80_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-80&longitude-max=-70&latitude-min=-60&latitude-max=-50&start=1981&end=2025&format=JSON"
+sha256 = "03d6c5d617fa733f5ae4ef1631d6cf78e9283a0751346720e821c91623efb284"
+bytes = 2953400
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_0_-100_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-100&longitude-max=-90&latitude-min=0&latitude-max=10&start=1981&end=2025&format=JSON"
+sha256 = "769a56b45d8ca643bd231a3b70a7f315ff17c2ad124fadafcefb199155f22238"
+bytes = 3003259
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_0_-10_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-10&longitude-max=0&latitude-min=0&latitude-max=10&start=1981&end=2025&format=JSON"
+sha256 = "c3135251ac197220048ecd26642bf7ed459168e5b558ca33ae6a0e03dd5d9000"
+bytes = 3003325
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_0_-160_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-160&longitude-max=-150&latitude-min=0&latitude-max=10&start=1981&end=2025&format=JSON"
+sha256 = "93bf25dff6d6f27454ba3890ec31c160976266ea91980f92be57906f576160bb"
+bytes = 3003819
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_0_-170_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-170&longitude-max=-160&latitude-min=0&latitude-max=10&start=1981&end=2025&format=JSON"
+sha256 = "9469485c2ca136a5ce4c02f1a28cb382cb2cece33d16493f586ed154b76fe609"
+bytes = 3003522
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_0_-20_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-20&longitude-max=-10&latitude-min=0&latitude-max=10&start=1981&end=2025&format=JSON"
+sha256 = "ec34eededa2f61ee4be11a78923e5da9a493906247cb8e2383c9697023977722"
+bytes = 3003186
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_0_-50_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-50&longitude-max=-40&latitude-min=0&latitude-max=10&start=1981&end=2025&format=JSON"
+sha256 = "8619127765724035fcb1a0cccca9266a65542a909ac489db722715a520d1580a"
+bytes = 3002974
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_0_-60_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-60&longitude-max=-50&latitude-min=0&latitude-max=10&start=1981&end=2025&format=JSON"
+sha256 = "c13438e0a64f4433c82eec79e569337171cb9d9d4dda92a86421be69f5b70739"
+bytes = 3003600
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_0_-70_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-70&longitude-max=-60&latitude-min=0&latitude-max=10&start=1981&end=2025&format=JSON"
+sha256 = "b3243ae7a82a18ce2605114bfb856c448d45f77be2c58683cc0d5ae47765d100"
+bytes = 3004108
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_0_-80_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-80&longitude-max=-70&latitude-min=0&latitude-max=10&start=1981&end=2025&format=JSON"
+sha256 = "857980168bc7ca394f70d2898ed6fc3bb3f1b2e1e84e870bf9ebc5a7e9878b6d"
+bytes = 3004253
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_0_-90_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-90&longitude-max=-80&latitude-min=0&latitude-max=10&start=1981&end=2025&format=JSON"
+sha256 = "50ec92f3503b83db295d12f18ae31479728c84de68d2703efbc628f7732426d4"
+bytes = 3003436
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_0_0_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=0&longitude-max=10&latitude-min=0&latitude-max=10&start=1981&end=2025&format=JSON"
+sha256 = "180e8ef4f623038dad966c7e7b449f8a9930b8c6ba0c0d8aee48dd702b7e9340"
+bytes = 2826648
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_0_100_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=100&longitude-max=110&latitude-min=0&latitude-max=10&start=1981&end=2025&format=JSON"
+sha256 = "611fe8f571b5fa7a7e39c0abd3a15f1904b44d814dbda69dfa4b6c65742be46a"
+bytes = 3003493
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_0_10_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=10&longitude-max=20&latitude-min=0&latitude-max=10&start=1981&end=2025&format=JSON"
+sha256 = "23874d9006883fa126176056993c25d255d3593c1f0a872ca720e6a9c11f1c9e"
+bytes = 3003805
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_0_110_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=110&longitude-max=120&latitude-min=0&latitude-max=10&start=1981&end=2025&format=JSON"
+sha256 = "26a9e00be3527541b9eee64ecfe3d74b99ab3c92804224615d7442263305ded0"
+bytes = 3003513
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_0_120_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=120&longitude-max=130&latitude-min=0&latitude-max=10&start=1981&end=2025&format=JSON"
+sha256 = "e6d81e89dee2da0cd0374fa3865bdb4f7f89992487f1c972dd186879c0f45ca7"
+bytes = 3003595
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_0_130_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=130&longitude-max=140&latitude-min=0&latitude-max=10&start=1981&end=2025&format=JSON"
+sha256 = "cd08b03b122a92e1ec026dbfa68ba73faff26304209af42274f2462212ef715c"
+bytes = 3003096
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_0_140_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=140&longitude-max=150&latitude-min=0&latitude-max=10&start=1981&end=2025&format=JSON"
+sha256 = "a6ad286d4151f3f0c761c6929aae0b2f74bded2d7cac02d2713addbc06c870d5"
+bytes = 3003107
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_0_150_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=150&longitude-max=160&latitude-min=0&latitude-max=10&start=1981&end=2025&format=JSON"
+sha256 = "fff8ceee5b87dce5d1f176963d2e33c5008a2bb0a0b07a312cf45c35cf609e95"
+bytes = 3003264
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_0_160_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=160&longitude-max=170&latitude-min=0&latitude-max=10&start=1981&end=2025&format=JSON"
+sha256 = "0aaabb5147fea2f0eef1fb52fa79d9f576a344607a202e10f14414163d22b24e"
+bytes = 3003134
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_0_170_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=170&longitude-max=180&latitude-min=0&latitude-max=10&start=1981&end=2025&format=JSON"
+sha256 = "1f28d491ec047532ee611b8ded0297e042559ff228973aa792718a605592daca"
+bytes = 2826537
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_0_20_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=20&longitude-max=30&latitude-min=0&latitude-max=10&start=1981&end=2025&format=JSON"
+sha256 = "c0bf27b60d0820a99f53210eb0486dec6e7b11150c983db056b858bfa62b3c1d"
+bytes = 3003917
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_0_30_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=30&longitude-max=40&latitude-min=0&latitude-max=10&start=1981&end=2025&format=JSON"
+sha256 = "00613081b1ecffb1d9cfd359c4bb91c79713a75679c4adda5faf1a935736460b"
+bytes = 3004070
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_0_40_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=40&longitude-max=50&latitude-min=0&latitude-max=10&start=1981&end=2025&format=JSON"
+sha256 = "1cb1326720bd64b91ee23e3211d90e0db4dbf1be72ce9e3f0215636ac3c2ee9b"
+bytes = 3003721
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_0_50_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=50&longitude-max=60&latitude-min=0&latitude-max=10&start=1981&end=2025&format=JSON"
+sha256 = "50c23383dba46e2c9984ab453fe410dc087bdf89ba580986bc0d58dea294f3c3"
+bytes = 3003026
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_0_70_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=70&longitude-max=80&latitude-min=0&latitude-max=10&start=1981&end=2025&format=JSON"
+sha256 = "86be5d462ec9dfaccdb2f637750f66a936d7bf8584d54e21e61ad5b03513a432"
+bytes = 3003016
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_0_80_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=80&longitude-max=90&latitude-min=0&latitude-max=10&start=1981&end=2025&format=JSON"
+sha256 = "f07d3cc20a5fd6b131b0a2df4e0bf17436b6108ad7b487fca39929baeedc9148"
+bytes = 3003197
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_0_90_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=90&longitude-max=100&latitude-min=0&latitude-max=10&start=1981&end=2025&format=JSON"
+sha256 = "70014f42d914e5c9686d3dacd845f360f19aa59e0e44b3badf9f65ffdb6427a3"
+bytes = 3003176
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_10_-100_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-100&longitude-max=-90&latitude-min=10&latitude-max=20&start=1981&end=2025&format=JSON"
+sha256 = "395522b15d511d80b456628642fb1f0a414e823653b4c6db05f054618b4c3508"
+bytes = 3154059
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_10_-10_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-10&longitude-max=0&latitude-min=10&latitude-max=20&start=1981&end=2025&format=JSON"
+sha256 = "4fab126f1e43798eda23145532e5592240d6f7a8d7b03ffc05182a03bc59b7fc"
+bytes = 3154475
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_10_-110_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-110&longitude-max=-100&latitude-min=10&latitude-max=20&start=1981&end=2025&format=JSON"
+sha256 = "baee49118d1ef622bce125e55910879a89949c2c284c838a355ccb004f46eff7"
+bytes = 3154294
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_10_-160_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-160&longitude-max=-150&latitude-min=10&latitude-max=20&start=1981&end=2025&format=JSON"
+sha256 = "d883bd4f02d02a655ec812e53dc7c0f553fa3127e75659c3ae59ca63cbd47c24"
+bytes = 3154230
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_10_-20_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-20&longitude-max=-10&latitude-min=10&latitude-max=20&start=1981&end=2025&format=JSON"
+sha256 = "7b112a35951758d919a9a14ed2d3b209569263aaa9d2b7925f80b3cc9745acc2"
+bytes = 3153882
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_10_-30_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-30&longitude-max=-20&latitude-min=10&latitude-max=20&start=1981&end=2025&format=JSON"
+sha256 = "f3988567640430a0309fc6d12bc4d5606417fc1726ec9bc290571b9b83ad67fd"
+bytes = 3153690
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_10_-60_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-60&longitude-max=-50&latitude-min=10&latitude-max=20&start=1981&end=2025&format=JSON"
+sha256 = "81cb9a2002f17ec5a66b44fb606c24dbaef779db657df4c0cec7b1fe6aa90baa"
+bytes = 3153661
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_10_-70_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-70&longitude-max=-60&latitude-min=10&latitude-max=20&start=1981&end=2025&format=JSON"
+sha256 = "0766e7347f8965fb3d39ea79070d27dae919f8f5b5f8a96a5643ba34eaf12799"
+bytes = 3153647
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_10_-80_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-80&longitude-max=-70&latitude-min=10&latitude-max=20&start=1981&end=2025&format=JSON"
+sha256 = "51d8ecbb04c7f54b085e7a3f9ccc3bf433a8acab6cd34d11280dd1e60f86fc0c"
+bytes = 3153863
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_10_-90_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-90&longitude-max=-80&latitude-min=10&latitude-max=20&start=1981&end=2025&format=JSON"
+sha256 = "7e35d5dbf5b46e516c1e83b4b4146c3f8fa7c75aca828ee09ffa98dd8ee6910a"
+bytes = 3153989
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_10_0_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=0&longitude-max=10&latitude-min=10&latitude-max=20&start=1981&end=2025&format=JSON"
+sha256 = "100485d486e74e9783ac7825c316d272fc09f15b22799bec951d0abc420f8f0f"
+bytes = 2968541
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_10_100_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=100&longitude-max=110&latitude-min=10&latitude-max=20&start=1981&end=2025&format=JSON"
+sha256 = "675da64112d3380616330eb5149e6a1265f96f606bf56b545e8cf6cf12a0355b"
+bytes = 3154381
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_10_10_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=10&longitude-max=20&latitude-min=10&latitude-max=20&start=1981&end=2025&format=JSON"
+sha256 = "3cf68bf6a1498d0c1e3982dd18643fe3ccd5f1531ca689567ba235754402c3a1"
+bytes = 3154218
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_10_110_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=110&longitude-max=120&latitude-min=10&latitude-max=20&start=1981&end=2025&format=JSON"
+sha256 = "7df806b0c33ef938b24de6db168c909bf02df00143414ff6879c8df8433d030a"
+bytes = 3153589
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_10_120_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=120&longitude-max=130&latitude-min=10&latitude-max=20&start=1981&end=2025&format=JSON"
+sha256 = "50a7a17ec60fa11f9f7876eb5558452eba6957de9efda8a4c771a1a75bf0fa57"
+bytes = 3153819
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_10_130_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=130&longitude-max=140&latitude-min=10&latitude-max=20&start=1981&end=2025&format=JSON"
+sha256 = "b3ef79f2e1711420bfb21c4ffe0c421047f0b9a11daba7cee19bfda9bbe4e950"
+bytes = 3153641
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_10_140_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=140&longitude-max=150&latitude-min=10&latitude-max=20&start=1981&end=2025&format=JSON"
+sha256 = "52b35d06fe399aba33c1d11666bbf7a16b0818f22d41943a13bf06aeb7ce4b6f"
+bytes = 3153688
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_10_160_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=160&longitude-max=170&latitude-min=10&latitude-max=20&start=1981&end=2025&format=JSON"
+sha256 = "a2a21704865fe1c81667ecded292e32b63fb32cb7b1746b1c73339fd73dc45d5"
+bytes = 3153626
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_10_170_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=170&longitude-max=180&latitude-min=10&latitude-max=20&start=1981&end=2025&format=JSON"
+sha256 = "60aa94a9f13a889e17ad07ca4746e65e07563e6a3db61b5173c78d556ae46af1"
+bytes = 2968050
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_10_20_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=20&longitude-max=30&latitude-min=10&latitude-max=20&start=1981&end=2025&format=JSON"
+sha256 = "461ce05e816ac655150be42cfa8dd75d1f2ff82f90681ef7be11de7dd1631388"
+bytes = 3154172
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_10_30_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=30&longitude-max=40&latitude-min=10&latitude-max=20&start=1981&end=2025&format=JSON"
+sha256 = "dcc68a3965f8357e38e55ab594fbf573644f5c63422c9a2169dfbd59b02d8934"
+bytes = 3154403
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_10_40_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=40&longitude-max=50&latitude-min=10&latitude-max=20&start=1981&end=2025&format=JSON"
+sha256 = "e6d00f92a435ce392899028fa784ecdfa258218daae64885404d83f1aea7146a"
+bytes = 3154031
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_10_50_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=50&longitude-max=60&latitude-min=10&latitude-max=20&start=1981&end=2025&format=JSON"
+sha256 = "42582da015b34abab17cedc1055e48ce9e7a9dff1f0c11014b2a74c92d7c4c8e"
+bytes = 3153462
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_10_70_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=70&longitude-max=80&latitude-min=10&latitude-max=20&start=1981&end=2025&format=JSON"
+sha256 = "b0b0930ef66cf83d74bd1a3be760516f49a435ae445c9e6107622f3c88f5a600"
+bytes = 3154128
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_10_80_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=80&longitude-max=90&latitude-min=10&latitude-max=20&start=1981&end=2025&format=JSON"
+sha256 = "e032d603fbd13fc3d563ed5642b70af394f65f04bbba8e5e9883c0ab58908dd1"
+bytes = 3153617
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_10_90_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=90&longitude-max=100&latitude-min=10&latitude-max=20&start=1981&end=2025&format=JSON"
+sha256 = "b8656bf323ca8bf5f6985cad16519b45a930213b81c6e62a575f00770be4f3b2"
+bytes = 3153910
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_20_-100_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-100&longitude-max=-90&latitude-min=20&latitude-max=30&start=1981&end=2025&format=JSON"
+sha256 = "f8219efd70a39a365b396f16430ebebddc7980547b8c6c967bc294a8e90f3a08"
+bytes = 3152795
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_20_-10_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-10&longitude-max=0&latitude-min=20&latitude-max=30&start=1981&end=2025&format=JSON"
+sha256 = "d2ff033ce0041246b29993fc17941ec94d707ec3aff8529effcdc3baec708d37"
+bytes = 3152992
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_20_-110_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-110&longitude-max=-100&latitude-min=20&latitude-max=30&start=1981&end=2025&format=JSON"
+sha256 = "224bfd83167a59f5b2cfa7f581e51f40b5c8b4de58918e50a0d13eee9cd88139"
+bytes = 3143787
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_20_-120_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-120&longitude-max=-110&latitude-min=20&latitude-max=30&start=1981&end=2025&format=JSON"
+sha256 = "2ea6551849a338d387742442003086ef8a097bba184cc9eeefce03e32f423b39"
+bytes = 3154244
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_20_-160_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-160&longitude-max=-150&latitude-min=20&latitude-max=30&start=1981&end=2025&format=JSON"
+sha256 = "90f4fac222cd067305f3988f902c4b17ed17bc2f88b64da71ac7f8fdb1c81e43"
+bytes = 3154110
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_20_-170_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-170&longitude-max=-160&latitude-min=20&latitude-max=30&start=1981&end=2025&format=JSON"
+sha256 = "d250aed5731b673d35632a4901af4880f5f14983880e3ebde44d4f8752e1157e"
+bytes = 3153696
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_20_-20_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-20&longitude-max=-10&latitude-min=20&latitude-max=30&start=1981&end=2025&format=JSON"
+sha256 = "71dbe15d19e9b20c0d150a059a92948c91a76cea1a5034a667d4cf1b703e945d"
+bytes = 3154228
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_20_-80_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-80&longitude-max=-70&latitude-min=20&latitude-max=30&start=1981&end=2025&format=JSON"
+sha256 = "3ecb5168bc5c56b7e00b2d626d9cf5f20ef42934ba5fe4fe341caf3d4735d356"
+bytes = 3153959
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_20_-90_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-90&longitude-max=-80&latitude-min=20&latitude-max=30&start=1981&end=2025&format=JSON"
+sha256 = "a133403e56cf1f6eee8a0364e17c0813b8ea96fb0391edf635cfe694b051f5c8"
+bytes = 3153853
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_20_0_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=0&longitude-max=10&latitude-min=20&latitude-max=30&start=1981&end=2025&format=JSON"
+sha256 = "85b53d5c413c6fe2f7086baee0d2faba0d00f7b81eb9399114d3b48192237269"
+bytes = 2963442
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_20_100_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=100&longitude-max=110&latitude-min=20&latitude-max=30&start=1981&end=2025&format=JSON"
+sha256 = "1668fbc16abb97ecc918a6213b586ee8fcc420363ff1cdb86aefab92d01178c4"
+bytes = 3120389
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_20_10_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=10&longitude-max=20&latitude-min=20&latitude-max=30&start=1981&end=2025&format=JSON"
+sha256 = "eaa526e63c5a5ea061f1a0fb7eca1c898e73ce0d482b0185aa42700cd8f0e0fd"
+bytes = 3146934
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_20_110_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=110&longitude-max=120&latitude-min=20&latitude-max=30&start=1981&end=2025&format=JSON"
+sha256 = "896b56113174bdd4a94f3b91692bf005cc4c94eef9f6aa13a66ebd16d96a9755"
+bytes = 3129419
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_20_120_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=120&longitude-max=130&latitude-min=20&latitude-max=30&start=1981&end=2025&format=JSON"
+sha256 = "ccbe8c677e0d3d62f2ef0b49b71abfbdb49b2213708b92dcbf7393d088862d01"
+bytes = 3150494
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_20_130_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=130&longitude-max=140&latitude-min=20&latitude-max=30&start=1981&end=2025&format=JSON"
+sha256 = "10e4d53cf810e45d0029c3e6147e2c2dd2f9f4a51f8c70e2c377f261352e77c4"
+bytes = 3153773
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_20_140_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=140&longitude-max=150&latitude-min=20&latitude-max=30&start=1981&end=2025&format=JSON"
+sha256 = "eba6552fbd865d905bbc3d9f063d9f178fd65eb5946e336cf5c01662f40920b7"
+bytes = 3153782
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_20_150_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=150&longitude-max=160&latitude-min=20&latitude-max=30&start=1981&end=2025&format=JSON"
+sha256 = "0ddbae28e5dccd676f27a76c1705f147b32ee6b8d4c95a09c69fa8d134c638ef"
+bytes = 3153629
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_20_20_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=20&longitude-max=30&latitude-min=20&latitude-max=30&start=1981&end=2025&format=JSON"
+sha256 = "6dd2dee3114b90be406caf079464a338b13fc5ab460a7bf510b6fe8007aaeeb9"
+bytes = 3150289
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_20_30_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=30&longitude-max=40&latitude-min=20&latitude-max=30&start=1981&end=2025&format=JSON"
+sha256 = "3d9c00c51795da9cce8d212315ff4cdf447a52e70a67ed37eb5890887468ac10"
+bytes = 3149148
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_20_40_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=40&longitude-max=50&latitude-min=20&latitude-max=30&start=1981&end=2025&format=JSON"
+sha256 = "21d64aba83c928c012c32fb99cef6a9518cc3fd13e18ea746c29f3afcbe1a2ef"
+bytes = 3150645
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_20_50_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=50&longitude-max=60&latitude-min=20&latitude-max=30&start=1981&end=2025&format=JSON"
+sha256 = "c17afc6e349ad2839d0c5ffb0bbc32fd702d8525f61c346413b2d5e43c02f2e6"
+bytes = 3148022
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_20_60_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=60&longitude-max=70&latitude-min=20&latitude-max=30&start=1981&end=2025&format=JSON"
+sha256 = "c51608b5f4b17674f96f0cb886434ba11e75d440daa362fc08a79a5843d3a221"
+bytes = 3148692
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_20_70_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=70&longitude-max=80&latitude-min=20&latitude-max=30&start=1981&end=2025&format=JSON"
+sha256 = "da672cce4c5e3fa8483066bd8bbe2cd3c712dbf171876f2a2806d200de81ee52"
+bytes = 3154049
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_20_80_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=80&longitude-max=90&latitude-min=20&latitude-max=30&start=1981&end=2025&format=JSON"
+sha256 = "3450e4564fea6c761d42fb26c87f568135a02c018dd74d3e048a3a14c09af40f"
+bytes = 3140376
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_20_90_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=90&longitude-max=100&latitude-min=20&latitude-max=30&start=1981&end=2025&format=JSON"
+sha256 = "43c2fcf563356d22e24fb921cc9e2d8b9dd4457f613721ac4a61de8e427dbdbd"
+bytes = 3125968
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_30_-100_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-100&longitude-max=-90&latitude-min=30&latitude-max=40&start=1981&end=2025&format=JSON"
+sha256 = "acaf0d98c093c22af5cdf5044fdb98f166a288bc845040dfb4a7e47cebb1d1a7"
+bytes = 3106095
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_30_-10_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-10&longitude-max=0&latitude-min=30&latitude-max=40&start=1981&end=2025&format=JSON"
+sha256 = "e1c6fd5b9695a31179130df1a200fca07f2eca6c1523db7561e770f81975455a"
+bytes = 3126391
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_30_-110_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-110&longitude-max=-100&latitude-min=30&latitude-max=40&start=1981&end=2025&format=JSON"
+sha256 = "d89530fb00760418310c55e41d17bf62a93d49a32fab3c924b79c5a7df399a33"
+bytes = 3093531
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_30_-120_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-120&longitude-max=-110&latitude-min=30&latitude-max=40&start=1981&end=2025&format=JSON"
+sha256 = "7f4b7c56e14f44f02cf28da6ffb4ea26d746dcbdaef75834dcdf6046d753e7e0"
+bytes = 3110683
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_30_-130_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-130&longitude-max=-120&latitude-min=30&latitude-max=40&start=1981&end=2025&format=JSON"
+sha256 = "ed3d773f1f36959047c4e2006d7436ec3e4149975a63df4bbe364d46e9af5a05"
+bytes = 3145746
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_30_-20_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-20&longitude-max=-10&latitude-min=30&latitude-max=40&start=1981&end=2025&format=JSON"
+sha256 = "8b6a14d95178bb63c4a2e5baa09396577931698b922b78d63fc2cfd514388c65"
+bytes = 3153646
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_30_-30_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-30&longitude-max=-20&latitude-min=30&latitude-max=40&start=1981&end=2025&format=JSON"
+sha256 = "333866b4dead32702dce54fd82cfa051610e5940338653f4ddc2dda58f7d124e"
+bytes = 3153947
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_30_-40_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-40&longitude-max=-30&latitude-min=30&latitude-max=40&start=1981&end=2025&format=JSON"
+sha256 = "71c6977e20e9c32699f6a9b1a431fd5e19dbd2078b744d69443a2c9731540edd"
+bytes = 3153767
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_30_-70_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-70&longitude-max=-60&latitude-min=30&latitude-max=40&start=1981&end=2025&format=JSON"
+sha256 = "17ca5eacaf8f4eb2cab689fe009522b2bb2a769ca81a22405e8765b3dc9bb150"
+bytes = 3150474
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_30_-80_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-80&longitude-max=-70&latitude-min=30&latitude-max=40&start=1981&end=2025&format=JSON"
+sha256 = "86976836c412f1275bb07dc2e78b25a8270f54557f14eef2b29acbc3ba95825d"
+bytes = 3129421
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_30_-90_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-90&longitude-max=-80&latitude-min=30&latitude-max=40&start=1981&end=2025&format=JSON"
+sha256 = "df04235d2ced42c3cf4464e167738ae930ed688ee5832ac9913870e20db057e3"
+bytes = 3107129
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_30_0_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=0&longitude-max=10&latitude-min=30&latitude-max=40&start=1981&end=2025&format=JSON"
+sha256 = "1a5679e516539e5e1746c5db3de77a634645b2fcd0c79ccc56f3102bcaa09c19"
+bytes = 2947770
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_30_100_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=100&longitude-max=110&latitude-min=30&latitude-max=40&start=1981&end=2025&format=JSON"
+sha256 = "c7a5fd97fedb298410ab663ccc20660f52c52b4d68c153f85f604d8740418e00"
+bytes = 3087712
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_30_10_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=10&longitude-max=20&latitude-min=30&latitude-max=40&start=1981&end=2025&format=JSON"
+sha256 = "0951652fd1b3dbec544279da8a63b7d48763fcbe3467a3e41b597768c0669c82"
+bytes = 3147998
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_30_110_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=110&longitude-max=120&latitude-min=30&latitude-max=40&start=1981&end=2025&format=JSON"
+sha256 = "5a5b913ef5c828d46f4a6d7016cfc48f1797027cf20765744363d06d7c615f64"
+bytes = 3097711
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_30_120_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=120&longitude-max=130&latitude-min=30&latitude-max=40&start=1981&end=2025&format=JSON"
+sha256 = "220c9b607c245608f0b52c25c159cef7a8b0d3606b4aeb2ac7eef250b5156a38"
+bytes = 3102247
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_30_130_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=130&longitude-max=140&latitude-min=30&latitude-max=40&start=1981&end=2025&format=JSON"
+sha256 = "5a27799697bc211bc4361c038b23a13aaf0d9461524554fc6644e90296284b5a"
+bytes = 3111516
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_30_140_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=140&longitude-max=150&latitude-min=30&latitude-max=40&start=1981&end=2025&format=JSON"
+sha256 = "d92fb8fcb8a4ea3cf583f61ff5d8375e5c8ab04e731e08d2111b14f77c62f598"
+bytes = 3129724
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_30_20_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=20&longitude-max=30&latitude-min=30&latitude-max=40&start=1981&end=2025&format=JSON"
+sha256 = "af1da91d295e20ce898cfb814665f9d34fd37d9cf58b6945089b77e89ecebe92"
+bytes = 3139329
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_30_30_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=30&longitude-max=40&latitude-min=30&latitude-max=40&start=1981&end=2025&format=JSON"
+sha256 = "89d3ddceb81aa8894b0e3c7ca9d1486098a26b14e322624a99f3b1a6b76f1913"
+bytes = 3115754
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_30_40_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=40&longitude-max=50&latitude-min=30&latitude-max=40&start=1981&end=2025&format=JSON"
+sha256 = "d532f868f227d82a8ae89dba0582f7b0c6441d47d7181c344cb9a8a99f66f5e8"
+bytes = 3108897
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_30_50_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=50&longitude-max=60&latitude-min=30&latitude-max=40&start=1981&end=2025&format=JSON"
+sha256 = "7984adbe991f8525be2e3755310a194aa932bd4f4047042f5d8180189990c639"
+bytes = 3099441
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_30_60_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=60&longitude-max=70&latitude-min=30&latitude-max=40&start=1981&end=2025&format=JSON"
+sha256 = "04f64754bb6fe3aa40621c7c158eaf51498ad3afc96082238ea775a90a5d7d89"
+bytes = 3096245
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_30_70_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=70&longitude-max=80&latitude-min=30&latitude-max=40&start=1981&end=2025&format=JSON"
+sha256 = "bf0a6d3698b8b57d6cb4c38c57ffb068c230677f70a0f81e806621d046c293c8"
+bytes = 3132262
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_30_80_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=80&longitude-max=90&latitude-min=30&latitude-max=40&start=1981&end=2025&format=JSON"
+sha256 = "2a070d3b65e35b05f0cac0a61e38d62f07e0269c1715e7d65d1403bc5aa778f9"
+bytes = 3139506
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_30_90_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=90&longitude-max=100&latitude-min=30&latitude-max=40&start=1981&end=2025&format=JSON"
+sha256 = "92109b61051e27019c55043588d8aa6043173a38db20a5942240cc1d9c69ae80"
+bytes = 3112434
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_40_-100_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-100&longitude-max=-90&latitude-min=40&latitude-max=50&start=1981&end=2025&format=JSON"
+sha256 = "f4db753ec94a49758b6420a400601eaf9ed8dd31447d87c423e0c22ea89fe313"
+bytes = 3116902
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_40_-10_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-10&longitude-max=0&latitude-min=40&latitude-max=50&start=1981&end=2025&format=JSON"
+sha256 = "68504cacae71ea9eebe9944d700daba26243d23a21373cd0f012ec83fa438bf2"
+bytes = 3108134
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_40_-110_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-110&longitude-max=-100&latitude-min=40&latitude-max=50&start=1981&end=2025&format=JSON"
+sha256 = "5c1bc29cf39a2400c91941b9fe6c7056ea3182482653eef1ca5a0cfa8645a6af"
+bytes = 3097084
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_40_-120_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-120&longitude-max=-110&latitude-min=40&latitude-max=50&start=1981&end=2025&format=JSON"
+sha256 = "1fd63e2cead8bcc01657da49fd7a39f43bcfbd296ebdf21b338216300618071c"
+bytes = 3089519
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_40_-130_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-130&longitude-max=-120&latitude-min=40&latitude-max=50&start=1981&end=2025&format=JSON"
+sha256 = "80fa77c96d7880694175590b9b4864b25111a3c7c7ed4890cd2adc9b9cdc1338"
+bytes = 3079982
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_40_-60_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-60&longitude-max=-50&latitude-min=40&latitude-max=50&start=1981&end=2025&format=JSON"
+sha256 = "f94886479395a569f45b25f6ccb8583727e776587b5181fe67978a0fa18d7ced"
+bytes = 3070048
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_40_-70_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-70&longitude-max=-60&latitude-min=40&latitude-max=50&start=1981&end=2025&format=JSON"
+sha256 = "c7bd49aa1dbc048e8f1d8458b40a99d823c08531f3f0754a8c14c553992df8ba"
+bytes = 3084222
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_40_-80_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-80&longitude-max=-70&latitude-min=40&latitude-max=50&start=1981&end=2025&format=JSON"
+sha256 = "c79634dfa6f5c0bfe3958a04133dc92ef1d3cae5c9745db5535be3cd7d3e1ef5"
+bytes = 3114146
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_40_-90_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-90&longitude-max=-80&latitude-min=40&latitude-max=50&start=1981&end=2025&format=JSON"
+sha256 = "3edf7fdcf27a7862fd717d4de357d029e91538c9ee6de96f143f759280f9f6d5"
+bytes = 3103029
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_40_0_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=0&longitude-max=10&latitude-min=40&latitude-max=50&start=1981&end=2025&format=JSON"
+sha256 = "ddf53d33839ce02d8d290f80c28c51fca69ec8e08efbf28498ab73f3e68192da"
+bytes = 2906686
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_40_100_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=100&longitude-max=110&latitude-min=40&latitude-max=50&start=1981&end=2025&format=JSON"
+sha256 = "b0fe5d8d9e9de4d78ad74a1c9a0315d6070125379cdbf3f69a35759588d14ed4"
+bytes = 3144091
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_40_10_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=10&longitude-max=20&latitude-min=40&latitude-max=50&start=1981&end=2025&format=JSON"
+sha256 = "2cfa085824de1f25e4d8f8e5845cf0b5f3e6d0eabafd07fe6fbb9c7c0e6e5aaa"
+bytes = 3093738
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_40_110_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=110&longitude-max=120&latitude-min=40&latitude-max=50&start=1981&end=2025&format=JSON"
+sha256 = "36212823b6e8ab47d0ebf12ee028a5db03fad944a5c8c05a2739316fe8252169"
+bytes = 3149824
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_40_120_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=120&longitude-max=130&latitude-min=40&latitude-max=50&start=1981&end=2025&format=JSON"
+sha256 = "3a92b1d79116573d2dd7cc94b7a36f60d10f9f1b1d927c9723539b412e4399a2"
+bytes = 3148647
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_40_130_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=130&longitude-max=140&latitude-min=40&latitude-max=50&start=1981&end=2025&format=JSON"
+sha256 = "127a8116cb24906c8e5f1325b7caa281b909de39e9e9d4c63d63191235070911"
+bytes = 3122226
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_40_140_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=140&longitude-max=150&latitude-min=40&latitude-max=50&start=1981&end=2025&format=JSON"
+sha256 = "09d8ef3d98d182e8f3da6384ea25cd70205c1d217f17b1d9b82f228a33b194f6"
+bytes = 3069324
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_40_150_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=150&longitude-max=160&latitude-min=40&latitude-max=50&start=1981&end=2025&format=JSON"
+sha256 = "2cedddc6368c6e99e7df7a895a75c27538f21b1d8cd4d8950f92ba0470b7029b"
+bytes = 3030034
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_40_20_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=20&longitude-max=30&latitude-min=40&latitude-max=50&start=1981&end=2025&format=JSON"
+sha256 = "33d714b01538dadd6680da8b1e2b250ebd3fd9025fc34cb285882de97b7abf64"
+bytes = 3084289
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_40_30_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=30&longitude-max=40&latitude-min=40&latitude-max=50&start=1981&end=2025&format=JSON"
+sha256 = "2812848db83118c41bf7eda2f2c2038faef971e507441e5df7336f5d972eb122"
+bytes = 3085486
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_40_40_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=40&longitude-max=50&latitude-min=40&latitude-max=50&start=1981&end=2025&format=JSON"
+sha256 = "e23e68a220e1b23a3fe7f0ce1e514bd152e61e5fa6194e6a86f89173e5bb7d90"
+bytes = 3095404
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_40_50_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=50&longitude-max=60&latitude-min=40&latitude-max=50&start=1981&end=2025&format=JSON"
+sha256 = "25c55c410253e614675f0f3fedcc157e01933eaf7bef1b1c4f827e7fd2b60505"
+bytes = 3113758
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_40_60_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=60&longitude-max=70&latitude-min=40&latitude-max=50&start=1981&end=2025&format=JSON"
+sha256 = "34cff12cd65e59651040e7be705cd553e60b27ccb4ef3f148e052e020b3e7581"
+bytes = 3121715
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_40_70_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=70&longitude-max=80&latitude-min=40&latitude-max=50&start=1981&end=2025&format=JSON"
+sha256 = "fb586b884ede92a3721663ff81fea0fa68a907adb298efc116ebdccff085dc8d"
+bytes = 3121958
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_40_80_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=80&longitude-max=90&latitude-min=40&latitude-max=50&start=1981&end=2025&format=JSON"
+sha256 = "696bdc5a057ba6f3ab10817f54cde900d98a4afca67146d9e36794ddda918a7d"
+bytes = 3128487
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_40_90_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=90&longitude-max=100&latitude-min=40&latitude-max=50&start=1981&end=2025&format=JSON"
+sha256 = "2732840addc2bca92ec30f3a82c577e1fecd99754c7cd4448d74ce5b3087da6a"
+bytes = 3137781
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_50_-100_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-100&longitude-max=-90&latitude-min=50&latitude-max=60&start=1981&end=2025&format=JSON"
+sha256 = "3567ed230b593e6ef19e3cc757c7c5f9c0d28fae96a378e68da3b768ee6401bc"
+bytes = 3177323
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_50_-10_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-10&longitude-max=0&latitude-min=50&latitude-max=60&start=1981&end=2025&format=JSON"
+sha256 = "a2d09a450d9c2b570c4521108bd53d07d28fa2ed389473b3dc334db451262bba"
+bytes = 3042828
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_50_-110_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-110&longitude-max=-100&latitude-min=50&latitude-max=60&start=1981&end=2025&format=JSON"
+sha256 = "6e96ca5531a9e8bcc1d0f67dcae37bfb140095cf2552b80fdd89e315469a32ab"
+bytes = 3167479
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_50_-120_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-120&longitude-max=-110&latitude-min=50&latitude-max=60&start=1981&end=2025&format=JSON"
+sha256 = "02a98a7f9d76b6db04264dab128cd41897992bc58ec2dc293d803fc2abe02234"
+bytes = 3143182
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_50_-130_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-130&longitude-max=-120&latitude-min=50&latitude-max=60&start=1981&end=2025&format=JSON"
+sha256 = "4776544711d61a3d01c2a5563def92ebc11fe2224c8d5cbfa7a1c07ce69add49"
+bytes = 3119889
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_50_-140_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-140&longitude-max=-130&latitude-min=50&latitude-max=60&start=1981&end=2025&format=JSON"
+sha256 = "b2f027c05e82e189ce7e2cdd3018e548d5ec2ad26ed0e203f8a24dc7ed16942e"
+bytes = 3046832
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_50_-150_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-150&longitude-max=-140&latitude-min=50&latitude-max=60&start=1981&end=2025&format=JSON"
+sha256 = "c3ce878068fc6c2ccb1b3a2d0f383a81b699ae830e4224e87691c67525ad640a"
+bytes = 3002504
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_50_-160_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-160&longitude-max=-150&latitude-min=50&latitude-max=60&start=1981&end=2025&format=JSON"
+sha256 = "dbf09cd576d1d2c528b80d102fbac1c3662fd2588c606f4031c65ccc02fdbd9e"
+bytes = 3016631
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_50_-170_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-170&longitude-max=-160&latitude-min=50&latitude-max=60&start=1981&end=2025&format=JSON"
+sha256 = "67aaaff50c193570b6aa854183b7f9ced691deb1e0987a43a98a3f3b50222e3c"
+bytes = 3000329
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_50_-180_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-180&longitude-max=-170&latitude-min=50&latitude-max=60&start=1981&end=2025&format=JSON"
+sha256 = "35198d0a7684718fe163fe1ba6a49b6dcfa4d5a171f002ea36345e4d062fdd83"
+bytes = 2977706
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_50_-20_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-20&longitude-max=-10&latitude-min=50&latitude-max=60&start=1981&end=2025&format=JSON"
+sha256 = "0443a2ac0a6af9165c7a974ee0fbab131a6109b8c8b68c40c660071a73210165"
+bytes = 3068709
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_50_-50_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-50&longitude-max=-40&latitude-min=50&latitude-max=60&start=1981&end=2025&format=JSON"
+sha256 = "db6a731b62da8aeceec338a0caf587410452543365af10ba9c44a81ed6367902"
+bytes = 2985129
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_50_-60_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-60&longitude-max=-50&latitude-min=50&latitude-max=60&start=1981&end=2025&format=JSON"
+sha256 = "0fb01e5debef59a68fe40696415acea7538cc15d1a5729a6d98f68ec65b2b49e"
+bytes = 3050779
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_50_-70_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-70&longitude-max=-60&latitude-min=50&latitude-max=60&start=1981&end=2025&format=JSON"
+sha256 = "22107cfcee85e7631f1899aa757895f274b5e17e1bfe88d2858f17dbb96a821a"
+bytes = 3162745
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_50_-80_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-80&longitude-max=-70&latitude-min=50&latitude-max=60&start=1981&end=2025&format=JSON"
+sha256 = "2cbd7b5498aec32893a48854bf54a40644d00db91d1ebcd4e54c0b3690ad509f"
+bytes = 3169796
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_50_-90_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-90&longitude-max=-80&latitude-min=50&latitude-max=60&start=1981&end=2025&format=JSON"
+sha256 = "deac7e7ad912e719594c368184cd5918cc24ee02f2197053faaef39472683b9d"
+bytes = 3159107
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_50_0_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=0&longitude-max=10&latitude-min=50&latitude-max=60&start=1981&end=2025&format=JSON"
+sha256 = "853ca257190f4d26707a9f656ecd4771f1ed1eb7e0061c8a98b5ce70e2378976"
+bytes = 2867082
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_50_100_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=100&longitude-max=110&latitude-min=50&latitude-max=60&start=1981&end=2025&format=JSON"
+sha256 = "d2c6fbe2d907d85b271c52e8fcd9d61974e1c0c29557a5c8059084cdc1490744"
+bytes = 3187118
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_50_10_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=10&longitude-max=20&latitude-min=50&latitude-max=60&start=1981&end=2025&format=JSON"
+sha256 = "f2d0010c62aacbabb9f8b77b6dd889bc17235b67e2e1ab005c43748d57b2748c"
+bytes = 3055850
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_50_110_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=110&longitude-max=120&latitude-min=50&latitude-max=60&start=1981&end=2025&format=JSON"
+sha256 = "29d9fe05d2a98bdfc2137bb72293b191238e1c2de9f940a082031d655744e242"
+bytes = 3197614
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_50_120_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=120&longitude-max=130&latitude-min=50&latitude-max=60&start=1981&end=2025&format=JSON"
+sha256 = "d78d1060668cde06ec6cd257f800c8e943247cb9381a5a16bea8ba4a9c1d08af"
+bytes = 3201580
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_50_130_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=130&longitude-max=140&latitude-min=50&latitude-max=60&start=1981&end=2025&format=JSON"
+sha256 = "424e9457141b840d3118afb004c32582300b9be3ecae566fea2971a6604cb2b7"
+bytes = 3198441
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_50_140_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=140&longitude-max=150&latitude-min=50&latitude-max=60&start=1981&end=2025&format=JSON"
+sha256 = "c7effea58c226009603568e2f518bbf84fa2601978efb5308892725097da6a67"
+bytes = 3126592
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_50_150_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=150&longitude-max=160&latitude-min=50&latitude-max=60&start=1981&end=2025&format=JSON"
+sha256 = "c8c3a6a6c010a09d3a2af932ee85f91637140828a5ea7dd9aab06cf62c7af571"
+bytes = 3088499
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_50_160_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=160&longitude-max=170&latitude-min=50&latitude-max=60&start=1981&end=2025&format=JSON"
+sha256 = "cd1305ad570215e15192679108d8388cc22614fb082bb823b2a2b43d2875d95f"
+bytes = 3043176
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_50_170_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=170&longitude-max=180&latitude-min=50&latitude-max=60&start=1981&end=2025&format=JSON"
+sha256 = "470ce2649c81ff4c1dae65c25050e94d721178af818d9cf4ff7e058737d7fa29"
+bytes = 2809474
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_50_20_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=20&longitude-max=30&latitude-min=50&latitude-max=60&start=1981&end=2025&format=JSON"
+sha256 = "32e4d3faf9151f50745a21a8b985c3822d7175eba6a39c691f34bbeb98ea0258"
+bytes = 3077325
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_50_30_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=30&longitude-max=40&latitude-min=50&latitude-max=60&start=1981&end=2025&format=JSON"
+sha256 = "e9cb432bee259cc47c1989ba91b97e3d8abff73c2b542f224f3b1c7a55b7ea61"
+bytes = 3108819
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_50_40_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=40&longitude-max=50&latitude-min=50&latitude-max=60&start=1981&end=2025&format=JSON"
+sha256 = "e68d60f95b37ba94f02a5962a2020188aa5224811a6d5d8c58b28773d1c0638e"
+bytes = 3128964
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_50_50_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=50&longitude-max=60&latitude-min=50&latitude-max=60&start=1981&end=2025&format=JSON"
+sha256 = "bda790b242a62b31c4b872bedf71ed61d3692f5d0f506a7cd46474462a0aa93d"
+bytes = 3145743
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_50_60_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=60&longitude-max=70&latitude-min=50&latitude-max=60&start=1981&end=2025&format=JSON"
+sha256 = "4019259cc0148ea168f11a570089787d2cf4ca95257710066de8feb6f3473c52"
+bytes = 3154514
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_50_70_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=70&longitude-max=80&latitude-min=50&latitude-max=60&start=1981&end=2025&format=JSON"
+sha256 = "26d6ae931256a1f4b50ce87e5ff73787483bc9a88a62ba5983f24d5191bd905a"
+bytes = 3160410
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_50_80_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=80&longitude-max=90&latitude-min=50&latitude-max=60&start=1981&end=2025&format=JSON"
+sha256 = "0a4de91018254a574e25c6949e420153a71d5960dcc5f4da07139ea87e7fe947"
+bytes = 3166433
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_50_90_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=90&longitude-max=100&latitude-min=50&latitude-max=60&start=1981&end=2025&format=JSON"
+sha256 = "f9dff627692ed92e16e2007c0b33651bdeca8f5f4ebf1059ecbceee728819839"
+bytes = 3176641
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_-100_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-100&longitude-max=-90&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "cc53a2b98d4447afe71c299f6b10661c2cf1c631947515bbea20ee0490b733ad"
+bytes = 3214915
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_-10_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-10&longitude-max=0&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "7f509f53d9016f33cd9fa4394d99e24fa526cd0d5c699e65ce7abdba8144953d"
+bytes = 2974355
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_-110_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-110&longitude-max=-100&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "d7ac34f0f0e81bfaa8337f2194fa6b8567d39a793785679b8639d9a66d52018d"
+bytes = 3217859
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_-120_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-120&longitude-max=-110&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "fb34a1b98644c530cdb3abd7d00221520fc32f861525e1e6d6c11bc0c96960a2"
+bytes = 3211581
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_-130_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-130&longitude-max=-120&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "3faccdaf87746eabf644a73f93732664706b68680303a94d6a2d46bb38dc0a1f"
+bytes = 3203742
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_-140_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-140&longitude-max=-130&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "50dcfe70f086d90d74ec599a95ef70990b5a08c0045db6510d78c7b758260178"
+bytes = 3193415
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_-150_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-150&longitude-max=-140&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "c1d0bb204bd231fd0b2fe2bb500d610e95cb936c22f4898f9b48c7fe90fe03fd"
+bytes = 3181157
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_-160_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-160&longitude-max=-150&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "ed78170fdf219a704911eeb2a8326f37b38efdb02017b8bd06f29a816acfbf88"
+bytes = 3187678
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_-170_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-170&longitude-max=-160&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "6ff80fdd6a6cdf62956f91d9567f5383e118184934c843ce0872ce936cb69c5e"
+bytes = 3150515
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_-180_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-180&longitude-max=-170&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "6ae6fffa4b79a5bfa947d6c72f47eac4c0372e8dc772eff020e7b5348cfda9ea"
+bytes = 3134204
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_-20_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-20&longitude-max=-10&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "577c87769375ea5a35295b135cfb34cee7425b5f40667373a1e91cb680bc3fa3"
+bytes = 3006759
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_-30_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-30&longitude-max=-20&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "9f1b005bb15d918f8cc8bf3f3d11e5fa28e86d70178dbade35e098c2b665ad78"
+bytes = 3031519
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_-40_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-40&longitude-max=-30&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "2585082f256e4174c5826edae9c87a3f1fa9a80f7b53b759b9d2ce026a47980f"
+bytes = 3094446
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_-50_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-50&longitude-max=-40&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "4ff261557f79c84000683b31542c6984ee8bbbbde09bbd9119175680ef8a6f2d"
+bytes = 3233349
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_-60_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-60&longitude-max=-50&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "5ae411e1187fa974df60de602c51a67ab72b9ac1455cf273e80220f67a6f5a30"
+bytes = 3111694
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_-70_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-70&longitude-max=-60&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "83b15038c475e3f94982640a0b24f0d7bf7eeeadb7c9f47092c90a449cb66470"
+bytes = 3182799
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_-80_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-80&longitude-max=-70&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "73d52ae3f87f3f73d85d44738a40d77a63ef4bf19d243191f7e7f9b2ae727ff1"
+bytes = 3191231
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_-90_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-90&longitude-max=-80&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "3236221e82132a6119193a8b1cd7a51078d748b72baa1a5b3a940816cfd99b60"
+bytes = 3194286
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_0_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=0&longitude-max=10&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "29cce4d714ec27d5af7db14852a33514f0a1344cf72cf8a187db50de6c4727dd"
+bytes = 2824501
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_100_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=100&longitude-max=110&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "20cff76bd59ea30ecae1aa3b687980e9d4338201fd3d4f401e7b01a1c121c6f5"
+bytes = 3225800
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_10_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=10&longitude-max=20&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "89ff9ee44b615af1a7863eb48a135e2fffa35de25d87d3aa4918a5047a4300a5"
+bytes = 3066240
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_110_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=110&longitude-max=120&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "a398830d5ea1af3cc108ab59558e9c1608c61680f1e67b0eefac4c97d0fac90f"
+bytes = 3226794
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_120_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=120&longitude-max=130&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "7ced4806d749d9cb4395251f628551f1162bdfd73b4e922765065579331f3337"
+bytes = 3227822
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_130_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=130&longitude-max=140&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "853f4f7e2cc52460264cec1d065d56038f3679dab19262ba5aa1de05c367ff89"
+bytes = 3235704
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_140_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=140&longitude-max=150&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "a3fcec7581e521649228e1bd06f684b3eadde9a8ef139237932c80ec22091157"
+bytes = 3236592
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_150_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=150&longitude-max=160&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "8a808af4ab146308e0f3c911f89d918193951e56b4f7c294186204a6cfb74692"
+bytes = 3220333
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_160_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=160&longitude-max=170&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "0e2812b12c439a5962b76db6dec907d25c41fd2c3187c8d27f42b3dfafef0ead"
+bytes = 3206632
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_170_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=170&longitude-max=180&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "acc26ac6f5cf2cca5c334e7b9e6908041db7c9408acdab349e61f425ba267b45"
+bytes = 2993702
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_20_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=20&longitude-max=30&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "0a0584b1b4d6fa74e370527d51f7e8c77c2c9508e70dd146950abbf458091e33"
+bytes = 3112773
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_30_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=30&longitude-max=40&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "2482d61697c8c15b771a22a9f1113843ecdcadb017428c8e42eb1926399b63cd"
+bytes = 3113100
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_40_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=40&longitude-max=50&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "cabb528fafb85b7b5bce39065406da9353addeb3c782cdf3e318c2d9920d520b"
+bytes = 3120934
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_50_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=50&longitude-max=60&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "6d32faba47539546b9efdec911d469b56804cbb9322d7f4b90b542683d4123d7"
+bytes = 3161841
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_60_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=60&longitude-max=70&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "3796cbccd93074845a22e5808d4ff3f69b531688e737da4f42d3b2de3d841453"
+bytes = 3184243
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_70_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=70&longitude-max=80&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "067b441be8507c2bd0b649dce6e08f6bafb82d217a17dc481ae2203b040166b8"
+bytes = 3193708
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_80_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=80&longitude-max=90&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "9b7a4cef4d72cd98117309e4302eb72ccf22ad0eb20e06380b93a3a5f6e9bb30"
+bytes = 3207109
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_60_90_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=90&longitude-max=100&latitude-min=60&latitude-max=70&start=1981&end=2025&format=JSON"
+sha256 = "97bf5e6aa313dd0db7083fdbd901277ad4cad6b87bb4f20df1c912a0408fc465"
+bytes = 3220528
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_70_-100_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-100&longitude-max=-90&latitude-min=70&latitude-max=80&start=1981&end=2025&format=JSON"
+sha256 = "74dc7ef93e105a7ad7898ecc11c60d6a7c8e26529e09c7f4bcf0ebd43e538b96"
+bytes = 3240364
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_70_-10_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-10&longitude-max=0&latitude-min=70&latitude-max=80&start=1981&end=2025&format=JSON"
+sha256 = "eefeed8375d30f4dfbb22dedb859fe46678c055fd550eb0cbc56769f54691a85"
+bytes = 3103020
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_70_-110_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-110&longitude-max=-100&latitude-min=70&latitude-max=80&start=1981&end=2025&format=JSON"
+sha256 = "c637c8b0350e42ae91da45fecd117dcc224409ff7cbc8bf700f81821bfcbf483"
+bytes = 3247011
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_70_-120_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-120&longitude-max=-110&latitude-min=70&latitude-max=80&start=1981&end=2025&format=JSON"
+sha256 = "b7bde1d0086c22bed5f1d29a93f28c5a6269e6aa7420c6115d4d10b666d9517f"
+bytes = 3245118
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_70_-130_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-130&longitude-max=-120&latitude-min=70&latitude-max=80&start=1981&end=2025&format=JSON"
+sha256 = "1306fc6db7c9f24ceaf774adb59b65ef7ee01aa3b44df34e9a6d214a8a4b4109"
+bytes = 3244106
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_70_-150_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-150&longitude-max=-140&latitude-min=70&latitude-max=80&start=1981&end=2025&format=JSON"
+sha256 = "1a38e70ecc9a6283c0f6115c70ab33f3764c8e8f1b40d4c64b8cea073132bcc6"
+bytes = 3251587
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_70_-160_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-160&longitude-max=-150&latitude-min=70&latitude-max=80&start=1981&end=2025&format=JSON"
+sha256 = "70f426e6455c07e8df32f2dc8e25648c1f7b31ffd6b5daa57470e252d4c77710"
+bytes = 3248171
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_70_-170_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-170&longitude-max=-160&latitude-min=70&latitude-max=80&start=1981&end=2025&format=JSON"
+sha256 = "3a4ea500e97b15ad0d61b4cba2918cb59709278073772653110937643671c8dd"
+bytes = 3241983
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_70_-180_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-180&longitude-max=-170&latitude-min=70&latitude-max=80&start=1981&end=2025&format=JSON"
+sha256 = "4634504eb850a85b95be88c735554814154d0c5a4d3f9d03f6bd7fe2090cf5de"
+bytes = 3245226
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_70_-30_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-30&longitude-max=-20&latitude-min=70&latitude-max=80&start=1981&end=2025&format=JSON"
+sha256 = "fb61feb43c018c35b6db212aaca1cbea144057ce35398e0f8cabe0c9767b0e22"
+bytes = 3282506
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_70_-60_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-60&longitude-max=-50&latitude-min=70&latitude-max=80&start=1981&end=2025&format=JSON"
+sha256 = "b3db9675d4812b42cccb258ac1ed82ab1931120df6501ac3c297851fe6795bc0"
+bytes = 3272293
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_70_-70_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-70&longitude-max=-60&latitude-min=70&latitude-max=80&start=1981&end=2025&format=JSON"
+sha256 = "6f1582624936546de799640dc65c9f88cfe27be600d7397ed666eb07d5226a83"
+bytes = 3235572
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_70_-80_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-80&longitude-max=-70&latitude-min=70&latitude-max=80&start=1981&end=2025&format=JSON"
+sha256 = "87e142200c53eed88befd22265613824a6a92532ab6256c229dbca3a98f55fc0"
+bytes = 3234288
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_70_-90_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-90&longitude-max=-80&latitude-min=70&latitude-max=80&start=1981&end=2025&format=JSON"
+sha256 = "35eb86f6c27c1c7ff162e6a4eaa9de5e2346cef14a1d69599aff4409a2ca1368"
+bytes = 3242229
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_70_100_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=100&longitude-max=110&latitude-min=70&latitude-max=80&start=1981&end=2025&format=JSON"
+sha256 = "4bf393fb22dcef13698fb84b136a68351b75ce29e60060e9ea297fffe99a8152"
+bytes = 3240359
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_70_10_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=10&longitude-max=20&latitude-min=70&latitude-max=80&start=1981&end=2025&format=JSON"
+sha256 = "ef7ef5159f17259cc54dd527db2215dc23b58bdb16152e55972697ef8fc735ea"
+bytes = 3044629
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_70_110_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=110&longitude-max=120&latitude-min=70&latitude-max=80&start=1981&end=2025&format=JSON"
+sha256 = "e7f0970d1022e7bfb4f0d88797060d6c14f2164f5eb4f49c6f88ba460d02fdce"
+bytes = 3237444
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_70_120_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=120&longitude-max=130&latitude-min=70&latitude-max=80&start=1981&end=2025&format=JSON"
+sha256 = "2a5446b397105322db1ba1919278d0a83e18e1a14fd977627497c6b86151c97e"
+bytes = 3234619
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_70_130_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=130&longitude-max=140&latitude-min=70&latitude-max=80&start=1981&end=2025&format=JSON"
+sha256 = "82b7ca3ff211057bf284b6abaa224412743dde6b6b744d331404bbc44554317f"
+bytes = 3229744
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_70_140_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=140&longitude-max=150&latitude-min=70&latitude-max=80&start=1981&end=2025&format=JSON"
+sha256 = "04f4866fdb6dabcb10f04eee60852d0a4e1cfcb39778e6ae273ed969a9b00439"
+bytes = 3235112
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_70_150_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=150&longitude-max=160&latitude-min=70&latitude-max=80&start=1981&end=2025&format=JSON"
+sha256 = "414ff94b58c7fdadab32bcd37cd1806037bccfb15163e1378a04e3f23d00006c"
+bytes = 3242241
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_70_160_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=160&longitude-max=170&latitude-min=70&latitude-max=80&start=1981&end=2025&format=JSON"
+sha256 = "7bee008fb78301009caf5731033c58d2864be55d14733e312a235c94f5550001"
+bytes = 3250201
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_70_170_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=170&longitude-max=180&latitude-min=70&latitude-max=80&start=1981&end=2025&format=JSON"
+sha256 = "62001445363f7c274289c387c7909373b189761277d9d633c45cff576fb56643"
+bytes = 3059276
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_70_20_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=20&longitude-max=30&latitude-min=70&latitude-max=80&start=1981&end=2025&format=JSON"
+sha256 = "43f14c53350b73e98a83eedf686befe925b9da25ae02286538e7adc928017bf6"
+bytes = 3075227
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_70_30_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=30&longitude-max=40&latitude-min=70&latitude-max=80&start=1981&end=2025&format=JSON"
+sha256 = "98e2231096c18f0df1a4939dd4d601b7604c7a1725f3b208a26e5a4a0ca4dba3"
+bytes = 3077360
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_70_50_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=50&longitude-max=60&latitude-min=70&latitude-max=80&start=1981&end=2025&format=JSON"
+sha256 = "ccc4ae4366abebbde7810cff1dee09c49dcebac47de4216a95d7bc067cee84d4"
+bytes = 3146997
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_70_60_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=60&longitude-max=70&latitude-min=70&latitude-max=80&start=1981&end=2025&format=JSON"
+sha256 = "7c1dbdec08c58a4be6bd8088e10fa5ac6ebb108917a3ad054da8f2f42a973a2d"
+bytes = 3182038
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_70_70_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=70&longitude-max=80&latitude-min=70&latitude-max=80&start=1981&end=2025&format=JSON"
+sha256 = "e025ea164626256f5878471b131b1a5b6878ba4e1f1f2da56e64a82123c93c29"
+bytes = 3199729
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_70_80_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=80&longitude-max=90&latitude-min=70&latitude-max=80&start=1981&end=2025&format=JSON"
+sha256 = "3c9ab8c8b0b886ff23193411ed857bbd1c30ebc2e1aee94f1815093ec65a4da9"
+bytes = 3220233
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_70_90_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=90&longitude-max=100&latitude-min=70&latitude-max=80&start=1981&end=2025&format=JSON"
+sha256 = "a947ed0090ab478969b02b6a0733e148d20493f211071f5b9f3e15618d89662b"
+bytes = 3235782
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_80_-100_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-100&longitude-max=-90&latitude-min=80&latitude-max=90&start=1981&end=2025&format=JSON"
+sha256 = "99a0015b12d29082fc12086b6ec699081f682f0680c7ffbfec5b458a1772be57"
+bytes = 3273985
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_80_-110_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-110&longitude-max=-100&latitude-min=80&latitude-max=90&start=1981&end=2025&format=JSON"
+sha256 = "58adc6db55d3a4d806004a054d6005e1a974ffdef36dbc37aa7a14192cb7a3ca"
+bytes = 3274903
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_80_-70_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-70&longitude-max=-60&latitude-min=80&latitude-max=90&start=1981&end=2025&format=JSON"
+sha256 = "6d362be854896f304acfabb9ef434852fb50f891c2f3376bec5ff857c3aa8d47"
+bytes = 3271462
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_80_-80_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-80&longitude-max=-70&latitude-min=80&latitude-max=90&start=1981&end=2025&format=JSON"
+sha256 = "8f9ea4cd07122f63f475b008ceb96d8004e67c40f3a78bdd712484edd92eae2c"
+bytes = 3278832
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_80_-90_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=-90&longitude-max=-80&latitude-min=80&latitude-max=90&start=1981&end=2025&format=JSON"
+sha256 = "596fa4841d75ac008eae62a23d4b1c0e269dc26af38646032b180941ea66ebff"
+bytes = 3272605
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_80_10_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=10&longitude-max=20&latitude-min=80&latitude-max=90&start=1981&end=2025&format=JSON"
+sha256 = "8064a112ee86eb5b564789676e6060a920a85ea0edd8ad51ef282904c0d5e134"
+bytes = 3249106
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_80_20_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=20&longitude-max=30&latitude-min=80&latitude-max=90&start=1981&end=2025&format=JSON"
+sha256 = "ba9a0da1a94ee2ee3bf88b0532140d9b205e243e7aabb430c5c7996d77b1af11"
+bytes = 3252827
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_80_30_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=30&longitude-max=40&latitude-min=80&latitude-max=90&start=1981&end=2025&format=JSON"
+sha256 = "243d183d056a1f64e1f11c4be8634208844463b813c445bdf6fb9bd78b3a4440"
+bytes = 3254903
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_80_40_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=40&longitude-max=50&latitude-min=80&latitude-max=90&start=1981&end=2025&format=JSON"
+sha256 = "59f42e85ac7d030e150d5b7b610cccf35c349d4aaa1d8a0f5e465ff1bebf91bc"
+bytes = 3256586
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_80_50_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=50&longitude-max=60&latitude-min=80&latitude-max=90&start=1981&end=2025&format=JSON"
+sha256 = "716fe716205061149771f5da8c19b20cb60b9961fb4b375a229613792a8afdfd"
+bytes = 3259580
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_80_60_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=60&longitude-max=70&latitude-min=80&latitude-max=90&start=1981&end=2025&format=JSON"
+sha256 = "a84865d2f837e328cf99ceea7b1c9edb95a453058d021f2c0b58cb1bbbd27aa4"
+bytes = 3263668
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_80_70_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=70&longitude-max=80&latitude-min=80&latitude-max=90&start=1981&end=2025&format=JSON"
+sha256 = "cbcb5369c732246c7570317fa6a960f438bca5decc910cf0b07c5a612588a63e"
+bytes = 3265875
+fetched = "2026-11-03"
+
+[files."power/monthly_T2M_80_90_1981_2025.bin"]
+url = "https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters=T2M&community=RE&longitude-min=90&longitude-max=100&latitude-min=80&latitude-max=90&start=1981&end=2025&format=JSON"
+sha256 = "fc11e9e0352a5123595b0aaca6259b540b3f24ab47bf9a7c785abb2e6355feb7"
+bytes = 3271519
+fetched = "2026-11-03"
+
 [files."un-wpp/WPP2024_TotalPopulationBySex.csv.gz"]
 url = "https://population.un.org/wpp/assets/Excel%20Files/1_Indicator%20(Standard)/CSV_FILES/WPP2024_TotalPopulationBySex.csv.gz"
 sha256 = "66b84489fd7875b62de9b40d960b803b8c8439367c98deab89c2f770970925b9"

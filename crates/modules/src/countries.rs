@@ -37,6 +37,7 @@ use esim_kernel::manifest::param_f64;
 use esim_kernel::{Ctx, Duration, Event, LatLonGrid, Module, Time};
 use esim_registry::countries::{self, Country};
 use esim_registry::cells;
+use crate::planet::CARBON;
 use esim_registry::{Catalog, Fetcher};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
@@ -265,6 +266,32 @@ impl PeopleCountries {
     }
 }
 
+/// The global anomaly record (HadCRUT5 annual, re-zeroed to 1850 to 1900), which the
+/// country fit and the cells' warming pattern are both regressed on.
+fn global_anomaly(f: &mut Fetcher, cat: &Catalog) -> Result<BTreeMap<i64, f64>, String> {
+    let had = esim_registry::planet::hadcrut5_annual(f, &asset_url(cat, "hadcrut5-global-annual")?)?;
+    let base = esim_registry::planet::window_mean(&had, 1850, 1900).unwrap_or(0.0);
+    Ok(had.iter().map(|(y, v)| (*y, v - base)).collect())
+}
+
+/// The cells' warming pattern, degrees of local warming per degree of global warming,
+/// for every populated cell (NaN elsewhere): the reanalysis's own trend, see
+/// `cells::warming_pattern`.
+fn load_pattern(f: &mut Fetcher, cat: &Catalog, res_deg: f64, from: i64, to: i64) -> Result<Vec<f32>, String> {
+    let people = cells::worldpop_count(f, &asset_url(cat, "worldpop-2020-1km")?, res_deg)?;
+    let g = global_anomaly(f, cat)?;
+    cells::warming_pattern(f, res_deg, from, to, &g, &people)
+}
+
+/// The warming a cell gets this year: its own slope times the global anomaly when the
+/// pattern is on cells and the cell has one, else its country's number.
+fn cell_warming(pattern_on: bool, slope: &[f32], i: usize, global_anom: Option<f64>, country: f64) -> f64 {
+    match (pattern_on, global_anom, slope.get(i)) {
+        (true, Some(ga), Some(sl)) if sl.is_finite() => *sl as f64 * ga,
+        _ => country,
+    }
+}
+
 // ---------------------------------------------------------------------------------------
 // climate.countries
 
@@ -273,7 +300,9 @@ pub struct ClimateCountries {
     name: String,
     res_deg: f64, frame_res_deg: f64, frame_every_years: i64, fit_from: i64, fit_to: i64, clim_from: i64, clim_to: i64,
     anom_from: i64, anom_to: i64, cells_clim_from: i64, cells_clim_to: i64, scale: String,
+    pattern: String, pattern_from: i64, pattern_to: i64, slope_frame_done: bool,
     gmst: f64,
+    #[serde(skip)] slope_cells: Vec<f32>,                 // pattern = cells: local warming per degree of global, per cell
     #[serde(skip)] g_anom: f64,                           // global anomaly's observed mean over the anomaly window
     #[serde(skip)] g_cells: f64,                          // and over the cells' climatology window (POWER's)
     #[serde(skip)] countries: Vec<Country>,
@@ -292,7 +321,8 @@ impl ClimateCountries {
             clim_from: param_f64(p, "clim_from", 1991.0) as i64, clim_to: param_f64(p, "clim_to", 2020.0) as i64,
             anom_from: param_f64(p, "anom_from", 2014.0) as i64, anom_to: param_f64(p, "anom_to", 2023.0) as i64,
             cells_clim_from: param_f64(p, "cells_clim_from", 2001.0) as i64, cells_clim_to: param_f64(p, "cells_clim_to", 2025.0) as i64, scale: param_str(p, "scale", "110m"),
-            gmst: 0.0, g_anom: 0.0, g_cells: 0.0, countries: Vec::new(), fit: Vec::new(), hot_clim: Vec::new(), g_clim: 0.0, last_frame_year: -1_000_000,
+            pattern: param_str(p, "pattern", "country"), pattern_from: param_f64(p, "pattern_from", 1981.0) as i64, pattern_to: param_f64(p, "pattern_to", 2025.0) as i64, slope_frame_done: false,
+            gmst: 0.0, slope_cells: Vec::new(), g_anom: 0.0, g_cells: 0.0, countries: Vec::new(), fit: Vec::new(), hot_clim: Vec::new(), g_clim: 0.0, last_frame_year: -1_000_000,
         };
         m.load()?;
         Ok(m)
@@ -312,6 +342,10 @@ impl ClimateCountries {
         self.g_anom = esim_registry::planet::window_mean(&g_all, self.anom_from, self.anom_to).unwrap_or(0.0);
         // POWER's climatology runs past the global record's end; the window mean uses the years both have
         self.g_cells = esim_registry::planet::window_mean(&g_all, self.cells_clim_from, self.cells_clim_to).unwrap_or(self.g_anom);
+        if self.pattern == "cells" {
+            let people = cells::worldpop_count(&mut f, &asset_url(&cat, "worldpop-2020-1km")?, self.res_deg)?;
+            self.slope_cells = cells::warming_pattern(&mut f, self.res_deg, self.pattern_from, self.pattern_to, &g_all, &people)?;
+        }
         // both series smoothed over eleven years before the fit: year-to-year noise in the
         // regressor would otherwise pull every slope toward zero
         let gs = countries::smooth(&g, 11);
@@ -326,7 +360,7 @@ impl ClimateCountries {
         Ok(())
     }
     pub fn describe(name: &str, p: &toml::Value) -> Describe {
-        Describe::new("climate.countries", name, "Each country's mean temperature from its own record (CRU TS 4.07, 1901 to 2022, via the World Bank portal) regressed on the global anomaly (HadCRUT5, re-zeroed to 1850 to 1900): the slope is the country's observed share of global warming, the intercept its level. The run's global anomaly from the energy module times the slope gives the country's annual mean each year; the hottest month moves by the same slope from its 1991 to 2020 mean. Pattern scaling from the record; the stated assumption is that the pattern persists.")
+        let d = Describe::new("climate.countries", name, "Each country's mean temperature from its own record (CRU TS 4.07, 1901 to 2022, via the World Bank portal) regressed on the global anomaly (HadCRUT5, re-zeroed to 1850 to 1900): the slope is the country's observed share of global warming, the intercept its level. The run's global anomaly from the energy module times the slope gives the country's annual mean each year; the hottest month moves by the same slope from its 1991 to 2020 mean. Pattern scaling from the record; the stated assumption is that the pattern persists.")
             .priority(3).dt("1 year (1 January), on the latest energy.state")
             .param("res_deg", param_f64(p, "res_deg", 2.0), "deg", "must match people.countries").param("frame_res_deg", param_f64(p, "frame_res_deg", param_f64(p, "res_deg", 2.0)), "deg", "frames folded to this grid").param("frame_every_years", param_f64(p, "frame_every_years", 5.0), "yr", "")
             .param("scale", param_str(p, "scale", "110m"), "", "must match people.countries")
@@ -344,6 +378,14 @@ impl ClimateCountries {
             .view("chart", "hottest country's annual mean", "climate.hottest_country_tas_c", "")
             .asset("worldbank-cckp-cru-tas-annual", "country annual means 1901 to 2022").asset("worldbank-cckp-cru-tas-monthly", "country monthly means for the hottest-month climatology").asset("hadcrut5-global-annual", "the global anomaly the records are regressed on").asset("natural-earth-110m-countries", "the country list")
             .note("A country's variance about the fit is lost; years are given their fitted value, not their weather. Countries missing from the record (Antarctica, a few territories) get no temperature and are counted in climate.countries_fitted.")
+            .param("pattern", param_str(p, "pattern", "country"), "", "country: one fitted slope per country, applied to every cell of it; cells: each populated cell's own slope from the reanalysis's 1981 to 2025 annual means on the global record, averaged over the points within a degree, published as gmst_anom_cells_c for the cell layers to multiply")
+            .param("pattern_from", param_f64(p, "pattern_from", 1981.0), "yr", "the reanalysis years the cells' slopes are fitted over").param("pattern_to", param_f64(p, "pattern_to", 2025.0), "yr", "");
+        if param_str(p, "pattern", "country") == "cells" {
+            d.frame("climate_slope_cells", "degC/degC").report("climate.slope_cells_median", "degC/degC")
+                .view("map", "local warming per degree of global warming", "climate_slope_cells", "the reanalysis's own trend per cell, 1981 to 2025; what the cell layers multiply the run's global anomaly by")
+                .asset("nasa-power-monthly-regional", "annual means per reanalysis point, 1981 to 2025, for the pattern").asset("worldpop-2020-1km", "which cells are populated")
+                .note("The pattern is the observed one, so it carries whatever has held a region's warming back so far (aerosols over South Asia, irrigation over the Indo-Gangetic plain); a model ensemble's pattern, which lets those fade, warms the tropics more. Small countries no longer get a slope fitted to a few grid cells of their own record.")
+        } else { d }
     }
 }
 
@@ -383,7 +425,16 @@ impl Module for ClimateCountries {
                     let (cg, t) = coarsen(&g, &tas, fac, Fold::Mean); let (_, h) = coarsen(&g, &hot, fac, Fold::Mean);
                     ctx.field("climate_tas_c", "degC", &cg, t); ctx.field("climate_hot_month_c", "degC", &cg, h); self.last_frame_year = y;
                 }
-                ctx.publish("climate.country_tas", json!({ "year": y, "gmst_c": self.gmst, "by_iso3": by }));
+                if self.pattern == "cells" && !self.slope_frame_done {
+                    let fac = frame_factor(self.res_deg, self.frame_res_deg);
+                    let (cg, sl) = coarsen(&g, &self.slope_cells, fac, Fold::Mean);
+                    ctx.field("climate_slope_cells", "degC/degC", &cg, sl);
+                    let mut v: Vec<f32> = self.slope_cells.iter().copied().filter(|x| x.is_finite()).collect();
+                    v.sort_by(|a, b| a.partial_cmp(b).unwrap());
+                    if !v.is_empty() { ctx.report("climate.slope_cells_median", "degC/degC", v[v.len() / 2] as f64); }
+                    self.slope_frame_done = true;
+                }
+                ctx.publish("climate.country_tas", json!({ "year": y, "gmst_c": self.gmst, "gmst_anom_c": self.gmst - self.g_anom, "gmst_anom_cells_c": self.gmst - self.g_cells, "pattern": self.pattern, "by_iso3": by }));
                 slopes.sort_by(|a, b| a.partial_cmp(b).unwrap());
                 if !slopes.is_empty() { ctx.report("climate.slope_median", "degC/degC", slopes[slopes.len() / 2]); }
                 ctx.report("climate.countries_fitted", "", slopes.len() as f64);
@@ -404,7 +455,7 @@ impl Module for ClimateCountries {
 pub struct PeopleHeat {
     name: String,
     res_deg: f64, frame_res_deg: f64, frame_every_years: i64, niche_c: f64, hot_month_c: f64, crossing_share: f64,
-    baseline: String, scale: String,
+    baseline: String, scale: String, pattern: String, pattern_from: i64, pattern_to: i64,
     pop: BTreeMap<String, f64>,
     crossed_niche: BTreeMap<String, i64>,
     crossed_hot: BTreeMap<String, i64>,
@@ -414,6 +465,7 @@ pub struct PeopleHeat {
     baseline_done: bool,
     #[serde(skip)] countries: Vec<Country>,
     #[serde(skip)] clim: Vec<f32>,   // cells mode: annual mean per cell over POWER's climatology, NaN elsewhere
+    #[serde(skip)] slope: Vec<f32>,  // pattern = cells: local warming per degree of global, per cell
     last_frame_year: i64,
 }
 
@@ -424,7 +476,8 @@ impl PeopleHeat {
             name: name.to_string(), res_deg: res, frame_res_deg: param_f64(p, "frame_res_deg", res), frame_every_years: param_f64(p, "frame_every_years", 5.0) as i64,
             niche_c: param_f64(p, "niche_c", 29.0), hot_month_c: param_f64(p, "hot_month_c", 32.0), crossing_share: param_f64(p, "crossing_share", 0.5),
             baseline: param_str(p, "baseline", "country"), scale: param_str(p, "scale", "110m"),
-            pop: BTreeMap::new(), crossed_niche: BTreeMap::new(), crossed_hot: BTreeMap::new(), cell_year: BTreeMap::new(), baseline_done: false, countries: Vec::new(), clim: Vec::new(), last_frame_year: -1_000_000,
+            pattern: param_str(p, "pattern", "country"), pattern_from: param_f64(p, "pattern_from", 1981.0) as i64, pattern_to: param_f64(p, "pattern_to", 2025.0) as i64,
+            pop: BTreeMap::new(), crossed_niche: BTreeMap::new(), crossed_hot: BTreeMap::new(), cell_year: BTreeMap::new(), baseline_done: false, countries: Vec::new(), clim: Vec::new(), slope: Vec::new(), last_frame_year: -1_000_000,
         };
         m.load()?;
         Ok(m)
@@ -448,6 +501,7 @@ impl PeopleHeat {
                 if let Some(pt) = pt { if let Some(v) = b.value(pt, ann) { self.clim[*i] = v as f32; } }
             }
         }
+        if self.pattern == "cells" { self.slope = load_pattern(&mut f, &cat, self.res_deg, self.pattern_from, self.pattern_to)?; }
         Ok(())
     }
     pub fn describe(name: &str, p: &toml::Value) -> Describe {
@@ -461,9 +515,10 @@ impl PeopleHeat {
         })
             .priority(4).dt("follows climate.country_tas")
             .param("res_deg", res, "deg", "must match people.countries").param("frame_res_deg", param_f64(p, "frame_res_deg", res), "deg", "frames folded to this grid").param("frame_every_years", param_f64(p, "frame_every_years", 5.0), "yr", "")
-            .param("baseline", param_str(p, "baseline", "country"), "", "country: one annual mean per country from its record; cells: each populated cell's own climatological mean from the reanalysis, shifted by its country's warming")
+            .param("baseline", param_str(p, "baseline", "country"), "", "country: one annual mean per country from its record; cells: each populated cell's own climatological mean from the reanalysis, shifted by its warming")
+            .param("pattern", param_str(p, "pattern", "country"), "", "cells only. country: every cell of a country warms by the country's fitted number; cells: each cell warms by its own slope (the reanalysis's 1981 to 2025 trend on the global record) times the run's global anomaly since the climatology")
             .param("scale", scale.clone(), "", "must match people.countries")
-            .param("niche_c", param_f64(p, "niche_c", 29.0), "degC", "mean annual temperature at the hot edge of the human climate niche, Xu et al. 2020 PNAS (recalled; to be checked)")
+            .param("niche_c", param_f64(p, "niche_c", 29.0), "degC", "mean annual temperature at the hot edge of the human climate niche: Xu et al. 2020 PNAS, and Lenton et al. 2023 Nature Sustainability, who chose 29 °C because only 0.3% of the 1980 population (12 million) lived there in the 1960 to 1990 climate (checked 2026-11-03)")
             .subscribe("people.population", "{ by_iso3 }").subscribe("climate.country_tas", "{ by_iso3: { tas_c, hot_month_c, tas_anom_cells_c } }")
             .read("country.index", "index", true, "which cell is which country")
             .own("people.outside_niche", if on_cells { "persons" } else { "1" })
@@ -481,7 +536,8 @@ impl PeopleHeat {
                 .read("people.count", "persons", true, "people per cell")
                 .publish("people.crossing", "{ iso3, name, year, kind: niche, persons, share } the first year the stated share of a country's people live past the niche; a country already there in the run's first year is not announced")
                 .asset("worldpop-2020-1km", "which cells have people").asset("nasa-power-climatology-regional", "each cell's annual mean, 2001 to 2025")
-                .note("The warming added to a cell is its country's, from the country record; within a country the pattern of the climatology is held. No mortality here on purpose.");
+                .note("The warming added to a cell is its country's from the country record, or with pattern = cells its own slope times the global anomaly; within a country the pattern of the climatology is held. No mortality here on purpose.");
+            if param_str(p, "pattern", "country") == "cells" { d = d.asset("nasa-power-monthly-regional", "the annual means the cells' slopes are fitted on").asset("hadcrut5-global-annual", "the global record they are fitted against"); }
         } else {
             d = d.param("hot_month_c", param_f64(p, "hot_month_c", 32.0), "degC", "a hottest-month mean marker with no paper behind it: a guess, kept to show the shape until a wet-bulb layer exists")
                 .publish("people.crossing", "{ iso3, name, year, kind: niche | hot_month, persons } the first year a country crosses; a country already over a marker in the run's first year is a state of its climate, not a crossing, and is not announced")
@@ -522,7 +578,7 @@ impl Module for PeopleHeat {
                     // recorded with year 0 and never announced; a crossing is a change from that state
                     if out { outside += p; n_out += 1; if !self.crossed_niche.contains_key(&c.iso3) { self.crossed_niche.insert(c.iso3.clone(), if self.baseline_done { y } else { 0 }); if self.baseline_done {
                         let sentence = format!("{}: the annual mean temperature of {} passes {} °C, the hot edge of the climate humans have always lived in. {} people live there.", y, c.name, self.niche_c, people_words(*p));
-                        crossings.push(json!({ "iso3": c.iso3, "name": c.name, "year": y, "kind": "niche", "persons": p, "tas_c": tas, "sentence": sentence, "source": "Xu et al. 2020 (recalled)" })); } } }
+                        crossings.push(json!({ "iso3": c.iso3, "name": c.name, "year": y, "kind": "niche", "persons": p, "tas_c": tas, "sentence": sentence, "source": "Xu et al. 2020; Lenton et al. 2023 (checked)" })); } } }
                     if over { hot_over += p; if !self.crossed_hot.contains_key(&c.iso3) { self.crossed_hot.insert(c.iso3.clone(), if self.baseline_done { y } else { 0 }); if self.baseline_done {
                         let sentence = format!("{}: the hottest month in {} now averages above {} °C. {} people. (A marker with no paper behind it.)", y, c.name, self.hot_month_c, people_words(*p));
                         crossings.push(json!({ "iso3": c.iso3, "name": c.name, "year": y, "kind": "hot_month", "persons": p, "hot_month_c": hot, "sentence": sentence, "source": "guess" })); } } }
@@ -565,6 +621,8 @@ impl PeopleHeat {
         let Some(index) = ctx.world_read_on("country.index", &g).map(|f| f.data.clone()) else { return };
         let Some(count) = ctx.world_read_on("people.count", &g).map(|f| f.data.clone()) else { return };
         let warming: Vec<f64> = self.countries.iter().map(|c| by.get(&c.iso3).and_then(|e| e.get("tas_anom_cells_c")).and_then(|v| v.as_f64()).unwrap_or(f64::NAN)).collect();
+        let ga = ev.data.get("gmst_anom_cells_c").and_then(|v| v.as_f64());
+        let on_pattern = self.pattern == "cells";
         let n = self.countries.len();
         let (mut out_c, mut tot_c) = (vec![0.0f64; n], vec![0.0f64; n]);
         let mut field = vec![f32::NAN; g.nx * g.ny];
@@ -575,8 +633,9 @@ impl PeopleHeat {
             let k = k as usize;
             let p = count[i]; if !(p > 0.0) { field[i] = 0.0; continue }
             tot_c[k] += p as f64;
-            let clim = self.clim[i]; if clim.is_nan() || warming[k].is_nan() { continue }
-            let t = clim as f64 + warming[k];
+            let w = cell_warming(on_pattern, &self.slope, i, ga, warming[k]);
+            let clim = self.clim[i]; if clim.is_nan() || w.is_nan() { continue }
+            let t = clim as f64 + w;
             if t > self.niche_c {
                 field[i] = p; out_c[k] += p as f64; outside += p as f64;
                 let e = self.cell_year.entry(i as u32).or_insert(if self.baseline_done { y as i32 } else { 0 });
@@ -595,7 +654,7 @@ impl PeopleHeat {
                     self.crossed_niche.insert(c.iso3.clone(), if self.baseline_done { y } else { 0 });
                     if self.baseline_done {
                         let sentence = format!("{}: in {}, {:.0}% of the people ({}) now live where the annual mean temperature is past {} °C, the hot edge of the climate humans have always lived in.", y, c.name, 100.0 * share, people_words(out_c[k]), self.niche_c);
-                        crossings.push(json!({ "iso3": c.iso3, "name": c.name, "year": y, "kind": "niche", "persons": out_c[k], "share": share, "sentence": sentence, "source": "Xu et al. 2020 (recalled); MERRA-2 via NASA POWER" }));
+                        crossings.push(json!({ "iso3": c.iso3, "name": c.name, "year": y, "kind": "niche", "persons": out_c[k], "share": share, "sentence": sentence, "source": "Xu et al. 2020; Lenton et al. 2023 (checked); MERRA-2 via NASA POWER" }));
                     }
                 }
             }
@@ -647,7 +706,7 @@ impl Tipping {
             .publish("tipping.crossing", "{ id, title, year, level: low | central, threshold_c, gmst_c, timescale, consequence, source, confidence }")
             .report("tipping.elements_past_low", "").report("tipping.elements_past_central", "")
             .view("counter", "tipping elements past their central estimate", "tipping.elements_past_central", "a flag with a citation, not a tip in this run")
-            .view("crossings", "tipping thresholds passed", "tipping.crossing", "every row of the table is marked recalled until checked against the paper")
+            .view("crossings", "tipping thresholds passed", "tipping.crossing", "every row checked against the paper's Table 1 on 2026-11-03; crossing the low end is what the assessment calls possible, the central estimate likely")
             .asset("events/tipping.toml", "the elements and their thresholds, with provenance and confidence per row")
             .note("Passing a threshold does not tip the element in this run; nothing feeds back yet. It is a flag with a citation, which is what the words-only essays lack.")
     }
@@ -694,7 +753,7 @@ pub struct PeopleWetBulb {
     name: String,
     res_deg: f64, frame_res_deg: f64, frame_every_years: i64, year_from: i64, year_to: i64,
     limit_a_c: f64, limit_b_c: f64, days_to_cross: f64, delta_max_c: f64, delta_step_c: f64, station_max_km: f64, crossing_share: f64,
-    source: String, scale: String,
+    source: String, scale: String, pattern: String, pattern_from: i64, pattern_to: i64,
     pop: BTreeMap<String, f64>,
     crossed_a: BTreeMap<String, i64>, crossed_b: BTreeMap<String, i64>,
     /// cells mode: the first year each cell passed limit a on more than days_to_cross days
@@ -711,6 +770,7 @@ pub struct PeopleWetBulb {
     #[serde(skip)] cell_ids: Vec<u32>,
     #[serde(skip)] cell_a: Vec<f32>,   // cell_ids.len() * steps, row-major
     #[serde(skip)] cell_b: Vec<f32>,
+    #[serde(skip)] slope: Vec<f32>,   // pattern = cells: local warming per degree of global, per cell
     last_frame_year: i64,
 }
 
@@ -725,8 +785,9 @@ impl PeopleWetBulb {
             days_to_cross: param_f64(p, "days_to_cross", 3.0), delta_max_c: param_f64(p, "delta_max_c", 8.0), delta_step_c: param_f64(p, "delta_step_c", 0.1),
             station_max_km: param_f64(p, "station_max_km", 80.0), crossing_share: param_f64(p, "crossing_share", 0.5),
             source, scale: param_str(p, "scale", "110m"),
+            pattern: param_str(p, "pattern", "country"), pattern_from: param_f64(p, "pattern_from", 1981.0) as i64, pattern_to: param_f64(p, "pattern_to", 2025.0) as i64,
             pop: BTreeMap::new(), crossed_a: BTreeMap::new(), crossed_b: BTreeMap::new(), cell_year: BTreeMap::new(), baseline_done: false,
-            countries: Vec::new(), capital: Vec::new(), table_a: Vec::new(), table_b: Vec::new(), max_wb_base: Vec::new(), cell_ids: Vec::new(), cell_a: Vec::new(), cell_b: Vec::new(), last_frame_year: -1_000_000,
+            countries: Vec::new(), capital: Vec::new(), table_a: Vec::new(), table_b: Vec::new(), max_wb_base: Vec::new(), cell_ids: Vec::new(), cell_a: Vec::new(), cell_b: Vec::new(), slope: Vec::new(), last_frame_year: -1_000_000,
         };
         m.load()?;
         Ok(m)
@@ -734,7 +795,16 @@ impl PeopleWetBulb {
     fn steps(&self) -> usize { (self.delta_max_c / self.delta_step_c).round() as usize + 1 }
     fn load(&mut self) -> Result<(), String> {
         self.countries = load_countries(&self.scale)?;
-        if self.source == "cells" { return self.load_cells(); }
+        if self.source == "cells" {
+            self.load_cells()?;
+            if self.pattern == "cells" {
+                let root = root();
+                let cat = Catalog::load(&root.join("data/catalog.toml"))?;
+                let mut f = Fetcher::default_for(&root)?;
+                self.slope = load_pattern(&mut f, &cat, self.res_deg, self.pattern_from, self.pattern_to)?;
+            }
+            return Ok(());
+        }
         let root = root();
         let cat = Catalog::load(&root.join("data/catalog.toml"))?;
         let mut f = Fetcher::default_for(&root)?;
@@ -869,10 +939,11 @@ impl PeopleWetBulb {
             .priority(4).dt("follows climate.country_tas")
             .param("res_deg", res, "deg", "must match people.countries").param("frame_res_deg", param_f64(p, "frame_res_deg", res), "deg", "frames folded to this grid").param("frame_every_years", param_f64(p, "frame_every_years", 5.0), "yr", "")
             .param("source", param_str(p, "source", "station"), "", "station: one GSOD station per capital; cells: the reanalysis at every populated cell")
+            .param("pattern", param_str(p, "pattern", "country"), "", "cells only. country: every cell of a country warms by the country's fitted number; cells: each cell warms by its own slope (the reanalysis's 1981 to 2025 trend on the global record) times the run's global anomaly since the observed window")
             .param("scale", scale.clone(), "", "must match people.countries")
             .param("year_from", param_f64(p, "year_from", yf), "yr", "observed daily window").param("year_to", param_f64(p, "year_to", yt), "yr", if on_cells { "ten years of daily boxes, about 4,600 answers; esim warm cells fetches them ahead" } else { "ten station-years, about 90 KB each" })
-            .param("limit_a_c", param_f64(p, "limit_a_c", 31.0), "degC wet-bulb", "the limit for young healthy adults at rest found in chamber studies, Vecellio et al. 2022 J Appl Physiol (recalled; to be checked)")
-            .param("limit_b_c", param_f64(p, "limit_b_c", 35.0), "degC wet-bulb", "the theoretical survivability limit, Sherwood and Huber 2010 PNAS (recalled)")
+            .param("limit_a_c", param_f64(p, "limit_a_c", 31.0), "degC wet-bulb", "the limit for young healthy adults at minimal activity found in chamber studies: Vecellio et al. 2022 J Appl Physiol measured a critical wet-bulb of 30.55 ± 0.98 °C across warm-humid conditions (24 subjects, about 10 W); 31 °C is that figure rounded (checked 2026-11-03)")
+            .param("limit_b_c", param_f64(p, "limit_b_c", 35.0), "degC wet-bulb", "the theoretical survivability limit: Sherwood and Huber 2010 PNAS, skin at 35 °C can shed no metabolic heat to air at a 35 °C wet-bulb (checked 2026-11-03)")
             .param("days_to_cross", param_f64(p, "days_to_cross", 3.0), "d/yr", "a place passes a limit when its afternoon wet-bulb exceeds it on more than this many days in a year")
             .param("delta_max_c", param_f64(p, "delta_max_c", 8.0), "degC", "warming range tabulated at load").param("delta_step_c", param_f64(p, "delta_step_c", 0.1), "degC", "")
             .subscribe("people.population", "{ by_iso3 }").subscribe("climate.country_tas", "{ by_iso3: { tas_anom_c } } the country's warming since the observed window")
@@ -894,7 +965,8 @@ impl PeopleWetBulb {
                 .publish("people.crossing", "{ iso3, name, year, kind: wetbulb_a | wetbulb_b, persons, share, days } the first year the stated share of a country's people live where a limit is passed on more than days_to_cross days")
                 .report("wetbulb.cells_over_a", "").report("wetbulb.cells_with_data", "").report("wetbulb.countries_over_a", "").report("wetbulb.countries_over_b", "")
                 .asset("worldpop-2020-1km", "which cells have people").asset("nasa-power-daily-regional", "daily maximum temperature and dew point per cell for the baseline decade")
-                .note("MERRA-2 is a reanalysis at about 50 km: a model's reconstruction constrained by observations, not a measurement. The day's dew point stands for the afternoon's, which runs a little high; constant relative humidity under warming is the standard first-order assumption and is stated as one. The station layer (source = station) is the check on it. The warming applied is the cell's country's.");
+                .note("MERRA-2 is a reanalysis at about 50 km: a model's reconstruction constrained by observations, not a measurement, and reanalyses read extreme wet-bulb low: Raymond, Matthews and Horton 2020 found ERA-Interim's extremes 2 to 4 °C below the Persian Gulf stations' (checked 2026-11-03), so this layer understates the Gulf coast in particular. The day's dew point stands for the afternoon's, which runs a little high; constant relative humidity under warming is the standard first-order assumption and is stated as one. The station layer (source = station) is the check on it. The warming applied is the cell's country's, or with pattern = cells the cell's own slope times the global anomaly.");
+            if param_str(p, "pattern", "country") == "cells" { d = d.asset("nasa-power-monthly-regional", "the annual means the cells' slopes are fitted on").asset("hadcrut5-global-annual", "the global record they are fitted against"); }
         } else {
             d = d.param("station_max_km", param_f64(p, "station_max_km", 80.0), "km", "a capital with no reporting station this close is left out and counted")
                 .view("counter", "people whose capital passes 31 °C wet-bulb on three days a year", "wetbulb.people_over_a", "the limit for healthy adults at rest; one station per country")
@@ -961,10 +1033,10 @@ impl Module for PeopleWetBulb {
                     days_a += da * p;
                     if da > self.days_to_cross { people_a += p; n_a += 1; if !self.crossed_a.contains_key(&c.iso3) { self.crossed_a.insert(c.iso3.clone(), if self.baseline_done { y } else { 0 }); if self.baseline_done {
                         let sentence = format!("{}: {} ({}) passes {} °C wet-bulb on more than {} afternoons a year, the limit past which a healthy adult at rest can no longer shed heat. {} people live in {}.", y, cap, c.name, self.limit_a_c, self.days_to_cross as i64, people_words(p), c.name);
-                        crossings.push(json!({ "iso3": c.iso3, "name": c.name, "capital": cap, "station": station, "year": y, "kind": "wetbulb_a", "persons": p, "days": da, "limit_c": self.limit_a_c, "sentence": sentence, "source": format!("Vecellio et al. 2022 (recalled); station {station}") })); } } }
+                        crossings.push(json!({ "iso3": c.iso3, "name": c.name, "capital": cap, "station": station, "year": y, "kind": "wetbulb_a", "persons": p, "days": da, "limit_c": self.limit_a_c, "sentence": sentence, "source": format!("Vecellio et al. 2022 (checked); station {station}") })); } } }
                     if db > self.days_to_cross { people_b += p; n_b += 1; if !self.crossed_b.contains_key(&c.iso3) { self.crossed_b.insert(c.iso3.clone(), if self.baseline_done { y } else { 0 }); if self.baseline_done {
                         let sentence = format!("{}: {} ({}) passes {} °C wet-bulb, the theoretical limit of human survival outdoors, on more than {} afternoons a year. {} people live in {}.", y, cap, c.name, self.limit_b_c, self.days_to_cross as i64, people_words(p), c.name);
-                        crossings.push(json!({ "iso3": c.iso3, "name": c.name, "capital": cap, "station": station, "year": y, "kind": "wetbulb_b", "persons": p, "days": db, "limit_c": self.limit_b_c, "sentence": sentence, "source": format!("Sherwood and Huber 2010 (recalled); station {station}") })); } } }
+                        crossings.push(json!({ "iso3": c.iso3, "name": c.name, "capital": cap, "station": station, "year": y, "kind": "wetbulb_b", "persons": p, "days": db, "limit_c": self.limit_b_c, "sentence": sentence, "source": format!("Sherwood and Huber 2010 (checked); station {station}") })); } } }
                 }
                 self.baseline_done = true;
                 if let Some(index) = index {
@@ -1005,6 +1077,8 @@ impl PeopleWetBulb {
         let Some(index) = ctx.world_read_on("country.index", &g).map(|f| f.data.clone()) else { return };
         let Some(count) = ctx.world_read_on("people.count", &g).map(|f| f.data.clone()) else { return };
         let warming: Vec<f64> = self.countries.iter().map(|c| by.get(&c.iso3).and_then(|e| e.get("tas_anom_c")).and_then(|v| v.as_f64()).unwrap_or(f64::NAN)).collect();
+        let ga = ev.data.get("gmst_anom_c").and_then(|v| v.as_f64());
+        let on_pattern = self.pattern == "cells";
         let n = self.countries.len();
         let steps = self.steps();
         let (mut over_a, mut over_b, mut tot_c, mut days_c) = (vec![0.0f64; n], vec![0.0f64; n], vec![0.0f64; n], vec![0.0f64; n]);
@@ -1016,8 +1090,9 @@ impl PeopleWetBulb {
             let i = id as usize;
             let k = index[i]; if k.is_nan() { continue }
             let k = k as usize;
-            if warming[k].is_nan() { continue }
-            let (da, db) = (self.days(&self.cell_a[row * steps..(row + 1) * steps], warming[k]), self.days(&self.cell_b[row * steps..(row + 1) * steps], warming[k]));
+            let w = cell_warming(on_pattern, &self.slope, i, ga, warming[k]);
+            if w.is_nan() { continue }
+            let (da, db) = (self.days(&self.cell_a[row * steps..(row + 1) * steps], w), self.days(&self.cell_b[row * steps..(row + 1) * steps], w));
             field[i] = da as f32;
             let p = count[i].max(0.0) as f64;
             people_days += da * p; days_c[k] += da * p;
@@ -1035,10 +1110,10 @@ impl PeopleWetBulb {
             let (sa, sb) = (over_a[k] / tot_c[k], over_b[k] / tot_c[k]);
             if sa >= self.crossing_share { n_a += 1; if !self.crossed_a.contains_key(&c.iso3) { self.crossed_a.insert(c.iso3.clone(), if self.baseline_done { y } else { 0 }); if self.baseline_done {
                 let sentence = format!("{}: in {}, {:.0}% of the people ({}) now live where the afternoon wet-bulb passes {} °C on more than {} days a year, the limit past which a healthy adult at rest can no longer shed heat.", y, c.name, 100.0 * sa, people_words(over_a[k]), self.limit_a_c, self.days_to_cross as i64);
-                crossings.push(json!({ "iso3": c.iso3, "name": c.name, "year": y, "kind": "wetbulb_a", "persons": over_a[k], "share": sa, "days": days_c[k] / tot_c[k], "limit_c": self.limit_a_c, "sentence": sentence, "source": "Vecellio et al. 2022 (recalled); MERRA-2 via NASA POWER" })); } } }
+                crossings.push(json!({ "iso3": c.iso3, "name": c.name, "year": y, "kind": "wetbulb_a", "persons": over_a[k], "share": sa, "days": days_c[k] / tot_c[k], "limit_c": self.limit_a_c, "sentence": sentence, "source": "Vecellio et al. 2022 (checked); MERRA-2 via NASA POWER" })); } } }
             if sb >= self.crossing_share { n_b += 1; if !self.crossed_b.contains_key(&c.iso3) { self.crossed_b.insert(c.iso3.clone(), if self.baseline_done { y } else { 0 }); if self.baseline_done {
                 let sentence = format!("{}: in {}, {:.0}% of the people ({}) now live where the afternoon wet-bulb passes {} °C, the theoretical limit of human survival outdoors, on more than {} days a year.", y, c.name, 100.0 * sb, people_words(over_b[k]), self.limit_b_c, self.days_to_cross as i64);
-                crossings.push(json!({ "iso3": c.iso3, "name": c.name, "year": y, "kind": "wetbulb_b", "persons": over_b[k], "share": sb, "limit_c": self.limit_b_c, "sentence": sentence, "source": "Sherwood and Huber 2010 (recalled); MERRA-2 via NASA POWER" })); } } }
+                crossings.push(json!({ "iso3": c.iso3, "name": c.name, "year": y, "kind": "wetbulb_b", "persons": over_b[k], "share": sb, "limit_c": self.limit_b_c, "sentence": sentence, "source": "Sherwood and Huber 2010 (checked); MERRA-2 via NASA POWER" })); } } }
         }
         self.baseline_done = true;
         ctx.world_write("wetbulb.days_over_a", "d/yr", &g, field.clone());
@@ -1058,6 +1133,125 @@ impl PeopleWetBulb {
 }
 
 // ---------------------------------------------------------------------------------------
+// carbon.tipped: the first cascade. A tipping element past its threshold releases the
+// carbon its table row states, on the row's timescale, into the carbon ledger, where the
+// pools module treats it as it treats fossil carbon. Nothing here is modelled: the amounts,
+// the thresholds and the timescales are the assessment's, read from the same table the
+// tipping module reads; this module only moves the stated mass over the stated time.
+
+#[derive(Serialize, Deserialize, Clone)]
+struct CarbonRule {
+    #[serde(default)] gtc: f64,
+    #[serde(default)] gtc_per_degree: f64,
+    #[serde(default)] decline_per_degree: f64,
+    timescale_yr: f64,
+    stock: String,
+    confidence: String,
+    source: String,
+}
+
+#[derive(Serialize, Deserialize, Clone)]
+struct CarbonElement { id: String, title: String, low_c: f64, central_c: f64, timescale: String, carbon: CarbonRule }
+
+#[derive(Serialize, Deserialize)]
+pub struct TippedCarbon {
+    name: String,
+    /// which threshold starts a release: "central" (the assessment's best estimate, where
+    /// crossing is "likely") or "low" (the bottom of its range, where crossing is "possible")
+    trigger: String,
+    gmst: f64,
+    elements: Vec<CarbonElement>,
+    triggered: BTreeMap<String, i64>,
+    released: BTreeMap<String, f64>,
+    last_tick: Option<Time>,
+}
+
+impl TippedCarbon {
+    pub fn new(name: &str, p: &toml::Value) -> Result<TippedCarbon, String> {
+        let text = std::fs::read_to_string(root().join("data/events/tipping.toml")).map_err(|e| format!("tipping.toml: {e}"))?;
+        let v: toml::Value = toml::from_str(&text).map_err(|e| format!("tipping.toml: {e}"))?;
+        let elements: Vec<CarbonElement> = v.get("element").and_then(|e| e.as_array()).into_iter().flatten()
+            .filter(|e| e.get("carbon").is_some())
+            .map(|e| e.clone().try_into::<CarbonElement>().map_err(|err| format!("tipping.toml carbon element: {err}"))).collect::<Result<_, _>>()?;
+        if elements.is_empty() { return Err("tipping.toml has no element with a carbon table".into()); }
+        Ok(TippedCarbon { name: name.to_string(), trigger: param_str(p, "trigger", "central"), gmst: 0.0, elements, triggered: BTreeMap::new(), released: BTreeMap::new(), last_tick: None })
+    }
+    /// What the rule says has been committed at this warming: a fixed mass, or a mass per
+    /// degree of global warming whose per-degree strength declines geometrically with
+    /// warming (integrated from pre-industrial), as the assessment's footnote states it.
+    fn target(r: &CarbonRule, gmst: f64) -> f64 {
+        if r.gtc > 0.0 { return r.gtc; }
+        let t = gmst.max(0.0);
+        if r.decline_per_degree > 0.0 && r.decline_per_degree < 1.0 {
+            let k = -(1.0 - r.decline_per_degree).ln();
+            r.gtc_per_degree * (1.0 - (-k * t).exp()) / k
+        } else { r.gtc_per_degree * t }
+    }
+    pub fn describe(name: &str, p: &toml::Value) -> Describe {
+        Describe::new("carbon.tipped", name, "The first cascade: a tipping element past its threshold releases the carbon its row of data/events/tipping.toml states, on the row's timescale, into the carbon ledger, where the pools module treats it as it treats fossil carbon, so the warming it adds comes back through the same energy balance. Three elements carry a carbon table from Armstrong McKay et al. 2022: boreal permafrost abrupt thaw (per degree, declining), Amazon partial dieback (30 GtC), boreal permafrost collapse (125 GtC). Each year the mass still owed is released as a first-order approach over the element's timescale. Nothing is modelled here; the amounts, thresholds and timescales are the assessment's and the module only moves the stated mass over the stated time.")
+            .priority(6).dt("1 year (1 January), after the tipping check")
+            .param("trigger", param_str(p, "trigger", "central"), "", "central: a release starts when the run passes the element's central estimate, where the assessment calls tipping likely; low: at the bottom of its range, where it calls tipping possible. The second is a sensitivity case, not a finding")
+            .subscribe("tipping.crossing", "{ id, level } the year an element's threshold is passed").subscribe("energy.state", "{ gmst_c } sets the per-degree targets")
+            .publish("carbon.emitted", "{ gtc, fossil_gtc: 0, luc_gtc: 0, source: element id } the year's release, which the pools module adds to the atmosphere")
+            .publish("carbon.crossing", "{ id, title, year, gtc_target, timescale_yr, sentence, source, confidence } the first year an element starts releasing")
+            .ledger(CARBON, "GtC", 1e-6)
+            .report("carbon.tipped_gtc_yr", "GtC/yr").report("carbon.tipped_cumulative_gtc", "GtC").report("carbon.tipped_elements", "")
+            .view("counter", "carbon released by tipped elements so far", "carbon.tipped_cumulative_gtc", "permafrost and the Amazon, once past their thresholds; the assessment's amounts on its timescales")
+            .view("chart", "carbon released by tipped elements", "carbon.tipped_gtc_yr", "a year's release, against the fossil record's 10 GtC a year")
+            .asset("events/tipping.toml", "the elements with a [carbon] table: amount, timescale, confidence, source")
+            .note("The feedbacks with the other sign are left out on purpose and said so: the boreal forest's southern dieback releases carbon but its net effect in the assessment is cooling (a lighter surface), and its northern expansion takes carbon up but warms on net (a darker one); both are albedo terms this energy balance has no place for, so including only their carbon would be the wrong sign. Methane from thawing permafrost is folded into the assessment's CO2-equivalent and is not separately represented. The release is first-order on the stated timescale; the assessment gives a timescale, not a shape.")
+    }
+}
+
+impl Module for TippedCarbon {
+    fn name(&self) -> &str { &self.name }
+    fn init(&mut self, ctx: &mut Ctx) {
+        ctx.ledger(CARBON, "GtC", 1e-6);
+        ctx.subscribe("tipping.crossing"); ctx.subscribe("energy.state");
+        self.last_tick = Some(ctx.now());
+        ctx.schedule_with_priority(to_next_year(ctx.now()), 6, "tick", json!(null));
+    }
+    fn handle(&mut self, ev: &Event, ctx: &mut Ctx) {
+        match ev.topic.as_str() {
+            "energy.state" => { if let Some(g) = ev.data.get("gmst_c").and_then(|v| v.as_f64()) { self.gmst = g; } }
+            "tipping.crossing" => {
+                let (Some(id), Some(level)) = (ev.data.get("id").and_then(|v| v.as_str()), ev.data.get("level").and_then(|v| v.as_str())) else { return };
+                if level != self.trigger || self.triggered.contains_key(id) { return }
+                let Some(e) = self.elements.iter().find(|e| e.id == id) else { return };
+                let y = ev.data.get("year").and_then(|v| v.as_i64()).unwrap_or(year_of(ctx.now()));
+                self.triggered.insert(id.to_string(), y);
+                let target = Self::target(&e.carbon, self.gmst);
+                let sentence = format!("{}: {} begins to release carbon: {} over about {} years, at the assessment's {} estimate ({} confidence), into the same air the emissions go into.", y, e.title.to_lowercase(), if e.carbon.gtc > 0.0 { format!("{:.0} GtC", e.carbon.gtc) } else { format!("{:.0} GtC for every degree of global warming, {:.0} GtC at today's", e.carbon.gtc_per_degree, target) }, e.carbon.timescale_yr, self.trigger, e.carbon.confidence);
+                ctx.publish("carbon.crossing", json!({ "id": e.id, "title": e.title, "year": y, "gtc_target": target, "timescale_yr": e.carbon.timescale_yr, "sentence": sentence, "source": e.carbon.source, "confidence": e.carbon.confidence }));
+            }
+            "tick" => {
+                let dt_yr = self.last_tick.map(|t| ctx.now().since(t).as_secs_f64() / (365.25 * 86400.0)).unwrap_or(1.0);
+                let mut year_total = 0.0;
+                for e in &self.elements {
+                    if !self.triggered.contains_key(&e.id) { continue }
+                    let done = self.released.get(&e.id).copied().unwrap_or(0.0);
+                    let owed = (Self::target(&e.carbon, self.gmst) - done).max(0.0);
+                    let release = owed * (1.0 - (-dt_yr / e.carbon.timescale_yr.max(1.0)).exp());
+                    if release <= 0.0 { continue }
+                    ctx.transfer(CARBON, &e.carbon.stock, "atmosphere", release);
+                    ctx.publish("carbon.emitted", json!({ "gtc": release, "fossil_gtc": 0.0, "luc_gtc": 0.0, "source": e.id }));
+                    self.released.insert(e.id.clone(), done + release);
+                    year_total += release;
+                }
+                ctx.report("carbon.tipped_gtc_yr", "GtC/yr", year_total / dt_yr.max(1e-9));
+                ctx.report("carbon.tipped_cumulative_gtc", "GtC", self.released.values().sum());
+                ctx.report("carbon.tipped_elements", "", self.triggered.len() as f64);
+                self.last_tick = Some(ctx.now());
+                ctx.schedule_with_priority(to_next_year(ctx.now()), 6, "tick", json!(null));
+            }
+            _ => {}
+        }
+    }
+    fn snapshot(&self) -> serde_json::Value { serde_json::to_value(self).unwrap() }
+    fn restore(&mut self, v: serde_json::Value) { *self = serde_json::from_value(v).unwrap(); }
+}
+
+// ---------------------------------------------------------------------------------------
 // story.bottomline: the headline of a planetary run, from what the other layers publish.
 
 #[derive(Serialize, Deserialize)]
@@ -1072,7 +1266,7 @@ impl Story {
     pub fn describe(name: &str, _p: &toml::Value) -> Describe {
         Describe::new("story.bottomline", name, "The bottom line of a planetary run, told as it happens: the headline numbers at the cursor and one plain sentence for every threshold crossed, each sentence written by the module that knows its source. It computes nothing new and it says, in the same place, what this run does not yet measure.")
             .priority(9).dt("follows the crossing events")
-            .subscribe("people.crossing", "sentences").subscribe("tipping.crossing", "sentences").subscribe("people.population", "the count")
+            .subscribe("people.crossing", "sentences").subscribe("tipping.crossing", "sentences").subscribe("carbon.crossing", "sentences").subscribe("people.population", "the count")
             .report("story.headlines", "")
             .view("map", "people living outside the human climate niche", "people_outside_niche", "annual mean above 29 °C")
             .view("map", "days a year over 31 °C wet-bulb", "wetbulb_days_over_31", "")
@@ -1085,16 +1279,16 @@ impl Story {
             .view("counter", "tipping elements past their central estimate", "tipping.elements_past_central", "")
             .view("counter", "sea level from expansion alone", "sea.thermal_m", "")
             .view("story", "what has happened so far", "crossing", "one sentence per threshold crossed, newest first; the source is beside each")
-            .view("text", "what this run does not yet measure", "Not in this run, so not in these numbers: deaths from heat (a published exposure-response layer is next), harvests and food prices, forest cover and the carbon it would release, biodiversity, fresh water, sea level from ice, migration, and any response by people to any of it. The population here is the UN's path, which assumes none of the above changes where people live. Every crossing above is a count of people living where a stated limit is passed, not a toll, and the model runs about 0.15 °C warm in 2024. The warming applied to a place is its country's, from the country record: within a country, the pattern of the recent past is held.", "")
+            .view("text", "what this run does not yet measure", "Not in this run, so not in these numbers: deaths from heat (a published exposure-response layer is next), harvests and food prices, biodiversity, fresh water, sea level from ice, migration, and any response by people to any of it. Of the tipping elements, only the carbon of permafrost and the Amazon feeds back, and only once the run passes the assessment's thresholds; the rest are flags. The population here is the UN's path, which assumes none of the above changes where people live. Every crossing above is a count of people living where a stated limit is passed, not a toll, and the model runs about 0.15 °C warm in 2024. The warming applied to a place is its country's, from the country record scaled by the run's global anomaly: wherever something has held a country's warming back so far, this holds it back still, and within a country the pattern of the recent past is held.", "")
     }
 }
 
 impl Module for Story {
     fn name(&self) -> &str { &self.name }
-    fn init(&mut self, ctx: &mut Ctx) { ctx.subscribe("people.crossing"); ctx.subscribe("tipping.crossing"); ctx.subscribe("people.population"); }
+    fn init(&mut self, ctx: &mut Ctx) { ctx.subscribe("people.crossing"); ctx.subscribe("tipping.crossing"); ctx.subscribe("carbon.crossing"); ctx.subscribe("people.population"); }
     fn handle(&mut self, ev: &Event, ctx: &mut Ctx) {
         match ev.topic.as_str() {
-            "people.crossing" | "tipping.crossing" => { self.headlines += 1; ctx.report("story.headlines", "", self.headlines as f64); }
+            "people.crossing" | "tipping.crossing" | "carbon.crossing" => { self.headlines += 1; ctx.report("story.headlines", "", self.headlines as f64); }
             _ => {}
         }
     }

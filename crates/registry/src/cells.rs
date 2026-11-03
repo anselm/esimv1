@@ -12,6 +12,7 @@
 
 use crate::fetch::Fetcher;
 use crate::cog;
+use std::collections::BTreeMap;
 use std::io::Read;
 
 /// People per cell on a regular lat-lon grid of `res_deg` (origin 180 W, 90 N, row-major
@@ -142,6 +143,81 @@ pub fn power_climatology_box(f: &mut Fetcher, param: &str, lat0: i32, lon0: i32)
     let mut bytes = Vec::new();
     std::fs::File::open(&path).map_err(|e| e.to_string())?.read_to_end(&mut bytes).map_err(|e| e.to_string())?;
     decode(&bytes)
+}
+
+/// The monthly means of a parameter over the box from `from` to `to` inclusive, as POWER
+/// answers them: thirteen columns a year in key order (YYYY01 to YYYY12, then YYYY13, the
+/// annual mean), so column (y - from) * 13 + 12 holds year y's annual mean. One request
+/// per box for the whole window (3 MB of JSON for 45 years; verified 2026-11-03).
+pub fn power_monthly_box(f: &mut Fetcher, param: &str, lat0: i32, lon0: i32, from: i64, to: i64) -> Result<PowerBox, String> {
+    let url = format!("https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters={param}&community=RE&longitude-min={lon0}&longitude-max={}&latitude-min={lat0}&latitude-max={}&start={from}&end={to}&format=JSON", lon0 + 10, lat0 + 10);
+    let key = format!("power/monthly_{param}_{lat0}_{lon0}_{from}_{to}.bin");
+    let path = f.fetch_reduced(&key, &url, &|raw| reduce_json(raw, param))?;
+    let mut bytes = Vec::new();
+    std::fs::File::open(&path).map_err(|e| e.to_string())?.read_to_end(&mut bytes).map_err(|e| e.to_string())?;
+    decode(&bytes)
+}
+
+/// The warming pattern from the reanalysis's own record: the slope of annual mean
+/// temperature on the global anomaly (HadCRUT5, re-zeroed to 1850 to 1900), `from` to
+/// `to`, both series smoothed over eleven years as the country fit is. One reanalysis
+/// point over forty-five years does not give a slope (fitted point by point the field ran
+/// from -5 to +7 degrees per degree, 2026-11-03), so the fit is made on the mean series of
+/// each 5-degree block of points (about 80 points) and the blocks' slopes are interpolated
+/// bilinearly to the cells. Degrees of local warming per degree of global warming; NaN
+/// where no block has a fit. Kept beside the cache as a derived product keyed by the
+/// resolution and the window. This is the observed pattern, which carries whatever has
+/// held a region's warming back so far (aerosols over South Asia, for one); a model
+/// ensemble's pattern would differ, and the describe says so.
+pub fn warming_pattern(f: &mut Fetcher, res_deg: f64, from: i64, to: i64, global: &BTreeMap<i64, f64>, populated: &[f32]) -> Result<Vec<f32>, String> {
+    const BLOCK: f64 = 5.0;
+    let nx = (360.0 / res_deg).round() as usize;
+    let ny = (180.0 / res_deg).round() as usize;
+    let derived = f.cache_dir.join(format!("tas_slope_cells_{res_deg}_{from}_{to}_block{BLOCK}.f32"));
+    if let Ok(bytes) = std::fs::read(&derived) {
+        if bytes.len() == nx * ny * 4 { return Ok(bytes.chunks_exact(4).map(|b| f32::from_le_bytes([b[0], b[1], b[2], b[3]])).collect()); }
+    }
+    let gs = crate::countries::smooth(global, 11);
+    let years = (to - from + 1) as usize;
+    // the mean annual series of every block: sums and counts per year, keyed by the block's
+    // south-west corner in block units; boxes share edge points, so each point counts once
+    let block_of = |lat: f64, lon: f64| (((lat + 90.0) / BLOCK).floor() as i32, ((lon + 180.0) / BLOCK).floor() as i32);
+    let mut seen: std::collections::BTreeSet<(i32, i32)> = std::collections::BTreeSet::new();
+    let mut acc: BTreeMap<(i32, i32), (Vec<f64>, Vec<u32>)> = BTreeMap::new();
+    for (lat0, lon0) in power_boxes(res_deg, |c, r| populated[r * nx + c] > 0.0) {
+        let b = power_monthly_box(f, "T2M", lat0, lon0, from, to)?;
+        if b.days != years * 13 { return Err(format!("monthly box {lat0},{lon0}: {} columns, expected {}", b.days, years * 13)); }
+        for (pi, &(lat, lon)) in b.points.iter().enumerate() {
+            let pk = (((lat + 90.0) * 2.0).round() as i32, ((lon + 180.0) / 0.625).round() as i32);
+            if !seen.insert(pk) { continue; }
+            let e = acc.entry(block_of(lat as f64, (lon as f64).min(179.999))).or_insert_with(|| (vec![0.0; years], vec![0; years]));
+            for k in 0..years { if let Some(v) = b.value(pi, k * 13 + 12) { e.0[k] += v; e.1[k] += 1; } }
+        }
+    }
+    let mut slopes: BTreeMap<(i32, i32), f64> = BTreeMap::new();
+    for (key, (sum, n)) in &acc {
+        let s: BTreeMap<i64, f64> = (0..years).filter(|k| n[*k] > 0).map(|k| (from + k as i64, sum[k] / n[k] as f64)).collect();
+        if let Some((slope, _, _)) = crate::countries::regress(&gs, &crate::countries::smooth(&s, 11)) { slopes.insert(*key, slope); }
+    }
+    // bilinear between block centres, renormalised over the blocks that have a fit
+    let mut out = vec![f32::NAN; nx * ny];
+    for r in 0..ny {
+        for c in 0..nx {
+            if !(populated[r * nx + c] > 0.0) { continue; }
+            let (lat, lon) = (90.0 - (r as f64 + 0.5) * res_deg, -180.0 + (c as f64 + 0.5) * res_deg);
+            let (bi, bj) = ((lat + 90.0) / BLOCK - 0.5, (lon + 180.0) / BLOCK - 0.5);
+            let (i0, j0) = (bi.floor(), bj.floor());
+            let (fi, fj) = (bi - i0, bj - j0);
+            let (mut sum, mut wsum) = (0.0, 0.0);
+            for (di, wi) in [(0, 1.0 - fi), (1, fi)] { for (dj, wj) in [(0, 1.0 - fj), (1, fj)] {
+                if let Some(v) = slopes.get(&(i0 as i32 + di, j0 as i32 + dj)) { sum += wi * wj * v; wsum += wi * wj; }
+            } }
+            if wsum > 0.0 { out[r * nx + c] = (sum / wsum) as f32; }
+        }
+    }
+    let bytes: Vec<u8> = out.iter().flat_map(|v| v.to_le_bytes()).collect();
+    std::fs::write(&derived, bytes).map_err(|e| e.to_string())?;
+    Ok(out)
 }
 
 /// The 10-degree boxes (south-west corners) that contain any cell for which `wanted`

@@ -40,6 +40,13 @@ title = "Emissions grow 1% a year to 2100"
 "emissions.after_record" = "grow:1"
 
 [[variant]]
+name = "held-low"
+title = "Emissions held; tipping elements release carbon from the low end of their ranges"
+[variant.set]
+"emissions.after_record" = "hold"
+"tipped.trigger" = "low"
+
+[[variant]]
 name = "falling"
 title = "Emissions fall 3% a year from 2025"
 # The cut rate Anderson and Bows (2008, Phil. Trans. R. Soc. A) examined, which Monbiot

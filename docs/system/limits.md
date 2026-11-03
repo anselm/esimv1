@@ -16,8 +16,16 @@ holds the history.
   +1.54 measured and the hindcast's temperature skill is 0.86; crossing years are a few
   years early rather than twenty. Holding aerosols flat after 2019 is a warm-side
   assumption, since they are falling.
-- Nothing feeds back: a tipping element flagged is not tipped; the Amazon does not release
-  its carbon; permafrost does not thaw in the run.
+- One thing feeds back: once the run passes a tipping element's central estimate, the
+  carbon its row of the assessment states (permafrost abrupt thaw per degree of warming,
+  the Amazon's 30 GtC, permafrost collapse's 125 GtC; Armstrong McKay et al. 2022, checked
+  against the paper's Table 1) is released into the carbon ledger over the row's timescale
+  as a first-order approach, which is a shape the assessment does not give. It comes to
+  about 16 GtC, 5 ppm and 0.02 °C by 2099 with emissions held, and 69 GtC and 0.1 °C with
+  every element tipping at the low end of its range. Everything else flagged is not
+  tipped: no ice into the sea, no albedo change from sea ice or forest (the energy balance
+  has no term for it, which is also why the boreal forest elements, whose net sign is the
+  albedo's, are left out), no methane as itself.
 - Sea level is thermal expansion only, a floor.
 - The warming applied to a place is its country's. People now sit on half-degree cells
   (WorldPop's 2020 pattern, the UN's count), each populated cell has its own climatological
@@ -28,20 +36,27 @@ holds the history.
   country's trend, and for small countries the fitted slope is not physical: Puerto Rico
   warms 1.78 °C and Qatar 1.75 °C per degree of global warming in the fit, against about
   1.0 for the United States and 0.82 for India, so the Caribbean islands and the small Gulf
-  states that leave the niche after 2040 do so on the slope, not the heat. A gridded
-  warming pattern is the next step. The niche threshold is on the annual mean and knows
+  states that leave the niche after 2040 do so on the slope, not the heat. A pattern from
+  the reanalysis's own 1981 to 2025 trend per cell was built and is drawn on the run page
+  (`climate_slope_cells`) but not applied: over South Asia MERRA-2 cools by 0.4 °C between
+  the 2000s and the 2010s while the globe warms, which no thermometer record does, so its
+  trend is the reanalysis's own fault there. A model-ensemble pattern is the next step. The niche threshold is on the annual mean and knows
   nothing of humidity or season; the 2020 settlement pattern is held for every year.
-  Against the one published count we have, recalled and not re-read (Lenton et al. 2023:
-  about 60 million people at 29 °C and up today, about 2 billion at +2.7 °C), this model
-  is high now (147 million at +1.70 °C in 2024) and low later (1.32 billion at +3.34 °C in
-  2099 with emissions held); the later gap is most likely India, which stays under 29 °C
-  here. Unresolved.
+  Against the published count (Lenton et al. 2023, read on 2026-11-03: 62 ± 26 million
+  people at 29 °C and up at +1.0 °C, 2.1 ± 0.8 billion at +2.7 °C, 3.3 billion at +3.6 °C),
+  this model is high now (147 million at +1.7 °C in 2024, on a warmer model year and a 2001
+  to 2025 climatology against their 1960 to 1990 one) and low later (1.32 billion at +3.4
+  °C in 2099 with emissions held). The later gap is the pattern: their local warming is
+  CMIP6's, in which land warms 1.5 times the global mean and India more; ours is the
+  observed country slope, India's 0.82, which carries the record's aerosol haze forward.
 - The wet-bulb layer's baseline is a reanalysis, not a measurement: MERRA-2 at about 50 km,
   daily maximum temperature and the day's dew point (standing for the afternoon's, which
   runs a little high), ten years, constant relative humidity under warming (the standard
   first-order assumption, stated as one). Its two limits are recalled from their papers
-  and not yet checked. A 50 km reanalysis does not reach the station extremes of the Gulf
-  coast, so this layer reads the humid heat mild: 6.5 million people live where 31 °C
+  and checked against their papers on 2026-11-03 (Vecellio et al. 2022 measured 30.55 ±
+  0.98 °C; Sherwood and Huber 2010 argued 35 °C). A 50 km reanalysis does not reach the
+  station extremes of the Gulf coast (Raymond, Matthews and Horton 2020 found ERA-Interim's
+  extremes 2 to 4 °C below the Gulf stations'), so this layer reads the humid heat mild: 6.5 million people live where 31 °C
   wet-bulb is passed on three days a year in 2024, and 38 people past 35 °C in 2099 with
   emissions held. The one-station-per-capital form is kept as `source = station` and is
   the check on it; it read the same limit in steps instead (1.58 billion in 2099, India

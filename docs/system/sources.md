@@ -169,6 +169,18 @@ Every record this simulator reads, from `data/catalog.toml`, with the publisher,
 - **url** `https://noaa-gsod-pds.s3.amazonaws.com/{year}/{station}.csv`
 - **notes** Daily summaries of station observations; the wet-bulb layer estimates an afternoon wet-bulb from MAX and DEWP.
 
+## raster
+
+### WorldPop, the spatial distribution of population in 2020, 1 km, global mosaic (unconstrained, not UN-adjusted)
+
+- **id** `worldpop-2020-1km`
+- **publisher** WorldPop (University of Southampton; University of Louisville; Universite de Namur) and CIESIN, Columbia University (2018), Global High Resolution Population Denominators Project, doi 10.5258/SOTON/WP00647; file path from the WorldPop hub API (rest/data/pop/wpgp1km, id 24777)
+- **licence** CC BY 4.0 (hub.worldpop.org/data/licence.txt, read 2026-11-02)
+- **units** persons per 1 km pixel (Float32; -3.4e38 is nodata)
+- **verified** 2026-11-02 from canada1: HEAD 869,715,253 bytes; header read: tiled 256x256 Float32 LZW, tiepoint -180.001249 83.999583, pixel 0.0083333
+- **url** `https://data.worldpop.org/GIS/Population/Global_2000_2020/2020/0_Mosaicked/ppp_2020_1km_Aggregated.tif`
+- **notes** Read tile by tile and summed to the run's grid; the sum is kept beside the file. People per cell are scaled to the UN country totals each year by the people module, so WorldPop supplies the pattern, the UN the count.
+
 ## raster tiles
 
 ### Copernicus DEM GLO-30, global land surface elevation at one arc-second
@@ -190,6 +202,30 @@ Every record this simulator reads, from `data/catalog.toml`, with the publisher,
 - **verified** 2026-11-01 from canada1: tile h11v04 composites for 2025 fetched for M5; the catalog had none for July to November 2025; per-file signing is rate-limited, so one container token per run
 - **url** `https://planetarycomputer.microsoft.com/api/stac/v1/search (collection modis-13A1-061); token from https://planetarycomputer.microsoft.com/api/sas/v1/token/modiseuwest/modis-061-cogs`
 - **notes** Reader: crates/registry/src/modis.rs; sinusoidal to lat-lon sampling.
+
+## reanalysis climatology
+
+### NASA POWER climatology regional: MERRA-2 2 m temperature monthly and annual means, 2001 to 2025, by 10-degree box
+
+- **id** `nasa-power-climatology-regional`
+- **publisher** NASA POWER Climatology API v2.10.1; the answer's header gives the period (start 20010101, end 20251231 on 2026-11-02)
+- **licence** as nasa-power-daily-regional
+- **units** degC
+- **verified** 2026-11-02 from canada1: the India box, 357 points, 98 KB
+- **url** `https://power.larc.nasa.gov/api/temporal/climatology/regional?parameters={param}&community=RE&longitude-min={lon0}&longitude-max={lon1}&latitude-min={lat0}&latitude-max={lat1}&format=JSON`
+- **notes** The annual mean per cell is the niche layer's baseline on cells; the country's warming since the same period is added to it.
+
+## reanalysis series
+
+### NASA POWER daily regional: MERRA-2 2 m temperature maximum and dew point per day on the 0.5 x 0.625 degree grid, by 10-degree box and year
+
+- **id** `nasa-power-daily-regional`
+- **publisher** NASA Langley Research Center POWER project (Prediction Of Worldwide Energy Resources), funded through the NASA Earth Science Division; meteorology from MERRA-2 (GMAO). POWER Daily API v2.10.1 on 2026-11-02
+- **licence** US federal (NASA) data; POWER asks that its reference be included and does not state a restriction (docs/referencing, read 2026-11-02); no licence text found on the site
+- **units** degC; -999 is missing; days in local solar time
+- **verified** 2026-11-02 from canada1: a 10x10 box over India for 2010, 357 points, 3.5 MB CSV or 2.2 MB JSON in about a second; the API refuses more than 10 degrees a side or more than 366 days; six requests back to back answered in 0.4 s each
+- **url** `https://power.larc.nasa.gov/api/temporal/daily/regional?parameters={param}&community=RE&longitude-min={lon0}&longitude-max={lon1}&latitude-min={lat0}&latitude-max={lat1}&start={year}0101&end={year}1231&format=JSON`
+- **notes** T2M_MAX is the maximum hourly 2 m temperature of the day, T2MDEW the day's dew point, both MERRA-2 at about 50 km. The cells wet-bulb layer uses them as the station layer used GSOD: an afternoon wet-bulb per day (Stull) shifted at constant humidity. A reanalysis, not a measurement; the station layer stays as its check.
 
 ## station list
 
@@ -221,6 +257,16 @@ Every record this simulator reads, from `data/catalog.toml`, with the publisher,
 - **verified** 2026-11-01 from canada1: 243 places, 215 capitals; nine 110m countries have no capital point (Antarctica, Greenland, Puerto Rico, South Sudan among them)
 - **url** `https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_populated_places.geojson`
 - **notes** One point per country for the wet-bulb layer; the capital stands for the country, which the layer says.
+
+### Natural Earth 1:50m admin-0 countries (GeoJSON)
+
+- **id** `natural-earth-50m-countries`
+- **publisher** Natural Earth (naturalearthdata.com), from the project's GitHub mirror nvkelso/natural-earth-vector
+- **licence** Natural Earth is public domain
+- **units** degrees
+- **verified** 2026-11-02 from canada1: HEAD 3,083,490 bytes
+- **url** `https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_50m_admin_0_countries.geojson`
+- **notes** Used in place of the 1:110m file when the grid is finer than 2 degrees; at 1:110m small island states vanish at half a degree.
 
 ## Places
 
