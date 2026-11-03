@@ -103,6 +103,14 @@
     </div>
   </section>
 
+  {#if meta.cover}
+    <!-- a depiction of the scenario, a file beside the manifest named in project.toml -->
+    <figure class="mb-10 max-w-3xl">
+      <img src={`/projects/${path}/${meta.cover}`} alt={meta.cover_caption ?? meta.title ?? path} class="w-full rounded-[3px]" />
+      {#if meta.cover_caption}<figcaption class="mt-1.5 text-xs muted">{meta.cover_caption}</figcaption>{/if}
+    </figure>
+  {/if}
+
   {#if readme}
     <section class="mb-10">
       {#key readme}<Readme {path} md={readme} />{/key}

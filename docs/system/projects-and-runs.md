@@ -20,6 +20,18 @@ The description matters more than it looks. It is what the person asked for, in 
 own words, kept beside the manifest a model drafted from it. When the manifest and the
 description disagree, the description is the claim and the manifest is the attempt.
 
+## A depiction, and the front page
+
+A project may carry a picture: a file beside the manifest, named in `project.toml` as
+`cover = "cover.png"`, with `cover_caption` saying what it is and where it came from. It is
+shown at the top of the project page and on the front page's card. The house rule for
+images holds: a picture drawn from the runs, or a real photograph, or a piece of art made
+for the scenario; never a stock image standing in for the place. A README may also show a
+picture that sits in the folder, `![what it is](file.png)`.
+
+`featured = true` in `project.toml` puts the project on the front page, which shows only the
+featured scenarios as cards; `?all` lists every project under its area.
+
 ## A project's README
 
 A project folder may hold a `README.md`, and the project page renders it above the

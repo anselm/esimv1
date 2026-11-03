@@ -14,6 +14,7 @@
   import Ladder from './Ladder.svelte'
 
   let { path, md } = $props()
+  const base = $derived(`/projects/${path}`)   // relative images and links in the README resolve here
   let runs = $state(null)
   let error = $state(null)
 
@@ -23,12 +24,12 @@
     const re = /^```esim[^\n]*\n([\s\S]*?)^```[ \t]*$/gm
     let last = 0, m
     while ((m = re.exec(md))) {
-      if (m.index > last) out.push({ kind: 'md', html: render(md.slice(last, m.index)) })
+      if (m.index > last) out.push({ kind: 'md', html: render(md.slice(last, m.index), { base }) })
       const words = m[1].trim().split(/\s+/)
       out.push({ kind: words[0], args: words.slice(1), text: m[1].trim() })
       last = m.index + m[0].length
     }
-    if (last < md.length) out.push({ kind: 'md', html: render(md.slice(last)) })
+    if (last < md.length) out.push({ kind: 'md', html: render(md.slice(last), { base }) })
     return out
   })
   const needsRuns = $derived(segments.some((s) => s.kind !== 'md'))

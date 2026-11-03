@@ -1,8 +1,10 @@
 <script>
   import Badge from './Badge.svelte'
-  // The front page: projects, each a folder under projects/<area>/<name>. Read from the
-  // project server when it is up, from the static index otherwise.
-  import { link, go } from './router.svelte.js'
+  // The front page: the featured scenarios as cards (a project whose project.toml says
+  // `featured = true`, with its cover picture), and on ?all every project under its area,
+  // each a folder under projects/<area>/<name>. Read from the project server when it is
+  // up, from the static index otherwise.
+  import { link, go, route } from './router.svelte.js'
   import { req, onChanged, hello } from './socket.js'
   let writable = $state(false)
   let readonly = $state(false)
@@ -40,6 +42,9 @@
     projects = projects
   }
   const latest = (p) => (p.runs ?? []).slice().sort((a, b) => (b.start ?? 0) - (a.start ?? 0))[0] ?? null
+  const featured = $derived((projects ?? []).filter((p) => p.featured === true))
+  // one sentence of the description for a card
+  const firstSentence = (s) => { const m = String(s ?? '').match(/^.*?[.!?](\s|$)/); return m ? m[0].trim() : String(s ?? '') }
   const areas = $derived.by(() => {
     const m = new Map()
     for (const p of projects ?? []) {
@@ -69,7 +74,29 @@
   <p class="muted text-sm">loading…</p>
 {:else if projects.length === 0}
   <p class="muted text-sm">no projects yet. <a use:link={{ isNew: true }} class="text-brand">Start one.</a></p>
+{:else if !route.all && featured.length}
+  <!-- the featured scenarios: one picture, one sentence each -->
+  <section class="mb-10 grid gap-8 sm:grid-cols-2">
+    {#each featured as p (p.path)}
+      <a use:link={{ project: p.path }} class="group block">
+        {#if p.cover}
+          <img src={`/projects/${p.path}/${p.cover}`} alt={p.cover_caption ?? p.title ?? p.path} class="aspect-[12/5] w-full rounded-[3px] object-cover" loading="lazy" />
+        {:else}
+          <div class="aspect-[12/5] w-full rounded-[3px] bg-brand-soft/40"></div>
+        {/if}
+        <h2 class="mt-3 text-lg font-medium group-hover:text-brand">{p.title ?? p.path}</h2>
+        <p class="mt-1 text-sm muted">{firstSentence(p.description)}</p>
+        <div class="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 mono text-xs muted">
+          <span>/{p.path}</span>
+          <span>{(p.runs ?? []).length} {(p.runs ?? []).length === 1 ? 'run' : 'runs'}</span>
+          {#if p.audit}<Verdict verdict={p.audit.verdict} />{/if}
+        </div>
+      </a>
+    {/each}
+  </section>
+  <p class="text-xs muted"><a use:link={{ all: true }} class="hover:text-brand">all {projects.length} projects →</a></p>
 {:else}
+  {#if featured.length}<p class="mb-6 text-xs muted"><a use:link={{}} class="hover:text-brand">← featured</a></p>{/if}
   {#each areas as [area, list] (area)}
     <section class="mb-10">
       <div class="label mb-2">{area} · {list.length} {list.length === 1 ? 'project' : 'projects'}</div>

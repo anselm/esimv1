@@ -4,26 +4,34 @@
 
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 
-function inline(s) {
+// A relative image or link source resolves against `base` (a project folder), so a
+// README can show a picture that sits beside it.
+function src(h, base) {
+  if (/^(https?:\/\/|\/|\?|#|mailto:)/.test(h)) return h
+  if (base && /^[\w.\-\/]+$/.test(h) && !h.includes('..')) return `${base.replace(/\/$/, '')}/${h}`
+  return '#'
+}
+
+function inline(s, base) {
   let out = esc(s)
   out = out.replace(/`([^`]+)`/g, (_, c) => `<code>${c}</code>`)
   out = out.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
   out = out.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>')
+  // ![alt](file): an image; relative to the page's base folder
+  out = out.replace(/!\[([^\]]*)\]\(([^)\s]+)\)/g, (_, a, h) => `<img src="${src(h, base)}" alt="${a}" loading="lazy">`)
   // [text](href): same-site links route in place; others open normally
-  out = out.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (_, t, h) => {
-    const safe = /^(https?:\/\/|\/|\?|#|mailto:)/.test(h) ? h : '#'
-    return `<a href="${safe}">${t}</a>`
-  })
+  out = out.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (_, t, h) => `<a href="${src(h, base)}">${t}</a>`)
   return out
 }
 
-export function render(md) {
+export function render(md, { base = '' } = {}) {
+  const inl = (t) => inline(t, base)
   // HTML comments carry page metadata (order) and are never shown
   const lines = md.replace(/<!--[\s\S]*?-->/g, '').replace(/\r\n/g, '\n').split('\n')
   const html = []
   let i = 0
   const para = []
-  const flush = () => { if (para.length) { html.push(`<p>${inline(para.join(' '))}</p>`); para.length = 0 } }
+  const flush = () => { if (para.length) { html.push(`<p>${inl(para.join(' '))}</p>`); para.length = 0 } }
   while (i < lines.length) {
     const line = lines[i]
     if (/^```/.test(line)) {
@@ -40,7 +48,7 @@ export function render(md) {
     if (h) {
       flush()
       const id = h[2].toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
-      html.push(`<h${h[1].length} id="${id}">${inline(h[2])}</h${h[1].length}>`)
+      html.push(`<h${h[1].length} id="${id}">${inl(h[2])}</h${h[1].length}>`)
       i++
       continue
     }
@@ -55,7 +63,7 @@ export function render(md) {
         else items.push(lines[i].replace(/^\s*([-*]|\d+\.)\s+/, ''))
         i++
       }
-      html.push(`<${ordered ? 'ol' : 'ul'}>${items.map((t) => `<li>${inline(t)}</li>`).join('')}</${ordered ? 'ol' : 'ul'}>`)
+      html.push(`<${ordered ? 'ol' : 'ul'}>${items.map((t) => `<li>${inl(t)}</li>`).join('')}</${ordered ? 'ol' : 'ul'}>`)
       continue
     }
     if (/^\|/.test(line) && i + 1 < lines.length && /^\|?\s*:?-{2,}/.test(lines[i + 1])) {
@@ -65,14 +73,14 @@ export function render(md) {
       i += 2
       const rows = []
       while (i < lines.length && /^\|/.test(lines[i])) rows.push(cells(lines[i++]))
-      html.push(`<table><thead><tr>${head.map((c) => `<th>${inline(c)}</th>`).join('')}</tr></thead><tbody>${rows.map((r) => `<tr>${r.map((c) => `<td>${inline(c)}</td>`).join('')}</tr>`).join('')}</tbody></table>`)
+      html.push(`<table><thead><tr>${head.map((c) => `<th>${inl(c)}</th>`).join('')}</tr></thead><tbody>${rows.map((r) => `<tr>${r.map((c) => `<td>${inl(c)}</td>`).join('')}</tr>`).join('')}</tbody></table>`)
       continue
     }
     if (/^>\s?/.test(line)) {
       flush()
       const buf = []
       while (i < lines.length && /^>\s?/.test(lines[i])) buf.push(lines[i++].replace(/^>\s?/, ''))
-      html.push(`<blockquote>${inline(buf.join(' '))}</blockquote>`)
+      html.push(`<blockquote>${inl(buf.join(' '))}</blockquote>`)
       continue
     }
     if (/^\s*$/.test(line)) { flush(); i++; continue }

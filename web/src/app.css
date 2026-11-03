@@ -69,3 +69,6 @@ body {
 .doc blockquote { margin: 0.75rem 0; padding-left: 0.75rem; border-left: 2px solid rgb(128 128 128 / 0.3); color: rgb(115 115 115); }
 .doc hr { border: none; border-top: 1px solid rgb(128 128 128 / 0.2); margin: 1.5rem 0; }
 .doc figure { margin: 1rem 0; }
+
+/* a picture in a README or a doc: never wider than the measure */
+.doc img { max-width: 100%; height: auto; border-radius: 3px; }
