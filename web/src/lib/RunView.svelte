@@ -21,6 +21,8 @@
 
   let { id, base, back = {}, backLabel = 'back' } = $props()
   let cursor = $state(null)
+  // roads, place names and city limits a module fetched for its window (its describe's `context` table)
+  const contextOf = (run) => (run?.describe?.modules ?? []).map((m) => m.tables?.context).find(Boolean) ?? null
   let wantLog = $state(false)   // the event log is ten megabytes; fetched when its panel opens
 
   async function load() {
@@ -104,7 +106,7 @@
 
   <!-- the modules, in the manifest's order, each with the views it declared -->
   {#each run.describe?.modules ?? [] as d (d.name)}
-    <ModuleViews describe={d} {run} {base} {cursor} {crossings} />
+    <ModuleViews describe={d} {run} {base} {cursor} {crossings} context={contextOf(run)} />
   {/each}
 
   <!-- what no module claimed -->
@@ -113,7 +115,7 @@
       <div class="label mb-3">other maps</div>
       <div class="grid gap-x-6 gap-y-6 {rest.maps.length === 1 ? '' : rest.maps.length === 2 ? 'sm:grid-cols-2' : 'sm:grid-cols-2 lg:grid-cols-3'}">
         {#each rest.maps as f (f)}
-          <FieldMap name={f} field={run.fields[f]} {base} {cursor} />
+          <FieldMap name={f} field={run.fields[f]} {base} {cursor} context={contextOf(run)} />
         {/each}
       </div>
     </section>

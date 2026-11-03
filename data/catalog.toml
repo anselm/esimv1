@@ -382,3 +382,27 @@ source = "National Interagency Fire Center, operational data archived from incid
 licence = "US federal public data; terms on data-nifc.opendata.arcgis.com"
 verified = "2026-11-03 from canada1: the Palisades fire's IRWIN id answered 34 polygons from 2025-01-08T06:00Z (2,920 acres) to 2025-01-21 (23,448 acres), most of them infrared interpretations; nothing between discovery at 18:30Z on the 7th and 06:00Z on the 8th"
 notes = "DateCurrent is the time to use; PolygonDateTime is frozen on the infrared rows."
+
+[[asset]]
+id = "osm-overpass"
+title = "OpenStreetMap through the Overpass API: roads, place names and city limits inside a window"
+kind = "vector"
+crs = "EPSG:4326"
+format = "Overpass JSON with geometry (out geom), reduced in the cache to roads by class, named places as points and admin_level 8 boundaries as lines"
+url_template = "https://overpass-api.de/api/interpreter?data={query}"
+source = "OpenStreetMap contributors"
+licence = "ODbL 1.0; attribution 'OpenStreetMap contributors' on any map that shows it"
+verified = "2026-11-03 from canada1: see the registry's wildfire::context; the Palisades window answered"
+notes = "A public instance with usage limits; one request per window, cached. Context only: nothing in a run's physics reads it."
+
+[[asset]]
+id = "cal-fire-dins-2025-palisades"
+title = "CAL FIRE Damage Inspection (DINS) points for the 2025 Palisades fire, public view"
+kind = "vector"
+crs = "EPSG:4326 on request (outSR=4326)"
+format = "ArcGIS FeatureServer query answering GeoJSON, 2,000 features a page; fields DAMAGE (Destroyed (>50%), Major (26-50%), Minor (10-25%), Affected (1-9%), No Damage) and STRUCTURETYPE"
+url_template = "https://services1.arcgis.com/jUJYIo9tSA7EHvfZ/arcgis/rest/services/DINS_2025_Palisades_Public_View/FeatureServer/0/query?where=1%3D1&outFields=DAMAGE,STRUCTURETYPE&outSR=4326&f=geojson&resultOffset={offset}&resultRecordCount=2000"
+source = "CAL FIRE Damage Inspection program (service owner dins.CALFIRE); a data-share view with the full inspection form and LA County's building footprints with the same damage exist beside it"
+licence = "No licence text on the service; California public records. Attribute CAL FIRE DINS."
+verified = "2026-11-03 from canada1: 12,081 points, anonymous; Destroyed 6,845, Major 72, Minor 171, Affected 732, No Damage 4,261; bbox lon -118.6859 to -118.4989, lat 34.0298 to 34.1288; inspections dated 2025-01-09 to 2025-02-19"
+notes = "The destroyed count equals CAL FIRE's incident figure of 6,845 structures."

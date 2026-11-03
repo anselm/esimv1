@@ -16,7 +16,7 @@
   import { isoDate, num } from './fmt.js'
   import { LUT, RAMP_CSS, FIRE_LUT, FIRE_CSS, COVER, COVER_NAMES, rampFor } from './ramp.js'
 
-  let { name, field, base, cursor = null } = $props()
+  let { name, field, base, cursor = null, context = null } = $props()
   const ramp = $derived(rampFor(name, field.unit))
   const coverRgb = Object.fromEntries(Object.entries(COVER).map(([k, h]) => [k, [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16))]))
 
@@ -139,6 +139,32 @@
     ctx.clearRect(0, 0, W, H)
     ctx.imageSmoothingEnabled = false
     ctx.drawImage(off, 0, 0, W, H)
+    // roads, city limits and place names over a local window
+    if (context && !world) {
+      const dark = matchMedia('(prefers-color-scheme: dark)').matches
+      const sx = (lon) => ((lon - grid.lon_w) / (grid.nx * grid.dlon)) * W
+      const sy = (lat) => ((grid.lat_n - lat) / (grid.ny * grid.dlat)) * H
+      const line = (pts) => { ctx.beginPath(); pts.forEach(([lon, lat], i) => (i ? ctx.lineTo(sx(lon), sy(lat)) : ctx.moveTo(sx(lon), sy(lat)))); ctx.stroke() }
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round'
+      ctx.setLineDash([4 * dpr, 3 * dpr]); ctx.strokeStyle = dark ? 'rgba(255,255,255,0.55)' : 'rgba(0,0,0,0.45)'; ctx.lineWidth = 1 * dpr
+      for (const b of context.boundaries ?? []) line(b.pts)
+      ctx.setLineDash([])
+      for (const r of context.roads ?? []) {
+        const major = /motorway|trunk|primary/.test(r.class)
+        ctx.strokeStyle = dark ? (major ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.4)') : (major ? 'rgba(0,0,0,0.7)' : 'rgba(0,0,0,0.3)')
+        ctx.lineWidth = (major ? 1.4 : 0.7) * dpr
+        line(r.pts)
+      }
+      ctx.font = `${11 * dpr}px ui-monospace, SFMono-Regular, Menlo, monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
+      ctx.lineWidth = 3 * dpr; ctx.strokeStyle = dark ? 'rgba(0,0,0,0.75)' : 'rgba(255,255,255,0.85)'; ctx.fillStyle = dark ? '#fff' : '#111'
+      const drawn = []
+      for (const p of (context.places ?? []).filter((p) => /city|town|suburb|neighbourhood|village|quarter/.test(p.kind)).sort((a, b) => ['city', 'town', 'suburb', 'neighbourhood', 'quarter', 'village'].indexOf(a.kind) - ['city', 'town', 'suburb', 'neighbourhood', 'quarter', 'village'].indexOf(b.kind))) {
+        const x = sx(p.lon), y = sy(p.lat)
+        if (x < 0 || y < 0 || x > W || y > H) continue
+        if (drawn.some(([dx, dy]) => Math.abs(dx - x) < 70 * dpr && Math.abs(dy - y) < 14 * dpr)) continue
+        ctx.strokeText(p.name, x, y); ctx.fillText(p.name, x, y); drawn.push([x, y])
+      }
+    }
     if (world && outlines) {
       const dark = matchMedia('(prefers-color-scheme: dark)').matches
       ctx.strokeStyle = dark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.35)'

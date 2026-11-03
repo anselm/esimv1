@@ -63,6 +63,7 @@ pub static KINDS: &[Kind] = &[
     kind!("story.bottomline", countries::Story),
     kind!("fire.rothermel", wildfire::Rothermel),
     kind!("obs.perimeters", wildfire::Perimeters),
+    kind!("obs.dins", wildfire::Structures),
 ];
 
 fn find(kind: &str) -> Result<&'static Kind, String> {

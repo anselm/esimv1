@@ -6,7 +6,7 @@
   import FieldMap from './FieldMap.svelte'
   import Chart from './Chart.svelte'
 
-  let { describe, run, base, cursor, crossings = [] } = $props()
+  let { describe, run, base, cursor, crossings = [], context = null } = $props()
 
   const views = $derived.by(() => {
     if (describe.views?.length) return describe.views
@@ -64,7 +64,7 @@
         {#each maps as v (v.source)}
           <div>
             <div class="mb-1 text-sm">{v.title}{#if v.note} <span class="muted">· {v.note}</span>{/if}</div>
-            <FieldMap name={v.source} field={run.fields[v.source]} {base} {cursor} />
+            <FieldMap name={v.source} field={run.fields[v.source]} {base} {cursor} {context} />
           </div>
         {/each}
       </div>

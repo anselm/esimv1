@@ -1,5 +1,47 @@
 # Written by the fetcher. One entry per fetched file: the bytes a run used.
 
+[files."cal-fire-dins/2025-palisades/page00.geojson"]
+url = "https://services1.arcgis.com/jUJYIo9tSA7EHvfZ/arcgis/rest/services/DINS_2025_Palisades_Public_View/FeatureServer/0/query?where=1%3D1&outFields=DAMAGE,STRUCTURETYPE&outSR=4326&f=geojson&resultOffset=0&resultRecordCount=2000"
+sha256 = "bdf32f5f94cc91067c2ab54086c87cb96a743b31a87bd1896a32d4b95ea3ad16"
+bytes = 388533
+fetched = "2026-11-03"
+
+[files."cal-fire-dins/2025-palisades/page01.geojson"]
+url = "https://services1.arcgis.com/jUJYIo9tSA7EHvfZ/arcgis/rest/services/DINS_2025_Palisades_Public_View/FeatureServer/0/query?where=1%3D1&outFields=DAMAGE,STRUCTURETYPE&outSR=4326&f=geojson&resultOffset=2000&resultRecordCount=2000"
+sha256 = "5b5133d0bbac0b994b2313ff4a9a32bba408810474235259a534cdd433a3f613"
+bytes = 385735
+fetched = "2026-11-03"
+
+[files."cal-fire-dins/2025-palisades/page02.geojson"]
+url = "https://services1.arcgis.com/jUJYIo9tSA7EHvfZ/arcgis/rest/services/DINS_2025_Palisades_Public_View/FeatureServer/0/query?where=1%3D1&outFields=DAMAGE,STRUCTURETYPE&outSR=4326&f=geojson&resultOffset=4000&resultRecordCount=2000"
+sha256 = "652f873c826d2d868a7c6941def609630ec4ed9360a4a38968eb4dc189f51e39"
+bytes = 383635
+fetched = "2026-11-03"
+
+[files."cal-fire-dins/2025-palisades/page03.geojson"]
+url = "https://services1.arcgis.com/jUJYIo9tSA7EHvfZ/arcgis/rest/services/DINS_2025_Palisades_Public_View/FeatureServer/0/query?where=1%3D1&outFields=DAMAGE,STRUCTURETYPE&outSR=4326&f=geojson&resultOffset=6000&resultRecordCount=2000"
+sha256 = "4810e714f386d5b6fef0ea368bd26e98729404ff46394da8c0db9dfea3edc4c4"
+bytes = 386617
+fetched = "2026-11-03"
+
+[files."cal-fire-dins/2025-palisades/page04.geojson"]
+url = "https://services1.arcgis.com/jUJYIo9tSA7EHvfZ/arcgis/rest/services/DINS_2025_Palisades_Public_View/FeatureServer/0/query?where=1%3D1&outFields=DAMAGE,STRUCTURETYPE&outSR=4326&f=geojson&resultOffset=8000&resultRecordCount=2000"
+sha256 = "9c4d11dfa66501f8fe330d3de9dee35b14ca0448b4043d57f66455dbf55f1e25"
+bytes = 387057
+fetched = "2026-11-03"
+
+[files."cal-fire-dins/2025-palisades/page05.geojson"]
+url = "https://services1.arcgis.com/jUJYIo9tSA7EHvfZ/arcgis/rest/services/DINS_2025_Palisades_Public_View/FeatureServer/0/query?where=1%3D1&outFields=DAMAGE,STRUCTURETYPE&outSR=4326&f=geojson&resultOffset=10000&resultRecordCount=2000"
+sha256 = "d84063038f74a70bae1c6b9bb83b5af700160a92f4f4ffbf9e1bc79dbfc9cd56"
+bytes = 380115
+fetched = "2026-11-03"
+
+[files."cal-fire-dins/2025-palisades/page06.geojson"]
+url = "https://services1.arcgis.com/jUJYIo9tSA7EHvfZ/arcgis/rest/services/DINS_2025_Palisades_Public_View/FeatureServer/0/query?where=1%3D1&outFields=DAMAGE,STRUCTURETYPE&outSR=4326&f=geojson&resultOffset=12000&resultRecordCount=2000"
+sha256 = "c18d607e8fb3db419871bd014d099fe272215367f4db9747b9ed1fedfd61988a"
+bytes = 15247
+fetched = "2026-11-03"
+
 [files."copernicus-dem-glo30/N34_W119.tif"]
 url = "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N34_00_W119_00_DEM/Copernicus_DSM_COG_10_N34_00_W119_00_DEM.tif"
 sha256 = "eb5f76ce3183a33c76e24d00fd854598b490523f6cb325e3f234203a3bc011a8"
@@ -9773,6 +9815,12 @@ url = "https://ensemble-api.open-meteo.com/v1/ensemble?latitude=42.375,42.375,42
 sha256 = "0201a5a1ccb4461ef213d914d24f05f66d0f5aff93145cd8b921f1d83e0dc83d"
 bytes = 4361540
 fetched = "2026-11-01"
+
+[files."osm-overpass/context_34_34.16_-118.72_-118.46.json"]
+url = "https://overpass.kumi.systems/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A180%5D%3B%28way%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%29%24%22%5D%2834%2C-118.72%2C34.16%2C-118.46%29%3Bnode%5B%22place%22~%22%5E%28city%7Ctown%7Csuburb%7Cneighbourhood%7Cvillage%7Cquarter%29%24%22%5D%2834%2C-118.72%2C34.16%2C-118.46%29%3Brelation%5B%22boundary%22%3D%22administrative%22%5D%5B%22admin_level%22%3D%228%22%5D%2834%2C-118.72%2C34.16%2C-118.46%29%3B%29%3Bout%20geom%3B"
+sha256 = "7620f8dac57b0c576128e5e3748e8599efad051e75a2b58a73fd6e9e2dbf1bbc"
+bytes = 3567130
+fetched = "2026-11-03"
 
 [files."owid/owid-co2-data.csv"]
 url = "https://raw.githubusercontent.com/owid/co2-data/master/owid-co2-data.csv"

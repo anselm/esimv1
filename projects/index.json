@@ -60,17 +60,18 @@
     "featured": true,
     "kinds": [
       "fire.rothermel",
-      "obs.perimeters"
+      "obs.perimeters",
+      "obs.dins"
     ],
     "name": "palisades-2025",
     "path": "anselm/palisades-2025",
     "runs": [
       {
         "all_ledgers_closed": true,
-        "digest": "6d767f390dbac767",
+        "digest": "bb594cbd9d0c851d",
         "end": 1736640000,
-        "events": 249,
-        "id": "f2-palisades-2025-199bb814-6d767f39",
+        "events": 352,
+        "id": "f2-palisades-2025-280ef421-bb594cbd",
         "name": "f2-palisades-2025",
         "seed": 1,
         "set": {
@@ -82,25 +83,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "d860c89609f49439",
+        "digest": "30244278472bfeb5",
         "end": 1736640000,
-        "events": 249,
-        "id": "f2-palisades-2025-54447a97-d860c896",
-        "name": "f2-palisades-2025",
-        "seed": 1,
-        "set": {
-          "fire.built_ros_m_min": "0"
-        },
-        "start": 1736272800,
-        "variant": "built-barrier",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "63cb30e994fd45db",
-        "end": 1736640000,
-        "events": 249,
-        "id": "f2-palisades-2025-93d2fa80-63cb30e9",
+        "events": 352,
+        "id": "f2-palisades-2025-2e212982-30244278",
         "name": "f2-palisades-2025",
         "seed": 1,
         "set": {
@@ -112,10 +98,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "90f91bbd410867d0",
+        "digest": "1bd28f8aeff03a14",
         "end": 1736640000,
-        "events": 249,
-        "id": "f2-palisades-2025-bde49164-90f91bbd",
+        "events": 352,
+        "id": "f2-palisades-2025-61dd849b-1bd28f8a",
         "name": "f2-palisades-2025",
         "seed": 1,
         "set": {
@@ -124,6 +110,21 @@
         "start": 1736272800,
         "variant": "sh7",
         "verdict": null
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "8b326bf88356cc1b",
+        "end": 1736640000,
+        "events": 352,
+        "id": "f2-palisades-2025-b628ba87-8b326bf8",
+        "name": "f2-palisades-2025",
+        "seed": 1,
+        "set": {
+          "fire.built_ros_m_min": "0"
+        },
+        "start": 1736272800,
+        "variant": "built-barrier",
+        "verdict": "holds"
       }
     ],
     "title": "The Palisades fire, January 2025",

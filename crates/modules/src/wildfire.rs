@@ -19,7 +19,7 @@
 
 use esim_kernel::manifest::{param_duration, param_f64, param_str};
 use esim_kernel::{Ctx, Duration, Event, LatLonGrid, Module, Time};
-use esim_registry::wildfire::{daily_perimeters, landcover_window, rasterize, wfigs_perimeters, wind_hourly, Perimeter, WindSeries};
+use esim_registry::wildfire::{cached_context, context, daily_perimeters, dins_points, landcover_window, rasterize, wfigs_perimeters, wind_hourly, Perimeter, Structure, WindSeries};
 use esim_registry::{dem_window, Catalog, Fetcher};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
@@ -246,6 +246,8 @@ impl Rothermel {
         }).collect();
         let wind_lat = (self.lat_s + self.lat_n) / 2.0; let wind_lon = (self.lon_w + self.lon_e) / 2.0;
         self.wind = Some(wind_hourly(&mut fe, wind_lat, wind_lon, &self.wind_start, &self.wind_end)?);
+        // roads, place names and city limits for the map; fetched once, carried by the describe from the cache
+        if let Err(e) = context(&mut fe, self.lat_s, self.lat_n, self.lon_w, self.lon_e) { eprintln!("context: {e} (the map will have no roads or names)"); }
         self.area_m2 = (0..grid.ny).flat_map(|r| std::iter::repeat_n(grid.row_area(r), grid.nx)).collect();
         self.metres = (0..grid.ny).map(|r| { let (mx, my) = grid.metres_per_degree(r); (mx * grid.dlon, my * grid.dlat) }).collect();
         // every primitive lattice direction within reach: (1,0), (1,1), (1,2), (2,1), (1,3), ... in all quadrants
@@ -450,7 +452,9 @@ impl Rothermel {
     pub fn describe(name: &str, p: &toml::Value) -> esim_kernel::describe::Describe {
         let root = std::env::var("ESIM_ROOT").ok().map(PathBuf::from).unwrap_or_else(|| PathBuf::from("."));
         let fuels = load_fuels(&root).map(|(f, _)| serde_json::to_value(f).unwrap_or(serde_json::Value::Array(vec![]))).unwrap_or(serde_json::Value::Array(vec![]));
-        esim_kernel::describe::Describe::new("fire.rothermel", name, "A wildfire on real terrain: Rothermel's surface spread model on a one-arc-second DEM window, a fuel model per cell from WorldCover land cover, dead fuel moisture from the hour's humidity and temperature, wind speed and direction from the ERA5 archive at the window's centre; fire moves cell to cell down an ellipse headed along the wind-plus-slope vector. No suppression, no spotting, no crown fire; built-up land burns at a guessed rate the manifest can set to zero.")
+        let (lat_s, lat_n, lon_w, lon_e) = (param_f64(p, "lat_s", 34.0), param_f64(p, "lat_n", 34.16), param_f64(p, "lon_w", -118.72), param_f64(p, "lon_e", -118.46));
+        let ctx_table = Fetcher::default_for(&root).ok().and_then(|f| cached_context(&f, lat_s, lat_n, lon_w, lon_e));
+        let mut d = esim_kernel::describe::Describe::new("fire.rothermel", name, "A wildfire on real terrain: Rothermel's surface spread model on a one-arc-second DEM window, a fuel model per cell from WorldCover land cover, dead fuel moisture from the hour's humidity and temperature, wind speed and direction from the ERA5 archive at the window's centre; fire moves cell to cell down an ellipse headed along the wind-plus-slope vector. No suppression, no spotting, no crown fire; built-up land burns at a guessed rate the manifest can set to zero.")
             .priority(6).dt(param_str(p, "dt", "1h"))
             .param("lat_s", 34.0, "deg", "").param("lat_n", 34.16, "deg", "").param("lon_w", -118.72, "deg", "").param("lon_e", -118.46, "deg", "")
             .param("res_arcsec", 1.0, "arcsec", "one arc-second is the DEM's own 30 m")
@@ -478,7 +482,10 @@ impl Rothermel {
             .view("map", "Arrival time", "fire_arrival_h", "hours since ignition, by cell")
             .view("chart", "Burned area", "fire.burned_acres", "")
             .view("chart", "Wind at the window's centre", "fire.wind_m_s", "ERA5 reanalysis, 25 km")
-            .note("Rothermel 1972 as Andrews 2018 sets it out; moisture by Simard 1968; wind adjustment by Albini and Baughman 1979; ellipse by Anderson 1983. All recalled; nothing tuned. The reanalysis wind under-reads Santa Ana gusts; the gust variant is the honest upper bound the data allows.")
+            .asset("osm-overpass", "roads, place names and city limits for the map, read from the cache only")
+            .note("Rothermel 1972 as Andrews 2018 sets it out; moisture by Simard 1968; wind adjustment by Albini and Baughman 1979; ellipse by Anderson 1983. All recalled; nothing tuned. The reanalysis wind under-reads Santa Ana gusts; the gust variant is the honest upper bound the data allows.");
+        if let Some(c) = ctx_table { d = d.table("context", c); }
+        d
     }
 }
 
@@ -600,6 +607,138 @@ impl Perimeters {
             .view_vs("Burned area against the mapped perimeters", "sim.acres", "obs.acres", "at the times a perimeter was current")
             .view("map", "Mapped perimeter", "obs_perimeter", "the incident's perimeter current at this time")
             .note(&format!("Incident {} ({}), IRWIN {}", param_str(p, "incident", "Palisades"), p.get("year").and_then(|v| v.as_integer()).unwrap_or(2025), param_str(p, "irwin", "{A7EA5D21-F882-44B8-BF64-44AB11059DC1}")))
+    }
+}
+
+// ---- the structures, and what became of them ------------------------------------------
+
+/// CAL FIRE's damage inspections for the incident: every structure as a point with the
+/// damage the inspectors recorded. Binned to the run's cells; each hour the fire's burned
+/// cells are read and the structures inside them counted against the record: how many of
+/// the destroyed the model's fire reached (recall), how many of the structures it reached
+/// were in fact destroyed (precision), and how many undamaged ones it overran.
+#[derive(Serialize, Deserialize)]
+pub struct Structures {
+    name: String,
+    lat_s: f64, lat_n: f64, lon_w: f64, lon_e: f64, res_arcsec: f64, frame_res_arcsec: f64,
+    dt: Duration,
+    service: String,
+    key: String,
+    #[serde(skip)] grid: Option<LatLonGrid>,
+    #[serde(skip)] cell_total: Vec<u16>,
+    #[serde(skip)] cell_destroyed: Vec<u16>,
+    #[serde(skip)] cell_intact: Vec<u16>,
+    #[serde(skip)] totals: (usize, usize, usize, usize), // all, destroyed, damaged, intact
+    #[serde(skip)] structures: Vec<Structure>,
+}
+
+impl Structures {
+    pub fn new(name: &str, p: &toml::Value) -> Result<Structures, String> {
+        let mut o = Structures {
+            name: name.to_string(),
+            lat_s: param_f64(p, "lat_s", 34.0), lat_n: param_f64(p, "lat_n", 34.16), lon_w: param_f64(p, "lon_w", -118.72), lon_e: param_f64(p, "lon_e", -118.46),
+            res_arcsec: param_f64(p, "res_arcsec", 1.0), frame_res_arcsec: param_f64(p, "frame_res_arcsec", 3.0),
+            dt: param_duration(p, "dt", "1h")?,
+            service: param_str(p, "service", "https://services1.arcgis.com/jUJYIo9tSA7EHvfZ/arcgis/rest/services/DINS_2025_Palisades_Public_View/FeatureServer/0").to_string(),
+            key: param_str(p, "key", "cal-fire-dins/2025-palisades").to_string(),
+            grid: None, cell_total: Vec::new(), cell_destroyed: Vec::new(), cell_intact: Vec::new(), totals: (0, 0, 0, 0), structures: Vec::new(),
+        };
+        o.load()?;
+        Ok(o)
+    }
+    fn load(&mut self) -> Result<(), String> {
+        let root = std::env::var("ESIM_ROOT").ok().map(PathBuf::from).unwrap_or_else(|| PathBuf::from("."));
+        let cat = Catalog::load(&root.join("data/catalog.toml"))?;
+        let dem = cat.asset("copernicus-dem-glo30").ok_or("catalog has no copernicus-dem-glo30")?;
+        let mut fe = Fetcher::default_for(&root)?;
+        let w = dem_window(&mut fe, dem, self.lat_s, self.lat_n, self.lon_w, self.lon_e, self.res_arcsec)?;
+        let grid = LatLonGrid { nx: w.nx, ny: w.ny, dlon: w.dlon, dlat: w.dlat, lon_w: w.lon_w, lat_n: w.lat_n };
+        self.structures = dins_points(&mut fe, &self.service, &self.key)?;
+        let n = grid.nx * grid.ny;
+        self.cell_total = vec![0; n]; self.cell_destroyed = vec![0; n]; self.cell_intact = vec![0; n];
+        let mut t = (0, 0, 0, 0);
+        for st in &self.structures {
+            if st.lat > grid.lat_n || st.lat < grid.lat_s() || st.lon < grid.lon_w || st.lon > grid.lon_e() { continue; }
+            let col = (((st.lon - grid.lon_w) / grid.dlon) as usize).min(grid.nx - 1);
+            let row = (((grid.lat_n - st.lat) / grid.dlat) as usize).min(grid.ny - 1);
+            let k = row * grid.nx + col;
+            self.cell_total[k] += 1; t.0 += 1;
+            if st.damage.starts_with("Destroyed") { self.cell_destroyed[k] += 1; t.1 += 1; }
+            else if st.damage.starts_with("No Damage") { self.cell_intact[k] += 1; t.3 += 1; }
+            else { t.2 += 1; }
+        }
+        self.totals = t;
+        self.grid = Some(grid);
+        Ok(())
+    }
+    fn frame(&self, v: &[u16]) -> (LatLonGrid, Vec<f32>) {
+        let g = self.grid.as_ref().unwrap();
+        let k = (self.frame_res_arcsec / self.res_arcsec).round().max(1.0) as usize;
+        let fg = LatLonGrid { nx: g.nx.div_ceil(k), ny: g.ny.div_ceil(k), dlon: g.dlon * k as f64, dlat: g.dlat * k as f64, lon_w: g.lon_w, lat_n: g.lat_n };
+        let mut out = vec![f32::NAN; fg.nx * fg.ny];
+        for fr in 0..fg.ny { for fc in 0..fg.nx {
+            let mut sum = 0u32;
+            for r in fr * k..((fr + 1) * k).min(g.ny) { for c in fc * k..((fc + 1) * k).min(g.nx) { sum += v[r * g.nx + c] as u32; } }
+            if sum > 0 { out[fr * fg.nx + fc] = sum as f32; }
+        } }
+        (fg, out)
+    }
+}
+
+impl Module for Structures {
+    fn name(&self) -> &str { &self.name }
+    fn init(&mut self, ctx: &mut Ctx) {
+        let (all, destroyed, damaged, intact) = self.totals;
+        ctx.publish("structures.loaded", json!({ "inspected": self.structures.len(), "in_window": all, "destroyed": destroyed, "damaged": damaged, "no_damage": intact, "service": self.service }));
+        let (fg, f) = self.frame(&self.cell_total); ctx.field("obs_structures", "count", &fg, f);
+        let (fg, f) = self.frame(&self.cell_destroyed); ctx.field("obs_destroyed", "count", &fg, f);
+        ctx.report("obs.structures", "count", all as f64);
+        ctx.report("obs.structures_destroyed", "count", destroyed as f64);
+        ctx.schedule_with_priority(self.dt, 9, "tick", json!(null));
+    }
+    fn handle(&mut self, ev: &Event, ctx: &mut Ctx) {
+        if ev.topic != "tick" { return; }
+        if let Some(f) = ctx.world_read("fire.burned_frac") {
+            if f.data.len() == self.cell_total.len() {
+                let (mut reached, mut hit, mut intact_hit) = (0u32, 0u32, 0u32);
+                for k in 0..self.cell_total.len() {
+                    if f.data[k] >= 0.5 { reached += self.cell_total[k] as u32; hit += self.cell_destroyed[k] as u32; intact_hit += self.cell_intact[k] as u32; }
+                }
+                let destroyed = self.totals.1 as f64;
+                ctx.report("sim.structures_reached", "count", reached as f64);
+                ctx.report("fit.destroyed_reached", "count", hit as f64);
+                ctx.report("fit.destroyed_missed", "count", destroyed - hit as f64);
+                ctx.report("fit.undamaged_reached", "count", intact_hit as f64);
+                ctx.report("fit.structures_recall", "1", if destroyed > 0.0 { hit as f64 / destroyed } else { 0.0 });
+                ctx.report("fit.structures_precision", "1", if reached > 0 { hit as f64 / reached as f64 } else { 0.0 });
+            }
+        }
+        ctx.schedule_with_priority(self.dt, 9, "tick", json!(null));
+    }
+    fn snapshot(&self) -> serde_json::Value { serde_json::to_value(self).unwrap() }
+    fn restore(&mut self, v: serde_json::Value) { let mut o: Structures = serde_json::from_value(v).unwrap(); o.load().expect("structures reload"); *self = o; }
+}
+
+impl Structures {
+    pub fn describe(name: &str, p: &toml::Value) -> esim_kernel::describe::Describe {
+        esim_kernel::describe::Describe::new("obs.dins", name, "CAL FIRE's damage inspections for the incident: every structure as a point with the damage the inspectors recorded, binned to the run's cells. Each hour the fire's burned cells are read and the structures inside them counted against the record: the destroyed the fire reached (recall), the reached that were in fact destroyed (precision), and the undamaged it overran.")
+            .priority(9).dt(param_str(p, "dt", "1h"))
+            .param("lat_s", 34.0, "deg", "").param("lat_n", 34.16, "deg", "").param("lon_w", -118.72, "deg", "").param("lon_e", -118.46, "deg", "").param("res_arcsec", 1.0, "arcsec", "").param("frame_res_arcsec", 3.0, "arcsec", "")
+            .param("dt", "1h", "", "")
+            .param("service", "https://services1.arcgis.com/jUJYIo9tSA7EHvfZ/arcgis/rest/services/DINS_2025_Palisades_Public_View/FeatureServer/0", "", "the DINS public view feature service")
+            .param("key", "cal-fire-dins/2025-palisades", "", "cache key prefix")
+            .publish("structures.loaded", "{ inspected, in_window, destroyed, damaged, no_damage, service }")
+            .read("fire.burned_frac", "1", false, "the fire module's burned cells")
+            .frame("obs_structures", "count").frame("obs_destroyed", "count")
+            .report("obs.structures", "count").report("obs.structures_destroyed", "count")
+            .report("sim.structures_reached", "count").report("fit.destroyed_reached", "count").report("fit.destroyed_missed", "count").report("fit.undamaged_reached", "count")
+            .report("fit.structures_recall", "1").report("fit.structures_precision", "1")
+            .asset("copernicus-dem-glo30", "the grid").asset("cal-fire-dins-2025-palisades", "inspected structures and their damage")
+            .view("map", "Structures destroyed", "obs_destroyed", "CAL FIRE's inspections: destroyed structures per block")
+            .view("map", "All inspected structures", "obs_structures", "")
+            .view_vs("Destroyed structures the fire reached, against the record", "fit.destroyed_reached", "obs.structures_destroyed", "the record is a total; the model's count grows as its fire spreads")
+            .view("chart", "Undamaged structures the model's fire overran", "fit.undamaged_reached", "")
+            .note("A reached structure is one in a burned cell; nothing physical about structures is modelled. Inspections ran 9 January to 19 February 2025 and carry no time of loss, so the comparison is against the final record only.")
     }
 }
 
