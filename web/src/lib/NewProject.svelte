@@ -4,7 +4,8 @@
   // a manifest from the description against the kinds the kernel knows; the kernel checks
   // it; the person can edit the TOML or paste their own; then the folder is created.
   import { link, go } from './router.svelte.js'
-  import { req, onLog } from './socket.js'
+  import { req, onLog, hello, onIdentity } from './socket.js'
+  import Account from './Account.svelte'
 
   let area = $state('')
   let name = $state('')
@@ -19,6 +20,17 @@
   let model = $state('')
 
   try { area = localStorage.getItem('esim.area') || '' } catch { /* fine */ }
+  // on a public copy the area is your attest handle, and nothing else
+  let pub = $state(false)
+  let user = $state(null)
+  let areaNote = $state('')
+  const identity = (h) => { pub = Boolean(h.public); user = h.user ?? null; if (pub && user) area = user.handle }
+  hello().then(identity)
+  $effect(() => onIdentity(identity))
+  $effect(() => {
+    if (!pub || !user) { areaNote = ''; return }
+    req('area.check', { area: user.handle }).then((r) => { areaNote = r.reserved ? 'that handle is a reserved word here' : r.exists && !r.mine ? `/${r.area} belongs to someone else` : r.exists ? `your area, /${r.area}` : `/${r.area} is free; it becomes yours when you create here` }).catch(() => {})
+  })
 
   const slug = (s) => s.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40)
   $effect(() => { if (!name && title) name = slug(title) })
@@ -53,7 +65,7 @@
 </script>
 
 <a use:link={{}} class="floating left-3 top-3 hover:text-brand">← projects</a>
-<div class="floating right-3 top-3 mono text-xs select-none"><Badge /></div>
+<div class="floating right-3 top-3 flex items-center gap-3 mono text-xs select-none"><Account /><Badge /></div>
 
 <section class="max-w-3xl">
   <h1 class="text-xl font-medium">New project</h1>
@@ -62,7 +74,8 @@
   <div class="mt-6 grid gap-4 sm:grid-cols-[1fr_1fr]">
     <label class="text-sm">
       <span class="label">area</span>
-      <input class="field mt-1 w-full" bind:value={area} placeholder="your name or a topic" />
+      <input class="field mt-1 w-full" bind:value={area} placeholder="your name or a topic" readonly={pub && Boolean(user)} />
+      {#if pub && !user}<p class="mt-1 text-xs text-leak">sign in through attest (top right) to create a project; your handle is your area</p>{:else if areaNote}<p class="mt-1 text-xs muted">{areaNote}</p>{/if}
     </label>
     <label class="text-sm">
       <span class="label">name</span>

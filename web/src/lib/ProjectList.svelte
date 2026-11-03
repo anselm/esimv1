@@ -1,5 +1,6 @@
 <script>
   import Badge from './Badge.svelte'
+  import Account from './Account.svelte'
   // The front page: the featured scenarios as cards (a project whose project.toml says
   // `featured = true`, with its cover picture), and on ?all every project under its area,
   // each a folder under projects/<area>/<name>. Read from the project server when it is
@@ -65,7 +66,7 @@
   {#if writable}<a use:link={{ isNew: true }} class="hover:text-brand" title="new project">+ project</a>{/if}
   <a use:link={{ kinds: true }} class="hover:text-brand" title="module kinds">kinds</a>
   <a use:link={{ docs: true }} class="hover:text-brand" title="documentation">docs</a>
-  <Badge />
+  <Account /><Badge />
 </div>
 
 {#if error}

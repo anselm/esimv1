@@ -3,11 +3,27 @@
 // `projects.changed` notices. When the server is down, `req` rejects and the pages fall
 // back to the static files Vite serves (projects/index.json, run folders).
 import { io } from 'socket.io-client'
+import { handshake } from './attest.js'
 
 let socket = null
 export function sock() {
-  if (!socket) socket = io({ path: '/socket.io', transports: ['websocket', 'polling'], reconnectionDelayMax: 5000 })
+  // auth is a function so every (re)connect carries a freshly signed attest handshake, or nothing
+  if (!socket) socket = io({ path: '/socket.io', transports: ['websocket', 'polling'], reconnectionDelayMax: 5000, auth: (cb) => handshake().then((a) => cb(a ? { attest: a } : {})).catch(() => cb({})) })
   return socket
+}
+
+// After a sign-in or sign-out: reconnect so the handshake carries the new state, ask hello
+// again, and tell the page (onIdentity) who it is now.
+const identityFns = new Set()
+export function onIdentity(fn) { identityFns.add(fn); return () => identityFns.delete(fn) }
+export async function reconnect() {
+  helloPromise = null
+  const s = sock()
+  s.disconnect()
+  s.connect()
+  const h = await hello()
+  for (const fn of identityFns) fn(h)
+  return h
 }
 
 export function req(name, payload = {}, timeoutMs = 600_000) {
@@ -48,7 +64,8 @@ export function onChanged(fn) {
   return () => s.off('projects.changed', fn)
 }
 
-// What the server is: version and whether this copy is read-only. Resolved once.
+// What the server is: version, whether this copy is read-only, which attest it trusts, and who
+// this socket is signed in as. Resolved once per connection.
 let helloPromise = null
 export function hello() {
   if (!helloPromise) helloPromise = req('hello', {}, 5000).catch(() => ({ ok: false, readonly: true, offline: true }))

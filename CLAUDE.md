@@ -98,6 +98,13 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   the 110 m order, against 50 m runs until 2026-11-03). `docs/system/projects-and-runs.md`
   has the embed vocabulary; `projects/anselm/planet-2100/README.md` is the first README and
   the lay reader's account of the 2100 runs.
+- Accounts (2026-11-03): `ESIM_PUBLIC=1` makes the server ask attest (attest.monster; code in
+  `~/projects/2027/attest`) who a socket is: `web/lib/attest.mjs` verifies the handshake
+  (adapted from matchmaker), the handle is the only area a person may write, claimed into
+  `projects/<handle>/area.toml` on first use; the word filter lives on attest (its
+  `packages/handle-guard`), not here. `web/scripts/attest-e2e.mjs` runs the whole flow against a
+  local attest with a scratch database (18 checks). `web/lib/attest-verify.mjs` is a copy of
+  attest's verifier until that package is on npm. The live esimv1 copy is read-only and unaffected.
 - Planetary rungs (`manifests/p1-*`, `crates/modules/src/planet.rs`) are zero-dimensional
   and read five small global records listed in the catalog (OWID emissions, Mauna Loa,
   Law Dome, HadCRUT5, GISTEMP); NOAA's ocean heat content server was down on 2026-11-01,

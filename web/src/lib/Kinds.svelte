@@ -1,5 +1,6 @@
 <script>
   import Badge from './Badge.svelte'
+  import Account from './Account.svelte'
   // Every module kind a person or a model can build on, from the kinds' own describes:
   // what it integrates and leaves out, its parameters with provenance, what it reads,
   // owns, publishes and subscribes, its ledgers, outputs and data.
@@ -39,7 +40,7 @@
 <a use:link={{}} class="floating left-3 top-3 hover:text-brand">← projects</a>
 <div class="floating right-3 top-3 flex items-center gap-3 mono text-xs select-none">
   <a use:link={{ docs: true }} class="hover:text-brand">docs</a>
-  <Badge />
+  <Account /><Badge />
 </div>
 
 <h1 class="text-xl font-medium">Kinds</h1>

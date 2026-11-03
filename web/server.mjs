@@ -13,7 +13,9 @@
 //   project.run {path, variant?, set?}  -> streams project.log {path, line}; ends with { ok, output }
 //   docs.list                           -> { pages: [{ path, title, order }] } and rewrites docs/index.json
 //   doc.save {path, markdown}           -> writes docs/<area>/<name>.md (first come first served per area)
-// Notices: projects.changed.
+//   area.check {area}                   -> { exists, reserved, owner, mine }
+// Notices: projects.changed. Identity (ESIM_PUBLIC=1): an attest delegation on the socket
+// handshake; `hello` answers with the attest origin and the signed-in {did, handle}.
 //
 // It also serves the viewer: the built pages from dist/ when `npm run build` has been
 // run, and the ../runs and ../projects folders at /runs/ and /projects/. So one process
@@ -31,6 +33,7 @@ import zlib from 'node:zlib'
 import { fileURLToPath } from 'node:url'
 import { Server } from 'socket.io'
 import Anthropic from '@anthropic-ai/sdk'
+import { verifyHandshake, ATTEST_URL } from './lib/attest.mjs'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.resolve(here, '..')
@@ -43,6 +46,15 @@ const MODEL = process.env.ESIM_MODEL || 'claude-opus-5-5'
 // needed in this mode: kinds and projects come from the files the last run wrote.
 const READONLY = process.env.ESIM_READONLY === '1'
 const HAVE_ESIM = fs.existsSync(ESIM)
+// ESIM_PUBLIC=1: a public, writable copy. Identity comes from attest (ATTEST_URL, default
+// https://attest.monster) on the socket handshake; a signed-in person may create, run and
+// write only under the area that is their attest handle, which they claim on first use
+// (projects/<handle>/area.toml records the handle and the DID). Without ESIM_PUBLIC the
+// server is a private workbench and asks nobody who they are, as before.
+const PUBLIC = process.env.ESIM_PUBLIC === '1'
+// Area names the viewer and the server need for themselves (routes, system folders),
+// refused as areas even when attest has given someone that handle.
+const RESERVED_AREAS = new Set('docs doc system runs run new kinds api compare all projects project index assets socket.io guest esim admin'.split(' '))
 // Second tier when the Anthropic API is not usable (no key, no credit): a local model
 // through ollama, labelled as such in the answer. Third tier is the person's own TOML.
 const OLLAMA = process.env.OLLAMA_URL || 'http://127.0.0.1:11434'
@@ -86,6 +98,33 @@ async function projectsList() {
   return JSON.parse(fs.readFileSync(path.join(ROOT, 'projects/index.json'), 'utf8'))
 }
 const refuse = () => { throw new Error('this copy is read-only: clone the repository to create, run or edit') }
+
+// Who owns an area: projects/<area>/area.toml, written when a signed-in person first
+// creates under their handle. An area without one (made by hand, before accounts) is
+// unowned: in public mode only the person whose handle it is can claim it.
+function areaOwner(area) {
+  try {
+    const t = fs.readFileSync(path.join(ROOT, 'projects', area, 'area.toml'), 'utf8')
+    const get = (k) => (t.match(new RegExp(`^${k}\\s*=\\s*"([^"]*)"`, 'm')) || [])[1] ?? null
+    return { handle: get('handle'), did: get('did'), created: get('created') }
+  } catch { return null }
+}
+// What a signed-in person may write: the area that is their handle, claimed on first use.
+// Throws with the reason otherwise. Returns the area.
+function claimArea(user, area) {
+  if (!PUBLIC) return area
+  if (!user) throw new Error('sign in through attest to create or run here')
+  if (RESERVED_AREAS.has(area)) throw new Error(`"${area}" is reserved`)
+  if (area !== user.handle) throw new Error(`you can write under /${user.handle} only; this is /${area}`)
+  const owner = areaOwner(area)
+  if (owner && owner.did && owner.did !== user.did) throw new Error(`/${area} belongs to another account`)
+  if (!owner) {
+    const dir = path.join(ROOT, 'projects', area)
+    fs.mkdirSync(dir, { recursive: true })
+    fs.writeFileSync(path.join(dir, 'area.toml'), `# This area belongs to an attest account: the handle is the folder.\nhandle = "${area}"\ndid = "${user.did}"\ncreated = "${new Date().toISOString().slice(0, 10)}"\n`)
+  }
+  return area
+}
 
 const validPath = (p) => /^[a-z0-9][a-z0-9_-]*\/[a-z0-9][a-z0-9_-]*$/.test(p)
 
@@ -292,7 +331,30 @@ const io = new Server(server, { cors: { origin: true } })
 io.on('connection', (socket) => {
   const reply = (ack, fn) => Promise.resolve().then(fn).then((v) => ack?.({ ok: true, ...v }), (e) => ack?.({ ok: false, error: e.message || String(e) }))
 
-  socket.on('hello', (_payload, ack) => reply(ack, async () => ({ version: VERSION, readonly: READONLY, drafts: !READONLY && (Boolean(process.env.ANTHROPIC_API_KEY) || true) })))
+  // identity, once per connection: the handshake's attest field, verified against this
+  // connection's origin and confirmed with attest; {did, handle} or nothing, with the reason
+  const origin = socket.handshake.headers.origin || ''
+  let user = null, authError = ''
+  const auth = (async () => {
+    if (!PUBLIC) return
+    try {
+      const a = await verifyHandshake(socket.handshake.auth?.attest, origin)
+      if (a) user = { did: a.root, handle: a.handle || '' }
+      if (user && !user.handle) { authError = 'your attest account has no handle yet; set one on attest'; user = null }
+    } catch (e) { authError = e.message }
+  })()
+  const who = async () => { await auth; return user }
+
+  socket.on('hello', (_payload, ack) => reply(ack, async () => ({ version: VERSION, readonly: READONLY, public: PUBLIC, attest: PUBLIC ? ATTEST_URL : null, user: await who(), authError, drafts: !READONLY && (Boolean(process.env.ANTHROPIC_API_KEY) || true) })))
+
+  // is this area free, mine, or someone else's? (what a handle sees before creating)
+  socket.on('area.check', ({ area } = {}, ack) => reply(ack, async () => {
+    if (!/^[a-z0-9][a-z0-9_-]*$/.test(String(area || ''))) throw new Error('an area is lower case letters, digits, - and _')
+    const u = await who()
+    const owner = areaOwner(area)
+    const exists = fs.existsSync(path.join(ROOT, 'projects', area))
+    return { area, exists, reserved: RESERVED_AREAS.has(area), owner: owner?.handle ?? null, mine: Boolean(u && (owner ? owner.did === u.did : area === u.handle)) }
+  }))
 
   socket.on('projects.list', (_payload, ack) => reply(ack, async () => ({ projects: await projectsList() })))
 
@@ -312,6 +374,7 @@ io.on('connection', (socket) => {
   socket.on('doc.save', ({ path: p, markdown } = {}, ack) => reply(ack, async () => {
     if (READONLY) refuse()
     if (!validPath(p)) throw new Error('page path must be area/name in lower case letters, digits, - and _')
+    claimArea(await who(), p.split('/')[0])
     if (typeof markdown !== 'string' || !markdown.trim()) throw new Error('an empty page is not saved')
     if (markdown.length > 200_000) throw new Error('page too long')
     const file = path.join(DOCS, `${p}.md`)
@@ -326,6 +389,7 @@ io.on('connection', (socket) => {
 
   socket.on('project.draft', ({ description, title } = {}, ack) => reply(ack, async () => {
     if (READONLY) refuse()
+    if (PUBLIC && !(await who())) throw new Error('sign in through attest to draft here')
     if (!description || String(description).trim().length < 10) throw new Error('describe the project in a sentence or more')
     return draft(String(description), String(title || ''), (line) => socket.emit('project.log', { path: null, line }))
   }))
@@ -334,11 +398,13 @@ io.on('connection', (socket) => {
     if (READONLY) refuse()
     if (!validPath(p)) throw new Error('project path must be area/name in lower case letters, digits, - and _')
     if (!manifest) throw new Error('a manifest is required')
+    claimArea(await who(), p.split('/')[0])
     const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'esim-new-'))
     const file = path.join(tmp, 'manifest.toml')
     fs.writeFileSync(file, manifest)
     try {
-      const args = ['project', 'new', p, '--manifest', file, '--by', by || 'web']
+      const u = await who()
+      const args = ['project', 'new', p, '--manifest', file, '--by', u ? `@${u.handle} via attest${by ? `, ${by}` : ''}` : (by || 'web')]
       if (title) args.push('--title', title)
       if (description) args.push('--description', description)
       const r = await esim(args)
@@ -353,6 +419,7 @@ io.on('connection', (socket) => {
   socket.on('project.run', ({ path: p, variant, set } = {}, ack) => reply(ack, async () => {
     if (READONLY) refuse()
     if (!validPath(p)) throw new Error('bad project path')
+    claimArea(await who(), p.split('/')[0])
     const args = ['project', 'run', p]
     if (variant) { if (!/^[a-z0-9][a-z0-9_-]*$/.test(variant)) throw new Error('bad variant name'); args.push('--variant', variant) }
     for (const [k, v] of Object.entries(set || {})) {
@@ -366,5 +433,5 @@ io.on('connection', (socket) => {
 })
 
 server.listen(PORT, '0.0.0.0', () => {
-  console.log(`esim ${VERSION}${READONLY ? ' (read-only)' : ''} on :${PORT}, root ${ROOT}, esim ${ESIM}, viewer ${fs.existsSync(DIST) ? 'from dist/' : 'NOT BUILT (npm run build)'}, model ${MODEL} (key ${process.env.ANTHROPIC_API_KEY ? 'set' : 'missing'}), local ${LOCAL_MODEL} at ${OLLAMA}`)
+  console.log(`esim ${VERSION}${READONLY ? ' (read-only)' : ''}${PUBLIC ? ` (public; identity from ${ATTEST_URL})` : ''} on :${PORT}, root ${ROOT}, esim ${ESIM}, viewer ${fs.existsSync(DIST) ? 'from dist/' : 'NOT BUILT (npm run build)'}, model ${MODEL} (key ${process.env.ANTHROPIC_API_KEY ? 'set' : 'missing'}), local ${LOCAL_MODEL} at ${OLLAMA}`)
 })

@@ -292,6 +292,21 @@
     "title": "Two buckets and a tap"
   },
   {
+    "area": "es37z6x",
+    "by": "@es37z6x via attest, web",
+    "created": "2026-11-03",
+    "description": "Kernel seed proof: source (1h) -> upper bucket (6h) -> lower bucket (1d) -> sea.",
+    "kinds": [
+      "water.source",
+      "water.bucket",
+      "water.bucket"
+    ],
+    "name": "e2e-buckets",
+    "path": "es37z6x/e2e-buckets",
+    "runs": [],
+    "title": "m0-buckets"
+  },
+  {
     "area": "guest",
     "by": "web test, manifest drafted by gpt-oss:120b",
     "created": "2026-11-01",

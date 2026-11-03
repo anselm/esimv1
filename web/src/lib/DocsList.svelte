@@ -1,5 +1,6 @@
 <script>
   import Badge from './Badge.svelte'
+  import Account from './Account.svelte'
   // The documentation: Markdown pages under docs/<area>/<name>.md, areas first come first
   // served like projects. The index is docs/index.json, written by the server.
   import { link } from './router.svelte.js'
@@ -36,7 +37,7 @@
 <a use:link={{}} class="floating left-3 top-3 hover:text-brand">← projects</a>
 <div class="floating right-3 top-3 flex items-center gap-3 mono text-xs select-none">
   {#if writable}<a use:link={{ doc: 'new' }} class="hover:text-brand" title="new page">+ page</a>{/if}
-  <Badge />
+  <Account /><Badge />
 </div>
 
 <h1 class="text-xl font-medium">Documentation</h1>
