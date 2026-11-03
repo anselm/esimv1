@@ -114,6 +114,17 @@ holds the history.
   still loses rate between them, and the arrival map shows striping along lattice
   directions. The first mapped perimeter (06:00Z on 8 January) is a hand-drawn triangle
   with a typed acreage, not a map; the first infrared perimeter is 27 hours in.
+- Our own engine (`fire.cells`, 2026-11-03) is a heat budget with guessed constants. One
+  multiplier on the ignition thresholds is swept across the runs; with heat felt three cells
+  away there is a cliff (the window burns in hours, or the next cell never lights), with heat
+  felt only by the next cell the early hours come within a factor of two of the record and the
+  fire then keeps growing because nothing stops it. The plausible-pace runs reach only a tenth
+  of the destroyed structures: a built-up cell is given a high threshold and the engine walks
+  around the neighbourhoods; there is no ember into a house and no house as the next house's
+  fuel. The HRRR 3 km wind it uses reads 10 m/s with 21 m/s gusts at the ignition point in the
+  first hour (checked against GDAL); the reanalysis read 7 and 13.
+- The 3D view takes building heights as feet because the county's service does not state a
+  unit; the terrain surface shows banding from the elevation window.
 - Built-up land carries fire at a guessed rate; nothing about structures is physical.
   No spotting, no crown fire, no fire weather of the fire's own, no evacuation, no people.
 

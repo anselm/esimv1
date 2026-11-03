@@ -1,0 +1,56 @@
+# A project: who asked for what, in their words, and the manifest beside it.
+area = "anselm"
+name = "palisades-engine"
+title = "The Palisades fire on our own engine"
+cover = "cover.png"
+cover_caption = "The ground as the engine saw it, from the run page's three-dimensional view: the terrain from the elevation model, every building a box of its stated height, the fire's arrival draped over both at the time cursor. The near-4 run, dark mode, 2026-11-03."
+description = "The same fire, the same ground and record, on an engine of our own: a heat budget on 30 m cells that know their elevation, land cover, buildings and roads, under NOAA's 3 km wind hour by hour. Every constant is a guess; one of them is fitted to the first infrared perimeter and declared; the structures the inspectors recorded are the test. Nobody fights the fire."
+created = "2026-11-03"
+by = "anselm, via claude 2026-11-03"
+
+# Variants: the one fitted number at several values. Below 1 the window burns in hours; at 8 one cell cannot light the next.
+
+[[variant]]
+name = "scale-2"
+title = "Ignition thresholds times 2"
+[variant.set]
+"fire.ignite_scale" = 2
+
+[[variant]]
+name = "scale-3"
+title = "Ignition thresholds times 3"
+[variant.set]
+"fire.ignite_scale" = 3
+
+[[variant]]
+name = "scale-4"
+title = "Ignition thresholds times 4"
+[variant.set]
+"fire.ignite_scale" = 4
+
+[[variant]]
+name = "scale-6"
+title = "Ignition thresholds times 6"
+[variant.set]
+"fire.ignite_scale" = 6
+
+[[variant]]
+name = "near-2"
+title = "Heat felt only by the next cell (reach 45 m), thresholds times 2"
+[variant.set]
+"fire.reach_m" = 45
+"fire.ignite_scale" = 2
+
+[[variant]]
+name = "near-3"
+title = "Heat felt only by the next cell (reach 45 m), thresholds times 3"
+[variant.set]
+"fire.reach_m" = 45
+"fire.ignite_scale" = 3
+
+[[variant]]
+name = "near-4"
+title = "Heat felt only by the next cell (reach 45 m), thresholds times 4"
+[variant.set]
+"fire.reach_m" = 45
+"fire.ignite_scale" = 4

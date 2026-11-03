@@ -82,8 +82,22 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
   records (GSOD) for the Yangtze and North China plains, and the Indus plain's absence
   explained by the pattern or the baseline, one or the other.
 
-## The fire (Anselm, 2026-11-03; `devlog/20261103-the-front-door-and-the-fire.md`)
+## The fire (Anselm, 2026-11-03; `devlog/20261103-the-front-door-and-the-fire.md`, `devlog/20261103-our-own-engine.md`)
 
+- The engine's structure physics: embers into houses, a house as the next house's fuel, a
+  structure's ignition from radiant exposure; the Palisades village burned house to house on
+  the first evening and the engine walks around it.
+- Fit the engine's constants to the perimeters and the inspections with the Eaton fire (same
+  day, same wind, 14,021 acres, DINS exists) held back as the test; a parameter sweep through
+  `esim ensemble --set`.
+- Suppression from the record: ICS-209 resource counts and where the infrared perimeters
+  stopped advancing, as agents with capacity; then the interventions Anselm asked for.
+- Pre and post imagery: Sentinel-2 L2A scenes S2A_MSIL2A_20250102T183751_R027_T11SLT (before)
+  and S2C_MSIL2A_20250201T183631_R027_T11SLT (after) on Planetary Computer, anonymous STAC;
+  needs a 16-bit windowed COG read.
+- Canopy height (Meta/WRI 1 m, tile 023012311 over the window) as a fuel layer.
+- The 3D view: land cover on the ground, structures coloured by their recorded fate, a wind
+  arrow, the time cursor playing; terrain banding to understand.
 - Check `data/events/fuels.toml` line by line against Scott and Burgan 2005 (RMRS-GTR-153); the
   SH5 row decides the Palisades result.
 - Barriers: roads and ridgelines from OpenStreetMap, the 2021 Palisades burn scar from the fire

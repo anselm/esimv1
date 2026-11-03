@@ -1,0 +1,46 @@
+# F3: the Palisades fire again, on our own engine: a heat budget on cells that know their
+# ground (elevation, land cover, buildings, roads) and the hour's 3 km wind from HRRR.
+# Every constant a guess, declared so; the mapped perimeters and the inspected structures
+# score it. Nobody fights the fire.
+
+[run]
+name = "f3-palisades-cells"
+start = "2025-01-07T18:00:00Z"
+end = "2025-01-12T00:00:00Z"
+seed = 1
+close_every = "1d"
+snapshot_every = "10d"
+notes = "Our own engine on the Palisades fire: heat budget on 30 m cells, buildings and roads from the county and OpenStreetMap, HRRR 3 km wind; unsuppressed; constants guessed."
+
+[place]
+lat_s = 34.0
+lat_n = 34.16
+lon_w = -118.72
+lon_e = -118.46
+res_arcsec = 1
+
+[[module]]
+name = "fire"
+kind = "fire.cells"
+[module.params]
+ignition_time = "2025-01-07T18:30:00Z"
+ignition_lat = 34.0723
+ignition_lon = -118.5451
+
+[[module]]
+name = "obs"
+kind = "obs.perimeters"
+[module.params]
+incident = "Palisades"
+year = 2025
+irwin = "{A7EA5D21-F882-44B8-BF64-44AB11059DC1}"
+
+[[module]]
+name = "structures"
+kind = "obs.dins"
+[module.params]
+service = "https://services1.arcgis.com/jUJYIo9tSA7EHvfZ/arcgis/rest/services/DINS_2025_Palisades_Public_View/FeatureServer/0"
+key = "cal-fire-dins/2025-palisades"
+
+[audit]
+scores = [["sim.acres", "obs.acres"]]

@@ -406,3 +406,28 @@ source = "CAL FIRE Damage Inspection program (service owner dins.CALFIRE); a dat
 licence = "No licence text on the service; California public records. Attribute CAL FIRE DINS."
 verified = "2026-11-03 from canada1: 12,081 points, anonymous; Destroyed 6,845, Major 72, Minor 171, Affected 732, No Damage 4,261; bbox lon -118.6859 to -118.4989, lat 34.0298 to 34.1288; inspections dated 2025-01-09 to 2025-02-19"
 notes = "The destroyed count equals CAL FIRE's incident figure of 6,845 structures."
+
+[[asset]]
+id = "lacounty-lariac-buildings-2025-fires"
+title = "LA County building footprints for the 2025 fires, with heights and CAL FIRE's damage inspection joined"
+kind = "vector"
+crs = "EPSG:4326 on request (outSR=4326)"
+format = "ArcGIS FeatureServer query answering GeoJSON polygons, 2,000 a page; fields AIN, HEIGHT (unit not stated; reads as feet), DINS_MaximumDamage, DINS_MinimumDamage, Incident_Name, InFirePerimeter, BLD_ID, ShapeArea"
+url_template = "https://services.arcgis.com/RmCCgQtiZLDCtblq/arcgis/rest/services/2025_WildFire_LARIAC_BUILDINGS_100M_Plus_DINS_MaxMin_DAMAGE_NEW/FeatureServer/0/query?where={where}&outFields=HEIGHT,DINS_MaximumDamage&outSR=4326&f=geojson&resultOffset={offset}&resultRecordCount=2000"
+source = "Los Angeles County Assessor (LARIAC footprints), damage from CAL FIRE DINS"
+licence = "The sibling service states copyright LARIAC, County of Los Angeles, Pictometry, EagleView, CalFIRE; no licence text on this one. Attribute them; do not redistribute the footprints as a dataset."
+verified = "2026-11-03 from canada1: Incident_Name LIKE '%Palisades%' answered 13,292 polygons; maximum damage Destroyed 6,352, No Damage 3,780, blank 2,250, Affected 687, Minor 159, Major 64; heights 0.75 to 96, mean 21"
+notes = "The fire engine rasterises the footprints to a cell fraction and a mean height; the 3D view extrudes them."
+
+[[asset]]
+id = "noaa-hrrr"
+title = "NOAA HRRR 3 km analysis (f00), hourly, by byte range from the open bucket"
+kind = "weather-grid"
+crs = "Lambert conformal conic on a sphere, 1799 by 1059 points at 3 km (template 3.30)"
+units = "UGRD, VGRD 10 m above ground m/s; GUST surface m/s; TMP 2 m K (the reader gives degC); RH 2 m %"
+format = "GRIB2 records, simple packing (5.0) or complex packing with second-order spatial differencing (5.3), read by the registry's own reader; one .idx per file gives each record's offset"
+url_template = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.{yyyymmdd}/conus/hrrr.t{hh}z.wrfsfcf00.grib2 (and .idx)"
+source = "NOAA National Centers for Environmental Prediction, High-Resolution Rapid Refresh, on the AWS Open Data registry (bucket noaa-hrrr-bdp-pds)"
+licence = "US federal public domain"
+verified = "2026-11-03 from canada1: 18Z on 2025-01-07 answered 150 MB with a 9 KB index; the 10 m wind at the Palisades ignition point read 9.9 m/s from 36 degrees with a 20.6 m/s gust, against the 25 km reanalysis's 6.9 and 13; the reader's values were cross-checked with GDAL"
+notes = "Only the window's block of each record is kept in the cache; the lock holds the raw record's hash and byte range."

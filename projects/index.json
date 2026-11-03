@@ -161,6 +161,186 @@
   },
   {
     "area": "anselm",
+    "by": "anselm, via claude 2026-11-03",
+    "cover": "cover.png",
+    "cover_caption": "The ground as the engine saw it, from the run page's three-dimensional view: the terrain from the elevation model, every building a box of its stated height, the fire's arrival draped over both at the time cursor. The near-4 run, dark mode, 2026-11-03.",
+    "created": "2026-11-03",
+    "description": "The same fire, the same ground and record, on an engine of our own: a heat budget on 30 m cells that know their elevation, land cover, buildings and roads, under NOAA's 3 km wind hour by hour. Every constant is a guess; one of them is fitted to the first infrared perimeter and declared; the structures the inspectors recorded are the test. Nobody fights the fire.",
+    "kinds": [
+      "fire.cells",
+      "obs.perimeters",
+      "obs.dins"
+    ],
+    "name": "palisades-engine",
+    "path": "anselm/palisades-engine",
+    "runs": [
+      {
+        "all_ledgers_closed": true,
+        "digest": "2711dee1dbc97620",
+        "end": 1736640000,
+        "events": 1217,
+        "id": "f3-palisades-cells-29244f10-2711dee1",
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.ignite_scale": "6"
+        },
+        "start": 1736272800,
+        "variant": "scale-6",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "3a05dfd286855938",
+        "end": 1736640000,
+        "events": 703,
+        "id": "f3-palisades-cells-36ca046d-3a05dfd2",
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.ignite_scale": "3"
+        },
+        "start": 1736272800,
+        "variant": "scale-3",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "66b7f801cf828ee6",
+        "end": 1736640000,
+        "events": 1379,
+        "id": "f3-palisades-cells-8893b34b-66b7f801",
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.ignite_scale": "2",
+          "fire.reach_m": "45"
+        },
+        "start": 1736272800,
+        "variant": "near-2",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "67d399978cfca794",
+        "end": 1736640000,
+        "events": 1048,
+        "id": "f3-palisades-cells-9625b18f-67d39997",
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.ignite_scale": "4",
+          "fire.reach_m": "45"
+        },
+        "start": 1736272800,
+        "variant": "near-4",
+        "verdict": null
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "0821683a704be113",
+        "end": 1736640000,
+        "events": 1302,
+        "id": "f3-palisades-cells-a8eb73da-0821683a",
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.ignite_scale": "3",
+          "fire.reach_m": "45"
+        },
+        "start": 1736272800,
+        "variant": "near-3",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "9cfa989672805005",
+        "end": 1736640000,
+        "events": 563,
+        "id": "f3-palisades-cells-c35711c1-9cfa9896",
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.ignite_scale": "2"
+        },
+        "start": 1736272800,
+        "variant": "scale-2",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "009c579f659724c2",
+        "end": 1736640000,
+        "events": 865,
+        "id": "f3-palisades-cells-e0038d4d-009c579f",
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.ignite_scale": "4"
+        },
+        "start": 1736272800,
+        "variant": "scale-4",
+        "verdict": "holds"
+      }
+    ],
+    "title": "The Palisades fire on our own engine",
+    "variant": [
+      {
+        "name": "scale-2",
+        "set": {
+          "fire.ignite_scale": 2
+        },
+        "title": "Ignition thresholds times 2"
+      },
+      {
+        "name": "scale-3",
+        "set": {
+          "fire.ignite_scale": 3
+        },
+        "title": "Ignition thresholds times 3"
+      },
+      {
+        "name": "scale-4",
+        "set": {
+          "fire.ignite_scale": 4
+        },
+        "title": "Ignition thresholds times 4"
+      },
+      {
+        "name": "scale-6",
+        "set": {
+          "fire.ignite_scale": 6
+        },
+        "title": "Ignition thresholds times 6"
+      },
+      {
+        "name": "near-2",
+        "set": {
+          "fire.ignite_scale": 2,
+          "fire.reach_m": 45
+        },
+        "title": "Heat felt only by the next cell (reach 45 m), thresholds times 2"
+      },
+      {
+        "name": "near-3",
+        "set": {
+          "fire.ignite_scale": 3,
+          "fire.reach_m": 45
+        },
+        "title": "Heat felt only by the next cell (reach 45 m), thresholds times 3"
+      },
+      {
+        "name": "near-4",
+        "set": {
+          "fire.ignite_scale": 4,
+          "fire.reach_m": 45
+        },
+        "title": "Heat felt only by the next cell (reach 45 m), thresholds times 4"
+      }
+    ]
+  },
+  {
+    "area": "anselm",
     "by": "anselm, via claude 2026-11-01",
     "cover": "cover.png",
     "cover_caption": "People living outside the human climate niche in 2091 with emissions held at the 2024 rate: the held run's own field, one-degree cells, log scale, drawn 2026-11-03.",

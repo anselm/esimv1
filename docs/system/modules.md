@@ -117,3 +117,8 @@ in doubt, split at the point where two different people would hold different opi
   WorldCover land cover and the hour's wind from the ERA5 archive, scored against the
   incident's mapped perimeters from NIFC as each was current. The first local scenario
   after the Boone basin; the Palisades fire of January 2025 is the case.
+- `fire.cells` (`crates/modules/src/firecells.rs`, 2026-11-03): our own engine, a heat budget
+  on cells that know their ground (DEM, WorldCover, LA County building footprints, OpenStreetMap
+  roads) under NOAA's HRRR 3 km wind read by the registry's own GRIB2 reader; `obs.dins`
+  counts CAL FIRE's inspected structures against any fire's burned cells. A run page shows a
+  declared `scene` view in three dimensions (terrain, buildings, arrival).

@@ -115,6 +115,16 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   about fourfold at 27 hours: an upper bound with no barriers or suppression. The first mapped
   perimeter is a hand-drawn triangle. Fire reaches three cells along 32 directions; progress is
   per approach direction (summing over neighbours ran the front several times too fast).
+- Our own fire engine (2026-11-03, `crates/modules/src/firecells.rs`, kind `fire.cells`): a heat
+  budget on 1-arcsec cells with buildings (LA County LARIAC footprints with heights, paged
+  anonymously), roads as breaks (OSM context), HRRR 3 km wind each hour (`crates/registry/src/grib.rs`
+  reads templates 3.30 and 5.0/5.3 by byte range from the open bucket; `Fetcher::fetch_range_reduced`;
+  cross-checked with GDAL), spotting, a declared `ignite_scale` knob. Project `anselm/palisades-engine`
+  (manifest `f3-palisades-cells`; variants scale-2..6 and near-2..4 with reach 45 m). `obs.dins`
+  (CAL FIRE's 12,081 inspections) scores structures. A `scene` view renders in 3D (`Scene3D.svelte`,
+  three.js 0.170, needs `terrain_elev_m` and `building_height` frames); headless screenshots need the
+  swiftshader flags, which the scratchpad shot script now sets. Never `pgrep -f`/`kill` a pattern
+  that appears in the running command line (killed my own shell this way).
 - Front page and covers (2026-11-03): `featured = true` in project.toml puts a project on the
   front page as a card; `cover` and `cover_caption` name a picture beside the manifest.
   Earth 2100 (renamed from "The planet, with people on it") and the Palisades fire are featured.

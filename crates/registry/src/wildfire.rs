@@ -9,6 +9,7 @@ use crate::cog;
 use crate::fetch::Fetcher;
 use crate::obs::{fetch_json_text, parse_iso_hour};
 use sha2::{Digest, Sha256};
+use serde::{Deserialize, Serialize};
 
 /// WorldCover tile key for a point: tiles are 3 by 3 degrees named by their south-west
 /// corner, "N33W120" for 33 to 36 N, 120 to 117 W.
@@ -335,6 +336,127 @@ pub fn dins_points(fetcher: &mut Fetcher, service: &str, key_prefix: &str) -> Re
             let c = &f["geometry"]["coordinates"];
             let (Some(lon), Some(lat)) = (c[0].as_f64(), c[1].as_f64()) else { continue };
             out.push(Structure { lon, lat, damage: f["properties"]["DAMAGE"].as_str().unwrap_or("").to_string(), kind: f["properties"]["STRUCTURETYPE"].as_str().unwrap_or("").to_string() });
+        }
+        let more = v["properties"]["exceededTransferLimit"].as_bool().unwrap_or(n == 2000);
+        if n == 0 || !more { break; }
+        offset += n;
+    }
+    Ok(out)
+}
+
+// ---- HRRR: the 3 km analysis wind, hour by hour, from NOAA's open bucket -----------------
+
+use crate::grib::{self, Lcc};
+
+/// One analysis hour of HRRR over a window: a small block of the 3 km grid (`ni` by `nj`
+/// from `i0`, `j0`), with the 10 m wind components, the gust, the 2 m temperature and
+/// humidity, and the projection to place a point in it.
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct HrrrHour {
+    pub grid: Lcc,
+    pub i0: usize, pub j0: usize, pub ni: usize, pub nj: usize,
+    pub u: Vec<f32>, pub v: Vec<f32>, pub gust: Vec<f32>, pub t2m_c: Vec<f32>, pub rh_pct: Vec<f32>,
+}
+
+impl HrrrHour {
+    /// Bilinear sample of one field at a point, or NaN outside the block.
+    pub fn at(&self, field: &[f32], lat: f64, lon: f64) -> f32 {
+        let (i, j) = self.grid.ij(lat, lon);
+        let (fi, fj) = (i - self.i0 as f64, j - self.j0 as f64);
+        if fi < 0.0 || fj < 0.0 || fi >= (self.ni - 1) as f64 || fj >= (self.nj - 1) as f64 { return f32::NAN; }
+        let (ia, ja) = (fi.floor() as usize, fj.floor() as usize);
+        let (tx, ty) = ((fi - ia as f64) as f32, (fj - ja as f64) as f32);
+        let g = |ii: usize, jj: usize| field[jj * self.ni + ii];
+        (g(ia, ja) * (1.0 - tx) + g(ia + 1, ja) * tx) * (1.0 - ty) + (g(ia, ja + 1) * (1.0 - tx) + g(ia + 1, ja + 1) * tx) * ty
+    }
+}
+
+const HRRR: &str = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com";
+
+/// Fetch the analysis (`f00`) records of one hour (`date` as YYYYMMDD, `hh` 0 to 23) and keep
+/// the block over the window. Each record is fetched by byte range from the file's index and
+/// reduced before it is cached; the lock holds the raw record's hash.
+pub fn hrrr_hour(fetcher: &mut Fetcher, date: &str, hh: u8, lat_s: f64, lat_n: f64, lon_w: f64, lon_e: f64) -> Result<HrrrHour, String> {
+    let file = format!("{HRRR}/hrrr.{date}/conus/hrrr.t{hh:02}z.wrfsfcf00.grib2");
+    let idx_path = fetcher.fetch(&format!("hrrr/{date}_t{hh:02}z.idx"), &format!("{file}.idx"))?;
+    let entries = grib::parse_idx(&std::fs::read_to_string(&idx_path).map_err(|e| e.to_string())?);
+    let bbox = (lat_s, lat_n, lon_w, lon_e);
+    let mut block: Option<(Lcc, usize, usize, usize, usize)> = None;
+    let mut fields: Vec<Vec<f32>> = Vec::new();
+    for (var, level) in [("UGRD", "10 m above ground"), ("VGRD", "10 m above ground"), ("GUST", "surface"), ("TMP", "2 m above ground"), ("RH", "2 m above ground")] {
+        let e = entries.iter().find(|e| e.var == var && e.level == level && e.forecast == "anl").ok_or_else(|| format!("hrrr {date} t{hh:02}z: no {var} at {level}"))?;
+        let (start, end) = grib::range_of(&entries, e.n, None).ok_or("range")?;
+        let key = format!("hrrr/{date}_t{hh:02}z_{var}_{lat_s}_{lat_n}_{lon_w}_{lon_e}.json");
+        let reduce = |raw: &[u8]| -> Result<Vec<u8>, String> {
+            let rec = grib::read(raw)?;
+            let g = &rec.grid;
+            let corners = [(bbox.0, bbox.2), (bbox.0, bbox.3), (bbox.1, bbox.2), (bbox.1, bbox.3)].map(|(la, lo)| g.ij(la, lo));
+            let i0 = corners.iter().map(|c| c.0).fold(f64::INFINITY, f64::min).floor().max(0.0) as usize;
+            let j0 = corners.iter().map(|c| c.1).fold(f64::INFINITY, f64::min).floor().max(0.0) as usize;
+            let i1 = (corners.iter().map(|c| c.0).fold(f64::NEG_INFINITY, f64::max).ceil() as usize + 1).min(g.nx - 1);
+            let j1 = (corners.iter().map(|c| c.1).fold(f64::NEG_INFINITY, f64::max).ceil() as usize + 1).min(g.ny - 1);
+            let (ni, nj) = (i1 - i0 + 1, j1 - j0 + 1);
+            let mut vals = Vec::with_capacity(ni * nj);
+            for j in j0..=j1 { for i in i0..=i1 { vals.push(rec.values[j * g.nx + i]); } }
+            serde_json::to_vec(&serde_json::json!({ "grid": g, "i0": i0, "j0": j0, "ni": ni, "nj": nj, "values": vals })).map_err(|e| e.to_string())
+        };
+        let path = fetcher.fetch_range_reduced(&key, &file, start, end, &reduce)?;
+        let v: serde_json::Value = serde_json::from_str(&std::fs::read_to_string(&path).map_err(|e| e.to_string())?).map_err(|e| e.to_string())?;
+        let vals: Vec<f32> = v["values"].as_array().into_iter().flatten().map(|x| x.as_f64().unwrap_or(f64::NAN) as f32).collect();
+        if block.is_none() {
+            let g: Lcc = serde_json::from_value(v["grid"].clone()).map_err(|e| e.to_string())?;
+            block = Some((g, v["i0"].as_u64().unwrap() as usize, v["j0"].as_u64().unwrap() as usize, v["ni"].as_u64().unwrap() as usize, v["nj"].as_u64().unwrap() as usize));
+        }
+        fields.push(vals);
+    }
+    let (grid, i0, j0, ni, nj) = block.unwrap();
+    let mut it = fields.into_iter();
+    let (u, v, gust, t2m, rh) = (it.next().unwrap(), it.next().unwrap(), it.next().unwrap(), it.next().unwrap(), it.next().unwrap());
+    Ok(HrrrHour { grid, i0, j0, ni, nj, u, v, gust, t2m_c: t2m.iter().map(|k| k - 273.15).collect(), rh_pct: rh })
+}
+
+#[cfg(test)]
+mod hrrr_tests {
+    use super::*;
+    /// The Santa Ana hour: HRRR's 3 km analysis at the Palisades, 18Z on 7 January 2025, against
+    /// the 25 km reanalysis (6.9 m/s mean, 13 m/s gust). Needs the network; skipped without a cache dir.
+    #[test]
+    fn palisades_first_hour_wind() {
+        let root: std::path::PathBuf = [env!("CARGO_MANIFEST_DIR"), "..", ".."].iter().collect();
+        if !root.join("data/cache").exists() { eprintln!("skipped"); return; }
+        let mut f = Fetcher::default_for(&root).unwrap();
+        let h = hrrr_hour(&mut f, "20250107", 18, 34.0, 34.16, -118.72, -118.46).expect("hrrr hour");
+        let (lat, lon) = (34.0723, -118.5451);
+        let (u, v, g) = (h.at(&h.u, lat, lon), h.at(&h.v, lat, lon), h.at(&h.gust, lat, lon));
+        let spd = (u * u + v * v).sqrt();
+        let from = ((-u).atan2(-v).to_degrees() + 360.0) % 360.0;
+        eprintln!("HRRR 18Z at the ignition: {spd:.1} m/s from {from:.0}, gust {g:.1}, t {:.1} C, rh {:.0}%  (block {}x{} at {},{})", h.at(&h.t2m_c, lat, lon), h.at(&h.rh_pct, lat, lon), h.ni, h.nj, h.i0, h.j0);
+        assert!(spd.is_finite() && spd > 0.5 && spd < 60.0, "{spd}");
+    }
+}
+
+// ---- buildings: LA County's footprints with the damage inspection joined ----------------
+
+/// A building footprint: its outer ring, the stated height (the service does not say its
+/// unit; the values read as feet), and the maximum damage the inspection recorded.
+#[derive(Clone, Debug)]
+pub struct Building { pub ring: Vec<(f64, f64)>, pub height: f64, pub damage: String }
+
+/// Every footprint of a feature service matching `where`, paged, anonymously.
+pub fn building_footprints(fetcher: &mut Fetcher, service: &str, key_prefix: &str, wh: &str) -> Result<Vec<Building>, String> {
+    let mut out = Vec::new();
+    let mut offset = 0usize;
+    for page in 0..60 {
+        let url = format!("{service}/query?where={}&outFields=HEIGHT,DINS_MaximumDamage&outSR=4326&f=geojson&resultOffset={offset}&resultRecordCount=2000", enc(wh));
+        let text = fetch_json_text(fetcher, &format!("{key_prefix}/page{page:02}.geojson"), &url)?;
+        let v: serde_json::Value = serde_json::from_str(&text).map_err(|e| format!("buildings json: {e}"))?;
+        if let Some(e) = v.get("error") { return Err(format!("buildings: {e}")); }
+        let feats = v["features"].as_array().cloned().unwrap_or_default();
+        let n = feats.len();
+        for f in feats {
+            let rings = rings_of(&f["geometry"]);
+            let Some(ring) = rings.into_iter().next() else { continue };
+            out.push(Building { ring, height: f["properties"]["HEIGHT"].as_f64().unwrap_or(f64::NAN), damage: f["properties"]["DINS_MaximumDamage"].as_str().unwrap_or("").to_string() });
         }
         let more = v["properties"]["exceededTransferLimit"].as_bool().unwrap_or(n == 2000);
         if n == 0 || !more { break; }

@@ -108,6 +108,39 @@ impl Fetcher {
         Ok(path)
     }
 
+
+    /// Fetch one byte range of `url` (a GRIB record by its index), hash the raw bytes into the
+    /// lock under `key`, keep only `reduce(raw)` in the cache. The lock's url carries the range.
+    pub fn fetch_range_reduced(&mut self, key: &str, url: &str, start: u64, end: u64, reduce: &dyn Fn(&[u8]) -> Result<Vec<u8>, String>) -> Result<PathBuf, String> {
+        let name = key.replace(['/', ' '], "_");
+        let path = self.cache_dir.join(&name);
+        if path.exists() { return Ok(path); }
+        let ranged = format!("{url}#bytes={start}-{end}");
+        let mut raw = Vec::new();
+        let mut wait = 2u64;
+        for attempt in 0..6 {
+            match ureq::get(url).set("Range", &format!("bytes={start}-{end}")).call() {
+                Ok(resp) => { resp.into_reader().read_to_end(&mut raw).map_err(|e| e.to_string())?; break; }
+                Err(ureq::Error::Status(code, _)) if (code == 429 || code >= 500) && attempt < 5 => {
+                    eprintln!("fetch: {ranged}: {code}; waiting {wait}s"); std::thread::sleep(std::time::Duration::from_secs(wait)); wait *= 2;
+                }
+                Err(e) => return Err(format!("GET {ranged}: {e}")),
+            }
+        }
+        if raw.is_empty() { return Err(format!("GET {ranged}: no bytes")); }
+        let sha = format!("{:x}", Sha256::digest(&raw));
+        match self.lock.files.get(key) {
+            Some(e) if e.sha256 != sha => return Err(format!("{key}: sha256 {sha} does not match lock {}", e.sha256)),
+            Some(_) => {}
+            None => { self.lock.files.insert(key.to_string(), Entry { url: ranged, sha256: sha, bytes: raw.len() as u64, fetched: today() }); self.save_lock()?; }
+        }
+        let reduced = reduce(&raw)?;
+        let tmp = self.cache_dir.join(format!("{name}.part"));
+        std::fs::write(&tmp, &reduced).map_err(|e| e.to_string())?;
+        std::fs::rename(&tmp, &path).map_err(|e| e.to_string())?;
+        Ok(path)
+    }
+
     fn save_lock(&self) -> Result<(), String> {
         let text = toml::to_string_pretty(&self.lock).map_err(|e| e.to_string())?;
         std::fs::write(&self.lock_path, format!("# Written by the fetcher. One entry per fetched file: the bytes a run used.\n\n{text}")).map_err(|e| e.to_string())

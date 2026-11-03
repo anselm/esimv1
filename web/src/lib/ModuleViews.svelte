@@ -4,6 +4,7 @@
   // as prose. A module that declared no views gets a map per frame and a chart per report.
   import { isoDate, num } from './fmt.js'
   import FieldMap from './FieldMap.svelte'
+  import Scene3D from './Scene3D.svelte'
   import Chart from './Chart.svelte'
 
   let { describe, run, base, cursor, crossings = [], context = null } = $props()
@@ -18,6 +19,8 @@
   const of = (kind) => views.filter((v) => v.kind === kind && (kind === 'text' || kind === 'crossings' || (kind === 'map' ? run.fields?.[v.source] : run.series?.[v.source])))
   const counters = $derived(of('counter'))
   const maps = $derived(of('map'))
+  // a scene needs the terrain frame beside the field it drapes
+  const scenes = $derived(views.filter((v) => v.kind === 'scene' && run.fields?.[v.source] && run.fields?.terrain_elev_m))
   const charts = $derived(of('chart'))
   const texts = $derived(of('text'))
   const crossViews = $derived(of('crossings'))
@@ -58,6 +61,15 @@
       <span class="mono text-xs muted">{describe.kind}</span>
     </div>
     {#if describe.summary}<p class="mt-1 max-w-3xl text-sm muted">{describe.summary}</p>{/if}
+
+    {#if scenes.length}
+      {#each scenes as v (v.source)}
+        <div class="mt-5">
+          <div class="mb-1 text-sm">{v.title}{#if v.note} <span class="muted">· {v.note}</span>{/if}</div>
+          <Scene3D {run} {base} {cursor} {context} fire={v.source} />
+        </div>
+      {/each}
+    {/if}
 
     {#if maps.length}
       <div class="mt-5 grid gap-x-6 gap-y-6 {grid(maps.length)}">
