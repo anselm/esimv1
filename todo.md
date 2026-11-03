@@ -69,6 +69,19 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
 - The swear-word filter from his other project, on area and project names only, when
   names become public.
 
+## Communicating a scenario (Anselm, 2026-11-03; `devlog/20261103-readme-and-the-ladder.md`)
+
+- More embeds for a README: a counter and a chart of one series, a map at a year, the
+  crossings list, a sentence from the story; each one a module's declared view, so the
+  README's vocabulary is the describe's.
+- A time cursor shared by every figure on a README, as the compare page has.
+- The drafting facade writes a first README beside the manifest it drafts, labelled as its draft.
+- Materials in the folder (images, a bibliography, source PDFs where licensed) listed on the page.
+- `docs/<area>/` pages fold into the area's own folder once the namespace is crumpled.
+- The China wet-bulb step (3.0 to 3.5 °C on the growing path) checked against station
+  records (GSOD) for the Yangtze and North China plains, and the Indus plain's absence
+  explained by the pattern or the baseline, one or the other.
+
 ## Platform
 
 - A model-ensemble warming pattern in place of one fitted slope per country: WorldClim's

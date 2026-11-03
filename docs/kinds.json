@@ -3263,7 +3263,719 @@
     ],
     "notes": [
       "Population is spread evenly over a country's land cells for the density map; distribution = worldpop places it by the 1 km count."
-    ]
+    ],
+    "tables": {
+      "countries": [
+        {
+          "iso3": "FJI",
+          "name": "Fiji"
+        },
+        {
+          "iso3": "TZA",
+          "name": "Tanzania"
+        },
+        {
+          "iso3": "ESH",
+          "name": "W. Sahara"
+        },
+        {
+          "iso3": "CAN",
+          "name": "Canada"
+        },
+        {
+          "iso3": "USA",
+          "name": "United States of America"
+        },
+        {
+          "iso3": "KAZ",
+          "name": "Kazakhstan"
+        },
+        {
+          "iso3": "UZB",
+          "name": "Uzbekistan"
+        },
+        {
+          "iso3": "PNG",
+          "name": "Papua New Guinea"
+        },
+        {
+          "iso3": "IDN",
+          "name": "Indonesia"
+        },
+        {
+          "iso3": "ARG",
+          "name": "Argentina"
+        },
+        {
+          "iso3": "CHL",
+          "name": "Chile"
+        },
+        {
+          "iso3": "COD",
+          "name": "Dem. Rep. Congo"
+        },
+        {
+          "iso3": "SOM",
+          "name": "Somalia"
+        },
+        {
+          "iso3": "KEN",
+          "name": "Kenya"
+        },
+        {
+          "iso3": "SDN",
+          "name": "Sudan"
+        },
+        {
+          "iso3": "TCD",
+          "name": "Chad"
+        },
+        {
+          "iso3": "HTI",
+          "name": "Haiti"
+        },
+        {
+          "iso3": "DOM",
+          "name": "Dominican Rep."
+        },
+        {
+          "iso3": "RUS",
+          "name": "Russia"
+        },
+        {
+          "iso3": "BHS",
+          "name": "Bahamas"
+        },
+        {
+          "iso3": "FLK",
+          "name": "Falkland Is."
+        },
+        {
+          "iso3": "NOR",
+          "name": "Norway"
+        },
+        {
+          "iso3": "GRL",
+          "name": "Greenland"
+        },
+        {
+          "iso3": "ATF",
+          "name": "Fr. S. Antarctic Lands"
+        },
+        {
+          "iso3": "TLS",
+          "name": "Timor-Leste"
+        },
+        {
+          "iso3": "ZAF",
+          "name": "South Africa"
+        },
+        {
+          "iso3": "LSO",
+          "name": "Lesotho"
+        },
+        {
+          "iso3": "MEX",
+          "name": "Mexico"
+        },
+        {
+          "iso3": "URY",
+          "name": "Uruguay"
+        },
+        {
+          "iso3": "BRA",
+          "name": "Brazil"
+        },
+        {
+          "iso3": "BOL",
+          "name": "Bolivia"
+        },
+        {
+          "iso3": "PER",
+          "name": "Peru"
+        },
+        {
+          "iso3": "COL",
+          "name": "Colombia"
+        },
+        {
+          "iso3": "PAN",
+          "name": "Panama"
+        },
+        {
+          "iso3": "CRI",
+          "name": "Costa Rica"
+        },
+        {
+          "iso3": "NIC",
+          "name": "Nicaragua"
+        },
+        {
+          "iso3": "HND",
+          "name": "Honduras"
+        },
+        {
+          "iso3": "SLV",
+          "name": "El Salvador"
+        },
+        {
+          "iso3": "GTM",
+          "name": "Guatemala"
+        },
+        {
+          "iso3": "BLZ",
+          "name": "Belize"
+        },
+        {
+          "iso3": "VEN",
+          "name": "Venezuela"
+        },
+        {
+          "iso3": "GUY",
+          "name": "Guyana"
+        },
+        {
+          "iso3": "SUR",
+          "name": "Suriname"
+        },
+        {
+          "iso3": "FRA",
+          "name": "France"
+        },
+        {
+          "iso3": "ECU",
+          "name": "Ecuador"
+        },
+        {
+          "iso3": "PRI",
+          "name": "Puerto Rico"
+        },
+        {
+          "iso3": "JAM",
+          "name": "Jamaica"
+        },
+        {
+          "iso3": "CUB",
+          "name": "Cuba"
+        },
+        {
+          "iso3": "ZWE",
+          "name": "Zimbabwe"
+        },
+        {
+          "iso3": "BWA",
+          "name": "Botswana"
+        },
+        {
+          "iso3": "NAM",
+          "name": "Namibia"
+        },
+        {
+          "iso3": "SEN",
+          "name": "Senegal"
+        },
+        {
+          "iso3": "MLI",
+          "name": "Mali"
+        },
+        {
+          "iso3": "MRT",
+          "name": "Mauritania"
+        },
+        {
+          "iso3": "BEN",
+          "name": "Benin"
+        },
+        {
+          "iso3": "NER",
+          "name": "Niger"
+        },
+        {
+          "iso3": "NGA",
+          "name": "Nigeria"
+        },
+        {
+          "iso3": "CMR",
+          "name": "Cameroon"
+        },
+        {
+          "iso3": "TGO",
+          "name": "Togo"
+        },
+        {
+          "iso3": "GHA",
+          "name": "Ghana"
+        },
+        {
+          "iso3": "CIV",
+          "name": "Côte d'Ivoire"
+        },
+        {
+          "iso3": "GIN",
+          "name": "Guinea"
+        },
+        {
+          "iso3": "GNB",
+          "name": "Guinea-Bissau"
+        },
+        {
+          "iso3": "LBR",
+          "name": "Liberia"
+        },
+        {
+          "iso3": "SLE",
+          "name": "Sierra Leone"
+        },
+        {
+          "iso3": "BFA",
+          "name": "Burkina Faso"
+        },
+        {
+          "iso3": "CAF",
+          "name": "Central African Rep."
+        },
+        {
+          "iso3": "COG",
+          "name": "Congo"
+        },
+        {
+          "iso3": "GAB",
+          "name": "Gabon"
+        },
+        {
+          "iso3": "GNQ",
+          "name": "Eq. Guinea"
+        },
+        {
+          "iso3": "ZMB",
+          "name": "Zambia"
+        },
+        {
+          "iso3": "MWI",
+          "name": "Malawi"
+        },
+        {
+          "iso3": "MOZ",
+          "name": "Mozambique"
+        },
+        {
+          "iso3": "SWZ",
+          "name": "eSwatini"
+        },
+        {
+          "iso3": "AGO",
+          "name": "Angola"
+        },
+        {
+          "iso3": "BDI",
+          "name": "Burundi"
+        },
+        {
+          "iso3": "ISR",
+          "name": "Israel"
+        },
+        {
+          "iso3": "LBN",
+          "name": "Lebanon"
+        },
+        {
+          "iso3": "MDG",
+          "name": "Madagascar"
+        },
+        {
+          "iso3": "PSE",
+          "name": "Palestine"
+        },
+        {
+          "iso3": "GMB",
+          "name": "Gambia"
+        },
+        {
+          "iso3": "TUN",
+          "name": "Tunisia"
+        },
+        {
+          "iso3": "DZA",
+          "name": "Algeria"
+        },
+        {
+          "iso3": "JOR",
+          "name": "Jordan"
+        },
+        {
+          "iso3": "ARE",
+          "name": "United Arab Emirates"
+        },
+        {
+          "iso3": "QAT",
+          "name": "Qatar"
+        },
+        {
+          "iso3": "KWT",
+          "name": "Kuwait"
+        },
+        {
+          "iso3": "IRQ",
+          "name": "Iraq"
+        },
+        {
+          "iso3": "OMN",
+          "name": "Oman"
+        },
+        {
+          "iso3": "VUT",
+          "name": "Vanuatu"
+        },
+        {
+          "iso3": "KHM",
+          "name": "Cambodia"
+        },
+        {
+          "iso3": "THA",
+          "name": "Thailand"
+        },
+        {
+          "iso3": "LAO",
+          "name": "Laos"
+        },
+        {
+          "iso3": "MMR",
+          "name": "Myanmar"
+        },
+        {
+          "iso3": "VNM",
+          "name": "Vietnam"
+        },
+        {
+          "iso3": "PRK",
+          "name": "North Korea"
+        },
+        {
+          "iso3": "KOR",
+          "name": "South Korea"
+        },
+        {
+          "iso3": "MNG",
+          "name": "Mongolia"
+        },
+        {
+          "iso3": "IND",
+          "name": "India"
+        },
+        {
+          "iso3": "BGD",
+          "name": "Bangladesh"
+        },
+        {
+          "iso3": "BTN",
+          "name": "Bhutan"
+        },
+        {
+          "iso3": "NPL",
+          "name": "Nepal"
+        },
+        {
+          "iso3": "PAK",
+          "name": "Pakistan"
+        },
+        {
+          "iso3": "AFG",
+          "name": "Afghanistan"
+        },
+        {
+          "iso3": "TJK",
+          "name": "Tajikistan"
+        },
+        {
+          "iso3": "KGZ",
+          "name": "Kyrgyzstan"
+        },
+        {
+          "iso3": "TKM",
+          "name": "Turkmenistan"
+        },
+        {
+          "iso3": "IRN",
+          "name": "Iran"
+        },
+        {
+          "iso3": "SYR",
+          "name": "Syria"
+        },
+        {
+          "iso3": "ARM",
+          "name": "Armenia"
+        },
+        {
+          "iso3": "SWE",
+          "name": "Sweden"
+        },
+        {
+          "iso3": "BLR",
+          "name": "Belarus"
+        },
+        {
+          "iso3": "UKR",
+          "name": "Ukraine"
+        },
+        {
+          "iso3": "POL",
+          "name": "Poland"
+        },
+        {
+          "iso3": "AUT",
+          "name": "Austria"
+        },
+        {
+          "iso3": "HUN",
+          "name": "Hungary"
+        },
+        {
+          "iso3": "MDA",
+          "name": "Moldova"
+        },
+        {
+          "iso3": "ROU",
+          "name": "Romania"
+        },
+        {
+          "iso3": "LTU",
+          "name": "Lithuania"
+        },
+        {
+          "iso3": "LVA",
+          "name": "Latvia"
+        },
+        {
+          "iso3": "EST",
+          "name": "Estonia"
+        },
+        {
+          "iso3": "DEU",
+          "name": "Germany"
+        },
+        {
+          "iso3": "BGR",
+          "name": "Bulgaria"
+        },
+        {
+          "iso3": "GRC",
+          "name": "Greece"
+        },
+        {
+          "iso3": "TUR",
+          "name": "Turkey"
+        },
+        {
+          "iso3": "ALB",
+          "name": "Albania"
+        },
+        {
+          "iso3": "HRV",
+          "name": "Croatia"
+        },
+        {
+          "iso3": "CHE",
+          "name": "Switzerland"
+        },
+        {
+          "iso3": "LUX",
+          "name": "Luxembourg"
+        },
+        {
+          "iso3": "BEL",
+          "name": "Belgium"
+        },
+        {
+          "iso3": "NLD",
+          "name": "Netherlands"
+        },
+        {
+          "iso3": "PRT",
+          "name": "Portugal"
+        },
+        {
+          "iso3": "ESP",
+          "name": "Spain"
+        },
+        {
+          "iso3": "IRL",
+          "name": "Ireland"
+        },
+        {
+          "iso3": "NCL",
+          "name": "New Caledonia"
+        },
+        {
+          "iso3": "SLB",
+          "name": "Solomon Is."
+        },
+        {
+          "iso3": "NZL",
+          "name": "New Zealand"
+        },
+        {
+          "iso3": "AUS",
+          "name": "Australia"
+        },
+        {
+          "iso3": "LKA",
+          "name": "Sri Lanka"
+        },
+        {
+          "iso3": "CHN",
+          "name": "China"
+        },
+        {
+          "iso3": "TWN",
+          "name": "Taiwan"
+        },
+        {
+          "iso3": "ITA",
+          "name": "Italy"
+        },
+        {
+          "iso3": "DNK",
+          "name": "Denmark"
+        },
+        {
+          "iso3": "GBR",
+          "name": "United Kingdom"
+        },
+        {
+          "iso3": "ISL",
+          "name": "Iceland"
+        },
+        {
+          "iso3": "AZE",
+          "name": "Azerbaijan"
+        },
+        {
+          "iso3": "GEO",
+          "name": "Georgia"
+        },
+        {
+          "iso3": "PHL",
+          "name": "Philippines"
+        },
+        {
+          "iso3": "MYS",
+          "name": "Malaysia"
+        },
+        {
+          "iso3": "BRN",
+          "name": "Brunei"
+        },
+        {
+          "iso3": "SVN",
+          "name": "Slovenia"
+        },
+        {
+          "iso3": "FIN",
+          "name": "Finland"
+        },
+        {
+          "iso3": "SVK",
+          "name": "Slovakia"
+        },
+        {
+          "iso3": "CZE",
+          "name": "Czechia"
+        },
+        {
+          "iso3": "ERI",
+          "name": "Eritrea"
+        },
+        {
+          "iso3": "JPN",
+          "name": "Japan"
+        },
+        {
+          "iso3": "PRY",
+          "name": "Paraguay"
+        },
+        {
+          "iso3": "YEM",
+          "name": "Yemen"
+        },
+        {
+          "iso3": "SAU",
+          "name": "Saudi Arabia"
+        },
+        {
+          "iso3": "ATA",
+          "name": "Antarctica"
+        },
+        {
+          "iso3": "CYN",
+          "name": "N. Cyprus"
+        },
+        {
+          "iso3": "CYP",
+          "name": "Cyprus"
+        },
+        {
+          "iso3": "MAR",
+          "name": "Morocco"
+        },
+        {
+          "iso3": "EGY",
+          "name": "Egypt"
+        },
+        {
+          "iso3": "LBY",
+          "name": "Libya"
+        },
+        {
+          "iso3": "ETH",
+          "name": "Ethiopia"
+        },
+        {
+          "iso3": "DJI",
+          "name": "Djibouti"
+        },
+        {
+          "iso3": "SOL",
+          "name": "Somaliland"
+        },
+        {
+          "iso3": "UGA",
+          "name": "Uganda"
+        },
+        {
+          "iso3": "RWA",
+          "name": "Rwanda"
+        },
+        {
+          "iso3": "BIH",
+          "name": "Bosnia and Herz."
+        },
+        {
+          "iso3": "MKD",
+          "name": "North Macedonia"
+        },
+        {
+          "iso3": "SRB",
+          "name": "Serbia"
+        },
+        {
+          "iso3": "MNE",
+          "name": "Montenegro"
+        },
+        {
+          "iso3": "KOS",
+          "name": "Kosovo"
+        },
+        {
+          "iso3": "TTO",
+          "name": "Trinidad and Tobago"
+        },
+        {
+          "iso3": "SSD",
+          "name": "S. Sudan"
+        }
+      ]
+    }
   },
   {
     "kind": "climate.countries",
@@ -3335,6 +4047,22 @@
       },
       {
         "name": "cells_clim_to",
+        "default": 2025.0,
+        "unit": "yr"
+      },
+      {
+        "name": "pattern",
+        "default": "country",
+        "note": "country: one fitted slope per country, applied to every cell of it; cells: each populated cell's own slope from the reanalysis's 1981 to 2025 annual means on the global record, averaged over the points within a degree, published as gmst_anom_cells_c for the cell layers to multiply"
+      },
+      {
+        "name": "pattern_from",
+        "default": 1981.0,
+        "unit": "yr",
+        "note": "the reanalysis years the cells' slopes are fitted over"
+      },
+      {
+        "name": "pattern_to",
         "default": 2025.0,
         "unit": "yr"
       }
@@ -3465,7 +4193,12 @@
       {
         "name": "baseline",
         "default": "country",
-        "note": "country: one annual mean per country from its record; cells: each populated cell's own climatological mean from the reanalysis, shifted by its country's warming"
+        "note": "country: one annual mean per country from its record; cells: each populated cell's own climatological mean from the reanalysis, shifted by its warming"
+      },
+      {
+        "name": "pattern",
+        "default": "country",
+        "note": "cells only. country: every cell of a country warms by the country's fitted number; cells: each cell warms by its own slope (the reanalysis's 1981 to 2025 trend on the global record) times the run's global anomaly since the climatology"
       },
       {
         "name": "scale",
@@ -3476,7 +4209,7 @@
         "name": "niche_c",
         "default": 29.0,
         "unit": "degC",
-        "note": "mean annual temperature at the hot edge of the human climate niche, Xu et al. 2020 PNAS (recalled; to be checked)"
+        "note": "mean annual temperature at the hot edge of the human climate niche: Xu et al. 2020 PNAS, and Lenton et al. 2023 Nature Sustainability, who chose 29 °C because only 0.3% of the 1980 population (12 million) lived there in the 1960 to 1990 climate (checked 2026-11-03)"
       },
       {
         "name": "hot_month_c",
@@ -3647,6 +4380,11 @@
         "note": "station: one GSOD station per capital; cells: the reanalysis at every populated cell"
       },
       {
+        "name": "pattern",
+        "default": "country",
+        "note": "cells only. country: every cell of a country warms by the country's fitted number; cells: each cell warms by its own slope (the reanalysis's 1981 to 2025 trend on the global record) times the run's global anomaly since the observed window"
+      },
+      {
         "name": "scale",
         "default": "110m",
         "note": "must match people.countries"
@@ -3667,13 +4405,13 @@
         "name": "limit_a_c",
         "default": 31.0,
         "unit": "degC wet-bulb",
-        "note": "the limit for young healthy adults at rest found in chamber studies, Vecellio et al. 2022 J Appl Physiol (recalled; to be checked)"
+        "note": "the limit for young healthy adults at minimal activity found in chamber studies: Vecellio et al. 2022 J Appl Physiol measured a critical wet-bulb of 30.55 ± 0.98 °C across warm-humid conditions (24 subjects, about 10 W); 31 °C is that figure rounded (checked 2026-11-03)"
       },
       {
         "name": "limit_b_c",
         "default": 35.0,
         "unit": "degC wet-bulb",
-        "note": "the theoretical survivability limit, Sherwood and Huber 2010 PNAS (recalled)"
+        "note": "the theoretical survivability limit: Sherwood and Huber 2010 PNAS, skin at 35 °C can shed no metabolic heat to air at a 35 °C wet-bulb (checked 2026-11-03)"
       },
       {
         "name": "days_to_cross",
@@ -3903,7 +4641,7 @@
         "title": "tipping thresholds passed",
         "source": "tipping.crossing",
         "obs": "",
-        "note": "every row of the table is marked recalled until checked against the paper"
+        "note": "every row checked against the paper's Table 1 on 2026-11-03; crossing the low end is what the assessment calls possible, the central estimate likely"
       }
     ],
     "assets": [
@@ -3914,6 +4652,315 @@
     ],
     "notes": [
       "Passing a threshold does not tip the element in this run; nothing feeds back yet. It is a flag with a citation, which is what the words-only essays lack."
+    ],
+    "tables": {
+      "elements": [
+        {
+          "central_c": 1.5,
+          "checked": "2026-11-03, against Table 1 of the paper",
+          "confidence": "checked",
+          "consequence": "sea level rising over millennia (the paper names 3.5 m as the irreversible-loss equivalent)",
+          "high_c": 3.0,
+          "id": "greenland-ice-sheet",
+          "low_c": 0.8,
+          "source": "Armstrong McKay et al. 2022, Table 1",
+          "timescale": "about 10,000 years (1,000 to 15,000)",
+          "title": "Greenland ice sheet collapse"
+        },
+        {
+          "central_c": 1.5,
+          "checked": "2026-11-03, against Table 1 of the paper",
+          "confidence": "checked",
+          "consequence": "sea level rising over centuries to millennia",
+          "high_c": 3.0,
+          "id": "west-antarctic-ice-sheet",
+          "low_c": 1.0,
+          "source": "Armstrong McKay et al. 2022, Table 1",
+          "timescale": "about 2,000 years (500 to 13,000)",
+          "title": "West Antarctic ice sheet collapse"
+        },
+        {
+          "central_c": 1.5,
+          "checked": "2026-11-03, against Table 1 of the paper",
+          "confidence": "checked",
+          "consequence": "loss of reefs and the fisheries and coasts that depend on them",
+          "high_c": 2.0,
+          "id": "low-latitude-coral-reefs",
+          "low_c": 1.0,
+          "source": "Armstrong McKay et al. 2022, Table 1",
+          "timescale": "about 10 years",
+          "title": "Low-latitude coral reef die-off"
+        },
+        {
+          "carbon": {
+            "confidence": "medium",
+            "decline_per_degree": 0.21,
+            "gtc_per_degree": 25.0,
+            "source": "Armstrong McKay et al. 2022, Table 1 and text",
+            "stock": "permafrost",
+            "timescale_yr": 200
+          },
+          "central_c": 1.5,
+          "checked": "2026-11-03, against Table 1 of the paper",
+          "confidence": "checked",
+          "consequence": "additional carbon and methane to the atmosphere",
+          "high_c": 2.3,
+          "id": "boreal-permafrost-abrupt-thaw",
+          "low_c": 1.0,
+          "source": "Armstrong McKay et al. 2022, Table 1",
+          "timescale": "about 200 years (100 to 300)",
+          "title": "Boreal permafrost abrupt thaw"
+        },
+        {
+          "central_c": 1.6,
+          "checked": "2026-11-03, against Table 1 of the paper",
+          "confidence": "checked",
+          "consequence": "regional; may alter northern hemisphere winter circulation",
+          "high_c": 1.7,
+          "id": "barents-sea-ice",
+          "low_c": 1.5,
+          "source": "Armstrong McKay et al. 2022, Table 1",
+          "timescale": "about 25 years",
+          "title": "Barents Sea winter ice loss"
+        },
+        {
+          "central_c": 1.8,
+          "checked": "2026-11-03, against Table 1 of the paper",
+          "confidence": "checked",
+          "consequence": "regional cooling around the North Atlantic; shifts in storm tracks",
+          "high_c": 3.8,
+          "id": "labrador-sea-convection",
+          "low_c": 1.1,
+          "source": "Armstrong McKay et al. 2022, Table 1",
+          "timescale": "about 10 years (5 to 50)",
+          "title": "Labrador-Irminger Sea convection collapse"
+        },
+        {
+          "central_c": 2.0,
+          "checked": "2026-11-03, against Table 1 of the paper",
+          "confidence": "checked",
+          "consequence": "loss of seasonal water storage for the rivers below them",
+          "high_c": 3.0,
+          "id": "mountain-glaciers",
+          "low_c": 1.5,
+          "source": "Armstrong McKay et al. 2022, Table 1",
+          "timescale": "about 200 years (50 to 1,000)",
+          "title": "Extra-polar mountain glacier loss"
+        },
+        {
+          "central_c": 2.8,
+          "checked": "2026-11-03, against Table 1 of the paper",
+          "confidence": "checked",
+          "consequence": "a wetter or drier Sahel; either way a different one",
+          "high_c": 3.5,
+          "id": "sahel-west-african-monsoon",
+          "low_c": 2.0,
+          "source": "Armstrong McKay et al. 2022, Table 1",
+          "timescale": "about 50 years (10 to 500)",
+          "title": "Sahel and West African monsoon shift"
+        },
+        {
+          "central_c": 3.0,
+          "checked": "2026-11-03, against Table 1 of the paper",
+          "confidence": "checked",
+          "consequence": "sea level rising over millennia",
+          "high_c": 6.0,
+          "id": "east-antarctic-subglacial-basins",
+          "low_c": 2.0,
+          "source": "Armstrong McKay et al. 2022, Table 1",
+          "timescale": "about 2,000 years (500 to 10,000)",
+          "title": "East Antarctic subglacial basins collapse"
+        },
+        {
+          "carbon": {
+            "confidence": "medium",
+            "gtc": 30.0,
+            "source": "Armstrong McKay et al. 2022, Table 1 and text",
+            "stock": "amazon",
+            "timescale_yr": 100
+          },
+          "central_c": 3.5,
+          "checked": "2026-11-03, against Table 1 of the paper",
+          "confidence": "checked",
+          "consequence": "forest to savanna over a large part of the basin; carbon released; regional rainfall lost",
+          "high_c": 6.0,
+          "id": "amazon-rainforest",
+          "low_c": 2.0,
+          "source": "Armstrong McKay et al. 2022, Table 1",
+          "timescale": "about 100 years (50 to 200)",
+          "title": "Amazon rainforest dieback"
+        },
+        {
+          "central_c": 4.0,
+          "checked": "2026-11-03, against Table 1 of the paper",
+          "confidence": "checked",
+          "consequence": "forest retreats at its southern edge; carbon released",
+          "high_c": 5.0,
+          "id": "boreal-forest-southern-dieback",
+          "low_c": 1.4,
+          "source": "Armstrong McKay et al. 2022, Table 1",
+          "timescale": "about 100 years (50 to unknown)",
+          "title": "Boreal forest southern dieback"
+        },
+        {
+          "central_c": 4.0,
+          "checked": "2026-11-03, against Table 1 of the paper",
+          "confidence": "checked",
+          "consequence": "cooling around the North Atlantic, shifted tropical rain belts and monsoons, faster sea level rise on the American east coast",
+          "high_c": 8.0,
+          "id": "amoc",
+          "low_c": 1.4,
+          "source": "Armstrong McKay et al. 2022, Table 1",
+          "timescale": "about 50 years (15 to 300)",
+          "title": "Atlantic meridional overturning circulation collapse"
+        },
+        {
+          "central_c": 6.3,
+          "checked": "2026-11-03, against Table 1 of the paper",
+          "confidence": "checked",
+          "consequence": "an ice-free Arctic in winter; strong further warming of the north",
+          "high_c": 8.7,
+          "id": "arctic-winter-sea-ice",
+          "low_c": 4.5,
+          "source": "Armstrong McKay et al. 2022, Table 1",
+          "timescale": "about 20 years (10 to 100)",
+          "title": "Arctic winter sea ice collapse"
+        },
+        {
+          "central_c": 7.5,
+          "checked": "2026-11-03, against Table 1 of the paper",
+          "confidence": "checked",
+          "consequence": "sea level rising over many millennia (the paper gives about 50 m of potential)",
+          "high_c": 10.0,
+          "id": "east-antarctic-ice-sheet",
+          "low_c": 5.0,
+          "source": "Armstrong McKay et al. 2022, Table 1",
+          "timescale": "more than 10,000 years (no central estimate given)",
+          "title": "East Antarctic ice sheet collapse"
+        },
+        {
+          "carbon": {
+            "confidence": "low",
+            "gtc": 125.0,
+            "source": "Armstrong McKay et al. 2022, Table 1 and text",
+            "stock": "permafrost",
+            "timescale_yr": 50
+          },
+          "central_c": 4.0,
+          "checked": "2026-11-03, against Table 1 of the paper",
+          "confidence": "checked",
+          "consequence": "the deep, carbon-rich Yedoma permafrost thaws; carbon on the order of 125 to 250 GtC",
+          "high_c": 6.0,
+          "id": "boreal-permafrost-collapse",
+          "low_c": 3.0,
+          "source": "Armstrong McKay et al. 2022, Table 1",
+          "timescale": "about 50 years (10 to 300)",
+          "title": "Boreal permafrost collapse"
+        },
+        {
+          "central_c": 4.0,
+          "checked": "2026-11-03, against Table 1 of the paper",
+          "confidence": "checked",
+          "consequence": "forest advances into tundra; a small carbon uptake (about 6 GtC) outweighed by a darker surface, net warming",
+          "high_c": 7.2,
+          "id": "boreal-forest-northern-expansion",
+          "low_c": 1.5,
+          "source": "Armstrong McKay et al. 2022, Table 1",
+          "timescale": "about 100 years (40 to unknown)",
+          "title": "Boreal forest northern expansion"
+        }
+      ]
+    }
+  },
+  {
+    "kind": "carbon.tipped",
+    "name": "carbon.tipped",
+    "summary": "The first cascade: a tipping element past its threshold releases the carbon its row of data/events/tipping.toml states, on the row's timescale, into the carbon ledger, where the pools module treats it as it treats fossil carbon, so the warming it adds comes back through the same energy balance. Three elements carry a carbon table from Armstrong McKay et al. 2022: boreal permafrost abrupt thaw (per degree, declining), Amazon partial dieback (30 GtC), boreal permafrost collapse (125 GtC). Each year the mass still owed is released as a first-order approach over the element's timescale. Nothing is modelled here; the amounts, thresholds and timescales are the assessment's and the module only moves the stated mass over the stated time.",
+    "priority": 6,
+    "dt": "1 year (1 January), after the tipping check",
+    "params": [
+      {
+        "name": "trigger",
+        "default": "central",
+        "note": "central: a release starts when the run passes the element's central estimate, where the assessment calls tipping likely; low: at the bottom of its range, where it calls tipping possible. The second is a sensitivity case, not a finding"
+      }
+    ],
+    "publishes": [
+      {
+        "name": "carbon.emitted",
+        "required": false,
+        "note": "{ gtc, fossil_gtc: 0, luc_gtc: 0, source: element id } the year's release, which the pools module adds to the atmosphere"
+      },
+      {
+        "name": "carbon.crossing",
+        "required": false,
+        "note": "{ id, title, year, gtc_target, timescale_yr, sentence, source, confidence } the first year an element starts releasing"
+      }
+    ],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [
+      {
+        "name": "tipping.crossing",
+        "required": false,
+        "note": "{ id, level } the year an element's threshold is passed"
+      },
+      {
+        "name": "energy.state",
+        "required": false,
+        "note": "{ gmst_c } sets the per-degree targets"
+      }
+    ],
+    "fields_owned": [],
+    "fields_read": [],
+    "ledgers": [
+      {
+        "name": "carbon",
+        "unit": "GtC",
+        "tolerance": 1e-6
+      }
+    ],
+    "frames": [],
+    "reports": [
+      {
+        "name": "carbon.tipped_gtc_yr",
+        "unit": "GtC/yr",
+        "required": false
+      },
+      {
+        "name": "carbon.tipped_cumulative_gtc",
+        "unit": "GtC",
+        "required": false
+      },
+      {
+        "name": "carbon.tipped_elements",
+        "required": false
+      }
+    ],
+    "views": [
+      {
+        "kind": "counter",
+        "title": "carbon released by tipped elements so far",
+        "source": "carbon.tipped_cumulative_gtc",
+        "obs": "",
+        "note": "permafrost and the Amazon, once past their thresholds; the assessment's amounts on its timescales"
+      },
+      {
+        "kind": "chart",
+        "title": "carbon released by tipped elements",
+        "source": "carbon.tipped_gtc_yr",
+        "obs": "",
+        "note": "a year's release, against the fossil record's 10 GtC a year"
+      }
+    ],
+    "assets": [
+      {
+        "key": "events/tipping.toml",
+        "note": "the elements with a [carbon] table: amount, timescale, confidence, source"
+      }
+    ],
+    "notes": [
+      "The feedbacks with the other sign are left out on purpose and said so: the boreal forest's southern dieback releases carbon but its net effect in the assessment is cooling (a lighter surface), and its northern expansion takes carbon up but warms on net (a darker one); both are albedo terms this energy balance has no place for, so including only their carbon would be the wrong sign. Methane from thawing permafrost is folded into the assessment's CO2-equivalent and is not separately represented. The release is first-order on the stated timescale; the assessment gives a timescale, not a shape."
     ]
   },
   {
@@ -3934,6 +4981,11 @@
       },
       {
         "name": "tipping.crossing",
+        "required": false,
+        "note": "sentences"
+      },
+      {
+        "name": "carbon.crossing",
         "required": false,
         "note": "sentences"
       },
@@ -4034,7 +5086,7 @@
       {
         "kind": "text",
         "title": "what this run does not yet measure",
-        "source": "Not in this run, so not in these numbers: deaths from heat (a published exposure-response layer is next), harvests and food prices, forest cover and the carbon it would release, biodiversity, fresh water, sea level from ice, migration, and any response by people to any of it. The population here is the UN's path, which assumes none of the above changes where people live. Every crossing above is a count of people living where a stated limit is passed, not a toll, and the model runs about 0.15 °C warm in 2024. The warming applied to a place is its country's, from the country record: within a country, the pattern of the recent past is held.",
+        "source": "Not in this run, so not in these numbers: deaths from heat (a published exposure-response layer is next), harvests and food prices, biodiversity, fresh water, sea level from ice, migration, and any response by people to any of it. Of the tipping elements, only the carbon of permafrost and the Amazon feeds back, and only once the run passes the assessment's thresholds; the rest are flags. The population here is the UN's path, which assumes none of the above changes where people live. Every crossing above is a count of people living where a stated limit is passed, not a toll, and the model runs about 0.15 °C warm in 2024. The warming applied to a place is its country's, from the country record scaled by the run's global anomaly: wherever something has held a country's warming back so far, this holds it back still, and within a country the pattern of the recent past is held.",
         "obs": "",
         "note": ""
       }

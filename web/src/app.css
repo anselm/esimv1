@@ -49,3 +49,23 @@ body {
 @media (prefers-color-scheme: dark) {
   body { --color-page: #0a0a0a; }
 }
+
+/* prose for rendered Markdown (docs pages and a project's README): sober, system fonts,
+   space not lines */
+.doc h1 { font-size: 1.375rem; font-weight: 500; margin: 0 0 0.75rem; }
+.doc h2 { font-size: 1.05rem; font-weight: 500; margin: 2rem 0 0.5rem; }
+.doc h3 { font-size: 0.95rem; font-weight: 500; margin: 1.5rem 0 0.4rem; }
+.doc p { font-size: 0.925rem; line-height: 1.65; margin: 0.6rem 0; }
+.doc li { font-size: 0.925rem; line-height: 1.6; margin: 0.25rem 0 0.25rem 1.25rem; list-style: disc; }
+.doc ol li { list-style: decimal; }
+.doc code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.85em; background: rgb(0 0 0 / 0.05); padding: 0 0.25em; border-radius: 3px; }
+.doc pre code { background: transparent; }
+.doc pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.8rem; line-height: 1.5; padding: 0.75rem; border-radius: 3px; overflow-x: auto; margin: 0.75rem 0; background: rgb(0 0 0 / 0.04); }
+@media (prefers-color-scheme: dark) { .doc pre { background: rgb(255 255 255 / 0.06); } .doc code { background: rgb(255 255 255 / 0.08); } .doc pre code { background: transparent; } }
+.doc table { font-size: 0.85rem; border-collapse: collapse; margin: 0.75rem 0; }
+.doc th, .doc td { text-align: left; padding: 0.25rem 1rem 0.25rem 0; vertical-align: top; border-top: 1px solid rgb(128 128 128 / 0.2); }
+.doc th { font-weight: 500; color: rgb(115 115 115); border-top: none; }
+.doc a { color: var(--color-brand); }
+.doc blockquote { margin: 0.75rem 0; padding-left: 0.75rem; border-left: 2px solid rgb(128 128 128 / 0.3); color: rgb(115 115 115); }
+.doc hr { border: none; border-top: 1px solid rgb(128 128 128 / 0.2); margin: 1.5rem 0; }
+.doc figure { margin: 1rem 0; }

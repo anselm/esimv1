@@ -77,23 +77,3 @@
     {@html html}
   </article>
 {/if}
-
-<style>
-  /* prose for rendered pages: sober, system fonts, space not lines */
-  .doc :global(h1) { font-size: 1.375rem; font-weight: 500; margin: 0 0 0.75rem; }
-  .doc :global(h2) { font-size: 1.05rem; font-weight: 500; margin: 2rem 0 0.5rem; }
-  .doc :global(h3) { font-size: 0.95rem; font-weight: 500; margin: 1.5rem 0 0.4rem; }
-  .doc :global(p) { font-size: 0.925rem; line-height: 1.65; margin: 0.6rem 0; }
-  .doc :global(li) { font-size: 0.925rem; line-height: 1.6; margin: 0.25rem 0 0.25rem 1.25rem; list-style: disc; }
-  .doc :global(ol li) { list-style: decimal; }
-  .doc :global(code) { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.85em; background: rgb(0 0 0 / 0.05); padding: 0 0.25em; border-radius: 3px; }
-  :global(.dark) .doc :global(code), .doc :global(pre code) { background: transparent; }
-  .doc :global(pre) { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.8rem; line-height: 1.5; padding: 0.75rem; border-radius: 3px; overflow-x: auto; margin: 0.75rem 0; background: rgb(0 0 0 / 0.04); }
-  @media (prefers-color-scheme: dark) { .doc :global(pre) { background: rgb(255 255 255 / 0.06); } .doc :global(code) { background: rgb(255 255 255 / 0.08); } }
-  .doc :global(table) { font-size: 0.85rem; border-collapse: collapse; margin: 0.75rem 0; }
-  .doc :global(th), .doc :global(td) { text-align: left; padding: 0.25rem 1rem 0.25rem 0; vertical-align: top; border-top: 1px solid rgb(128 128 128 / 0.2); }
-  .doc :global(th) { font-weight: 500; color: rgb(115 115 115); border-top: none; }
-  .doc :global(a) { color: var(--color-brand); }
-  .doc :global(blockquote) { margin: 0.75rem 0; padding-left: 0.75rem; border-left: 2px solid rgb(128 128 128 / 0.3); color: rgb(115 115 115); }
-  .doc :global(hr) { border: none; border-top: 1px solid rgb(128 128 128 / 0.2); margin: 1.5rem 0; }
-</style>

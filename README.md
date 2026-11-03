@@ -17,6 +17,11 @@ The planet pages to start with:
 - [Documentation](https://esimv1.exe.xyz/?docs) and [the module kinds](https://esimv1.exe.xyz/?kinds).
 - [Limits today](https://esimv1.exe.xyz/?doc=system/limits), to read before any number.
 
+The project page opens with the project's own README, "The road to 2100, and the
+thresholds on it": what a tipping point is, the ladder of thresholds with every path
+drawn against it, what each half degree costs in people, and what the runs do and do not
+do with a crossing.
+
 Nothing on those pages is a forecast. Every run past 2024 rests on a stated assumption,
 every threshold carries its source and whether it has been checked, and the page says
 what the run does not yet measure.
@@ -51,9 +56,10 @@ what the run does not yet measure.
   audit, check, describe, kinds, projects, sources, regress (the hindcast ladder, which
   every coupling must leave where it was or move on purpose).
 - **Viewer and server** (`web/`): Svelte pages composed from each module's own declared
-  views in the manifest's order, maps under one time cursor; a Node server that serves
-  the pages and folders and, when not read-only, lists, drafts (with a model), checks,
-  creates and runs projects over one socket.
+  views in the manifest's order, maps under one time cursor; a project's README rendered
+  with live figures from its runs (the thresholds ladder, a table at a year); a Node
+  server that serves the pages and folders and, when not read-only, lists, drafts (with
+  a model), checks, creates and runs projects over one socket.
 
 ## Honesty rules
 
@@ -107,7 +113,7 @@ kernel check it before anything runs.
 ```
 crates/        kernel, registry, modules, audit, cli
 manifests/     the ladder, from two buckets to the planet; bundles to include
-projects/      <area>/<name>/{project.toml, manifest.toml, runs/}   (runs are not in git)
+projects/      <area>/<name>/{project.toml, manifest.toml, README.md, runs/}   (runs are not in git)
 regress/       ladder.toml, the hindcast rungs; baseline.json, their accepted scores
 docs/          documentation pages, docs/<area>/<name>.md; docs/system/ is the simulator's own
 data/          catalog.toml, catalog.lock.toml, events/ tables      (cache/ is not in git)

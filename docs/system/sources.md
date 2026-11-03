@@ -227,6 +227,16 @@ Every record this simulator reads, from `data/catalog.toml`, with the publisher,
 - **url** `https://power.larc.nasa.gov/api/temporal/daily/regional?parameters={param}&community=RE&longitude-min={lon0}&longitude-max={lon1}&latitude-min={lat0}&latitude-max={lat1}&start={year}0101&end={year}1231&format=JSON`
 - **notes** T2M_MAX is the maximum hourly 2 m temperature of the day, T2MDEW the day's dew point, both MERRA-2 at about 50 km. The cells wet-bulb layer uses them as the station layer used GSOD: an afternoon wet-bulb per day (Stull) shifted at constant humidity. A reanalysis, not a measurement; the station layer stays as its check.
 
+### NASA POWER monthly regional: MERRA-2 2 m temperature monthly and annual means per year, 1981 to 2025, by 10-degree box
+
+- **id** `nasa-power-monthly-regional`
+- **publisher** NASA POWER Monthly and Annual API v2.10.0; MERRA-2; the answer's header gives the window (19810101 to 20251231 on 2026-11-03)
+- **licence** as nasa-power-daily-regional
+- **units** degC
+- **verified** 2026-11-03 from canada1: the India box for 1981 to 2025, 357 points, 585 columns, 3.2 MB in 0.8 s
+- **url** `https://power.larc.nasa.gov/api/temporal/monthly/regional?parameters={param}&community=RE&longitude-min={lon0}&longitude-max={lon1}&latitude-min={lat0}&latitude-max={lat1}&start={from}&end={to}&format=JSON`
+- **notes** The cells' warming pattern: each populated cell's annual mean regressed on the global record over these years gives its local warming per degree of global warming, in place of one slope per country.
+
 ## station list
 
 ### NOAA Integrated Surface Database station history

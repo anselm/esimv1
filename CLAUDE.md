@@ -90,6 +90,14 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   variant, +0.1 °C at the low end. Every tipping row is now `checked` against the paper's Table 1.
 - Manifests may `include = ["other.toml"]`; `Manifest::load` resolves, project folders get
   the resolved text. Projects may declare `[[variant]]` sets; runs record `variant.json`.
+- A project's `README.md` (2026-11-03) is rendered on its page by `web/src/lib/Readme.svelte`:
+  Markdown, with fenced `esim` blocks as live figures (`ladder`; `table <year> series=label …`),
+  drawn from the runs through `web/src/lib/runs.js`. `Describe.tables` carries small tables a
+  module read (the tipping rows; the countries in outline-file order, which is what the
+  `country_index` frame indexes; the compare page's country picker read `docs/countries.json`,
+  the 110 m order, against 50 m runs until 2026-11-03). `docs/system/projects-and-runs.md`
+  has the embed vocabulary; `projects/anselm/planet-2100/README.md` is the first README and
+  the lay reader's account of the 2100 runs.
 - Planetary rungs (`manifests/p1-*`, `crates/modules/src/planet.rs`) are zero-dimensional
   and read five small global records listed in the catalog (OWID emissions, Mauna Loa,
   Law Dome, HadCRUT5, GISTEMP); NOAA's ocean heat content server was down on 2026-11-01,

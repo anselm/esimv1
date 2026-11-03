@@ -42,6 +42,10 @@ pub struct Describe {
     /// Data this module fetches through the registry: catalog asset ids, or `events/<table>`.
     pub assets: Vec<AssetUse>,
     pub notes: Vec<String>,
+    /// Small tables the module reads and a page may draw: the rows of an events table, say,
+    /// as JSON, so a run folder carries the exact table it used.
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub tables: BTreeMap<String, serde_json::Value>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, Default)]
@@ -121,6 +125,7 @@ impl Describe {
     pub fn report(mut self, name: &str, unit: &str) -> Self { self.reports.push(port(name, unit, false, "")); self }
     pub fn asset(mut self, key: &str, note: &str) -> Self { self.assets.push(AssetUse { key: key.into(), note: note.into() }); self }
     pub fn note(mut self, s: &str) -> Self { self.notes.push(s.into()); self }
+    pub fn table(mut self, name: &str, rows: serde_json::Value) -> Self { self.tables.insert(name.into(), rows); self }
     pub fn view(mut self, kind: &str, title: &str, source: &str, note: &str) -> Self { self.views.push(View { kind: kind.into(), title: title.into(), source: source.into(), obs: String::new(), note: note.into() }); self }
     /// A chart of a model series with an observed series beside it.
     pub fn view_vs(mut self, title: &str, source: &str, obs: &str, note: &str) -> Self { self.views.push(View { kind: "chart".into(), title: title.into(), source: source.into(), obs: obs.into(), note: note.into() }); self }

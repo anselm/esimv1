@@ -98,8 +98,10 @@
       index = { arr, grid: meta.grid }
     }
     if (!countries) {
-      const gj = await loadJson('/docs/countries.json').catch(() => null)
-      countries = gj
+      // the run's own list (people.countries declares the outline file's order in its describe);
+      // the server's docs/countries.json (the 110 m file) is the fallback for older runs
+      const de = await loadJson(`${o.base}/describe.json`).catch(() => null)
+      countries = de?.modules?.find((m) => m.kind === 'people.countries' && m.tables?.countries?.length)?.tables.countries ?? (await loadJson('/docs/countries.json').catch(() => null))
     }
     const k = index.arr[cell]
     if (Number.isNaN(k) || !countries) return

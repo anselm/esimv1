@@ -63,6 +63,23 @@ fn load_countries(scale: &str) -> Result<Vec<Country>, String> {
     let mut f = Fetcher::default_for(&root)?;
     countries::natural_earth_countries(&mut f, &asset_url(&cat, scale_asset(scale))?)
 }
+/// `[{ iso3, name }]` in the outline file's order, from the cached file only; None when it
+/// is not cached yet. The same order the country_index frame's values index into.
+fn cached_country_names(scale: &str) -> Option<serde_json::Value> {
+    let root = root();
+    let cat = Catalog::load(&root.join("data/catalog.toml")).ok()?;
+    let url = asset_url(&cat, scale_asset(scale)).ok()?;
+    let file = url.rsplit('/').next()?;
+    let text = std::fs::read_to_string(root.join("data/cache").join(format!("natural-earth_{file}"))).ok()?;
+    let v: serde_json::Value = serde_json::from_str(&text).ok()?;
+    let rows: Vec<serde_json::Value> = v["features"].as_array()?.iter().map(|feat| {
+        let p = &feat["properties"];
+        let mut iso3 = p["ISO_A3"].as_str().unwrap_or("-99").to_string();
+        if iso3 == "-99" { iso3 = p["ADM0_A3"].as_str().unwrap_or("-99").to_string(); }
+        json!({ "iso3": iso3, "name": p["NAME"].as_str().unwrap_or("") })
+    }).collect();
+    Some(serde_json::Value::Array(rows))
+}
 fn param_str(p: &toml::Value, key: &str, default: &str) -> String { esim_kernel::manifest::param_str(p, key, default).to_string() }
 
 /// How a fine field is folded into a coarser frame for the page.
@@ -205,6 +222,9 @@ impl PeopleCountries {
             .view("counter", "people on Earth", "people.world_total", "the UN's estimates to 2023 and its medium projection after")
             .view("map", "people per square kilometre", "people_density_km2", if worldpop { "WorldPop's 2020 pattern, each country scaled to the UN count for the year" } else { "a country's people spread evenly over its land" })
             .asset(scale_asset(&scale), "outlines, ISO3 codes").asset("un-wpp-2024-total-population", "people per country per year");
+        // the countries in file order, which is what the country_index frame holds, read from
+        // the cache when the outlines are already there (describe never fetches)
+        if let Some(rows) = cached_country_names(&scale) { d = d.table("countries", rows); }
         if worldpop { d = d.report("people.cells_unassigned", "").asset("worldpop-2020-1km", "people per 1 km pixel in 2020, summed to the grid").note("A populated cell the outlines do not claim is given to the nearest claimed cell within three cells; the rest are counted in people.cells_unassigned. The 2020 pattern is held for every year: cities do not move or grow relative to their countryside here."); }
         else { d = d.note("Population is spread evenly over a country's land cells for the density map; distribution = worldpop places it by the 1 km count."); }
         d
@@ -700,8 +720,15 @@ impl Tipping {
         Ok(Tipping { name: name.to_string(), elements, passed_low: BTreeMap::new(), passed_central: BTreeMap::new(), gmst: 0.0 })
     }
     pub fn describe(name: &str, _p: &toml::Value) -> Describe {
+        // the rows as the run will read them, so a page can draw the rungs the run was checked against
+        let rows = std::fs::read_to_string(root().join("data/events/tipping.toml")).ok()
+            .and_then(|t| toml::from_str::<toml::Value>(&t).ok())
+            .and_then(|v| v.get("element").cloned())
+            .and_then(|a| serde_json::to_value(a).ok())
+            .unwrap_or(serde_json::Value::Array(vec![]));
         Describe::new("tipping.elements", name, "The climate tipping elements from data/events/tipping.toml, each with the global warming at which an assessment judged it likely to tip (a central estimate and a range) and its timescale, checked every year against the run's global anomaly. A tipping.crossing event the first year the run passes an element's low end and again its central estimate. The table is the claim; the module only compares.")
             .priority(5).dt("follows energy.state, once a year")
+            .table("elements", rows)
             .subscribe("energy.state", "{ gmst_c }")
             .publish("tipping.crossing", "{ id, title, year, level: low | central, threshold_c, gmst_c, timescale, consequence, source, confidence }")
             .report("tipping.elements_past_low", "").report("tipping.elements_past_central", "")

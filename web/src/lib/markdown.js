@@ -48,9 +48,11 @@ export function render(md) {
       flush()
       const ordered = /^\s*\d+\./.test(line)
       const items = []
+      // an indented line continues the item above it, even when it happens to start with
+      // a number and a period ("2040. The first decades…"); an unindented one starts an item
       while (i < lines.length && (/^\s*[-*]\s+/.test(lines[i]) || /^\s*\d+\.\s+/.test(lines[i]) || (/^\s{2,}\S/.test(lines[i]) && items.length))) {
-        if (/^\s*([-*]|\d+\.)\s+/.test(lines[i])) items.push(lines[i].replace(/^\s*([-*]|\d+\.)\s+/, ''))
-        else items[items.length - 1] += ' ' + lines[i].trim()
+        if (/^\s{2,}\S/.test(lines[i]) && items.length && !/^\s{2,}[-*]\s+/.test(lines[i])) items[items.length - 1] += ' ' + lines[i].trim()
+        else items.push(lines[i].replace(/^\s*([-*]|\d+\.)\s+/, ''))
         i++
       }
       html.push(`<${ordered ? 'ol' : 'ul'}>${items.map((t) => `<li>${inline(t)}</li>`).join('')}</${ordered ? 'ol' : 'ul'}>`)

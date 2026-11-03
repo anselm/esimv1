@@ -62,6 +62,13 @@ holds the history.
   the check on it; it read the same limit in steps instead (1.58 billion in 2099, India
   and Pakistan entering whole at their capitals' first three days). Neither is the
   measurement.
+- The one transition the runs find rather than read from a table is a step in the
+  wet-bulb count between 3.0 and 3.5 °C of global warming (35 to 204 million on the
+  growing path): the humid plains of eastern China crossing 31 °C in the 2070s and 2080s,
+  cell after cell, with Japan's coast and Taiwan after. The Indus and Ganges plains barely
+  cross in any run, which station records contradict; the reanalysis baseline reads humid
+  extremes mild and India's warming is scaled from a record that has run cool. The China
+  step is probably real and probably not first.
 - A country "crosses" a limit when half its people live where the limit is passed on more
   than three days a year. The counts of people and person-days are continuous; the
   country event is a stated rule on them, chosen so that a sentence can be written, and
@@ -69,8 +76,9 @@ holds the history.
 - Population after 2023 is the UN's medium projection, which assumes a world where none of
   the crossings change where people live. Before 1950 it is held flat and called a
   placeholder.
-- The tipping table's numbers are recalled from the assessment and not yet checked against
-  it. Every row says so.
+- The tipping table's rows were checked against the assessment's Table 1 on 2026-11-03;
+  the model passes each threshold about six years before the record would, since it runs
+  0.2 °C warm in 2024 (1.5 °C in 2018 against the record's 2024).
 
 ## The basin
 

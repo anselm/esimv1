@@ -6,6 +6,7 @@
   import { isoDate, num } from './fmt.js'
   import Status from './Status.svelte'
   import Verdict from './Verdict.svelte'
+  import Readme from './Readme.svelte'
 
   let { path } = $props()
   let meta = $state(null)
@@ -15,6 +16,7 @@
   let live = $state(false)
   let running = $state(false)
   let log = $state([])
+  let readme = $state(null)      // the project's README.md, when it has one
 
   // project.toml is small: flat key = "value" lines, then [[variant]] tables with a
   // [variant.set] of "module.param" = value lines.
@@ -52,6 +54,7 @@
       } catch (e2) { error = e2.message }
     }
     runs = runs.slice().sort((a, b) => (b.start ?? 0) - (a.start ?? 0))
+    fetch(`/projects/${path}/README.md`, { cache: 'no-store' }).then((r) => (r.ok ? r.text() : null)).then((t) => { readme = t && t.trim() ? t : null }).catch(() => {})
     await Promise.all(runs.map(async (run) => {
       try {
         const r = await fetch(`/projects/${path}/runs/${encodeURIComponent(run.id)}/audit.json`, { cache: 'no-store' })
@@ -99,6 +102,12 @@
       <span class="mono">{kinds.join(' · ')}</span>
     </div>
   </section>
+
+  {#if readme}
+    <section class="mb-10">
+      {#key readme}<Readme {path} md={readme} />{/key}
+    </section>
+  {/if}
 
   <section class="mb-8">
     {#if meta.variants?.length}
