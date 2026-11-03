@@ -161,6 +161,7 @@ pub struct Rothermel {
     lat_s: f64, lat_n: f64, lon_w: f64, lon_e: f64, res_arcsec: f64,
     dt: Duration,
     frame_every: Duration,
+    frame_res_arcsec: f64,
     ignition_time: String,
     ignition_lat: f64, ignition_lon: f64,
     wind_start: String, wind_end: String,
@@ -194,6 +195,7 @@ pub struct Rothermel {
     #[serde(skip)] stamp: Vec<u32>,
     #[serde(skip)] hour_stamp: u32,
     #[serde(skip)] dirs: Vec<(isize, isize)>,
+    #[serde(skip)] frame_grid: Option<LatLonGrid>,
 }
 
 impl Rothermel {
@@ -203,7 +205,8 @@ impl Rothermel {
             lat_s: param_f64(p, "lat_s", 34.0), lat_n: param_f64(p, "lat_n", 34.16), lon_w: param_f64(p, "lon_w", -118.72), lon_e: param_f64(p, "lon_e", -118.46),
             res_arcsec: param_f64(p, "res_arcsec", 1.0),
             dt: param_duration(p, "dt", "1h")?,
-            frame_every: param_duration(p, "frame_every", "6h")?,
+            frame_every: param_duration(p, "frame_every", "1h")?,
+            frame_res_arcsec: param_f64(p, "frame_res_arcsec", 3.0),
             ignition_time: param_str(p, "ignition_time", "2025-01-07T18:30:00Z").to_string(),
             ignition_lat: param_f64(p, "ignition_lat", 34.0723), ignition_lon: param_f64(p, "ignition_lon", -118.5451),
             wind_start: param_str(p, "wind_start", "2025-01-06").to_string(), wind_end: param_str(p, "wind_end", "2025-01-14").to_string(),
@@ -218,7 +221,7 @@ impl Rothermel {
             reach_cells: param_f64(p, "reach_cells", 3.0) as i64,
             ignited: false, ignited_at: Vec::new(), progress: Vec::new(), active: Vec::new(), since_ignition_s: 0.0, last_frame: i64::MIN / 4,
             grid: None, fuel_of: Vec::new(), cover: Vec::new(), fuels: Vec::new(), slope: Vec::new(), aspect: Vec::new(), wind: None, area_m2: Vec::new(), metres: Vec::new(),
-            beds: Vec::new(), cell_rate: Vec::new(), stamp: Vec::new(), hour_stamp: 0, dirs: Vec::new(),
+            beds: Vec::new(), cell_rate: Vec::new(), stamp: Vec::new(), hour_stamp: 0, dirs: Vec::new(), frame_grid: None,
         };
         f.load()?;
         Ok(f)
@@ -258,8 +261,24 @@ impl Rothermel {
         fuels.truncate(fuels.len());
         self.fuels = fuels;
         self.slope = slope; self.aspect = aspect;
+        // frames go out on a coarser grid (whole blocks of cells), so an hourly series stays small
+        let k = (self.frame_res_arcsec / self.res_arcsec).round().max(1.0) as usize;
+        self.frame_grid = Some(LatLonGrid { nx: grid.nx.div_ceil(k), ny: grid.ny.div_ceil(k), dlon: grid.dlon * k as f64, dlat: grid.dlat * k as f64, lon_w: grid.lon_w, lat_n: grid.lat_n });
         self.grid = Some(grid);
         Ok(())
+    }
+    /// A per-cell array reduced to the frame grid by `f` over each block (NaN-aware min or mode).
+    fn to_frame(&self, v: &[f32], f: impl Fn(&[f32]) -> f32) -> Vec<f32> {
+        let g = self.grid.as_ref().unwrap(); let fg = self.frame_grid.as_ref().unwrap();
+        let k = (self.frame_res_arcsec / self.res_arcsec).round().max(1.0) as usize;
+        let mut out = vec![f32::NAN; fg.nx * fg.ny];
+        let mut block = Vec::with_capacity(k * k);
+        for fr in 0..fg.ny { for fc in 0..fg.nx {
+            block.clear();
+            for r in fr * k..((fr + 1) * k).min(g.ny) { for c in fc * k..((fc + 1) * k).min(g.nx) { block.push(v[r * g.nx + c]); } }
+            out[fr * fg.nx + fc] = f(&block);
+        } }
+        out
     }
     fn cell_of(&self, lat: f64, lon: f64) -> Option<usize> {
         let g = self.grid.as_ref()?;
@@ -320,7 +339,9 @@ impl Module for Rothermel {
     fn init(&mut self, ctx: &mut Ctx) {
         let g = self.grid.clone().unwrap();
         ctx.publish("fuel.loaded", json!({ "fuels": self.fuels.iter().map(|f| json!({ "id": f.id, "confidence": f.confidence })).collect::<Vec<_>>(), "shrub": self.shrub_fuel, "cells": g.nx * g.ny, "burnable_cells": self.fuel_of.iter().filter(|&&f| f != 255).count() }));
-        ctx.field("fire_fuel_class", "worldcover code", &g, self.cover.iter().map(|&c| c as f32).collect());
+        let cover_f: Vec<f32> = self.cover.iter().map(|&c| c as f32).collect();
+        let fg = self.frame_grid.clone().unwrap();
+        ctx.field("fire_fuel_class", "worldcover code", &fg, self.to_frame(&cover_f, |b| { let mut best = (0.0f32, 0usize); for &x in b { let n = b.iter().filter(|&&y| y == x).count(); if n > best.1 { best = (x, n); } } best.0 }));
         let mut km2 = std::collections::BTreeMap::new();
         for (i, &c) in self.cover.iter().enumerate() { *km2.entry(c).or_insert(0.0) += self.area_m2[i] / 1e6; }
         ctx.publish("cover.summary", json!(km2.iter().map(|(c, a)| json!({ "code": c, "km2": (a * 100.0).round() / 100.0 })).collect::<Vec<_>>()));
@@ -403,7 +424,8 @@ impl Module for Rothermel {
         let burned_m2 = self.burned_m2();
         ctx.world_write("fire.burned_frac", "1", &g, self.burned_field());
         if self.ignited && now.0.saturating_sub(self.last_frame) >= self.frame_every.0 {
-            ctx.field("fire_arrival_h", "h", &g, self.ignited_at.iter().map(|v| v / 3600.0).collect());
+            let fg = self.frame_grid.clone().unwrap();
+            ctx.field("fire_arrival_h", "h", &fg, self.to_frame(&self.ignited_at, |b| b.iter().copied().filter(|v| !v.is_nan()).fold(f32::NAN, |m, v| if m.is_nan() || v < m { v } else { m }) / 3600.0));
             self.last_frame = now.0;
         }
         let head_shrub = shrub_bed.map(|bed| { let u = (u10 * FT_PER_M * 60.0 * bed.waf).min(0.9 * bed.ir); bed.r0 * (1.0 + bed.c * u.powf(bed.b) * bed.ratio.powf(-bed.e)) / FT_PER_M }).unwrap_or(0.0);
@@ -432,7 +454,7 @@ impl Rothermel {
             .priority(6).dt(param_str(p, "dt", "1h"))
             .param("lat_s", 34.0, "deg", "").param("lat_n", 34.16, "deg", "").param("lon_w", -118.72, "deg", "").param("lon_e", -118.46, "deg", "")
             .param("res_arcsec", 1.0, "arcsec", "one arc-second is the DEM's own 30 m")
-            .param("dt", "1h", "", "the weather step; spread runs in substeps inside it").param("frame_every", "6h", "", "arrival-time frames")
+            .param("dt", "1h", "", "the weather step; spread runs in substeps inside it").param("frame_every", "1h", "", "arrival-time frames").param("frame_res_arcsec", 3.0, "arcsec", "frames are reduced to blocks of this size (earliest arrival, most common cover), so an hourly series stays small")
             .param("ignition_time", "2025-01-07T18:30:00Z", "", "").param("ignition_lat", 34.0723, "deg", "").param("ignition_lon", -118.5451, "deg", "the ignition point in the California WFTIIC record for the Palisades fire")
             .param("wind_start", "2025-01-06", "date", "").param("wind_end", "2025-01-14", "date", "")
             .param("wind_source", "mean", "", "mean: the hourly 10 m wind; gust: the hourly gust, as a what-if for a reanalysis that reads a Santa Ana event mild")
@@ -469,6 +491,7 @@ pub struct Perimeters {
     incident: String,
     year: i64,
     irwin: String,
+    frame_res_arcsec: f64,
     scheduled: bool,
     #[serde(skip)] grid: Option<LatLonGrid>,
     #[serde(skip)] perims: Vec<Perimeter>,
@@ -485,6 +508,7 @@ impl Perimeters {
             incident: param_str(p, "incident", "Palisades").to_string(),
             year: p.get("year").and_then(|v| v.as_integer()).unwrap_or(2025),
             irwin: param_str(p, "irwin", "{A7EA5D21-F882-44B8-BF64-44AB11059DC1}").to_string(),
+            frame_res_arcsec: param_f64(p, "frame_res_arcsec", 3.0),
             scheduled: false,
             grid: None, perims: Vec::new(), sources: Vec::new(), area_m2: Vec::new(),
         };
@@ -529,7 +553,15 @@ impl Module for Perimeters {
         let g = self.grid.clone().unwrap();
         let mask = rasterize(&p.rings, g.nx, g.ny, g.dlon, g.dlat, g.lon_w, g.lat_n);
         let obs_m2: f64 = mask.iter().zip(&self.area_m2).filter(|(m, _)| **m).map(|(_, a)| a).sum();
-        ctx.field("obs_perimeter", "1", &g, mask.iter().map(|&m| if m { 1.0 } else { 0.0 }).collect());
+        let k = (self.frame_res_arcsec / self.res_arcsec).round().max(1.0) as usize;
+        let fg = LatLonGrid { nx: g.nx.div_ceil(k), ny: g.ny.div_ceil(k), dlon: g.dlon * k as f64, dlat: g.dlat * k as f64, lon_w: g.lon_w, lat_n: g.lat_n };
+        let mut frame = vec![0f32; fg.nx * fg.ny];
+        for fr in 0..fg.ny { for fc in 0..fg.nx {
+            let (mut n, mut inside) = (0usize, 0usize);
+            for r in fr * k..((fr + 1) * k).min(g.ny) { for c in fc * k..((fc + 1) * k).min(g.nx) { n += 1; if mask[r * g.nx + c] { inside += 1; } } }
+            frame[fr * fg.nx + fc] = if n > 0 { inside as f32 / n as f32 } else { 0.0 };
+        } }
+        ctx.field("obs_perimeter", "1", &fg, frame);
         ctx.report("obs.acres", "acres", p.acres);
         ctx.report("obs.acres_in_window", "acres", obs_m2 / ACRE_M2);
         if let Some(f) = ctx.world_read("fire.burned_frac") {
@@ -559,7 +591,7 @@ impl Perimeters {
         esim_kernel::describe::Describe::new("obs.perimeters", name, "The mapped perimeters of a wildfire incident from NIFC (the daily operational perimeters by IRWIN id and the WFIGS perimeter of record), each rasterised on the run's grid at the time it was current and scored against the fire module's burned area: acres, overlap (Sørensen), missed and overrun acres.")
             .priority(9).dt("at each mapped perimeter's time")
             .param("lat_s", 34.0, "deg", "").param("lat_n", 34.16, "deg", "").param("lon_w", -118.72, "deg", "").param("lon_e", -118.46, "deg", "").param("res_arcsec", 1.0, "arcsec", "")
-            .param("incident", "Palisades", "", "incident name as WFIGS spells it").param("year", 2025, "", "discovery year").param("irwin", "{A7EA5D21-F882-44B8-BF64-44AB11059DC1}", "", "IRWIN id of the incident")
+            .param("incident", "Palisades", "", "incident name as WFIGS spells it").param("year", 2025, "", "discovery year").param("irwin", "{A7EA5D21-F882-44B8-BF64-44AB11059DC1}", "", "IRWIN id of the incident").param("frame_res_arcsec", 3.0, "arcsec", "the perimeter frames are the share of each block inside, on this grid")
             .publish("perimeters.loaded", "{ incident, irwin, count, first, last }").publish("perimeter.scored", "{ time, obs_acres, sim_acres, sorensen, method, source }")
             .read("fire.burned_frac", "1", false, "the fire module's burned cells")
             .frame("obs_perimeter", "1")

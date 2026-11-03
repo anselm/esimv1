@@ -11,7 +11,7 @@ start = "2025-01-07T18:00:00Z"
 end = "2025-01-12T00:00:00Z"
 seed = 1
 close_every = "1d"
-snapshot_every = "1d"
+snapshot_every = "10d"   # a snapshot holds every cell's progress in 32 directions, 335 MB as JSON; none inside a four-day run
 notes = "The Palisades fire's first four days under reanalysis wind, unsuppressed; scored against NIFC's daily perimeters. Fuel parameters recalled from Scott and Burgan 2005 and not yet checked; the reanalysis under-reads Santa Ana gusts."
 
 [place]

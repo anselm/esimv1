@@ -67,10 +67,10 @@
     "runs": [
       {
         "all_ledgers_closed": true,
-        "digest": "9b67271aa09ea463",
+        "digest": "6d767f390dbac767",
         "end": 1736640000,
-        "events": 253,
-        "id": "f2-palisades-2025-0bff2d8a-9b67271a",
+        "events": 249,
+        "id": "f2-palisades-2025-199bb814-6d767f39",
         "name": "f2-palisades-2025",
         "seed": 1,
         "set": {
@@ -82,10 +82,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "c7f9f04d0f99cd19",
+        "digest": "d860c89609f49439",
         "end": 1736640000,
-        "events": 253,
-        "id": "f2-palisades-2025-0e5f009e-c7f9f04d",
+        "events": 249,
+        "id": "f2-palisades-2025-54447a97-d860c896",
         "name": "f2-palisades-2025",
         "seed": 1,
         "set": {
@@ -97,10 +97,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "4137e17769dc384d",
+        "digest": "63cb30e994fd45db",
         "end": 1736640000,
-        "events": 253,
-        "id": "f2-palisades-2025-4d6d802d-4137e177",
+        "events": 249,
+        "id": "f2-palisades-2025-93d2fa80-63cb30e9",
         "name": "f2-palisades-2025",
         "seed": 1,
         "set": {
@@ -112,10 +112,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "085333618c77c254",
+        "digest": "90f91bbd410867d0",
         "end": 1736640000,
-        "events": 253,
-        "id": "f2-palisades-2025-8f17f073-08533361",
+        "events": 249,
+        "id": "f2-palisades-2025-bde49164-90f91bbd",
         "name": "f2-palisades-2025",
         "seed": 1,
         "set": {

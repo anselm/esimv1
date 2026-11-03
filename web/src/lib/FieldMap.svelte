@@ -14,9 +14,11 @@
   // own, a time slider when there is more than one frame, and a hover/tap
   // readout of lat, lon and value.
   import { isoDate, num } from './fmt.js'
-  import { LUT, RAMP_CSS } from './ramp.js'
+  import { LUT, RAMP_CSS, FIRE_LUT, FIRE_CSS, COVER, COVER_NAMES, rampFor } from './ramp.js'
 
   let { name, field, base, cursor = null } = $props()
+  const ramp = $derived(rampFor(name, field.unit))
+  const coverRgb = Object.fromEntries(Object.entries(COVER).map(([k, h]) => [k, [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16))]))
 
   const grid = $derived(field.grid)
   const times = $derived(field.times ?? [])
@@ -126,8 +128,9 @@
       const v = frame[k]
       const o = k * 4
       if (Number.isNaN(v)) { px[o + 3] = 0; continue }
-      const t = Math.min(255, Math.max(0, Math.round(((v - lo) / span) * 255)))
-      const c = LUT[t]
+      let c
+      if (ramp === 'cover') { c = coverRgb[Math.round(v)]; if (!c) { px[o + 3] = 0; continue } }
+      else { const t = Math.min(255, Math.max(0, Math.round(((v - lo) / span) * 255))); c = ramp === 'fire' ? FIRE_LUT[t] : LUT[t] }
       px[o] = c[0]; px[o + 1] = c[1]; px[o + 2] = c[2]; px[o + 3] = 255
     }
     off.getContext('2d').putImageData(img, 0, 0)
@@ -200,15 +203,20 @@
         style="left:{Math.min(hover.x + 10, width - 150)}px; top:{Math.max(hover.y - 40, 0)}px"
       >
         <div>{hover.lat.toFixed(4)}, {hover.lon.toFixed(4)}</div>
-        <div>{hover.v === null ? 'no data' : `${num(+hover.v.toPrecision(6))} ${field.unit}`}</div>
+        <div>{hover.v === null ? 'no data' : ramp === 'cover' ? (COVER_NAMES[Math.round(hover.v)] ?? hover.v) : `${num(+hover.v.toPrecision(6))} ${field.unit}`}</div>
       </div>
     {/if}
   </div>
 
-  <!-- legend: labels follow the chosen stretch -->
+  <!-- legend: labels follow the chosen stretch; a categorical field lists its classes -->
+  {#if ramp === 'cover'}
+  <div class="mono mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[10px] muted">
+    {#each Object.entries(COVER_NAMES) as [code, label] (code)}<span class="inline-flex items-center gap-1"><span class="inline-block h-2 w-2 rounded-[1px]" style="background:{COVER[code]}" aria-hidden="true"></span>{label}</span>{/each}
+  </div>
+  {:else}
   <div class="mono mt-1.5 flex items-center gap-2 text-[10px] muted">
     <span>{num(+lo.toPrecision(5))}</span>
-    <span class="h-2 flex-1 rounded-[2px]" style="background:{RAMP_CSS}" aria-hidden="true"></span>
+    <span class="h-2 flex-1 rounded-[2px]" style="background:{ramp === 'fire' ? FIRE_CSS : RAMP_CSS}" aria-hidden="true"></span>
     <span>{num(+hi.toPrecision(5))}</span>
     <span>{field.unit}</span>
     <span class="ml-1 inline-flex select-none" role="radiogroup" aria-label="colour stretch" title="colour scale: run-wide or this frame's min/max">
@@ -221,6 +229,7 @@
       {/each}
     </span>
   </div>
+  {/if}
 
   <!-- time -->
   <div class="mono mt-1.5 flex items-center gap-3 text-xs">

@@ -27,6 +27,11 @@
     pts.map((p, i) => `${i ? 'L' : 'M'}${sx(p[0]).toFixed(1)},${sy(p[1]).toFixed(1)}`).join(' ')
   const path = $derived(toPath(points))
   const obsPath = $derived(paired ? toPath(obs) : '')
+  // with a cursor, the part already played is drawn solid and the rest of the run faint: the
+  // run is complete and its future is known, but the eye should follow the cursor
+  const upTo = (pts) => (cursor === null ? pts : pts.filter((p) => p[0] <= cursor))
+  const playedPath = $derived(toPath(upTo(points)))
+  const playedObsPath = $derived(paired ? toPath(upTo(obs)) : '')
 
   // value at the cursor: the last point at or before it
   const at = (pts, t) => {
@@ -84,10 +89,12 @@
           >{isoDate(t)}</text>
         {/each}
         {#if paired && obs.length}
-          <path d={obsPath} fill="none" class="stroke-neutral-900 dark:stroke-neutral-100" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke" />
+          <path d={obsPath} fill="none" class="stroke-neutral-900 dark:stroke-neutral-100" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke" opacity={cursor === null ? 1 : 0.22} />
+          {#if cursor !== null}<path d={playedObsPath} fill="none" class="stroke-neutral-900 dark:stroke-neutral-100" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke" />{/if}
         {/if}
         {#if points.length}
-          <path d={path} fill="none" class="stroke-brand" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke" />
+          <path d={path} fill="none" class="stroke-brand" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke" opacity={cursor === null ? 1 : 0.22} />
+          {#if cursor !== null}<path d={playedPath} fill="none" class="stroke-brand" stroke-width="1.5" stroke-linejoin="round" vector-effect="non-scaling-stroke" />{/if}
         {/if}
         {#if cursor !== null && cursor >= tMin && cursor <= tMax}
           <line x1={sx(cursor)} y1={padT} x2={sx(cursor)} y2={H - padB} class="stroke-neutral-400 dark:stroke-neutral-500" stroke-width="1" />
