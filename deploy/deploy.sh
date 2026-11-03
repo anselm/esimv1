@@ -15,7 +15,7 @@ RS="rsync -az --delete -e 'ssh -o ServerAliveInterval=5 -o StrictHostKeyChecking
 (cd "$HERE" && ./target/release/esim kinds --json > docs/kinds.json && ./target/release/esim projects --json > projects/index.json && ./target/release/esim sources --write >/dev/null)
 
 ssh -o ServerAliveInterval=5 -o StrictHostKeyChecking=accept-new "$HOST" 'mkdir -p /srv/esim/web'
-eval $RS "$HERE/web/dist" "$HERE/web/server.mjs" "$HERE/web/package.json" "$HOST:/srv/esim/web/"
+eval $RS "$HERE/web/dist" "$HERE/web/lib" "$HERE/web/server.mjs" "$HERE/web/package.json" "$HOST:/srv/esim/web/"
 eval $RS --exclude='fields/*/*.f32.tmp' "$HERE/projects/" "$HOST:/srv/esim/projects/"
 eval $RS "$HERE/docs/" "$HOST:/srv/esim/docs/"
 # the server reads these for the country picker and outlines when the geojson cache is absent

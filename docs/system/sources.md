@@ -169,6 +169,16 @@ Every record this simulator reads, from `data/catalog.toml`, with the publisher,
 - **url** `https://noaa-gsod-pds.s3.amazonaws.com/{year}/{station}.csv`
 - **notes** Daily summaries of station observations; the wet-bulb layer estimates an afternoon wet-bulb from MAX and DEWP.
 
+### Open-Meteo historical weather API, hourly at one point with wind direction and gusts
+
+- **id** `open-meteo-era5-wind`
+- **publisher** Open-Meteo, serving ECMWF ERA5 reanalysis (Copernicus Climate Change Service)
+- **licence** As open-meteo-era5: free for non-commercial use only
+- **units** temperature_2m degC, relative_humidity_2m %, wind_speed_10m m/s, wind_direction_10m degrees the wind comes from, wind_gusts_10m m/s
+- **verified** 2026-11-03 from canada1: the Palisades point for 2025-01-07 to 2025-01-08 answered; the reanalysis gives 6 to 10 m/s mean wind and gusts to 24 m/s from the north-north-east on the night of 7 to 8 January, far below the ridge gusts news reports gave (recalled)
+- **url** `https://archive-api.open-meteo.com/v1/archive?latitude={lat}&longitude={lon}&start_date={start}&end_date={end}&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m&models=era5&timezone=UTC&wind_speed_unit=ms`
+- **notes** A 25 km reanalysis reads a Santa Ana event mild; the fire module says so in its describe and offers the gust series as a variant.
+
 ## raster
 
 ### WorldPop, the spatial distribution of population in 2020, 1 km, global mosaic (unconstrained, not UN-adjusted)
@@ -180,6 +190,16 @@ Every record this simulator reads, from `data/catalog.toml`, with the publisher,
 - **verified** 2026-11-02 from canada1: HEAD 869,715,253 bytes; header read: tiled 256x256 Float32 LZW, tiepoint -180.001249 83.999583, pixel 0.0083333
 - **url** `https://data.worldpop.org/GIS/Population/Global_2000_2020/2020/0_Mosaicked/ppp_2020_1km_Aggregated.tif`
 - **notes** Read tile by tile and summed to the run's grid; the sum is kept beside the file. People per cell are scaled to the UN country totals each year by the people module, so WorldPop supplies the pattern, the UN the count.
+
+### ESA WorldCover 2021 v200 land cover, 10 m
+
+- **id** `esa-worldcover-2021`
+- **publisher** ESA WorldCover project 2021 (Zanaga et al. 2022), produced by VITO and partners, distributed on the AWS Open Data registry (bucket esa-worldcover)
+- **licence** CC BY 4.0 (stated in the product user manual, v2.0, fetched 2026-11-03)
+- **units** class code: 10 tree cover, 20 shrubland, 30 grassland, 40 cropland, 50 built-up, 60 bare or sparse vegetation, 70 snow and ice, 80 permanent water, 90 herbaceous wetland, 95 mangroves, 100 moss and lichen; 0 no data
+- **verified** 2026-11-03 from canada1: HEAD on N33W120 answered 200, 101,202,142 bytes; gdalinfo read EPSG:4326, Byte, DEFLATE, 1024-pixel blocks; the class table was read from the file's legend and the manual's Table 3
+- **url** `https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_{tile}_Map.tif`
+- **notes** The fire modules read the window they need through the registry's windowed reader and take the most common class in each cell as its fuel class.
 
 ## raster tiles
 
@@ -277,6 +297,24 @@ Every record this simulator reads, from `data/catalog.toml`, with the publisher,
 - **verified** 2026-11-02 from canada1: HEAD 3,083,490 bytes
 - **url** `https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_50m_admin_0_countries.geojson`
 - **notes** Used in place of the 1:110m file when the grid is finer than 2 degrees; at 1:110m small island states vanish at half a degree.
+
+### NIFC WFIGS interagency fire perimeters (the perimeter of record per incident)
+
+- **id** `nifc-wfigs-perimeters`
+- **publisher** National Interagency Fire Center, Wildland Fire Interagency Geospatial Services
+- **licence** US federal public data; terms on data-nifc.opendata.arcgis.com
+- **verified** 2026-11-03 from canada1: the Palisades fire (discovered 2025-01-07) answered one feature of 10,501 vertices, 23,448 acres, current 2025-01-21
+- **url** `https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_Interagency_Perimeters/FeatureServer/0/query?where={where}&outFields=*&outSR=4326&f=geojson`
+- **notes** The registry builds the where clause from an incident name and its discovery year.
+
+### NIFC Operational Data Archive: the daily fire perimeters of a year's incidents
+
+- **id** `nifc-operational-archive`
+- **publisher** National Interagency Fire Center, operational data archived from incident GIS
+- **licence** US federal public data; terms on data-nifc.opendata.arcgis.com
+- **verified** 2026-11-03 from canada1: the Palisades fire's IRWIN id answered 34 polygons from 2025-01-08T06:00Z (2,920 acres) to 2025-01-21 (23,448 acres), most of them infrared interpretations; nothing between discovery at 18:30Z on the 7th and 06:00Z on the 8th
+- **url** `https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/Operational_Data_Archive_{year}/FeatureServer/6/query?where={where}&outFields=*&outSR=4326&f=geojson`
+- **notes** DateCurrent is the time to use; PolygonDateTime is frozen on the infrared rows.
 
 ## Places
 
