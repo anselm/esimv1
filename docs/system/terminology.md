@@ -38,6 +38,30 @@ the boreal belt) is a world-spanning layer another manifest can include for, say
 cover. A planetary simulation is patches on one clock, coupled through shared global
 state and boundary fluxes; the country layer is 177 very coarse ones.
 
+**Ledger.** The book a run keeps for one conserved quantity: water in cubic metres,
+carbon in tonnes, energy in joules, animals in individuals, nitrogen in kilograms.
+Every move is written twice, out of one account and into another, and on a cadence the
+kernel closes the book and checks that nothing appeared or vanished; a leak above
+tolerance fails the run. Several modules can hold one ledger, which is how emissions,
+the carbon cycle and a future permafrost module would share one atmosphere. The auditor
+reads the closes to see what was spent down and what built up.
+
+**Coupling.** A relationship between two modules, in the only form the kernel has for
+one: one module writes a named thing (a topic, a field, a ledger entry) and another
+reads it and changes its own state because of it. "Ice sheets affect sea level" is a
+coupling only when a module that knows the ice publishes something the sea module
+subscribes to. A relationship the world has and the run lacks is a missing coupling.
+
+**Feedback.** A coupling that runs back up the stack: warming changes the sinks, which
+changes CO2, which changes warming. The basin has several; the planet stack, as of
+2026-11-02, has one.
+
+**Wiring.** All the couplings of a manifest, derived from the describes before anything
+runs. `esim check` reports the wiring as errors, warnings and information; the run page
+draws it as a graph, modules as boxes, couplings as arrows, ledgers as shared books,
+with arrows that end in air for outputs nothing reads. The word is from the check, not
+from the literature; "coupling graph" means the same.
+
 **Manifest.** The TOML document that fully states a simulation: the run window, seed and
 cadences, an optional place, the modules with their parameters, and the audit's
 scoreboards. A manifest may include other manifests. The resolved manifest text is the

@@ -16,6 +16,7 @@ html {
 
 body {
   @apply bg-white text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100;
+  --color-page: #fff;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
@@ -43,4 +44,8 @@ body {
   @apply rounded-[3px] px-2 py-1 text-sm bg-neutral-100 dark:bg-neutral-900
     ring-1 ring-neutral-200 dark:ring-neutral-800 outline-none
     focus:ring-brand;
+}
+
+@media (prefers-color-scheme: dark) {
+  body { --color-page: #0a0a0a; }
 }

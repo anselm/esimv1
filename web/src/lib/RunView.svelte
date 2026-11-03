@@ -17,6 +17,7 @@
   import Timeline from './Timeline.svelte'
   import Audit from './Audit.svelte'
   import ModuleViews from './ModuleViews.svelte'
+  import Wiring from './Wiring.svelte'
 
   let { id, base, back = {}, backLabel = 'back' } = $props()
   let cursor = $state(null)
@@ -130,6 +131,15 @@
           </div>
         </div>
       {/each}
+    </section>
+  {/if}
+
+  <!-- the wiring: the check made visible -->
+  {#if run.describe?.modules?.length}
+    <section class="mb-10">
+      <div class="label mb-1">wiring</div>
+      <p class="mb-3 text-sm muted">The relationships between the modules of this run: who writes what, who reads it, and which books they share. Drawn from what each module declares, so a relationship the world has and the run lacks shows as a missing arrow.</p>
+      <Wiring modules={run.describe.modules} info={run.describe.info ?? []} />
     </section>
   {/if}
 

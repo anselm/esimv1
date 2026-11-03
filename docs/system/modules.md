@@ -48,6 +48,16 @@ manifest. A test runs real manifests and compares every publish, send, field wri
 subscription in the log against the declarations, so a describe that drifts from its
 code fails the build.
 
+The same declarations drawn as a graph are the **wiring** section of every run page:
+modules as boxes in rows by dependency, topics as solid arrows and fields as dashed ones
+from the module that writes to each module that reads, ledgers as shared books beside
+the flow, feedbacks as arrows that climb back up, and outputs nothing in the manifest
+reads as short red arrows into air. It computes nothing new; it is the check made
+visible. For the planet stack it shows one temperature line fanning out to three
+threshold modules whose crossings reach only the story, which is why that page reads as
+symptoms of one cause rather than as compounding, and which couplings would change
+that. `devlog/20261102-why-it-reads-mild.md` has the reasoning.
+
 ## The pool
 
 There are twenty-three kinds today, all in one repository. There will be hundreds, then

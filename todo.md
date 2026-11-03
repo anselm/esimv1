@@ -15,6 +15,28 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
 - The 2003, 2010, 2015 and 2021 heat events as precedents for country exposure.
   `devlog/20261101-the-2100-scenario.md`
 
+## Making the planet page read as it should (Anselm, 2026-11-02; `devlog/20261102-why-it-reads-mild.md`)
+
+- Records to date on the first screen: the hindcast's record years as a sequence with
+  sources, before any assumption; the present tense is the most convincing thing we have.
+- The deep-time axis: EPICA Dome C and Vostok CO2 from NOAA paleoclimatology as a context
+  module, so the present is drawn as the spike it is.
+- Paleo analogues: for a year's CO2, the last time the air was there and what the sea
+  stood at then; numbers to be checked (Dutton et al. 2015, Pliocene literature) first.
+- Extremes, not means: per country per year, how often the previous record month falls,
+  and when the 2024 record becomes an ordinary year.
+- A few named places in the bottom line, chosen by their crossings, each with its own
+  sentence, instead of planet-sized totals alone.
+- Coincidence: the count of stated limits a country has crossed this year, mapped zero to
+  five; the stress board on the platform list is this.
+- Cascade: consequence modules that subscribe to crossings and move a stock someone reads,
+  in this order: permafrost and Amazon crossings into the carbon ledger; ice-sheet
+  crossings into sea level; AMOC into regional temperature (its sign differs; keep it for
+  that reason); country temperature into harvest; harvest and heat into migration and
+  migration into who lives under which heat. Every parameter recalled until checked, and
+  the feedbacks with the other sign (CO2 fertilisation, aerosols) included so the
+  selection is not the frightening ones.
+
 ## Layers to build
 
 - Humidity, then wet-bulb exposure, replacing the guessed hottest-month marker; the Gulf
