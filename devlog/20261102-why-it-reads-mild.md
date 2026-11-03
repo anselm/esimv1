@@ -125,3 +125,63 @@ because one very populous country's capital crosses and the layer counts the who
 country by its capital's station. The step is an artefact of one station per country,
 not a cliff in the world; the 1 km population layer and more than one station per
 country are the fix and were already on the todo. The page should say so until then.
+
+## Addendum, evening: cells instead of capitals
+
+Anselm, on the one-station step: "When you say a populous capital crosses are you saying
+that the daily temperature in a large capital goes past the wet bulb point long enough
+for the country as a whole to be tipped? Yes more granular population would help. Do we
+really need stations?" Then: "What you're saying we need is a more granular map of both
+people and a granular map of estimated surface temperature?" and "Well I think that we
+should have layers like this."
+
+The shape agreed: people on a grid, temperature and humidity on the same grid for a
+baseline of real years, exposure computed per cell and summed by country, no threshold
+applied to a country as a whole.
+
+**Data doors tried (all anonymous):**
+- WorldPop 2020 1 km global mosaic: 870 MB GeoTIFF, tiled 256, Float32, LZW, CC BY 4.0,
+  found through the hub API (the directory paths guessed first were 404s). The server
+  claims byte ranges and ignores them, so GDAL over HTTP fails; downloaded whole. Our
+  reader gained TIFF LZW and a tile walker so the raster is never held in memory; the
+  cell sums are cached beside the file. GDAL's statistics on the same file give 7.969
+  billion people, ours 7.970: the decoder is right.
+- ERA5, the public Google copy: hourly 2 m temperature is there on a quarter degree, but
+  2 m dew point exists only in the raw-grid store chunked one hour of the whole globe
+  per chunk, so a baseline decade would be several hundred gigabytes. Out for now; a
+  bulk path (its own job on a machine near the bucket) is the way back to it.
+- NASA POWER: MERRA-2 at 0.5 by 0.625 degrees, daily maximum temperature and dew point
+  and a 2001 to 2025 climatology, by regional request. Limits found by trying: 10
+  degrees a side, 366 days, one parameter per regional request; no stated rate limit;
+  six back-to-back requests answered in 0.4 s each. 343 ten-degree boxes hold people, so
+  a decade of two parameters plus the climatology is 7,203 requests; `esim warm cells`
+  makes them once, resumably, at about one a second. The JSON (2 MB per answer) is
+  reduced to a table of tenths of a degree (230 KB) and the JSON's hash kept in the lock,
+  which is a new fetcher mode, `fetch_reduced`. POWER's referencing page asks for an
+  acknowledgement and states no restriction; no licence text exists on the site, which
+  the catalog says.
+- Natural Earth 1:50m outlines, because at half a degree the 1:110m file loses the small
+  island states.
+
+**Modules.** Each country kind kept its country mode as the default and gained a cells
+mode by parameter, so every older run still reproduces: `people.countries` with
+`distribution = "worldpop"` places each country's UN count over its cells in proportion
+to WorldPop and owns `people.count`; `people.heat` with `baseline = "cells"` adds the
+country's warming since the climatology to each populated cell's own annual mean;
+`people.wetbulb` with `source = "cells"` builds, per populated cell, the days per year
+over each limit against the warming, from the baseline decade, by solving for the warming
+each day needs to reach the limit (a Newton step on Stull, monotone) and binning it, so a
+run's year costs one lookup per cell. A country "crosses" when half its people live past
+a limit; the counts and person-days are continuous. Frames are folded to a coarser grid
+(`frame_res_deg`) so a half-degree run does not write a megabyte per map per frame.
+Climate publishes a second anomaly, since POWER's climatology window, beside the first.
+
+**Honesty notes written into the describes and the limits page.** The warming applied
+to a cell is still its country's one number; MERRA-2 is a reconstruction, not a
+measurement, and the station form stays as the check; the day's dew point stands for the
+afternoon's; the 2020 settlement pattern is held for every year; the half is a choice.
+
+**Open.** The lock file gains one entry per POWER answer (about 7,200, 1.4 MB) and is
+rewritten on each; a per-source lock shard would be tidier. The runs of the planet-2100
+project with the cells manifest, and their numbers against the capital-based ones, follow
+once the cache is warm.
