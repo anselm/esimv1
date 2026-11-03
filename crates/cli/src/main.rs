@@ -10,6 +10,7 @@
 //! esim project prune <area/name> [--keep 1]    keep the newest run per variant, remove the rest
 //! esim projects [--json]                  list projects (and refresh projects/index.json)
 //! esim sources [--write]                  the catalog as a Markdown credits page (docs/system/sources.md)
+//! esim regress [--accept] [--only s]      run the hindcast ladder (regress/ladder.toml) against regress/baseline.json
 
 use esim_kernel::{Kernel, Manifest, Module};
 use std::fs;
@@ -694,6 +695,85 @@ fn parse_sets(args: &[String]) -> Result<Vec<(String, String, f64, f64)>, String
     Ok(sets)
 }
 
+/// esim regress [--accept] [--only <text>]: run every rung of regress/ladder.toml (hindcasts
+/// with scoreboards), compare each score and each watched end value against
+/// regress/baseline.json within the ladder's tolerances, and fail on drift. --accept
+/// records the current values as the baseline, with the commit and the date. A coupling
+/// earns its place by leaving the hindcasts where they were, or by moving them towards
+/// the record on purpose, accepted by hand.
+fn regress(accept: bool, only: Option<&str>) -> Result<(), String> {
+    let root = esim_root();
+    let ladder_path = root.join("regress/ladder.toml");
+    let ladder: toml::Value = toml::from_str(&fs::read_to_string(&ladder_path).map_err(|e| format!("{}: {e}", ladder_path.display()))?).map_err(|e| format!("ladder: {e}"))?;
+    let tol = |k: &str, d: f64| ladder.get("tolerance").and_then(|t| t.get(k)).and_then(|v| v.as_float()).unwrap_or(d);
+    let (t_skill, t_pbias, t_rmse_pct, t_watch_pct) = (tol("skill", 0.005), tol("pbias_pct", 0.5), tol("rmse_pct", 1.0), tol("watch_pct", 0.5));
+    let base_path = root.join("regress/baseline.json");
+    let baseline: serde_json::Value = fs::read_to_string(&base_path).ok().and_then(|t| serde_json::from_str(&t).ok()).unwrap_or(serde_json::json!({ "rungs": {} }));
+    let out_root = root.join("runs/regress");
+    let mut rungs: serde_json::Map<String, serde_json::Value> = baseline["rungs"].as_object().cloned().unwrap_or_default();
+    let (mut checked, mut drifted, mut fresh) = (0usize, 0usize, 0usize);
+    let mut lines: Vec<String> = Vec::new();
+    for rung in ladder.get("rung").and_then(|r| r.as_array()).into_iter().flatten() {
+        let name = rung.get("name").and_then(|v| v.as_str()).ok_or("a rung without a name")?;
+        if let Some(o) = only { if !name.contains(o) { continue; } }
+        let manifest = rung.get("manifest").and_then(|v| v.as_str()).ok_or_else(|| format!("rung {name}: no manifest"))?;
+        let sets: Vec<Override> = rung.get("set").and_then(|v| v.as_array()).into_iter().flatten().filter_map(|v| v.as_str()).filter_map(|s| s.split_once('=')).map(|(k, v)| (k.to_string(), v.to_string())).collect();
+        let watch: Vec<&str> = rung.get("watch").and_then(|v| v.as_array()).into_iter().flatten().filter_map(|v| v.as_str()).collect();
+        let extra: Vec<(&str, &str)> = rung.get("scores").and_then(|v| v.as_array()).into_iter().flatten().filter_map(|p| Some((p.get(0)?.as_str()?, p.get(1)?.as_str()?))).collect();
+        println!("rung     {name}: {manifest}{}", if sets.is_empty() { String::new() } else { format!(" with {}", sets.iter().map(|(k, v)| format!("{k}={v}")).collect::<Vec<_>>().join(" ")) });
+        let dir = run_with(Path::new(manifest), &out_root, &sets, None)?;
+        for (sim, obs) in &extra { score(&dir, sim, obs)?; }
+        let scores: Vec<serde_json::Value> = fs::read_to_string(dir.join("scores.json")).ok().and_then(|t| serde_json::from_str(&t).ok()).unwrap_or_default();
+        let run: serde_json::Value = serde_json::from_str(&fs::read_to_string(dir.join("run.json")).map_err(|e| e.to_string())?).map_err(|e| e.to_string())?;
+        let mut now = serde_json::json!({ "manifest": manifest, "set": sets.iter().map(|(k, v)| format!("{k}={v}")).collect::<Vec<_>>(), "digest": run["log_digest"], "scores": {}, "watch": {} });
+        for s in &scores {
+            let key = format!("{} vs {}", s["sim"].as_str().unwrap_or("?"), s["obs"].as_str().unwrap_or("?"));
+            now["scores"][key] = serde_json::json!({ "nse": s["nse"], "kge": s["kge"], "pbias_pct": s["pbias_pct"], "rmse": s["rmse"] });
+        }
+        for w in &watch {
+            let last = run["series"][w]["points"].as_array().and_then(|a| a.last()).and_then(|p| p.get(1)).and_then(|v| v.as_f64());
+            match last { Some(v) => { now["watch"][*w] = serde_json::json!(v); } None => lines.push(format!("  {name}: watched series {w} is not in the run")) }
+        }
+        let base = &rungs.get(name).cloned().unwrap_or(serde_json::Value::Null);
+        if base.is_null() {
+            fresh += 1;
+            lines.push(format!("  {name}: no baseline yet; --accept records this run"));
+        } else {
+            if base["digest"] != now["digest"] { lines.push(format!("  {name}: log digest {} -> {} (the log changed; informative, not a failure)", base["digest"].as_str().unwrap_or("?"), now["digest"].as_str().unwrap_or("?"))); }
+            let mut check = |what: String, b: Option<f64>, n: Option<f64>, tol_abs: f64, tol_pct: f64| {
+                let (Some(b), Some(n)) = (b, n) else { lines.push(format!("  {name}: {what}: missing on one side")); return };
+                checked += 1;
+                let d = n - b;
+                let ok = d.abs() <= tol_abs || (tol_pct > 0.0 && b != 0.0 && (d / b).abs() * 100.0 <= tol_pct);
+                if !ok { drifted += 1; }
+                lines.push(format!("  {} {name}: {what}: {b:.4} -> {n:.4} ({d:+.4})", if ok { "ok   " } else { "DRIFT" }));
+            };
+            for (key, m) in now["scores"].as_object().into_iter().flatten() {
+                let bm = &base["scores"][key];
+                check(format!("{key} NSE"), bm["nse"].as_f64(), m["nse"].as_f64(), t_skill, 0.0);
+                check(format!("{key} KGE"), bm["kge"].as_f64(), m["kge"].as_f64(), t_skill, 0.0);
+                check(format!("{key} PBIAS"), bm["pbias_pct"].as_f64(), m["pbias_pct"].as_f64(), t_pbias, 0.0);
+                check(format!("{key} RMSE"), bm["rmse"].as_f64(), m["rmse"].as_f64(), 0.0, t_rmse_pct);
+            }
+            for (key, v) in now["watch"].as_object().into_iter().flatten() {
+                check(format!("{key} at end"), base["watch"][key].as_f64(), v.as_f64(), 0.0, t_watch_pct);
+            }
+        }
+        rungs.insert(name.to_string(), now);
+    }
+    for l in &lines { println!("{l}"); }
+    if accept {
+        let sh = |cmd: &str, args: &[&str]| std::process::Command::new(cmd).args(args).output().ok().filter(|o| o.status.success()).map(|o| String::from_utf8_lossy(&o.stdout).trim().to_string());
+        let out = serde_json::json!({ "accepted": sh("date", &["-u", "+%Y-%m-%d"]), "commit": sh("git", &["rev-parse", "--short", "HEAD"]), "tolerance": { "skill": t_skill, "pbias_pct": t_pbias, "rmse_pct": t_rmse_pct, "watch_pct": t_watch_pct }, "rungs": rungs });
+        fs::create_dir_all(base_path.parent().unwrap()).map_err(|e| e.to_string())?;
+        fs::write(&base_path, serde_json::to_string_pretty(&out).unwrap()).map_err(|e| e.to_string())?;
+        println!("regress  baseline written: {} ({checked} values compared, {drifted} had drifted, {fresh} new rungs)", base_path.display());
+        return Ok(());
+    }
+    println!("regress  {checked} values compared, {drifted} drifted, {fresh} rungs without a baseline");
+    if drifted > 0 { Err(format!("{drifted} values drifted from regress/baseline.json; fix the change, or accept it on purpose with esim regress --accept")) } else { Ok(()) }
+}
+
 fn main() {
     let args: Vec<String> = std::env::args().collect();
     let res = match args.get(1).map(String::as_str) {
@@ -748,9 +828,10 @@ fn main() {
                 _ => Err("usage: esim project new <area/name> --manifest <file> [--title t] [--description d] [--by who] | esim project run <area/name>".into()),
             }
         }
+        Some("regress") => regress(args.iter().any(|a| a == "--accept"), args.iter().position(|a| a == "--only").and_then(|i| args.get(i + 1)).map(String::as_str)),
         Some("check") => match args.get(2) { Some(p) => check(Path::new(p)), None => Err("usage: esim check <manifest.toml>".into()) },
         Some("describe") => match args.get(2) { Some(p) => describe(Path::new(p)), None => Err("usage: esim describe <manifest.toml>".into()) },
-        _ => Err("usage: esim run|verify|ensemble|sweep|score|audit|check|describe|kinds|project|projects|sources|warm".into()),
+        _ => Err("usage: esim run|verify|ensemble|sweep|score|audit|check|describe|kinds|project|projects|sources|warm|regress".into()),
     };
     if let Err(e) = res { eprintln!("error: {e}"); std::process::exit(1); }
 }

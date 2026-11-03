@@ -1,0 +1,91 @@
+{
+  "accepted": "2026-11-03",
+  "commit": "6aa6e32",
+  "rungs": {
+    "boone-water": {
+      "digest": "f29cfb63bbc61c5f",
+      "manifest": "manifests/m3-water-boone.toml",
+      "scores": {
+        "hydro.q_sim_daily_m3_s vs hydro.q_obs_daily_m3_s": {
+          "kge": 0.4352384216064943,
+          "nse": 0.4685417204587199,
+          "pbias_pct": 31.44357534235713,
+          "rmse": 23.400983535621304
+        }
+      },
+      "set": [],
+      "watch": {}
+    },
+    "planet-co2": {
+      "digest": "3121bc120d472a5c",
+      "manifest": "manifests/p1-planet-co2-1850-2025.toml",
+      "scores": {
+        "carbon.co2_ppm vs obs.co2_ppm": {
+          "kge": 0.7983576510623693,
+          "nse": 0.8879610389617687,
+          "pbias_pct": 2.9809646478801097,
+          "rmse": 12.23888132339528
+        },
+        "energy.gmst_anom_c vs obs.gmst_gistemp_c": {
+          "kge": 0.359729950203145,
+          "nse": 0.670043316380116,
+          "pbias_pct": 63.68715439482472,
+          "rmse": 0.2233998755864081
+        },
+        "energy.gmst_anom_c vs obs.gmst_hadcrut5_c": {
+          "kge": 0.614579340346102,
+          "nse": 0.8046222687508495,
+          "pbias_pct": 38.03719371909697,
+          "rmse": 0.171804697910863
+        }
+      },
+      "set": [],
+      "watch": {
+        "carbon.airborne_fraction": 0.4672590619606392,
+        "carbon.co2_ppm": 452.0018176813827,
+        "energy.gmst_anom_c": 1.3904604819885689
+      }
+    },
+    "planet-people-hindcast": {
+      "digest": "e93b1a6891364792",
+      "manifest": "manifests/p4-planet-people.toml",
+      "scores": {
+        "carbon.co2_ppm vs obs.co2_ppm": {
+          "kge": 0.8105068096073026,
+          "nse": 0.9012874047130484,
+          "pbias_pct": 2.798492460294572,
+          "rmse": 11.48797474832807
+        },
+        "energy.gmst_anom_c vs obs.gmst_gistemp_c": {
+          "kge": 0.6861493240893559,
+          "nse": 0.8106734938422085,
+          "pbias_pct": 25.146237687674308,
+          "rmse": 0.1692233047929574
+        },
+        "energy.gmst_anom_c vs obs.gmst_hadcrut5_c": {
+          "kge": 0.8507701921082413,
+          "nse": 0.8626333764017602,
+          "pbias_pct": 6.763187630767066,
+          "rmse": 0.14405824376629348
+        }
+      },
+      "set": [
+        "run.end=\"2025-01-01\""
+      ],
+      "watch": {
+        "people.countries_outside_niche": 4.0,
+        "people.outside_niche": 152407575.22503862,
+        "tipping.elements_past_central": 5.0,
+        "tipping.elements_past_low": 9.0,
+        "wetbulb.people_days_over_a": 96604385.16216488,
+        "wetbulb.people_over_a": 7564420.688657284
+      }
+    }
+  },
+  "tolerance": {
+    "pbias_pct": 0.5,
+    "rmse_pct": 1.0,
+    "skill": 0.005,
+    "watch_pct": 0.5
+  }
+}

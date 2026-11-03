@@ -1,0 +1,29 @@
+# The regression ladder: hindcasts with known outcomes, run by `esim regress` and compared
+# against regress/baseline.json. A change that moves a score or a watched end value past
+# the tolerances fails; `esim regress --accept` records a new baseline, which is a decision
+# made by hand and explained in the devlog. Every coupling pays its way here first.
+# Asked for by Anselm on 2026-11-02 ("we can probably regression test against historical
+# scenarios with known outcomes"); built 2026-11-03.
+
+[tolerance]
+skill = 0.005      # NSE and KGE, absolute
+pbias_pct = 0.5    # percentage points
+rmse_pct = 1.0     # percent of the baseline RMSE
+watch_pct = 0.5    # percent of the baseline end value
+
+[[rung]]
+name = "planet-co2"
+manifest = "manifests/p1-planet-co2-1850-2025.toml"
+# scores come from the manifest's [audit] scores: CO2 against Mauna Loa and Law Dome, warming against HadCRUT5 and GISTEMP
+watch = ["carbon.co2_ppm", "energy.gmst_anom_c", "carbon.airborne_fraction"]
+
+[[rung]]
+name = "planet-people-hindcast"
+manifest = "manifests/p4-planet-people.toml"
+set = ['run.end="2025-01-01"']   # the value is TOML text, so a date needs its quotes
+watch = ["people.outside_niche", "people.countries_outside_niche", "wetbulb.people_over_a", "wetbulb.people_days_over_a", "tipping.elements_past_low", "tipping.elements_past_central"]
+
+[[rung]]
+name = "boone-water"
+manifest = "manifests/m3-water-boone.toml"
+scores = [["hydro.q_sim_daily_m3_s", "hydro.q_obs_daily_m3_s"]]
