@@ -89,7 +89,9 @@ fn decode(bytes: &[u8]) -> Result<PowerBox, String> {
 
 /// Reduce POWER's regional JSON: features[].geometry.coordinates [lon, lat], and
 /// properties.parameter.<PARAM> as { "YYYYMMDD": value } (daily) or month names plus
-/// "ANN" (climatology). Keys are sorted, so a daily table runs in date order.
+/// "ANN" (climatology). Keys are sorted as strings, so a daily table runs in date order
+/// and a climatology runs ANN, APR, AUG, DEC, FEB, JAN, JUL, JUN, MAR, MAY, NOV, OCT, SEP:
+/// read a climatology column by name through `clim_index`, never by position.
 fn reduce_json(raw: &[u8], param: &str) -> Result<Vec<u8>, String> {
     let v: serde_json::Value = serde_json::from_slice(raw).map_err(|e| format!("POWER json: {e}"))?;
     if let Some(msgs) = v.get("messages").and_then(|m| m.as_array()) { if !msgs.is_empty() && v.get("features").is_none() { return Err(format!("POWER: {}", msgs.iter().map(|m| m.to_string()).collect::<Vec<_>>().join("; "))); } }
@@ -124,8 +126,15 @@ pub fn power_daily_box(f: &mut Fetcher, param: &str, lat0: i32, lon0: i32, year:
 }
 
 /// The climatology of a parameter over the same box: twelve monthly means and the annual
-/// mean ("ANN", the last value) per point, over POWER's climatology period (2001 to 2025
-/// as served on 2026-11-02; the header of the answer states it).
+/// mean per point, over POWER's climatology period (2001 to 2025 as served on 2026-11-02;
+/// the header of the answer states it). Columns are in `CLIM_KEYS` order; `clim_index("ANN")`
+/// is the annual mean. (Until 2026-11-03 the reader took the last column as the annual mean;
+/// that column is September.)
+pub const CLIM_KEYS: [&str; 13] = ["ANN", "APR", "AUG", "DEC", "FEB", "JAN", "JUL", "JUN", "MAR", "MAY", "NOV", "OCT", "SEP"];
+
+/// The column of a climatology table holding `key` ("ANN" or a three-letter month).
+pub fn clim_index(key: &str) -> Option<usize> { CLIM_KEYS.iter().position(|k| *k == key) }
+
 pub fn power_climatology_box(f: &mut Fetcher, param: &str, lat0: i32, lon0: i32) -> Result<PowerBox, String> {
     let url = format!("https://power.larc.nasa.gov/api/temporal/climatology/regional?parameters={param}&community=RE&longitude-min={lon0}&longitude-max={}&latitude-min={lat0}&latitude-max={}&format=JSON", lon0 + 10, lat0 + 10);
     let key = format!("power/clim_{param}_{lat0}_{lon0}.bin");

@@ -185,3 +185,83 @@ afternoon's; the 2020 settlement pattern is held for every year; the half is a c
 rewritten on each; a per-source lock shard would be tidier. The runs of the planet-2100
 project with the cells manifest, and their numbers against the capital-based ones, follow
 once the cache is warm.
+
+## Addendum, 2026-11-03 night: the cells runs, and a column read by position
+
+The warm finished at 01:32: 7,203 POWER answers in 105 minutes, the cache 3.3 GB. The
+first cells run of the held variant took 47 s (41 s of it building the per-cell wet-bulb
+table, cached after that; later runs take about 8 s) and writes 66 MB (eight maps at one
+degree, 25 frames each) against 40 MB before.
+
+**The bug.** The first runs had Cuba, Haiti and Puerto Rico leaving the 29 °C niche by
+2021 and 610 million people outside it in 2024. Havana's annual mean is about 25.5 °C
+(recalled), so that could not be right. The cause: POWER's climatology table has
+thirteen keys, twelve month names and ANN, and the reducer sorts keys as strings so that
+daily tables run in date order. Sorted as strings the climatology runs ANN, APR, AUG, DEC,
+FEB, JAN, JUL, JUN, MAR, MAY, NOV, OCT, SEP, and the reader took the last column as the
+annual mean. Every cell's niche baseline was its September mean. The fix reads the
+column by name (`clim_index("ANN")`) and refuses a table with the wrong number of
+columns; the reduced files on disk are unchanged. Checked after the fix against recalled
+annual means at the one-degree frame: Havana 26.4, Khartoum 28.8, Delhi 25.5, London
+9.9, Singapore 26.7, Riyadh 26.7, Lagos 27.8, Dhaka 26.2; within about a degree, the
+frame being a one-degree average of half-degree cells.
+
+**The numbers, cells against capitals (held variant, 2099).**
+
+| | capitals / countries (before) | cells (now) |
+|---|---|---|
+| people outside the 29 °C niche, 2024 | 98 M (1.2 %) | 147 M (1.8 %) |
+| people outside the niche, 2099 | 741 M (7.3 %) | 1.32 bn (13.0 %) |
+| countries outside the niche, 2099 | 22 | 22 |
+| people where 31 °C wet-bulb is passed 3 days a year, 2024 | 19 M | 6.5 M |
+| the same, 2099 | 1.58 bn | 116 M |
+| person-days a year over 31 °C, 2099 | 25.4 bn | 2.7 bn |
+| people where 35 °C is passed, 2099 | 0 | 38 |
+
+The other variants at 2099, people outside the niche then over 31 °C wet-bulb: zero by
+2050 (+2.09 °C) 523 M and 22 M; falling 3 % a year (+2.45 °C) 694 M and 31 M; trend
+(+3.70 °C) 1.59 bn and 268 M; growing 1 % (+3.93 °C) 1.77 bn and 495 M. The hindcast's
+2024 is the same in every variant: 147 M outside the niche, 6.5 M over the wet-bulb
+limit, one country (Qatar, since 2012) with half its people there.
+
+What moved and why. The niche count roughly doubled because the test is now made where
+people live rather than on one country mean: Sudan, South Sudan, the Emirates and
+Mauritania are over by 2024, Chad, Oman, Qatar, Djibouti, Cambodia, Mali, Burkina Faso and
+Niger follow by 2065 in the held run. The wet-bulb count fell by an order of magnitude
+because a country no longer tips as a whole when its capital's station does: the 1.58 bn
+of the capital form was India and Pakistan entering at their capitals' first three
+days, the 116 M now is the Gulf, the Indus and the Ganges delta cell by cell. The
+capital form's 2024 figure (19 M) was also higher than the cells' (6.5 M), which is the
+other known bias: a 50 km reanalysis does not reach the station extremes of the Gulf
+coast (Raymond, Matthews and Horton 2020 said as much of ERA-Interim; recalled, not
+re-read). The cells read the humid heat mild and the station form read it in steps;
+neither is the measurement.
+
+Against a published figure, recalled and not re-read: Lenton et al. 2023 (Nature
+Sustainability) put about 60 million people in a mean annual temperature of 29 °C and
+up today and about 2 billion at 2.7 °C with their population path. Ours is 147 M at
++1.70 °C (the model runs 0.15 warm) and 1.32 bn at +3.34 °C. Higher now, lower later;
+the difference later is most likely India, whose cells sit at 25 to 27 °C and whose
+fitted country slope is 0.82 °C per degree of global warming, so most of India stays
+under 29 °C at +3.3 °C in this model where theirs crosses. Not resolved; on the
+limits page.
+
+**A second fault seen in the crossing list.** Puerto Rico leaves the niche in 2051 and
+Haiti in 2067 in the held run. Their cells sit at 26 to 27 °C; they get there because
+the per-country slope fitted to the CRU record is 1.78 for Puerto Rico and 1.42 for the
+Dominican Republic, against about 1.0 for the United Kingdom and the United States and
+0.82 for India. A tropical island warming nearly twice the global mean is the fit, not
+the physics; small countries' CRU series are short on grid cells and the fit is
+unconstrained. Qatar's 1.75 is the same artefact. The fix is a gridded warming pattern
+(pattern scaling from an ensemble, or the reanalysis's own trend per cell) in place of
+one slope per country; until then the Caribbean and the small Gulf states' niche
+crossings should be read as the slope's. Noted on the limits page and in the todo.
+
+**The page.** Verified by screenshot in light and dark: the run page draws the three
+cells maps (people outside the niche, days over 31 °C, the year each cell crossed) with
+country outlines at one degree, the counters and the bottom line read from the new
+series, and the compare page lists the crossings per variant. The sparse people maps
+read faint under the run-wide stretch (a Dhaka cell at 34 million sets the top); a
+log or quantile stretch is a viewer item.
+
+Commits: the reader fix and the six runs follow this entry. Nothing pushed.

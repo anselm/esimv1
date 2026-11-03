@@ -68,34 +68,52 @@ kind = "people.countries"
 name = "people"
 
 [module.params]
-frame_every_years = 5
-res_deg = 2.0
+distribution = "worldpop"
+frame_every_years = 10
+frame_res_deg = 1.0
+res_deg = 0.5
+scale = "50m"
 
 [[module]]
 kind = "climate.countries"
 name = "climate"
 
 [module.params]
-frame_every_years = 5
-res_deg = 2.0
+anom_from = 2011
+anom_to = 2020
+cells_clim_from = 2001
+cells_clim_to = 2025
+frame_every_years = 10
+frame_res_deg = 1.0
+res_deg = 0.5
+scale = "50m"
 
 [[module]]
 kind = "people.heat"
 name = "heat"
 
 [module.params]
-frame_every_years = 5
-hot_month_c = 32.0
+baseline = "cells"
+crossing_share = 0.5
+frame_every_years = 10
+frame_res_deg = 1.0
 niche_c = 29.0
-res_deg = 2.0
+res_deg = 0.5
+scale = "50m"
 
 [[module]]
 kind = "people.wetbulb"
 name = "wetbulb"
 
 [module.params]
-frame_every_years = 5
-res_deg = 2.0
+crossing_share = 0.5
+frame_every_years = 10
+frame_res_deg = 1.0
+res_deg = 0.5
+scale = "50m"
+source = "cells"
+year_from = 2011
+year_to = 2020
 
 [[module]]
 kind = "tipping.elements"
@@ -105,6 +123,6 @@ name = "tipping"
 close_every = "30d"
 end = "2100-01-01"
 name = "p4-planet-people"
-notes = "Planet core plus countries, people, heat exposure and tipping thresholds, 1850 to 2100. After 2024 emissions follow the variant's assumption (default: held at the 2024 rate). CO2, CH4 and N2O forcing; no aerosols; no feedbacks."
+notes = "Planet core plus people on half-degree cells, each country's warming from its record, heat and wet-bulb exposure cell by cell from a reanalysis baseline, and tipping thresholds, 1850 to 2100. After 2024 emissions follow the variant's assumption (default: held at the 2024 rate). CO2, CH4 and N2O forcing; the AR6 assessed series held after 2019; the Millar sink feedback; nothing else feeds back."
 seed = 1
 start = "1850-01-01"

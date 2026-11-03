@@ -441,9 +441,11 @@ impl PeopleHeat {
         let boxes = cells::power_boxes(self.res_deg, |c, r| people[r * g.nx + c] > 0.0);
         for &(lat0, lon0) in &boxes {
             let b = cells::power_climatology_box(&mut f, "T2M", lat0, lon0)?;
+            let ann = cells::clim_index("ANN").ok_or("no ANN column")?;
+            if b.days != cells::CLIM_KEYS.len() { return Err(format!("climatology box {lat0},{lon0}: {} columns, expected {}", b.days, cells::CLIM_KEYS.len())); }
             let members: Vec<usize> = (0..g.nx * g.ny).filter(|&i| people[i] > 0.0 && { let (c, r) = g.col_row(i); box_of(g.lat(r), g.lon(c)) == (lat0, lon0) }).collect();
             for (i, pt) in members.iter().zip(points_for(&b, &g, &members)) {
-                if let Some(pt) = pt { if let Some(v) = b.value(pt, b.days - 1) { self.clim[*i] = v as f32; } }
+                if let Some(pt) = pt { if let Some(v) = b.value(pt, ann) { self.clim[*i] = v as f32; } }
             }
         }
         Ok(())

@@ -70,7 +70,16 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
 
 ## Platform
 
-- A 1 km population layer (WorldPop) in place of people spread evenly over a country.
+- A gridded warming pattern (pattern scaling from an ensemble, or the reanalysis's own trend
+  per cell) in place of one fitted slope per country: small islands and Gulf states fit at
+  1.4 to 1.8 °C per °C global and cross the niche on the slope, not the heat (2026-11-03,
+  `devlog/20261102-why-it-reads-mild.md`).
+- Check the niche counts against Lenton et al. 2023 (read the paper: their baseline, their
+  population path, their India), and the wet-bulb baseline against Gulf stations (Raymond
+  et al. 2020); both are recalled comparisons today.
+- A log or quantile colour stretch for sparse people maps; under the run-wide stretch one
+  Dhaka cell sets the top and the rest reads faint.
+- A per-source lock shard: the POWER entries are 7,200 of the lock file's 3 MB.
 - A country stress board at the cursor (count of crossed markers per country, ranked), after
   the hormuz room's board; the breaking-points row shape for every new threshold layer.
   `devlog/20261101-people-layers.md`

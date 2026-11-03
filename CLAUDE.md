@@ -68,8 +68,12 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   read tile by tile; the sum per cell is cached beside it) and NASA POWER (MERRA-2) regional
   boxes, 10 degrees and one year per request, about 7,200 answers for 343 populated boxes,
   reduced to tenths-of-a-degree tables (`fetch_reduced`). `esim warm cells` fetches them ahead
-  (about 100 minutes at one request a second); the cache is then about 2.5 GB. The country
-  modes are the defaults and still reproduce the old runs.
+  (105 minutes on 2026-11-03, about one request a second); the cache is then 3.3 GB. POWER's
+  reduced tables keep keys in string order, so a climatology's columns run ANN, APR, AUG, ...;
+  read them by name (`cells::clim_index`), never by position (the annual mean was read as
+  September until 2026-11-03). The per-country warming slope fitted to CRU runs high for small
+  islands and Gulf states (Puerto Rico 1.78, Qatar 1.75 °C per °C global); a gridded pattern
+  is the planned replacement. The country modes are the defaults and still reproduce the old runs.
 - Manifests may `include = ["other.toml"]`; `Manifest::load` resolves, project folders get
   the resolved text. Projects may declare `[[variant]]` sets; runs record `variant.json`.
 - Planetary rungs (`manifests/p1-*`, `crates/modules/src/planet.rs`) are zero-dimensional

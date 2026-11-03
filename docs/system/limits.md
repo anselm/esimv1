@@ -25,15 +25,28 @@ holds the history.
   (NASA POWER), and exposure is computed cell by cell before it is summed; but the warming
   added to every cell of a country is one number from the country's record regressed on
   the global anomaly. Deserts and mountains keep their climatology and share their
-  country's trend. A gridded warming pattern is the next step. The niche threshold is on
-  the annual mean and knows nothing of humidity or season; the 2020 settlement pattern is
-  held for every year.
+  country's trend, and for small countries the fitted slope is not physical: Puerto Rico
+  warms 1.78 °C and Qatar 1.75 °C per degree of global warming in the fit, against about
+  1.0 for the United States and 0.82 for India, so the Caribbean islands and the small Gulf
+  states that leave the niche after 2040 do so on the slope, not the heat. A gridded
+  warming pattern is the next step. The niche threshold is on the annual mean and knows
+  nothing of humidity or season; the 2020 settlement pattern is held for every year.
+  Against the one published count we have, recalled and not re-read (Lenton et al. 2023:
+  about 60 million people at 29 °C and up today, about 2 billion at +2.7 °C), this model
+  is high now (147 million at +1.70 °C in 2024) and low later (1.32 billion at +3.34 °C in
+  2099 with emissions held); the later gap is most likely India, which stays under 29 °C
+  here. Unresolved.
 - The wet-bulb layer's baseline is a reanalysis, not a measurement: MERRA-2 at about 50 km,
   daily maximum temperature and the day's dew point (standing for the afternoon's, which
   runs a little high), ten years, constant relative humidity under warming (the standard
   first-order assumption, stated as one). Its two limits are recalled from their papers
-  and not yet checked. The one-station-per-capital form is kept as `source = station`
-  and is the check on it.
+  and not yet checked. A 50 km reanalysis does not reach the station extremes of the Gulf
+  coast, so this layer reads the humid heat mild: 6.5 million people live where 31 °C
+  wet-bulb is passed on three days a year in 2024, and 38 people past 35 °C in 2099 with
+  emissions held. The one-station-per-capital form is kept as `source = station` and is
+  the check on it; it read the same limit in steps instead (1.58 billion in 2099, India
+  and Pakistan entering whole at their capitals' first three days). Neither is the
+  measurement.
 - A country "crosses" a limit when half its people live where the limit is passed on more
   than three days a year. The counts of people and person-days are continuous; the
   country event is a stated rule on them, chosen so that a sentence can be written, and
