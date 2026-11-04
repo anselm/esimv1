@@ -180,6 +180,19 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   the README (Anselm, 2026-11-04). The 3D scene stretches the vertical twice, lights by the sun's
   position at the cursor (low-precision solar formula, recalled), colours the sea, drapes the mapped
   perimeter as dots and draws the wind as an arrow at the north-west corner.
+- Fort McMurray 2016 (2026-11-04, Anselm: the second fire, to test how portable the engine is;
+  `manifests/f4-fortmcmurray-cells.toml`, project `anselm/fortmcmurray-2016`,
+  `data/events/fortmcmurray-2016/`): the same engine on a boreal fire outside the United States.
+  What had to generalise: buildings from OpenStreetMap through Overpass (`buildings = "osm"`,
+  `registry::wildfire::osm_buildings`, heights to feet so the pipeline is unchanged), wind from
+  ERA5 at one point because HRRR stops at the border (`wind = "era5"`, which existed), and the
+  record as satellite hotspots (`obs.hotspots`, CWFIS Fire M3 archive copied for the window) because
+  nobody mapped the fire hour by hour. Copernicus pixels are 1.5 arcsec wide at 56°N: `dem_window`'s scatter left one cell in
+  three NaN (the holes again); `terrain-v4` fills such cells from the nearest pixel, regress shows no
+  drift. Overpass's admin-boundary relation is skipped for windows over 0.1 square degrees. Result:
+  thresholds ×8 match the hotspot-seen pace from day 3, overlap a third to two fifths because the
+  ERA5 point wind reads the 3 May run into the city as a light south-easterly. The detection hour (about 16:00 MDT on 1 May) is recalled and unchecked; the provincial
+  review on open.alberta.ca answered 520 that day.
 - Breadcrumbs and areas (2026-11-04): `/anselm` is an area page (`ProjectList` with `area`), every path
   fragment in the headers is a link (`web/src/lib/Crumbs.svelte`), the byline links to the area. In the
   3D scene a line fades out twelve hours after its time and the whole record stays at the run's end.

@@ -286,6 +286,17 @@ Every record this simulator reads, from `data/catalog.toml`, with the publisher,
 - **url** `https://www.ncei.noaa.gov/pub/data/noaa/isd-history.csv`
 - **notes** Used to find the reporting station nearest each capital; the GSOD station id is USAF followed by WBAN.
 
+## table
+
+### CWFIS Fire M3 hotspots archive: satellite fire detections over Canada and the United States, by year
+
+- **id** `cwfis-hotspots`
+- **publisher** Natural Resources Canada, Canadian Forest Service, Northern Forestry Centre (Canadian Wildland Fire Information System)
+- **licence** Open Government Licence - Canada; an end-user agreement is stated on the download page (cfs.nrcan.gc.ca/common/cwfis/End_User_Agreement_gen_EN.html, not yet read)
+- **verified** 2026-11-04 from canada1: 2016_hotspots.zip is 26 MB, 457,428 rows for North America; 17,358 inside 56.3 to 57.2 N, -112.2 to -110.6 E from 25 April to 30 June, the first at 00:23 on 2 May near 56.67, -111.45 (AVHRR); VIIRS-I 9,828, MODIS 3,322, AVHRR 2,625, VIIRS-M 1,581
+- **url** `https://cwfis.cfs.nrcan.gc.ca/downloads/hotspots/archive/{year}_hotspots.zip`
+- **notes** Not fetched by a module: the window's rows are copied into data/events/<event>/cwfis/hotspots.csv and read by obs.hotspots. rep_date carries no zone in the metadata and is taken as UTC.
+
 ## vector
 
 ### Natural Earth 1:110m admin-0 countries, GeoJSON
@@ -334,7 +345,7 @@ Every record this simulator reads, from `data/catalog.toml`, with the publisher,
 - **url** `https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/Operational_Data_Archive_{year}/FeatureServer/6/query?where={where}&outFields=*&outSR=4326&f=geojson`
 - **notes** DateCurrent is the time to use; PolygonDateTime is frozen on the infrared rows.
 
-### OpenStreetMap through the Overpass API: roads, place names and city limits inside a window
+### OpenStreetMap through the Overpass API: roads, place names and city limits inside a window; since 2026-11-04 also every building (way[building]) with its height tag or storeys, for fires without a county footprint service
 
 - **id** `osm-overpass`
 - **publisher** OpenStreetMap contributors

@@ -384,8 +384,20 @@ verified = "2026-11-03 from canada1: the Palisades fire's IRWIN id answered 34 p
 notes = "DateCurrent is the time to use; PolygonDateTime is frozen on the infrared rows."
 
 [[asset]]
+id = "cwfis-hotspots"
+title = "CWFIS Fire M3 hotspots archive: satellite fire detections over Canada and the United States, by year"
+kind = "table"
+crs = "EPSG:4326"
+format = "zip of one CSV per year: rep_date, satellite, sensor, source, lat, lon, frp, and the agency's fuel type, weather and fire-weather indices at the point"
+url_template = "https://cwfis.cfs.nrcan.gc.ca/downloads/hotspots/archive/{year}_hotspots.zip"
+source = "Natural Resources Canada, Canadian Forest Service, Northern Forestry Centre (Canadian Wildland Fire Information System)"
+licence = "Open Government Licence - Canada; an end-user agreement is stated on the download page (cfs.nrcan.gc.ca/common/cwfis/End_User_Agreement_gen_EN.html, not yet read)"
+verified = "2026-11-04 from canada1: 2016_hotspots.zip is 26 MB, 457,428 rows for North America; 17,358 inside 56.3 to 57.2 N, -112.2 to -110.6 E from 25 April to 30 June, the first at 00:23 on 2 May near 56.67, -111.45 (AVHRR); VIIRS-I 9,828, MODIS 3,322, AVHRR 2,625, VIIRS-M 1,581"
+notes = "Not fetched by a module: the window's rows are copied into data/events/<event>/cwfis/hotspots.csv and read by obs.hotspots. rep_date carries no zone in the metadata and is taken as UTC."
+
+[[asset]]
 id = "osm-overpass"
-title = "OpenStreetMap through the Overpass API: roads, place names and city limits inside a window"
+title = "OpenStreetMap through the Overpass API: roads, place names and city limits inside a window; since 2026-11-04 also every building (way[building]) with its height tag or storeys, for fires without a county footprint service"
 kind = "vector"
 crs = "EPSG:4326"
 format = "Overpass JSON with geometry (out geom), reduced in the cache to roads by class, named places as points and admin_level 8 boundaries as lines"

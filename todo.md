@@ -122,7 +122,11 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
    purposes, for home buyers." — the per-structure score from 5, then its distribution over an
    ensemble of winds; not started beyond 5.
 8. "We can tune over any fire we wish ... the fire that inspired the book Fire Weather." — Fort
-   McMurray 2016 is the second fire; Eaton is the held-out test; nothing fetched for either yet.
+   McMurray 2016 started 2026-11-04 (`anselm/fortmcmurray-2016`, `devlog/20261104-fort-mcmurray.md`):
+   the engine runs there with OpenStreetMap buildings, ERA5 wind and CWFIS hotspots as the record.
+   Still to do: the provincial review's chronology (open.alberta.ca was down), the NBAC final
+   perimeter, a boreal fuel kind (spruce crowns; the engine has one "tree"), the hotspot weather
+   columns as a wind check. Eaton is the held-out test; nothing fetched for it yet.
 9. "Copy anything useful we find into this project for our own reference ... the documentation
    should reflect this as well - our sources - our more aggressive model." — done for today's finds
    (`data/events/palisades-2025/README.md`, `docs/system/data.md`, `docs/system/modules.md`,

@@ -23,7 +23,7 @@ pub struct DemWindow {
     pub provenance: String,
 }
 
-const RECIPE_VERSION: &str = "terrain-v3"; // v2: reader honours PixelIsPoint; v3: grid laid half a pixel off the lattice (no empty columns)
+const RECIPE_VERSION: &str = "terrain-v4"; // v2: reader honours PixelIsPoint; v3: grid laid half a pixel off the lattice (no empty columns); v4: cells no pixel centre fell in take the nearest pixel (tiles coarser than the grid, as GLO-30 is in longitude above 50°N)
 const SOURCE_ARCSEC: f64 = 1.0; // Copernicus GLO-30 below 50 degrees of latitude
 
 fn derived_path(fetcher: &Fetcher, key: &str) -> PathBuf {
@@ -105,7 +105,28 @@ pub fn dem_window(fetcher: &mut Fetcher, dem: &Asset, lat_s: f64, lat_n: f64, lo
             }
         }
     }
-    let elev: Vec<f32> = sum.iter().zip(cnt.iter()).map(|(s, c)| if *c > 0 { (*s / *c as f64) as f32 } else { f32::NAN }).collect();
+    let mut elev: Vec<f32> = sum.iter().zip(cnt.iter()).map(|(s, c)| if *c > 0 { (*s / *c as f64) as f32 } else { f32::NAN }).collect();
+    // a cell no pixel centre fell in (the tile's pixels are wider than the grid: GLO-30 is 1.5 arcsec
+    // in longitude from 50°N and coarser further north, found at Fort McMurray on 2026-11-04 as a
+    // missing column in every three) takes the nearest pixel at its own centre
+    let empty = cnt.iter().filter(|&&c| c == 0).count();
+    if empty > 0 {
+        let mut filled = 0usize;
+        for (_, p) in &paths {
+            let r = cog::read(p)?;
+            for i in 0..nx * ny {
+                if cnt[i] > 0 || elev[i].is_finite() { continue; }
+                let (orow, ocol) = (i / nx, i % nx);
+                let lat = lat_n - (orow as f64 + 0.5) * d; let lon = lon_w + (ocol as f64 + 0.5) * d;
+                let col = ((lon - r.x0) / r.dx).floor(); let row = ((r.y0 - lat) / r.dy).floor();
+                if col < 0.0 || row < 0.0 || col >= r.width as f64 || row >= r.height as f64 { continue; }
+                let v = r.get(col as usize, row as usize);
+                if !v.is_finite() || Some(v) == r.nodata { continue; }
+                elev[i] = v; filled += 1;
+            }
+        }
+        eprintln!("dem: {empty} of {} cells took no pixel centre; {filled} filled from the nearest pixel", nx * ny);
+    }
     write_f32s(&cache, &elev);
     Ok(DemWindow { nx, ny, dlon: d, dlat: d, lon_w, lat_n, elev, provenance })
 }

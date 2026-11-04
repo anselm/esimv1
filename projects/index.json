@@ -52,6 +52,102 @@
   },
   {
     "area": "anselm",
+    "by": "anselm",
+    "created": "2026-11-04",
+    "description": "Our own engine on the Fort McMurray fire: heat budget on 30 m cells, OpenStreetMap buildings, ERA5 wind at one point; scored against CWFIS satellite hotspots; unsuppressed; constants carried over from the Palisades.",
+    "kinds": [
+      "fire.cells",
+      "obs.hotspots"
+    ],
+    "name": "fortmcmurray-2016",
+    "path": "anselm/fortmcmurray-2016",
+    "runs": [
+      {
+        "all_ledgers_closed": true,
+        "digest": "62998eb1ce06a832",
+        "end": 1462579200,
+        "events": 311,
+        "id": "f4-fortmcmurray-cells-742b205e-62998eb1",
+        "name": "f4-fortmcmurray-cells",
+        "seed": 1,
+        "set": {
+          "fire.ignite_scale": "5"
+        },
+        "start": 1462140000,
+        "variant": "vector-5",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "c1063e452c66bd8e",
+        "end": 1462579200,
+        "events": 504,
+        "id": "f4-fortmcmurray-cells-8ae5c799-c1063e45",
+        "name": "f4-fortmcmurray-cells",
+        "seed": 1,
+        "set": {
+          "fire.ignite_scale": "8"
+        },
+        "start": 1462140000,
+        "variant": "vector-8",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "d7800bbc762c5734",
+        "end": 1462579200,
+        "events": 330,
+        "id": "f4-fortmcmurray-cells-b355b723-d7800bbc",
+        "name": "f4-fortmcmurray-cells",
+        "seed": 1,
+        "set": {
+          "fire.ignite_scale": "3"
+        },
+        "start": 1462140000,
+        "variant": "vector-3",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "62998eb1ce06a832",
+        "end": 1462579200,
+        "events": 311,
+        "id": "f4-fortmcmurray-cells-d50563e0-62998eb1",
+        "name": "f4-fortmcmurray-cells",
+        "seed": 1,
+        "set": null,
+        "start": 1462140000,
+        "variant": null,
+        "verdict": "holds"
+      }
+    ],
+    "title": "The Fort McMurray fire, May 2016",
+    "variant": [
+      {
+        "name": "vector-3",
+        "set": {
+          "fire.ignite_scale": 3
+        },
+        "title": "The vector form, thresholds times 3"
+      },
+      {
+        "name": "vector-5",
+        "set": {
+          "fire.ignite_scale": 5
+        },
+        "title": "The vector form, thresholds times 5: the Palisades' setting, unchanged"
+      },
+      {
+        "name": "vector-8",
+        "set": {
+          "fire.ignite_scale": 8
+        },
+        "title": "The vector form, thresholds times 8"
+      }
+    ]
+  },
+  {
+    "area": "anselm",
     "by": "anselm, via claude 2026-11-03",
     "cover": "cover.png",
     "cover_caption": "Where the model's unsuppressed fire had reached 27 hours after ignition, coloured by the hour it arrived (yellow first, red last), on the reanalysis wind; in white the first infrared perimeter the incident mapped at that hour (15,824 acres), in blue the final perimeter (23,448 acres). Land cover beneath: trees, shrub, grass, built-up, the sea. Drawn from the run's own frames, 2026-11-03.",

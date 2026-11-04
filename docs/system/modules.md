@@ -132,6 +132,14 @@ in doubt, split at the point where two different people would hold different opi
   rate factor with Rothermel's shape, wind and slope as vectors, Anderson's ellipse for the other
   directions, with `cooling = "idle"`), (`devlog/20261104-the-vector-form.md`). Both engines subscribe to `ground.break` and never
   read the record themselves.
+- `obs.hotspots` (`crates/modules/src/hotspots.rs`, 2026-11-04): satellite hotspots as the record of
+  a fire's progress, for fires nobody mapped hour by hour. Reads a CSV of detections (CWFIS's Fire M3
+  archive; NASA FIRMS has the same shape) under `data/events/`, marks the ground within each
+  detection's half-pixel as seen burning by then, and at a fixed cadence scores the fire module's
+  burned cells against it with the same measures as `obs.perimeters` (acres, Sørensen, missed,
+  overrun), so a README table reads either. The seen area is a floor on the burned area: cloud, smoke
+  and the gaps between passes. First used for Fort McMurray 2016. `fire.cells` can take its buildings
+  from OpenStreetMap (`buildings = "osm"`) where no county footprint service exists.
 - `fire.suppression` (`crates/modules/src/suppression.rs`, 2026-11-04): interventions as a module
   of their own, so the same fire engine runs another fire with another record or none. In `mode =
   "hold"` each completed line in the record (`record.event` of kind line, category Completed …,

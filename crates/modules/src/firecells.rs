@@ -16,7 +16,7 @@
 
 use esim_kernel::manifest::{param_duration, param_f64, param_str};
 use esim_kernel::{Ctx, Duration, Event, LatLonGrid, Module, Time};
-use esim_registry::wildfire::{building_footprints, cached_context, context, hrrr_hour, landcover_window, wind_hourly, HrrrHour, WindSeries};
+use esim_registry::wildfire::{building_footprints, cached_context, context, hrrr_hour, landcover_window, osm_buildings, wind_hourly, HrrrHour, WindSeries};
 use esim_registry::{dem_window, Catalog, Fetcher};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
@@ -37,6 +37,7 @@ pub struct Cells {
     wind: String,            // hrrr | era5
     wind_use: String,        // mean | gust
     wind_start: String, wind_end: String,
+    buildings: String,       // lariac | osm | none
     buildings_service: String, buildings_where: String, buildings_key: String,
     // the guesses
     reach_m: f64, lambda_m: f64, wind_gain: f64, slope_gain: f64, slope_rate_gain: f64, downslope_gain: f64,
@@ -120,6 +121,7 @@ impl Cells {
             ignition_lat: param_f64(p, "ignition_lat", 34.0723), ignition_lon: param_f64(p, "ignition_lon", -118.5451),
             wind: param_str(p, "wind", "hrrr").to_string(), wind_use: param_str(p, "wind_use", "mean").to_string(),
             wind_start: param_str(p, "wind_start", "2025-01-07T18:00:00Z").to_string(), wind_end: param_str(p, "wind_end", "2025-01-12T00:00:00Z").to_string(),
+            buildings: param_str(p, "buildings", "lariac").to_string(),
             buildings_service: param_str(p, "buildings_service", "https://services.arcgis.com/RmCCgQtiZLDCtblq/arcgis/rest/services/2025_WildFire_LARIAC_BUILDINGS_100M_Plus_DINS_MaxMin_DAMAGE_NEW/FeatureServer/0").to_string(),
             buildings_where: param_str(p, "buildings_where", "Incident_Name LIKE '%Palisades%'").to_string(),
             buildings_key: param_str(p, "buildings_key", "lacounty-lariac/2025-palisades").to_string(),
@@ -170,7 +172,12 @@ impl Cells {
         self.built_frac = vec![0.0; n]; self.built_height = vec![f32::NAN; n];
         let mut hsum = vec![0f32; n]; let mut hcnt = vec![0u16; n];
         let mut bodies_src: Option<Vec<esim_registry::wildfire::Building>> = None;
-        match building_footprints(&mut fe, &self.buildings_service, &self.buildings_key, &self.buildings_where) {
+        let fetched = match self.buildings.as_str() {
+            "osm" => osm_buildings(&mut fe, self.lat_s, self.lat_n, self.lon_w, self.lon_e),
+            "none" => Err("no building source asked for".to_string()),
+            _ => building_footprints(&mut fe, &self.buildings_service, &self.buildings_key, &self.buildings_where),
+        };
+        match fetched {
             Ok(bs) => {
                 for b in &bs {
                     // the footprint's bounding cells, then its area share by sub-sampling each cell 3x3
@@ -681,6 +688,7 @@ impl Cells {
             .param("ignition_time", "2025-01-07T18:30:00Z", "", "").param("ignition_lat", 34.0723, "deg", "").param("ignition_lon", -118.5451, "deg", "")
             .param("wind", "hrrr", "", "hrrr: NOAA's 3 km analysis, a field over the window each hour; era5: one 25 km point").param("wind_use", "mean", "", "mean or gust")
             .param("wind_start", "2025-01-07T18:00:00Z", "", "").param("wind_end", "2025-01-12T00:00:00Z", "", "")
+            .param("buildings", "lariac", "", "lariac: LA County's footprints with heights from the feature service below (the Palisades window); osm: OpenStreetMap buildings through Overpass for the window, heights from the height tag or building:levels times 3.2 m, else two storeys, a guess; none: built-up land from land cover alone")
             .param("buildings_service", "https://services.arcgis.com/RmCCgQtiZLDCtblq/arcgis/rest/services/2025_WildFire_LARIAC_BUILDINGS_100M_Plus_DINS_MaxMin_DAMAGE_NEW/FeatureServer/0", "", "").param("buildings_where", "Incident_Name LIKE '%Palisades%'", "", "").param("buildings_key", "lacounty-lariac/2025-palisades", "", "")
             .param("reach_m", 90.0, "m", "guess: how far a burning cell's heat is felt").param("lambda_m", 20.0, "m", "guess: e-folding distance of that heat in still air on the flat")
             .param("wind_gain", 0.15, "1/(m/s)", "guess: the reach grows by this per m/s of wind in the downwind direction").param("slope_gain", 1.5, "", "guess: the reach grows by this times tan(slope) uphill").param("slope_rate_gain", 0.0, "", "the heat a cell delivers uphill is multiplied by 1 + this times tan²(slope) and downhill divided by it; 0 leaves slope to the reach alone. Rothermel's slope factor has this shape with 5.275 β^-0.3 as the gain, about 20 for a shrub bed (recalled); the downhill half is a guess").param("downslope_gain", -1.0, "", "the gain on the downhill division; -1 means the same as slope_rate_gain")

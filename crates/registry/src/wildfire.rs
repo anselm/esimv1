@@ -4,6 +4,7 @@
 //! WFIGS final perimeter and the Operational Data Archive's daily perimeters), with a
 //! rasteriser so a run's burned area can be scored against them. All anonymous.
 
+use serde_json::json;
 use crate::catalog::Asset;
 use crate::cog;
 use crate::fetch::Fetcher;
@@ -290,7 +291,11 @@ fn context_key(lat_s: f64, lat_n: f64, lon_w: f64, lon_e: f64) -> String { forma
 /// Fetch (once; the lock keeps the raw answer's hash, the cache the reduced map) the
 /// roads, places and city limits inside a window.
 pub fn context(fetcher: &mut Fetcher, lat_s: f64, lat_n: f64, lon_w: f64, lon_e: f64) -> Result<serde_json::Value, String> {
-    let q = format!("[out:json][timeout:180];(way[\"highway\"~\"^(motorway|trunk|primary|secondary|tertiary)$\"]({lat_s},{lon_w},{lat_n},{lon_e});node[\"place\"~\"^(city|town|suburb|neighbourhood|village|quarter)$\"]({lat_s},{lon_w},{lat_n},{lon_e});relation[\"boundary\"=\"administrative\"][\"admin_level\"=\"8\"]({lat_s},{lon_w},{lat_n},{lon_e}););out geom;");
+    // the city limits (admin_level 8 relations with their geometry) only for a small window: over a
+    // large one the relation is a whole rural municipality (Wood Buffalo around Fort McMurray is
+    // 63,000 km²) and Overpass answers 504 for an hour (2026-11-04)
+    let bounds = if (lat_n - lat_s) * (lon_e - lon_w) < 0.1 { format!("relation[\"boundary\"=\"administrative\"][\"admin_level\"=\"8\"]({lat_s},{lon_w},{lat_n},{lon_e});") } else { String::new() };
+    let q = format!("[out:json][timeout:180];(way[\"highway\"~\"^(motorway|trunk|primary|secondary|tertiary)$\"]({lat_s},{lon_w},{lat_n},{lon_e});node[\"place\"~\"^(city|town|suburb|neighbourhood|village|quarter)$\"]({lat_s},{lon_w},{lat_n},{lon_e});{bounds});out geom;");
     // overpass-api.de answered 406 and then 502 (at capacity) on 2026-11-03; the kumi mirror answered in four minutes
     let bbox = (lat_s, lat_n, lon_w, lon_e);
     let key = context_key(lat_s, lat_n, lon_w, lon_e);
@@ -303,6 +308,48 @@ pub fn context(fetcher: &mut Fetcher, lat_s: f64, lat_n: f64, lon_w: f64, lon_e:
     let path = path.ok_or(last)?;
     let text = std::fs::read_to_string(&path).map_err(|e| e.to_string())?;
     serde_json::from_str(&text).map_err(|e| format!("context cache: {e}"))
+}
+
+/// Every OpenStreetMap building in a window, through Overpass, with a height in feet (so the
+/// engine and the viewer treat it as they treat the county's footprints, whose unit is feet):
+/// the `height` tag in metres when present, else `building:levels` times 3.2 m, else two storeys
+/// (6.4 m), a declared guess. No damage field: OSM does not record the fire's outcome.
+pub fn osm_buildings(fetcher: &mut Fetcher, lat_s: f64, lat_n: f64, lon_w: f64, lon_e: f64) -> Result<Vec<Building>, String> {
+    let q = format!("[out:json][timeout:180];(way[\"building\"]({lat_s},{lon_w},{lat_n},{lon_e}););out geom;");
+    let key = format!("osm-overpass/buildings_{lat_s}_{lat_n}_{lon_w}_{lon_e}.json");
+    let mut last = String::new();
+    let mut path = None;
+    for host in ["https://overpass.kumi.systems/api/interpreter", "https://overpass-api.de/api/interpreter"] {
+        let url = format!("{host}?data={}", enc(&q));
+        match fetcher.fetch_reduced(&key, &url, &|raw| reduce_buildings(raw)) { Ok(p) => { path = Some(p); break; } Err(e) => { last = e; } }
+    }
+    let path = path.ok_or(last)?;
+    let text = std::fs::read_to_string(&path).map_err(|e| e.to_string())?;
+    let v: serde_json::Value = serde_json::from_str(&text).map_err(|e| format!("osm buildings cache: {e}"))?;
+    let mut out = Vec::new();
+    for b in v.as_array().cloned().unwrap_or_default() {
+        let ring: Vec<(f64, f64)> = b["ring"].as_array().cloned().unwrap_or_default().iter().filter_map(|p| Some((p.get(0)?.as_f64()?, p.get(1)?.as_f64()?))).collect();
+        if ring.len() < 3 { continue; }
+        out.push(Building { ring, height: b["height_ft"].as_f64().unwrap_or(f64::NAN), damage: String::new() });
+    }
+    Ok(out)
+}
+fn reduce_buildings(raw: &[u8]) -> Result<Vec<u8>, String> {
+    let v: serde_json::Value = serde_json::from_slice(raw).map_err(|e| format!("overpass json: {e}"))?;
+    if let Some(r) = v.get("remark") { if r.as_str().map(|s| s.contains("error")).unwrap_or(false) { return Err(format!("overpass: {r}")); } }
+    let num = |s: &str| -> Option<f64> { s.trim().split(|c: char| !(c.is_ascii_digit() || c == '.')).next().and_then(|x| x.parse::<f64>().ok()) };
+    let mut out = Vec::new();
+    for e in v["elements"].as_array().cloned().unwrap_or_default() {
+        if e["type"] != "way" { continue; }
+        let ring: Vec<serde_json::Value> = e["geometry"].as_array().cloned().unwrap_or_default().iter().filter_map(|g| Some(json!([g["lon"].as_f64()?, g["lat"].as_f64()?]))).collect();
+        if ring.len() < 3 { continue; }
+        let tags = &e["tags"];
+        let metres = tags["height"].as_str().and_then(num)
+            .or_else(|| tags["building:levels"].as_str().and_then(num).map(|l| l * 3.2))
+            .unwrap_or(6.4);
+        out.push(json!({ "ring": ring, "height_ft": metres / 0.3048, "levels": tags["building:levels"].as_str(), "kind": tags["building"].as_str() }));
+    }
+    serde_json::to_vec(&out).map_err(|e| e.to_string())
 }
 
 /// The cached context for a window, never fetching (for a describe).

@@ -72,11 +72,23 @@ sha256 = "fd13c2041ea3a133effeb9cdff3d02c8baf668d8e9dab24cb441840156fa190e"
 bytes = 39189738
 fetched = "2026-11-01"
 
+[files."copernicus-dem-glo30/N56_W112.tif"]
+url = "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N56_00_W112_00_DEM/Copernicus_DSM_COG_10_N56_00_W112_00_DEM.tif"
+sha256 = "7ab2fa7d1c30b1ab46105944b267bfcb4b3aaccc053454e84c1f5cafab45643d"
+bytes = 26941660
+fetched = "2026-11-04"
+
 [files."esa-worldcover-2021/N33W120.tif"]
 url = "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N33W120_Map.tif"
 sha256 = "61e0909a51e2e76a6f153599316753370be937d0ce150261d023006a80613385"
 bytes = 101202142
 fetched = "2026-11-03"
+
+[files."esa-worldcover-2021/N54W114.tif"]
+url = "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N54W114_Map.tif"
+sha256 = "b02113058cd9ef4cc2d18251f12f1771c70492c812b33c79f3ec2c5761acf893"
+bytes = 73716468
+fetched = "2026-11-04"
 
 [files."ghcn-daily/USC00138806.csv"]
 url = "https://noaa-ghcn-pds.s3.amazonaws.com/csv/by_station/USC00138806.csv"
@@ -13290,6 +13302,12 @@ sha256 = "3c822295af91f990533ed8daf2d12117d420a45f8c82d41f43b8f03290cb3658"
 bytes = 9092
 fetched = "2026-11-03"
 
+[files."open-meteo-era5-wind/56.7_-111.45_2016-05-01_2016-05-07.json"]
+url = "https://archive-api.open-meteo.com/v1/archive?latitude=56.7&longitude=-111.45&start_date=2016-05-01&end_date=2016-05-07&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m&models=era5&timezone=UTC&wind_speed_unit=ms"
+sha256 = "846aef70833d0ce0259596bb50bc7a790d1c10e27650c370924ed044e84e1d32"
+bytes = 7321
+fetched = "2026-11-04"
+
 [files."open-meteo-era5/42.3_43.2_-94.2_-93.5_0.25deg_2013-01-01_2013-12-31.json"]
 url = "https://archive-api.open-meteo.com/v1/archive?latitude=42.375,42.375,42.375,42.625,42.625,42.625,42.875,42.875,42.875,43.125,43.125,43.125&longitude=-94.125,-93.875,-93.625,-94.125,-93.875,-93.625,-94.125,-93.875,-93.625,-94.125,-93.875,-93.625&start_date=2013-01-01&end_date=2013-12-31&hourly=temperature_2m,precipitation,shortwave_radiation,relative_humidity_2m,wind_speed_10m&models=era5&timezone=UTC&wind_speed_unit=ms"
 sha256 = "2c376e99b5672ce1d28437c87c6489427faef7e8806b99bd6413cb2bfe758f90"
@@ -13566,11 +13584,23 @@ sha256 = "0201a5a1ccb4461ef213d914d24f05f66d0f5aff93145cd8b921f1d83e0dc83d"
 bytes = 4361540
 fetched = "2026-11-01"
 
+[files."osm-overpass/buildings_56.55_56.85_-111.75_-111.15.json"]
+url = "https://overpass.kumi.systems/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A180%5D%3B%28way%5B%22building%22%5D%2856.55%2C-111.75%2C56.85%2C-111.15%29%3B%29%3Bout%20geom%3B"
+sha256 = "f3fb2b78c78b807aa087af972249fd682f21627f85901157e74ad0098ec71234"
+bytes = 13866403
+fetched = "2026-11-04"
+
 [files."osm-overpass/context_34_34.16_-118.72_-118.46.json"]
 url = "https://overpass.kumi.systems/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A180%5D%3B%28way%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%29%24%22%5D%2834%2C-118.72%2C34.16%2C-118.46%29%3Bnode%5B%22place%22~%22%5E%28city%7Ctown%7Csuburb%7Cneighbourhood%7Cvillage%7Cquarter%29%24%22%5D%2834%2C-118.72%2C34.16%2C-118.46%29%3Brelation%5B%22boundary%22%3D%22administrative%22%5D%5B%22admin_level%22%3D%228%22%5D%2834%2C-118.72%2C34.16%2C-118.46%29%3B%29%3Bout%20geom%3B"
 sha256 = "7620f8dac57b0c576128e5e3748e8599efad051e75a2b58a73fd6e9e2dbf1bbc"
 bytes = 3567130
 fetched = "2026-11-03"
+
+[files."osm-overpass/context_56.55_56.85_-111.75_-111.15.json"]
+url = "https://overpass.kumi.systems/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A180%5D%3B%28way%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%29%24%22%5D%2856.55%2C-111.75%2C56.85%2C-111.15%29%3Bnode%5B%22place%22~%22%5E%28city%7Ctown%7Csuburb%7Cneighbourhood%7Cvillage%7Cquarter%29%24%22%5D%2856.55%2C-111.75%2C56.85%2C-111.15%29%3B%29%3Bout%20geom%3B"
+sha256 = "c7f047f600e5b672571f7950e45826f5b368909e785f03185c7c911ce71e6c35"
+bytes = 472992
+fetched = "2026-11-04"
 
 [files."owid/owid-co2-data.csv"]
 url = "https://raw.githubusercontent.com/owid/co2-data/master/owid-co2-data.csv"

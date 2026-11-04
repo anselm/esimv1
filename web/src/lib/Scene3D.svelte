@@ -30,7 +30,10 @@
   const tf = $derived(run.fields?.[terrain])
   const bf = $derived(run.fields?.[buildings])
   const ff = $derived(run.fields?.[fire])
-  const pf = $derived(run.fields?.[perimeter])
+  // the record's burned ground: the mapped perimeter when the run has one, else the satellite hotspots
+  const recordField = $derived(run.fields?.[perimeter] ? perimeter : 'obs_hotspots')
+  const pf = $derived(run.fields?.[recordField])
+  const recordName = $derived(run.fields?.[perimeter] ? 'the mapped perimeter' : 'the ground seen burning from orbit')
   // the vertical is stretched this many times, ground and buildings alike, so the canyons read
   const ZS = 2
   // the wind at the cursor, from the fire module's own series
@@ -106,7 +109,7 @@
     const i = perimIdx
     if (i < 0) { perim = null; return }
     let live = true
-    frame(perimeter, i).then((f) => { if (live) perim = { f, grid: pf.grid, i } }).catch(() => {})
+    frame(recordField, i).then((f) => { if (live) perim = { f, grid: pf.grid, i } }).catch(() => {})
     return () => { live = false }
   })
 
@@ -487,7 +490,7 @@
       {/if}
       <span>labels carry the event's time in UTC; the record's times are when the GIS feature was made, which lags the work</span>
     {/if}
-    {#if pf}<span><span class="inline-block h-2 w-2 rounded-full align-middle bg-neutral-900 dark:bg-neutral-100" aria-hidden="true"></span> the mapped perimeter current at this time, as dots along its edge</span>{/if}
+    {#if pf}<span><span class="inline-block h-2 w-2 rounded-full align-middle bg-neutral-900 dark:bg-neutral-100" aria-hidden="true"></span> {recordName} by this time, as dots along its edge</span>{/if}
     {#if wind && Number.isFinite(wind.spd)}<span><span class="inline-block h-0.5 w-3 align-middle" style="background:#129a9a" aria-hidden="true"></span> the wind at the ignition point: the arrow at the north-west corner points the way it blows, 250 m per m/s</span>{/if}
     <span>the sky and the light follow the sun over the window at the cursor; the vertical is stretched twice, ground and buildings alike; building heights as the county states them, taken as feet</span>
   </div>

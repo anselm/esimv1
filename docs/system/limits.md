@@ -151,6 +151,15 @@ holds the history.
   no engines at houses, no retardant. The candidates are the wind over the mountains on the second day and the
   suppression the record does not place. The HRRR 3 km wind it uses reads 10 m/s with 21 m/s gusts at the ignition point in
   the first hour (checked against GDAL); the reanalysis read 7 and 13.
+- Fort McMurray 2016 (the second fire, `anselm/fortmcmurray-2016`, 2026-11-04): the engine ports,
+  with OpenStreetMap buildings, the ERA5 point wind and satellite hotspots as the record, and at
+  thresholds times eight its pace matches the ground seen from orbit from the third day; the Palisades'
+  setting burns two to three times that. The shape is wrong at every hour (overlap a third to two
+  fifths): the reanalysis reads 2 to 5 m/s where the record has gusts to 72 km/h, the model spreads as
+  a disc and never enters the city the fire burned on 3 May. The ignition hour is recalled; the fuel
+  is one "tree" kind for a spruce forest; the hotspot area is a floor, not a perimeter. Above 50°N the
+  elevation model's pixels are 1.5 arcsec wide; until this afternoon the sampler left one cell in three
+  empty there (`terrain-v4` fills them from the nearest pixel).
 - The 3D view takes building heights as feet because the county's service does not state a
   unit.
 - Built-up land carries fire at a guessed rate; nothing about structures is physical.
