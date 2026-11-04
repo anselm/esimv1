@@ -82,6 +82,41 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
   records (GSOD) for the Yangtze and North China plains, and the Indus plain's absence
   explained by the pattern or the baseline, one or the other.
 
+## Anselm's asks on the fire, 2026-11-03, as a list (his words in quotes; status after the dash)
+
+1. "Volumetric air ... convection, terrain adjusted wind, indrafts, full coupling ... I don't care how
+   long it takes to compute ... if we need fast assessments we can have modes." — not started. Order
+   decided in `devlog/20261103-beyond-rothermel.md`: terrain-following wind first (one-way), a local
+   indraft second, a dense 3D solver last; modes by manifest.
+2. "The fire spread in an almost linear fashion ... like a drop of water ... not believable." — the
+   phantom cliffs are fixed; the drop shape remains because the wind is flat and fuel is a cover
+   class. Falls out of 1 and 3.
+3. "Much finer granularity on different kinds of ignitable/flammable fuel sources ... the cellular
+   resolution is far too low ... individual trees." — not started. Plan: 10 m cells with load, canopy
+   height, time since burn and seasonal live moisture; trees as individuals only when canopy data
+   earns it.
+4. "Interventions - there may be calfire logs of actual intervention points." — the record is in
+   hand (`data/events/palisades-2025/`: CAL FIRE's resources by report, NIFC's 2,334 lines and 825
+   points, UL's radio log); no module reads it yet.
+5. "More clearly indicate when actual buildings themselves are likely burned - right now they stay
+   one color." — in progress (2026-11-03 evening): structures as bodies in `fire.cells`, each
+   footprint with its own ignition and burn, coloured in the 3D view by the model's state and the
+   inspectors' recorded fate, with the disagreements shown.
+6. "Our model should diverge from the rothermal model." — agreed; Rothermel stays as the baseline
+   module, the work goes into `fire.cells`.
+7. "Real predictive assessments of the shelter individual plots of land may have ... for insurance
+   purposes, for home buyers." — the per-structure score from 5, then its distribution over an
+   ensemble of winds; not started beyond 5.
+8. "We can tune over any fire we wish ... the fire that inspired the book Fire Weather." — Fort
+   McMurray 2016 is the second fire; Eaton is the held-out test; nothing fetched for either yet.
+9. "Copy anything useful we find into this project for our own reference ... the documentation
+   should reflect this as well - our sources - our more aggressive model." — done for today's finds
+   (`data/events/palisades-2025/README.md`, `docs/system/data.md`, `docs/system/modules.md`,
+   `docs/system/sources.md`); every new source goes the same way.
+10. Earlier the same day, still open: the Rothermel fuel table checked against Scott and Burgan; the
+    first day scored against something better than a hand-drawn triangle (the UL hourly maps, CAL
+    FIRE's reported acreage); the held-low variant on the Earth 2100 compare page.
+
 ## The fire (Anselm, 2026-11-03; `devlog/20261103-the-front-door-and-the-fire.md`, `devlog/20261103-our-own-engine.md`)
 
 - Terrain-adjusted wind, one-way: the 3 km HRRR field shaped by the DEM so the Santa Ana
