@@ -143,7 +143,7 @@ read; a frame is a field snapshot written for maps.
 
 **Event and topic.** A message at an instant, broadcast on a topic or sent to a named
 instance, optionally about one grid cell. Topics and field names are the vocabulary; see
-[Vocabulary](?doc=system/vocabulary).
+[Vocabulary](/docs/system/vocabulary).
 
 **Registry and catalog.** The registry fetches and reads records; the catalog is its index
 of sources with licence, verification date and notes; the lock file holds the hash of

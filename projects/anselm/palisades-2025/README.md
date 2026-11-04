@@ -7,7 +7,54 @@ incident record). This project runs that fire again on the real terrain, with th
 cover and the hour's wind from a weather reanalysis, lit where and when the record says,
 with nobody fighting it. Then it holds the result against the perimeters the incident's
 own mapping teams drew as the fire grew. Every number on this page is read from the runs
-below it; the prose was written on 2026-11-03 and the runs may have changed since.
+above it; the prose was written on 2026-11-03 and revised on the 4th, and the runs may have
+changed since.
+
+## The fire
+
+The record we hold is copied into the project's event folder, publisher by publisher, and
+this is what it says. On New Year's Day a small fire, the Lachman fire, burned on the same
+ridge and was declared out; crews reported smouldering ground and hot roots on 2 January and
+left. Six days later, in the strongest Santa Ana wind the basin had seen in years, the fire
+came back from that ground. UL's Fire Safety Research Institute, which reconstructed the day
+from dispatch and radio logs for the state, puts the weather at ignition at 47 miles an hour
+sustained with gusts to 64 at the Malibu Hills station, and the first hour like this: at
+10:33 the fire was backing into Temescal Canyon; by 10:49 it was below the old burn scar and
+pushing toward Palisades Drive; by 11:25 it had crossed the road; houses on Lachman Lane were
+burning from 11:27; and within the first hour it had run over a mile south toward the ocean.
+
+CAL FIRE's status reports give the growth as it was reported: 10 acres at 11:06, 200 at 11:31,
+1,262 at 15:34, 2,921 just after midnight, 11,802 at 11:45 the next morning and 15,832 at 13:20
+on 8 January, all local time. The incident's own maps are sparser. The first is a triangle drawn
+by hand at 06:00 UTC on the 8th with 2,920 acres typed in; the first infrared perimeter is from
+the following evening, 27 hours after ignition, at 15,824 acres; the fire was mapped at 19,629
+acres a day later and 23,343 on the night of the 11th, and the final perimeter is 23,448. The
+first night, when the fire went from the ridge to the sea and through the Palisades house by
+house, has no map at all. The reconstructions of that night (UL's hourly figures) are pictures
+in a report, not yet georeferenced here.
+
+What people did is in the record too, with its limits. The incident's GIS archive holds 2,334
+lines (554 kilometres of completed dozer line, 130 of hand line, 94 of road used as line) and
+825 points (dozer pushes, drop points, helispots, division breaks, the command post at Will
+Rogers), and every one carries the time the GIS feature was made rather than the time the work
+was done; the first completed line is dated 19:40 UTC on 9 January, two days in. CAL FIRE's
+reports count the resources: 149 engines, 4 dozers, 7 helicopters and 836 people on the
+afternoon of the 8th, 476 engines, 48 dozers, 44 helicopters and 4,471 people by the 17th.
+Reporting after the fire, as summarised to the author and not read here (the Los Angeles Times
+of 13 January 2025, the state's analysis as covered by LAist, the Los Angeles Fire Department's
+after-action review of October 2025), has the first day as a day on which nothing worked: the
+aircraft grounded by the wind, the fuel breaks overrun, the crews turned from containment to
+evacuation, and forty engines standing in repair yards. The second day, when the wind eased and
+the record grew by only 3,800 acres, is the day the suppression record would have to explain,
+and it is the day both models here get wrong.
+
+Two projects run this fire. This one uses the 1972 spread formula every American fire
+behaviour tool rests on, on a coarse reanalysis wind, as the baseline. The project beside it
+([The Palisades fire, cell by cell](/anselm/palisades-cells)) is an engine of our own on the
+same ground under NOAA's 3 km wind, with the buildings as bodies, the record's points and lines
+drawn on the three-dimensional view at their times, and a first day that now matches the
+infrared perimeter in pace and shape. The Eaton fire, which started the same evening across the
+basin, is held back as the test for whatever is fitted here.
 
 ## What is in the runs
 
@@ -83,4 +130,4 @@ The arrival-time map on each run page shows where the model's fire went first.
 Spotting (embers carried ahead of the front), crown fire, the fire's own weather, the
 structures as fuel in any physical sense, evacuation, and the people. All of them are
 on the list; none of them is modelled. The runs beneath carry every number's source, and
-[Limits today](?doc=system/limits) says what is known to be wrong.
+[Limits today](/docs/system/limits) says what is known to be wrong.

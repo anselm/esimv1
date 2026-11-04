@@ -74,7 +74,7 @@ the system's job is not to pick the winner but to make the choice checkable: eve
 says what it reads, what it owns, where its numbers come from and what it leaves out;
 every run can be scored against the record; two manifests that differ in one module can
 be run side by side under one cursor. Provenance and scoreboards are how a pool like
-this stays honest without a gatekeeper. See [Evolution](?doc=system/evolution).
+this stays honest without a gatekeeper. See [Evolution](/docs/system/evolution).
 
 ## Views: how a module asks to be shown
 
@@ -111,7 +111,7 @@ in doubt, split at the point where two different people would hold different opi
 ## Where modules live today
 
 `crates/modules/src/`, one file per layer or per place, registered in a table of kinds.
-[Adding a module](?doc=system/adding-a-module) is the recipe.
+[Adding a module](/docs/system/adding-a-module) is the recipe.
 - `fire.rothermel` and `obs.perimeters` (`crates/modules/src/wildfire.rs`, 2026-11-03): a
   wildfire hindcast on a one-arc-second window, Rothermel's spread with fuel from
   WorldCover land cover and the hour's wind from the ERA5 archive, scored against the

@@ -7,8 +7,9 @@
   import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
   import { FIRE } from './ramp.js'
   import { isoTime } from './fmt.js'
+  import { seriesAt } from './runs.js'
 
-  let { run, base, cursor = null, terrain = 'terrain_elev_m', buildings = 'building_height', fire = 'fire_arrival_h', arrival = 'building_arrival_h', fate = 'building_fate', context = null } = $props()
+  let { run, base, cursor = null, terrain = 'terrain_elev_m', buildings = 'building_height', fire = 'fire_arrival_h', arrival = 'building_arrival_h', fate = 'building_fate', perimeter = 'obs_perimeter', context = null } = $props()
 
   // the bodies, when the run has them: each building's own arrival hour (the last frame holds them
   // all) and the inspectors' word; the ignition instant is read off the first fire frame
@@ -29,6 +30,18 @@
   const tf = $derived(run.fields?.[terrain])
   const bf = $derived(run.fields?.[buildings])
   const ff = $derived(run.fields?.[fire])
+  const pf = $derived(run.fields?.[perimeter])
+  // the vertical is stretched this many times, ground and buildings alike, so the canyons read
+  const ZS = 2
+  // the wind at the cursor, from the fire module's own series
+  const wind = $derived(cursor !== null ? { spd: seriesAt(run, 'fire.wind_m_s', cursor), from: seriesAt(run, 'fire.wind_from_deg', cursor) } : null)
+  // local clock time from the window's longitude (whole hours; the solar zone, not the legal one)
+  const utcOff = $derived(tf ? Math.round((tf.grid.lon_w + (tf.grid.nx * tf.grid.dlon) / 2) / 15) : 0)
+  const localTime = $derived.by(() => {
+    if (cursor === null) return ''
+    const d = new Date((cursor + utcOff * 3600) * 1000)
+    return `${String(d.getUTCHours()).padStart(2, '0')}:${String(d.getUTCMinutes()).padStart(2, '0')} local (UTC${utcOff >= 0 ? '+' : '−'}${Math.abs(utcOff)}, from the longitude)`
+  })
 
   // the run's placed events, read from its log: the record's (obs.record: what people did, where
   // and when) and the fire's own ignition and spot fires. Each is drawn where it happened, pulses
@@ -77,6 +90,26 @@
     return () => { live = false }
   })
 
+  // the mapped perimeter current at the cursor, as the outline of its rasterised cells; keyed on
+  // the frame index, as the fire frame is, so a moving cursor does not cancel the fetch
+  let perim = $state(null)       // { f: Float32Array, grid }
+  let perimIdx = $state(-1)
+  $effect(() => {
+    if (!pf || cursor === null) { perimIdx = -1; return }
+    const times = pf.times ?? []
+    let i = -1
+    while (i + 1 < times.length && times[i + 1] <= cursor) i++
+    perimIdx = i
+  })
+  $effect(() => {
+    if (!pf) return
+    const i = perimIdx
+    if (i < 0) { perim = null; return }
+    let live = true
+    frame(perimeter, i).then((f) => { if (live) perim = { f, grid: pf.grid, i } }).catch(() => {})
+    return () => { live = false }
+  })
+
   $effect(() => {
     if (!af || !faf || !ff) return
     let live = true
@@ -92,7 +125,7 @@
   })
 
   // the scene, built once from the terrain and building frames
-  let scene, camera, renderer, controls, terrainMesh, terrainColors, boxMesh, boxColors, dims
+  let scene, camera, renderer, controls, terrainMesh, terrainColors, boxMesh, boxColors, dims, hemi, sun, arrow, outline
   let ready = $state(false)
   let labelEl = $state()
   const fireRgb = FIRE.map((h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16) / 255))
@@ -129,7 +162,7 @@
         let zmin = Infinity, zmax = -Infinity
         for (let k = 0; k < elev.length; k++) { const z = elev[k]; if (Number.isFinite(z)) { if (z < zmin) zmin = z; if (z > zmax) zmax = z } }
         dims.zmin = zmin
-        for (let r = 0; r < ny; r++) for (let c = 0; c < nx; c++) { const k = r * nx + c; const z = elev[k]; pos.setZ(k, Number.isFinite(z) ? z - zmin : 0) }
+        for (let r = 0; r < ny; r++) for (let c = 0; c < nx; c++) { const k = r * nx + c; const z = elev[k]; pos.setZ(k, Number.isFinite(z) ? (z - zmin) * ZS : 0) }
         geom.computeVertexNormals()
         terrainColors = new Float32Array(nx * ny * 3)
         geom.setAttribute('color', new THREE.BufferAttribute(terrainColors, 3))
@@ -150,19 +183,22 @@
           boxColors = new Float32Array(cells.length * 3)
           const m = new THREE.Matrix4()
           cells.forEach(([r, c, h], i) => {
-            const z0 = Number.isFinite(elev[r * nx + c]) ? elev[r * nx + c] - zmin : 0
-            m.makeScale(1, Math.max(2, h), 1); m.setPosition((c + 0.5) * dx - dims.w / 2, z0, (r + 0.5) * dy - dims.h / 2)
+            const z0 = Number.isFinite(elev[r * nx + c]) ? (elev[r * nx + c] - zmin) * ZS : 0
+            m.makeScale(1, Math.max(2, h) * ZS, 1); m.setPosition((c + 0.5) * dx - dims.w / 2, z0, (r + 0.5) * dy - dims.h / 2)
             boxMesh.setMatrixAt(i, m)
           })
           boxMesh.userData.cells = cells
           boxMesh.instanceColor = new THREE.InstancedBufferAttribute(boxColors, 3)
           scene.add(boxMesh)
         }
-        scene.add(new THREE.HemisphereLight(0xffffff, 0x404040, dark ? 0.9 : 1.1))
-        const sun = new THREE.DirectionalLight(0xffffff, dark ? 0.8 : 1.0); sun.position.set(-dims.w, 3 * (zmax - zmin) + 2000, dims.h); scene.add(sun)
-        camera.position.set(0, (zmax - zmin) + dims.h * 0.9, dims.h * 1.1)
+        hemi = new THREE.HemisphereLight(0xffffff, 0x404040, 1.0); scene.add(hemi)
+        sun = new THREE.DirectionalLight(0xffffff, 1.0); sun.position.set(-dims.w, 3 * (zmax - zmin) * ZS + 2000, dims.h); scene.add(sun)
+        dims.ztop = (zmax - zmin) * ZS
+        arrow = new THREE.ArrowHelper(new THREE.Vector3(0, 0, 1), new THREE.Vector3(-dims.w / 2 + 1500, dims.ztop + 900, -dims.h / 2 + 1500), 1, 0x129a9a, 500, 320); arrow.visible = false; scene.add(arrow)
+        camera.position.set(0, (zmax - zmin) * ZS + dims.h * 0.9, dims.h * 1.1)
         controls.target.set(0, 0, 0)
         paint()
+        sky()
         status = ''
         ready = true
         const loop = (now) => { if (disposed) return; controls.update(); animateMarks(now); renderer.render(scene, camera); requestAnimationFrame(loop) }
@@ -186,13 +222,13 @@
     const cf = (lon - g.lon_w) / g.dlon, rf = (g.lat_n - lat) / g.dlat
     const c = Math.min(nx - 1, Math.max(0, Math.floor(cf))), r = Math.min(ny - 1, Math.max(0, Math.floor(rf)))
     const z = elev[r * nx + c]
-    return [cf * dx - w / 2, (Number.isFinite(z) ? z - zmin : 0) + lift, rf * dy - h / 2]
+    return [cf * dx - w / 2, (Number.isFinite(z) ? (z - zmin) * ZS : 0) + lift, rf * dy - h / 2]
   }
   function worldCell(cell, lift = 3) {
     const { dx, dy, w, h, nx, elev, zmin } = dims
     const c = cell % nx, r = Math.floor(cell / nx)
     const z = elev[cell]
-    return [(c + 0.5) * dx - w / 2, (Number.isFinite(z) ? z - zmin : 0) + lift, (r + 0.5) * dy - h / 2]
+    return [(c + 0.5) * dx - w / 2, (Number.isFinite(z) ? (z - zmin) * ZS : 0) + lift, (r + 0.5) * dy - h / 2]
   }
   function buildMarks() {
     if (marks) { scene.remove(marks.ring); for (const l of marks.lines) scene.remove(l.obj); marks = null }
@@ -300,10 +336,13 @@
     const ffg = ff?.grid
     const dark = matchMedia('(prefers-color-scheme: dark)').matches
     const ground = dark ? [0.22, 0.24, 0.22] : [0.80, 0.80, 0.76]
+    const sea = dark ? [0.10, 0.16, 0.26] : [0.62, 0.72, 0.84]
     for (let r = 0; r < ny; r++) for (let c = 0; c < nx; c++) {
       const k = r * nx + c
       let col = ground
-      if (hours && ffg) {
+      const z = dims.elev[k]
+      if (!Number.isFinite(z) || z <= 0.1) col = sea
+      else if (hours && ffg) {
         // the fire frame is coarser: sample it by position
         const fr = Math.min(ffg.ny - 1, Math.floor((r * ny / ny) * (ffg.ny / ny))), fc = Math.min(ffg.nx - 1, Math.floor(c * (ffg.nx / nx)))
         const h = hours[fr * ffg.nx + fc]
@@ -337,13 +376,86 @@
     }
   }
   $effect(() => { hours; bodyHours; bodyFate; cursorH; paint() })
+
+  // ---- the sky: the sun's place over the window at the cursor sets the light and the backdrop.
+  // Low-precision solar position (the Astronomical Almanac's, recalled; good to a fraction of a degree).
+  function sunAt(lat, lon, t) {
+    const d = t / 86400 - 10957.5
+    const rad = Math.PI / 180
+    const L = (280.460 + 0.9856474 * d) % 360, g = (357.528 + 0.9856003 * d) * rad
+    const lam = (L + 1.915 * Math.sin(g) + 0.020 * Math.sin(2 * g)) * rad
+    const eps = (23.439 - 0.0000004 * d) * rad
+    const ra = Math.atan2(Math.cos(eps) * Math.sin(lam), Math.cos(lam)), dec = Math.asin(Math.sin(eps) * Math.sin(lam))
+    const gmst = (18.697374558 + 24.06570982441908 * d) % 24
+    const H = (gmst * 15 + lon) * rad - ra
+    const la = lat * rad
+    const east = -Math.cos(dec) * Math.sin(H)
+    const north = Math.sin(dec) * Math.cos(la) - Math.cos(dec) * Math.cos(H) * Math.sin(la)
+    const up = Math.sin(dec) * Math.sin(la) + Math.cos(dec) * Math.cos(H) * Math.cos(la)
+    return { east, north, up, elev: Math.asin(up) / rad }
+  }
+  const mix = (a, b, t) => a.map((x, i) => x + (b[i] - x) * t)
+  const smooth = (x) => { const t = Math.min(1, Math.max(0, x)); return t * t * (3 - 2 * t) }
+  let sunElev = $state(null)
+  let dayness = 1              // 0 at night, 1 in daylight; the perimeter dots pick their colour by it
+  function sky() {
+    if (!scene || !dims || cursor === null) return
+    const g = dims.g
+    const lat = g.lat_n - (dims.ny * g.dlat) / 2, lon = g.lon_w + (dims.nx * g.dlon) / 2
+    const sp = sunAt(lat, lon, cursor)
+    sunElev = sp.elev
+    const dark = matchMedia('(prefers-color-scheme: dark)').matches
+    dayness = smooth((sp.elev + 6) / 16)                // 0 below −6°, 1 above 10°
+    const dusk = 1 - Math.min(1, Math.abs(sp.elev) / 8)  // warm band around the horizon
+    const dayCol = dark ? [0.29, 0.35, 0.42] : [0.78, 0.86, 0.94], nightCol = [0.025, 0.03, 0.055], duskCol = [0.78, 0.52, 0.32]
+    let c = mix(nightCol, dayCol, dayness); c = mix(c, duskCol, dusk * 0.3)
+    scene.background = new THREE.Color(c[0], c[1], c[2])
+    // the sun lights the ground from where it stands; below the horizon only the sky's glow is left
+    sun.intensity = 1.2 * Math.max(0, sp.up)
+    sun.position.set(sp.east, Math.max(0.05, sp.up), -sp.north).multiplyScalar(50_000)
+    hemi.intensity = 0.3 + 0.8 * dayness
+    hemi.color.setRGB(c[0] * 0.6 + 0.4, c[1] * 0.6 + 0.4, c[2] * 0.6 + 0.45)
+    // the wind arrow: pointing the way the wind blows, long in proportion to its speed
+    if (arrow && wind && Number.isFinite(wind.spd) && Number.isFinite(wind.from)) {
+      const to = (wind.from + 180) * Math.PI / 180
+      arrow.setDirection(new THREE.Vector3(Math.sin(to), 0, -Math.cos(to)).normalize())
+      const len = Math.max(400, 250 * wind.spd); arrow.setLength(len, Math.min(500, len * 0.45), Math.min(320, len * 0.3))
+      arrow.visible = true
+    } else if (arrow) arrow.visible = false
+    if (outline) outline.material.color.set(dayness > 0.5 ? 0x111111 : 0xf2f2f2)
+  }
+  $effect(() => { cursor; wind; if (ready) sky() })
+
+  // ---- the mapped perimeter: the outline of the cells the record says were burned at the cursor
+  function drawOutline() {
+    if (!scene || !dims) return
+    if (outline) { scene.remove(outline); outline.geometry.dispose(); outline = null }
+    if (!perim) return
+    const { f, grid: pg } = perim
+    const pts = []
+    const inside = (r, c) => r >= 0 && c >= 0 && r < pg.ny && c < pg.nx && f[r * pg.nx + c] >= 0.5
+    for (let r = 0; r < pg.ny; r++) for (let c = 0; c < pg.nx; c++) {
+      if (!inside(r, c)) continue
+      if (inside(r - 1, c) && inside(r + 1, c) && inside(r, c - 1) && inside(r, c + 1)) continue
+      const lat = pg.lat_n - (r + 0.5) * pg.dlat, lon = pg.lon_w + (c + 0.5) * pg.dlon
+      const w = worldAt(lat, lon, 30)
+      if (w) pts.push(...w)
+    }
+    if (!pts.length) return
+    const geom = new THREE.BufferGeometry()
+    geom.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3))
+    outline = new THREE.Points(geom, new THREE.PointsMaterial({ color: dayness > 0.5 ? 0x111111 : 0xf2f2f2, size: Math.max(dims.dx, dims.dy) * 2.2, sizeAttenuation: true, depthTest: false }))
+    outline.renderOrder = 2
+    scene.add(outline)
+  }
+  $effect(() => { perim; if (ready) drawOutline() })
   $effect(() => { if (renderer && camera) { renderer.setSize(width, height); camera.aspect = width / height; camera.updateProjectionMatrix() } })
 </script>
 
 <figure class="min-w-0">
   <figcaption class="flex flex-wrap items-baseline justify-between gap-x-3 text-xs">
     <span class="mono">{terrain} <span class="muted">+</span> {buildings} <span class="muted">+</span> {fire}</span>
-    <span class="mono muted">{cursor !== null ? isoTime(cursor) : ''} · drag to orbit, wheel to zoom</span>
+    <span class="mono muted">{cursor !== null ? isoTime(cursor) : ''}{localTime ? ` · ${localTime}` : ''}{sunElev !== null ? ` · sun ${sunElev >= 0 ? '+' : '−'}${Math.abs(sunElev).toFixed(0)}°` : ''}{wind && Number.isFinite(wind.spd) ? ` · wind ${wind.spd.toFixed(0)} m/s from ${Math.round(wind.from)}°` : ''} · drag to orbit, wheel to zoom</span>
   </figcaption>
   <div class="relative mt-1 min-w-0 select-none" bind:clientWidth={width}>
     <div bind:this={el} style="width:{width}px;height:{height}px" class="rounded-[2px] bg-neutral-100 dark:bg-neutral-900"></div>
@@ -372,7 +484,9 @@
       {/if}
       <span>labels carry the event's time in UTC; the record's times are when the GIS feature was made, which lags the work</span>
     {/if}
-    <span>vertical in metres, as the ground is; building heights as the county states them, taken as feet</span>
+    {#if pf}<span><span class="inline-block h-2 w-2 rounded-full align-middle bg-neutral-900 dark:bg-neutral-100" aria-hidden="true"></span> the mapped perimeter current at this time, as dots along its edge</span>{/if}
+    {#if wind && Number.isFinite(wind.spd)}<span><span class="inline-block h-0.5 w-3 align-middle" style="background:#129a9a" aria-hidden="true"></span> the wind at the ignition point: the arrow at the north-west corner points the way it blows, 250 m per m/s</span>{/if}
+    <span>the sky and the light follow the sun over the window at the cursor; the vertical is stretched twice, ground and buildings alike; building heights as the county states them, taken as feet</span>
   </div>
 </figure>
 

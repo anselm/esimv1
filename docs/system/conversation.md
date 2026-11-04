@@ -39,7 +39,7 @@ The same things that make it legible to a person: a one-sentence summary that sa
 it integrates and what it leaves out; parameter notes that give provenance; required
 reads that name the kinds which satisfy them; topic notes that give the data shape. A
 kind whose describe is thin will be wired badly by a model and by a person alike. See
-[Adding a module](?doc=system/adding-a-module).
+[Adding a module](/docs/system/adding-a-module).
 
 ## What the conversation is not
 

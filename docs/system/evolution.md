@@ -56,5 +56,5 @@ person decide with their eyes open. There is no committee.
 ## What does not evolve
 
 The vocabulary (topic names, field names, units, ledger names) changes slowly and on
-purpose, because every module uses it; see [Vocabulary](?doc=system/vocabulary). The
+purpose, because every module uses it; see [Vocabulary](/docs/system/vocabulary). The
 protocol changes rarely, with a version number. The honesty rules do not change.

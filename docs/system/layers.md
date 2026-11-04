@@ -53,5 +53,5 @@ that reads a layer-3 field and owns a layer-5 field is a layer-5 kind with a dec
 coupling, which is normal. A kind that produces layer-7 consequences (a riot, a
 migration) from nothing but words is not a kind; it is an essay, and the project does not
 run essays. The upper layers are where honesty gets hardest and where the rules in
-[Honesty](?doc=system/honesty) do the most work: counts before models, published
+[Honesty](/docs/system/honesty) do the most work: counts before models, published
 response curves with their ranges, and the word "guess" wherever it is true.

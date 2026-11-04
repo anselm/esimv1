@@ -128,4 +128,4 @@ to the warming or the sea, and none is modelled yet.
   Both shortfalls pull the people counts down, not up.
 
 The run pages beneath carry every number's source, and
-[Limits today](?doc=system/limits) says what is known to be wrong.
+[Limits today](/docs/system/limits) says what is known to be wrong.

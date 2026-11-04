@@ -167,6 +167,15 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   record's first line is after the overrun); `obs.record` has `time_shift_h`. `esim project prune
   <area/name> --keep 0` deletes every run of the project (did it by accident; all runs are deterministic
   and were rerun).
+- Path URLs (2026-11-04, Anselm's ask): the viewer routes by path, `/<area>/<name>`, `/<area>/<name>/<run id>`,
+  `/<area>/<name>/compare`, `/docs/<area>/<name>`, `/runs`, `/run/<id>`, `/new`, `/kinds`, `/all`
+  (`web/src/lib/router.svelte.js`; the old `?project=` forms are still read). The server serves
+  `/projects/`, `/runs/` and `/docs/` as files and falls back to the page for an extensionless path
+  under them. `RESERVED_AREAS` in `server.mjs` is the list no handle may take. Markdown links in docs
+  and READMEs use `/docs/system/limits`, not `?doc=`. The project page shows variants and runs before
+  the README (Anselm, 2026-11-04). The 3D scene stretches the vertical twice, lights by the sun's
+  position at the cursor (low-precision solar formula, recalled), colours the sea, drapes the mapped
+  perimeter as dots and draws the wind as an arrow at the north-west corner.
 - Front page and covers (2026-11-03): `featured = true` in project.toml puts a project on the
   front page as a card; `cover` and `cover_caption` name a picture beside the manifest.
   Earth 2100 (renamed from "The planet, with people on it") and the Palisades fire are featured.

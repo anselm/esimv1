@@ -11,7 +11,7 @@ The recipe, in the order that keeps the rules intact.
    and cached.
 2. **Name what it owns and reads.** Which fields will it write (and with what unit), which
    will it read and from which kinds, which topics will it publish and subscribe, which
-   ledger stocks will it hold. Use the names in [Vocabulary](?doc=system/vocabulary); add
+   ledger stocks will it hold. Use the names in [Vocabulary](/docs/system/vocabulary); add
    a new name only when none fits, and in its form.
 3. **Write the kind** in `crates/modules/src/<layer or place>.rs`: a struct with its
    parameters and state, `new(name, params)` that reads parameters with defaults and

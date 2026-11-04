@@ -173,9 +173,13 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
 - Evacuation orders by Genasys zone and time (the Malibu archive names zones MAL-C111-A/B,
   RMB-U030-A/B, MAL-C112-B at 23:30 on 7 January; the state's evacuation-zone service).
 - Canopy height (Meta/WRI 1 m, tile 023012311 over the window) as a fuel layer.
-- The 3D view: land cover on the ground, structures coloured by their recorded fate, a wind
-  arrow, the time cursor playing. (The terrain banding was the elevation window's missing
-  columns, fixed 2026-11-03; `devlog/20261103-the-holes-in-the-ground.md`.)
+- The 3D view. Done by 2026-11-04: structures coloured by their recorded fate, the record's points
+  and lines pulsing at their times, the wind arrow, the sun's light and sky at the cursor, the
+  vertical stretched twice, the sea, the mapped perimeter draped as dots
+  (`devlog/20261104-the-scene-and-the-paths.md`). Still quick: land cover as the ground's colour,
+  the cursor playing when scrolled into view, a north mark, spot fires' flight as arcs, hour labels
+  on the arrival ramp, lines thickened by length, a camera preset up the canyons from the sea.
+  (The terrain banding was the elevation window's missing columns, fixed 2026-11-03.)
 - Check `data/events/fuels.toml` line by line against Scott and Burgan 2005 (RMRS-GTR-153); the
   SH5 row decides the Palisades result.
 - Barriers: roads and ridgelines from OpenStreetMap, the 2021 Palisades burn scar from the fire

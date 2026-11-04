@@ -1,43 +1,56 @@
-// Query-string routing, so every view is a shareable URL:
+// Path routing, so every view is a shareable URL (query strings until 2026-11-04; the old
+// forms are still read, the new ones are written):
 //   /                           the projects
-//   ?project=area/name          one project: its description, manifest and runs
-//   ?project=area/name&run=id   one run of that project
-//   ?run=id                     a run in the loose runs/ folder (the old list)
-//   ?runs                       the loose runs/ folder itself
-//   ?new                        the new-project form
-//   ?docs                       the documentation index
-//   ?doc=area/name              one documentation page (doc=new is the new-page form)
-//   ?kinds                      every module kind, from its describe
-//   ?compare=area/name          a project's variants side by side under one cursor
-//   ?all                        the front page with every project, not only the featured ones
+//   /<area>/<name>              one project: its runs and variants, then its story
+//   /<area>/<name>/<run id>     one run of that project
+//   /<area>/<name>/compare      a project's variants side by side under one cursor
+//   /runs                       the loose runs/ folder (the old list); /run/<id> one of its runs
+//   /new                        the new-project form
+//   /docs                       the documentation index; /docs/<area>/<name> one page (docs/new is the new-page form)
+//   /kinds                      every module kind, from its describe
+//   /all                        the front page with every project, not only the featured ones
+// The top-level words above are reserved and no area may take them (RESERVED_AREAS in server.mjs).
 export const route = $state({ project: null, run: null, runs: false, isNew: false, docs: false, doc: null, kinds: false, compare: null, all: false })
+
+const TOP = new Set(['runs', 'run', 'new', 'docs', 'kinds', 'all', 'compare'])
 
 function read() {
   const q = new URLSearchParams(location.search)
-  route.project = q.get('project')
-  route.run = q.get('run')
-  route.runs = q.has('runs')
-  route.isNew = q.has('new')
-  route.docs = q.has('docs')
-  route.doc = q.get('doc')
-  route.kinds = q.has('kinds')
-  route.compare = q.get('compare')
-  route.all = q.has('all')
+  const parts = location.pathname.split('/').filter(Boolean).map(decodeURIComponent)
+  const r = { project: null, run: null, runs: false, isNew: false, docs: false, doc: null, kinds: false, compare: null, all: false }
+  if (parts.length === 0) {
+    // the query forms, as written before 2026-11-04 and in links that still carry them
+    r.project = q.get('project'); r.run = q.get('run'); r.runs = q.has('runs'); r.isNew = q.has('new')
+    r.docs = q.has('docs'); r.doc = q.get('doc'); r.kinds = q.has('kinds'); r.compare = q.get('compare'); r.all = q.has('all')
+  } else if (TOP.has(parts[0])) {
+    const [top, ...rest] = parts
+    if (top === 'runs') r.runs = true
+    else if (top === 'run') r.run = rest.join('/') || null
+    else if (top === 'new') r.isNew = true
+    else if (top === 'kinds') r.kinds = true
+    else if (top === 'all') r.all = true
+    else if (top === 'docs') { if (rest.length) r.doc = rest.join('/'); else r.docs = true }
+  } else if (parts.length >= 2) {
+    r.project = `${parts[0]}/${parts[1]}`
+    if (parts[2] === 'compare') { r.compare = r.project; r.project = null }
+    else if (parts[2]) r.run = parts.slice(2).join('/')
+  }
+  Object.assign(route, r)
 }
 
+const enc = (s) => s.split('/').map(encodeURIComponent).join('/')
 export function href({ project = null, run = null, runs = false, isNew = false, docs = false, doc = null, kinds = false, compare = null, all = false } = {}) {
-  const q = new URLSearchParams()
-  if (project) q.set('project', project)
-  if (run) q.set('run', run)
-  if (runs) q.set('runs', '')
-  if (isNew) q.set('new', '')
-  if (docs) q.set('docs', '')
-  if (doc) q.set('doc', doc)
-  if (kinds) q.set('kinds', '')
-  if (compare) q.set('compare', compare)
-  if (all) q.set('all', '')
-  const s = q.toString().replace(/=(&|$)/g, '$1')
-  return s ? `?${s}` : location.pathname
+  if (project && run) return `/${enc(project)}/${encodeURIComponent(run)}`
+  if (project) return `/${enc(project)}`
+  if (compare) return `/${enc(compare)}/compare`
+  if (run) return `/run/${encodeURIComponent(run)}`
+  if (runs) return '/runs'
+  if (isNew) return '/new'
+  if (doc) return `/docs/${enc(doc)}`
+  if (docs) return '/docs'
+  if (kinds) return '/kinds'
+  if (all) return '/all'
+  return '/'
 }
 
 export function go(to = {}) {

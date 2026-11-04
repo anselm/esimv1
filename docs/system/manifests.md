@@ -78,7 +78,7 @@ ranges; its runs record the values it chose.
 The order of `[[module]]` entries is the order of sections on the run page. A bundle's
 modules come first unless the including manifest restates them; a module that exists to
 summarise (the story) is listed first so it is read first. See the views table in
-[Modules](?doc=system/modules).
+[Modules](/docs/system/modules).
 
 ## Checking
 
@@ -89,4 +89,4 @@ or a model what the manifest could gain.
 
 ## Writing them
 
-People rarely will. See [Conversation](?doc=system/conversation).
+People rarely will. See [Conversation](/docs/system/conversation).

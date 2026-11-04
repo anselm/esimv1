@@ -122,26 +122,6 @@ title = "Near reach, thresholds times 4, Rothermel's uphill gain (20) with a gen
 "fire.downslope_gain" = 2
 
 [[variant]]
-name = "vector-4"
-title = "The vector form (wind and slope as vectors, Rothermel's shape, Anderson's ellipse, idle cooling), thresholds times 4"
-[variant.set]
-"fire.form" = "vector"
-"fire.cooling" = "idle"
-"fire.reach_m" = 45
-"fire.ignite_scale" = 4
-"fire.slope_rate_gain" = 20
-
-[[variant]]
-name = "vector-6"
-title = "The vector form (wind and slope as vectors, Rothermel's shape, Anderson's ellipse, idle cooling), thresholds times 6"
-[variant.set]
-"fire.form" = "vector"
-"fire.cooling" = "idle"
-"fire.reach_m" = 45
-"fire.ignite_scale" = 6
-"fire.slope_rate_gain" = 20
-
-[[variant]]
 name = "vector-5"
 title = "The vector form: wind and slope as vectors with Rothermel's shape, Anderson's ellipse, idle cooling; thresholds times 5"
 [variant.set]

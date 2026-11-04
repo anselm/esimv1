@@ -271,6 +271,8 @@ function serveStatic(req, res) {
     // a run folder is named by its content hashes and never changes: cache it for a year;
     // indexes, projects and docs change and are revalidated
     const immutable = /\/runs\/[^/]+\/(?!index\.json)/.test(url)
+    // a path with no extension that names no file is a page of the viewer (/docs/system/limits)
+    if (!path.extname(file) && !fs.existsSync(file)) { sendFile(req, res, path.join(DIST, 'index.html'), 'no-cache'); return true }
     sendFile(req, res, file, immutable ? 'public, max-age=31536000, immutable' : 'no-cache')
     return true
   }
@@ -278,7 +280,7 @@ function serveStatic(req, res) {
   if (url.startsWith('/projects/')) return under('/projects/', path.join(ROOT, 'projects'))
   if (url.startsWith('/docs/')) return under('/docs/', DOCS)
   if (!fs.existsSync(DIST)) { res.statusCode = 503; return res.end('viewer not built: run `npm run build` in web/, or use the Vite dev server') }
-  // the viewer: a file from dist/ when it exists, else index.html (routes are query strings, so this is rare)
+  // the viewer: a file from dist/ when it exists, else index.html (the routes are paths: /anselm/palisades-2025)
   const file = path.resolve(DIST, '.' + (url === '/' ? '/index.html' : url))
   if (!file.startsWith(DIST + path.sep)) { res.statusCode = 403; return res.end('forbidden') }
   fs.stat(file, (err, st) => {

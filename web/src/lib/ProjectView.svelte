@@ -112,12 +112,6 @@
     </figure>
   {/if}
 
-  {#if readme}
-    <section class="mb-10">
-      {#key readme}<Readme {path} md={readme} />{/key}
-    </section>
-  {/if}
-
   <section class="mb-8">
     {#if meta.variants?.length}
       <div class="mb-2 flex flex-wrap items-center justify-between gap-3">
@@ -171,6 +165,13 @@
       </ul>
     {/if}
   </section>
+
+  {#if readme}
+    <!-- the story under the runs it is read from (Anselm, 2026-11-04: the variants and runs first) -->
+    <section class="mb-10">
+      {#key readme}<Readme {path} md={readme} />{/key}
+    </section>
+  {/if}
 
   <details class="mb-8">
     <summary class="label cursor-pointer">manifest</summary>

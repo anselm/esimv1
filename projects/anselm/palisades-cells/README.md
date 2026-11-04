@@ -17,6 +17,12 @@ against the record; the record it is read against is the incident's mapped perim
 the 12,081 structures CAL FIRE's inspectors visited, 6,845 of them destroyed. Written
 2026-11-03; the numbers below come from the runs as the page is read.
 
+The fire itself, as the record tells it, is set out on the first project's page
+([A fire run again on its own ground](/anselm/palisades-2025)): the rekindle from the Lachman
+burn, the first hour at 47 miles an hour sustained, the reported acreages, the sparse maps, the
+lines and the resource counts, and the first day on which nothing worked. The runs on this page
+are read against the same record.
+
 ## What the runs say
 
 Where each run stands at the first infrared perimeter, 27 hours in, and at the end:
@@ -109,4 +115,4 @@ draped over both at the time cursor. Since the late evening of 2026-11-03 it als
 record of what people did, from the incident's own GIS: dozer pushes, drop points, helispots and
 completed lines appear where and when they were made, pulse for a while, and carry their times,
 beside the model's ignition and the spot fires it threw. The model does not yet react to any of
-it; the lines are drawn, not defended. [Limits today](?doc=system/limits) has the list.
+it; the lines are drawn, not defended. [Limits today](/docs/system/limits) has the list.

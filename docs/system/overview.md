@@ -28,13 +28,13 @@ time cursor.
 
 ## Where to start reading
 
-- [Terminology](?doc=system/terminology), because the words have been fuzzy.
-- [Honesty](?doc=system/honesty), the rules that make the rest worth doing.
-- [Modules](?doc=system/modules), [Layers](?doc=system/layers), [Manifests](?doc=system/manifests), [Projects and runs](?doc=system/projects-and-runs).
-- [Conversation](?doc=system/conversation), how a scenario gets built without hand-writing TOML.
-- [Data](?doc=system/data), [Scoring and tearing](?doc=system/scoring-and-tearing), [Evolution](?doc=system/evolution).
-- [Workspace](?doc=system/workspace), how the folders are laid out and how to behave in a shared one.
-- [Time](?doc=system/time), [Vocabulary](?doc=system/vocabulary), [Adding a module](?doc=system/adding-a-module), [Limits today](?doc=system/limits).
+- [Terminology](/docs/system/terminology), because the words have been fuzzy.
+- [Honesty](/docs/system/honesty), the rules that make the rest worth doing.
+- [Modules](/docs/system/modules), [Layers](/docs/system/layers), [Manifests](/docs/system/manifests), [Projects and runs](/docs/system/projects-and-runs).
+- [Conversation](/docs/system/conversation), how a scenario gets built without hand-writing TOML.
+- [Data](/docs/system/data), [Scoring and tearing](/docs/system/scoring-and-tearing), [Evolution](/docs/system/evolution).
+- [Workspace](/docs/system/workspace), how the folders are laid out and how to behave in a shared one.
+- [Time](/docs/system/time), [Vocabulary](/docs/system/vocabulary), [Adding a module](/docs/system/adding-a-module), [Limits today](/docs/system/limits).
 
 The design brief and every decision since are dated entries in the repository's
 `devlog/` folder. This documentation describes the system as it stands; the devlog says

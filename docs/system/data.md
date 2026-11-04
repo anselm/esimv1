@@ -19,7 +19,7 @@ assessed forcings; Natural Earth outlines and capitals; UN population; CRU count
 temperatures through the World Bank portal; NOAA's station history and daily station
 summaries (GSOD) for the weather station nearest each capital. Each
 catalog entry says what was verified and what licence text still has to be fetched and
-stored before any public use; [Sources](?doc=system/sources) is that list as a page.
+stored before any public use; [Sources](/docs/system/sources) is that list as a page.
 
 For the fire (since 2026-11-03) the catalog adds ESA WorldCover, NOAA's HRRR analyses read by
 byte range, Open-Meteo's ERA5 wind with gusts, NIFC's perimeters, CAL FIRE's damage
