@@ -408,6 +408,30 @@ verified = "2026-11-03 from canada1: 12,081 points, anonymous; Destroyed 6,845, 
 notes = "The destroyed count equals CAL FIRE's incident figure of 6,845 structures."
 
 [[asset]]
+id = "ul-fsri-socal-fires-timeline"
+title = "UL Research Institutes FSRI, Southern California Fires Incident Analysis Dataset: timestamped events for the Palisades, Eaton and Lachman fires and the weather, from dispatch, radio, EOC logs, utility reports and press"
+kind = "observation-series"
+crs = "none (addresses and place names in text)"
+format = "Google Sheet read as CSV through the gviz export, one sheet per gid: Palisades 1961773423, Eaton 1341829632, Lachman 1125301104, weather 578253915, title and caveats 1717589843; columns Source Description, Event Date, Event Time (local), Incident Name, Event Location/Address, Event Units / Personnel, Event Description"
+url_template = "https://docs.google.com/spreadsheets/d/1aTCDS6v7vRSqrmdmtVNAinjJH156d3r7llwVxYKXTkY/gviz/tq?tqx=out:csv&gid={gid}"
+source = "UL Research Institutes, Fire Safety Research Institute, for the Office of the Governor of California; companion to the Incident Analysis Report, DOI 10.60752/102376.31982232 (2026-10-02) and the Timeline Report, DOI 10.60752/102376.29905157 (2025-11-20)"
+licence = "The report is CC BY-SA 4.0 on figshare; the sheet carries a UL copyright line and no licence of its own. Attribute UL Research Institutes FSRI; check before anything derived from it is published."
+verified = "2026-11-03 from canada1: Palisades sheet 4,785 rows (2025-01-02 to 01-09; 3,777 on 01-07, 996 on 01-08), anonymous; sources led by LAPD CAD, LA County fire radio, LASD, LAFD tactical channels, EOC 214 logs"
+notes = "UL's caveat: radio transcribed by machine and incomplete, 'should not be considered a complete record of events'. Carries a reported-acreage series from the radio and press (10 acres 10:43, 200 at 11:20, 772 at 12:12, 1,308 at 15:17, 2,921 at 18:50 local on 7 January) and the suppression record in prose; devlog/20261103-six-links.md."
+
+[[asset]]
+id = "noaa-ngs-eri-2025"
+title = "NOAA National Geodetic Survey Emergency Response Imagery 2025: Maxar scenes during the fires and NOAA's own aerial RGB afterwards, as web tiles"
+kind = "raster-tiles"
+crs = "Web Mercator tiles (EPSG:3857)"
+format = "XYZ tiles {z}/{x}/{y} per dated layer; index.json gives bounds and zoom per layer; also WMTS"
+url_template = "https://stormscdn.ngs.noaa.gov/{layer}/{z}/{x}/{y}"
+source = "NOAA NGS, storms.ngs.noaa.gov/storms/2025_eri; Maxar layers from Maxar's open data release, NOAA layers flown by NGS"
+licence = "NOAA imagery US federal public domain; the Maxar layers are Maxar Open Data (CC BY-NC 4.0, recalled, to be checked). Attribute both."
+verified = "2026-11-03 from canada1: index.json read anonymously; layers over the Palisades window 20250109m_MAXAR, 20250110n_MAXAR, 20250113m_MAXAR, 20250114m_MAXAR, 20250116m_MAXAR, 20250118m_MAXAR, 20250120m_MAXAR (zoom 0-19) and 20250128a_RGB (NOAA, -118.76 to -117.97, 34.01 to 34.23, zoom 0-21); no tiles fetched yet"
+notes = "The before-and-after imagery for the structure record at a resolution Sentinel-2 cannot give; 20250109m_MAXAR is during the fire. Found through FEMA's incident hub page; devlog/20261103-six-links.md."
+
+[[asset]]
 id = "lacounty-lariac-buildings-2025-fires"
 title = "LA County building footprints for the 2025 fires, with heights and CAL FIRE's damage inspection joined"
 kind = "vector"

@@ -1,3 +1,11 @@
+# Event tables, and the record of events
+
+Beside the two tables below, a folder per studied event holds copies of the public record we
+read it against, organised for our use with a README that names every source, its licence and
+the day it was fetched: `palisades-2025/` (since 2026-11-03) is the first. The catalog
+(`data/catalog.toml`) remains the registry for anything a module fetches; a copy here is for
+reading, scoring and reference, so the record cannot drift or vanish under the runs.
+
 # Event tables
 
 Two flavours of one table, as the design brief says: the **calendar** holds known or

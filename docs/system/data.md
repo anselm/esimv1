@@ -21,6 +21,21 @@ summaries (GSOD) for the weather station nearest each capital. Each
 catalog entry says what was verified and what licence text still has to be fetched and
 stored before any public use; [Sources](?doc=system/sources) is that list as a page.
 
+For the fire (since 2026-11-03) the catalog adds ESA WorldCover, NOAA's HRRR analyses read by
+byte range, Open-Meteo's ERA5 wind with gusts, NIFC's perimeters, CAL FIRE's damage
+inspections, Los Angeles County's building footprints, OpenStreetMap through Overpass, NOAA's
+emergency response imagery and UL Research Institutes' timestamped incident dataset.
+
+## The record of an event
+
+A studied event gets a folder under `data/events/`, committed, holding a reading copy of the
+public record it is scored against, with a README that names each source, its licence and the
+day it was fetched: `data/events/palisades-2025/` holds CAL FIRE's 344 status reports as a
+table, UL FSRI's 4,785 timestamped events and the text of its timeline report, and NIFC's
+2,334 fire lines and 825 points. The catalog stays the registry for what modules fetch; the
+folder is so the record cannot drift or vanish under the runs, and so a reader of the
+repository sees the sources beside the code.
+
 ## Sizes and how they are kept in hand
 
 A basin stage warms about half a gigabyte of cache: four elevation tiles, a year of

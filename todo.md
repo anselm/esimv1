@@ -107,9 +107,23 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
 - The engine beyond Rothermel, Anselm's four asks and the order to build them (structures as
   bodies; terrain-following wind; fuel as fuel at 10 m; interventions; then the 3D air):
   `devlog/20261103-beyond-rothermel.md`.
-- Pre and post imagery: Sentinel-2 L2A scenes S2A_MSIL2A_20250102T183751_R027_T11SLT (before)
-  and S2C_MSIL2A_20250201T183631_R027_T11SLT (after) on Planetary Computer, anonymous STAC;
-  needs a 16-bit windowed COG read.
+- Pre and post imagery: NOAA NGS emergency response tiles (`noaa-ngs-eri-2025`: Maxar 9 to 20
+  January, NOAA aerial 28 January, zoom to 21) over the window, before Sentinel-2 (scenes
+  S2A_MSIL2A_20250102T183751_R027_T11SLT and S2C_MSIL2A_20250201T183631_R027_T11SLT noted).
+- The record copied into `data/events/palisades-2025/` (2026-11-03): CAL FIRE's 344 status reports
+  (acres, containment, engines, dozers, helicopters, crews, personnel, structures by time), the UL
+  FSRI timestamped dataset (4,785 Palisades rows), the UL timeline report's text with hourly
+  fire-activity maps for the first 26 hours, and NIFC's 2,334 event lines and 825 points. From
+  them: an `obs.reports` scoreboard of reported acreage by time (CAL FIRE: 10 acres at 11:06, 200
+  at 11:31, 1,262 at 15:34, 2,921 at 00:29 on the 8th, 11,802 at 11:45, 15,832 at 13:20 local; the
+  press had 2,921 from 18:50 on the 7th, so the triangle's 06:00Z stamp lies between the two); the
+  suppression record (resources by day; lines, undated in the archive); the UL hourly maps as the
+  first-day perimeters, to be georeferenced from the figures; the Eaton sheet for the held-out
+  test; the Lachman fire of 1 January as the origin.
+- Satellite hotspot detections (VIIRS, MODIS active fire; OroraTech counted 5,128 over 7 to 12
+  January) as a third scoreboard: where heat was seen from orbit each pass.
+- Evacuation orders by Genasys zone and time (the Malibu archive names zones MAL-C111-A/B,
+  RMB-U030-A/B, MAL-C112-B at 23:30 on 7 January; the state's evacuation-zone service).
 - Canopy height (Meta/WRI 1 m, tile 023012311 over the window) as a fuel layer.
 - The 3D view: land cover on the ground, structures coloured by their recorded fate, a wind
   arrow, the time cursor playing. (The terrain banding was the elevation window's missing

@@ -179,6 +179,15 @@ Every record this simulator reads, from `data/catalog.toml`, with the publisher,
 - **url** `https://archive-api.open-meteo.com/v1/archive?latitude={lat}&longitude={lon}&start_date={start}&end_date={end}&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m&models=era5&timezone=UTC&wind_speed_unit=ms`
 - **notes** A 25 km reanalysis reads a Santa Ana event mild; the fire module says so in its describe and offers the gust series as a variant.
 
+### UL Research Institutes FSRI, Southern California Fires Incident Analysis Dataset: timestamped events for the Palisades, Eaton and Lachman fires and the weather, from dispatch, radio, EOC logs, utility reports and press
+
+- **id** `ul-fsri-socal-fires-timeline`
+- **publisher** UL Research Institutes, Fire Safety Research Institute, for the Office of the Governor of California; companion to the Incident Analysis Report, DOI 10.60752/102376.31982232 (2026-10-02) and the Timeline Report, DOI 10.60752/102376.29905157 (2025-11-20)
+- **licence** The report is CC BY-SA 4.0 on figshare; the sheet carries a UL copyright line and no licence of its own. Attribute UL Research Institutes FSRI; check before anything derived from it is published.
+- **verified** 2026-11-03 from canada1: Palisades sheet 4,785 rows (2025-01-02 to 01-09; 3,777 on 01-07, 996 on 01-08), anonymous; sources led by LAPD CAD, LA County fire radio, LASD, LAFD tactical channels, EOC 214 logs
+- **url** `https://docs.google.com/spreadsheets/d/1aTCDS6v7vRSqrmdmtVNAinjJH156d3r7llwVxYKXTkY/gviz/tq?tqx=out:csv&gid={gid}`
+- **notes** UL's caveat: radio transcribed by machine and incomplete, 'should not be considered a complete record of events'. Carries a reported-acreage series from the radio and press (10 acres 10:43, 200 at 11:20, 772 at 12:12, 1,308 at 15:17, 2,921 at 18:50 local on 7 January) and the suppression record in prose; devlog/20261103-six-links.md.
+
 ## raster
 
 ### WorldPop, the spatial distribution of population in 2020, 1 km, global mosaic (unconstrained, not UN-adjusted)
@@ -222,6 +231,15 @@ Every record this simulator reads, from `data/catalog.toml`, with the publisher,
 - **verified** 2026-11-01 from canada1: tile h11v04 composites for 2025 fetched for M5; the catalog had none for July to November 2025; per-file signing is rate-limited, so one container token per run
 - **url** `https://planetarycomputer.microsoft.com/api/stac/v1/search (collection modis-13A1-061); token from https://planetarycomputer.microsoft.com/api/sas/v1/token/modiseuwest/modis-061-cogs`
 - **notes** Reader: crates/registry/src/modis.rs; sinusoidal to lat-lon sampling.
+
+### NOAA National Geodetic Survey Emergency Response Imagery 2025: Maxar scenes during the fires and NOAA's own aerial RGB afterwards, as web tiles
+
+- **id** `noaa-ngs-eri-2025`
+- **publisher** NOAA NGS, storms.ngs.noaa.gov/storms/2025_eri; Maxar layers from Maxar's open data release, NOAA layers flown by NGS
+- **licence** NOAA imagery US federal public domain; the Maxar layers are Maxar Open Data (CC BY-NC 4.0, recalled, to be checked). Attribute both.
+- **verified** 2026-11-03 from canada1: index.json read anonymously; layers over the Palisades window 20250109m_MAXAR, 20250110n_MAXAR, 20250113m_MAXAR, 20250114m_MAXAR, 20250116m_MAXAR, 20250118m_MAXAR, 20250120m_MAXAR (zoom 0-19) and 20250128a_RGB (NOAA, -118.76 to -117.97, 34.01 to 34.23, zoom 0-21); no tiles fetched yet
+- **url** `https://stormscdn.ngs.noaa.gov/{layer}/{z}/{x}/{y}`
+- **notes** The before-and-after imagery for the structure record at a resolution Sentinel-2 cannot give; 20250109m_MAXAR is during the fire. Found through FEMA's incident hub page; devlog/20261103-six-links.md.
 
 ## reanalysis climatology
 

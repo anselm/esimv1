@@ -121,4 +121,10 @@ in doubt, split at the point where two different people would hold different opi
   on cells that know their ground (DEM, WorldCover, LA County building footprints, OpenStreetMap
   roads) under NOAA's HRRR 3 km wind read by the registry's own GRIB2 reader; `obs.dins`
   counts CAL FIRE's inspected structures against any fire's burned cells. A run page shows a
-  declared `scene` view in three dimensions (terrain, buildings, arrival).
+  declared `scene` view in three dimensions (terrain, buildings, arrival). Rothermel stays as
+  the baseline anyone can run beside it; the engine is where the work goes, and its direction
+  is decided (Anselm, 2026-11-03; `devlog/20261103-beyond-rothermel.md`): structures as bodies
+  with their own exposure and fate, a wind shaped by the terrain, fuel as fuel at 10 m,
+  the incident's lines and resources as interventions, and then the air itself as a
+  three-dimensional solver with the fire's heat in it. The record all of it is held against
+  is copied into `data/events/palisades-2025/`.
