@@ -212,6 +212,7 @@
   const COL = { record: 0x129a9a, planned: 0x7bbcbc, spot: 0xf28c1a, ignition: 0xd9261a }
   // how long after its time an event keeps pulsing, in hours of run time, and the ring's radius in metres
   const SHOW = { record: [6, 80], line: [3, 0], spot: [1.5, 40], ignition: [1e9, 120] }
+  const LINE_FADE_H = 12       // a line is bright for SHOW.line[0] hours, fades until this, then goes; at the run's end every line stays
   let marks = null          // { ring: InstancedMesh, pts: [...], lines: [...] }
   let active = []           // the points pulsing at the cursor
   let labels = []           // [{ el, pos }]
@@ -273,15 +274,17 @@
       const age = (cursor - p.t) / 3600
       if (age <= SHOW[p.kind][0]) { act.push({ i, p, frac: Math.min(1, age / Math.min(SHOW[p.kind][0], 24)) }); if (p.label) lab.push({ t: p.t, text: p.label, pos: p.pos }) }
     }
-    let nlines = 0, km = 0
+    let nlines = 0
+    // at the end of the run the whole record stays on the ground (Anselm, 2026-11-04)
+    const atEnd = run.end != null && cursor >= run.end - 3600
     for (const l of lines) {
-      const on = l.t <= cursor
-      l.obj.visible = on
-      if (!on) continue
+      if (l.t > cursor) { l.obj.visible = false; continue }
       nlines++
       const age = (cursor - l.t) / 3600
       const fresh = age <= SHOW.line[0]
-      l.mat.opacity = fresh ? 1 : 0.55
+      const faded = age >= LINE_FADE_H
+      l.obj.visible = atEnd || !faded
+      l.mat.opacity = fresh ? 1 : atEnd && faded ? 0.5 : 0.55 * (1 - (age - SHOW.line[0]) / (LINE_FADE_H - SHOW.line[0])) + 0.1
       if (fresh) lab.push({ t: l.t, text: l.label, pos: l.pos })
     }
     // the latest two dozen labels, so the view stays readable; everything else still pulses
@@ -479,7 +482,7 @@
       <span><span class="inline-block h-2 w-2 rounded-full border-2 align-middle" style="border-color:#f28c1a" aria-hidden="true"></span> spot fire the model threw, pulsing for an hour and a half</span>
       {#if recordSoFar || events.some((e) => e.topic === 'record.event')}
         <span><span class="inline-block h-2 w-2 rounded-full border-2 align-middle" style="border-color:#129a9a" aria-hidden="true"></span> the record: a point (dozer push, drop point, helispot, break), pulsing for six hours after it was made</span>
-        <span><span class="inline-block h-0.5 w-3 align-middle" style="background:#129a9a" aria-hidden="true"></span> a completed line (dozer, hand, road), bright for three hours</span>
+        <span><span class="inline-block h-0.5 w-3 align-middle" style="background:#129a9a" aria-hidden="true"></span> a completed line (dozer, hand, road), bright for three hours, gone after twelve; at the run's end the whole record stays</span>
         {#if recordSoFar}<span>so far: {recordSoFar.points} points, {recordSoFar.lines} lines</span>{/if}
       {/if}
       <span>labels carry the event's time in UTC; the record's times are when the GIS feature was made, which lags the work</span>

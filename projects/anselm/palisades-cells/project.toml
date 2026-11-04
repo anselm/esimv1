@@ -150,4 +150,4 @@ title = "The vector form at 5, with the record's completed lines holding from th
 "fire.reach_m" = 45
 "fire.ignite_scale" = 5
 "fire.slope_rate_gain" = 20
-"fire.lines" = "hold"
+"suppression.mode" = "hold"

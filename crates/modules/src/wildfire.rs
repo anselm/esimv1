@@ -340,6 +340,7 @@ impl Module for Rothermel {
     fn name(&self) -> &str { &self.name }
     fn init(&mut self, ctx: &mut Ctx) {
         let g = self.grid.clone().unwrap();
+        ctx.subscribe("ground.break");
         ctx.publish("fuel.loaded", json!({ "fuels": self.fuels.iter().map(|f| json!({ "id": f.id, "confidence": f.confidence })).collect::<Vec<_>>(), "shrub": self.shrub_fuel, "cells": g.nx * g.ny, "burnable_cells": self.fuel_of.iter().filter(|&&f| f != 255).count() }));
         let cover_f: Vec<f32> = self.cover.iter().map(|&c| c as f32).collect();
         let fg = self.frame_grid.clone().unwrap();
@@ -351,6 +352,15 @@ impl Module for Rothermel {
         ctx.schedule_with_priority(self.dt, 6, "tick", json!(null));
     }
     fn handle(&mut self, ev: &Event, ctx: &mut Ctx) {
+        if ev.topic == "ground.break" {
+            // an interventions module's break: the cells become unburnable from now on
+            if ev.data.get("strength").and_then(|v| v.as_f64()).unwrap_or(1.0) > 0.0 {
+                for c in ev.data.get("cells").and_then(|v| v.as_array()).map(|a| a.as_slice()).unwrap_or(&[]) {
+                    if let Some(k) = c.as_u64().map(|x| x as usize) { if k < self.fuel_of.len() && self.ignited_at[k].is_nan() { self.fuel_of[k] = 255; } }
+                }
+            }
+            return;
+        }
         if ev.topic != "tick" { return; }
         let g = self.grid.clone().unwrap();
         let now = ctx.now();
@@ -469,6 +479,7 @@ impl Rothermel {
             .param("built_ros_m_min", 1.0, "m/min", "guessed head rate through built-up land at 10 m/s wind, scaled by the wind; 0 makes built-up land a barrier")
             .param("max_residence_min", 120.0, "min", "how long a burning cell keeps pushing fire into neighbours it has not yet lit")
             .param("substep_s", 15.0, "s", "spread substep; a 30 m cell at 100 m/min is crossed in 18 s")
+            .subscribe("ground.break", "from an interventions module (fire.suppression): the cells named become unburnable from the break's time on")
             .param("reach_cells", 3, "cells", "fire travels straight to every cell within this radius along primitive lattice directions (32 at 3), so a narrow wind-driven ellipse is not starved by the eight neighbours; the path must not cross an unburnable cell")
             .publish("fuel.loaded", "the fuel models in use and their confidence").publish("cover.summary", "km2 per land-cover class in the window").publish("fire.ignition", "at a cell: { lat, lon, time, cover, fuel }")
             .own("fire.burned_frac", "1")

@@ -24,6 +24,10 @@
     {#key route.project}
       <ProjectView path={route.project} />
     {/key}
+  {:else if route.area}
+    {#key route.area}
+      <ProjectList area={route.area} />
+    {/key}
   {:else if route.isNew}
     <NewProject />
   {:else if route.doc}

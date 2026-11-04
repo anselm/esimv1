@@ -145,8 +145,10 @@ holds the history.
   cliff. With it the first day is right for the first time on either engine (16,525 acres at 27 hours
   against 15,824, overlap 0.79) and the second day is wrong in a way no constant reaches: the model
   fills the mountain block north to Calabasas by 49 hours where the record grew by 3,800 acres. The
-  record's completed lines, made to hold, change nothing, because the record's first line is dated
-  after the overrun. The candidates are the wind over the mountains on the second day and the
+  record's completed lines, made to hold (`fire.suppression`, a module between the record and the
+  engines, from the afternoon of 2026-11-04), change nothing, because the record's first line is
+  dated after the overrun; and nothing else about suppression is modelled: no crews, no aircraft,
+  no engines at houses, no retardant. The candidates are the wind over the mountains on the second day and the
   suppression the record does not place. The HRRR 3 km wind it uses reads 10 m/s with 21 m/s gusts at the ignition point in
   the first hour (checked against GDAL); the reanalysis read 7 and 13.
 - The 3D view takes building heights as feet because the county's service does not state a

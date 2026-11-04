@@ -42,8 +42,6 @@ pub struct Cells {
     reach_m: f64, lambda_m: f64, wind_gain: f64, slope_gain: f64, slope_rate_gain: f64, downslope_gain: f64,
     form: String,            // reach | vector
     cooling: String,         // always | idle
-    lines: String,           // off | hold
-    line_width_m: f64,
     wind_phi: f64, wind_phi_exp: f64, phi_cap: f64, waf: f64,
     moisture_gain: f64, live_moisture_pct: f64,
     grass_ignite: f64, grass_intensity: f64, grass_burn_min: f64,
@@ -83,8 +81,8 @@ pub struct Cells {
     #[serde(skip)] built_frac: Vec<f32>,
     #[serde(skip)] built_height: Vec<f32>,
     #[serde(skip)] road: Vec<bool>,
-    #[serde(skip)] held: Vec<bool>,      // under a completed line from the record, from its time on
-    held_cells: usize, lines_taken: usize,
+    #[serde(skip)] held: Vec<bool>,      // under a ground.break (fire.suppression's lines), from its time on
+    held_cells: usize, breaks_taken: usize,
     #[serde(skip)] kind: Vec<u8>,          // 0 none, 1 grass, 2 shrub, 3 tree, 4 built
     #[serde(skip)] area_m2: Vec<f64>,
     #[serde(skip)] metres: Vec<(f64, f64)>,
@@ -126,7 +124,7 @@ impl Cells {
             buildings_where: param_str(p, "buildings_where", "Incident_Name LIKE '%Palisades%'").to_string(),
             buildings_key: param_str(p, "buildings_key", "lacounty-lariac/2025-palisades").to_string(),
             reach_m: param_f64(p, "reach_m", 90.0), lambda_m: param_f64(p, "lambda_m", 20.0), wind_gain: param_f64(p, "wind_gain", 0.15), slope_gain: param_f64(p, "slope_gain", 1.5), slope_rate_gain: param_f64(p, "slope_rate_gain", 0.0), downslope_gain: param_f64(p, "downslope_gain", -1.0),
-            form: param_str(p, "form", "reach").to_string(), cooling: param_str(p, "cooling", "always").to_string(), lines: param_str(p, "lines", "off").to_string(), line_width_m: param_f64(p, "line_width_m", 30.0), wind_phi: param_f64(p, "wind_phi", 1.9), wind_phi_exp: param_f64(p, "wind_phi_exp", 0.9), phi_cap: param_f64(p, "phi_cap", 30.0), waf: param_f64(p, "waf", 0.4),
+            form: param_str(p, "form", "reach").to_string(), cooling: param_str(p, "cooling", "always").to_string(), wind_phi: param_f64(p, "wind_phi", 1.9), wind_phi_exp: param_f64(p, "wind_phi_exp", 0.9), phi_cap: param_f64(p, "phi_cap", 30.0), waf: param_f64(p, "waf", 0.4),
             moisture_gain: param_f64(p, "moisture_gain", 10.0), live_moisture_pct: param_f64(p, "live_moisture_pct", 60.0),
             grass_ignite: param_f64(p, "grass_ignite", 0.6), grass_intensity: param_f64(p, "grass_intensity", 1.0), grass_burn_min: param_f64(p, "grass_burn_min", 5.0),
             shrub_ignite: param_f64(p, "shrub_ignite", 1.5), shrub_intensity: param_f64(p, "shrub_intensity", 2.5), shrub_burn_min: param_f64(p, "shrub_burn_min", 20.0),
@@ -145,7 +143,7 @@ impl Cells {
             structure_frame_every: param_duration(p, "structure_frame_every", "6h")?,
             s_t_ign: Vec::new(), s_t_out: Vec::new(), s_heat: Vec::new(), s_heat_t: Vec::new(), s_active: Vec::new(), last_s_frame: i64::MIN / 4,
             ignited: false, since_ignition_s: 0.0, last_frame: i64::MIN / 4,
-            t_ign: Vec::new(), t_out: Vec::new(), heat: Vec::new(), heat_t: Vec::new(), active: Vec::new(), spots: 0, held_cells: 0, lines_taken: 0,
+            t_ign: Vec::new(), t_out: Vec::new(), heat: Vec::new(), heat_t: Vec::new(), active: Vec::new(), spots: 0, held_cells: 0, breaks_taken: 0,
             grid: None, frame_grid: None, elev: Vec::new(), slope: Vec::new(), aspect: Vec::new(), cover: Vec::new(), built_frac: Vec::new(), built_height: Vec::new(), road: Vec::new(), held: Vec::new(), kind: Vec::new(),
             area_m2: Vec::new(), metres: Vec::new(), hrrr: Vec::new(), hrrr_t0: 0, era5: None, cell_wind: Vec::new(), cell_moist: Vec::new(), jitter: Vec::new(), offsets: Vec::new(),
             s_cell: Vec::new(), s_area: Vec::new(), s_fate: Vec::new(), s_jitter: Vec::new(), s_neigh: Vec::new(), cell_structs: Default::default(), cell_home: Default::default(),
@@ -407,43 +405,18 @@ impl Cells {
         } }
         out
     }
-    /// A completed line from the record (dozer, hand, road as line; approved or proposed, not planned) holds
-    /// from its time on: the cells under it, to line_width_m, take no heat and no ember. Nothing else is
-    /// modelled: no crews on the line, no burnover, no retardant.
-    fn take_line(&mut self, ev: &Event) {
-        if self.lines != "hold" { return; }
-        let d = &ev.data;
-        if d.get("kind").and_then(|v| v.as_str()) != Some("line") { return; }
-        let cat = d.get("category").and_then(|v| v.as_str()).unwrap_or("");
-        let status = d.get("status").and_then(|v| v.as_str()).unwrap_or("");
-        if !cat.starts_with("Completed") || status == "Archive" { return; }
-        let Some(path) = d.get("path").and_then(|v| v.as_array()) else { return };
-        let pts: Vec<(f64, f64)> = path.iter().filter_map(|p| { let a = p.as_array()?; Some((a.get(1)?.as_f64()?, a.get(0)?.as_f64()?)) }).collect(); // (lon, lat)
-        let Some(grid) = self.grid.clone() else { return };
+    /// A ground.break from an interventions module (fire.suppression): the cells it names take no heat
+    /// and no ember from now on. The engine knows nothing of the record, only of breaks.
+    fn take_break(&mut self, ev: &Event) {
+        let Some(cells) = ev.data.get("cells").and_then(|v| v.as_array()) else { return };
+        let strength = ev.data.get("strength").and_then(|v| v.as_f64()).unwrap_or(1.0);
+        if strength <= 0.0 { return; }
         let mut taken = 0usize;
-        let half = self.line_width_m / 2.0;
-        for seg in pts.windows(2) {
-            let (ax, ay) = seg[0]; let (bx, by) = seg[1];
-            let row_mid = (((grid.lat_n - (ay + by) / 2.0) / grid.dlat).max(0.0) as usize).min(grid.ny - 1);
-            let (mx, my) = self.metres[row_mid];
-            let len = (((bx - ax) * mx / grid.dlon).powi(2) + ((by - ay) * my / grid.dlat).powi(2)).sqrt();
-            let steps = (len / 5.0).ceil().max(1.0) as usize;
-            for st in 0..=steps {
-                let t = st as f64 / steps as f64; let (x, y) = (ax + (bx - ax) * t, ay + (by - ay) * t);
-                if x < grid.lon_w || x >= grid.lon_e() || y <= grid.lat_s() || y > grid.lat_n { continue; }
-                let c = ((x - grid.lon_w) / grid.dlon) as usize; let r = ((grid.lat_n - y) / grid.dlat) as usize;
-                let (rc, rr) = ((half / mx).ceil() as isize, (half / my).ceil() as isize);
-                for dr in -rr..=rr { for dc in -rc..=rc {
-                    let (cc, rrr) = (c as isize + dc, r as isize + dr);
-                    if cc < 0 || rrr < 0 || cc >= grid.nx as isize || rrr >= grid.ny as isize { continue; }
-                    if ((dc as f64 * mx).powi(2) + (dr as f64 * my).powi(2)).sqrt() <= half.max(mx * 0.5) {
-                        let k = rrr as usize * grid.nx + cc as usize;
-                        if !self.held[k] { self.held[k] = true; taken += 1; }
-                    }
-                } }
-            }
+        for c in cells {
+            let Some(k) = c.as_u64().map(|x| x as usize) else { continue };
+            if k < self.held.len() && !self.held[k] { self.held[k] = true; taken += 1; }
         }
-        if taken > 0 { self.lines_taken += 1; self.held_cells += taken; }
+        if taken > 0 { self.breaks_taken += 1; self.held_cells += taken; }
     }
     fn cell_of(&self, lat: f64, lon: f64) -> Option<usize> {
         let g = self.grid.as_ref()?;
@@ -476,11 +449,11 @@ impl Module for Cells {
             ctx.field("building_fate", "0 unknown 1 no damage 2 damaged 3 destroyed (the inspectors)", &g, self.struct_frame(|l| l.iter().map(|&i| self.s_fate[i as usize]).max().unwrap_or(0) as f32));
             ctx.field("building_arrival_h", "h", &g, vec![f32::NAN; n]);
         }
-        if self.lines == "hold" { ctx.subscribe("record.event"); }
+        ctx.subscribe("ground.break");
         ctx.schedule_with_priority(self.dt, 6, "tick", json!(null));
     }
     fn handle(&mut self, ev: &Event, ctx: &mut Ctx) {
-        if ev.topic == "record.event" { self.take_line(ev); return; }
+        if ev.topic == "ground.break" { self.take_break(ev); return; }
         if ev.topic != "tick" { return; }
         let g = self.grid.clone().unwrap();
         let now = ctx.now();
@@ -689,7 +662,7 @@ impl Module for Cells {
         ctx.report("fire.wind_from_deg", "deg", (((wt as f64).to_degrees() + 180.0) % 360.0 + 360.0) % 360.0);
         ctx.report("fire.dead_moisture_pct", "%", self.cell_moist[k0] as f64 * 100.0);
         ctx.report("fire.built_cells_burned", "cells", self.t_ign.iter().zip(&self.kind).filter(|(t, &k)| !t.is_nan() && k == 4).count() as f64);
-        if self.lines == "hold" { ctx.report("fire.held_cells", "cells", self.held_cells as f64); ctx.report("fire.lines_held", "lines", self.lines_taken as f64); }
+        if self.breaks_taken > 0 { ctx.report("fire.held_cells", "cells", self.held_cells as f64); ctx.report("fire.breaks_held", "breaks", self.breaks_taken as f64); }
         ctx.schedule_with_priority(self.dt, 6, "tick", json!(null));
     }
     fn snapshot(&self) -> serde_json::Value { serde_json::to_value(self).unwrap() }
@@ -719,8 +692,7 @@ impl Cells {
             .param("shrub_ignite", 1.5, "heat", "guess").param("shrub_intensity", 2.5, "heat/min", "guess").param("shrub_burn_min", 20.0, "min", "guess")
             .param("tree_ignite", 2.0, "heat", "guess").param("tree_intensity", 2.0, "heat/min", "guess").param("tree_burn_min", 30.0, "min", "guess")
             .param("built_ignite", 4.0, "heat", "guess: a structure's threshold, scaled by nothing yet").param("built_intensity", 3.0, "heat/min", "guess, scaled by the cell's built fraction").param("built_burn_min", 90.0, "min", "guess, scaled by the built fraction")
-            .param("cool_min", 15.0, "min", "guess: a cell's received heat decays with this e-folding time").param("lines", "off", "", "hold: every completed line in the record (obs.record's record.event, kind line, category Completed …, status not Archive) holds from the event's time on: the cells under it, to line_width_m, take no heat and no ember. Nothing else about suppression is modelled, and the record's times lag the work (see obs.record's time_shift_h)").param("line_width_m", 30.0, "m", "guess: the width held along a completed line")
-            .param("cooling", "always", "", "always: a cell's heat decays between doses whatever is happening, so under steady heating it settles at dose times cool_min and a slow flank below the threshold never lights (the cliff); idle: it decays only over the time no dose arrived, so steady heating accumulates and the time to ignite is threshold over rate, as a spread rate is")
+            .param("cool_min", 15.0, "min", "guess: a cell's received heat decays with this e-folding time").param("cooling", "always", "", "always: a cell's heat decays between doses whatever is happening, so under steady heating it settles at dose times cool_min and a slow flank below the threshold never lights (the cliff); idle: it decays only over the time no dose arrived, so steady heating accumulates and the time to ignite is threshold over rate, as a spread rate is")
             .param("ignite_scale", 1.0, "", "one multiplier on every ignition threshold: the single number fitted to the record (the first infrared perimeter's acreage), declared as such; everything else is the test")
             .param("threshold_jitter", 0.0, "", "sigma of a fixed log-normal factor on each cell's ignition threshold: the micro-conditions nobody mapped (slope detail, what a house is made of); 0 is none")
             .param("ember_built_p", 0.0, "", "chance an ember landing on a built cell lights it, times the cell's built fraction; 0 uses the ordinary landing chance")
@@ -740,8 +712,8 @@ impl Cells {
             .frame("building_fate", "0 unknown 1 no damage 2 damaged 3 destroyed (the inspectors)").frame("building_arrival_h", "h")
             .report("fire.buildings_ignited", "count").report("fire.buildings_burning", "count").report("fit.buildings_destroyed_reached", "count").report("fit.buildings_undamaged_reached", "count").report("fit.buildings_recall", "1").report("fit.buildings_precision", "1")
             .report("fire.burned_acres", "acres").report("fire.burned_km2", "km2").report("fire.active_cells", "cells").report("fire.ignited_cells_hour", "cells/h").report("fire.spots_hour", "1/h")
-            .report("fire.wind_m_s", "m/s").report("fire.wind_from_deg", "deg").report("fire.dead_moisture_pct", "%").report("fire.built_cells_burned", "cells").report("fire.held_cells", "cells").report("fire.lines_held", "lines")
-            .subscribe("record.event", "with lines = hold: a completed line from the record (dozer, hand, road as line; not planned, not archived) holds from its time on")
+            .report("fire.wind_m_s", "m/s").report("fire.wind_from_deg", "deg").report("fire.dead_moisture_pct", "%").report("fire.built_cells_burned", "cells").report("fire.held_cells", "cells").report("fire.breaks_held", "breaks")
+            .subscribe("ground.break", "from an interventions module (fire.suppression): { cells, strength } the cells take no heat and no ember from the break's time on; the engine never reads the record itself")
             .asset("copernicus-dem-glo30", "elevation, slope, aspect").asset("esa-worldcover-2021", "land cover").asset("lacounty-lariac-buildings-2025-fires", "building footprints and heights").asset("osm-overpass", "major roads as breaks; the map's context").asset("noaa-hrrr", "the 3 km wind, gust, temperature and humidity each hour").asset("open-meteo-era5-wind", "the one-point alternative")
             .view("scene", "The fire on the ground", "fire_arrival_h", "terrain, buildings and the fire's arrival, in three dimensions")
             .view("map", "Arrival time", "fire_arrival_h", "hours since ignition").view("map", "What each cell is", "fire_fuel_kind", "")

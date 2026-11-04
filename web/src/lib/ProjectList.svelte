@@ -1,4 +1,5 @@
 <script>
+  let { area = null } = $props()
   import Badge from './Badge.svelte'
   import Account from './Account.svelte'
   // The front page: the featured scenarios as cards (a project whose project.toml says
@@ -50,6 +51,7 @@
     const m = new Map()
     for (const p of projects ?? []) {
       const a = p.area ?? p.path.split('/')[0]
+      if (area && a !== area) continue
       if (!m.has(a)) m.set(a, [])
       m.get(a).push(p)
     }
@@ -75,7 +77,7 @@
   <p class="muted text-sm">loading…</p>
 {:else if projects.length === 0}
   <p class="muted text-sm">no projects yet. <a use:link={{ isNew: true }} class="text-brand">Start one.</a></p>
-{:else if !route.all && featured.length}
+{:else if !route.all && !area && featured.length}
   <!-- the featured scenarios: one picture, one sentence each -->
   <section class="mb-10 grid gap-8 sm:grid-cols-2">
     {#each featured as p (p.path)}
@@ -97,7 +99,9 @@
   </section>
   <p class="text-xs muted"><a use:link={{ all: true }} class="hover:text-brand">all {projects.length} projects →</a></p>
 {:else}
-  {#if featured.length}<p class="mb-6 text-xs muted"><a use:link={{}} class="hover:text-brand">← featured</a></p>{/if}
+  {#if area}<p class="mb-6 text-xs muted"><a use:link={{}} class="hover:text-brand">← projects</a> <span class="mono">/ {area}</span></p>
+  {:else if featured.length}<p class="mb-6 text-xs muted"><a use:link={{}} class="hover:text-brand">← featured</a></p>{/if}
+  {#if area && !areas.length}<p class="muted text-sm">no projects under {area}</p>{/if}
   {#each areas as [area, list] (area)}
     <section class="mb-10">
       <div class="label mb-2">{area} · {list.length} {list.length === 1 ? 'project' : 'projects'}</div>

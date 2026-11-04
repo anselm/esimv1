@@ -18,6 +18,7 @@ pub mod planet;
 pub mod countries;
 pub mod wildfire;
 pub mod record;
+pub mod suppression;
 pub mod firecells;
 
 use esim_kernel::describe::Describe;
@@ -67,6 +68,7 @@ pub static KINDS: &[Kind] = &[
     kind!("obs.perimeters", wildfire::Perimeters),
     kind!("obs.dins", wildfire::Structures),
     kind!("obs.record", record::Record),
+    kind!("fire.suppression", suppression::Suppression),
     kind!("fire.cells", firecells::Cells),
 ];
 

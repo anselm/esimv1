@@ -62,32 +62,33 @@
       "fire.rothermel",
       "obs.perimeters",
       "obs.dins",
-      "obs.record"
+      "obs.record",
+      "fire.suppression"
     ],
     "name": "palisades-2025",
     "path": "anselm/palisades-2025",
     "runs": [
       {
         "all_ledgers_closed": true,
-        "digest": "ffff1689c7a9d1d3",
+        "digest": "f5303941b2b24fb9",
         "end": 1736640000,
-        "events": 1763,
-        "id": "f2-palisades-2025-26a30683-ffff1689",
+        "events": 1764,
+        "id": "f2-palisades-2025-049fd575-f5303941",
         "name": "f2-palisades-2025",
         "seed": 1,
         "set": {
-          "fire.built_ros_m_min": "0"
+          "fire.shrub_fuel": "\"SH7\""
         },
         "start": 1736272800,
-        "variant": "built-barrier",
+        "variant": "sh7",
         "verdict": "holds"
       },
       {
         "all_ledgers_closed": true,
-        "digest": "4861453d53e23530",
+        "digest": "1ef44ed6900682fd",
         "end": 1736640000,
-        "events": 1763,
-        "id": "f2-palisades-2025-3dd00a8f-4861453d",
+        "events": 1764,
+        "id": "f2-palisades-2025-4464aade-1ef44ed6",
         "name": "f2-palisades-2025",
         "seed": 1,
         "set": {
@@ -99,10 +100,25 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "5e29110b37f6fd0d",
+        "digest": "4c5d9a239751d634",
         "end": 1736640000,
-        "events": 1763,
-        "id": "f2-palisades-2025-826db28b-5e29110b",
+        "events": 1764,
+        "id": "f2-palisades-2025-89ae7246-4c5d9a23",
+        "name": "f2-palisades-2025",
+        "seed": 1,
+        "set": {
+          "fire.built_ros_m_min": "0"
+        },
+        "start": 1736272800,
+        "variant": "built-barrier",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "eb728349588044e2",
+        "end": 1736640000,
+        "events": 1764,
+        "id": "f2-palisades-2025-a679e5d7-eb728349",
         "name": "f2-palisades-2025",
         "seed": 1,
         "set": {
@@ -110,21 +126,6 @@
         },
         "start": 1736272800,
         "variant": "reanalysis",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "758c3743def53c58",
-        "end": 1736640000,
-        "events": 1763,
-        "id": "f2-palisades-2025-9f3d179c-758c3743",
-        "name": "f2-palisades-2025",
-        "seed": 1,
-        "set": {
-          "fire.shrub_fuel": "\"SH7\""
-        },
-        "start": 1736272800,
-        "variant": "sh7",
         "verdict": "holds"
       }
     ],
@@ -171,37 +172,34 @@
       "fire.cells",
       "obs.perimeters",
       "obs.dins",
-      "obs.record"
+      "obs.record",
+      "fire.suppression"
     ],
     "name": "palisades-cells",
     "path": "anselm/palisades-cells",
     "runs": [
       {
         "all_ledgers_closed": true,
-        "digest": "0fb5a7b8a429d320",
+        "digest": "2d1db73804dfb214",
         "end": 1736640000,
-        "events": 2403,
-        "id": "f3-palisades-cells-11b0a6e2-0fb5a7b8",
+        "events": 2456,
+        "id": "f3-palisades-cells-0e261438-2d1db738",
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
-          "fire.house_lambda_m": "6",
-          "fire.ignite_scale": "4",
-          "fire.reach_m": "45",
-          "fire.structure_ignite": "15",
-          "fire.structure_jitter": "0.6",
-          "fire.structures": "\"on\""
+          "fire.ignite_scale": "3",
+          "fire.reach_m": "45"
         },
         "start": 1736272800,
-        "variant": "bodies",
+        "variant": "near-3",
         "verdict": "holds"
       },
       {
         "all_ledgers_closed": true,
-        "digest": "40958bf03dd1e587",
+        "digest": "cae1ba894aa32381",
         "end": 1736640000,
-        "events": 2353,
-        "id": "f3-palisades-cells-13631328-40958bf0",
+        "events": 2354,
+        "id": "f3-palisades-cells-14927292-cae1ba89",
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -216,84 +214,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "f92f58fe359c9f84",
+        "digest": "5ec0f114202c3f0d",
         "end": 1736640000,
-        "events": 2122,
-        "id": "f3-palisades-cells-3f30a5be-f92f58fe",
-        "name": "f3-palisades-cells",
-        "seed": 1,
-        "set": {
-          "fire.cooling": "\"idle\"",
-          "fire.form": "\"vector\"",
-          "fire.ignite_scale": "8",
-          "fire.reach_m": "45",
-          "fire.slope_rate_gain": "20"
-        },
-        "start": 1736272800,
-        "variant": "vector-8",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "a3de76925720d924",
-        "end": 1736640000,
-        "events": 2418,
-        "id": "f3-palisades-cells-4f02f4a6-a3de7692",
-        "name": "f3-palisades-cells",
-        "seed": 1,
-        "set": {
-          "fire.built_to_built_gain": "2.5",
-          "fire.ember_built_p": "0.5",
-          "fire.ignite_scale": "4",
-          "fire.reach_m": "45",
-          "fire.threshold_jitter": "0.6"
-        },
-        "start": 1736272800,
-        "variant": "houses-jitter",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "0b757a5701f23541",
-        "end": 1736640000,
-        "events": 2151,
-        "id": "f3-palisades-cells-56b53825-0b757a57",
-        "name": "f3-palisades-cells",
-        "seed": 1,
-        "set": {
-          "fire.cooling": "\"idle\"",
-          "fire.form": "\"vector\"",
-          "fire.ignite_scale": "5",
-          "fire.lines": "\"hold\"",
-          "fire.reach_m": "45",
-          "fire.slope_rate_gain": "20",
-          "record.time_shift_h": "0"
-        },
-        "start": 1736272800,
-        "variant": "vector-5-held",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "f5983829c8c8ac3a",
-        "end": 1736640000,
-        "events": 1955,
-        "id": "f3-palisades-cells-5b0f3f4f-f5983829",
-        "name": "f3-palisades-cells",
-        "seed": 1,
-        "set": {
-          "fire.ignite_scale": "2"
-        },
-        "start": 1736272800,
-        "variant": "scale-2",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "7e423c8285bca85e",
-        "end": 1736640000,
-        "events": 2440,
-        "id": "f3-palisades-cells-5e477926-7e423c82",
+        "events": 2441,
+        "id": "f3-palisades-cells-1639a39f-5ec0f114",
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -310,25 +234,59 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "81480f42c29d43a3",
+        "digest": "3716add79ea27174",
         "end": 1736640000,
-        "events": 2318,
-        "id": "f3-palisades-cells-66fc8fd3-81480f42",
+        "events": 2129,
+        "id": "f3-palisades-cells-38da48d9-3716add7",
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
-          "fire.ignite_scale": "4"
+          "fire.ignite_scale": "3"
         },
         "start": 1736272800,
-        "variant": "scale-4",
+        "variant": "scale-3",
         "verdict": "holds"
       },
       {
         "all_ledgers_closed": true,
-        "digest": "6999ef5763a7c5e8",
+        "digest": "f34599a500f07340",
         "end": 1736640000,
-        "events": 2151,
-        "id": "f3-palisades-cells-711dd7f2-6999ef57",
+        "events": 1763,
+        "id": "f3-palisades-cells-42ffef19-f34599a5",
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.ignite_scale": "6"
+        },
+        "start": 1736272800,
+        "variant": "scale-6",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "624e3c315c0a69a2",
+        "end": 1736640000,
+        "events": 2123,
+        "id": "f3-palisades-cells-5f4cc560-624e3c31",
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.cooling": "\"idle\"",
+          "fire.form": "\"vector\"",
+          "fire.ignite_scale": "8",
+          "fire.reach_m": "45",
+          "fire.slope_rate_gain": "20"
+        },
+        "start": 1736272800,
+        "variant": "vector-8",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "2eb215dfd094ace8",
+        "end": 1736640000,
+        "events": 2152,
+        "id": "f3-palisades-cells-7131bd4a-2eb215df",
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -344,58 +302,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "2ee2ce27cd54eea5",
+        "digest": "44a83d66791b9ce2",
         "end": 1736640000,
-        "events": 2128,
-        "id": "f3-palisades-cells-882f6578-2ee2ce27",
-        "name": "f3-palisades-cells",
-        "seed": 1,
-        "set": {
-          "fire.ignite_scale": "3"
-        },
-        "start": 1736272800,
-        "variant": "scale-3",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "2c9e53a0ee7db216",
-        "end": 1736640000,
-        "events": 2643,
-        "id": "f3-palisades-cells-8cdd54df-2c9e53a0",
-        "name": "f3-palisades-cells",
-        "seed": 1,
-        "set": {
-          "fire.ignite_scale": "2",
-          "fire.reach_m": "45"
-        },
-        "start": 1736272800,
-        "variant": "near-2",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "b711e9099624be33",
-        "end": 1736640000,
-        "events": 2276,
-        "id": "f3-palisades-cells-99bf8903-b711e909",
-        "name": "f3-palisades-cells",
-        "seed": 1,
-        "set": {
-          "fire.ignite_scale": "4",
-          "fire.reach_m": "45",
-          "fire.slope_rate_gain": "6"
-        },
-        "start": 1736272800,
-        "variant": "near-4-slope-6",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "480260bcfae56ba6",
-        "end": 1736640000,
-        "events": 1835,
-        "id": "f3-palisades-cells-c19eee64-480260bc",
+        "events": 1836,
+        "id": "f3-palisades-cells-8bfc6e78-44a83d66",
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -409,10 +319,30 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "6c2ea9bff260579e",
+        "digest": "d3d917851f843e56",
         "end": 1736640000,
-        "events": 2584,
-        "id": "f3-palisades-cells-c9bed6a8-6c2ea9bf",
+        "events": 2404,
+        "id": "f3-palisades-cells-aada6577-d3d91785",
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.house_lambda_m": "6",
+          "fire.ignite_scale": "4",
+          "fire.reach_m": "45",
+          "fire.structure_ignite": "15",
+          "fire.structure_jitter": "0.6",
+          "fire.structures": "\"on\""
+        },
+        "start": 1736272800,
+        "variant": "bodies",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "713656981ef79938",
+        "end": 1736640000,
+        "events": 2585,
+        "id": "f3-palisades-cells-b012c120-71365698",
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -427,25 +357,112 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "e2d31305ee5786ea",
+        "digest": "c805539532432e45",
         "end": 1736640000,
-        "events": 1762,
-        "id": "f3-palisades-cells-e541868d-e2d31305",
+        "events": 2319,
+        "id": "f3-palisades-cells-b4a4af11-c8055395",
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
-          "fire.ignite_scale": "6"
+          "fire.ignite_scale": "4"
         },
         "start": 1736272800,
-        "variant": "scale-6",
+        "variant": "scale-4",
         "verdict": "holds"
       },
       {
         "all_ledgers_closed": true,
-        "digest": "0922db6747067d80",
+        "digest": "265827d2bd2c5f40",
         "end": 1736640000,
-        "events": 2353,
-        "id": "f3-palisades-cells-e9051d4f-0922db67",
+        "events": 2277,
+        "id": "f3-palisades-cells-b9cd582e-265827d2",
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.ignite_scale": "4",
+          "fire.reach_m": "45",
+          "fire.slope_rate_gain": "6"
+        },
+        "start": 1736272800,
+        "variant": "near-4-slope-6",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "9687dbdcf41416c7",
+        "end": 1736640000,
+        "events": 2419,
+        "id": "f3-palisades-cells-d1407db5-9687dbdc",
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.built_to_built_gain": "2.5",
+          "fire.ember_built_p": "0.5",
+          "fire.ignite_scale": "4",
+          "fire.reach_m": "45",
+          "fire.threshold_jitter": "0.6"
+        },
+        "start": 1736272800,
+        "variant": "houses-jitter",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "eba8c6f7a7e910cb",
+        "end": 1736640000,
+        "events": 1956,
+        "id": "f3-palisades-cells-d73b8fb3-eba8c6f7",
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.ignite_scale": "2"
+        },
+        "start": 1736272800,
+        "variant": "scale-2",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "3d9036d4492626c0",
+        "end": 1736640000,
+        "events": 2644,
+        "id": "f3-palisades-cells-df3a701a-3d9036d4",
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.ignite_scale": "2",
+          "fire.reach_m": "45"
+        },
+        "start": 1736272800,
+        "variant": "near-2",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "8915b8359e886563",
+        "end": 1736640000,
+        "events": 2247,
+        "id": "f3-palisades-cells-e05d601f-8915b835",
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.cooling": "\"idle\"",
+          "fire.form": "\"vector\"",
+          "fire.ignite_scale": "5",
+          "fire.reach_m": "45",
+          "fire.slope_rate_gain": "20",
+          "suppression.mode": "\"hold\""
+        },
+        "start": 1736272800,
+        "variant": "vector-5-held",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "a23bcc6bb910feec",
+        "end": 1736640000,
+        "events": 2354,
+        "id": "f3-palisades-cells-f372497a-a23bcc6b",
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -454,22 +471,6 @@
         },
         "start": 1736272800,
         "variant": "near-4",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "15ef7c48238ef11c",
-        "end": 1736640000,
-        "events": 2455,
-        "id": "f3-palisades-cells-ed6e79f0-15ef7c48",
-        "name": "f3-palisades-cells",
-        "seed": 1,
-        "set": {
-          "fire.ignite_scale": "3",
-          "fire.reach_m": "45"
-        },
-        "start": 1736272800,
-        "variant": "near-3",
         "verdict": "holds"
       }
     ],
@@ -601,28 +602,6 @@
         "title": "Near reach, thresholds times 4, Rothermel's uphill gain (20) with a gentle downhill division (2)"
       },
       {
-        "name": "vector-4",
-        "set": {
-          "fire.cooling": "idle",
-          "fire.form": "vector",
-          "fire.ignite_scale": 4,
-          "fire.reach_m": 45,
-          "fire.slope_rate_gain": 20
-        },
-        "title": "The vector form (wind and slope as vectors, Rothermel's shape, Anderson's ellipse, idle cooling), thresholds times 4"
-      },
-      {
-        "name": "vector-6",
-        "set": {
-          "fire.cooling": "idle",
-          "fire.form": "vector",
-          "fire.ignite_scale": 6,
-          "fire.reach_m": 45,
-          "fire.slope_rate_gain": 20
-        },
-        "title": "The vector form (wind and slope as vectors, Rothermel's shape, Anderson's ellipse, idle cooling), thresholds times 6"
-      },
-      {
         "name": "vector-5",
         "set": {
           "fire.cooling": "idle",
@@ -650,9 +629,9 @@
           "fire.cooling": "idle",
           "fire.form": "vector",
           "fire.ignite_scale": 5,
-          "fire.lines": "hold",
           "fire.reach_m": 45,
-          "fire.slope_rate_gain": 20
+          "fire.slope_rate_gain": 20,
+          "suppression.mode": "hold"
         },
         "title": "The vector form at 5, with the record's completed lines holding from their recorded time"
       }

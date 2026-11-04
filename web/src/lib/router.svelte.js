@@ -1,6 +1,7 @@
 // Path routing, so every view is a shareable URL (query strings until 2026-11-04; the old
 // forms are still read, the new ones are written):
 //   /                           the projects
+//   /<area>                     an area: the projects under one handle
 //   /<area>/<name>              one project: its runs and variants, then its story
 //   /<area>/<name>/<run id>     one run of that project
 //   /<area>/<name>/compare      a project's variants side by side under one cursor
@@ -10,14 +11,14 @@
 //   /kinds                      every module kind, from its describe
 //   /all                        the front page with every project, not only the featured ones
 // The top-level words above are reserved and no area may take them (RESERVED_AREAS in server.mjs).
-export const route = $state({ project: null, run: null, runs: false, isNew: false, docs: false, doc: null, kinds: false, compare: null, all: false })
+export const route = $state({ area: null, project: null, run: null, runs: false, isNew: false, docs: false, doc: null, kinds: false, compare: null, all: false })
 
 const TOP = new Set(['runs', 'run', 'new', 'docs', 'kinds', 'all', 'compare'])
 
 function read() {
   const q = new URLSearchParams(location.search)
   const parts = location.pathname.split('/').filter(Boolean).map(decodeURIComponent)
-  const r = { project: null, run: null, runs: false, isNew: false, docs: false, doc: null, kinds: false, compare: null, all: false }
+  const r = { area: null, project: null, run: null, runs: false, isNew: false, docs: false, doc: null, kinds: false, compare: null, all: false }
   if (parts.length === 0) {
     // the query forms, as written before 2026-11-04 and in links that still carry them
     r.project = q.get('project'); r.run = q.get('run'); r.runs = q.has('runs'); r.isNew = q.has('new')
@@ -30,6 +31,8 @@ function read() {
     else if (top === 'kinds') r.kinds = true
     else if (top === 'all') r.all = true
     else if (top === 'docs') { if (rest.length) r.doc = rest.join('/'); else r.docs = true }
+  } else if (parts.length === 1) {
+    r.area = parts[0]
   } else if (parts.length >= 2) {
     r.project = `${parts[0]}/${parts[1]}`
     if (parts[2] === 'compare') { r.compare = r.project; r.project = null }
@@ -39,9 +42,10 @@ function read() {
 }
 
 const enc = (s) => s.split('/').map(encodeURIComponent).join('/')
-export function href({ project = null, run = null, runs = false, isNew = false, docs = false, doc = null, kinds = false, compare = null, all = false } = {}) {
+export function href({ area = null, project = null, run = null, runs = false, isNew = false, docs = false, doc = null, kinds = false, compare = null, all = false } = {}) {
   if (project && run) return `/${enc(project)}/${encodeURIComponent(run)}`
   if (project) return `/${enc(project)}`
+  if (area) return `/${encodeURIComponent(area)}`
   if (compare) return `/${enc(compare)}/compare`
   if (run) return `/run/${encodeURIComponent(run)}`
   if (runs) return '/runs'

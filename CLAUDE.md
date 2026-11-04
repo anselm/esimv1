@@ -163,8 +163,12 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   every cliff the engine met). Variants vector-5 (first day right: 16,525 acres at 27 h against 15,824,
   overlap 0.79), vector-8, vector-5-held. The second day overruns (54,000 acres at 49 h against 19,629)
   and no constant reaches it; candidates are the day-2 wind over the mountains and unplaced suppression.
-  `lines = "hold"` makes the record's completed lines unburnable from their time (does nothing here: the
-  record's first line is after the overrun); `obs.record` has `time_shift_h`. `esim project prune
+  Interventions are a module (`fire.suppression`, `crates/modules/src/suppression.rs`, afternoon of
+  2026-11-04, Anselm: a modular approach lets one engine run other fires): in `mode = "hold"` it turns the
+  record's completed lines into `ground.break { cells, strength, from }` events; `fire.cells` and
+  `fire.rothermel` subscribe to `ground.break` and never read the record. Both Palisades manifests carry it
+  with `mode = "off"`; the `vector-5-held` variant sets `suppression.mode = "hold"` (does nothing to the
+  numbers: the record's first line is after the overrun). `obs.record` has `time_shift_h`. `esim project prune
   <area/name> --keep 0` deletes every run of the project (did it by accident; all runs are deterministic
   and were rerun).
 - Path URLs (2026-11-04, Anselm's ask): the viewer routes by path, `/<area>/<name>`, `/<area>/<name>/<run id>`,
@@ -176,6 +180,9 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   the README (Anselm, 2026-11-04). The 3D scene stretches the vertical twice, lights by the sun's
   position at the cursor (low-precision solar formula, recalled), colours the sea, drapes the mapped
   perimeter as dots and draws the wind as an arrow at the north-west corner.
+- Breadcrumbs and areas (2026-11-04): `/anselm` is an area page (`ProjectList` with `area`), every path
+  fragment in the headers is a link (`web/src/lib/Crumbs.svelte`), the byline links to the area. In the
+  3D scene a line fades out twelve hours after its time and the whole record stays at the run's end.
 - Front page and covers (2026-11-03): `featured = true` in project.toml puts a project on the
   front page as a card; `cover` and `cover_caption` name a picture beside the manifest.
   Earth 2100 (renamed from "The planet, with people on it") and the Palisades fire are featured.

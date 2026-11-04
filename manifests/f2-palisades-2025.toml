@@ -55,3 +55,10 @@ time_field = "CreateDate"
 
 [audit]
 scores = [["sim.acres", "obs.acres"]]
+
+[[module]]
+name = "suppression"
+kind = "fire.suppression"
+[module.params]
+mode = "off"
+line_width_m = 30

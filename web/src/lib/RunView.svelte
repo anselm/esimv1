@@ -6,6 +6,7 @@
   // manifest behind disclosures. No module is special-cased here; a module that wants a
   // counter, a map or a list declares it in its describe.
   import { link } from './router.svelte.js'
+  import Crumbs from './Crumbs.svelte'
   import { isoDate, num, ms } from './fmt.js'
   import Status from './Status.svelte'
   import Ledger from './Ledger.svelte'
@@ -75,7 +76,11 @@
   }
 </script>
 
-<a use:link={back} class="floating left-3 top-3 hover:text-brand">← {backLabel}</a>
+{#if back.project}
+  <span class="floating left-3 top-3"><a use:link={back} class="hover:text-brand">←</a> <Crumbs path={back.project} run={id} floating /></span>
+{:else}
+  <a use:link={back} class="floating left-3 top-3 hover:text-brand">← {backLabel}</a>
+{/if}
 <div class="floating right-3 top-3 mono text-xs select-none"><Badge /></div>
 
 {#await load()}

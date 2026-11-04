@@ -8,6 +8,7 @@
   import Status from './Status.svelte'
   import Verdict from './Verdict.svelte'
   import Readme from './Readme.svelte'
+  import Crumbs from './Crumbs.svelte'
 
   let { path } = $props()
   let meta = $state(null)
@@ -92,14 +93,14 @@
   <p class="muted text-sm">loading…</p>
 {:else}
   <section class="mb-8">
-    <div class="mono text-xs muted">/{path}</div>
+    <Crumbs {path} />
     <h1 class="mt-1 text-xl font-medium">{meta.title ?? path}</h1>
     {#if meta.description}
       <p class="mt-2 max-w-3xl text-sm leading-relaxed">{meta.description}</p>
     {/if}
     <div class="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs muted">
       {#if meta.created}<span>started {meta.created}</span>{/if}
-      {#if meta.by}<span>by {meta.by}</span>{/if}
+      {#if meta.by}<span>by <a use:link={{ area: path.split('/')[0] }} class="hover:text-brand">{meta.by}</a></span>{/if}
       <span class="mono">{kinds.join(' · ')}</span>
     </div>
   </section>

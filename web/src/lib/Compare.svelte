@@ -4,6 +4,7 @@
   // Big counters that move with the cursor, the maps, the crossings so far, and a country
   // picker that draws one country's path from the run logs. Built for the 2100 question.
   import { link } from './router.svelte.js'
+  import Crumbs from './Crumbs.svelte'
   import { isoDate, num } from './fmt.js'
   import FieldMap from './FieldMap.svelte'
   import Chart from './Chart.svelte'
@@ -112,7 +113,7 @@
   }
 </script>
 
-<a use:link={{ project: path }} class="floating left-3 top-3 hover:text-brand">← {path}</a>
+<span class="floating left-3 top-3"><a use:link={{ project: path }} class="hover:text-brand">←</a> <Crumbs {path} floating /> <span class="mono muted">/ compare</span></span>
 <div class="floating right-3 top-3 mono text-xs select-none"><Badge /></div>
 
 {#if error}

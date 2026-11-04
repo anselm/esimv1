@@ -103,9 +103,10 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
    hand (`data/events/palisades-2025/`: CAL FIRE's resources by report, NIFC's 2,334 lines and 825
    points, UL's radio log). Late evening: `obs.record` publishes NIFC's points and lines into every
    Palisades run at their times, and the 3D view pulses them with their times beside the model's
-   ignition and spots (`devlog/20261103-the-record-on-the-map.md`). Morning of the 4th: `lines = "hold"`
-   makes the completed lines unburnable from their time and `obs.record` can shift the record's times;
-   neither touches the second day's overrun, which precedes the record's first line. Still to do: the
+   ignition and spots (`devlog/20261103-the-record-on-the-map.md`). Afternoon of the 4th: `fire.suppression`, a
+   module of its own between the record and the engines, turns the completed lines into `ground.break`
+   events both engines honour, and `obs.record` can shift the record's times; neither touches the second
+   day's overrun, which precedes the record's first line. Still to do: the
    unplaced suppression (aircraft and crews of the 8th and 9th from CAL FIRE's resource counts, as
    agents with capacity), geocoding UL's addressed events.
 5. "More clearly indicate when actual buildings themselves are likely burned - right now they stay

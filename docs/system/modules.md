@@ -130,13 +130,22 @@ in doubt, split at the point where two different people would hold different opi
   is copied into `data/events/palisades-2025/`. Since 2026-11-04 the engine has two forms: `reach`
   (the first, wind and slope stretching the heat's e-folding distance) and `vector` (the heat times a
   rate factor with Rothermel's shape, wind and slope as vectors, Anderson's ellipse for the other
-  directions, with `cooling = "idle"`), and `lines = "hold"` makes the record's completed lines
-  unburnable from their time (`devlog/20261104-the-vector-form.md`).
+  directions, with `cooling = "idle"`), (`devlog/20261104-the-vector-form.md`). Both engines subscribe to `ground.break` and never
+  read the record themselves.
+- `fire.suppression` (`crates/modules/src/suppression.rs`, 2026-11-04): interventions as a module
+  of their own, so the same fire engine runs another fire with another record or none. In `mode =
+  "hold"` each completed line in the record (`record.event` of kind line, category Completed …,
+  not archived) becomes a `ground.break`: the cells under it to a stated width, of a stated
+  strength, from the line's recorded time. `fire.cells` refuses heat and embers there;
+  `fire.rothermel` makes them unburnable. In `mode = "off"` (both Palisades manifests as written)
+  the record is drawn and not defended. Resources as agents with a ledger (engines, dozers,
+  aircraft placed by rule from the reports' counts) are the next form
+  (`devlog/20261104-interventions-as-a-module.md`).
 - `obs.record` (`crates/modules/src/record.rs`, 2026-11-03): the record of what people did,
   placed and timed, read from GeoJSON in the event folder (NIFC's event points and lines for the
   Palisades fire) and published into the run as `record.event` at each feature's time and cell.
   The run page's 3D view draws them as pulses and lines with their times, beside the model's own
-  ignition and spot fires. `fire.cells` with `lines = "hold"` makes the completed
-  lines unburnable from their time; nothing else reacts to them. The times are when the GIS feature
+  ignition and spot fires. `fire.suppression` turns the completed lines into
+  `ground.break` events that any fire engine subscribes to; nothing else reacts to them. The times are when the GIS feature
   was made, which lags the work (`devlog/20261103-the-record-on-the-map.md`); `time_shift_h` takes a
   stated number of hours off every feature's time, a guess when it is not zero.
