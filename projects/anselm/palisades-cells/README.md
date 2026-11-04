@@ -90,4 +90,8 @@ fitted, one constant at a time, with the Eaton fire of the same day kept back as
 
 The three-dimensional view on each run page is the ground as the run saw it: the terrain
 from the elevation model, every building as a box of its stated height, the fire's arrival
-draped over both at the time cursor. [Limits today](?doc=system/limits) has the list.
+draped over both at the time cursor. Since the late evening of 2026-11-03 it also carries the
+record of what people did, from the incident's own GIS: dozer pushes, drop points, helispots and
+completed lines appear where and when they were made, pulse for a while, and carry their times,
+beside the model's ignition and the spot fires it threw. The model does not yet react to any of
+it; the lines are drawn, not defended. [Limits today](?doc=system/limits) has the list.

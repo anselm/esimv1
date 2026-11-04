@@ -100,7 +100,11 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
    earns it.
 4. "Interventions - there may be calfire logs of actual intervention points." — the record is in
    hand (`data/events/palisades-2025/`: CAL FIRE's resources by report, NIFC's 2,334 lines and 825
-   points, UL's radio log); no module reads it yet.
+   points, UL's radio log). Late evening: `obs.record` publishes NIFC's points and lines into every
+   Palisades run at their times, and the 3D view pulses them with their times beside the model's
+   ignition and spots (`devlog/20261103-the-record-on-the-map.md`). Still to do: a module that
+   makes the lines hold (strength from the resource counts, the GIS lag stated), geocoding UL's
+   addressed events.
 5. "More clearly indicate when actual buildings themselves are likely burned - right now they stay
    one color." — done in the first form (2026-11-03 evening, `devlog/20261103-bodies.md`): every
    footprint a body with its own ignition and burn, coloured in the 3D view by the model's state

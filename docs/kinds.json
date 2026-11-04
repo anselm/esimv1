@@ -112429,6 +112429,16 @@
         "note": "guess: the reach grows by this times tan(slope) uphill"
       },
       {
+        "name": "slope_rate_gain",
+        "default": 0.0,
+        "note": "the heat a cell delivers uphill is multiplied by 1 + this times tan²(slope) and downhill divided by it; 0 leaves slope to the reach alone. Rothermel's slope factor has this shape with 5.275 β^-0.3 as the gain, about 20 for a shrub bed (recalled); the downhill half is a guess"
+      },
+      {
+        "name": "downslope_gain",
+        "default": -1.0,
+        "note": "the gain on the downhill division; -1 means the same as slope_rate_gain"
+      },
+      {
         "name": "moisture_gain",
         "default": 10.0,
         "note": "guess: ignition energy grows by this times the dead fuel moisture fraction"

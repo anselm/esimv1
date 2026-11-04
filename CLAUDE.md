@@ -148,6 +148,14 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   three.js 0.170, needs `terrain_elev_m` and `building_height` frames); headless screenshots need the
   swiftshader flags, which the scratchpad shot script now sets. Never `pgrep -f`/`kill` a pattern
   that appears in the running command line (killed my own shell this way).
+- The record on the map (2026-11-03 late, `devlog/20261103-the-record-on-the-map.md`): `obs.record`
+  (`crates/modules/src/record.rs`) reads GeoJSON from `data/events/<event>/` and publishes
+  `record.event` at each feature's time and cell; both Palisades manifests carry it (NIFC points and
+  lines, `CreateDate`, which lags the work; the dataset's own time fields are empty). `Scene3D`
+  reads the run's `log.jsonl` for `record.event`, `fire.ignition`, `fire.spot` and draws pulsing
+  rings, draped lines and time labels (UTC) at the cursor. The model does not react to the record.
+  A project's manifest is frozen: after a manifest change run `esim project update <area/name>
+  --manifest manifests/x.toml` (area/name, not the folder path) and rerun the variants.
 - Front page and covers (2026-11-03): `featured = true` in project.toml puts a project on the
   front page as a card; `cover` and `cover_caption` name a picture beside the manifest.
   Earth 2100 (renamed from "The planet, with people on it") and the Palisades fire are featured.

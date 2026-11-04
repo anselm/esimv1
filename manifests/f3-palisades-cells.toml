@@ -42,5 +42,12 @@ kind = "obs.dins"
 service = "https://services1.arcgis.com/jUJYIo9tSA7EHvfZ/arcgis/rest/services/DINS_2025_Palisades_Public_View/FeatureServer/0"
 key = "cal-fire-dins/2025-palisades"
 
+[[module]]
+name = "record"
+kind = "obs.record"
+[module.params]
+files = ["palisades-2025/nifc/palisades-event-points.geojson", "palisades-2025/nifc/palisades-event-lines.geojson"]
+time_field = "CreateDate"
+
 [audit]
 scores = [["sim.acres", "obs.acres"]]

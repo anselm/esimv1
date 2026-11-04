@@ -72,6 +72,9 @@ Our perimeter reader gives 23,448 acres for the WFIGS perimeter of record, match
 
 ### `nifc/` — the incident's own GIS lines and points
 
+Read by the `obs.record` module (both Palisades manifests), which publishes each feature into the
+run at its `CreateDate` and the 3D view draws them; see `devlog/20261103-the-record-on-the-map.md`.
+
 - **Source** NIFC Operational Data Archive 2025, `services3.arcgis.com/T4QMspbfLg3qTGWY/.../Operational_Data_Archive_2025/FeatureServer`,
   layers 4 (Event_Line) and 2 (Event_Point), `IncidentName = 'Palisades'`, paged at 2,000, GeoJSON
   in EPSG:4326, all fields. The perimeters (layer 6) are fetched live by `obs.perimeters` and are
