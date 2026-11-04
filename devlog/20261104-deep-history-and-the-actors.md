@@ -165,3 +165,28 @@ SVG pasted in, and any project can draw one. It needs no runs. The embed is docu
 `docs/system/projects-and-runs.md`. The heckler pass on the history section brought the mean
 sentence from 38 words to 26; the function-word fingerprint still drifts from his corpus, which
 a Claude draft always does.
+
+## The principle (Anselm, later that evening)
+
+"Today there is a large difference between a human oriented model and our simulation. That's
+ok. I feel like this delta we can examine and decide if we want to reconcile or educate users or
+so on. The human model however should be something that everybody largely agrees covers the
+topic. And reconciliation if ever can happen later."
+
+So there are two models of each scenario and a delta between them, and all three are objects
+of the project. The human model is the consensus map of what decides the outcome, and its
+standard is agreement, not the code: it should be drawable by a fire officer, an ecologist and
+a resident and come out much the same. The simulation is whatever we have built. The delta is
+examined, and what we do about it is a choice each time: close it with a module, or say on the
+page that the model lacks it and why. Nothing obliges the simulation to grow toward the human
+model, and the human model must not shrink toward the simulation to look complete.
+
+What that asks of the actors figure: its actors and arrows should rest on named frameworks
+rather than on this session's phrasing. The candidates to check and cite are the fire behaviour
+triangle of fuel, weather and topography that the fire services teach (recalled, not fetched),
+the four factors the county's 1982 history names, "land use, vegetation, fire topography and
+climate (fire winds)" (read), and the home-ignition-zone work on why houses burn (Cohen, USDA;
+recalled). People and buildings are the two actors the triangle leaves out and the record
+puts in. The delta could then be machine-checked rather than hand-typed: an arrow could name
+the module or parameter that models it, and the page could draw it solid only when that module
+is in the manifest. That is the examination tool, not the reconciliation, and it is not built.
