@@ -100,8 +100,13 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
 - Fit the engine's constants to the perimeters and the inspections with the Eaton fire (same
   day, same wind, 14,021 acres, DINS exists) held back as the test; a parameter sweep through
   `esim ensemble --set`.
-- Suppression from the record: ICS-209 resource counts and where the infrared perimeters
-  stopped advancing, as agents with capacity; then the interventions Anselm asked for.
+- Suppression from the record: the NIFC Operational Data Archive 2025 holds, for Palisades, 2,334
+  event lines (completed dozer and hand lines, roads used as line, dated from 2025-01-09 19:40Z)
+  and 825 event points (dozer pushes, drop points, division breaks); checked 2026-11-03. Lines as
+  timed barriers of declared strength first, then ICS-209 resource counts as agents with capacity.
+- The engine beyond Rothermel, Anselm's four asks and the order to build them (structures as
+  bodies; terrain-following wind; fuel as fuel at 10 m; interventions; then the 3D air):
+  `devlog/20261103-beyond-rothermel.md`.
 - Pre and post imagery: Sentinel-2 L2A scenes S2A_MSIL2A_20250102T183751_R027_T11SLT (before)
   and S2C_MSIL2A_20250201T183631_R027_T11SLT (after) on Planetary Computer, anonymous STAC;
   needs a 16-bit windowed COG read.
