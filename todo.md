@@ -84,10 +84,19 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
 
 ## The fire (Anselm, 2026-11-03; `devlog/20261103-the-front-door-and-the-fire.md`, `devlog/20261103-our-own-engine.md`)
 
-- The engine's structure physics, continued: a first pass (embers into houses, house to house,
-  per-cell jitter) took destroyed-structure recall from 0.12 to 0.32; next, structures as
-  individual bodies from the footprints, ignition by radiant exposure and ember load, the
-  building's material where the inspection form states it (the data-share view has it).
+- Terrain-adjusted wind, one-way: the 3 km HRRR field shaped by the DEM so the Santa Ana
+  accelerates down the canyons and slackens in the lee (Anselm, 2026-11-03: "is the wind
+  volumetric?"; it is flat). The biggest gap for the first night now that the ground is real.
+- The fire's own wind, cheapest step: a local indraft toward intense cells added to the ambient
+  field, declared as a guess (Anselm: "in a real forest fire the wind is influenced by the fire
+  itself"). Full coupling (WRF-Fire) is noted and out of reach for this window.
+- Vegetation beyond a cover class: fuel load and species (LANDFIRE, needs an email), time since
+  last burn (the 2021 scar), canopy height (Meta tile below), seasonal live moisture.
+- The engine's structure physics, continued: on the corrected ground the first pass (embers
+  into houses, house to house, per-cell jitter) takes destroyed-structure recall from 0.12 to
+  0.19 at the record's 27-hour acreage; next, structures as individual bodies from the
+  footprints, ignition by radiant exposure and ember load, the building's material where the
+  inspection form states it (the data-share view has it).
 - Fit the engine's constants to the perimeters and the inspections with the Eaton fire (same
   day, same wind, 14,021 acres, DINS exists) held back as the test; a parameter sweep through
   `esim ensemble --set`.
@@ -98,7 +107,8 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
   needs a 16-bit windowed COG read.
 - Canopy height (Meta/WRI 1 m, tile 023012311 over the window) as a fuel layer.
 - The 3D view: land cover on the ground, structures coloured by their recorded fate, a wind
-  arrow, the time cursor playing; terrain banding to understand.
+  arrow, the time cursor playing. (The terrain banding was the elevation window's missing
+  columns, fixed 2026-11-03; `devlog/20261103-the-holes-in-the-ground.md`.)
 - Check `data/events/fuels.toml` line by line against Scott and Burgan 2005 (RMRS-GTR-153); the
   SH5 row decides the Palisades result.
 - Barriers: roads and ridgelines from OpenStreetMap, the 2021 Palisades burn scar from the fire

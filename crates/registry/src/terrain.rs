@@ -23,7 +23,8 @@ pub struct DemWindow {
     pub provenance: String,
 }
 
-const RECIPE_VERSION: &str = "terrain-v2"; // v2: reader honours PixelIsPoint
+const RECIPE_VERSION: &str = "terrain-v3"; // v2: reader honours PixelIsPoint; v3: grid laid half a pixel off the lattice (no empty columns)
+const SOURCE_ARCSEC: f64 = 1.0; // Copernicus GLO-30 below 50 degrees of latitude
 
 fn derived_path(fetcher: &Fetcher, key: &str) -> PathBuf {
     let dir = fetcher.cache_dir.join("derived");
@@ -45,8 +46,16 @@ fn write_f32s(path: &std::path::Path, v: &[f32]) {
 /// The window is snapped outward to whole output cells.
 pub fn dem_window(fetcher: &mut Fetcher, dem: &Asset, lat_s: f64, lat_n: f64, lon_w: f64, lon_e: f64, res_arcsec: f64) -> Result<DemWindow, String> {
     let d = res_arcsec / 3600.0;
-    let lon_w = (lon_w / d).floor() * d;
-    let lat_n = (lat_n / d).ceil() * d;
+    // GLO-30's pixel centres sit on whole arc-seconds. An output grid whose edges also sit on
+    // whole arc-seconds puts every source centre exactly on an edge, and floating-point rounding
+    // then decides which cell it falls in: at one arc-second one column in three or four got no
+    // pixel at all and came out NaN, which the slope code read as a 400 m trench (found 2026-11-03
+    // in the Palisades window). So the grid is laid half a source pixel off the lattice: at the
+    // DEM's own resolution each cell is centred on its pixel, and at coarser ones no pixel centre
+    // lies on an edge.
+    let half = SOURCE_ARCSEC / 3600.0 / 2.0;
+    let lon_w = (lon_w / d).floor() * d - half;
+    let lat_n = (lat_n / d).ceil() * d + half;
     let nx = ((lon_e - lon_w) / d).ceil() as usize;
     let ny = ((lat_n - lat_s) / d).ceil() as usize;
     // tiles needed
@@ -78,6 +87,7 @@ pub fn dem_window(fetcher: &mut Fetcher, dem: &Asset, lat_s: f64, lat_n: f64, lo
     let mut cnt = vec![0u32; nx * ny];
     for (_, p) in &paths {
         let r = cog::read(p)?;
+        if ((r.dx * 3600.0) - SOURCE_ARCSEC).abs() > 1e-6 { eprintln!("dem: tile pixel is {:.4} arcsec, not {SOURCE_ARCSEC}; the grid may not sit on its centres", r.dx * 3600.0); }
         // map every source pixel centre into an output cell
         for row in 0..r.height {
             let lat = r.lat(row);

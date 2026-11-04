@@ -92,14 +92,20 @@ holds the history.
 
 ## The fire
 
-- Rothermel's spread model with no suppression, no roads, no fuel breaks and no burn scars,
-  on land cover where every classified cell carries fuel, is an upper bound. On the
-  Palisades fire (2026-11-03) it burns about four times the mapped area at 27 hours
-  (79,000 acres against 15,800 on the reanalysis wind) and fills the window by the second
-  day; at the first mapped figure, eleven and a half hours in, it has more than twenty times
-  the acreage. The gust, barrier and heavy-shrub
-  variants do not close the gap. The missing things are known: barriers, suppression, the
-  fuel table.
+- Rothermel's spread model on one 25 km reanalysis wind is slow on a Santa Ana day. On the
+  Palisades fire (2026-11-03, corrected ground) it has about an eighth of the mapped area at
+  27 hours (2,000 acres against 15,800) and reaches the record's size at the end of the fourth
+  day, when the real fire was being held; the gusts variant has 2,500 at 27 hours and overruns
+  by the end. Ending near the right size is not being right at any hour. Until that afternoon
+  the elevation window had a NaN column every third or fourth cell (pixel centres on cell
+  edges, `terrain.rs`), the slope code read each as a cliff, and the same model burned four
+  times the record; the old figures are in the devlog, not here.
+- The wind is flat. Neither fire module adjusts it for terrain (no channelling down canyons,
+  no lee), and neither feeds the fire back into it (no convective column, no indraft, no
+  plume-driven spread); both are one-way models that read a wind and never write one.
+- Vegetation is a cover class, not a fuel: WorldCover's shrubland is one thing whether it is
+  coastal sage or forty-year chamise; no fuel load, no time since last burn, no canopy
+  height, no seasonal live moisture, no crown fire.
 - Every fuel parameter (`data/events/fuels.toml`) is recalled from Scott and Burgan 2005
   and not yet checked; the moisture, wind-adjustment and ellipse equations are recalled
   too. The ellipse's wind is in m/s with the FARSITE coefficients, which is consistent with
@@ -117,14 +123,15 @@ holds the history.
 - Our own engine (`fire.cells`, 2026-11-03) is a heat budget with guessed constants. One
   multiplier on the ignition thresholds is swept across the runs; with heat felt three cells
   away there is a cliff (the window burns in hours, or the next cell never lights), with heat
-  felt only by the next cell the early hours come within a factor of two of the record and the
-  fire then keeps growing because nothing stops it. The plausible-pace runs reach only a tenth
+  felt only by the next cell the first day matches the record's acreage (15,300 against 15,800
+  at 27 hours on the corrected ground) and the fire then keeps growing because nothing stops
+  it, to twice the record by the fourth day. The plausible-pace runs reach an eighth to a fifth
   of the destroyed structures: a built-up cell is given a high threshold and the engine walks
-  around the neighbourhoods; there is no ember into a house and no house as the next house's
-  fuel. The HRRR 3 km wind it uses reads 10 m/s with 21 m/s gusts at the ignition point in the
-  first hour (checked against GDAL); the reanalysis read 7 and 13.
+  around the neighbourhoods; embers into houses and a house-to-house reach are knobs, not
+  physics. The HRRR 3 km wind it uses reads 10 m/s with 21 m/s gusts at the ignition point in
+  the first hour (checked against GDAL); the reanalysis read 7 and 13.
 - The 3D view takes building heights as feet because the county's service does not state a
-  unit; the terrain surface shows banding from the elevation window.
+  unit.
 - Built-up land carries fire at a guessed rate; nothing about structures is physical.
   No spotting, no crown fire, no fire weather of the fire's own, no evacuation, no people.
 

@@ -43,32 +43,40 @@ table 2025-01-08T21:25Z fire.burned_acres=burned obs.acres=mapped fit.sorensen=o
 table 2025-01-12T00:00Z fire.burned_acres=burned_by_the_end obs.acres=last_mapped fit.sorensen=overlap
 ```
 
-The model overruns the record by a wide margin. On the reanalysis wind it burns about four
-times the area the mapping teams found at 27 hours, and by the second day it has burned
-every cell in the window that can burn, from Malibu to Brentwood, which the real fire did
-not. Four variants ask whether the overrun is a matter of the wind, the
-houses or the shrub: the reanalysis gusts in place of the mean wind, built-up land as a
-barrier instead of a carrier, and the heavier chaparral model. None of them closes the
-gap; the barrier variant removes the houses from the count and nothing more.
+On the reanalysis wind the model is slow. At the hour of the first infrared map it has
+burned about an eighth of the mapped area, and it reaches the record's size only at the
+end of the fourth day, when the real fire had been that size for three. The shape it ends
+with is fair: a little over half of the burned-and-mapped union agrees. Four variants ask
+whether the shortfall is the wind, the houses or the shrub. The reanalysis gusts in place
+of the mean wind close part of the first day's gap and overrun by the end; the heavier
+chaparral model burns less, not more; built-up land as a barrier changes little. None of
+them produces the first night, when the real fire went from the ridge to the sea in hours.
+
+Until the afternoon of 2026-11-03 these runs were made on broken ground. The elevation
+window had a column of missing values every third or fourth cell, which the slope code
+read as a cliff on either side, and the model then burned four times the record and filled
+the window by the second day. The runs on this page are on the corrected ground; the
+devlog entry *The holes in the ground* has the account.
 
 ## What that means
 
-A spread model with no suppression, no roads, no fuel breaks and no burn scars, on a
-landscape where every cell carries fuel, is an upper bound: the fire the land would
-allow. At the hour of the first mapped figure, eleven and a half hours in, the model has
-more than twenty times the acreage the triangle states, and the difference is the things
-this model does not have. Three of them are known and are the next work:
+Two things are missing and they pull in opposite directions. The wind that blew on the
+ridges that night was two or three times what a 25 km reanalysis says, and a spread model
+on the real wind runs faster; the engine project beside this one, which reads NOAA's 3 km
+analysis with its gusts, matches the first day's acreage. And nothing here is fought: by the
+second day the real fire was being held on its eastern and northern flanks, so a model that
+is slow early and unhindered late can end near the right size without having been right at
+any hour. The hourly perimeters, not the final acreage, are the test. Three things are
+known and are the next work:
 
-- The fuel table, recalled, to be checked line by line against the published models.
-- Roads, ridgelines and the 2021 Palisades burn scar as barriers, from OpenStreetMap and
-  the fire history.
+- The wind shaped by the terrain, so the Santa Ana accelerates down the canyons and
+  slackens in the lee, instead of one flat value for the window.
+- The fuel table, recalled, to be checked line by line against the published models, and a
+  fuel map made for fire beside the land-cover classes.
 - Suppression as an agent: engines, dozers and aircraft placed by rule, holding lines
   where the record says lines held.
 
-The overlap scores above are honest about the shape as well as the size: about a third of
-the burned-and-mapped union agrees at 27 hours, because the model's fire does cover the
-real one and then goes far beyond it. The arrival-time map on each run page shows where
-it went first.
+The arrival-time map on each run page shows where the model's fire went first.
 
 ## Not in these runs
 

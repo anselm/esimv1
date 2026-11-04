@@ -1,16 +1,16 @@
 {
-  "accepted": "2026-11-03",
-  "commit": "2a8b276",
+  "accepted": "2026-11-04",
+  "commit": "5a37740",
   "rungs": {
     "boone-water": {
-      "digest": "f29cfb63bbc61c5f",
+      "digest": "26199adb826100a3",
       "manifest": "manifests/m3-water-boone.toml",
       "scores": {
         "hydro.q_sim_daily_m3_s vs hydro.q_obs_daily_m3_s": {
-          "kge": 0.4352384216064943,
-          "nse": 0.4685417204587199,
-          "pbias_pct": 31.44357534235713,
-          "rmse": 23.400983535621304
+          "kge": 0.4412252953882973,
+          "nse": 0.4751098501971577,
+          "pbias_pct": 28.562888291120966,
+          "rmse": 23.255931191837213
         }
       },
       "set": [],

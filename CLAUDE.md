@@ -111,16 +111,27 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   and gusts at one point; NIFC's daily perimeters by IRWIN id and the WFIGS perimeter of record,
   all anonymous). Fuel models in `data/events/fuels.toml`, every row recalled from Scott and
   Burgan 2005 and unchecked. Project `anselm/palisades-2025` (manifest `f2-palisades-2025`,
-  variants reanalysis, gusts, built-barrier, sh7) runs in about 15 s and overruns the record
-  about fourfold at 27 hours: an upper bound with no barriers or suppression. The first mapped
-  perimeter is a hand-drawn triangle. Fire reaches three cells along 32 directions; progress is
-  per approach direction (summing over neighbours ran the front several times too fast).
+  variants reanalysis, gusts, built-barrier, sh7) runs in about 10 s and, on the corrected ground,
+  is about eight times too slow at 27 hours on the reanalysis wind (2,031 acres against 15,824)
+  and ends the fourth day near the record's size (20,892 against 23,343, overlap 0.58); the gusts
+  variant overruns by the end. The first mapped perimeter is a hand-drawn triangle. Fire reaches
+  three cells along 32 directions; progress is per approach direction (summing over neighbours
+  ran the front several times too fast).
+- The holes in the ground (2026-11-03 afternoon, `devlog/20261103-the-holes-in-the-ground.md`):
+  until then `dem_window` put Copernicus pixel centres exactly on output cell edges, one column
+  in three or four came out NaN at one arc-second, Horn's slope read each as a cliff, and both fire
+  engines ran on east-west cliffs (Rothermel burned 79,000 acres at 27 hours). The grid is now
+  laid half a source pixel off the lattice (`terrain-v3`); the Boone regress baseline moved
+  slightly and was accepted. Any run made before that afternoon on a one-arcsecond window is
+  suspect. Neither fire module adjusts the wind for terrain or feeds the fire back into it.
 - Our own fire engine (2026-11-03, `crates/modules/src/firecells.rs`, kind `fire.cells`): a heat
   budget on 1-arcsec cells with buildings (LA County LARIAC footprints with heights, paged
   anonymously), roads as breaks (OSM context), HRRR 3 km wind each hour (`crates/registry/src/grib.rs`
   reads templates 3.30 and 5.0/5.3 by byte range from the open bucket; `Fetcher::fetch_range_reduced`;
   cross-checked with GDAL), spotting, a declared `ignite_scale` knob. Project `anselm/palisades-cells`
-  (manifest `f3-palisades-cells`; variants scale-2..6 and near-2..4 with reach 45 m). `obs.dins`
+  (manifest `f3-palisades-cells`; variants scale-2..6 and near-2..4 with reach 45 m, houses,
+  houses-jitter). On the corrected ground near-4 has 15,306 acres at 27 hours against 15,824 mapped
+  and twice the record by day four; destroyed-structure recall 0.12 to 0.19. `obs.dins`
   (CAL FIRE's 12,081 inspections) scores structures. A `scene` view renders in 3D (`Scene3D.svelte`,
   three.js 0.170, needs `terrain_elev_m` and `building_height` frames); headless screenshots need the
   swiftshader flags, which the scratchpad shot script now sets. Never `pgrep -f`/`kill` a pattern

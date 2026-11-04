@@ -27,11 +27,15 @@ in the morning on the 7th, burned 23,448 acres, destroyed 6,845 buildings and ki
 people. We run it again on its own ground: the real terrain at 30 metres, the real land
 cover as fuel, the hour's wind from a weather reanalysis, lit where and when the record
 says, with nobody fighting it. Then we hold the result against the perimeters the fire's
-own mapping teams drew as it grew. The honest news is that the model burns about four
-times what they mapped at 27 hours. No roads, no fuel breaks, no crews, a fuel table I have
-not yet checked against the book it came from. It is an upper bound: the fire the land
-would allow. That is worth knowing, and it is a long way from a tool a fire chief could
-use. The gap is the work.
+own mapping teams drew as it grew. The honest news is that the model is slow: at 27 hours
+it has about an eighth of what they mapped, because a 25 km reanalysis reads a Santa Ana
+night as a stiff breeze, and it reaches the fire's final size only on the fourth day, when
+the real fire was being held. A second engine of our own, on NOAA's 3 km wind with its
+gusts, matches the first day's acreage and then burns twice the record because nothing in
+it stops. Neither is a tool a fire chief could use. The gap is the work. (An earlier
+version of this paragraph said the model burned four times the record. It did, on ground
+with a hole in it every third column that the slope code read as a cliff; the devlog has
+the account.)
 
 The second is Earth 2100. One model of the planet, six assumptions about what we do with
 emissions after 2024, each run to the end of the century and read against the sixteen

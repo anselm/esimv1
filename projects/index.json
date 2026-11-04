@@ -68,10 +68,10 @@
     "runs": [
       {
         "all_ledgers_closed": true,
-        "digest": "bb594cbd9d0c851d",
+        "digest": "0e1d341ffb572a05",
         "end": 1736640000,
         "events": 352,
-        "id": "f2-palisades-2025-280ef421-bb594cbd",
+        "id": "f2-palisades-2025-280ef421-0e1d341f",
         "name": "f2-palisades-2025",
         "seed": 1,
         "set": {
@@ -83,10 +83,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "30244278472bfeb5",
+        "digest": "60cc1355add49856",
         "end": 1736640000,
         "events": 352,
-        "id": "f2-palisades-2025-2e212982-30244278",
+        "id": "f2-palisades-2025-2e212982-60cc1355",
         "name": "f2-palisades-2025",
         "seed": 1,
         "set": {
@@ -98,10 +98,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "1bd28f8aeff03a14",
+        "digest": "66c4541773de4392",
         "end": 1736640000,
         "events": 352,
-        "id": "f2-palisades-2025-61dd849b-1bd28f8a",
+        "id": "f2-palisades-2025-61dd849b-66c45417",
         "name": "f2-palisades-2025",
         "seed": 1,
         "set": {
@@ -109,14 +109,14 @@
         },
         "start": 1736272800,
         "variant": "sh7",
-        "verdict": null
+        "verdict": "holds"
       },
       {
         "all_ledgers_closed": true,
-        "digest": "8b326bf88356cc1b",
+        "digest": "d36f2dbe24e92923",
         "end": 1736640000,
         "events": 352,
-        "id": "f2-palisades-2025-b628ba87-8b326bf8",
+        "id": "f2-palisades-2025-b628ba87-d36f2dbe",
         "name": "f2-palisades-2025",
         "seed": 1,
         "set": {
@@ -176,10 +176,10 @@
     "runs": [
       {
         "all_ledgers_closed": true,
-        "digest": "2711dee1dbc97620",
+        "digest": "b1c9de226a5d37cb",
         "end": 1736640000,
-        "events": 1217,
-        "id": "f3-palisades-cells-29244f10-2711dee1",
+        "events": 351,
+        "id": "f3-palisades-cells-29244f10-b1c9de22",
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -191,10 +191,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "3a05dfd286855938",
+        "digest": "3e182bb8c4e527c1",
         "end": 1736640000,
-        "events": 703,
-        "id": "f3-palisades-cells-36ca046d-3a05dfd2",
+        "events": 717,
+        "id": "f3-palisades-cells-36ca046d-3e182bb8",
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -206,10 +206,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "66b7f801cf828ee6",
+        "digest": "74551b15b8776621",
         "end": 1736640000,
-        "events": 1379,
-        "id": "f3-palisades-cells-8893b34b-66b7f801",
+        "events": 1232,
+        "id": "f3-palisades-cells-8893b34b-74551b15",
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -222,10 +222,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "1b526276c5285a5b",
+        "digest": "63eec543e7c4fee2",
         "end": 1736640000,
-        "events": 1034,
-        "id": "f3-palisades-cells-8cbeb05c-1b526276",
+        "events": 942,
+        "id": "f3-palisades-cells-8cbeb05c-63eec543",
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -240,10 +240,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "67d399978cfca794",
+        "digest": "d74bb29053fb48e9",
         "end": 1736640000,
-        "events": 1048,
-        "id": "f3-palisades-cells-9625b18f-67d39997",
+        "events": 942,
+        "id": "f3-palisades-cells-9625b18f-d74bb290",
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -256,10 +256,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "0821683a704be113",
+        "digest": "da320bdac3cf1d45",
         "end": 1736640000,
-        "events": 1302,
-        "id": "f3-palisades-cells-a8eb73da-0821683a",
+        "events": 1044,
+        "id": "f3-palisades-cells-a8eb73da-da320bda",
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -272,10 +272,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "9cfa989672805005",
+        "digest": "8bd15e05801f16e6",
         "end": 1736640000,
-        "events": 563,
-        "id": "f3-palisades-cells-c35711c1-9cfa9896",
+        "events": 544,
+        "id": "f3-palisades-cells-c35711c1-8bd15e05",
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -287,10 +287,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "009c579f659724c2",
+        "digest": "a0d04b52744d0366",
         "end": 1736640000,
-        "events": 865,
-        "id": "f3-palisades-cells-e0038d4d-009c579f",
+        "events": 907,
+        "id": "f3-palisades-cells-e0038d4d-a0d04b52",
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -302,10 +302,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "5320fc77829f4fb5",
+        "digest": "72a6dd2beb80cd87",
         "end": 1736640000,
-        "events": 1098,
-        "id": "f3-palisades-cells-f2c6427a-5320fc77",
+        "events": 1007,
+        "id": "f3-palisades-cells-f2c6427a-72a6dd2b",
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -317,7 +317,7 @@
         },
         "start": 1736272800,
         "variant": "houses-jitter",
-        "verdict": null
+        "verdict": "holds"
       }
     ],
     "title": "The Palisades fire, cell by cell",

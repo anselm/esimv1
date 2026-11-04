@@ -1,8 +1,8 @@
 # The same fire, cell by cell
 
-The first Palisades project runs a 1972 spread formula and overruns the record fourfold.
-This one starts from the facts instead and asks what the simplest engine built on them
-does. Every cell of the ground knows its height and slope, its cover, how much of it is
+The first Palisades project runs a 1972 spread formula on a 25 km wind and is eight times
+too slow on the first day. This one starts from the facts instead and asks what the
+simplest engine built on them does. Every cell of the ground knows its height and slope, its cover, how much of it is
 under a building and how tall, whether a highway crosses it, and, hour by hour, the wind,
 gust, temperature and humidity that NOAA's 3 km analysis put over it. A burning cell
 heats the cells around it, further downwind and uphill. A cell lights when the heat it has
@@ -34,18 +34,27 @@ Two things come out of the sweep, and both are about the engine rather than the 
 The first is a cliff. With a far reach (heat felt three cells away) the fire either fills the
 window in hours or, past a threshold, cannot light the cell next to it at all; there is no
 setting in between that walks at the record's pace. With a near reach, heat felt only by
-the next cell, the early hours come into range: at four times the threshold the engine has
-burned about 5,500 acres at twelve hours where the triangle says 2,920, and about 22,000 at
-27 hours where the map says 15,800. Then it keeps going, because nothing in it stops, and
-by the fourth day it has twice the record.
+the next cell, the first day comes into range: at four times the threshold the engine has
+burned about 4,100 acres at twelve hours where the triangle says 2,920, and about 15,300 at
+27 hours where the infrared map says 15,800. Then it keeps going, because nothing in it
+stops, and by the fourth day it has twice the record.
 
 The second is the houses. The runs that spread at a plausible pace reach only a small share
 of the structures that were in fact destroyed, because a built-up cell is given a high
 threshold and the fire walks around the neighbourhoods rather than into them. The real
-fire went into Pacific Palisades on the first evening and burned it house to house, and
-the model has no mechanism for that: no ember into an eave, no house as the next house's
-fuel. The far-reach runs reach nearly every destroyed structure, but only because they burn
-everything. Between the two is what a structure model has to supply.
+fire went into Pacific Palisades on the first evening and burned it house to house. Two
+further knobs, embers that light houses and a longer reach from house to house, lift the
+share reached from about an eighth to about a fifth at the same acreage, and no further.
+The far-reach runs reach nearly every destroyed structure, but only because they burn
+everything. Between the two is what a structure model has to supply: each house as a body
+with its own exposure, not a cell with a share of roof in it.
+
+Until the afternoon of 2026-11-03 these runs, like the first project's, were made on ground
+with a column of missing elevation every third or fourth cell, which the slope code read as
+cliffs. This engine felt it less than the spread formula does, because it stretches its
+reach by the slope rather than its square, but the first day's pace was partly riding those
+slopes. The runs on this page are on the corrected ground; the devlog entry *The holes in
+the ground* has the account.
 
 ## What is honest about it, and what is not
 
