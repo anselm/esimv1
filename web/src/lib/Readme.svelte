@@ -6,6 +6,7 @@
   //   ladder                          the tipping thresholds against the variants' warming
   //   table 2099 series... [=label]   each variant's value of the named series at the start of that year
   //   table 2025-01-08T21:24Z series...  or at a date and time
+  //   actors                          a diagram of actors and relationships in the author's words (Actors.svelte)
   //   ```
   //
   // Figures draw from the project's runs and from nothing else: the author writes the
@@ -13,6 +14,7 @@
   import { render } from './markdown.js'
   import { latestRuns, seriesAt, yearStart } from './runs.js'
   import Ladder from './Ladder.svelte'
+  import Actors from './Actors.svelte'
 
   let { path, md } = $props()
   const base = $derived(`/projects/${path}`)   // relative images and links in the README resolve here
@@ -33,7 +35,7 @@
     if (last < md.length) out.push({ kind: 'md', html: render(md.slice(last), { base }) })
     return out
   })
-  const needsRuns = $derived(segments.some((s) => s.kind !== 'md'))
+  const needsRuns = $derived(segments.some((s) => s.kind !== 'md' && s.kind !== 'actors'))
   $effect(() => { if (needsRuns && !runs) latestRuns(path, null, { audit: true, describe: true }).then((r) => { runs = r }).catch((e) => { error = e.message }) })
 
   const elements = $derived.by(() => {
@@ -64,6 +66,8 @@
   {#each segments as s, i (i)}
     {#if s.kind === 'md'}
       {@html s.html}
+    {:else if s.kind === 'actors'}
+      <Actors text={s.text} />
     {:else if error}
       <p class="text-sm text-leak">{error}</p>
     {:else if !runs}

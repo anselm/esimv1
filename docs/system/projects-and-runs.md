@@ -67,7 +67,25 @@ passes each rung; and
 ```
 
 prints each variant's value of the named series at the start of that year (underscores
-in a label become spaces). The figures come from the runs and from nothing else: the
+in a label become spaces); and
+
+```
+    ```esim
+    actors
+    weather: wind, dry air, heat, the sun
+    fire
+    weather -> fire: drives the head downwind
+    fire -> weather: makes its own wind (not in the model)
+    ```
+```
+
+draws the actors and the relationships between them in the author's own words: a line
+`name: words` is an actor with a caption, `a -> b: words` an arrow read along its
+direction, and words ending in a parenthesis that begins "not" mark a relationship the
+world has and the model lacks, drawn dashed with the words kept. The actor with the most
+arrows stands in the middle. It is the one figure an author draws by hand, and it is for
+the picture a person carries of the system, which the wiring diagram on a run page (modules,
+topics, fields) does not give. The figures with numbers in them come from the runs and from nothing else: the
 rungs are the table the run's own describe records, the paths and values are the runs'
 series, the years are the runs' crossing events. An author writes the story and cannot
 type a number into a figure. Prose may of course quote numbers, and a quoted number goes

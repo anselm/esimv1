@@ -5238,7 +5238,13 @@
     ],
     "sends": [],
     "accepts": [],
-    "subscribes": [],
+    "subscribes": [
+      {
+        "name": "ground.break",
+        "required": false,
+        "note": "from an interventions module (fire.suppression): the cells named become unburnable from the break's time on"
+      }
+    ],
     "fields_owned": [
       {
         "name": "fire.burned_frac",
@@ -112413,6 +112419,257 @@
     ]
   },
   {
+    "kind": "fire.suppression",
+    "name": "fire.suppression",
+    "summary": "What people did to the fire, as a module of its own: each completed line in the record (obs.record's record.event of kind line) becomes a ground.break, the cells under it to a stated width, of a stated strength, from the line's recorded time on. Any fire engine that subscribes to ground.break refuses heat and embers there; the engine never reads the record itself, so the same engine runs another fire with another record, or none. The record's times are when the GIS feature was made, which lags the work; obs.record's time_shift_h is the declared way to move them. Resources as agents with a ledger are the next form.",
+    "priority": 9,
+    "dt": "at each line's recorded time",
+    "params": [
+      {
+        "name": "lat_s",
+        "default": 34.0,
+        "unit": "deg",
+        "note": "the fire's window, so the cells match the engine's"
+      },
+      {
+        "name": "lat_n",
+        "default": 34.16,
+        "unit": "deg"
+      },
+      {
+        "name": "lon_w",
+        "default": -118.72,
+        "unit": "deg"
+      },
+      {
+        "name": "lon_e",
+        "default": -118.46,
+        "unit": "deg"
+      },
+      {
+        "name": "res_arcsec",
+        "default": 1.0,
+        "unit": "arcsec"
+      },
+      {
+        "name": "mode",
+        "default": "off",
+        "note": "off: nothing is published, the record is drawn and not defended; hold: completed lines hold from their recorded time"
+      },
+      {
+        "name": "line_width_m",
+        "default": 30.0,
+        "unit": "m",
+        "note": "guess: the width held along a completed line"
+      },
+      {
+        "name": "strength",
+        "default": 1.0,
+        "note": "the break's strength; engines today treat any strength above zero as unburnable"
+      },
+      {
+        "name": "category_prefix",
+        "default": "Completed",
+        "note": "which record categories are lines that hold (Completed Dozer Line, Completed Hand Line, Completed Road as Line); planned lines do not"
+      },
+      {
+        "name": "skip_status",
+        "default": "Archive",
+        "note": "features with this status are ignored"
+      }
+    ],
+    "publishes": [
+      {
+        "name": "suppression.ready",
+        "required": false,
+        "note": "{ mode, line_width_m, strength, source }"
+      }
+    ],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [],
+    "fields_owned": [],
+    "fields_read": [],
+    "ledgers": [],
+    "frames": [],
+    "reports": [],
+    "views": [],
+    "assets": [],
+    "notes": [
+      "Nothing here is suppression as it happened: no crews on the line, no burnover, no retardant drops, no aircraft, no engines at houses. It is the record's lines as barriers, from the time the record gives."
+    ]
+  },
+  {
+    "kind": "obs.hotspots",
+    "name": "obs.hotspots",
+    "summary": "Satellite hotspots as the record of a fire's progress, for fires nobody mapped hour by hour: detections from a CSV (CWFIS's Fire M3 archive; NASA FIRMS has the same shape) inside the window and the run's days, each marking the ground within its sensor's half-pixel as seen burning by then; at a fixed cadence the fire module's burned cells are scored against the seen area (acres, Sørensen overlap, missed and overrun). A hotspot is a pixel that was hot when a satellite passed, not a perimeter: cloud, smoke and the gaps between passes make the seen area a floor, and a pixel marks ground it only partly covers.",
+    "priority": 9,
+    "dt": "every 6h",
+    "params": [
+      {
+        "name": "lat_s",
+        "default": 56.55,
+        "unit": "deg"
+      },
+      {
+        "name": "lat_n",
+        "default": 56.85,
+        "unit": "deg"
+      },
+      {
+        "name": "lon_w",
+        "default": -111.75,
+        "unit": "deg"
+      },
+      {
+        "name": "lon_e",
+        "default": -111.15,
+        "unit": "deg"
+      },
+      {
+        "name": "res_arcsec",
+        "default": 1.0,
+        "unit": "arcsec"
+      },
+      {
+        "name": "file",
+        "default": "fortmcmurray-2016/cwfis/hotspots.csv",
+        "note": "CSV under data/events/"
+      },
+      {
+        "name": "start",
+        "default": "2016-05-01T00:00:00Z"
+      },
+      {
+        "name": "end",
+        "default": "2016-05-07T00:00:00Z"
+      },
+      {
+        "name": "every",
+        "default": "6h",
+        "note": "the scoring cadence"
+      },
+      {
+        "name": "frame_res_arcsec",
+        "default": 4.0,
+        "unit": "arcsec",
+        "note": "the seen-by-then frames are the share of each block seen, on this grid"
+      },
+      {
+        "name": "time_field",
+        "default": "rep_date",
+        "note": "'YYYY-MM-DD HH:MM:SS', taken as UTC (the archive's metadata states no zone), or ISO"
+      },
+      {
+        "name": "lat_field",
+        "default": "lat"
+      },
+      {
+        "name": "lon_field",
+        "default": "lon"
+      },
+      {
+        "name": "sensor_field",
+        "default": "sensor"
+      },
+      {
+        "name": "default_radius_m",
+        "default": 500.0,
+        "unit": "m",
+        "note": "half-pixel for a sensor not in the table (VIIRS-I 187, VIIRS-M 375, MODIS and AVHRR 500, OLI 15; recalled nadir values)"
+      }
+    ],
+    "publishes": [
+      {
+        "name": "hotspots.loaded",
+        "required": false,
+        "note": "{ file, count, first, last, by_sensor, time_zone }"
+      },
+      {
+        "name": "hotspots.scored",
+        "required": false,
+        "note": "{ time, obs_acres, sim_acres, sorensen, detections }"
+      }
+    ],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [],
+    "fields_owned": [],
+    "fields_read": [
+      {
+        "name": "fire.burned_frac",
+        "unit": "1",
+        "required": false,
+        "note": "the fire module's burned cells"
+      }
+    ],
+    "ledgers": [],
+    "frames": [
+      {
+        "name": "obs_hotspots",
+        "unit": "1",
+        "required": false
+      }
+    ],
+    "reports": [
+      {
+        "name": "obs.acres",
+        "unit": "acres",
+        "required": false
+      },
+      {
+        "name": "obs.hotspots_so_far",
+        "unit": "detections",
+        "required": false
+      },
+      {
+        "name": "sim.acres",
+        "unit": "acres",
+        "required": false
+      },
+      {
+        "name": "fit.sorensen",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "fit.missed_acres",
+        "unit": "acres",
+        "required": false
+      },
+      {
+        "name": "fit.over_acres",
+        "unit": "acres",
+        "required": false
+      }
+    ],
+    "views": [
+      {
+        "kind": "chart",
+        "title": "Seen burning from orbit",
+        "source": "obs.acres",
+        "obs": "",
+        "note": "the ground within a hotspot's footprint by this time; a floor on the burned area"
+      },
+      {
+        "kind": "chart",
+        "title": "Overlap with the hotspots",
+        "source": "fit.sorensen",
+        "obs": "",
+        "note": "Sørensen of the model's burned cells against the seen area"
+      }
+    ],
+    "assets": [
+      {
+        "key": "copernicus-dem-glo30",
+        "note": "the grid"
+      }
+    ],
+    "notes": [
+      "Fire M3 hotspots: Natural Resources Canada, Canadian Forest Service; Open Government Licence - Canada, with an end-user agreement on the download page. Copied to data/events/<event>/cwfis/ for the window and the days."
+    ]
+  },
+  {
     "kind": "fire.cells",
     "name": "fire.cells",
     "summary": "Our own fire engine: a heat budget on one-arc-second cells that know their elevation and slope, land cover, the share under buildings and their height, the major roads, and the hour's 3 km wind, gust, temperature and humidity. A burning cell radiates heat into the cells around it, further downwind and upslope; a cell ignites when the heat it has received outweighs what its fuel and moisture absorb, then burns with the intensity and for the time its contents set; strong winds loft embers that may start spot fires; roads and water carry nothing; nobody fights it. Every rate and threshold is a guess, declared so, to be fitted against the record.",
@@ -112494,6 +112751,11 @@
       {
         "name": "wind_end",
         "default": "2025-01-12T00:00:00Z"
+      },
+      {
+        "name": "buildings",
+        "default": "lariac",
+        "note": "lariac: LA County's footprints with heights from the feature service below (the Palisades window); osm: OpenStreetMap buildings through Overpass for the window, heights from the height tag or building:levels times 3.2 m, else two storeys, a guess; none: built-up land from land cover alone"
       },
       {
         "name": "buildings_service",
@@ -112656,17 +112918,6 @@
         "note": "guess: a cell's received heat decays with this e-folding time"
       },
       {
-        "name": "lines",
-        "default": "off",
-        "note": "hold: every completed line in the record (obs.record's record.event, kind line, category Completed …, status not Archive) holds from the event's time on: the cells under it, to line_width_m, take no heat and no ember. Nothing else about suppression is modelled, and the record's times lag the work (see obs.record's time_shift_h)"
-      },
-      {
-        "name": "line_width_m",
-        "default": 30.0,
-        "unit": "m",
-        "note": "guess: the width held along a completed line"
-      },
-      {
         "name": "cooling",
         "default": "always",
         "note": "always: a cell's heat decays between doses whatever is happening, so under steady heating it settles at dose times cool_min and a slow flank below the threshold never lights (the cliff); idle: it decays only over the time no dose arrived, so steady heating accumulates and the time to ignite is threshold over rate, as a spread rate is"
@@ -112807,9 +113058,9 @@
     "accepts": [],
     "subscribes": [
       {
-        "name": "record.event",
+        "name": "ground.break",
         "required": false,
-        "note": "with lines = hold: a completed line from the record (dozer, hand, road as line; not planned, not archived) holds from its time on"
+        "note": "from an interventions module (fire.suppression): { cells, strength } the cells take no heat and no ember from the break's time on; the engine never reads the record itself"
       }
     ],
     "fields_owned": [
@@ -112935,8 +113186,8 @@
         "required": false
       },
       {
-        "name": "fire.lines_held",
-        "unit": "lines",
+        "name": "fire.breaks_held",
+        "unit": "breaks",
         "required": false
       }
     ],

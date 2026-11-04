@@ -196,6 +196,12 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
 - Breadcrumbs and areas (2026-11-04): `/anselm` is an area page (`ProjectList` with `area`), every path
   fragment in the headers is a link (`web/src/lib/Crumbs.svelte`), the byline links to the area. In the
   3D scene a line fades out twelve hours after its time and the whole record stays at the run's end.
+- The deep history and the actors figure (2026-11-04 evening, `devlog/20261104-deep-history-and-the-actors.md`):
+  the first Palisades README carries *The ground before the fire* (Radtke 1982, Keeley 2005, Mensing 1999,
+  the Park Service, Lake Elsinore; the big fires come at the same rate under every regime, people changed
+  the ignitions, the fuel's age and the stakes; a time-since-last-fire layer is the ask) and *The actors*, a
+  README figure (` ```esim actors `, `web/src/lib/Actors.svelte`): `name: caption` and `a -> b: words`
+  lines, words ending in a parenthesis beginning "not" drawn dashed as what the world has and the model lacks.
 - Front page and covers (2026-11-03): `featured = true` in project.toml puts a project on the
   front page as a card; `cover` and `cover_caption` name a picture beside the manifest.
   Earth 2100 (renamed from "The planet, with people on it") and the Palisades fire are featured.

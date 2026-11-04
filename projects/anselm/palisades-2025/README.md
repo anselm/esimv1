@@ -56,6 +56,85 @@ drawn on the three-dimensional view at their times, and a first day that now mat
 infrared perimeter in pace and shape. The Eaton fire, which started the same evening across the
 basin, is held back as the test for whatever is fitted here.
 
+## The ground before the fire
+
+The ridge the fire came back from has burned many times, and the record of that reaches a
+long way down. Over the last 600 years the big fires of this coast have come at about the same
+rate under every kind of management. Charcoal in the layered mud of the Santa Barbara Basin,
+read by Mensing, Michaelsen and Byrne in 1999 for the years 1425 to 1985, holds at least twenty
+fires of over 20,000 hectares. Every one came under Santa Ana conditions, most at the end of a
+wet spell and the start of a drought. The average gap between them shows no change across the
+Chumash period, the Spanish and ranching period, and the twentieth century with its fire
+engines. The Park Service applies that reading to this range: large weather-driven fires "more
+or less regularly" through "very different approaches to fire suppression." Further back the
+nearest long record is Lake Elsinore, inland, where the mud shows almost no fire before 13,200
+years ago and then ten times as much, holding for centuries, as a warm dry spell ended and people
+arrived. The megafauna at La Brea were gone within about two hundred years of it (O'Keefe and
+others, 2023). People lived in villages along this coast from about 8,000 years ago and burned
+near homes and along trails; whether they set large fires on purpose is disputed between the
+authors the county's foresters cite, and the Park Service says they did not. Nobody has read a
+ten-thousand-year charcoal record from these mountains themselves.
+
+What people changed is the ignitions, the fuel and the stakes. Lightning here comes in the wet
+season, out of phase with the wind, and the county's own fire history (Radtke, Arndt and
+Wakimoto, 1982) says plainly that "almost every fire in recorded history was accidentally or
+deliberately set by man." Ranchers and homesteaders set them before 1900 in weather that kept
+them small. After 1900 the hunters and the growing city set them in the fire season. From 1900
+to 1918 the range burned over at least twice; the 1911 fire ran for weeks from Santa Monica into
+Ventura County. Management changed three times. In 1793 the Spanish governor,
+Arrillaga, banned burning anywhere it might do harm, California's first fire law. In 1919 Los
+Angeles County stood up an organised fire force for the mountains, and the records begin. After
+the 1961 Bel Air fire, which took 484 homes by embers landing on wood shake roofs, the city
+built its brush-clearance programme and banned wood shingles on new roofs. Through all of that,
+from 1919 to 1980, the coastal strip from Las Flores Canyon west burned three to five times, a
+gap of 12 to 21 years, while inland of the ridge most ground burned once. The foresters saw a
+cycle of about twenty years in the area burned. Suppression, they said, had worked inland and
+not on the coast: "a steady fuel buildup and a shift from small to large disastrous fires." The
+Park Service now puts the mean return interval at about 28 years and notes corridors burned
+more than ten times since 1925. Keeley (2005) puts the rotation under fifteen years, "likely
+many times shorter than the natural regime." He names too much fire, not too little, as the
+threat to the chaparral: frequent burning turns it to grass, and grass burns more often again. The
+fires on or beside this window are the 1938 Trippet Ranch fire into Mandeville Canyon, Bel Air
+in 1961, Mandeville in 1978 through chaparral forty and sixty-three years old, Old Topanga in
+1993 and Woolsey in 2018.
+
+For the models here the point is the age of the ground. The foresters give the years after
+which each cover carries a large fire again: ten for coastal sage, fifteen for south-slope
+chaparral, twenty for north-slope. Our fuel is a land-cover class from 2021 with no age in it.
+The time since the last fire, cell by cell, from the state's perimeter history, is the layer
+this history asks for, and neither project has it yet. The sources and what each says are in
+the devlog entry of 4 November 2026, *The deep history of the Palisades ground*; the two
+papers are public Forest Service PDFs, the Park Service pages are its fire-frequency and
+fire-history pages for the recreation area, and the Santa Barbara Basin paper is in
+*Quaternary Research* 51.
+
+## The actors
+
+What decides the outcome, in the words a person at the fire would use, drawn from these
+words. A solid arrow is a relationship at least one of the two projects models. A dashed one
+is a relationship the world has and the models do not, which is where the second day went.
+
+```esim
+actors
+ground: slope and aspect
+weather: wind, dry air, heat, the sun
+fuel: what grows there, how dry, how old
+buildings: houses as fuel and as the stakes
+people: crews, lines, aircraft, evacuation
+fire
+weather -> fire: drives the head downwind
+weather -> fuel: dries it by the hour
+ground -> fire: runs it uphill, slows it down
+fuel -> fire: whether it carries, how hot, how long
+fire -> fuel: resets its age for twenty years (not modelled)
+fire -> buildings: lights them by embers and radiant heat
+buildings -> fire: burn for an hour, throw embers of their own
+people -> fire: cut lines, drop water (not placed in time)
+fire -> people: outruns them on the first day (not modelled)
+fire -> weather: makes its own wind (not modelled)
+ground -> weather: bends the wind over the ridges (not modelled)
+```
+
 ## What is in the runs
 
 The ground is the Copernicus 30 m elevation model, from which the slope and aspect of

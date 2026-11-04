@@ -141,3 +141,27 @@ Mensing et al. 1999 (Cambridge Core abstract); Graham 2025 (dornsife.usc.edu/icw
 2023-10-12 on the Arrillaga decree; Wikipedia, Bel Air Fire; phys.org 2023-08-17 on O'Keefe et
 al.; Homann et al. 2022 (nature.com). Not reached: the Keeley 1989 Santa Monica estimate of a
 70-year interval, cited in a search summary only.
+
+## Later the same evening: on the page
+
+Anselm: "We should extend the documentation to cover this deep history at least" and "We could
+even try draw a diagram in the readme of a human phrasing around the relationships." The first
+Palisades README gained a section, *The ground before the fire*, written from the reading above
+with the sources named in the prose, and a section *The actors* that is a new README figure:
+
+    ```esim
+    actors
+    weather: wind, dry air, heat, the sun
+    fire
+    weather -> fire: drives the head downwind
+    fire -> weather: makes its own wind (not modelled)
+    ```
+
+`Actors.svelte` draws it: the actor with the most arrows in the middle, the rest on a ring in
+the order written, the words along each arrow, and a relationship whose words end in a
+parenthesis beginning "not" dashed and kept, so the gaps stand on the page beside the
+couplings. The README renderer passes no raw HTML, so the figure is a vocabulary rather than an
+SVG pasted in, and any project can draw one. It needs no runs. The embed is documented in
+`docs/system/projects-and-runs.md`. The heckler pass on the history section brought the mean
+sentence from 38 words to 26; the function-word fingerprint still drifts from his corpus, which
+a Claude draft always does.
