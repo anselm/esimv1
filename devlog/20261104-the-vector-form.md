@@ -104,6 +104,31 @@ threshold over dose and the ellipse does what Anderson's does. What is left of t
 threshold (fuel and moisture), the burn time (how long a cell is a source) and the reach of the
 heat (f(d)), which is what it should have been.
 
+## What Anselm's sources say about the interventions (added the same morning)
+
+While this was being written Anselm sent two summaries (machine-made, with their sources; the
+sources are his to have checked and are listed as he sent them, not fetched here): the Los Angeles
+Times of 2025-01-13 on whether brush clearance could have slowed the fire, LAist and Fire Engineering
+on the state's analysis of the 2025 fires, the LAFD after-action review of 2025-10-08
+(`lafd.org/sites/default/files/pdf_files/Palisades_AARR_10_08_2025_final.pdf`), the UC San Diego
+WIFIRE programme's account of its real-time maps, OroraTech's visualisation, a Hoover piece, and the
+Times of 2025-10-30 on the crews ordered off the smouldering Lachman burn on 2 January. Their burden:
+on the first day nothing worked. Fuel breaks were overrun ("a 10-lane freeway in front of that fire"
+would not have slowed it, in the Orange County chief's words as the Times quotes him), aircraft were
+grounded by the wind, the fire went house to house, and the crews turned from containment to
+evacuation; 40 engines sat in repair yards, mutual aid was stretched across fourteen fires, and the
+fire had rekindled from the Lachman burn that crews left on 2 January.
+
+That is the model's first day: nothing stopped it and the vector form, with nothing stopping it, has
+the day. It also says the lines in the record were never the second day's answer, which is what the
+held runs found from the other side. What the summaries do not settle is the second day. The record
+grew by 3,800 acres between the 27-hour and 49-hour perimeters while the model grew by 37,000, and
+whether that is the wind easing over the mountains or the air attack once aircraft could fly (recalled:
+aircraft returned on the 8th as the wind dropped; not in these summaries, to be checked in the
+after-action review) is the open question. The after-action review is the document to copy into
+`data/events/palisades-2025/` next, since it is the incident's own account of when resources were
+where; CAL FIRE's reports by time, already there, carry the counts.
+
 Session: Claude Fable 5.1, the esimv1 room on canada1, 2026-11-04 morning. Also this morning: a
 `prune --keep 0` with a flag I guessed wiped the project's fourteen runs; they were rerun (deterministic,
 same numbers) before anything else.
