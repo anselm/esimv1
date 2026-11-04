@@ -71,6 +71,21 @@ downhill; at a gain of 6 both ways the fire climbs toward Topanga and along the 
 and its overlap with the mapped perimeter is the best of any run on either engine so far, though it
 is half the record's area on the first day. The devlog entry *The slope* has the table.
 
+The next morning (2026-11-04) the engine gained the form that entry had asked for. In the `vector` runs
+the heat a burning cell delivers is a rate factor with Rothermel's shape: wind and slope added as
+vectors, the head at one plus their sum, every other direction on Anderson's ellipse from the head,
+so the back burns at the ellipse's backing rate and not a division; and the cell's heat decays only
+while no heat arrives, because a budget that always decays has a floor under which a slow flank never
+lights, which was every cliff this engine had met. `vector-5` is the first run on either engine with
+the first day right in both pace and shape: 16,525 acres at the first infrared perimeter against
+15,824, overlap 0.79, a lobe along the coast to Malibu and up to Topanga. Its second day is wrong, and
+wrong in a way no constant in the engine reaches: the model fills the mountains north to Calabasas by
+the second night where the record grew by a few thousand acres, and raising thresholds, cutting the
+slope gain, capping the wind, tripling the moisture's weight, slowing the flat rate eightfold under the
+same head, or making the record's completed lines hold (`vector-5-held`; they are dated after the
+overrun) leaves it. What the model lacks for that day is the wind over the mountains as it blew and
+the suppression the record does not place. The devlog entry *The vector form* has the table.
+
 Until the afternoon of 2026-11-03 these runs, like the first project's, were made on ground
 with a column of missing elevation every third or fourth cell, which the slope code read as
 cliffs. This engine felt it less than the spread formula does, because it stretches its

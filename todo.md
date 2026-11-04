@@ -91,9 +91,10 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
 2. "The fire spread in an almost linear fashion ... like a drop of water ... not believable." — the
    phantom cliffs are fixed. Evening: the rings were mostly the formula, slope only in the heat's
    reach and capped (`devlog/20261103-the-slope.md`); with Rothermel's shape on the rate at gain 6
-   the fire climbs the canyons in fingers and the perimeter overlap is the best so far (0.70). Still
-   to do: wind and slope as vectors in one rate factor, the ellipse's backing rate instead of a
-   downhill division, then the terrain-following wind of 1.
+   the fire climbs the canyons in fingers and the perimeter overlap is the best so far (0.70). Morning
+   of the 4th: the vector form (`devlog/20261104-the-vector-form.md`) has the first day right in pace
+   and shape (0.79 at the infrared perimeter) and the second day everywhere at once; no constant
+   reaches the second day, so the next step is the terrain-following wind of 1 and the suppression of 4.
 3. "Much finer granularity on different kinds of ignitable/flammable fuel sources ... the cellular
    resolution is far too low ... individual trees." — not started. Plan: 10 m cells with load, canopy
    height, time since burn and seasonal live moisture; trees as individuals only when canopy data
@@ -102,9 +103,11 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
    hand (`data/events/palisades-2025/`: CAL FIRE's resources by report, NIFC's 2,334 lines and 825
    points, UL's radio log). Late evening: `obs.record` publishes NIFC's points and lines into every
    Palisades run at their times, and the 3D view pulses them with their times beside the model's
-   ignition and spots (`devlog/20261103-the-record-on-the-map.md`). Still to do: a module that
-   makes the lines hold (strength from the resource counts, the GIS lag stated), geocoding UL's
-   addressed events.
+   ignition and spots (`devlog/20261103-the-record-on-the-map.md`). Morning of the 4th: `lines = "hold"`
+   makes the completed lines unburnable from their time and `obs.record` can shift the record's times;
+   neither touches the second day's overrun, which precedes the record's first line. Still to do: the
+   unplaced suppression (aircraft and crews of the 8th and 9th from CAL FIRE's resource counts, as
+   agents with capacity), geocoding UL's addressed events.
 5. "More clearly indicate when actual buildings themselves are likely burned - right now they stay
    one color." — done in the first form (2026-11-03 evening, `devlog/20261103-bodies.md`): every
    footprint a body with its own ignition and burn, coloured in the 3D view by the model's state

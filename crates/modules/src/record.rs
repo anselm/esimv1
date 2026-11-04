@@ -42,6 +42,7 @@ pub struct Record {
     note_field: String,
     status_field: String,
     max_vertices: usize,
+    time_shift_h: f64,
     scheduled: bool,
     #[serde(skip)] feats: Vec<Feature>,
 }
@@ -63,6 +64,7 @@ impl Record {
             note_field: param_str(p, "note_field", "Comments").to_string(),
             status_field: param_str(p, "status_field", "FeatureStatus").to_string(),
             max_vertices: param_f64(p, "max_vertices", 40.0) as usize,
+            time_shift_h: param_f64(p, "time_shift_h", 0.0),
             scheduled: false,
             feats: Vec::new(),
         };
@@ -97,7 +99,7 @@ impl Record {
                     serde_json::Value::Number(n) => { let x = n.as_f64().unwrap_or(0.0); if x > 1e11 { (x / 1000.0) as i64 } else { x as i64 } }
                     serde_json::Value::String(x) => match Time::parse(x) { Ok(tt) => tt.0, Err(_) => continue },
                     _ => continue,
-                };
+                } - (self.time_shift_h * 3600.0) as i64;
                 let geom = ft.get("geometry").cloned().unwrap_or(json!(null));
                 let gtype = s(&geom, "type");
                 let coords = geom.get("coordinates").cloned().unwrap_or(json!([]));
@@ -138,7 +140,7 @@ impl Module for Record {
         let now = ctx.now();
         let mut by: std::collections::BTreeMap<String, usize> = Default::default();
         for f in &self.feats { *by.entry(f.category.clone()).or_default() += 1; }
-        ctx.publish("record.loaded", json!({ "files": self.files, "count": self.feats.len(), "first": self.feats.first().map(|f| Time(f.t).to_iso()), "last": self.feats.last().map(|f| Time(f.t).to_iso()), "by_category": by, "time_field": self.time_field }));
+        ctx.publish("record.loaded", json!({ "files": self.files, "count": self.feats.len(), "first": self.feats.first().map(|f| Time(f.t).to_iso()), "last": self.feats.last().map(|f| Time(f.t).to_iso()), "by_category": by, "time_field": self.time_field, "time_shift_h": self.time_shift_h }));
         if !self.scheduled {
             for (i, f) in self.feats.iter().enumerate() {
                 if f.t >= now.0 { ctx.schedule_with_priority(Duration(f.t - now.0), 9, "record", json!(i)); }
@@ -167,7 +169,7 @@ impl Record {
             .param("files", json!(param_list(p, "files")), "", "GeoJSON files under data/events, as the event folder's README lists them")
             .param("time_field", "CreateDate", "", "the property that times a feature: epoch milliseconds, seconds or ISO. For NIFC event features this is when the GIS feature was made, which lags the work; the dataset's own LineDateTime and PointDateTime are empty for this incident")
             .param("category_field", "FeatureCategory", "", "").param("label_field", "Label", "", "").param("note_field", "Comments", "", "").param("status_field", "FeatureStatus", "", "Approved, Proposed, Archive as the GIS unit set it")
-            .param("max_vertices", 40.0, "", "a line's path is thinned to about this many vertices in the event")
+            .param("max_vertices", 40.0, "", "a line's path is thinned to about this many vertices in the event").param("time_shift_h", 0.0, "h", "hours taken off every feature's time, for a time field known to lag the work it records; 0 is the record as it stands, anything else is a guess and says so here")
             .publish("record.loaded", "{ files, count, first, last, by_category, time_field }")
             .publish("record.event", "at the feature's cell: { kind point|line, category, label, note, status, lat, lon, path [[lat, lon]], length_m, file, time }")
             .asset("copernicus-dem-glo30", "the grid")

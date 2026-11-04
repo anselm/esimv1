@@ -149,7 +149,7 @@ fn dead_moisture(t_c: f64, rh: f64) -> f64 {
 
 /// Length-to-breadth of the fire ellipse from the midflame wind in m/s (Anderson 1983 as
 /// FARSITE states it, recalled), held between 1 and 8.
-fn length_to_breadth(u_m_s: f64) -> f64 {
+pub(crate) fn length_to_breadth(u_m_s: f64) -> f64 {
     (0.936 * (0.2566 * u_m_s).exp() + 0.461 * (-0.1548 * u_m_s).exp() - 0.397).clamp(1.0, 8.0)
 }
 

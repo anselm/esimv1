@@ -216,6 +216,25 @@
       },
       {
         "all_ledgers_closed": true,
+        "digest": "f92f58fe359c9f84",
+        "end": 1736640000,
+        "events": 2122,
+        "id": "f3-palisades-cells-3f30a5be-f92f58fe",
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.cooling": "\"idle\"",
+          "fire.form": "\"vector\"",
+          "fire.ignite_scale": "8",
+          "fire.reach_m": "45",
+          "fire.slope_rate_gain": "20"
+        },
+        "start": 1736272800,
+        "variant": "vector-8",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
         "digest": "a3de76925720d924",
         "end": 1736640000,
         "events": 2418,
@@ -231,6 +250,27 @@
         },
         "start": 1736272800,
         "variant": "houses-jitter",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "0b757a5701f23541",
+        "end": 1736640000,
+        "events": 2151,
+        "id": "f3-palisades-cells-56b53825-0b757a57",
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.cooling": "\"idle\"",
+          "fire.form": "\"vector\"",
+          "fire.ignite_scale": "5",
+          "fire.lines": "\"hold\"",
+          "fire.reach_m": "45",
+          "fire.slope_rate_gain": "20",
+          "record.time_shift_h": "0"
+        },
+        "start": 1736272800,
+        "variant": "vector-5-held",
         "verdict": "holds"
       },
       {
@@ -281,6 +321,25 @@
         },
         "start": 1736272800,
         "variant": "scale-4",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "6999ef5763a7c5e8",
+        "end": 1736640000,
+        "events": 2151,
+        "id": "f3-palisades-cells-711dd7f2-6999ef57",
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.cooling": "\"idle\"",
+          "fire.form": "\"vector\"",
+          "fire.ignite_scale": "5",
+          "fire.reach_m": "45",
+          "fire.slope_rate_gain": "20"
+        },
+        "start": 1736272800,
+        "variant": "vector-5",
         "verdict": "holds"
       },
       {
@@ -540,6 +599,62 @@
           "fire.slope_rate_gain": 20
         },
         "title": "Near reach, thresholds times 4, Rothermel's uphill gain (20) with a gentle downhill division (2)"
+      },
+      {
+        "name": "vector-4",
+        "set": {
+          "fire.cooling": "idle",
+          "fire.form": "vector",
+          "fire.ignite_scale": 4,
+          "fire.reach_m": 45,
+          "fire.slope_rate_gain": 20
+        },
+        "title": "The vector form (wind and slope as vectors, Rothermel's shape, Anderson's ellipse, idle cooling), thresholds times 4"
+      },
+      {
+        "name": "vector-6",
+        "set": {
+          "fire.cooling": "idle",
+          "fire.form": "vector",
+          "fire.ignite_scale": 6,
+          "fire.reach_m": 45,
+          "fire.slope_rate_gain": 20
+        },
+        "title": "The vector form (wind and slope as vectors, Rothermel's shape, Anderson's ellipse, idle cooling), thresholds times 6"
+      },
+      {
+        "name": "vector-5",
+        "set": {
+          "fire.cooling": "idle",
+          "fire.form": "vector",
+          "fire.ignite_scale": 5,
+          "fire.reach_m": 45,
+          "fire.slope_rate_gain": 20
+        },
+        "title": "The vector form: wind and slope as vectors with Rothermel's shape, Anderson's ellipse, idle cooling; thresholds times 5"
+      },
+      {
+        "name": "vector-8",
+        "set": {
+          "fire.cooling": "idle",
+          "fire.form": "vector",
+          "fire.ignite_scale": 8,
+          "fire.reach_m": 45,
+          "fire.slope_rate_gain": 20
+        },
+        "title": "The vector form, thresholds times 8: slower on the first day, nearer the record on the second"
+      },
+      {
+        "name": "vector-5-held",
+        "set": {
+          "fire.cooling": "idle",
+          "fire.form": "vector",
+          "fire.ignite_scale": 5,
+          "fire.lines": "hold",
+          "fire.reach_m": 45,
+          "fire.slope_rate_gain": 20
+        },
+        "title": "The vector form at 5, with the record's completed lines holding from their recorded time"
       }
     ]
   },

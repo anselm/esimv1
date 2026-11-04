@@ -127,11 +127,16 @@ in doubt, split at the point where two different people would hold different opi
   with their own exposure and fate, a wind shaped by the terrain, fuel as fuel at 10 m,
   the incident's lines and resources as interventions, and then the air itself as a
   three-dimensional solver with the fire's heat in it. The record all of it is held against
-  is copied into `data/events/palisades-2025/`.
+  is copied into `data/events/palisades-2025/`. Since 2026-11-04 the engine has two forms: `reach`
+  (the first, wind and slope stretching the heat's e-folding distance) and `vector` (the heat times a
+  rate factor with Rothermel's shape, wind and slope as vectors, Anderson's ellipse for the other
+  directions, with `cooling = "idle"`), and `lines = "hold"` makes the record's completed lines
+  unburnable from their time (`devlog/20261104-the-vector-form.md`).
 - `obs.record` (`crates/modules/src/record.rs`, 2026-11-03): the record of what people did,
   placed and timed, read from GeoJSON in the event folder (NIFC's event points and lines for the
   Palisades fire) and published into the run as `record.event` at each feature's time and cell.
   The run page's 3D view draws them as pulses and lines with their times, beside the model's own
-  ignition and spot fires. Nothing in the model reacts to them yet; an interventions module that
-  makes the lines hold is the next step. The times are when the GIS feature was made, which lags
-  the work (`devlog/20261103-the-record-on-the-map.md`).
+  ignition and spot fires. `fire.cells` with `lines = "hold"` makes the completed
+  lines unburnable from their time; nothing else reacts to them. The times are when the GIS feature
+  was made, which lags the work (`devlog/20261103-the-record-on-the-map.md`); `time_shift_h` takes a
+  stated number of hours off every feature's time, a guess when it is not zero.

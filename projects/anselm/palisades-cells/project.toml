@@ -120,3 +120,54 @@ title = "Near reach, thresholds times 4, Rothermel's uphill gain (20) with a gen
 "fire.ignite_scale" = 4
 "fire.slope_rate_gain" = 20
 "fire.downslope_gain" = 2
+
+[[variant]]
+name = "vector-4"
+title = "The vector form (wind and slope as vectors, Rothermel's shape, Anderson's ellipse, idle cooling), thresholds times 4"
+[variant.set]
+"fire.form" = "vector"
+"fire.cooling" = "idle"
+"fire.reach_m" = 45
+"fire.ignite_scale" = 4
+"fire.slope_rate_gain" = 20
+
+[[variant]]
+name = "vector-6"
+title = "The vector form (wind and slope as vectors, Rothermel's shape, Anderson's ellipse, idle cooling), thresholds times 6"
+[variant.set]
+"fire.form" = "vector"
+"fire.cooling" = "idle"
+"fire.reach_m" = 45
+"fire.ignite_scale" = 6
+"fire.slope_rate_gain" = 20
+
+[[variant]]
+name = "vector-5"
+title = "The vector form: wind and slope as vectors with Rothermel's shape, Anderson's ellipse, idle cooling; thresholds times 5"
+[variant.set]
+"fire.form" = "vector"
+"fire.cooling" = "idle"
+"fire.reach_m" = 45
+"fire.ignite_scale" = 5
+"fire.slope_rate_gain" = 20
+
+[[variant]]
+name = "vector-8"
+title = "The vector form, thresholds times 8: slower on the first day, nearer the record on the second"
+[variant.set]
+"fire.form" = "vector"
+"fire.cooling" = "idle"
+"fire.reach_m" = 45
+"fire.ignite_scale" = 8
+"fire.slope_rate_gain" = 20
+
+[[variant]]
+name = "vector-5-held"
+title = "The vector form at 5, with the record's completed lines holding from their recorded time"
+[variant.set]
+"fire.form" = "vector"
+"fire.cooling" = "idle"
+"fire.reach_m" = 45
+"fire.ignite_scale" = 5
+"fire.slope_rate_gain" = 20
+"fire.lines" = "hold"

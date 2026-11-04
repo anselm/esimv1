@@ -138,8 +138,16 @@ holds the history.
   a few times the flat rate, so the fire spread in rings while Rothermel's ran up the canyons. A
   rate factor with Rothermel's shape (`slope_rate_gain`, off by default) is now a declared option;
   at the literature's gain it stalls on ridge tops because the downhill half is a division, and at
-  a gain of 6 it gives the best perimeter overlap so far (0.70) at half the first day's area. Wind
-  and slope still do not add as vectors in this engine. The HRRR 3 km wind it uses reads 10 m/s with 21 m/s gusts at the ignition point in
+  a gain of 6 it gives the best perimeter overlap so far (0.70) at half the first day's area. On the morning
+  of 2026-11-04 the engine gained its second form (`form = "vector"`, `devlog/20261104-the-vector-form.md`):
+  wind and slope as vectors with Rothermel's shape, Anderson's ellipse for the flanks and back, and a
+  heat budget that decays only when idle, since one that decays always has a floor and the floor is a
+  cliff. With it the first day is right for the first time on either engine (16,525 acres at 27 hours
+  against 15,824, overlap 0.79) and the second day is wrong in a way no constant reaches: the model
+  fills the mountain block north to Calabasas by 49 hours where the record grew by 3,800 acres. The
+  record's completed lines, made to hold, change nothing, because the record's first line is dated
+  after the overrun. The candidates are the wind over the mountains on the second day and the
+  suppression the record does not place. The HRRR 3 km wind it uses reads 10 m/s with 21 m/s gusts at the ignition point in
   the first hour (checked against GDAL); the reanalysis read 7 and 13.
 - The 3D view takes building heights as feet because the county's service does not state a
   unit.
