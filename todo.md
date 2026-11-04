@@ -125,6 +125,16 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
 - Whether the held-low variant belongs on the public compare page: Anselm's call.
 - Accounts and the crumpled namespace: see below.
 
+## Neighbours (Anselm, 2026-11-03; `devlog/20261103-ageospatial.md`)
+
+- ageospatial.com: "one record per property, each fact with its source and date", four
+  questions (what is here, what defines it, what is exposed, what has changed). Build the
+  structure record: one card per building in a fire window with sourced facts and the hour
+  the model's fire arrived per variant; the facade answers "what should I know about this
+  building?" from it.
+- Exposure as a run output per building: the arrival hour's distribution over an ensemble.
+- Before and after imagery beside each structure's inspection outcome.
+
 ## Platform
 
 - A model-ensemble warming pattern in place of one fitted slope per country: WorldClim's
