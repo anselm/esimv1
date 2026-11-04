@@ -190,3 +190,20 @@ recalled). People and buildings are the two actors the triangle leaves out and t
 puts in. The delta could then be machine-checked rather than hand-typed: an arrow could name
 the module or parameter that models it, and the page could draw it solid only when that module
 is in the manifest. That is the examination tool, not the reconciliation, and it is not built.
+
+## The human model revised (Anselm: "Feel free to rev the human model in the text then")
+
+The actors section now rests on three named frameworks instead of this session's phrasing: the
+fire behaviour triangle of fuels, weather and topography as the NWCG's S-190 course and the
+Park Service's fire-behaviour page state it (fuel the one leg a manager can change, weather the
+most variable); Radtke's four factors, which add land use, that is people as the source of
+almost every ignition here; and Cohen's home ignition zone (Thompson Memorial Lecture, Northern
+Arizona University, 2000-04-10, read in full: "the home and its immediate surroundings", "a few
+tens of meters around a home not hundreds", "fire losses depend on home ignitions and home
+ignitions depend on home ignitability", firebrands "a principal W-UI ignition factor", Bel Air
+95 percent survival with nonflammable roofs and 10 to 18 m clearance after Howard et al. 1973,
+and wildland fuel reduction beyond the zone "does not necessarily change home ignitability").
+Seven actors: ground, weather, fuel, people, homes, crews, fire; fourteen arrows, seven solid.
+People split from crews because the two differ in what the model has: the ignition is the
+record's, the suppression is not placed in time. Countryman 1972 as the triangle's origin is
+recalled and was not found in the search; not cited.

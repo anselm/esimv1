@@ -110,29 +110,48 @@ fire-history pages for the recreation area, and the Santa Barbara Basin paper is
 
 ## The actors
 
-What decides the outcome, in the words a person at the fire would use, drawn from these
-words. A solid arrow is a relationship at least one of the two projects models. A dashed one
-is a relationship the world has and the models do not, which is where the second day went.
+What decides the outcome, drawn as the people who work on fire already draw it. The fire
+services teach a triangle: fuels, weather and topography are the three legs of the fire
+environment, fuel the only leg a manager can change and weather the most variable (the
+NWCG's S-190 course and the Park Service's page on fire behaviour say it this way). The county's
+own history of this range names four factors, "land use, vegetation, fire topography and
+climate (fire winds)", and the fourth leg is people, who set almost every fire here. The work
+on why houses burn adds one more: Jack Cohen's home ignition zone, the house and "a few tens
+of meters around" it, not hundreds. "Fire losses depend on home ignitions and home ignitions
+depend on home ignitability," which is the roof, the vents, the siding and the clearance, and
+firebrands are "a principal" way they light; after the 1961 Bel Air fire 95 percent of the
+homes with nonflammable roofs and 10 to 18 metres of clearance survived (Howard and others,
+1973, as Cohen reports it). Fuel reduction out in the wildland, he found, "does not necessarily
+change home ignitability." So the human model has seven actors and the fire in the middle.
+
+This is the map people agree on, and it is not the simulation. A solid arrow is a relationship
+at least one of the two projects models. A dashed one is a relationship the world has and the
+models lack. The gap between the two pictures is meant to be looked at, arrow by arrow, and
+closed with a module or explained on the page, and not hidden by drawing the smaller picture.
 
 ```esim
 actors
-ground: slope and aspect
-weather: wind, dry air, heat, the sun
-fuel: what grows there, how dry, how old
-buildings: houses as fuel and as the stakes
-people: crews, lines, aircraft, evacuation
+ground: slope, aspect, the canyons
+weather: wind, dry air, heat; the Santa Ana; the drought
+fuel: what grows, its moisture, load and age
+people: set almost every fire here, live in the homes
+homes: the house and its first thirty metres
+crews: lines, water, aircraft, evacuation
 fire
 weather -> fire: drives the head downwind
 weather -> fuel: dries it by the hour
 ground -> fire: runs it uphill, slows it down
+ground -> weather: bends the wind (not modelled)
 fuel -> fire: whether it carries, how hot, how long
 fire -> fuel: resets its age for twenty years (not modelled)
-fire -> buildings: lights them by embers and radiant heat
-buildings -> fire: burn for an hour, throw embers of their own
-people -> fire: cut lines, drop water (not placed in time)
-fire -> people: outruns them on the first day (not modelled)
+fire -> homes: embers first, then flame
+homes -> fire: burn for an hour, throw embers of their own
+people -> fire: set it, here where the record says
+people -> homes: roof, vents, clearance (not modelled)
+people -> fuel: clear it, burn it (not modelled)
+crews -> fire: cut lines, drop water (not placed in time)
+fire -> crews: outruns them on the first day (not modelled)
 fire -> weather: makes its own wind (not modelled)
-ground -> weather: bends the wind over the ridges (not modelled)
 ```
 
 ## What is in the runs
