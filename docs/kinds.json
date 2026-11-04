@@ -112523,6 +112523,21 @@
         "note": "one multiplier on every ignition threshold: the single number fitted to the record (the first infrared perimeter's acreage), declared as such; everything else is the test"
       },
       {
+        "name": "threshold_jitter",
+        "default": 0.0,
+        "note": "sigma of a fixed log-normal factor on each cell's ignition threshold: the micro-conditions nobody mapped (slope detail, what a house is made of); 0 is none"
+      },
+      {
+        "name": "ember_built_p",
+        "default": 0.0,
+        "note": "chance an ember landing on a built cell lights it, times the cell's built fraction; 0 uses the ordinary landing chance"
+      },
+      {
+        "name": "built_to_built_gain",
+        "default": 1.0,
+        "note": "heat reaches this many times further from a burning built cell into the next built cell: house to house"
+      },
+      {
         "name": "spot_rate",
         "default": 0.003,
         "unit": "1/min",
@@ -112548,6 +112563,68 @@
         "name": "road_widths_m",
         "default": "motorway=30,trunk=20,primary=14,secondary=10,tertiary=8",
         "note": "roads this wide carry no fuel"
+      },
+      {
+        "name": "structures",
+        "default": "off",
+        "note": "on: every building footprint is a body of its own that feels the burning ground within exposure_m and its burning neighbours across the gap between footprints, takes embers that land on it, ignites past its own threshold, burns for structure_burn_min and lights the ground it stands on; its fate is scored against the inspectors' word for that footprint"
+      },
+      {
+        "name": "structure_ignite",
+        "default": 3.0,
+        "unit": "heat",
+        "note": "guess: a structure's ignition threshold, times its own fixed factor"
+      },
+      {
+        "name": "structure_intensity",
+        "default": 3.0,
+        "unit": "heat/min",
+        "note": "guess at 200 m2 of footprint, scaled by the square root of the area"
+      },
+      {
+        "name": "structure_burn_min",
+        "default": 60.0,
+        "unit": "min",
+        "note": "guess: how long a burning structure heats its neighbours"
+      },
+      {
+        "name": "structure_jitter",
+        "default": 0.3,
+        "note": "sigma of a fixed log-normal factor per structure on its threshold: what it is made of, its vents and eaves, which nobody mapped"
+      },
+      {
+        "name": "house_reach_m",
+        "default": 40.0,
+        "unit": "m",
+        "note": "guess: gap between footprints across which a burning structure's heat is felt"
+      },
+      {
+        "name": "house_lambda_m",
+        "default": 8.0,
+        "unit": "m",
+        "note": "guess: e-folding gap of that heat, longer downwind"
+      },
+      {
+        "name": "exposure_m",
+        "default": 35.0,
+        "unit": "m",
+        "note": "guess: the burning ground within this of a footprint heats the structure"
+      },
+      {
+        "name": "exposure_lambda_m",
+        "default": 12.0,
+        "unit": "m",
+        "note": "guess: e-folding distance of that heat, longer downwind"
+      },
+      {
+        "name": "ember_accept",
+        "default": 0.25,
+        "note": "guess: chance a structure takes an ember that lands in its cell, divided by its own factor"
+      },
+      {
+        "name": "structure_frame_every",
+        "default": "6h",
+        "note": "the one-arc-second building_arrival_h frame is written this often"
       }
     ],
     "publishes": [
@@ -112557,6 +112634,11 @@
         "note": "cell counts by fuel kind, road cells, HRRR hours"
       },
       {
+        "name": "bodies.loaded",
+        "required": false,
+        "note": "structures, their recorded fates, neighbour links"
+      },
+      {
         "name": "fire.ignition",
         "required": false,
         "note": "at a cell"
@@ -112564,7 +112646,7 @@
       {
         "name": "fire.spot",
         "required": false,
-        "note": "at a cell: { from, distance_m }"
+        "note": "at a cell: { from, distance_m, structure? }"
       }
     ],
     "sends": [],
@@ -112599,9 +112681,49 @@
         "name": "fire_arrival_h",
         "unit": "h",
         "required": false
+      },
+      {
+        "name": "building_fate",
+        "unit": "0 unknown 1 no damage 2 damaged 3 destroyed (the inspectors)",
+        "required": false
+      },
+      {
+        "name": "building_arrival_h",
+        "unit": "h",
+        "required": false
       }
     ],
     "reports": [
+      {
+        "name": "fire.buildings_ignited",
+        "unit": "count",
+        "required": false
+      },
+      {
+        "name": "fire.buildings_burning",
+        "unit": "count",
+        "required": false
+      },
+      {
+        "name": "fit.buildings_destroyed_reached",
+        "unit": "count",
+        "required": false
+      },
+      {
+        "name": "fit.buildings_undamaged_reached",
+        "unit": "count",
+        "required": false
+      },
+      {
+        "name": "fit.buildings_recall",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "fit.buildings_precision",
+        "unit": "1",
+        "required": false
+      },
       {
         "name": "fire.burned_acres",
         "unit": "acres",
@@ -112676,6 +112798,13 @@
         "source": "fire.burned_acres",
         "obs": "",
         "note": ""
+      },
+      {
+        "kind": "chart",
+        "title": "Buildings the model has lit",
+        "source": "fire.buildings_ignited",
+        "obs": "",
+        "note": "against the inspectors' record: recall and precision in the series"
       },
       {
         "kind": "chart",

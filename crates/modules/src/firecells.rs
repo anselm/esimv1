@@ -39,7 +39,7 @@ pub struct Cells {
     wind_start: String, wind_end: String,
     buildings_service: String, buildings_where: String, buildings_key: String,
     // the guesses
-    reach_m: f64, lambda_m: f64, wind_gain: f64, slope_gain: f64,
+    reach_m: f64, lambda_m: f64, wind_gain: f64, slope_gain: f64, slope_rate_gain: f64, downslope_gain: f64,
     moisture_gain: f64, live_moisture_pct: f64,
     grass_ignite: f64, grass_intensity: f64, grass_burn_min: f64,
     shrub_ignite: f64, shrub_intensity: f64, shrub_burn_min: f64,
@@ -118,7 +118,7 @@ impl Cells {
             buildings_service: param_str(p, "buildings_service", "https://services.arcgis.com/RmCCgQtiZLDCtblq/arcgis/rest/services/2025_WildFire_LARIAC_BUILDINGS_100M_Plus_DINS_MaxMin_DAMAGE_NEW/FeatureServer/0").to_string(),
             buildings_where: param_str(p, "buildings_where", "Incident_Name LIKE '%Palisades%'").to_string(),
             buildings_key: param_str(p, "buildings_key", "lacounty-lariac/2025-palisades").to_string(),
-            reach_m: param_f64(p, "reach_m", 90.0), lambda_m: param_f64(p, "lambda_m", 20.0), wind_gain: param_f64(p, "wind_gain", 0.15), slope_gain: param_f64(p, "slope_gain", 1.5),
+            reach_m: param_f64(p, "reach_m", 90.0), lambda_m: param_f64(p, "lambda_m", 20.0), wind_gain: param_f64(p, "wind_gain", 0.15), slope_gain: param_f64(p, "slope_gain", 1.5), slope_rate_gain: param_f64(p, "slope_rate_gain", 0.0), downslope_gain: param_f64(p, "downslope_gain", -1.0),
             moisture_gain: param_f64(p, "moisture_gain", 10.0), live_moisture_pct: param_f64(p, "live_moisture_pct", 60.0),
             grass_ignite: param_f64(p, "grass_ignite", 0.6), grass_intensity: param_f64(p, "grass_intensity", 1.0), grass_burn_min: param_f64(p, "grass_burn_min", 5.0),
             shrub_ignite: param_f64(p, "shrub_ignite", 1.5), shrub_intensity: param_f64(p, "shrub_intensity", 2.5), shrub_burn_min: param_f64(p, "shrub_burn_min", 20.0),
@@ -471,9 +471,20 @@ impl Module for Cells {
                         let along = (theta - wto).cos().max(0.0);
                         let mut lambda = self.lambda_m as f32 * (1.0 + self.wind_gain as f32 * wspd * along);
                         let asp = self.aspect[n];
-                        if asp.is_finite() { let up = (theta - (asp + std::f32::consts::PI)).cos().max(0.0); lambda *= 1.0 + self.slope_gain as f32 * self.slope[n].tan() * up; }
+                        // slope on the rate itself: Rothermel's shape, a gain times tan²(slope), uphill multiplies
+                        // the heat delivered and downhill divides it (the downhill half is a guess)
+                        let mut sfac = 1.0f32;
+                        if asp.is_finite() {
+                            let c = (theta - (asp + std::f32::consts::PI)).cos();
+                            lambda *= 1.0 + self.slope_gain as f32 * self.slope[n].tan() * c.max(0.0);
+                            if self.slope_rate_gain > 0.0 {
+                                let t2 = self.slope[n].tan().powi(2);
+                                let down = if self.downslope_gain < 0.0 { self.slope_rate_gain } else { self.downslope_gain } as f32;
+                                sfac = if c >= 0.0 { 1.0 + self.slope_rate_gain as f32 * t2 * c } else { 1.0 / (1.0 + down * t2 * -c) };
+                            }
+                        }
                         if self.kind[b] == 4 && self.kind[n] == 4 { lambda *= self.built_to_built_gain as f32; }
-                        let q = ib * (-d / lambda).exp() * dt / 60.0;
+                        let q = ib * (-d / lambda).exp() * sfac * dt / 60.0;
                         // the cell cools between contributions
                         let elapsed = t - self.heat_t[n];
                         if elapsed > 0.0 { self.heat[n] *= (-(elapsed / 60.0) / self.cool_min as f32).exp(); self.heat_t[n] = t; }
@@ -618,7 +629,7 @@ impl Cells {
             .param("wind_start", "2025-01-07T18:00:00Z", "", "").param("wind_end", "2025-01-12T00:00:00Z", "", "")
             .param("buildings_service", "https://services.arcgis.com/RmCCgQtiZLDCtblq/arcgis/rest/services/2025_WildFire_LARIAC_BUILDINGS_100M_Plus_DINS_MaxMin_DAMAGE_NEW/FeatureServer/0", "", "").param("buildings_where", "Incident_Name LIKE '%Palisades%'", "", "").param("buildings_key", "lacounty-lariac/2025-palisades", "", "")
             .param("reach_m", 90.0, "m", "guess: how far a burning cell's heat is felt").param("lambda_m", 20.0, "m", "guess: e-folding distance of that heat in still air on the flat")
-            .param("wind_gain", 0.15, "1/(m/s)", "guess: the reach grows by this per m/s of wind in the downwind direction").param("slope_gain", 1.5, "", "guess: the reach grows by this times tan(slope) uphill")
+            .param("wind_gain", 0.15, "1/(m/s)", "guess: the reach grows by this per m/s of wind in the downwind direction").param("slope_gain", 1.5, "", "guess: the reach grows by this times tan(slope) uphill").param("slope_rate_gain", 0.0, "", "the heat a cell delivers uphill is multiplied by 1 + this times tan²(slope) and downhill divided by it; 0 leaves slope to the reach alone. Rothermel's slope factor has this shape with 5.275 β^-0.3 as the gain, about 20 for a shrub bed (recalled); the downhill half is a guess").param("downslope_gain", -1.0, "", "the gain on the downhill division; -1 means the same as slope_rate_gain")
             .param("moisture_gain", 10.0, "", "guess: ignition energy grows by this times the dead fuel moisture fraction").param("live_moisture_pct", 60.0, "%", "guess: chaparral in January after a dry autumn")
             .param("grass_ignite", 0.6, "heat", "guess").param("grass_intensity", 1.0, "heat/min", "guess").param("grass_burn_min", 5.0, "min", "guess")
             .param("shrub_ignite", 1.5, "heat", "guess").param("shrub_intensity", 2.5, "heat/min", "guess").param("shrub_burn_min", 20.0, "min", "guess")

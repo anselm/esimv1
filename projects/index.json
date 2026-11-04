@@ -176,22 +176,21 @@
     "runs": [
       {
         "all_ledgers_closed": true,
-        "digest": "8892d449ff6fb41e",
+        "digest": "be22468c580b023f",
         "end": 1736640000,
-        "events": 1108,
-        "id": "f3-palisades-cells-232b0e19-8892d449",
+        "events": 1173,
+        "id": "f3-palisades-cells-039b1bf5-be22468c",
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
-          "fire.ember_accept": "0.6",
-          "fire.house_reach_m": "60",
+          "fire.downslope_gain": "2",
           "fire.ignite_scale": "4",
           "fire.reach_m": "45",
-          "fire.structures": "\"on\""
+          "fire.slope_rate_gain": "20"
         },
         "start": 1736272800,
-        "variant": "bodies-embers",
-        "verdict": "holds"
+        "variant": "near-4-slope-soft",
+        "verdict": null
       },
       {
         "all_ledgers_closed": true,
@@ -241,6 +240,23 @@
         },
         "start": 1736272800,
         "variant": "bodies-hard",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "237fff01322f93c9",
+        "end": 1736640000,
+        "events": 865,
+        "id": "f3-palisades-cells-40fecb0d-237fff01",
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.ignite_scale": "4",
+          "fire.reach_m": "45",
+          "fire.slope_rate_gain": "6"
+        },
+        "start": 1736272800,
+        "variant": "near-4-slope-6",
         "verdict": "holds"
       },
       {
@@ -327,6 +343,23 @@
         },
         "start": 1736272800,
         "variant": "near-3",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "424d5c89f64855db",
+        "end": 1736640000,
+        "events": 424,
+        "id": "f3-palisades-cells-b002dad3-424d5c89",
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.ignite_scale": "4",
+          "fire.reach_m": "45",
+          "fire.slope_rate_gain": "20"
+        },
+        "start": 1736272800,
+        "variant": "near-4-slope",
         "verdict": "holds"
       },
       {
@@ -477,6 +510,34 @@
           "fire.structures": "on"
         },
         "title": "As bodies, with the structure threshold at 25: half the destroyed reached, at the same precision"
+      },
+      {
+        "name": "near-4-slope",
+        "set": {
+          "fire.ignite_scale": 4,
+          "fire.reach_m": 45,
+          "fire.slope_rate_gain": 20
+        },
+        "title": "Near reach, thresholds times 4, slope on the rate with Rothermel's shape (gain 20)"
+      },
+      {
+        "name": "near-4-slope-6",
+        "set": {
+          "fire.ignite_scale": 4,
+          "fire.reach_m": 45,
+          "fire.slope_rate_gain": 6
+        },
+        "title": "Near reach, thresholds times 4, slope on the rate at a milder gain (6)"
+      },
+      {
+        "name": "near-4-slope-soft",
+        "set": {
+          "fire.downslope_gain": 2,
+          "fire.ignite_scale": 4,
+          "fire.reach_m": 45,
+          "fire.slope_rate_gain": 20
+        },
+        "title": "Near reach, thresholds times 4, Rothermel's uphill gain (20) with a gentle downhill division (2)"
       }
     ]
   },

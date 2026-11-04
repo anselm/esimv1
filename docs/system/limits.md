@@ -133,7 +133,13 @@ holds the history.
   stays at the record's base rate of about 0.48 to 0.54, because the model has nothing that
   tells a survivor from its destroyed neighbour. The house's own vulnerability (roof, vents,
   eaves, year built) is not in any public field we hold; the assessor's roll by parcel number
-  is the noted route. The HRRR 3 km wind it uses reads 10 m/s with 21 m/s gusts at the ignition point in
+  is the noted route. Until the evening of 2026-11-03 the engine was nearly blind to slope: it
+  entered only the reach of the heat, linearly, under a form that caps any directional effect at
+  a few times the flat rate, so the fire spread in rings while Rothermel's ran up the canyons. A
+  rate factor with Rothermel's shape (`slope_rate_gain`, off by default) is now a declared option;
+  at the literature's gain it stalls on ridge tops because the downhill half is a division, and at
+  a gain of 6 it gives the best perimeter overlap so far (0.70) at half the first day's area. Wind
+  and slope still do not add as vectors in this engine. The HRRR 3 km wind it uses reads 10 m/s with 21 m/s gusts at the ignition point in
   the first hour (checked against GDAL); the reanalysis read 7 and 13.
 - The 3D view takes building heights as feet because the county's service does not state a
   unit.

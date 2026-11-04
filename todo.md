@@ -89,8 +89,11 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
    decided in `devlog/20261103-beyond-rothermel.md`: terrain-following wind first (one-way), a local
    indraft second, a dense 3D solver last; modes by manifest.
 2. "The fire spread in an almost linear fashion ... like a drop of water ... not believable." — the
-   phantom cliffs are fixed; the drop shape remains because the wind is flat and fuel is a cover
-   class. Falls out of 1 and 3.
+   phantom cliffs are fixed. Evening: the rings were mostly the formula, slope only in the heat's
+   reach and capped (`devlog/20261103-the-slope.md`); with Rothermel's shape on the rate at gain 6
+   the fire climbs the canyons in fingers and the perimeter overlap is the best so far (0.70). Still
+   to do: wind and slope as vectors in one rate factor, the ellipse's backing rate instead of a
+   downhill division, then the terrain-following wind of 1.
 3. "Much finer granularity on different kinds of ignitable/flammable fuel sources ... the cellular
    resolution is far too low ... individual trees." — not started. Plan: 10 m cells with load, canopy
    height, time since burn and seasonal live moisture; trees as individuals only when canopy data

@@ -138,7 +138,13 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   colours; precision sits at the base rate (0.48) whatever the threshold, because nothing we hold
   tells a survivor from its neighbour; the county footprints carry `AIN`, the assessor's parcel
   number, and the assessor's roll is the way to year built and size. The public DINS views carry
-  only DAMAGE and STRUCTURETYPE; the full form is in a non-public data-share view. A `scene` view renders in 3D (`Scene3D.svelte`,
+  only DAMAGE and STRUCTURETYPE; the full form is in a non-public data-share view. Slope
+  (`devlog/20261103-the-slope.md`): until the evening the engine put slope only in the heat's reach,
+  linearly and capped, so it spread in rings while Rothermel's quadratic slope factor climbed the
+  canyons; `slope_rate_gain` (default 0, unchanged runs) and `downslope_gain` put Rothermel's shape
+  on the rate; variants near-4-slope (gain 20, stalls on ridges), near-4-slope-6 (best overlap yet,
+  0.70, half the first day's area), near-4-slope-soft (20 up, 2 down, overruns). Next for the engine:
+  heat as I·f(d)·(1+φ_w+φ_s) with wind and slope as vectors, then terrain-following wind. A `scene` view renders in 3D (`Scene3D.svelte`,
   three.js 0.170, needs `terrain_elev_m` and `building_height` frames); headless screenshots need the
   swiftshader flags, which the scratchpad shot script now sets. Never `pgrep -f`/`kill` a pattern
   that appears in the running command line (killed my own shell this way).

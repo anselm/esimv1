@@ -61,6 +61,16 @@ survivors stand among the destroyed on the same streets, and nothing in the foot
 height, the gap or the slope tells them apart. What does is the house itself, its roof, vents,
 eaves and age, and that is the data the next step has to bring in.
 
+Later that evening Anselm noticed that the older model climbs the canyons and this one did not. It
+was the formula: slope entered only the reach of a burning cell's heat, linearly, and the heat form
+caps every directional effect at a few times the flat rate, so a 30° slope doubled the spread where
+Rothermel's quadratic slope factor multiplies it by about seven. The `near-4-slope` runs put
+Rothermel's shape on the rate itself (`slope_rate_gain`, uphill multiplied, downhill divided). At
+Rothermel's own gain the fire runs up one canyon and stops on the ridge, since everything beyond is
+downhill; at a gain of 6 both ways the fire climbs toward Topanga and along the ridges in fingers,
+and its overlap with the mapped perimeter is the best of any run on either engine so far, though it
+is half the record's area on the first day. The devlog entry *The slope* has the table.
+
 Until the afternoon of 2026-11-03 these runs, like the first project's, were made on ground
 with a column of missing elevation every third or fourth cell, which the slope code read as
 cliffs. This engine felt it less than the spread formula does, because it stretches its

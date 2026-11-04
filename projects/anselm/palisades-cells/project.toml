@@ -95,3 +95,28 @@ title = "As bodies, with the structure threshold at 25: half the destroyed reach
 "fire.structure_ignite" = 25
 "fire.house_lambda_m" = 6
 "fire.structure_jitter" = 0.6
+
+[[variant]]
+name = "near-4-slope"
+title = "Near reach, thresholds times 4, slope on the rate with Rothermel's shape (gain 20)"
+[variant.set]
+"fire.reach_m" = 45
+"fire.ignite_scale" = 4
+"fire.slope_rate_gain" = 20
+
+[[variant]]
+name = "near-4-slope-6"
+title = "Near reach, thresholds times 4, slope on the rate at a milder gain (6)"
+[variant.set]
+"fire.reach_m" = 45
+"fire.ignite_scale" = 4
+"fire.slope_rate_gain" = 6
+
+[[variant]]
+name = "near-4-slope-soft"
+title = "Near reach, thresholds times 4, Rothermel's uphill gain (20) with a gentle downhill division (2)"
+[variant.set]
+"fire.reach_m" = 45
+"fire.ignite_scale" = 4
+"fire.slope_rate_gain" = 20
+"fire.downslope_gain" = 2
