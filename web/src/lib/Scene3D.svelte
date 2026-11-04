@@ -119,7 +119,9 @@
           for (let r = 0; r < ny; r++) for (let c = 0; c < nx; c++) { const h = bh[r * nx + c]; if (Number.isFinite(h) && h > 0) cells.push([r, c, h * 0.3048]) }
           const box = new THREE.BoxGeometry(dx * 0.7, 1, dy * 0.7)
           box.translate(0, 0.5, 0)
-          const bmat = new THREE.MeshLambertMaterial({ vertexColors: true })
+          // no vertexColors here: the box geometry has no colour attribute, and with the flag set
+          // every instance drew black whatever its instance colour said (until 2026-11-03)
+          const bmat = new THREE.MeshLambertMaterial()
           boxMesh = new THREE.InstancedMesh(box, bmat, cells.length)
           boxColors = new Float32Array(cells.length * 3)
           const m = new THREE.Matrix4()

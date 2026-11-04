@@ -144,7 +144,7 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   canyons; `slope_rate_gain` (default 0, unchanged runs) and `downslope_gain` put Rothermel's shape
   on the rate; variants near-4-slope (gain 20, stalls on ridges), near-4-slope-6 (best overlap yet,
   0.70, half the first day's area), near-4-slope-soft (20 up, 2 down, overruns). Next for the engine:
-  heat as I·f(d)·(1+φ_w+φ_s) with wind and slope as vectors, then terrain-following wind. A `scene` view renders in 3D (`Scene3D.svelte`,
+  heat as I·f(d)·(1+φ_w+φ_s) with wind and slope as vectors, then terrain-following wind. A `scene` view renders in 3D (`Scene3D.svelte`; its building boxes drew black until the late evening of 2026-11-03 because the box material had `vertexColors` set with no colour attribute, so instance colours never showed;
   three.js 0.170, needs `terrain_elev_m` and `building_height` frames); headless screenshots need the
   swiftshader flags, which the scratchpad shot script now sets. Never `pgrep -f`/`kill` a pattern
   that appears in the running command line (killed my own shell this way).
