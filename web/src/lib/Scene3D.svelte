@@ -8,7 +8,16 @@
   import { FIRE } from './ramp.js'
   import { isoTime } from './fmt.js'
 
-  let { run, base, cursor = null, terrain = 'terrain_elev_m', buildings = 'building_height', fire = 'fire_arrival_h', context = null } = $props()
+  let { run, base, cursor = null, terrain = 'terrain_elev_m', buildings = 'building_height', fire = 'fire_arrival_h', arrival = 'building_arrival_h', fate = 'building_fate', context = null } = $props()
+
+  // the bodies, when the run has them: each building's own arrival hour (the last frame holds them
+  // all) and the inspectors' word; the ignition instant is read off the first fire frame
+  const af = $derived(run.fields?.[arrival])
+  const faf = $derived(run.fields?.[fate])
+  let bodyHours = $state(null)   // Float32Array on the 1-arcsec grid, hours since ignition
+  let bodyFate = $state(null)
+  let ignitionT = $state(null)
+  const cursorH = $derived(cursor !== null && ignitionT !== null ? (cursor - ignitionT) / 3600 : null)
 
   let el = $state()
   let width = $state(640)
@@ -44,6 +53,20 @@
     if (i < 0) { hours = null; return }
     let live = true
     frame(fire, i).then((f) => { if (live) { hours = f; fireMax = Math.max(1, ff.max ?? 1) } }).catch(() => {})
+    return () => { live = false }
+  })
+
+  $effect(() => {
+    if (!af || !faf || !ff) return
+    let live = true
+    const last = (af.times?.length ?? 1) - 1
+    Promise.all([frame(arrival, last), frame(fate, 0), frame(fire, 0)]).then(([a, f, f0]) => {
+      if (!live) return
+      bodyHours = a; bodyFate = f
+      // the first fire frame's latest arrival is about an hour after ignition
+      let mx = 0; for (let k = 0; k < f0.length; k++) if (Number.isFinite(f0[k]) && f0[k] > mx) mx = f0[k]
+      ignitionT = (ff.times?.[0] ?? 0) - mx * 3600
+    }).catch(() => {})
     return () => { live = false }
   })
 
@@ -143,9 +166,19 @@
     terrainMesh.geometry.attributes.color.needsUpdate = true
     if (boxMesh) {
       const cells = boxMesh.userData.cells
+      const bodies = bodyHours && bodyFate && cursorH !== null
       cells.forEach(([r, c], i) => {
         let col = dark ? [0.55, 0.55, 0.6] : [0.45, 0.45, 0.5]
-        if (hours && ffg) {
+        if (bodies) {
+          // the body's own state against the inspectors' word
+          const k = r * nx + c
+          const lit = Number.isFinite(bodyHours[k]) && bodyHours[k] <= cursorH
+          const f = bodyFate[k]
+          if (lit && f === 3) col = [0.85, 0.15, 0.1]            // burned, and it was destroyed
+          else if (lit) col = [0.95, 0.55, 0.1]                  // burned in the model, not destroyed in the record
+          else if (f === 3) col = [0.2, 0.45, 0.9]               // destroyed in the record, not reached by the model
+          else if (f === 2) col = dark ? [0.6, 0.55, 0.45] : [0.6, 0.55, 0.45]
+        } else if (hours && ffg) {
           const fr = Math.min(ffg.ny - 1, Math.floor(r * (ffg.ny / ny))), fc = Math.min(ffg.nx - 1, Math.floor(c * (ffg.nx / nx)))
           const h = hours[fr * ffg.nx + fc]
           if (Number.isFinite(h)) col = [0.85, 0.15, 0.1]
@@ -155,7 +188,7 @@
       boxMesh.instanceColor.needsUpdate = true
     }
   }
-  $effect(() => { hours; paint() })
+  $effect(() => { hours; bodyHours; bodyFate; cursorH; paint() })
   $effect(() => { if (renderer && camera) { renderer.setSize(width, height); camera.aspect = width / height; camera.updateProjectionMatrix() } })
 </script>
 
@@ -171,8 +204,15 @@
   <div class="mono mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-[10px] muted">
     <span><span class="inline-block h-2 w-2 align-middle" style="background:{FIRE[1]}" aria-hidden="true"></span> burned early</span>
     <span><span class="inline-block h-2 w-2 align-middle" style="background:{FIRE[5]}" aria-hidden="true"></span> burned late</span>
-    <span><span class="inline-block h-2 w-2 align-middle bg-neutral-500" aria-hidden="true"></span> building, unburned</span>
-    <span><span class="inline-block h-2 w-2 align-middle" style="background:#d9261a" aria-hidden="true"></span> building in a burned cell</span>
+    {#if bodyHours && bodyFate}
+      <span><span class="inline-block h-2 w-2 align-middle bg-neutral-500" aria-hidden="true"></span> building, unburned, not destroyed</span>
+      <span><span class="inline-block h-2 w-2 align-middle" style="background:#d9261a" aria-hidden="true"></span> burned, and the inspectors found it destroyed</span>
+      <span><span class="inline-block h-2 w-2 align-middle" style="background:#f28c1a" aria-hidden="true"></span> burned in the model, not destroyed in the record</span>
+      <span><span class="inline-block h-2 w-2 align-middle" style="background:#3373e6" aria-hidden="true"></span> destroyed in the record, not reached by the model</span>
+    {:else}
+      <span><span class="inline-block h-2 w-2 align-middle bg-neutral-500" aria-hidden="true"></span> building, unburned</span>
+      <span><span class="inline-block h-2 w-2 align-middle" style="background:#d9261a" aria-hidden="true"></span> building in a burned cell</span>
+    {/if}
     <span>vertical in metres, as the ground is; building heights as the county states them, taken as feet</span>
   </div>
 </figure>

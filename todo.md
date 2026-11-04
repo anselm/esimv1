@@ -99,9 +99,12 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
    hand (`data/events/palisades-2025/`: CAL FIRE's resources by report, NIFC's 2,334 lines and 825
    points, UL's radio log); no module reads it yet.
 5. "More clearly indicate when actual buildings themselves are likely burned - right now they stay
-   one color." — in progress (2026-11-03 evening): structures as bodies in `fire.cells`, each
-   footprint with its own ignition and burn, coloured in the 3D view by the model's state and the
-   inspectors' recorded fate, with the disagreements shown.
+   one color." — done in the first form (2026-11-03 evening, `devlog/20261103-bodies.md`): every
+   footprint a body with its own ignition and burn, coloured in the 3D view by the model's state
+   against the inspectors' fate, disagreements in orange and blue; scored per footprint. Finding:
+   precision stays at the base rate, the model cannot tell a survivor from its neighbour. Next:
+   join the county's `AIN` to the assessor's roll for year built and size as vulnerability; CAL
+   FIRE's Camp 2018 DINS public view carries pictures, for later.
 6. "Our model should diverge from the rothermal model." — agreed; Rothermel stays as the baseline
    module, the work goes into `fire.cells`.
 7. "Real predictive assessments of the shelter individual plots of land may have ... for insurance

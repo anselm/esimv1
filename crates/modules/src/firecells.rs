@@ -52,8 +52,15 @@ pub struct Cells {
     built_to_built_gain: f64,
     spot_rate: f64, spot_mean_m: f64, spot_land_p: f64, spot_min_intensity: f64,
     road_widths_m: String,
+    // structures as bodies: every footprint its own thing to ignite and burn
+    structures: String,          // on | off
+    structure_ignite: f64, structure_intensity: f64, structure_burn_min: f64, structure_jitter: f64,
+    house_reach_m: f64, house_lambda_m: f64, exposure_m: f64, exposure_lambda_m: f64, ember_accept: f64,
+    structure_frame_every: Duration,
     // state
     ignited: bool,
+    s_t_ign: Vec<f32>, s_t_out: Vec<f32>, s_heat: Vec<f32>, s_heat_t: Vec<f32>, s_active: Vec<u32>,
+    last_s_frame: i64,
     since_ignition_s: f64,
     last_frame: i64,
     t_ign: Vec<f32>,         // seconds since ignition, NaN unburned
@@ -81,6 +88,14 @@ pub struct Cells {
     #[serde(skip)] cell_moist: Vec<f32>,
     #[serde(skip)] jitter: Vec<f32>,        // per-cell multiplier on the ignition threshold: the micro-conditions nobody mapped
     #[serde(skip)] offsets: Vec<(isize, isize, f32, f32)>, // dc, dr, distance factor (cells), bearing rad
+    // the bodies
+    #[serde(skip)] s_cell: Vec<usize>,                 // the cell under each structure's centroid
+    #[serde(skip)] s_area: Vec<f32>,                   // footprint m2
+    #[serde(skip)] s_fate: Vec<u8>,                    // the inspectors' word: 0 unknown, 1 no damage, 2 affected to major, 3 destroyed
+    #[serde(skip)] s_jitter: Vec<f32>,
+    #[serde(skip)] s_neigh: Vec<Vec<(u32, f32, f32)>>, // neighbour structure, gap between footprints m, bearing from this one rad
+    #[serde(skip)] cell_structs: std::collections::HashMap<usize, Vec<(u32, f32)>>, // cells whose fire a structure feels, with the distance
+    #[serde(skip)] cell_home: std::collections::HashMap<usize, Vec<u32>>,           // structures standing in a cell
 }
 
 fn civil(t: i64) -> (String, u8) {
@@ -116,10 +131,16 @@ impl Cells {
             built_to_built_gain: param_f64(p, "built_to_built_gain", 1.0),
             spot_rate: param_f64(p, "spot_rate", 0.003), spot_mean_m: param_f64(p, "spot_mean_m", 25.0), spot_land_p: param_f64(p, "spot_land_p", 0.3), spot_min_intensity: param_f64(p, "spot_min_intensity", 2.0),
             road_widths_m: param_str(p, "road_widths_m", "motorway=30,trunk=20,primary=14,secondary=10,tertiary=8").to_string(),
+            structures: param_str(p, "structures", "off").to_string(),
+            structure_ignite: param_f64(p, "structure_ignite", 3.0), structure_intensity: param_f64(p, "structure_intensity", 3.0), structure_burn_min: param_f64(p, "structure_burn_min", 60.0), structure_jitter: param_f64(p, "structure_jitter", 0.3),
+            house_reach_m: param_f64(p, "house_reach_m", 40.0), house_lambda_m: param_f64(p, "house_lambda_m", 8.0), exposure_m: param_f64(p, "exposure_m", 35.0), exposure_lambda_m: param_f64(p, "exposure_lambda_m", 12.0), ember_accept: param_f64(p, "ember_accept", 0.25),
+            structure_frame_every: param_duration(p, "structure_frame_every", "6h")?,
+            s_t_ign: Vec::new(), s_t_out: Vec::new(), s_heat: Vec::new(), s_heat_t: Vec::new(), s_active: Vec::new(), last_s_frame: i64::MIN / 4,
             ignited: false, since_ignition_s: 0.0, last_frame: i64::MIN / 4,
             t_ign: Vec::new(), t_out: Vec::new(), heat: Vec::new(), heat_t: Vec::new(), active: Vec::new(), spots: 0,
             grid: None, frame_grid: None, elev: Vec::new(), slope: Vec::new(), aspect: Vec::new(), cover: Vec::new(), built_frac: Vec::new(), built_height: Vec::new(), road: Vec::new(), kind: Vec::new(),
             area_m2: Vec::new(), metres: Vec::new(), hrrr: Vec::new(), hrrr_t0: 0, era5: None, cell_wind: Vec::new(), cell_moist: Vec::new(), jitter: Vec::new(), offsets: Vec::new(),
+            s_cell: Vec::new(), s_area: Vec::new(), s_fate: Vec::new(), s_jitter: Vec::new(), s_neigh: Vec::new(), cell_structs: Default::default(), cell_home: Default::default(),
         };
         c.load()?;
         Ok(c)
@@ -142,6 +163,7 @@ impl Cells {
         // buildings: fraction of each cell under a footprint, and the mean height there
         self.built_frac = vec![0.0; n]; self.built_height = vec![f32::NAN; n];
         let mut hsum = vec![0f32; n]; let mut hcnt = vec![0u16; n];
+        let mut bodies_src: Option<Vec<esim_registry::wildfire::Building>> = None;
         match building_footprints(&mut fe, &self.buildings_service, &self.buildings_key, &self.buildings_where) {
             Ok(bs) => {
                 for b in &bs {
@@ -164,6 +186,7 @@ impl Cells {
                 }
                 for k in 0..n { if hcnt[k] > 0 { self.built_height[k] = hsum[k] / hcnt[k] as f32; } }
                 eprintln!("buildings: {} footprints, {} cells touched", bs.len(), self.built_frac.iter().filter(|&&f| f > 0.0).count());
+                bodies_src = Some(bs);
             }
             Err(e) => eprintln!("buildings: {e}; built-up land from land cover only"),
         }
@@ -202,6 +225,7 @@ impl Cells {
             if self.built_frac[k] >= 0.05 { return 4; }
             match self.cover[k] { 10 => 3, 20 => 2, 30 | 40 | 90 => 1, 50 => 4, _ => 0 }
         }).collect();
+        if self.structures == "on" { if let Some(bs) = &bodies_src { self.build_bodies(bs, &grid); } }
         // the wind: HRRR hours over the window, or the ERA5 point series
         let t0 = Time::parse(&self.wind_start)?.0; let t1 = Time::parse(&self.wind_end)?.0;
         self.hrrr_t0 = t0;
@@ -241,6 +265,89 @@ impl Cells {
         Ok(())
     }
 
+    /// Every footprint becomes a body: a centroid, an area, the cell it stands in, the inspectors'
+    /// word on its fate, a fixed vulnerability factor, its neighbours within `house_reach_m` (with the
+    /// gap between footprints, not between centres), and the wildland cells within `exposure_m`
+    /// whose fire it feels.
+    fn build_bodies(&mut self, bs: &[esim_registry::wildfire::Building], grid: &LatLonGrid) {
+        let mut cent: Vec<(f64, f64)> = Vec::new();
+        self.s_cell.clear(); self.s_area.clear(); self.s_fate.clear();
+        for b in bs {
+            if b.ring.len() < 3 { continue; }
+            let (cx, cy) = (b.ring.iter().map(|p| p.0).sum::<f64>() / b.ring.len() as f64, b.ring.iter().map(|p| p.1).sum::<f64>() / b.ring.len() as f64);
+            if cy > grid.lat_n || cy < grid.lat_s() || cx < grid.lon_w || cx > grid.lon_e() { continue; }
+            let r = (((grid.lat_n - cy) / grid.dlat) as usize).min(grid.ny - 1); let c = (((cx - grid.lon_w) / grid.dlon) as usize).min(grid.nx - 1);
+            let (mx, my) = (self.metres[r].0 / grid.dlon, self.metres[r].1 / grid.dlat); // metres per degree here
+            let mut a = 0.0; for i in 0..b.ring.len() { let (x0, y0) = b.ring[i]; let (x1, y1) = b.ring[(i + 1) % b.ring.len()]; a += (x0 * mx) * (y1 * my) - (x1 * mx) * (y0 * my); }
+            let area = (a.abs() / 2.0) as f32;
+            if !(area > 5.0) { continue; }
+            let fate = if b.damage.starts_with("Destroyed") { 3 } else if b.damage.starts_with("No Damage") { 1 } else if b.damage.is_empty() { 0 } else { 2 };
+            cent.push((cx, cy)); self.s_cell.push(r * grid.nx + c); self.s_area.push(area); self.s_fate.push(fate);
+        }
+        let m = cent.len();
+        self.s_jitter = (0..m).map(|i| {
+            if self.structure_jitter <= 0.0 { return 1.0; }
+            let mut x = (i as u64 + 7_919).wrapping_mul(0x9E3779B97F4A7C15) ^ 0xD1B54A32D192ED03; x ^= x >> 29; x = x.wrapping_mul(0xBF58476D1CE4E5B9); x ^= x >> 32;
+            let u1 = ((x & 0xFFFF_FFFF) as f64 + 0.5) / 4294967296.0; let u2 = (((x >> 32) & 0xFFFF_FFFF) as f64 + 0.5) / 4294967296.0;
+            ((self.structure_jitter * (-2.0 * u1.ln()).sqrt() * (std::f64::consts::TAU * u2).cos()).exp()) as f32
+        }).collect();
+        if self.s_t_ign.len() != m { self.s_t_ign = vec![f32::NAN; m]; self.s_t_out = vec![0.0; m]; self.s_heat = vec![0.0; m]; self.s_heat_t = vec![0.0; m]; self.s_active.clear(); }
+        // a bucket grid in cells for the neighbour search
+        self.cell_home.clear();
+        for (i, &k) in self.s_cell.iter().enumerate() { self.cell_home.entry(k).or_default().push(i as u32); }
+        let (mx0, my0) = self.metres[grid.ny / 2];
+        let reach_c = (self.house_reach_m / mx0).ceil() as isize + 1; let reach_r = (self.house_reach_m / my0).ceil() as isize + 1;
+        self.s_neigh = vec![Vec::new(); m];
+        for i in 0..m {
+            let (r, c) = ((self.s_cell[i] / grid.nx) as isize, (self.s_cell[i] % grid.nx) as isize);
+            let (mx, my) = (self.metres[r as usize].0 / grid.dlon, self.metres[r as usize].1 / grid.dlat);
+            let half_i = (self.s_area[i] as f64).sqrt() / 2.0;
+            for dr in -reach_r..=reach_r { for dc in -reach_c..=reach_c {
+                let (rr, cc) = (r + dr, c + dc);
+                if rr < 0 || cc < 0 || rr >= grid.ny as isize || cc >= grid.nx as isize { continue; }
+                let Some(list) = self.cell_home.get(&(rr as usize * grid.nx + cc as usize)) else { continue };
+                for &j in list {
+                    let j = j as usize; if j == i { continue; }
+                    let (ex, ny_m) = ((cent[j].0 - cent[i].0) * mx, (cent[j].1 - cent[i].1) * my);
+                    let d = (ex * ex + ny_m * ny_m).sqrt();
+                    let gap = (d - half_i - (self.s_area[j] as f64).sqrt() / 2.0).max(0.0);
+                    if gap <= self.house_reach_m { self.s_neigh[i].push((j as u32, gap as f32, ex.atan2(ny_m) as f32)); }
+                }
+            } }
+        }
+        // the cells a structure feels
+        self.cell_structs.clear();
+        let exp_c = (self.exposure_m / mx0).ceil() as isize; let exp_r = (self.exposure_m / my0).ceil() as isize;
+        for i in 0..m {
+            let (r, c) = ((self.s_cell[i] / grid.nx) as isize, (self.s_cell[i] % grid.nx) as isize);
+            let (mx, my) = (self.metres[r as usize].0 / grid.dlon, self.metres[r as usize].1 / grid.dlat);
+            let half_i = (self.s_area[i] as f64).sqrt() / 2.0;
+            for dr in -exp_r..=exp_r { for dc in -exp_c..=exp_c {
+                let (rr, cc) = (r + dr, c + dc);
+                if rr < 0 || cc < 0 || rr >= grid.ny as isize || cc >= grid.nx as isize { continue; }
+                let k = rr as usize * grid.nx + cc as usize;
+                if self.kind[k] == 0 { continue; }
+                let (ex, ny_m) = ((grid.lon(cc as usize) - cent[i].0) * mx, (grid.lat(rr as usize) - cent[i].1) * my);
+                let d = ((ex * ex + ny_m * ny_m).sqrt() - half_i).max(0.0);
+                if d <= self.exposure_m { self.cell_structs.entry(k).or_default().push((i as u32, d as f32)); }
+            } }
+        }
+        let pairs: usize = self.cell_structs.values().map(|v| v.len()).sum();
+        eprintln!("bodies: {} structures ({} destroyed, {} undamaged by the inspectors), {} neighbour links, {} cell exposures", m, self.s_fate.iter().filter(|&&f| f == 3).count(), self.s_fate.iter().filter(|&&f| f == 1).count(), self.s_neigh.iter().map(|v| v.len()).sum::<usize>(), pairs);
+    }
+    fn ignite_struct(&mut self, i: usize, t: f32) {
+        self.s_t_ign[i] = t; self.s_t_out[i] = t + self.structure_burn_min as f32 * 60.0; self.s_active.push(i as u32);
+        // the ground it stands on burns with it, so the cell engine carries the fire on
+        let k = self.s_cell[i];
+        if self.t_ign[k].is_nan() && self.kind[k] != 0 { self.ignite(k, t); }
+    }
+    /// A one-arc-second frame holding, per cell, the structures standing in it reduced by `f`.
+    fn struct_frame(&self, f: impl Fn(&[u32]) -> f32) -> Vec<f32> {
+        let n = self.t_ign.len();
+        let mut out = vec![f32::NAN; n];
+        for (&k, list) in &self.cell_home { out[k] = f(list); }
+        out
+    }
     fn fuel(&self, kind: u8) -> FuelKind {
         match kind {
             1 => FuelKind { ignite: self.grass_ignite as f32, intensity: self.grass_intensity as f32, burn_min: self.grass_burn_min as f32 },
@@ -318,6 +425,11 @@ impl Module for Cells {
         let kinds: Vec<f32> = self.kind.iter().map(|&k| k as f32).collect();
         ctx.field("fire_fuel_kind", "0 none 1 grass 2 shrub 3 tree 4 built", &fg, self.to_frame(&kinds, |b| { let mut best = (0.0f32, 0usize); for &x in b { let c = b.iter().filter(|&&y| y == x).count(); if c > best.1 { best = (x, c); } } best.0 }));
         ctx.world_write("fire.burned_frac", "1", &g, vec![0.0; n]);
+        if self.structures == "on" {
+            ctx.publish("bodies.loaded", json!({ "structures": self.s_cell.len(), "destroyed": self.s_fate.iter().filter(|&&f| f == 3).count(), "undamaged": self.s_fate.iter().filter(|&&f| f == 1).count(), "neighbour_links": self.s_neigh.iter().map(|v| v.len()).sum::<usize>() }));
+            ctx.field("building_fate", "0 unknown 1 no damage 2 damaged 3 destroyed (the inspectors)", &g, self.struct_frame(|l| l.iter().map(|&i| self.s_fate[i as usize]).max().unwrap_or(0) as f32));
+            ctx.field("building_arrival_h", "h", &g, vec![f32::NAN; n]);
+        }
         ctx.schedule_with_priority(self.dt, 6, "tick", json!(null));
     }
     fn handle(&mut self, ev: &Event, ctx: &mut Ctx) {
@@ -379,6 +491,17 @@ impl Module for Cells {
                             let (lc, lr) = (bc + ((dist * dir.sin()) / mx as f32).round() as isize, br - ((dist * dir.cos()) / my as f32).round() as isize);
                             if lc >= 0 && lr >= 0 && lc < g.nx as isize && lr < g.ny as isize {
                                 let l = lr as usize * g.nx + lc as usize;
+                                // a structure standing where the ember lands may take it
+                                if self.structures == "on" {
+                                    if let Some(home) = self.cell_home.get(&l) {
+                                        let pick = home[(ctx.rng().f64() * home.len() as f64) as usize % home.len()] as usize;
+                                        if self.s_t_ign[pick].is_nan() && ctx.rng().f64() < (self.ember_accept as f32 / self.s_jitter[pick]) as f64 {
+                                            self.ignite_struct(pick, t + dt); self.spots += 1; spots_hour += 1; newly += 1;
+                                            ctx.publish_at(l, "fire.spot", json!({ "from": b, "distance_m": dist, "structure": pick }));
+                                            continue;
+                                        }
+                                    }
+                                }
                                 let p_land = if self.kind[l] == 4 && self.ember_built_p > 0.0 { self.ember_built_p as f32 * self.built_frac[l].clamp(0.2, 1.0) } else { self.spot_land_p as f32 * (1.0 - 4.0 * self.cell_moist[l]).max(0.0) };
                                 if self.t_ign[l].is_nan() && self.kind[l] != 0 && ctx.rng().f64() < p_land as f64 {
                                     self.ignite(l, t + dt); self.spots += 1; spots_hour += 1; newly += 1;
@@ -389,6 +512,50 @@ impl Module for Cells {
                     }
                 }
                 let _ = cool;
+                if self.structures == "on" {
+                    // what the bodies feel from the burning ground
+                    for &b in &keep {
+                        let Some(list) = self.cell_structs.get(&b) else { continue };
+                        let ib = self.fuel(self.kind[b]).intensity * if self.kind[b] == 4 { self.built_frac[b].max(0.3) } else { 1.0 };
+                        let (wspd, wto) = self.cell_wind[b];
+                        let (bc, br) = ((b % g.nx) as f64, (b / g.nx) as f64);
+                        for &(i, d) in list.clone().iter() {
+                            let i = i as usize;
+                            if !self.s_t_ign[i].is_nan() { continue; }
+                            // downwind of the burning cell the heat and embers reach further
+                            let (sc, sr) = ((self.s_cell[i] % g.nx) as f64, (self.s_cell[i] / g.nx) as f64);
+                            let theta = (sc - bc).atan2(br - sr) as f32;
+                            let lambda = self.exposure_lambda_m as f32 * (1.0 + self.wind_gain as f32 * wspd * (theta - wto).cos().max(0.0));
+                            let q = ib * (-d / lambda).exp() * dt / 60.0;
+                            let elapsed = t - self.s_heat_t[i];
+                            if elapsed > 0.0 { self.s_heat[i] *= (-(elapsed / 60.0) / self.cool_min as f32).exp(); self.s_heat_t[i] = t; }
+                            self.s_heat[i] += q;
+                            if self.s_heat[i] >= self.s_jitter[i] * self.structure_ignite as f32 { self.ignite_struct(i, t + dt); newly += 1; }
+                        }
+                    }
+                    // burning bodies heat their neighbours across the gap
+                    let s_active = std::mem::take(&mut self.s_active);
+                    let mut s_keep = Vec::with_capacity(s_active.len());
+                    for &si in &s_active {
+                        let si = si as usize;
+                        if t >= self.s_t_out[si] { continue; }
+                        s_keep.push(si as u32);
+                        let is = self.structure_intensity as f32 * (self.s_area[si] / 200.0).sqrt();
+                        let (wspd, wto) = self.cell_wind[self.s_cell[si]];
+                        for &(j, gap, bearing) in self.s_neigh[si].clone().iter() {
+                            let j = j as usize;
+                            if !self.s_t_ign[j].is_nan() { continue; }
+                            let lambda = self.house_lambda_m as f32 * (1.0 + self.wind_gain as f32 * wspd * (bearing - wto).cos().max(0.0));
+                            let q = is * (-gap / lambda).exp() * dt / 60.0;
+                            let elapsed = t - self.s_heat_t[j];
+                            if elapsed > 0.0 { self.s_heat[j] *= (-(elapsed / 60.0) / self.cool_min as f32).exp(); self.s_heat_t[j] = t; }
+                            self.s_heat[j] += q;
+                            if self.s_heat[j] >= self.s_jitter[j] * self.structure_ignite as f32 { self.ignite_struct(j, t + dt); newly += 1; }
+                        }
+                    }
+                    s_keep.extend(self.s_active.drain(..));
+                    self.s_active = s_keep;
+                }
                 keep.extend(self.active.drain(..));
                 self.active = keep;
                 self.since_ignition_s += dt as f64;
@@ -400,6 +567,25 @@ impl Module for Cells {
             let fg = self.frame_grid.clone().unwrap();
             ctx.field("fire_arrival_h", "h", &fg, self.to_frame(&self.t_ign, |b| b.iter().copied().filter(|v| !v.is_nan()).fold(f32::NAN, |m, v| if m.is_nan() || v < m { v } else { m }) / 3600.0));
             self.last_frame = now.0;
+        }
+        if self.structures == "on" {
+            if self.ignited && now.0.saturating_sub(self.last_s_frame) >= self.structure_frame_every.0 {
+                ctx.field("building_arrival_h", "h", &g, self.struct_frame(|l| l.iter().map(|&i| self.s_t_ign[i as usize]).filter(|v| !v.is_nan()).fold(f32::NAN, |m, v| if m.is_nan() || v < m { v } else { m }) / 3600.0));
+                self.last_s_frame = now.0;
+            }
+            let (mut lit, mut hit, mut intact_hit) = (0usize, 0usize, 0usize);
+            let (mut destroyed, mut intact) = (0usize, 0usize);
+            for i in 0..self.s_cell.len() {
+                let f = self.s_fate[i]; if f == 3 { destroyed += 1; } else if f == 1 { intact += 1; }
+                if !self.s_t_ign[i].is_nan() { lit += 1; if f == 3 { hit += 1; } else if f == 1 { intact_hit += 1; } }
+            }
+            ctx.report("fire.buildings_ignited", "count", lit as f64);
+            ctx.report("fire.buildings_burning", "count", self.s_active.len() as f64);
+            ctx.report("fit.buildings_destroyed_reached", "count", hit as f64);
+            ctx.report("fit.buildings_undamaged_reached", "count", intact_hit as f64);
+            ctx.report("fit.buildings_recall", "1", if destroyed > 0 { hit as f64 / destroyed as f64 } else { 0.0 });
+            ctx.report("fit.buildings_precision", "1", if lit > 0 { hit as f64 / lit as f64 } else { 0.0 });
+            let _ = intact;
         }
         let k0 = self.cell_of(self.ignition_lat, self.ignition_lon).unwrap_or(0);
         let (ws, wt) = self.cell_wind[k0];
@@ -445,15 +631,24 @@ impl Cells {
             .param("built_to_built_gain", 1.0, "", "heat reaches this many times further from a burning built cell into the next built cell: house to house")
             .param("spot_rate", 0.003, "1/min", "guess: embers per burning cell per minute at 10 m/s, times (wind/10)^2").param("spot_mean_m", 25.0, "m per m/s", "guess: mean ember flight per m/s of wind").param("spot_land_p", 0.3, "", "guess: chance a landed ember lights dry fuel").param("spot_min_intensity", 2.0, "heat/min", "")
             .param("road_widths_m", "motorway=30,trunk=20,primary=14,secondary=10,tertiary=8", "", "roads this wide carry no fuel")
-            .publish("ground.loaded", "cell counts by fuel kind, road cells, HRRR hours").publish("fire.ignition", "at a cell").publish("fire.spot", "at a cell: { from, distance_m }")
+            .param("structures", "off", "", "on: every building footprint is a body of its own that feels the burning ground within exposure_m and its burning neighbours across the gap between footprints, takes embers that land on it, ignites past its own threshold, burns for structure_burn_min and lights the ground it stands on; its fate is scored against the inspectors' word for that footprint")
+            .param("structure_ignite", 3.0, "heat", "guess: a structure's ignition threshold, times its own fixed factor").param("structure_intensity", 3.0, "heat/min", "guess at 200 m2 of footprint, scaled by the square root of the area").param("structure_burn_min", 60.0, "min", "guess: how long a burning structure heats its neighbours")
+            .param("structure_jitter", 0.3, "", "sigma of a fixed log-normal factor per structure on its threshold: what it is made of, its vents and eaves, which nobody mapped")
+            .param("house_reach_m", 40.0, "m", "guess: gap between footprints across which a burning structure's heat is felt").param("house_lambda_m", 8.0, "m", "guess: e-folding gap of that heat, longer downwind")
+            .param("exposure_m", 35.0, "m", "guess: the burning ground within this of a footprint heats the structure").param("exposure_lambda_m", 12.0, "m", "guess: e-folding distance of that heat, longer downwind")
+            .param("ember_accept", 0.25, "", "guess: chance a structure takes an ember that lands in its cell, divided by its own factor")
+            .param("structure_frame_every", "6h", "", "the one-arc-second building_arrival_h frame is written this often")
+            .publish("ground.loaded", "cell counts by fuel kind, road cells, HRRR hours").publish("bodies.loaded", "structures, their recorded fates, neighbour links").publish("fire.ignition", "at a cell").publish("fire.spot", "at a cell: { from, distance_m, structure? }")
             .own("fire.burned_frac", "1")
             .frame("terrain_elev_m", "m").frame("building_height", "ft (as stated)").frame("fire_fuel_kind", "0 none 1 grass 2 shrub 3 tree 4 built").frame("fire_arrival_h", "h")
+            .frame("building_fate", "0 unknown 1 no damage 2 damaged 3 destroyed (the inspectors)").frame("building_arrival_h", "h")
+            .report("fire.buildings_ignited", "count").report("fire.buildings_burning", "count").report("fit.buildings_destroyed_reached", "count").report("fit.buildings_undamaged_reached", "count").report("fit.buildings_recall", "1").report("fit.buildings_precision", "1")
             .report("fire.burned_acres", "acres").report("fire.burned_km2", "km2").report("fire.active_cells", "cells").report("fire.ignited_cells_hour", "cells/h").report("fire.spots_hour", "1/h")
             .report("fire.wind_m_s", "m/s").report("fire.wind_from_deg", "deg").report("fire.dead_moisture_pct", "%").report("fire.built_cells_burned", "cells")
             .asset("copernicus-dem-glo30", "elevation, slope, aspect").asset("esa-worldcover-2021", "land cover").asset("lacounty-lariac-buildings-2025-fires", "building footprints and heights").asset("osm-overpass", "major roads as breaks; the map's context").asset("noaa-hrrr", "the 3 km wind, gust, temperature and humidity each hour").asset("open-meteo-era5-wind", "the one-point alternative")
             .view("scene", "The fire on the ground", "fire_arrival_h", "terrain, buildings and the fire's arrival, in three dimensions")
             .view("map", "Arrival time", "fire_arrival_h", "hours since ignition").view("map", "What each cell is", "fire_fuel_kind", "")
-            .view("chart", "Burned area", "fire.burned_acres", "").view("chart", "Wind at the ignition point", "fire.wind_m_s", "HRRR 3 km").view("chart", "Spot fires", "fire.spots_hour", "")
+            .view("chart", "Burned area", "fire.burned_acres", "").view("chart", "Buildings the model has lit", "fire.buildings_ignited", "against the inspectors' record: recall and precision in the series").view("chart", "Wind at the ignition point", "fire.wind_m_s", "HRRR 3 km").view("chart", "Spot fires", "fire.spots_hour", "")
             .note("Not Rothermel: a heat budget with guessed constants, built to be fitted against the mapped perimeters and the inspected structures. The HRRR reader was cross-checked against GDAL at the ignition point. Nothing physical about structures beyond a threshold, an intensity and a burn time.");
         if let Some(c) = ctx_table { d = d.table("context", c); }
         d

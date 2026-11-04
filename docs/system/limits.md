@@ -128,7 +128,12 @@ holds the history.
   it, to twice the record by the fourth day. The plausible-pace runs reach an eighth to a fifth
   of the destroyed structures: a built-up cell is given a high threshold and the engine walks
   around the neighbourhoods; embers into houses and a house-to-house reach are knobs, not
-  physics. The HRRR 3 km wind it uses reads 10 m/s with 21 m/s gusts at the ignition point in
+  physics. With `structures = "on"` (the `bodies` variants) every footprint burns as its own
+  body and is scored per footprint: recall can be set anywhere by the threshold, but precision
+  stays at the record's base rate of about 0.48 to 0.54, because the model has nothing that
+  tells a survivor from its destroyed neighbour. The house's own vulnerability (roof, vents,
+  eaves, year built) is not in any public field we hold; the assessor's roll by parcel number
+  is the noted route. The HRRR 3 km wind it uses reads 10 m/s with 21 m/s gusts at the ignition point in
   the first hour (checked against GDAL); the reanalysis read 7 and 13.
 - The 3D view takes building heights as feet because the county's service does not state a
   unit.

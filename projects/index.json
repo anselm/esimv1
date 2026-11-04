@@ -176,6 +176,25 @@
     "runs": [
       {
         "all_ledgers_closed": true,
+        "digest": "8892d449ff6fb41e",
+        "end": 1736640000,
+        "events": 1108,
+        "id": "f3-palisades-cells-232b0e19-8892d449",
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.ember_accept": "0.6",
+          "fire.house_reach_m": "60",
+          "fire.ignite_scale": "4",
+          "fire.reach_m": "45",
+          "fire.structures": "\"on\""
+        },
+        "start": 1736272800,
+        "variant": "bodies-embers",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
         "digest": "b1c9de226a5d37cb",
         "end": 1736640000,
         "events": 351,
@@ -202,6 +221,46 @@
         },
         "start": 1736272800,
         "variant": "scale-3",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "222ccb75727368d7",
+        "end": 1736640000,
+        "events": 1029,
+        "id": "f3-palisades-cells-3af95295-222ccb75",
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.house_lambda_m": "6",
+          "fire.ignite_scale": "4",
+          "fire.reach_m": "45",
+          "fire.structure_ignite": "25",
+          "fire.structure_jitter": "0.6",
+          "fire.structures": "\"on\""
+        },
+        "start": 1736272800,
+        "variant": "bodies-hard",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "8d98160da78b1931",
+        "end": 1736640000,
+        "events": 992,
+        "id": "f3-palisades-cells-53791bf4-8d98160d",
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.house_lambda_m": "6",
+          "fire.ignite_scale": "4",
+          "fire.reach_m": "45",
+          "fire.structure_ignite": "15",
+          "fire.structure_jitter": "0.6",
+          "fire.structures": "\"on\""
+        },
+        "start": 1736272800,
+        "variant": "bodies",
         "verdict": "holds"
       },
       {
@@ -394,6 +453,30 @@
           "fire.threshold_jitter": 0.6
         },
         "title": "As houses, with micro-conditions: each cell's threshold jittered by a fixed factor (sigma 0.6)"
+      },
+      {
+        "name": "bodies",
+        "set": {
+          "fire.house_lambda_m": 6,
+          "fire.ignite_scale": 4,
+          "fire.reach_m": 45,
+          "fire.structure_ignite": 15,
+          "fire.structure_jitter": 0.6,
+          "fire.structures": "on"
+        },
+        "title": "Near reach, thresholds times 4, every building a body of its own: threshold 15, gap scale 6 m, jitter 0.6"
+      },
+      {
+        "name": "bodies-hard",
+        "set": {
+          "fire.house_lambda_m": 6,
+          "fire.ignite_scale": 4,
+          "fire.reach_m": 45,
+          "fire.structure_ignite": 25,
+          "fire.structure_jitter": 0.6,
+          "fire.structures": "on"
+        },
+        "title": "As bodies, with the structure threshold at 25: half the destroyed reached, at the same precision"
       }
     ]
   },

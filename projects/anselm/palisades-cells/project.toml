@@ -73,3 +73,25 @@ title = "As houses, with micro-conditions: each cell's threshold jittered by a f
 "fire.ember_built_p" = 0.5
 "fire.built_to_built_gain" = 2.5
 "fire.threshold_jitter" = 0.6
+
+[[variant]]
+name = "bodies"
+title = "Near reach, thresholds times 4, every building a body of its own: threshold 15, gap scale 6 m, jitter 0.6"
+[variant.set]
+"fire.reach_m" = 45
+"fire.ignite_scale" = 4
+"fire.structures" = "on"
+"fire.structure_ignite" = 15
+"fire.house_lambda_m" = 6
+"fire.structure_jitter" = 0.6
+
+[[variant]]
+name = "bodies-hard"
+title = "As bodies, with the structure threshold at 25: half the destroyed reached, at the same precision"
+[variant.set]
+"fire.reach_m" = 45
+"fire.ignite_scale" = 4
+"fire.structures" = "on"
+"fire.structure_ignite" = 25
+"fire.house_lambda_m" = 6
+"fire.structure_jitter" = 0.6

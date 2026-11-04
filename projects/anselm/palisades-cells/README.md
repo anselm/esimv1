@@ -49,6 +49,18 @@ The far-reach runs reach nearly every destroyed structure, but only because they
 everything. Between the two is what a structure model has to supply: each house as a body
 with its own exposure, not a cell with a share of roof in it.
 
+The evening of the same day added the bodies. In the `bodies` runs every county footprint is a
+structure of its own: it feels the burning ground within 35 m and its burning neighbours across
+the gap between footprints, takes embers that land on it, ignites past its own threshold, and
+burns as a source for the next house. Each is scored against the inspectors' word for that
+footprint, and the three-dimensional view colours it accordingly, with a blue for the houses
+the record says were destroyed and the model never reached. The result so far is a finding
+rather than a fit: at every threshold the model lights destroyed and undamaged houses in the
+same proportion, about one destroyed in two, which is the record's own base rate. The
+survivors stand among the destroyed on the same streets, and nothing in the footprint, the
+height, the gap or the slope tells them apart. What does is the house itself, its roof, vents,
+eaves and age, and that is the data the next step has to bring in.
+
 Until the afternoon of 2026-11-03 these runs, like the first project's, were made on ground
 with a column of missing elevation every third or fourth cell, which the slope code read as
 cliffs. This engine felt it less than the spread formula does, because it stretches its

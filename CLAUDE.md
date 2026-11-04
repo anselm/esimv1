@@ -132,7 +132,13 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   (manifest `f3-palisades-cells`; variants scale-2..6 and near-2..4 with reach 45 m, houses,
   houses-jitter). On the corrected ground near-4 has 15,306 acres at 27 hours against 15,824 mapped
   and twice the record by day four; destroyed-structure recall 0.12 to 0.19. `obs.dins`
-  (CAL FIRE's 12,081 inspections) scores structures. A `scene` view renders in 3D (`Scene3D.svelte`,
+  (CAL FIRE's 12,081 inspections) scores structures by cell. `structures = "on"` (evening of
+  2026-11-03, `devlog/20261103-bodies.md`) makes every footprint a body scored per footprint
+  (`fit.buildings_*`), with frames `building_fate` and `building_arrival_h` that the 3D view
+  colours; precision sits at the base rate (0.48) whatever the threshold, because nothing we hold
+  tells a survivor from its neighbour; the county footprints carry `AIN`, the assessor's parcel
+  number, and the assessor's roll is the way to year built and size. The public DINS views carry
+  only DAMAGE and STRUCTURETYPE; the full form is in a non-public data-share view. A `scene` view renders in 3D (`Scene3D.svelte`,
   three.js 0.170, needs `terrain_elev_m` and `building_height` frames); headless screenshots need the
   swiftshader flags, which the scratchpad shot script now sets. Never `pgrep -f`/`kill` a pattern
   that appears in the running command line (killed my own shell this way).
