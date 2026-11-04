@@ -137,9 +137,11 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
 - A fuel map made for fire (LANDFIRE, needs an email) beside WorldCover's "tree cover".
 - Spotting, and the lattice striping (a Huygens front instead of lattice directions).
 - Evacuation and the people: WorldPop cells, roads, a clearance time per neighbourhood.
-- A second fire with a book behind it: Fort McMurray, May 2016 (John Vaillant's *Fire Weather*,
-  which Anselm pointed at on 2026-11-03; author recalled, title from the link). Canadian doors to
-  check: CWFIS and the National Burned Area Composite for perimeters, ECCC stations for wind.
+- A second fire with a book behind it: Fort McMurray, May 2016 (John Vaillant, *Fire Weather: A
+  True Story from a Hotter World*; title and author confirmed from the cover Anselm sent on
+  2026-11-03, when he named it again as the fire to tune on after the Palisades). Canadian doors to
+  check: CWFIS hotspots and the National Burned Area Composite for perimeters, ECCC stations for
+  wind, Alberta's post-incident reviews for the suppression record; all recalled, none fetched.
 - The speed test, answered: one fire day at 30 m runs in about three seconds; operator-in-the-loop
   is a surface question (live wind, a clock, decisions injected).
 
