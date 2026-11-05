@@ -165,3 +165,40 @@ named); the people's response layer feeding the living band from deaths and move
 than from a crossing flag; a population-weighted world mean beside the plain one; and a
 choice of band set per project, since nine Bank indicators are one reading of a bottom line
 and the module should take its bands from a table rather than a constant.
+
+## Evening: a ChatGPT answer on bioregional scorecards, and what it says about ours
+
+Anselm shared a ChatGPT conversation titled "Community health measures" and asked what I
+thought and whether it changes the strategy. Only the final answer renders without a login,
+so his prompt is unread. The answer, as read: track what a region depends on, what it depletes
+and how it copes when a supply route fails, rather than net inflows; two established measures,
+physical trade balance (imports minus exports by weight) and ecological deficit (demand against
+regenerative capacity); a scorecard of three questions, what must come in, what is being drawn
+down, what happens when a route fails (close the port or road in a scenario and count the days
+each community can meet essential needs); Bangladesh after the 1998 floods as the case (more
+than two million tonnes of rice imported, almost all from India, which it cites to FAO and I
+have not checked); for communication, one journey a viewer follows before and after (Cyclone
+Amphan 2020 imagery, then a road in Koyra broken two months on, a 20 km detour, salt water back
+with each tide), replay the storm against two sea levels with the view labelled modeled and the
+satellite labelled observed, and one concrete question on screen: "At what sea level does this
+road become impassable?"
+
+What I think. It is a fair critique of the globe built this afternoon. The nine bands are
+stocks ranked among peers: what a region has. The answer's three questions are flows and
+counterfactuals: what it depends on, what it is drawing down, what breaks. Those are what a
+simulator can do and a ranked indicator cannot, and a scorecard that is all stocks will show
+Norway high and Bangladesh low in 2100 much as in 2025, which is what ours does. On
+communication it says, in other words, what the telling page says: the story carries the
+reader, the modelled and the observed are labelled apart, and a page should pose one concrete
+question and answer it from the runs. The journey at road level is the scale the fire pages
+already have (Palisades Drive at 11:25) and the planet page lacks.
+
+What changes, in order, none built tonight: the bands become three kinds, has, draws down,
+depends on, with the drawdown bands from the Bank's own time series (forest area change,
+water stress ER.H2O.FWST.ZS as a candidate) and the dependence bands from FAO food balance
+sheets and energy import shares, to be checked for anonymous access; the wild cards get a
+place and a "route fails" kind, so a card can close one region's port for a season and the
+globe can show the days of reserve; every project page opens with one concrete question; and
+the 2100 page follows one place, the Bangladesh delta, through the run, which is the impact
+layer's first job. Memory: the physical trade balance and ecological deficit measures are the
+chat's naming and were not looked up here.
