@@ -83,3 +83,32 @@ the rebuild tracker's funnel), sourced from news and official releases read that
 said to be casual; and the sections now run priming, event, aftermath, actors, runs.
 `docs/system/telling.md` is the practice page. The docs index groups pages by a `section`
 comment; the server writes it into the index and the list draws the headings.
+
+## A second kind of human diagram: the cascade map (Anselm, late evening)
+
+Anselm pointed at a reference, a claude.ai artifact titled *Climate Cascade Map*, "an example of
+how somebody tried to paint core and knock-on effects; this isn't a functional relationships
+diagram in terms of inputs/outputs - but rather indicates impacts radiating from core issues".
+Read this evening: a square poster, a dark disc on a red field, population growth at the
+centre, about forty nodes placed by hand in rough rings outward (climate change, methane,
+permafrost, fertiliser, farming, deforestation, fossil fuel near the core; ocean acidification,
+coral, fisheries, food prices, riots, sea level, ecomigration, water wars further out;
+awareness, alternative energy, efficient vehicles, LEED buildings, rethinking urban growth at
+the bottom edge), and about seventy curved links in three colours: red for climate
+consequences, white for demand and economic chains, cyan for responses and feedbacks. Hovering a
+node lights its neighbourhood. No arrowheads; direction is read outward from the centre.
+
+What it is: a map of consequence, not of mechanism. Distance from the centre is "how many
+steps removed", colour is "what kind of chain", and the picture's claim is breadth, that one
+cause touches everything. The actors figure claims the opposite thing, that a few named
+relationships decide the outcome, and the wiring claims only what the code does. Three
+pictures, three questions: what matters (actors), what follows (cascade), what runs (wiring).
+
+What it would take here, not built: a `cascade` README block with a centre, nodes in rings
+(`ring 1`, `ring 2`, ...), and links typed by kind, drawn radially in the house style (no red
+field, no uppercase mono poster; the brand teal for one chain kind at most, the rest in greys
+and dashes). The honesty rule carries over unchanged: a link the runs model is solid, one the
+world has and the runs lack is dashed, and for the 2100 project nearly every ring past the
+first would be dashed, which is the true picture of a planet model with no economy in it. The
+hover-to-light-a-neighbourhood is worth keeping; it is how a reader asks "and then what?" of a
+dense picture. Not started.
