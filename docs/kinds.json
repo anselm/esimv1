@@ -5029,6 +5029,13 @@
     ],
     "views": [
       {
+        "kind": "globe",
+        "title": "the world, scored",
+        "source": "region.scored",
+        "obs": "",
+        "note": "each country a glyph at its centroid, from the regions module: three groups as rings of its outline, or nine bands as a pole; drag to turn, hover for the scores"
+      },
+      {
         "kind": "map",
         "title": "people living outside the human climate niche",
         "source": "people_outside_niche",
@@ -220213,18 +220220,11 @@
     ],
     "views": [
       {
-        "kind": "globe",
-        "title": "the world, scored",
-        "source": "region.scored",
-        "obs": "",
-        "note": "each country a glyph at its centroid: nine bands stacked, the total its height; drag to turn, hover for the bands"
-      },
-      {
         "kind": "chart",
         "title": "mean total score",
         "source": "region.mean_total",
         "obs": "",
-        "note": "the plain mean over countries, not weighted by people"
+        "note": "the plain mean over countries, not weighted by people; the globe itself is drawn at the top of the page by the story module"
       }
     ],
     "assets": [
