@@ -202,3 +202,31 @@ globe can show the days of reserve; every project page opens with one concrete q
 the 2100 page follows one place, the Bangladesh delta, through the run, which is the impact
 layer's first job. Memory: the physical trade balance and ecological deficit measures are the
 chat's naming and were not looked up here.
+
+## The bioregion as a patient (Anselm, the same evening)
+
+"Human Population itself and growth rate is a measure hmm - I was looking for biodiversity
+measures more than human centric but it is meaningful too. If we treat a bioregion as a
+patient - how does a doctor get a holistic read on that patient? How does we know when the
+patient dies?"
+
+Checked that evening: the UN SDG API (unstats.un.org/sdgapi, anonymous JSON) serves the IUCN
+Red List Index per country and year from 1980 (series ER_RSK_LST, 12,322 rows; Afghanistan
+1980 = 0.929), the annual forest area change rate (AG_LND_FRSTCHG), the Mountain Green Cover
+Index and the share of terrestrial, freshwater, marine and mountain Key Biodiversity Areas
+under protection. So a biodiversity band with a trend is one fetcher away, where today's nine
+bands are human-centric stocks with forest and protected area as the only nature in them.
+
+The reading of the question is in the reply to Anselm; in short: a doctor reads a patient by a
+few vital signs taken often, a history, and a prognosis against the normal range for that
+body; the signs for a bioregion would be greenness and primary production from orbit each
+month, river flow and groundwater, the fire regime against its own history, the Red List
+Index trend and species abundance where a record exists, and soil and water quality; the
+normal range is the region's own past, not the world's rank. Death has a published
+definition: the IUCN Red List of Ecosystems calls it collapse, a transition past which the
+defining features are lost and the characteristic biota gone, with criteria for decline in
+extent, environmental degradation and disruption of processes (recalled; the criteria paper is
+Keith et al. 2013, to be read). The Keeley finding of 2026-11-04 is a local case: chaparral
+burned too often becomes grass that burns more often, a regime shift, a death with a
+successor. For a people-and-land region the second death is dependence without reserve: the
+region cannot feed or water itself and the route fails. Nothing built tonight.
