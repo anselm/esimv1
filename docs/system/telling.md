@@ -47,6 +47,25 @@ lack. The gap between the two pictures is an object of the project: looked at ar
 arrow and closed with a module or explained on the page, never hidden by drawing the smaller
 picture. The two may never fully meet, and that is allowed.
 
+There are other kinds of human picture, and not every scenario wants every kind. The one
+below is a cascade: a core issue at the centre and its knock-on effects radiating outward,
+each ring one step further removed, the colour of a line saying what kind of chain it is. It
+answers "and then what?", which the actors figure does not, and it suits a planet-scale
+scenario better than a single fire. It was drawn by alwayswithhonor.com and is reproduced
+here as Anselm supplied it on 2026-11-04; the actors figure on the Earth 2100 page breaks
+out the knock-on contributors in the same spirit, with the model's gaps dashed.
+
+![A cascade map: population growth at the centre, climate change, methane and fossil fuel near it, fisheries, food prices, sea level and water wars further out, and the responses along the bottom edge; drawn by alwayswithhonor.com](/docs/system/cascade-map.svg)
+
+The cascade belongs to a longer line of drawn networks. Anselm points to Ben Fry's essay
+*Learning from Lombardi* (medium.com/@ben_fry) on Mark Lombardi, whose pencil drawings of
+money and influence were made from thousands of index cards and are read as pictures
+before they are read as data; Fry's point, as Anselm relays it, is that the hand-made
+arrangement is part of the argument. The essay was not read for this page, since Medium
+refused the fetch. Beyond it lies the whole field of information graphics and visual
+storytelling, which is older than simulation and better at readers; the pages here borrow
+from it and do not pretend to add to it.
+
 ## The story carries the reader
 
 The tool is an appliance, and an appliance is not an explanation. The project page is a

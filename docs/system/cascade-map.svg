@@ -1,0 +1,249 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-40 -40 1080 1080" width="1080" height="1080">
+<style>text{font-family:"Audiowide","Eurostile","Bank Gothic",sans-serif;font-size:9.4px;fill:#fff;text-transform:uppercase}</style>
+<rect x="-40" y="-40" width="1080" height="1080" fill="#e0202e"/>
+<g id="rings"><circle cx="500" cy="500" r="480" fill="#1f070c"/><circle cx="500" cy="500" r="372" fill="#4a1420"/><circle cx="500" cy="500" r="292" fill="#6b1b27"/><circle cx="500" cy="500" r="236" fill="#86222c"/><circle cx="500" cy="500" r="170" fill="#9a2a30"/><circle cx="500" cy="500" r="125" fill="#a63033"/><circle cx="500" cy="500" r="60" fill="#b13536"/></g>
+<g id="links" fill="none" stroke-width="1.2" stroke-linecap="round">
+<path id="drought-fresh" stroke="#ff4f5a" d="M169,467 C175.0,409.4 175.8,407.1 205,363"/>
+<path id="climate-ice" stroke="#ff4f5a" d="M380,344 C235.9,272.3 258.1,273.8 171,266"/>
+<path id="oil-spec" stroke="#ff4f5a" d="M734,684 C782.9,677.6 878.5,677.7 915,653"/>
+<path id="ocean-climate" stroke="#ff4f5a" d="M551,70 C405.0,51.6 269.5,150.6 380,344"/>
+<path id="pop-water" stroke="#e6e4ff" d="M543,499 C476.4,678.5 193.0,810.1 43,621"/>
+<path id="meat-grain" stroke="#ff4f5a" d="M916,391 C936.6,438.9 924.9,400.3 938,444"/>
+<path id="sea-migrate" stroke="#ff4f5a" d="M120,269 C51.2,285.8 141.3,258.4 75,281"/>
+<path id="aware-urban" stroke="#ff4f5a" d="M283,839 C365.3,917.3 501.1,964.5 572,964"/>
+<path id="fert-runoff" stroke="#ff4f5a" d="M608,396 C665.7,391.1 673.3,323.5 773,207"/>
+<path id="pop-fossil" stroke="#ff4f5a" d="M543,499 C611.2,462.1 655.4,503.8 655,555"/>
+<path id="higherfood-meat" stroke="#ff4f5a" d="M867,351 C906.7,373.5 887.7,361.7 916,391"/>
+<path id="spec-prices" stroke="#ff4f5a" d="M915,653 C957.5,620.9 919.9,657.2 949,618"/>
+<path id="farm-fert" stroke="#ff4f5a" d="M466,438 C448.5,393.2 546.4,369.5 608,396"/>
+<path id="sea-ice" stroke="#ff4f5a" d="M120,269 C204.8,258.6 105.9,270.5 171,266"/>
+<path id="biofuel-grain" stroke="#ff4f5a" d="M903,544 C910.7,501.2 874.4,399.1 938,444"/>
+<path id="fert-fossil" stroke="#ff4f5a" d="M608,396 C655.0,414.1 685.0,462.7 655,555"/>
+<path id="beetle-climate" stroke="#ff4f5a" d="M288,377 C312.5,350.0 324.4,352.5 380,344"/>
+<path id="scarcity-grain" stroke="#ff4f5a" d="M951,479 C931.1,422.7 957.5,493.1 938,444"/>
+<path id="drought-water" stroke="#ff4f5a" d="M169,467 C146.1,574.1 26.0,518.1 43,621"/>
+<path id="aware-rd" stroke="#ff4f5a" d="M283,839 C302.8,880.1 282.5,880.3 323,922"/>
+<path id="co2-fossil" stroke="#ff4f5a" d="M393,624 C552.2,690.1 628.6,617.7 655,555"/>
+<path id="ocean-coral" stroke="#ff4f5a" d="M551,70 C675.0,87.4 698.1,109.3 730,118"/>
+<path id="aware-drought" stroke="#ff4f5a" d="M283,839 C261.4,801.8 181.7,743.1 169,467"/>
+<path id="beetle-fire" stroke="#ff4f5a" d="M288,377 C264.9,421.0 283.1,371.9 274,416"/>
+<path id="farm-methane" stroke="#ff4f5a" d="M466,438 C445.6,416.3 390.6,433.7 394,386"/>
+<path id="pop-higherfood" stroke="#ff4f5a" d="M543,499 C623.5,389.0 841.7,360.5 867,351"/>
+<path id="transport-prices" stroke="#ff4f5a" d="M918,634 C954.0,619.7 916.6,637.5 949,618"/>
+<path id="diet-obesity" stroke="#ff4f5a" d="M933,301 C924.5,357.0 948.1,306.3 915,342"/>
+<path id="overfish-fisheries" stroke="#ff4f5a" d="M838,229 C833.2,193.1 829.7,217.7 843,193"/>
+<path id="methane-biofuel" stroke="#ff4f5a" d="M394,386 C790.9,133.9 889.6,474.3 903,544"/>
+<path id="defor-fire" stroke="#ff4f5a" d="M456,554 C421.6,431.9 279.2,532.0 274,416"/>
+<path id="vehicles-aware" stroke="#ff4f5a" d="M389,948 C357.9,937.4 308.0,888.8 283,839"/>
+<path id="urban-fossil" stroke="#74cfe8" d="M572,964 C533.9,645.0 779.4,591.0 655,555"/>
+<path id="fossil-scarcity" stroke="#74cfe8" d="M655,555 C766.4,319.0 938.1,627.0 951,479"/>
+<path id="glacial-climate" stroke="#ff4f5a" d="M244,337 C298.9,324.5 284.1,319.8 380,344"/>
+<path id="glacial-fresh" stroke="#ff4f5a" d="M244,337 C193.0,367.9 270.6,313.0 205,363"/>
+<path id="overfish-higherfood" stroke="#ff4f5a" d="M838,229 C873.7,311.7 896.3,338.9 867,351"/>
+<path id="fossil-oil" stroke="#ff4f5a" d="M655,555 C638.3,671.4 689.4,687.4 734,684"/>
+<path id="fisheries-diet" stroke="#ff4f5a" d="M843,193 C899.7,262.7 784.9,123.1 933,301"/>
+<path id="vehicles-fossil" stroke="#74cfe8" d="M389,948 C418.4,780.3 771.9,663.7 655,555"/>
+<path id="methane-climate" stroke="#ff4f5a" d="M394,386 C391.7,337.0 404.7,400.2 380,344"/>
+<path id="defor-co2" stroke="#ff4f5a" d="M456,554 C464.9,598.3 429.9,630.7 393,624"/>
+<path id="defor-drought" stroke="#ff4f5a" d="M456,554 C418.7,447.8 227.6,650.9 169,467"/>
+<path id="rd-fossil" stroke="#74cfe8" d="M323,922 C315.5,864.4 800.8,630.3 655,555"/>
+<path id="oil-transport" stroke="#ff4f5a" d="M734,684 C805.6,662.5 850.8,648.8 918,634"/>
+<path id="farm-defor" stroke="#ff4f5a" d="M466,438 C434.0,438.4 425.5,457.7 456,554"/>
+<path id="scarcity-riots" stroke="#ff4f5a" d="M951,479 C978.1,570.8 935.8,459.2 976,550"/>
+<path id="coral-fisheries" stroke="#ff4f5a" d="M730,118 C753.9,133.3 768.7,131.5 843,193"/>
+<path id="higherfood-obesity" stroke="#ff4f5a" d="M867,351 C912.4,349.2 874.5,359.7 915,342"/>
+<path id="aware-leed" stroke="#ff4f5a" d="M283,839 C297.1,850.0 369.0,944.4 499,964"/>
+<path id="co2-pop" stroke="#e6e4ff" d="M393,624 C507.0,622.8 519.9,530.7 543,499"/>
+<path id="climate-fresh" stroke="#ff4f5a" d="M380,344 C310.9,326.9 267.3,310.9 205,363"/>
+<path id="climate-drought" stroke="#ff4f5a" d="M380,344 C335.4,298.8 271.1,363.1 169,467"/>
+<path id="climate-fire" stroke="#ff4f5a" d="M380,344 C374.0,292.3 263.3,379.7 274,416"/>
+<path id="climate-co2" stroke="#ff4f5a" d="M380,344 C390.7,456.0 297.3,561.8 393,624"/>
+<path id="climate-defor" stroke="#ff4f5a" d="M380,344 C327.2,527.6 414.8,592.3 456,554"/>
+<path id="pop-leed" stroke="#e6e4ff" d="M543,499 C519.0,558.3 577.2,853.6 499,964"/>
+<path id="meat-scarcity" stroke="#ff4f5a" d="M916,391 C915.2,421.9 1007.8,494.7 951,479"/>
+<path id="riots-transport" stroke="#ff4f5a" d="M976,550 C889.6,590.3 976.9,650.8 918,634"/>
+<path id="oil-urban" stroke="#ff4f5a" d="M734,684 C888.5,700.2 837.4,918.1 572,964"/>
+<path id="oil-leed" stroke="#ff4f5a" d="M734,684 C875.3,694.0 874.4,924.3 499,964"/>
+<path id="oil-vehicles" stroke="#ff4f5a" d="M734,684 C882.3,697.6 887.1,953.5 389,948"/>
+<path id="oil-rd" stroke="#ff4f5a" d="M734,684 C905.4,699.6 852.3,1005.1 323,922"/>
+<path id="migrate-co2" stroke="#74cfe8" d="M75,281 C34.6,364.7 5.1,574.5 393,624"/>
+<path id="pop-riots" stroke="#e6e4ff" d="M543,499 C459.4,903.3 932.8,904.3 976,550"/>
+<path id="drought-oil" stroke="#ff4f5a" d="M169,467 C167.0,474.8 145.9,853.7 734,684"/>
+<path id="perma-farm" stroke="#ff4f5a" d="M395,269 C451.2,238.2 520.0,271.3 466,438"/>
+<path id="sea-climate" stroke="#ff4f5a" d="M120,269 C276.1,255.8 321.7,324.1 380,344"/>
+</g><g id="nodes">
+<g id="farm"><circle cx="466" cy="438" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="466" cy="438" r="2.2" fill="#fff"/><text>
+<tspan x="478" y="412.0">Increased</tspan>
+<tspan x="478" y="423.5">Farming</tspan>
+<tspan x="478" y="435.0">Intensity</tspan>
+</text></g>
+<g id="defor"><circle cx="456" cy="554" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="456" cy="554" r="2.2" fill="#fff"/><text>
+<tspan x="410" y="544.0">Deforestation</tspan>
+</text></g>
+<g id="vehicles"><circle cx="389" cy="948" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="389" cy="948" r="2.2" fill="#fff"/><text>
+<tspan x="345" y="964.0">R+D</tspan>
+<tspan x="345" y="975.5">Fuel Efficient</tspan>
+<tspan x="345" y="987.0">Vehicles</tspan>
+</text></g>
+<g id="aware"><circle cx="283" cy="839" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="283" cy="839" r="2.2" fill="#fff"/><text>
+<tspan x="290" y="798.0">Increased</tspan>
+<tspan x="290" y="809.5">Environmental</tspan>
+<tspan x="290" y="821.0">Awareness</tspan>
+</text></g>
+<g id="methane"><circle cx="394" cy="386" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="394" cy="386" r="2.2" fill="#fff"/><text>
+<tspan x="405" y="378.0">Methane</tspan>
+<tspan x="405" y="389.5">Release</tspan>
+</text></g>
+<g id="perma"><circle cx="395" cy="269" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="395" cy="269" r="2.2" fill="#fff"/><text>
+<tspan x="388" y="246.0">Melting</tspan>
+<tspan x="388" y="257.5">Permafrost</tspan>
+</text></g>
+<g id="co2"><circle cx="393" cy="624" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="393" cy="624" r="2.2" fill="#fff"/><text>
+<tspan x="408" y="608.0">CO₂</tspan>
+<tspan x="408" y="619.5">Release</tspan>
+</text></g>
+<g id="urban"><circle cx="572" cy="964" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="572" cy="964" r="2.2" fill="#fff"/><text>
+<tspan x="565" y="980.0">Rethinking</tspan>
+<tspan x="565" y="991.5">Urban Growth</tspan>
+</text></g>
+<g id="leed"><circle cx="499" cy="964" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="499" cy="964" r="2.2" fill="#fff"/><text>
+<tspan x="450" y="980.0">More</tspan>
+<tspan x="450" y="991.5">LEED-Certified</tspan>
+<tspan x="450" y="1003.0">Buildings</tspan>
+</text></g>
+<g id="rd"><circle cx="323" cy="922" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="323" cy="922" r="2.2" fill="#fff"/><text>
+<tspan x="255" y="890.0">R+D</tspan>
+<tspan x="255" y="901.5">Alternative</tspan>
+<tspan x="255" y="913.0">Energy</tspan>
+</text></g>
+<g id="ocean"><circle cx="551" cy="70" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="551" cy="70" r="2.2" fill="#fff"/><text>
+<tspan x="543" y="96.0">Ocean</tspan>
+<tspan x="543" y="107.5">Acidification</tspan>
+</text></g>
+<g id="fert"><circle cx="608" cy="396" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="608" cy="396" r="2.2" fill="#fff"/><text>
+<tspan x="590" y="360.0">Increased</tspan>
+<tspan x="590" y="371.5">Fertilizer</tspan>
+<tspan x="590" y="383.0">Demand</tspan>
+</text></g>
+<g id="beetle"><circle cx="288" cy="377" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="288" cy="377" r="2.2" fill="#fff"/><text>
+<tspan x="290" y="396.0">Pine Beetle</tspan>
+<tspan x="290" y="407.5">Outbreak</tspan>
+</text></g>
+<g id="fire"><circle cx="274" cy="416" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="274" cy="416" r="2.2" fill="#fff"/><text>
+<tspan x="222" y="404.0">Forest</tspan>
+<tspan x="222" y="415.5">Fires</tspan>
+</text></g>
+<g id="glacial"><circle cx="244" cy="337" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="244" cy="337" r="2.2" fill="#fff"/><text>
+<tspan x="230" y="312.0">Glacial</tspan>
+<tspan x="230" y="323.5">Melting</tspan>
+</text></g>
+<g id="coral"><circle cx="730" cy="118" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="730" cy="118" r="2.2" fill="#fff"/><text>
+<tspan x="690" y="130.0">Coral</tspan>
+<tspan x="690" y="141.5">Bleaching</tspan>
+</text></g>
+<g id="sea"><circle cx="120" cy="269" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="120" cy="269" r="2.2" fill="#fff"/><text>
+<tspan x="98" y="242.0">Sea Level</tspan>
+<tspan x="98" y="253.5">Rise</tspan>
+</text></g>
+<g id="drought"><circle cx="169" cy="467" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="169" cy="467" r="2.2" fill="#fff"/><text>
+<tspan x="182" y="466.0">Drought/</tspan>
+<tspan x="182" y="477.5">Desertification</tspan>
+</text></g>
+<g id="climate"><circle cx="380" cy="344" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="380" cy="344" r="2.2" fill="#fff"/><text>
+<tspan x="388" y="328.0">Climate</tspan>
+<tspan x="388" y="339.5">Change</tspan>
+</text></g>
+<g id="ice"><circle cx="171" cy="266" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="171" cy="266" r="2.2" fill="#fff"/><text>
+<tspan x="188" y="246.0">Polar</tspan>
+<tspan x="188" y="257.5">Ice Melt</tspan>
+</text></g>
+<g id="pop"><circle cx="543" cy="499" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="543" cy="499" r="2.2" fill="#fff"/><text>
+<tspan x="553" y="508.0">Population</tspan>
+<tspan x="553" y="519.5">Growth</tspan>
+</text></g>
+<g id="algal"><circle cx="809" cy="187" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="809" cy="187" r="2.2" fill="#fff"/><text>
+<tspan x="775" y="168.0">Algal</tspan>
+<tspan x="775" y="179.5">Blooms</tspan>
+</text></g>
+<g id="overfish"><circle cx="838" cy="229" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="838" cy="229" r="2.2" fill="#fff"/><text>
+<tspan x="803" y="240.0">Over</tspan>
+<tspan x="803" y="251.5">Fishing</tspan>
+</text></g>
+<g id="fresh"><circle cx="205" cy="363" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="205" cy="363" r="2.2" fill="#fff"/><text>
+<tspan x="135" y="333.0">Decreased</tspan>
+<tspan x="135" y="344.5">Freshwater</tspan>
+<tspan x="135" y="356.0">Supply</tspan>
+</text></g>
+<g id="runoff"><circle cx="773" cy="207" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="773" cy="207" r="2.2" fill="#fff"/><text>
+<tspan x="708" y="193.0">Fertilizer</tspan>
+<tspan x="708" y="204.5">Runoff</tspan>
+</text></g>
+<g id="higherfood"><circle cx="867" cy="351" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="867" cy="351" r="2.2" fill="#fff"/><text>
+<tspan x="793" y="318.0">More People</tspan>
+<tspan x="793" y="329.5">Eating Higher on</tspan>
+<tspan x="793" y="341.0">Food Chain</tspan>
+</text></g>
+<g id="fossil"><circle cx="655" cy="555" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="655" cy="555" r="2.2" fill="#fff"/><text>
+<tspan x="662" y="570.0">Increased</tspan>
+<tspan x="662" y="581.5">Fossil</tspan>
+<tspan x="662" y="593.0">Fuel Usage</tspan>
+</text></g>
+<g id="oil"><circle cx="734" cy="684" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="734" cy="684" r="2.2" fill="#fff"/><text>
+<tspan x="700" y="702.0">Increased</tspan>
+<tspan x="700" y="713.5">Oil Prices</tspan>
+</text></g>
+<g id="biofuel"><circle cx="903" cy="544" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="903" cy="544" r="2.2" fill="#fff"/><text>
+<tspan x="838" y="542.0">Increased</tspan>
+<tspan x="838" y="553.5">Biofuel</tspan>
+<tspan x="838" y="565.0">Production</tspan>
+</text></g>
+<g id="fisheries"><circle cx="843" cy="193" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="843" cy="193" r="2.2" fill="#fff"/><text>
+<tspan x="843" y="166.0">Collapse of</tspan>
+<tspan x="843" y="177.5">Global</tspan>
+<tspan x="843" y="189.0">Fisheries</tspan>
+</text></g>
+<g id="meat"><circle cx="916" cy="391" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="916" cy="391" r="2.2" fill="#fff"/><text>
+<tspan x="845" y="391.0">More Meat</tspan>
+<tspan x="845" y="402.5">Production</tspan>
+</text></g>
+<g id="transport"><circle cx="918" cy="634" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="918" cy="634" r="2.2" fill="#fff"/><text>
+<tspan x="845" y="610.0">Increased</tspan>
+<tspan x="845" y="621.5">Transportation</tspan>
+<tspan x="845" y="633.0">Costs</tspan>
+</text></g>
+<g id="scarcity"><circle cx="951" cy="479" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="951" cy="479" r="2.2" fill="#fff"/><text>
+<tspan x="907" y="488.0">Food</tspan>
+<tspan x="907" y="499.5">Scarcity</tspan>
+</text></g>
+<g id="water"><circle cx="43" cy="621" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="43" cy="621" r="2.2" fill="#fff"/><text>
+<tspan x="55" y="614.0">Water Wars</tspan>
+</text></g>
+<g id="diet"><circle cx="933" cy="301" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="933" cy="301" r="2.2" fill="#fff"/><text>
+<tspan x="895" y="270.0">Increased</tspan>
+<tspan x="895" y="281.5">Focus on Dietary</tspan>
+<tspan x="895" y="293.0">Habits</tspan>
+</text></g>
+<g id="spec"><circle cx="915" cy="653" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="915" cy="653" r="2.2" fill="#fff"/><text>
+<tspan x="893" y="672.0">Increased</tspan>
+<tspan x="893" y="683.5">Speculation on</tspan>
+<tspan x="893" y="695.0">Commodities</tspan>
+</text></g>
+<g id="prices"><circle cx="949" cy="618" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="949" cy="618" r="2.2" fill="#fff"/><text>
+<tspan x="938" y="593.0">Higher Food</tspan>
+<tspan x="938" y="604.5">Prices</tspan>
+</text></g>
+<g id="obesity"><circle cx="915" cy="342" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="915" cy="342" r="2.2" fill="#fff"/><text>
+<tspan x="922" y="358.0">Increase in</tspan>
+<tspan x="922" y="369.5">Obesity</tspan>
+</text></g>
+<g id="migrate"><circle cx="75" cy="281" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="75" cy="281" r="2.2" fill="#fff"/><text>
+<tspan x="78" y="300.0">Ecomigration</tspan>
+</text></g>
+<g id="grain"><circle cx="938" cy="444" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="938" cy="444" r="2.2" fill="#fff"/><text>
+<tspan x="940" y="423.0">Low Grain</tspan>
+<tspan x="940" y="434.5">Supply</tspan>
+</text></g>
+<g id="riots"><circle cx="976" cy="550" r="5.2" fill="#1a0507" stroke="#fff" stroke-width="1.3"/><circle cx="976" cy="550" r="2.2" fill="#fff"/><text>
+<tspan x="950" y="536.0">Food Riots</tspan>
+</text></g>
+</g></svg>

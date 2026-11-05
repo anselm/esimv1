@@ -112,3 +112,25 @@ world has and the runs lack is dashed, and for the 2100 project nearly every rin
 first would be dashed, which is the true picture of a planet model with no economy in it. The
 hover-to-light-a-neighbourhood is worth keeping; it is how a reader asks "and then what?" of a
 dense picture. Not started.
+
+## Later still: visceral knock-ons, and the missing layer
+
+Anselm, after the cascade map went on the telling page with its credit (alwayswithhonor.com)
+and Ben Fry's *Learning from Lombardi* named as the lineage (Medium refused the fetch; not
+read): "for better or worse we have to find ways to communicate more viscerally around knock
+on effects". And: "the 2100 simulation as a whole also does fail to estimate real impacts, it
+shows earth populations steadily growing - but a more precise granular read of impacts would
+show that bangladesh will probably have massive exodus migrations and deaths - we're really
+missing _impact_ and non-linear effects."
+
+Two findings in one. The cascade is not a figure for every scenario (his words earlier: "not
+useful in each scenario"; the 2100 actors figure is "ok" but should break out the
+contributors to knock-on effects, which it now does: nine actors, thaw and dieback, reefs and
+currents, ice sheets as separate actors with separate arrows). And the model itself has
+exposure where it needs impact: people counted under a passed limit on a settlement pattern
+held at 2020, nobody moving, nobody dying, the UN's population path running on regardless.
+The 2100 page's closing section now says so with his example. The module this asks for is
+the people's response: a mortality and migration layer per cell or per country, driven by the
+heat, the humid heat and the sea the runs already compute, with the non-linear step (a delta
+that floods, a season that fails) as the thing to get right, scored against something real
+(the UN's own displacement counts, the IDMC's, are candidates to check). Not designed yet.

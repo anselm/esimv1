@@ -19,8 +19,10 @@ into the land (Friedlingstein and others, 2024). Behind the emissions stands Kay
 the frame the IPCC's scenarios are built on: emissions are how many people there are, how
 rich, how much energy each unit of wealth takes, and how much carbon each unit of energy
 releases. Ahead of the warming stand the thresholds, the sixteen elements of Armstrong McKay
-and colleagues' 2022 assessment, each with the warming at which it likely tips. So the human
-model has six actors around the warming.
+and colleagues' 2022 assessment, each with the warming at which it likely tips; the figure
+groups them by what they do when they go: thaw and dieback give up carbon, reefs and currents
+change the ocean, ice sheets raise the sea. So the human model has nine actors around the
+warming, and each knock-on has its own arrow.
 
 This is the map people agree on, and it is not the simulation. A solid arrow is a relationship
 these runs model. A dashed one is a relationship the world has and the runs lack, and the
@@ -33,20 +35,27 @@ people: how many, how rich, how much energy, from what
 emissions: fossil fuel and cleared land
 sinks: the ocean and the land
 air: CO₂ for centuries, methane for a decade
-thresholds: ice sheets, permafrost, forest, reefs, currents
+thaw and dieback: permafrost, the Amazon
+reefs and currents: coral, the overturning circulation
+ice sheets: Greenland, West Antarctica
 sea: the water, the ice
+heat: days past the niche, air too humid to cool in
 warming
-people -> emissions: set them (not derived here; an assumption)
-emissions -> air: most of it stays for centuries
+people -> emissions: set them (not derived here)
+emissions -> air: most stays for centuries
 emissions -> sinks: about half is taken up
 sinks -> air: give back more as they warm and fill
 air -> warming: traps the heat
-warming -> thresholds: passes the doors one by one
-thresholds -> air: thaw and dieback give up carbon
-thresholds -> warming: darker ground, a slower ocean (not modelled)
-thresholds -> sea: ice sheets slide into it (not modelled)
+warming -> thaw and dieback: passes their doors
+thaw and dieback -> air: give up their carbon
+warming -> reefs and currents: bleaches, slows
+reefs and currents -> warming: a slower ocean shifts the heat (not modelled)
+warming -> ice sheets: past their doors already
+ice sheets -> warming: darker ground where ice was (not modelled)
+ice sheets -> sea: slide into it over millennia (not modelled)
 warming -> sea: swells the water
-warming -> people: heat past the niche, air too humid to cool in
+warming -> heat: more days past the limits
+heat -> people: counted (not moved, not killed)
 sea -> people: takes the coast (not modelled)
 ```
 
@@ -167,7 +176,12 @@ to the warming or the sea, and none is modelled yet.
 - The people counts are exposure, not deaths: people living where a stated limit is
   passed, on a settlement pattern held at 2020 and the UN's population path, in a world
   where nobody moves. Deaths, harvests, water, migration and any response by anyone are
-  not in these runs.
+  not in these runs. This is the largest thing the page gets wrong, and it is wrong in a
+  known direction: the model's population climbs smoothly to 2100 everywhere, where a
+  country like Bangladesh, low, crowded and in the path of both the sea and the humid
+  heat, would in any granular reading see people leave in numbers and people die. Impact,
+  and the non-linear turns that make it, is the layer this project does not yet have, and
+  it is the next one (Anselm, 2026-11-04).
 - The warming at any place is its country's, from the country's own record scaled by the
   run's global warming; the reanalysis beneath the wet-bulb count reads humid heat mild.
   Both shortfalls pull the people counts down, not up.

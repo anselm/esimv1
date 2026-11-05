@@ -18,7 +18,6 @@
   // the middle and the rest stand around it in the order written.
   let { text = '' } = $props()
 
-  const W = 720, H = 520, RX = 280, RY = 195
 
   const graph = $derived.by(() => parse(text))
 
@@ -49,6 +48,9 @@
     for (const e of edges) { degree.set(e.from, degree.get(e.from) + 1); degree.set(e.to, degree.get(e.to) + 1) }
     const hub = actors.slice().sort((a, b) => degree.get(b.name) - degree.get(a.name))[0]
     const ring = actors.filter((a) => a !== hub)
+    // the picture grows with the ring so the arrows stay long enough for their words
+    const big = ring.length > 6
+    const W = big ? 900 : 720, H = big ? 660 : 520, RX = W / 2 - 95, RY = H / 2 - 70
     const pos = new Map()
     if (hub) pos.set(hub.name, { x: W / 2, y: H / 2 })
     ring.forEach((a, i) => {
@@ -72,20 +74,22 @@
       const clip = (n, sx, sy) => Math.min(n.w / 2 / Math.max(1e-6, Math.abs(sx)), n.h / 2 / Math.max(1e-6, Math.abs(sy)))
       const x1 = a.x + ux * (clip(a, ux, uy) + 4) + px, y1 = a.y + uy * (clip(a, ux, uy) + 4) + py
       const x2 = b.x - ux * (clip(b, ux, uy) + 6) + px, y2 = b.y - uy * (clip(b, ux, uy) + 6) + py
-      // the words run along the arrow, left to right whichever way it points
+      // the words sit at the arrow's middle, turned to its angle, reading left to right
+      // whichever way it points; a short arrow does not cut them off
       const ltr = x2 >= x1
-      const d = ltr ? `M ${x1} ${y1} L ${x2} ${y2}` : `M ${x2} ${y2} L ${x1} ${y1}`
-      // words longer than the arrow go on two lines, one each side of it
+      const mx = (x1 + x2) / 2, my = (y1 + y2) / 2
+      const angle = (Math.atan2(y2 - y1, x2 - x1) * 180) / Math.PI + (ltr ? 0 : 180)
+      // words longer than the arrow go on two lines
       const full = e.words + (e.missing ? ` (${e.note})` : '')
-      const room = Math.hypot(x2 - x1, y2 - y1) - 12
+      const room = Math.hypot(x2 - x1, y2 - y1) + 30
       const rows = 5.3 * full.length <= room ? [full] : split(full)
       // a lone arrow carries its words above it; one of a pair carries them on its outer
-      // side, which is its own right hand, and the path's right hand only when drawn its way
+      // side, which is its own right hand, and "below" in text terms only when drawn its way
       const below = twin && ltr
       const dys = rows.map((_, i) => (below ? 10 + 10 * i : -3 - 10 * (rows.length - 1 - i)))
-      return { ...e, x1, y1, x2, y2, d, rows, dys, id: `actors-${edges.indexOf(e)}` }
+      return { ...e, x1, y1, x2, y2, mx, my, angle, rows, dys, id: `actors-${edges.indexOf(e)}` }
     })
-    return { nodes, edges: drawn }
+    return { nodes, edges: drawn, W, H }
   }
 
   function split(s) {
@@ -109,19 +113,16 @@
 </script>
 
 <figure class="my-4 overflow-x-auto">
-  <svg viewBox="0 0 {W} {H}" class="w-full h-auto min-w-[560px] text-neutral-900 dark:text-neutral-100" role="img" aria-label="the actors and their relationships">
+  <svg viewBox="0 0 {graph.W} {graph.H}" class="w-full h-auto min-w-[560px] text-neutral-900 dark:text-neutral-100" role="img" aria-label="the actors and their relationships">
     <defs>
       <marker id="actors-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
         <path d="M 0 0 L 10 5 L 0 10 z" fill="currentColor" />
       </marker>
     </defs>
     {#each graph.edges as e (e.id)}
-      <path id={e.id} d={e.d} fill="none" stroke="none" />
       <line x1={e.x1} y1={e.y1} x2={e.x2} y2={e.y2} stroke="currentColor" stroke-width="1.1" stroke-dasharray={e.missing ? '4 3' : null} opacity={e.missing ? 0.45 : 0.8} marker-end="url(#actors-head)" />
       {#each e.rows as row, i (i)}
-        <text font-size="10" fill="currentColor" opacity={e.missing ? 0.6 : 0.9} font-style={e.missing ? 'italic' : null} dy={e.dys[i]}>
-          <textPath href={'#' + e.id} startOffset="50%" text-anchor="middle">{row}</textPath>
-        </text>
+        <text transform="translate({e.mx} {e.my}) rotate({e.angle})" text-anchor="middle" font-size="10" fill="currentColor" opacity={e.missing ? 0.6 : 0.9} font-style={e.missing ? 'italic' : null} dy={e.dys[i]}>{row}</text>
       {/each}
     {/each}
     {#each graph.nodes as n (n.name)}
