@@ -6,7 +6,8 @@
 # as a timeline of speculative events), so the schema is flat.
 #
 # Schema: id, title, kind (astronomy | geology | solar | disease | war | economy | politics |
-# ecology | technology), p_per_year (rough annual probability, a number or empty), effect
+# ecology | technology), p_per_year (rough annual probability; absent when no figure is
+# known), effect
 # (a table of what a run could apply: forcing_w_m2 and forcing_years for a pulse on the
 # energy balance; emissions_scale and emissions_years for a scaling of emissions; mortality
 # as a fraction of world population; region as free text), magnitude (free text), source,
@@ -16,7 +17,8 @@
 # esim session (Claude Fable 5.1) at Anselm's ask and NONE has been checked. The annual
 # probabilities are the order of magnitude commonly quoted, not a fit; the effects are the
 # session's own translation into the model's terms and should be read as placeholders until
-# a source is beside each. Check a row before relying on it.
+# a source is beside each. Check a row before relying on it. The rows marked "from Anselm's
+# list" came from a Google AI answer he supplied on 2026-11-05 and carry no probability.
 
 [[event]]
 id = "carrington-storm"
@@ -202,5 +204,55 @@ p_per_year = 0.03
 magnitude = "unknown sign on emissions; large on employment"
 effect = { region = "everywhere" }
 source = "no agreed figure"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "engineered-pandemic"
+title = "An engineered pathogen with high transmissibility, long silent incubation and high fatality escapes or is released"
+kind = "disease"
+magnitude = "beyond any natural pandemic; vaccine timelines bypassed"
+effect = { mortality = 0.1, emissions_scale = 0.8, emissions_years = 2 }
+source = "from Anselm's list (a Google AI answer, 2026-11-05); the mortality is the session's placeholder"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "subsea-cable-severance"
+title = "Coordinated cutting of the subsea cables between North America, Europe and Asia"
+kind = "war"
+magnitude = "the internet fractured into regional networks for weeks to months"
+effect = { emissions_scale = 0.97, emissions_years = 1 }
+source = "from Anselm's list (a Google AI answer, 2026-11-05)"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "sovereign-debt-cascade"
+title = "A loss of faith in a reserve currency and a cascade of sovereign defaults"
+kind = "economy"
+magnitude = "credit markets closed; a depression deeper than 2008"
+effect = { emissions_scale = 0.9, emissions_years = 4 }
+source = "from Anselm's list (a Google AI answer, 2026-11-05)"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "geoengineering-termination-shock"
+title = "A stratospheric aerosol programme started unilaterally and then halted, with the masked warming arriving in months"
+kind = "technology"
+magnitude = "a jump of the warming the aerosols had hidden, over a few years"
+effect = { forcing_w_m2 = 2.0, forcing_years = 5 }
+source = "from Anselm's list (a Google AI answer, 2026-11-05); the forcing is the session's placeholder for a programme masking about a degree"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "asteroid-surprise-city"
+title = "A dark asteroid from the sunward side, unseen until a day out, bursts over a city or raises a regional tsunami"
+kind = "astronomy"
+magnitude = "a city or a coast; no global climate effect"
+effect = { region = "one city or coast" }
+source = "from Anselm's list (a Google AI answer, 2026-11-05); the Tunguska row carries the rate for the class"
 confidence = "recalled"
 checked = ""

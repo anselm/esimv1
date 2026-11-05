@@ -78,3 +78,17 @@ Before either runs, every row wants a source beside it. The known list is checka
 hour against the organisers' pages; the speculative list's probabilities are the order of
 magnitude commonly quoted and should be read as placeholders until the papers named in each
 row are read.
+
+## Later the same morning: the lists read against Wikipedia
+
+Anselm pointed at Wikipedia's *2030s*, *21st century* and *Timelines of the future* pages and
+a Google answer with its own black-swan list. The known list was rebuilt from the pages
+(plus *List of future astronomical events* and *3rd millennium*, which the timelines page
+links): 89 rows, 82 read on Wikipedia and 7 still recalled (the 2026 and 2045 eclipses, the
+US election and census, the two Paris stocktakes). The `confidence` vocabulary now has
+"wikipedia" for a row read there, which is a tertiary source and not the organiser's page;
+"checked" is kept for a row confirmed against the primary. The speculative list gained five
+rows from the Google answer (an engineered pandemic, subsea cable severance, a sovereign
+debt cascade, geoengineering termination shock, an unseen asteroid), with no probability,
+since the answer gave none and the session will not invent one; Carrington-plus and the AI
+runaway were already covered. 22 rows.
