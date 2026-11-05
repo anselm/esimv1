@@ -274,3 +274,42 @@ the same account per region per year, with a flood or a wild card closing the ro
 against the 1998 record. The design matters too: a page of four questions with a case and a
 knob, not a page of panels, and the questions are the headings. That is the shape the 2100
 page should grow toward, and the telling page should say so.
+
+## The glyph grammar (Anselm's revised page, the same evening) and an icon block on the globe
+
+Anselm: "I'm less concerned about factual accuracy at the moment. What I am searching for is
+an implicit value of place. The metric is how can a person look at a globe and see bioregional
+health? Now I am leaning towards an idea of a glyph that has child emoji representing a gestalt
+understanding of place." And: "ignore the style. ChatGPT just wanted to make it pretty. I am
+really just exploring how do we communicate information about regions?"
+
+The page's new section, read in full: two glyphs on the same data. A portrait, "read from
+crown to roots": leaves count thriving populations, a doorway shows affordability, roots are
+grain routes, a mark travelling along a root is a delivery arriving, the portrait can be turned
+45 degrees; two fictional estuaries (Alder, one route, one week in reserve; Reed, three routes,
+four weeks) with a flood-the-crossing switch and a delivery timeline to play. And an icon
+block: six measures for the United States and Bangladesh in fixed slots, land on top (forest,
+fields), water and energy in the middle, household services below; area carries the amount
+against a pale silhouette that is 100 percent, colour identifies the row and can be switched
+off, a crossed slot is a measured zero and a hatched one a missing figure, a year slider
+2010 to 2024. Its grammar, in its words: "A symbol supplies the noun. Position gives it a
+consistent place in the whole. Size can express an amount, hue can identify a category, and
+motion can describe a process." Bertin's visual variables and Ward on multivariate glyphs are
+the references it names; the music aside (a voice keeping its colour through the score) is the
+same idea for time.
+
+Built that evening as a prototype: `Globe.svelte` has a second glyph, `icons`, now the
+default, beside `bars`. Each country is a billboard sprite with a three-by-three block of
+emoji in fixed slots, one per band (heart, money bag, scales, ballot box, wind, tree, park,
+drop, footprints), each icon scaled so its area carries the band, the whole block growing a
+little with the total; a missing band is a dot. Hover reads the bands. At the Americas' scale
+Canada, the United States, Mexico and Brazil read at a glance (the United States: a small
+scales, a small footprint); the Caribbean and Central America pile up, which any glyph map
+does, and the zoom separates them. The emoji are the device's font, not fixed artwork, as the
+page itself warns. The bars remain a click away.
+
+What I think, for the reply: the icon block is the better of the two for a globe, because a
+glyph that is read by position and size survives being small and being many, and a portrait
+that is read as a picture does not; the portrait is for one region on a page. The thing
+neither does yet, and the thing a run can do, is motion with one meaning: the block in 2050
+beside the block in 2025, the same slots, and a mark that moves when something happens.
