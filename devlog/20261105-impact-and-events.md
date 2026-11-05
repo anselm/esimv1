@@ -230,3 +230,47 @@ Keith et al. 2013, to be read). The Keeley finding of 2026-11-04 is a local case
 burned too often becomes grass that burns more often, a regime shift, a death with a
 successor. For a people-and-land region the second death is dependence without reserve: the
 region cannot feed or water itself and the route fails. Nothing built tonight.
+
+## "The Living Region" (Anselm's ChatGPT-built page, the same evening)
+
+Anselm: "How about this: https://the-living-region.anselm52491.chatgpt.site". Read in full by
+rendering it (the fetcher choked on an embedded Landsat image). A single page, "How healthy is
+a place?", four questions with a Bangladesh field case and a sources section:
+
+- Community well-being, "What does GDP leave out?": room to live (income left after housing,
+  transport and childcare, lowest fifth), health and opportunity (life expectancy by
+  neighbourhood, mental distress, reading, young people's access to work), time and access
+  (commuting hours, reach to clinic, groceries, park), connection and voice (a neighbour to
+  call, life worthwhile, decisions reflect views). Show current value, five-year trend, the gap
+  between groups: "Who experienced the gains?"
+- Ecology and biodiversity, "Could the people be thriving while the river is dying?": native
+  life (abundance, breeding success, genetic diversity, range), habitat connections (spawning
+  habitat reachable, floodplain the river can enter), renewal (sediment moving, young streamside
+  trees, a wetland watered when its species need it), resilience to a shock (name the system
+  and the disturbance). "Record its current condition, the locally appropriate reference range,
+  and its direction of change." The Umatilla Tribes' River Vision as the working example: flow,
+  channel and floodplain form, connectivity, streamside plants, aquatic life.
+- The Bangladesh case: a before-and-after Sentinel-1 radar slider around Nazirpur (16 and 22
+  May 2020, Amphan), labelled observed, then Koyra in July with the road to Uttor Bedkashi broken
+  and the tide still coming through; then "What if Amphan came back in 2100?", labelled modeled,
+  three sea-level scenarios (32, 50, 84 cm) from Mitchell and colleagues 2022, exposed population
+  up 50 to 80 percent in the high one.
+- Material flows and resilience, "Should a healthy bioregion be a net producer?": physical trade
+  balance, material footprint, ecological deficit as three different questions; an account per
+  essential commodity (what arrives, by which routes, what can be made locally, what happens at
+  the source); an interactive grain exercise (100 t a week needed, 60 local, 40 by one route,
+  120 in reserve; halve the harvest, close the route); the 1998 flood (2.2 million tonnes of
+  rice lost, over two million imported, mainly from India; FAO and World Bank cited).
+- Sources and methods: "The indicators are prompts for a local assessment. Selecting the
+  geography, reference conditions, time windows and ecological limits is part of the work."
+
+Read against the project: it is the human model for a region, as the actors figure is for a
+fire, and it is better than the globe's nine bands in three ways that matter: it reads a place
+against its own reference range and direction of change, not a rank; it keeps nature's claim
+separate from people's and names the river's five features; and it carries one place a reader
+can stand in (Koyra's road) and one knob a reader can turn (the grain reserve). What it lacks
+is what we have: a clock and a run. Its grain exercise is a one-week arithmetic; ours could be
+the same account per region per year, with a flood or a wild card closing the route, scored
+against the 1998 record. The design matters too: a page of four questions with a case and a
+knob, not a page of panels, and the questions are the headings. That is the shape the 2100
+page should grow toward, and the telling page should say so.
