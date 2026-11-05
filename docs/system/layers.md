@@ -1,4 +1,5 @@
 <!-- order: 5 -->
+<!-- section: The machine -->
 # Layers
 
 Modules sort themselves into layers by what they read and what they own, from the slow

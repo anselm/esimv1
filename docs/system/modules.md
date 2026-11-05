@@ -1,4 +1,5 @@
 <!-- order: 4 -->
+<!-- section: The machine -->
 # Modules
 
 A module is one piece of science behind a small contract, and the contract is the only

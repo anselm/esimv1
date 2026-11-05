@@ -1,4 +1,5 @@
 <!-- order: 6 -->
+<!-- section: The machine -->
 # Manifests
 
 A manifest is the whole arrangement of a simulation in one TOML document. It is the

@@ -1,4 +1,5 @@
 <!-- order: 10 -->
+<!-- section: Projects and the record -->
 # Scoring and tearing
 
 Two different questions. Scoring asks how well a model series matches a record. Tearing

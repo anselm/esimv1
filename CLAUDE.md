@@ -202,6 +202,11 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   the ignitions, the fuel's age and the stakes; a time-since-last-fire layer is the ask) and *The actors*, a
   README figure (` ```esim actors `, `web/src/lib/Actors.svelte`): `name: caption` and `a -> b: words`
   lines, words ending in a parenthesis beginning "not" drawn dashed as what the world has and the model lacks.
+- Docs sections and the telling page (2026-11-04 evening, Anselm): `<!-- section: name -->` on a docs page's second
+  line groups it on `/docs` (Start here, The machine, Projects and the record, Telling it, Changing it; the order is
+  `SECTIONS` in `DocsList.svelte`, the server writes `section` into `docs/index.json`). `docs/system/telling.md` is the
+  house practice for a project page: priming, event, aftermath; the actors figure on named frameworks with the gaps
+  dashed; the story carries the reader. The first Palisades README has all three parts, *After the fire* as of 2026-11-04.
 - Front page and covers (2026-11-03): `featured = true` in project.toml puts a project on the
   front page as a card; `cover` and `cover_caption` name a picture beside the manifest.
   Earth 2100 (renamed from "The planet, with people on it") and the Palisades fire are featured.

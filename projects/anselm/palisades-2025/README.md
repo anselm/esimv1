@@ -10,52 +10,6 @@ own mapping teams drew as the fire grew. Every number on this page is read from 
 above it; the prose was written on 2026-11-03 and revised on the 4th, and the runs may have
 changed since.
 
-## The fire
-
-The record we hold is copied into the project's event folder, publisher by publisher, and
-this is what it says. On New Year's Day a small fire, the Lachman fire, burned on the same
-ridge and was declared out; crews reported smouldering ground and hot roots on 2 January and
-left. Six days later, in the strongest Santa Ana wind the basin had seen in years, the fire
-came back from that ground. UL's Fire Safety Research Institute, which reconstructed the day
-from dispatch and radio logs for the state, puts the weather at ignition at 47 miles an hour
-sustained with gusts to 64 at the Malibu Hills station, and the first hour like this: at
-10:33 the fire was backing into Temescal Canyon; by 10:49 it was below the old burn scar and
-pushing toward Palisades Drive; by 11:25 it had crossed the road; houses on Lachman Lane were
-burning from 11:27; and within the first hour it had run over a mile south toward the ocean.
-
-CAL FIRE's status reports give the growth as it was reported: 10 acres at 11:06, 200 at 11:31,
-1,262 at 15:34, 2,921 just after midnight, 11,802 at 11:45 the next morning and 15,832 at 13:20
-on 8 January, all local time. The incident's own maps are sparser. The first is a triangle drawn
-by hand at 06:00 UTC on the 8th with 2,920 acres typed in; the first infrared perimeter is from
-the following evening, 27 hours after ignition, at 15,824 acres; the fire was mapped at 19,629
-acres a day later and 23,343 on the night of the 11th, and the final perimeter is 23,448. The
-first night, when the fire went from the ridge to the sea and through the Palisades house by
-house, has no map at all. The reconstructions of that night (UL's hourly figures) are pictures
-in a report, not yet georeferenced here.
-
-What people did is in the record too, with its limits. The incident's GIS archive holds 2,334
-lines (554 kilometres of completed dozer line, 130 of hand line, 94 of road used as line) and
-825 points (dozer pushes, drop points, helispots, division breaks, the command post at Will
-Rogers), and every one carries the time the GIS feature was made rather than the time the work
-was done; the first completed line is dated 19:40 UTC on 9 January, two days in. CAL FIRE's
-reports count the resources: 149 engines, 4 dozers, 7 helicopters and 836 people on the
-afternoon of the 8th, 476 engines, 48 dozers, 44 helicopters and 4,471 people by the 17th.
-Reporting after the fire, as summarised to the author and not read here (the Los Angeles Times
-of 13 January 2025, the state's analysis as covered by LAist, the Los Angeles Fire Department's
-after-action review of October 2025), has the first day as a day on which nothing worked: the
-aircraft grounded by the wind, the fuel breaks overrun, the crews turned from containment to
-evacuation, and forty engines standing in repair yards. The second day, when the wind eased and
-the record grew by only 3,800 acres, is the day the suppression record would have to explain,
-and it is the day both models here get wrong.
-
-Two projects run this fire. This one uses the 1972 spread formula every American fire
-behaviour tool rests on, on a coarse reanalysis wind, as the baseline. The project beside it
-([The Palisades fire, cell by cell](/anselm/palisades-cells)) is an engine of our own on the
-same ground under NOAA's 3 km wind, with the buildings as bodies, the record's points and lines
-drawn on the three-dimensional view at their times, and a first day that now matches the
-infrared perimeter in pace and shape. The Eaton fire, which started the same evening across the
-basin, is held back as the test for whatever is fitted here.
-
 ## The ground before the fire
 
 The ridge the fire came back from has burned many times, and the record of that reaches a
@@ -107,6 +61,116 @@ the devlog entry of 4 November 2026, *The deep history of the Palisades ground*;
 papers are public Forest Service PDFs, the Park Service pages are its fire-frequency and
 fire-history pages for the recreation area, and the Santa Barbara Basin paper is in
 *Quaternary Research* 51.
+
+## The fire
+
+The record we hold is copied into the project's event folder, publisher by publisher, and
+this is what it says. On New Year's Day a small fire, the Lachman fire, burned on the same
+ridge and was declared out; crews reported smouldering ground and hot roots on 2 January and
+left. Six days later, in the strongest Santa Ana wind the basin had seen in years, the fire
+came back from that ground. UL's Fire Safety Research Institute, which reconstructed the day
+from dispatch and radio logs for the state, puts the weather at ignition at 47 miles an hour
+sustained with gusts to 64 at the Malibu Hills station, and the first hour like this: at
+10:33 the fire was backing into Temescal Canyon; by 10:49 it was below the old burn scar and
+pushing toward Palisades Drive; by 11:25 it had crossed the road; houses on Lachman Lane were
+burning from 11:27; and within the first hour it had run over a mile south toward the ocean.
+
+CAL FIRE's status reports give the growth as it was reported: 10 acres at 11:06, 200 at 11:31,
+1,262 at 15:34, 2,921 just after midnight, 11,802 at 11:45 the next morning and 15,832 at 13:20
+on 8 January, all local time. The incident's own maps are sparser. The first is a triangle drawn
+by hand at 06:00 UTC on the 8th with 2,920 acres typed in; the first infrared perimeter is from
+the following evening, 27 hours after ignition, at 15,824 acres; the fire was mapped at 19,629
+acres a day later and 23,343 on the night of the 11th, and the final perimeter is 23,448. The
+first night, when the fire went from the ridge to the sea and through the Palisades house by
+house, has no map at all. The reconstructions of that night (UL's hourly figures) are pictures
+in a report, not yet georeferenced here.
+
+What people did is in the record too, with its limits. The incident's GIS archive holds 2,334
+lines (554 kilometres of completed dozer line, 130 of hand line, 94 of road used as line) and
+825 points (dozer pushes, drop points, helispots, division breaks, the command post at Will
+Rogers), and every one carries the time the GIS feature was made rather than the time the work
+was done; the first completed line is dated 19:40 UTC on 9 January, two days in. CAL FIRE's
+reports count the resources: 149 engines, 4 dozers, 7 helicopters and 836 people on the
+afternoon of the 8th, 476 engines, 48 dozers, 44 helicopters and 4,471 people by the 17th.
+Reporting after the fire, as summarised to the author and not read here (the Los Angeles Times
+of 13 January 2025, the state's analysis as covered by LAist, the Los Angeles Fire Department's
+after-action review of October 2025), has the first day as a day on which nothing worked: the
+aircraft grounded by the wind, the fuel breaks overrun, the crews turned from containment to
+evacuation, and forty engines standing in repair yards. The second day, when the wind eased and
+the record grew by only 3,800 acres, is the day the suppression record would have to explain,
+and it is the day both models here get wrong.
+
+Two projects run this fire. This one uses the 1972 spread formula every American fire
+behaviour tool rests on, on a coarse reanalysis wind, as the baseline. The project beside it
+([The Palisades fire, cell by cell](/anselm/palisades-cells)) is an engine of our own on the
+same ground under NOAA's 3 km wind, with the buildings as bodies, the record's points and lines
+drawn on the three-dimensional view at their times, and a first day that now matches the
+infrared perimeter in pace and shape. The Eaton fire, which started the same evening across the
+basin, is held back as the test for whatever is fitted here.
+
+## After the fire
+
+What the fire changed, from the reporting as it stood on 4 November 2026, twenty-two months
+on. This is casual research, read from news and official releases rather than the documents
+themselves, and the numbers move every month.
+
+The cause went to court. Federal prosecutors charged a Florida man on 8 October 2025 with
+setting the Lachman fire on New Year's Day; the fire department's own account is that the
+7 January fire was "not a rekindle or due to failed suppression" but a holdover smouldering
+underground for six days, undetectable even to infrared, that woke in the wind. His first trial,
+in June 2026, ended with the jury deadlocked ten to two for acquittal; a retrial on the narrower
+charge of the Lachman fire alone opened in Los Angeles on 4 November 2026, and he has pleaded
+not guilty. Whatever the verdict, the physics on this page is the same.
+
+The reviews found the system, not a person. Los Angeles County's independent review of its
+alerts and evacuations (McChrystal Group, 25 September 2025) found "no single point of
+failure" but outdated policies, inconsistent practice and an emergency office of 37 people with
+no operating budget; it issued 32 warnings and 19 orders for this fire, and the city's agencies
+declined to be interviewed for it. The city fire department's after-action review (8 October
+2025) said staff were allowed off duty on the morning of the fire in the forecast wind and not
+recalled, engines stood in repair, crews worked 36 hours without relief, and the water system
+was not built for a fire of this size; the Los Angeles Times reported that the report had been
+edited to soften its criticism of leadership before release, and the chief acknowledged it.
+
+The rules changed, and some are still changing. The governor's order of 12 January 2025
+suspended the state's environmental review and Coastal Act permitting for rebuilding what was
+lost, the first of 27 orders that year; by its anniversary the state counted 2,617 rebuilding
+permits issued of 6,191 applications across both fires, against 385 a year after the Camp fire,
+and more than 2.5 million tons of debris cleared from over 10,000 parcels in nine months. The
+building code's wildland chapter was replaced by a new wildland-urban interface code on
+1 January 2026, as the builders' guides report it. The rule the 1961 fire's lesson pointed at,
+an ember-resistant zone in the first five feet of every house in the hazard zones, was
+approved by the state Board of Forestry on 19 August 2026 after years of drafts, withdrawn from
+administrative review on 8 September, and is not in force as this is written; existing homes
+would have three years to comply once it is.
+
+The insurance market was the slow fire behind the fast one. Before the fire the state's plan
+of last resort had grown 85 percent in two years in the Palisades' ZIP code, and one insurer
+alone had dropped about 1,600 policies there in July 2024. Afterwards the commissioner froze
+cancellations in the fire ZIP codes for a year (Bulletin 2025-1, the day the fire started),
+approved a one-billion-dollar assessment on the state's insurers to keep the plan solvent
+(February 2025; up to half may be passed to policyholders), and let the largest insurer raise
+its home rates 17 percent on an interim basis, settled in March 2026. The regulator alleged
+hundreds of violations in a sample of 220 of that insurer's fire claims; the insurer says it has
+paid more than six billion dollars on 13,700 claims. The county is investigating the plan of
+last resort over smoke-damage denials. Across Southern California about 40,000 claims and
+twenty billion dollars had been paid by September 2025.
+
+The houses come back slowly. By an independent tracker built from county records (5 August
+2026) the Palisades had 1,750 rebuilding applications, 1,196 permits, 1,006 houses under
+construction and 30 with a certificate of occupancy, which is 30 families home of the 6,845
+structures the inspectors recorded destroyed. The state says permits now issue about three times
+faster than before the fire. A later count will be higher than these, and the page will say so
+when it is updated.
+
+Sources read, all on 4 November 2026: the governor's office (gov.ca.gov, 12 January 2025 and
+5 January 2026); Los Angeles County's after-action page (lacounty.gov/aar) and its release of
+25 September 2025; reporting on the fire department's review by Government Technology, KTLA
+and FireRescue1; Wildfire LA on Zone 0 (24 August 2026); the Palisades Fire Rebuilding tracker
+(from the Pali Rebuild Map, published by the Palisadian-Post); insurance.com's one-year review
+(updated 24 March 2026), the Insurance Journal and CBS on the rates and the assessment; the
+International Fire and Safety Journal (10 October 2025) and NBC Los Angeles and MyNewsLA
+(November 2026) on the case.
 
 ## The actors
 

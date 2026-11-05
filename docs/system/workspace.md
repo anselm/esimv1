@@ -1,4 +1,5 @@
 <!-- order: 12 -->
+<!-- section: The machine -->
 # Workspace
 
 ## Layout

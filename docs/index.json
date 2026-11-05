@@ -2,86 +2,109 @@
   {
     "path": "system/adding-a-module",
     "title": "Adding a module",
-    "order": 15
+    "order": 15,
+    "section": "Changing it"
   },
   {
     "path": "system/conversation",
     "title": "Conversation",
-    "order": 8
+    "order": 8,
+    "section": "Changing it"
   },
   {
     "path": "system/data",
     "title": "Data",
-    "order": 9
+    "order": 9,
+    "section": "Projects and the record"
   },
   {
     "path": "system/evolution",
     "title": "Evolution",
-    "order": 11
+    "order": 11,
+    "section": "Changing it"
   },
   {
     "path": "system/honesty",
     "title": "Honesty",
-    "order": 3
+    "order": 3,
+    "section": "Start here"
   },
   {
     "path": "system/layers",
     "title": "Layers",
-    "order": 5
+    "order": 5,
+    "section": "The machine"
   },
   {
     "path": "system/limits",
     "title": "Limits today",
-    "order": 16
+    "order": 16,
+    "section": "Changing it"
   },
   {
     "path": "system/manifests",
     "title": "Manifests",
-    "order": 6
+    "order": 6,
+    "section": "The machine"
   },
   {
     "path": "system/modules",
     "title": "Modules",
-    "order": 4
+    "order": 4,
+    "section": "The machine"
   },
   {
     "path": "system/overview",
     "title": "What this is",
-    "order": 1
+    "order": 1,
+    "section": "Start here"
   },
   {
     "path": "system/projects-and-runs",
     "title": "Projects and runs",
-    "order": 7
+    "order": 7,
+    "section": "Projects and the record"
   },
   {
     "path": "system/scoring-and-tearing",
     "title": "Scoring and tearing",
-    "order": 10
+    "order": 10,
+    "section": "Projects and the record"
   },
   {
     "path": "system/sources",
     "title": "Sources",
-    "order": 17
+    "order": 17,
+    "section": "Projects and the record"
+  },
+  {
+    "path": "system/telling",
+    "title": "Telling a scenario",
+    "order": 18,
+    "section": "Telling it"
   },
   {
     "path": "system/terminology",
     "title": "Terminology",
-    "order": 2
+    "order": 2,
+    "section": "Start here"
   },
   {
     "path": "system/time",
     "title": "Time",
-    "order": 13
+    "order": 13,
+    "section": "The machine"
   },
   {
     "path": "system/vocabulary",
     "title": "Vocabulary",
-    "order": 14
+    "order": 14,
+    "section": "The machine"
   },
   {
     "path": "system/workspace",
     "title": "Workspace",
-    "order": 12
+    "order": 12,
+    "section": "The machine"
   }
 ]

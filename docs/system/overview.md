@@ -1,4 +1,5 @@
 <!-- order: 1 -->
+<!-- section: Start here -->
 # What this is
 
 A whole-system simulator: many small pieces of science on one clock, each reading real

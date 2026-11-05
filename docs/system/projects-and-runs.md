@@ -1,4 +1,5 @@
 <!-- order: 7 -->
+<!-- section: Projects and the record -->
 # Projects and runs
 
 ## A project is a folder

@@ -1,4 +1,5 @@
 <!-- order: 9 -->
+<!-- section: Projects and the record -->
 # Data
 
 ## The registry

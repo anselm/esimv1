@@ -1,4 +1,5 @@
 <!-- order: 3 -->
+<!-- section: Start here -->
 # Honesty
 
 The rules that make the rest worth doing. They are enforced by code where code can, and

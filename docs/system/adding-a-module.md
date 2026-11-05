@@ -1,4 +1,5 @@
 <!-- order: 15 -->
+<!-- section: Changing it -->
 # Adding a module
 
 The recipe, in the order that keeps the rules intact.

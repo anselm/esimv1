@@ -1,4 +1,5 @@
 <!-- order: 2 -->
+<!-- section: Start here -->
 # Terminology
 
 The words, fixed. Where two words have been used for one thing, the first is the one to

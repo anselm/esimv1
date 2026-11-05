@@ -1,4 +1,5 @@
 <!-- order: 13 -->
+<!-- section: The machine -->
 # Time
 
 ## The clock

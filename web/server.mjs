@@ -291,7 +291,7 @@ function serveStatic(req, res) {
 
 // ---- docs: Markdown pages under ../docs/<area>/<name>.md; the index is written for the
 // static fallback. A page's title is its first heading; `<!-- order: n -->` on the first
-// line orders pages within an area.
+// line orders pages within an area; `<!-- section: name -->` groups them under a heading.
 const DOCS = path.join(ROOT, 'docs')
 function docsIndex() {
   const pages = []
@@ -303,7 +303,8 @@ function docsIndex() {
       const text = fs.readFileSync(path.join(DOCS, area.name, f), 'utf8')
       const title = (text.match(/^#\s+(.+)$/m) || [])[1]?.trim() ?? null
       const order = Number((text.match(/<!--\s*order:\s*(\d+)\s*-->/) || [])[1]) || null
-      pages.push({ path: `${area.name}/${f.slice(0, -3)}`, title, order })
+      const section = (text.match(/<!--\s*section:\s*(.+?)\s*-->/) || [])[1] ?? null
+      pages.push({ path: `${area.name}/${f.slice(0, -3)}`, title, order, section })
     }
   }
   pages.sort((a, b) => a.path.localeCompare(b.path))

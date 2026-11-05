@@ -67,3 +67,19 @@ state and city law and in the fire code; what the insurers did and what the stat
 last resort carried; how many permits have issued and how many houses stand a year on; and
 what the after-action reviews concluded. Nothing on that is written yet; the sources are to be
 fetched and read, not recalled.
+
+## Later: the aftermath, the practice page, the sections
+
+Anselm: "go ahead and source that and add a post event outcomes to the readme there - i'm ok
+with just casual research on this"; "we may want to have some global commentary on the site as
+a whole - say in the /docs - around best practices - talking about these topics above; deep
+time, human diagrams, story telling"; "can you break the /docs into sections also - right now
+it is one long run of individual essays".
+
+The first Palisades README now has *After the fire* (the case and its retrial opening the
+same day, the county's and the city's reviews, the governor's orders and the permit counts,
+Zone 0 approved and then withdrawn from review, the insurance moratorium, assessment and rates,
+the rebuild tracker's funnel), sourced from news and official releases read that evening and
+said to be casual; and the sections now run priming, event, aftermath, actors, runs.
+`docs/system/telling.md` is the practice page. The docs index groups pages by a `section`
+comment; the server writes it into the index and the list draws the headings.

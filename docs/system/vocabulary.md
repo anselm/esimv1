@@ -1,4 +1,5 @@
 <!-- order: 14 -->
+<!-- section: The machine -->
 # Vocabulary
 
 The protocol between kernel and module is small and will rarely change. What carries
