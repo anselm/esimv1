@@ -2532,7 +2532,13 @@
     ],
     "sends": [],
     "accepts": [],
-    "subscribes": [],
+    "subscribes": [
+      {
+        "name": "emissions.scale",
+        "required": false,
+        "note": "{ name, factor } a multiplier on the rate from other modules (wild cards), kept by name until replaced; the product of all applies"
+      }
+    ],
     "fields_owned": [],
     "fields_read": [],
     "ledgers": [
@@ -3203,7 +3209,13 @@
     ],
     "sends": [],
     "accepts": [],
-    "subscribes": [],
+    "subscribes": [
+      {
+        "name": "people.shock",
+        "required": false,
+        "note": "{ id, title, year, fraction } from the wild cards: that fraction of every country's people is removed from this year on, and counted in people.shock_deaths"
+      }
+    ],
     "fields_owned": [
       {
         "name": "country.index",
@@ -3232,6 +3244,11 @@
       },
       {
         "name": "people.countries_matched",
+        "required": false
+      },
+      {
+        "name": "people.shock_deaths",
+        "unit": "persons",
         "required": false
       }
     ],
@@ -4988,6 +5005,11 @@
         "name": "carbon.crossing",
         "required": false,
         "note": "sentences"
+      },
+      {
+        "name": "shock.crossing",
+        "required": false,
+        "note": "sentences: the wild cards"
       },
       {
         "name": "people.population",
@@ -219758,6 +219780,354 @@
         ],
         "source": "OpenStreetMap contributors, ODbL, through the Overpass API"
       }
+    }
+  },
+  {
+    "kind": "events.shock",
+    "name": "events.shock",
+    "summary": "Wild cards: speculative events (eruptions, pandemics, wars, storms, crashes) drawn by a seeded coin each year from a list with rough annual chances, or one named event in a chosen year, applied through three levers the planet modules expose: a forcing pulse for some years, a scaling of emissions for some years, a fraction of the world's people. A placeholder by design: the list's chances are recalled orders of magnitude and say so, events may repeat, and nothing here is a forecast of anything. Off unless a manifest or variant turns it on.",
+    "priority": 1,
+    "dt": "1 year (1 January)",
+    "params": [
+      {
+        "name": "file",
+        "default": "future-speculative.toml",
+        "note": "the list, under data/events; rows carry p_per_year and an effect table"
+      },
+      {
+        "name": "mode",
+        "default": "off",
+        "note": "off: nothing happens; draw: each year from `from`, every row with a chance is tried once against the module's seeded stream; named: the event named fires once in the year `at`, or the first year from `from` if `at` is empty"
+      },
+      {
+        "name": "event",
+        "default": "",
+        "note": "the row id for mode = named"
+      },
+      {
+        "name": "at",
+        "default": "",
+        "note": "the year (or date) the named event fires"
+      },
+      {
+        "name": "scale",
+        "default": 1.0,
+        "note": "multiplies every annual chance: 2 is a wilder world, 0.5 a calmer one"
+      },
+      {
+        "name": "from",
+        "default": "2025-01-01",
+        "note": "no draws before this date, so the hindcast is untouched"
+      },
+      {
+        "name": "max",
+        "default": 0.0,
+        "note": "at most this many events in a run; 0 means no limit, and the same event may come twice"
+      }
+    ],
+    "publishes": [],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [],
+    "fields_owned": [],
+    "fields_read": [],
+    "ledgers": [],
+    "frames": [],
+    "reports": [],
+    "views": [],
+    "assets": [],
+    "notes": [
+      "Effects: forcing_w_m2 for forcing_years goes to the energy balance as forcing.extra named shock (a cooling eruption is negative); emissions_scale for emissions_years multiplies the emissions rate (people.shock does the same to the count of people, once, by the row's mortality). Deaths are a single fraction of everyone, with no place and no age: the population module applies it to every country alike. The region field is carried in the event and not applied."
+    ],
+    "tables": {
+      "events": [
+        {
+          "confidence": "recalled",
+          "emissions_scale": 0.97,
+          "emissions_years": 1.0,
+          "forcing_w_m2": null,
+          "forcing_years": null,
+          "id": "carrington-storm",
+          "kind": "solar",
+          "mortality": null,
+          "p_per_year": 0.01,
+          "source": "Riley 2012 (about 12 percent per decade) is the commonly cited estimate",
+          "title": "A Carrington-class geomagnetic storm"
+        },
+        {
+          "confidence": "recalled",
+          "emissions_scale": null,
+          "emissions_years": null,
+          "forcing_w_m2": -4.0,
+          "forcing_years": 2.0,
+          "id": "vei7-eruption",
+          "kind": "geology",
+          "mortality": null,
+          "p_per_year": 0.0017,
+          "source": "Cassidy and Mani 2022 put the century chance near one in six",
+          "title": "A VEI 7 volcanic eruption (Tambora 1815 class)"
+        },
+        {
+          "confidence": "recalled",
+          "emissions_scale": null,
+          "emissions_years": null,
+          "forcing_w_m2": -2.5,
+          "forcing_years": 1.0,
+          "id": "vei6-eruption",
+          "kind": "geology",
+          "mortality": null,
+          "p_per_year": 0.02,
+          "source": "roughly one or two per century in the record",
+          "title": "A VEI 6 eruption (Pinatubo 1991 class)"
+        },
+        {
+          "confidence": "recalled",
+          "emissions_scale": null,
+          "emissions_years": null,
+          "forcing_w_m2": -10.0,
+          "forcing_years": 5.0,
+          "id": "supervolcano-vei8",
+          "kind": "geology",
+          "mortality": 0.05,
+          "p_per_year": 0.00001,
+          "source": "return period of order 100,000 years",
+          "title": "A VEI 8 super-eruption"
+        },
+        {
+          "confidence": "recalled",
+          "emissions_scale": null,
+          "emissions_years": null,
+          "forcing_w_m2": null,
+          "forcing_years": null,
+          "id": "tunguska-airburst",
+          "kind": "astronomy",
+          "mortality": null,
+          "p_per_year": 0.003,
+          "source": "return period of order a few hundred years for the class, most over ocean or empty land",
+          "title": "A Tunguska-class airburst over a populated region"
+        },
+        {
+          "confidence": "recalled",
+          "emissions_scale": null,
+          "emissions_years": null,
+          "forcing_w_m2": -8.0,
+          "forcing_years": 3.0,
+          "id": "asteroid-1km",
+          "kind": "astronomy",
+          "mortality": 0.1,
+          "p_per_year": 2e-6,
+          "source": "return period of order 500,000 years",
+          "title": "Impact of an asteroid about a kilometre across"
+        },
+        {
+          "confidence": "recalled",
+          "emissions_scale": null,
+          "emissions_years": null,
+          "forcing_w_m2": null,
+          "forcing_years": null,
+          "id": "gamma-ray-burst",
+          "kind": "astronomy",
+          "mortality": 0.0,
+          "p_per_year": 1e-7,
+          "source": "order-of-magnitude estimates in the astrophysics literature",
+          "title": "A nearby gamma-ray burst"
+        },
+        {
+          "confidence": "recalled",
+          "emissions_scale": 0.93,
+          "emissions_years": 1.0,
+          "forcing_w_m2": null,
+          "forcing_years": null,
+          "id": "pandemic-1918-class",
+          "kind": "disease",
+          "mortality": 0.02,
+          "p_per_year": 0.01,
+          "source": "Marani et al. 2021 put the annual chance of a COVID-scale event near two percent and a 1918-scale one lower",
+          "title": "A pandemic of the 1918 influenza's scale"
+        },
+        {
+          "confidence": "recalled",
+          "emissions_scale": null,
+          "emissions_years": null,
+          "forcing_w_m2": null,
+          "forcing_years": null,
+          "id": "cholera-resurgence",
+          "kind": "disease",
+          "mortality": 0.0003,
+          "p_per_year": 0.03,
+          "source": "WHO reporting on the 2022 to 2024 surge",
+          "title": "A cholera resurgence across several regions in a hot, flooded decade"
+        },
+        {
+          "confidence": "recalled",
+          "emissions_scale": 0.9,
+          "emissions_years": 3.0,
+          "forcing_w_m2": null,
+          "forcing_years": null,
+          "id": "great-power-war",
+          "kind": "war",
+          "mortality": 0.002,
+          "p_per_year": 0.01,
+          "source": "no agreed figure; the order of magnitude of the twentieth century's record",
+          "title": "A war between great powers, conventional"
+        },
+        {
+          "confidence": "recalled",
+          "emissions_scale": 0.8,
+          "emissions_years": 3.0,
+          "forcing_w_m2": -3.0,
+          "forcing_years": 4.0,
+          "id": "nuclear-exchange-limited",
+          "kind": "war",
+          "mortality": 0.005,
+          "p_per_year": 0.002,
+          "source": "Robock and Toon's regional-war studies for the cooling; the probability is a guess",
+          "title": "A limited nuclear exchange (of order 100 warheads)"
+        },
+        {
+          "confidence": "recalled",
+          "emissions_scale": 0.96,
+          "emissions_years": 2.0,
+          "forcing_w_m2": null,
+          "forcing_years": null,
+          "id": "global-financial-crisis",
+          "kind": "economy",
+          "mortality": null,
+          "p_per_year": 0.08,
+          "source": "roughly one per decade in the record",
+          "title": "A global financial crisis of 2008's scale"
+        },
+        {
+          "confidence": "recalled",
+          "emissions_scale": null,
+          "emissions_years": null,
+          "forcing_w_m2": null,
+          "forcing_years": null,
+          "id": "multi-breadbasket-failure",
+          "kind": "ecology",
+          "mortality": 0.001,
+          "p_per_year": 0.02,
+          "source": "Gaupp et al. 2020 on the rising joint probability under warming",
+          "title": "Simultaneous harvest failure in several of the world's breadbaskets"
+        },
+        {
+          "confidence": "recalled",
+          "emissions_scale": null,
+          "emissions_years": null,
+          "forcing_w_m2": null,
+          "forcing_years": null,
+          "id": "cascadia-m9",
+          "kind": "geology",
+          "mortality": null,
+          "p_per_year": 0.003,
+          "source": "USGS and OSSPAC estimates of 10 to 15 percent in fifty years",
+          "title": "A magnitude-9 earthquake and tsunami on the Cascadia subduction zone"
+        },
+        {
+          "confidence": "recalled",
+          "emissions_scale": null,
+          "emissions_years": null,
+          "forcing_w_m2": null,
+          "forcing_years": null,
+          "id": "korean-reunification",
+          "kind": "politics",
+          "mortality": null,
+          "p_per_year": 0.01,
+          "source": "no agreed figure",
+          "title": "Reunification of Korea"
+        },
+        {
+          "confidence": "recalled",
+          "emissions_scale": null,
+          "emissions_years": null,
+          "forcing_w_m2": null,
+          "forcing_years": null,
+          "id": "amoc-collapse",
+          "kind": "ecology",
+          "mortality": null,
+          "p_per_year": 0.005,
+          "source": "Armstrong McKay et al. 2022 for the threshold; the annual chance is a guess",
+          "title": "Collapse of the Atlantic overturning circulation"
+        },
+        {
+          "confidence": "recalled",
+          "emissions_scale": null,
+          "emissions_years": null,
+          "forcing_w_m2": null,
+          "forcing_years": null,
+          "id": "ai-shock",
+          "kind": "technology",
+          "mortality": null,
+          "p_per_year": 0.03,
+          "source": "no agreed figure",
+          "title": "A sudden economic reordering from automation"
+        },
+        {
+          "confidence": "recalled",
+          "emissions_scale": 0.8,
+          "emissions_years": 2.0,
+          "forcing_w_m2": null,
+          "forcing_years": null,
+          "id": "engineered-pandemic",
+          "kind": "disease",
+          "mortality": 0.1,
+          "p_per_year": null,
+          "source": "from Anselm's list (a Google AI answer, 2026-11-05); the mortality is the session's placeholder",
+          "title": "An engineered pathogen with high transmissibility, long silent incubation and high fatality escapes or is released"
+        },
+        {
+          "confidence": "recalled",
+          "emissions_scale": 0.97,
+          "emissions_years": 1.0,
+          "forcing_w_m2": null,
+          "forcing_years": null,
+          "id": "subsea-cable-severance",
+          "kind": "war",
+          "mortality": null,
+          "p_per_year": null,
+          "source": "from Anselm's list (a Google AI answer, 2026-11-05)",
+          "title": "Coordinated cutting of the subsea cables between North America, Europe and Asia"
+        },
+        {
+          "confidence": "recalled",
+          "emissions_scale": 0.9,
+          "emissions_years": 4.0,
+          "forcing_w_m2": null,
+          "forcing_years": null,
+          "id": "sovereign-debt-cascade",
+          "kind": "economy",
+          "mortality": null,
+          "p_per_year": null,
+          "source": "from Anselm's list (a Google AI answer, 2026-11-05)",
+          "title": "A loss of faith in a reserve currency and a cascade of sovereign defaults"
+        },
+        {
+          "confidence": "recalled",
+          "emissions_scale": null,
+          "emissions_years": null,
+          "forcing_w_m2": 2.0,
+          "forcing_years": 5.0,
+          "id": "geoengineering-termination-shock",
+          "kind": "technology",
+          "mortality": null,
+          "p_per_year": null,
+          "source": "from Anselm's list (a Google AI answer, 2026-11-05); the forcing is the session's placeholder for a programme masking about a degree",
+          "title": "A stratospheric aerosol programme started unilaterally and then halted, with the masked warming arriving in months"
+        },
+        {
+          "confidence": "recalled",
+          "emissions_scale": null,
+          "emissions_years": null,
+          "forcing_w_m2": null,
+          "forcing_years": null,
+          "id": "asteroid-surprise-city",
+          "kind": "astronomy",
+          "mortality": null,
+          "p_per_year": null,
+          "source": "from Anselm's list (a Google AI answer, 2026-11-05); the Tunguska row carries the rate for the class",
+          "title": "A dark asteroid from the sunward side, unseen until a day out, bursts over a city or raises a regional tsunami"
+        }
+      ]
     }
   }
 ]
