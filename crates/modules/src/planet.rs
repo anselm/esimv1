@@ -73,6 +73,8 @@ pub struct EmissionsIn {
     after_record: String,
     last_tick: Option<Time>,
     fossil_total: f64, luc_total: f64,
+    /// multipliers on the rate from other modules (wild cards), by name, until replaced
+    #[serde(default)] scales: BTreeMap<String, f64>,
     #[serde(skip)] data: Emissions,
 }
 
@@ -83,7 +85,7 @@ impl EmissionsIn {
             include_land_use: p.get("include_land_use").and_then(|v| v.as_bool()).unwrap_or(true),
             hold_last: p.get("hold_last").and_then(|v| v.as_bool()).unwrap_or(true),
             after_record: esim_kernel::manifest::param_str(p, "after_record", "hold").to_string(),
-            last_tick: None, fossil_total: 0.0, luc_total: 0.0, data: Emissions::default(),
+            last_tick: None, fossil_total: 0.0, luc_total: 0.0, scales: BTreeMap::new(), data: Emissions::default(),
         };
         e.load()?;
         Ok(e)
@@ -127,6 +129,7 @@ impl EmissionsIn {
             .param("hold_last", p.get("hold_last").and_then(|v| v.as_bool()).unwrap_or(true), "", "false stops emissions when the record ends, whatever after_record says")
             .param("after_record", esim_kernel::manifest::param_str(p, "after_record", "hold"), "", "assumption after the record's last year (2024): hold = the last rate for good; stop; zero_by:YYYY = a straight line to zero in that year; grow:P = compound growth of P percent a year; trend:N = the record's own mean growth over its last N years, continued. An assumption, never a forecast; the manifest notes must say which was chosen and why")
             .publish("carbon.emitted", "{ gtc, fossil_gtc, luc_gtc } for the month just added")
+            .subscribe("emissions.scale", "{ name, factor } a multiplier on the rate from other modules (wild cards), kept by name until replaced; the product of all applies")
             .ledger(CARBON, "GtC", 1e-6)
             .report("carbon.emissions_gtc_yr", "GtC/yr").report("carbon.cumulative_gtc", "GtC")
             .view("chart", "emissions", "carbon.emissions_gtc_yr", "the record to 2024, then the assumption")
@@ -139,16 +142,22 @@ impl Module for EmissionsIn {
     fn name(&self) -> &str { &self.name }
     fn init(&mut self, ctx: &mut Ctx) {
         ctx.ledger(CARBON, "GtC", 1e-6);
+        ctx.subscribe("emissions.scale");
         self.last_tick = Some(ctx.now());
         ctx.schedule_with_priority(to_next_month(ctx.now()), 0, "tick", json!(null));
     }
     fn handle(&mut self, ev: &Event, ctx: &mut Ctx) {
+        if ev.topic == "emissions.scale" {
+            if let (Some(n), Some(f)) = (ev.data["name"].as_str(), ev.data["factor"].as_f64()) { self.scales.insert(n.to_string(), f); }
+            return;
+        }
         if ev.topic != "tick" { return; }
         let prev = self.last_tick.unwrap_or(ctx.now());
         let (y, _) = year_month(prev); // the month just completed belongs to its own year
         let dt_yr = years_between(prev, ctx.now());
-        let fossil = self.rate(&self.data.fossil_gtc, y) * dt_yr;
-        let luc = if self.include_land_use { self.rate(&self.data.land_use_gtc, y) * dt_yr } else { 0.0 };
+        let factor: f64 = self.scales.values().product();
+        let fossil = self.rate(&self.data.fossil_gtc, y) * dt_yr * factor;
+        let luc = if self.include_land_use { self.rate(&self.data.land_use_gtc, y) * dt_yr * factor } else { 0.0 };
         ctx.transfer(CARBON, "fossil_reserve", "atmosphere", fossil);
         ctx.transfer(CARBON, "land_use", "atmosphere", luc);
         self.fossil_total += fossil; self.luc_total += luc;

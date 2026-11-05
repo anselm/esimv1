@@ -104,6 +104,11 @@ holds the history.
 - The wind is flat. Neither fire module adjusts it for terrain (no channelling down canyons,
   no lee), and neither feeds the fire back into it (no convective column, no indraft, no
   plume-driven spread); both are one-way models that read a wind and never write one.
+- Wild cards (`events.shock`, 2026-11-05) are placeholders: the deck's annual chances are recalled
+  orders of magnitude, its effects are three blunt levers (a global forcing pulse, a global emissions
+  factor, a global death fraction with no place or age), a card may repeat, and no card changes the
+  emissions path for good, so with emissions held the deck moves the century by tenths of a degree and
+  a few hundred million people. It is not a risk model; it is a way to see a run end somewhere else.
 - Vegetation is a cover class, not a fuel: WorldCover's shrubland is one thing whether it is
   coastal sage or forty-year chamise; no fuel load, no time since last burn, no canopy
   height, no seasonal live moisture, no crown fire.

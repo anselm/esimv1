@@ -141,6 +141,14 @@ in doubt, split at the point where two different people would hold different opi
   overrun), so a README table reads either. The seen area is a floor on the burned area: cloud, smoke
   and the gaps between passes. First used for Fort McMurray 2016. `fire.cells` can take its buildings
   from OpenStreetMap (`buildings = "osm"`) where no county footprint service exists.
+- `events.shock` (`crates/modules/src/shock.rs`, 2026-11-05): wild cards. A deck of speculative events
+  (`data/events/future-speculative.toml`: eruptions, pandemics, wars, storms, crashes, each with a rough
+  annual chance and an effect) drawn by the run's seed each year from a stated date, or one named card in
+  a named year. An event drawn is a `shock.crossing` with a sentence for the story, and its effect goes
+  out on ports the planet modules already read or gained for it: `forcing.extra` (a pulse on the energy
+  balance), `emissions.scale` (a multiplier on the emissions rate, kept by name), `people.shock` (a
+  fraction of every country's people, counted in `people.shock_deaths`). Off unless a manifest or
+  variant turns it on; a placeholder by design, and the deck says so on every row.
 - `fire.suppression` (`crates/modules/src/suppression.rs`, 2026-11-04): interventions as a module
   of their own, so the same fire engine runs another fire with another record or none. In `mode =
   "hold"` each completed line in the record (`record.event` of kind line, category Completed …,

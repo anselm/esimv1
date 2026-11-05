@@ -57,3 +57,47 @@ title = "Emissions fall 3% a year from 2025"
 # 2026-11-02 so that claim can be checked against this model. Their start year was 2020.
 [variant.set]
 "emissions.after_record" = "grow:-3"
+
+[[variant]]
+name = "wild-1"
+title = "Emissions held, with wild cards drawn (seed 1)"
+# the speculative-event list drawn each year by the run's seed; the list's chances are
+# recalled orders of magnitude and the effects are placeholders (2026-11-05)
+[variant.set]
+"emissions.after_record" = "hold"
+"wildcards.mode" = "draw"
+"run.seed" = 1
+
+[[variant]]
+name = "wild-2"
+title = "Emissions held, with wild cards drawn (seed 2)"
+[variant.set]
+"emissions.after_record" = "hold"
+"wildcards.mode" = "draw"
+"run.seed" = 2
+
+[[variant]]
+name = "wild-3"
+title = "Emissions held, with wild cards drawn (seed 3)"
+[variant.set]
+"emissions.after_record" = "hold"
+"wildcards.mode" = "draw"
+"run.seed" = 3
+
+[[variant]]
+name = "eruption-2040"
+title = "Emissions held; a Tambora-class eruption in 2040"
+[variant.set]
+"emissions.after_record" = "hold"
+"wildcards.mode" = "named"
+"wildcards.event" = "vei7-eruption"
+"wildcards.at" = "2040"
+
+[[variant]]
+name = "wild-4x"
+title = "Emissions held, wild cards drawn four times as often (seed 1)"
+[variant.set]
+"emissions.after_record" = "hold"
+"wildcards.mode" = "draw"
+"wildcards.scale" = 4
+"run.seed" = 1

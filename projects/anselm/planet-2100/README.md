@@ -152,6 +152,36 @@ reads humid extremes two to four degrees mild against the stations, and India's 
 is scaled from its own record, which has run cool. The China step is probably real and
 probably not the first; see the limits.
 
+## Wild cards
+
+Nothing above happens by surprise. Emissions follow their assumption, the sinks their
+equations, the thresholds their table, and the population the UN's path. The world will not
+be like that: a pandemic came in 2020, a financial crisis in 2008, an eruption that cooled
+the planet for two years in 1991, and something of each kind is likely before 2100. So the
+project carries a deck of wild cards, drawn by the run's seed. The deck is
+`data/events/future-speculative.toml`: twenty-two things that could happen, each with the
+rough annual chance commonly quoted for it and an effect in the model's terms, a pulse on the
+energy balance for some years, a scaling of emissions for some years, a fraction of everyone.
+Every chance and every effect in it was written from memory and is marked so; the cards are
+placeholders, not forecasts, and a card may come up twice. The runs below draw the deck each
+year from 2025 with three different seeds, draw it four times as often, or play one named
+card, a Tambora-class eruption in 2040, on top of emissions held at the 2024 rate.
+
+```esim
+table 2100 people.world_total=people energy.gmst_anom_c=warming shock.count=wild_cards people.shock_deaths=taken_by_wild_cards
+```
+
+What the deck does to this model is small in the total and visible in the story. A seed
+draws about a dozen to twenty cards in seventy-five years, most of them the frequent cheap
+ones (a financial crisis every decade or so, a cholera decade, an eruption of 1991's size),
+and the century ends a hundredth of a degree cooler and a couple of hundred million people
+short of the UN's path. Four times the draw takes half a billion and a tenth of a degree. The eruption shows as a
+two-year dip on the warming chart and nothing at 2100. That smallness is the finding: with
+emissions held, the slow things decide the century and the shocks are weather on top of it,
+unless a shock is of the kind that changes the emissions path for good, which no card in this
+deck yet does. The run page lists every card drawn, with the chance it was drawn at and what
+the run did with it, in the story beside the thresholds crossed.
+
 ## What the model does with a crossing
 
 The ladder is a measuring stick held against the runs. For thirteen of the sixteen

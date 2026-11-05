@@ -137,7 +137,13 @@ pub struct PeopleCountries {
     #[serde(skip)] unassigned: usize,      // populated cells no country claimed
     #[serde(skip)] pop: BTreeMap<String, BTreeMap<i64, f64>>,
     last_frame_year: i64,
+    /// wild cards: the product of (1 - fraction) over every people.shock so far, applied to
+    /// every country alike, and the people it has taken
+    #[serde(default = "one")] shock_factor: f64,
+    #[serde(default)] shock_deaths: f64,
 }
+
+fn one() -> f64 { 1.0 }
 
 impl PeopleCountries {
     pub fn new(name: &str, p: &toml::Value) -> Result<PeopleCountries, String> {
@@ -147,6 +153,7 @@ impl PeopleCountries {
             hold_before_record: p.get("hold_before_record").and_then(|v| v.as_bool()).unwrap_or(true),
             scale: param_str(p, "scale", "110m"), distribution: param_str(p, "distribution", "even"),
             countries: Vec::new(), index: Vec::new(), land_km2: Vec::new(), weights: Vec::new(), wsum: Vec::new(), unassigned: 0, pop: BTreeMap::new(), last_frame_year: -1_000_000,
+            shock_factor: 1.0, shock_deaths: 0.0,
         };
         m.load()?;
         Ok(m)
@@ -218,7 +225,8 @@ impl PeopleCountries {
             .param("distribution", param_str(p, "distribution", "even"), "", "even: a country's people spread evenly over its land cells; worldpop: in proportion to WorldPop's 1 km count")
             .own("country.index", "index").own("people.count", "persons").own("people.density_km2", "1/km2")
             .publish("people.population", "{ year, iso3: persons } each January")
-            .report("people.world_total", "persons").report("people.countries_matched", "")
+            .subscribe("people.shock", "{ id, title, year, fraction } from the wild cards: that fraction of every country's people is removed from this year on, and counted in people.shock_deaths")
+            .report("people.world_total", "persons").report("people.countries_matched", "").report("people.shock_deaths", "persons")
             .view("counter", "people on Earth", "people.world_total", "the UN's estimates to 2023 and its medium projection after")
             .view("map", "people per square kilometre", "people_density_km2", if worldpop { "WorldPop's 2020 pattern, each country scaled to the UN count for the year" } else { "a country's people spread evenly over its land" })
             .asset(scale_asset(&scale), "outlines, ISO3 codes").asset("un-wpp-2024-total-population", "people per country per year");
@@ -239,10 +247,20 @@ impl Module for PeopleCountries {
         let (cg, ci) = coarsen(&g, &self.index, frame_factor(self.res_deg, self.frame_res_deg), Fold::Max);
         ctx.field("country_index", "index", &cg, ci);
         if self.distribution == "worldpop" { ctx.report("people.cells_unassigned", "", self.unassigned as f64); }
+        ctx.subscribe("people.shock");
         self.emit(ctx);
         ctx.schedule_with_priority(to_next_year(ctx.now()), 0, "tick", json!(null));
     }
     fn handle(&mut self, ev: &Event, ctx: &mut Ctx) {
+        if ev.topic == "people.shock" {
+            let f = ev.data["fraction"].as_f64().unwrap_or(0.0).clamp(0.0, 1.0);
+            let y = year_of(ctx.now());
+            let alive: f64 = self.countries.iter().filter_map(|c| self.population(&c.iso3, y)).sum::<f64>() * self.shock_factor;
+            self.shock_deaths += alive * f;
+            self.shock_factor *= 1.0 - f;
+            ctx.report("people.shock_deaths", "persons", self.shock_deaths);
+            return;
+        }
         if ev.topic != "tick" { return; }
         self.emit(ctx);
         ctx.schedule_with_priority(to_next_year(ctx.now()), 0, "tick", json!(null));
@@ -259,7 +277,7 @@ impl PeopleCountries {
         let mut per_country = vec![0.0f64; self.countries.len()];
         let (mut total, mut matched) = (0.0, 0usize);
         for (k, c) in self.countries.iter().enumerate() {
-            if let Some(p) = self.population(&c.iso3, y) { per_country[k] = p; total += p; matched += 1; table.insert(c.iso3.clone(), json!(p)); }
+            if let Some(p) = self.population(&c.iso3, y) { let p = p * self.shock_factor; per_country[k] = p; total += p; matched += 1; table.insert(c.iso3.clone(), json!(p)); }
         }
         let worldpop = self.distribution == "worldpop";
         let mut count = vec![f32::NAN; g.nx * g.ny];
@@ -1293,7 +1311,7 @@ impl Story {
     pub fn describe(name: &str, _p: &toml::Value) -> Describe {
         Describe::new("story.bottomline", name, "The bottom line of a planetary run, told as it happens: the headline numbers at the cursor and one plain sentence for every threshold crossed, each sentence written by the module that knows its source. It computes nothing new and it says, in the same place, what this run does not yet measure.")
             .priority(9).dt("follows the crossing events")
-            .subscribe("people.crossing", "sentences").subscribe("tipping.crossing", "sentences").subscribe("carbon.crossing", "sentences").subscribe("people.population", "the count")
+            .subscribe("people.crossing", "sentences").subscribe("tipping.crossing", "sentences").subscribe("carbon.crossing", "sentences").subscribe("shock.crossing", "sentences: the wild cards").subscribe("people.population", "the count")
             .report("story.headlines", "")
             .view("map", "people living outside the human climate niche", "people_outside_niche", "annual mean above 29 °C")
             .view("map", "days a year over 31 °C wet-bulb", "wetbulb_days_over_31", "")
@@ -1312,10 +1330,10 @@ impl Story {
 
 impl Module for Story {
     fn name(&self) -> &str { &self.name }
-    fn init(&mut self, ctx: &mut Ctx) { ctx.subscribe("people.crossing"); ctx.subscribe("tipping.crossing"); ctx.subscribe("carbon.crossing"); ctx.subscribe("people.population"); }
+    fn init(&mut self, ctx: &mut Ctx) { ctx.subscribe("people.crossing"); ctx.subscribe("tipping.crossing"); ctx.subscribe("carbon.crossing"); ctx.subscribe("shock.crossing"); ctx.subscribe("people.population"); }
     fn handle(&mut self, ev: &Event, ctx: &mut Ctx) {
         match ev.topic.as_str() {
-            "people.crossing" | "tipping.crossing" | "carbon.crossing" => { self.headlines += 1; ctx.report("story.headlines", "", self.headlines as f64); }
+            "people.crossing" | "tipping.crossing" | "carbon.crossing" | "shock.crossing" => { self.headlines += 1; ctx.report("story.headlines", "", self.headlines as f64); }
             _ => {}
         }
     }

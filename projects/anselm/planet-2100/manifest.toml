@@ -129,6 +129,13 @@ name = "tipped"
 [module.params]
 trigger = "central"
 
+[[module]]
+kind = "events.shock"
+name = "wildcards"
+
+[module.params]
+mode = "off"
+
 [run]
 close_every = "30d"
 end = "2100-01-01"

@@ -84,7 +84,7 @@ row are read.
 Anselm pointed at Wikipedia's *2030s*, *21st century* and *Timelines of the future* pages and
 a Google answer with its own black-swan list. The known list was rebuilt from the pages
 (plus *List of future astronomical events* and *3rd millennium*, which the timelines page
-links): 89 rows, 82 read on Wikipedia and 7 still recalled (the 2026 and 2045 eclipses, the
+links): 88 rows, 82 read on Wikipedia and 6 still recalled (the 2026 and 2045 eclipses, the
 US election and census, the two Paris stocktakes). The `confidence` vocabulary now has
 "wikipedia" for a row read there, which is a tertiary source and not the organiser's page;
 "checked" is kept for a row confirmed against the primary. The speculative list gained five
@@ -92,3 +92,37 @@ rows from the Google answer (an engineered pandemic, subsea cable severance, a s
 debt cascade, geoengineering termination shock, an unseen asteroid), with no probability,
 since the answer gave none and the session will not invent one; Carrington-plus and the AI
 runaway were already covered. 22 rows.
+
+## Later: the wild cards built
+
+Anselm: "i don't care if the module is accurate - i just want a placeholder, it is ok to have a
+black swan event happen more than once. the fact is _some_ black swan event will happen - we just
+had a pandemic for example - and that is actually likely. we will probably see a big change due
+to ai as well. these almost leave the realm of black swan. the module or modules should be able
+to be added to a scenario - in particular i want to plug it into the 2100 scenario, and have runs
+that maybe end with unexpected outcomes. think of this like a video game with wild card factors
+optionally."
+
+Built the same morning as `events.shock`. Each January from `from` it tries every card in the
+deck once against the module's seeded stream (so `run.seed` changes the draw and a card can
+come twice), or plays one named card in a named year. A card fires as a `shock.crossing` with a
+sentence (the auditor collects `.crossing` topics into the story, so nothing in the viewer
+changed except the compare page's label) and as up to three effects: `forcing.extra` named
+shock, which the energy balance already summed by name; `emissions.scale`, a new port on
+`carbon.emissions` that multiplies the rate by the product of named factors; `people.shock`, a
+new port on `people.countries` that removes a fraction of every country's people from that
+year on and counts them. Off by default; the 2100 manifest carries it off and five variants
+turn it on. Describe test and regress both clean (the hindcast is untouched because nothing is
+drawn before 2025).
+
+What the runs say, emissions held, at 2100: the baseline 10.18 billion people and +3.36 °C;
+seed 1 draws 17 cards (four financial crises, three cholera decades, three automation
+reorderings that apply nothing, an AMOC card, a Pinatubo, a great-power war, a 1918 pandemic
+in 2090) and ends at 9.93 billion, 241 million taken, +3.35 °C; seed 2, 13 cards, 9.97 billion;
+seed 3, 17 cards, 9.96 billion; the deck drawn four times as often, 63 cards, 9.61 billion, 562
+million taken, +3.24 °C; the named Tambora in 2040 dips the warming for two years and leaves
+2100 unchanged. The finding is the smallness: with the emissions path held, the slow things
+decide the century and the shocks are weather on top, because no card in the deck changes the
+path for good. A card that did (a war that halves emissions for a generation, a technology
+that zeroes them, a collapse that does both) would be the first to add, and the levers for it
+exist. The README has the section and the table.

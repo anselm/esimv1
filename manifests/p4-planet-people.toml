@@ -96,3 +96,13 @@ name = "tipped"
 kind = "carbon.tipped"
 [module.params]
 trigger = "central"
+
+# wild cards: speculative events from data/events/future-speculative.toml, drawn by the run's
+# seed and applied as forcing pulses, emissions scalings and deaths. Off here; the project's
+# wild variants turn the draw on, and one names an eruption (Anselm, 2026-11-05: a placeholder,
+# like a video game's wild-card factors, so some runs end in unexpected places).
+[[module]]
+name = "wildcards"
+kind = "events.shock"
+[module.params]
+mode = "off"

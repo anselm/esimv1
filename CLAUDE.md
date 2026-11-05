@@ -202,6 +202,15 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   the ignitions, the fuel's age and the stakes; a time-since-last-fire layer is the ask) and *The actors*, a
   README figure (` ```esim actors `, `web/src/lib/Actors.svelte`): `name: caption` and `a -> b: words`
   lines, words ending in a parenthesis beginning "not" drawn dashed as what the world has and the model lacks.
+- Wild cards (2026-11-05, Anselm: "i just want a placeholder ... like a video game with wild card factors
+  optionally"): `events.shock` (`crates/modules/src/shock.rs`) draws `data/events/future-speculative.toml` by the
+  run's seed each year from `from` (default 2025), or plays one named card (`mode = "named"`, `event`, `at`);
+  `scale` multiplies the chances; cards may repeat. Effects go out as `forcing.extra` (name shock), `emissions.scale`
+  (new port on `carbon.emissions`, product of factors by name) and `people.shock` (new port on `people.countries`:
+  a fraction of every country, cumulative, reported as `people.shock_deaths`); each card is a `shock.crossing`
+  with a sentence, so the story and the compare page show it. `manifests/p4-planet-people.toml` carries it with
+  `mode = "off"`; project variants wild-1/2/3 (seeds), wild-4x (`scale = 4`), eruption-2040 (named VEI 7).
+  With emissions held the deck moves 2100 by tenths of a degree and 200 to 560 million people; regress unchanged.
 - The log ramp and the future-event lists (2026-11-05 morning, Anselm): `FieldMap` has a `log` colour stretch, the
   default when a field's positive values span three decades (people per cell, days a year), because the linear ramp
   to the run's maximum left the 2100 maps blank while the cover, drawn by hand on a log scale, showed the Sahel and

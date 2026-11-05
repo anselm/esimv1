@@ -155,8 +155,8 @@
           <ul class="mono max-h-64 overflow-auto text-xs">
             {#each xs.slice().reverse() as c, i (i)}
               <li class="flex justify-between gap-2 py-0.5 border-t border-neutral-100 dark:border-neutral-900">
-                <span class="truncate">{isoDate(c.t).slice(0, 4)} {c.topic === 'tipping.crossing' || c.topic === 'carbon.crossing' ? c.data.title : `${c.data.name}${c.data.capital ? ` (${c.data.capital})` : ''}`}</span>
-                <span class="whitespace-nowrap {c.topic === 'tipping.crossing' ? (c.data.level === 'central' ? 'text-leak' : 'muted') : c.topic === 'carbon.crossing' || c.data.kind === 'niche' || c.data.kind?.startsWith('wetbulb') ? 'text-leak' : 'muted'}">{c.topic === 'tipping.crossing' ? `${c.data.level} ${c.data.threshold_c}°` : c.topic === 'carbon.crossing' ? `releases ${Math.round(c.data.gtc_target)} GtC` : c.data.kind === 'niche' ? 'left the niche' : c.data.kind === 'wetbulb_a' ? '31° wet-bulb' : c.data.kind === 'wetbulb_b' ? '35° wet-bulb' : 'hottest month'}</span>
+                <span class="truncate">{isoDate(c.t).slice(0, 4)} {c.topic === 'tipping.crossing' || c.topic === 'carbon.crossing' || c.topic === 'shock.crossing' ? c.data.title : `${c.data.name}${c.data.capital ? ` (${c.data.capital})` : ''}`}</span>
+                <span class="whitespace-nowrap {c.topic === 'tipping.crossing' ? (c.data.level === 'central' ? 'text-leak' : 'muted') : c.topic === 'carbon.crossing' || c.data.kind === 'niche' || c.data.kind?.startsWith('wetbulb') ? 'text-leak' : 'muted'}">{c.topic === 'tipping.crossing' ? `${c.data.level} ${c.data.threshold_c}°` : c.topic === 'shock.crossing' ? 'wild card' : c.topic === 'carbon.crossing' ? `releases ${Math.round(c.data.gtc_target)} GtC` : c.data.kind === 'niche' ? 'left the niche' : c.data.kind === 'wetbulb_a' ? '31° wet-bulb' : c.data.kind === 'wetbulb_b' ? '35° wet-bulb' : 'hottest month'}</span>
               </li>
             {/each}
           </ul>

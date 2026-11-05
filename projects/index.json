@@ -755,11 +755,30 @@
       "people.heat",
       "people.wetbulb",
       "tipping.elements",
-      "carbon.tipped"
+      "carbon.tipped",
+      "events.shock"
     ],
     "name": "planet-2100",
     "path": "anselm/planet-2100",
     "runs": [
+      {
+        "all_ledgers_closed": true,
+        "digest": "0fdd9c74dba66f71",
+        "end": 4102444800,
+        "events": 28519,
+        "id": "p4-planet-people-181de279-0fdd9c74",
+        "name": "p4-planet-people",
+        "seed": 1,
+        "set": {
+          "emissions.after_record": "\"hold\"",
+          "run.seed": "1",
+          "wildcards.mode": "\"draw\"",
+          "wildcards.scale": "4"
+        },
+        "start": -3786825600,
+        "variant": "wild-4x",
+        "verdict": "holds"
+      },
       {
         "all_ledgers_closed": true,
         "digest": "31d0141b0be24bf3",
@@ -777,6 +796,23 @@
       },
       {
         "all_ledgers_closed": true,
+        "digest": "fdde53291f9f798e",
+        "end": 4102444800,
+        "events": 28452,
+        "id": "p4-planet-people-73a28169-fdde5329",
+        "name": "p4-planet-people",
+        "seed": 2,
+        "set": {
+          "emissions.after_record": "\"hold\"",
+          "run.seed": "2",
+          "wildcards.mode": "\"draw\""
+        },
+        "start": -3786825600,
+        "variant": "wild-2",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
         "digest": "68ceabef17fc8b27",
         "end": 4102444800,
         "events": 27678,
@@ -788,6 +824,58 @@
         },
         "start": -3786825600,
         "variant": "falling",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "7c04ea6db8f30016",
+        "end": 4102444800,
+        "events": 28459,
+        "id": "p4-planet-people-914212cd-7c04ea6d",
+        "name": "p4-planet-people",
+        "seed": 3,
+        "set": {
+          "emissions.after_record": "\"hold\"",
+          "run.seed": "3",
+          "wildcards.mode": "\"draw\""
+        },
+        "start": -3786825600,
+        "variant": "wild-3",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "2d23e9c5127179bf",
+        "end": 4102444800,
+        "events": 28439,
+        "id": "p4-planet-people-af3f7e06-2d23e9c5",
+        "name": "p4-planet-people",
+        "seed": 1,
+        "set": {
+          "emissions.after_record": "\"hold\"",
+          "wildcards.at": "\"2040\"",
+          "wildcards.event": "\"vei7-eruption\"",
+          "wildcards.mode": "\"named\""
+        },
+        "start": -3786825600,
+        "variant": "eruption-2040",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "9997ba4813526edd",
+        "end": 4102444800,
+        "events": 28461,
+        "id": "p4-planet-people-ba79b612-9997ba48",
+        "name": "p4-planet-people",
+        "seed": 1,
+        "set": {
+          "emissions.after_record": "\"hold\"",
+          "run.seed": "1",
+          "wildcards.mode": "\"draw\""
+        },
+        "start": -3786825600,
+        "variant": "wild-1",
         "verdict": "holds"
       },
       {
@@ -918,6 +1006,53 @@
           "emissions.after_record": "grow:-3"
         },
         "title": "Emissions fall 3% a year from 2025"
+      },
+      {
+        "name": "wild-1",
+        "set": {
+          "emissions.after_record": "hold",
+          "run.seed": 1,
+          "wildcards.mode": "draw"
+        },
+        "title": "Emissions held, with wild cards drawn (seed 1)"
+      },
+      {
+        "name": "wild-2",
+        "set": {
+          "emissions.after_record": "hold",
+          "run.seed": 2,
+          "wildcards.mode": "draw"
+        },
+        "title": "Emissions held, with wild cards drawn (seed 2)"
+      },
+      {
+        "name": "wild-3",
+        "set": {
+          "emissions.after_record": "hold",
+          "run.seed": 3,
+          "wildcards.mode": "draw"
+        },
+        "title": "Emissions held, with wild cards drawn (seed 3)"
+      },
+      {
+        "name": "eruption-2040",
+        "set": {
+          "emissions.after_record": "hold",
+          "wildcards.at": "2040",
+          "wildcards.event": "vei7-eruption",
+          "wildcards.mode": "named"
+        },
+        "title": "Emissions held; a Tambora-class eruption in 2040"
+      },
+      {
+        "name": "wild-4x",
+        "set": {
+          "emissions.after_record": "hold",
+          "run.seed": 1,
+          "wildcards.mode": "draw",
+          "wildcards.scale": 4
+        },
+        "title": "Emissions held, wild cards drawn four times as often (seed 1)"
       }
     ]
   },
