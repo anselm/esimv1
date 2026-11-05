@@ -23,8 +23,15 @@
   const grid = $derived(field.grid)
   const times = $derived(field.times ?? [])
   let frame = $state(null)      // Float32Array of the current frame
-  // colour stretch: 'run' uses run.json's run-wide min/max, 'frame' the loaded frame's own
-  let stretch = $state('run')
+  // colour stretch: 'run' uses run.json's run-wide min/max, 'frame' the loaded frame's own,
+  // 'log' a logarithmic ramp over the run's range, which is the default when the field's
+  // positive values span three decades or more (people per cell, days a year), since on a
+  // linear ramp from zero to the run's maximum nearly every cell is invisible
+  const logByDefault = field.min >= 0 && field.max > 0 && field.max / Math.max(field.min, field.max / 1e5, 1e-9) >= 1000
+  let stretch = $state(logByDefault ? 'log' : 'run')
+  // the log ramp's floor: four decades under the maximum, and never under one unit for a
+  // field that counts things (people, days), so zero and the tiniest values stay blank
+  const logFloor = $derived(field.max > 0 ? Math.max(field.max / 1e4, field.max >= 10 ? 1 : 0) : 1)
   const frameRange = $derived.by(() => {
     if (!frame) return null
     let lo = Infinity, hi = -Infinity
@@ -36,7 +43,7 @@
     }
     return lo <= hi ? [lo, hi] : null
   })
-  const lo = $derived(stretch === 'frame' && frameRange ? frameRange[0] : field.min)
+  const lo = $derived(stretch === 'frame' && frameRange ? frameRange[0] : stretch === 'log' ? logFloor : field.min)
   const hi = $derived(stretch === 'frame' && frameRange ? frameRange[1] : field.max)
 
   // Aspect in degrees, corrected by cos(latitude at the grid's centre) so a
@@ -124,13 +131,18 @@
     const img = off.getContext('2d').createImageData(nx, ny)
     const px = img.data
     const span = hi - lo || 1
+    const logSpan = Math.log(hi / lo) || 1
     for (let k = 0; k < nx * ny; k++) {
       const v = frame[k]
       const o = k * 4
       if (Number.isNaN(v)) { px[o + 3] = 0; continue }
       let c
       if (ramp === 'cover') { c = coverRgb[Math.round(v)]; if (!c) { px[o + 3] = 0; continue } }
-      else { const t = Math.min(255, Math.max(0, Math.round(((v - lo) / span) * 255))); c = ramp === 'fire' ? FIRE_LUT[t] : LUT[t] }
+      else {
+        const u = stretch === 'log' ? (v <= lo ? 0 : Math.log(v / lo) / logSpan) : (v - lo) / span
+        const t = Math.min(255, Math.max(0, Math.round(u * 255)))
+        c = ramp === 'fire' ? FIRE_LUT[t] : LUT[t]
+      }
       px[o] = c[0]; px[o + 1] = c[1]; px[o + 2] = c[2]; px[o + 3] = 255
     }
     off.getContext('2d').putImageData(img, 0, 0)
@@ -241,12 +253,12 @@
   </div>
   {:else}
   <div class="mono mt-1.5 flex items-center gap-2 text-[10px] muted">
-    <span>{num(+lo.toPrecision(5))}</span>
+    <span>{stretch === 'log' ? '≤ ' : ''}{num(+lo.toPrecision(5))}</span>
     <span class="h-2 flex-1 rounded-[2px]" style="background:{ramp === 'fire' ? FIRE_CSS : RAMP_CSS}" aria-hidden="true"></span>
     <span>{num(+hi.toPrecision(5))}</span>
     <span>{field.unit}</span>
-    <span class="ml-1 inline-flex select-none" role="radiogroup" aria-label="colour stretch" title="colour scale: run-wide or this frame's min/max">
-      {#each ['run', 'frame'] as m (m)}
+    <span class="ml-1 inline-flex select-none" role="radiogroup" aria-label="colour stretch" title="colour scale: run-wide, this frame's min/max, or logarithmic over the run's range">
+      {#each ['run', 'frame', 'log'] as m (m)}
         <button
           type="button" role="radio" aria-checked={stretch === m}
           class="px-1 leading-4 rounded-[2px] {stretch === m ? 'text-brand ring-1 ring-brand/40' : 'hover:text-neutral-900 dark:hover:text-neutral-100'}"

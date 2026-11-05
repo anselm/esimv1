@@ -1,0 +1,280 @@
+# Known future events: things on the calendar with a date, for a run to mark on its time
+# axis and for other tools to reuse. One table per event. The list is a data source, not a
+# forecast: an event is here because a body has scheduled or computed it, and the row says
+# who. Meant to be portable (digitaltwins.wiki may carry a copy as a timeline of known
+# future events), so the schema is small and flat.
+#
+# Schema: id (slug), date (ISO; "YYYY" or "YYYY-MM" where the day is not fixed), title,
+# kind (sport | astronomy | politics | space | treaty | technology | anniversary),
+# where (free text), effect (what a run could do with it; usually "mark"), source (who
+# fixed the date), confidence ("checked" against the source on a stated day, or "recalled"
+# from memory and not yet checked), checked (the day and against what, or empty).
+#
+# PROVENANCE: every row below was written from memory on 2026-11-05 by the esim session
+# (Claude Fable 5.1) at Anselm's ask and NONE has been checked against its source. Dates
+# that slip (launches) are marked as planned. Check a row before relying on it, and set
+# confidence = "checked" with the day.
+
+[[event]]
+id = "fifa-world-cup-2026"
+date = "2026-06-11"
+title = "FIFA World Cup opens (United States, Canada, Mexico; final 2026-07-19)"
+kind = "sport"
+where = "North America"
+effect = "mark"
+source = "FIFA"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "solar-eclipse-2026-08-12"
+date = "2026-08-12"
+title = "Total solar eclipse over Iceland and Spain"
+kind = "astronomy"
+where = "Iceland, Spain"
+effect = "mark"
+source = "NASA eclipse catalogue"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "solar-eclipse-2027-08-02"
+date = "2027-08-02"
+title = "Total solar eclipse over North Africa and Arabia, the century's longest over land"
+kind = "astronomy"
+where = "Egypt, Saudi Arabia"
+effect = "mark"
+source = "NASA eclipse catalogue"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "olympics-2028-los-angeles"
+date = "2028-07-14"
+title = "Summer Olympics, Los Angeles (to 2028-07-30)"
+kind = "sport"
+where = "Los Angeles"
+effect = "mark"
+source = "IOC"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "us-election-2028"
+date = "2028-11-07"
+title = "United States presidential election"
+kind = "politics"
+where = "United States"
+effect = "mark"
+source = "US law (first Tuesday after the first Monday in November)"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "paris-stocktake-2028"
+date = "2028"
+title = "Second global stocktake under the Paris Agreement"
+kind = "treaty"
+where = "UNFCCC"
+effect = "mark"
+source = "Paris Agreement, Article 14 (every five years from 2023)"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "apophis-2029"
+date = "2029-04-13"
+title = "Asteroid 99942 Apophis passes within about 32,000 km of Earth"
+kind = "astronomy"
+where = "Earth"
+effect = "mark"
+source = "NASA JPL"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "sdg-target-2030"
+date = "2030"
+title = "Target year of the UN Sustainable Development Goals"
+kind = "treaty"
+where = "UN"
+effect = "mark"
+source = "UN General Assembly resolution 70/1 (2015)"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "olympics-2030-french-alps"
+date = "2030-02"
+title = "Winter Olympics, French Alps"
+kind = "sport"
+where = "France"
+effect = "mark"
+source = "IOC"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "us-census-2030"
+date = "2030-04-01"
+title = "United States census day"
+kind = "politics"
+where = "United States"
+effect = "mark"
+source = "US Constitution, decennial"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "expo-2030-riyadh"
+date = "2030-10"
+title = "World Expo, Riyadh"
+kind = "politics"
+where = "Saudi Arabia"
+effect = "mark"
+source = "Bureau International des Expositions"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "iss-deorbit"
+date = "2030"
+title = "International Space Station planned end of operations and deorbit (about 2030 to 2031)"
+kind = "space"
+where = "low Earth orbit"
+effect = "mark"
+source = "NASA (planned; dates slip)"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "olympics-2032-brisbane"
+date = "2032-07"
+title = "Summer Olympics, Brisbane"
+kind = "sport"
+where = "Australia"
+effect = "mark"
+source = "IOC"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "paris-stocktake-2033"
+date = "2033"
+title = "Third global stocktake under the Paris Agreement"
+kind = "treaty"
+where = "UNFCCC"
+effect = "mark"
+source = "Paris Agreement, Article 14"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "olympics-2034-salt-lake"
+date = "2034-02"
+title = "Winter Olympics, Salt Lake City"
+kind = "sport"
+where = "United States"
+effect = "mark"
+source = "IOC"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "fifa-world-cup-2034"
+date = "2034"
+title = "FIFA World Cup, Saudi Arabia"
+kind = "sport"
+where = "Saudi Arabia"
+effect = "mark"
+source = "FIFA"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "unix-time-2038"
+date = "2038-01-19"
+title = "32-bit Unix time overflows (03:14:07 UTC)"
+kind = "technology"
+where = "everywhere"
+effect = "mark"
+source = "arithmetic"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "solar-eclipse-2045-08-12"
+date = "2045-08-12"
+title = "Total solar eclipse across the United States, coast to coast"
+kind = "astronomy"
+where = "United States"
+effect = "mark"
+source = "NASA eclipse catalogue"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "hong-kong-2047"
+date = "2047-07-01"
+title = "End of the fifty years of 'one country, two systems' promised for Hong Kong"
+kind = "politics"
+where = "Hong Kong"
+effect = "mark"
+source = "Sino-British Joint Declaration (1984), Basic Law"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "prc-centenary-2049"
+date = "2049-10-01"
+title = "Centenary of the People's Republic of China"
+kind = "anniversary"
+where = "China"
+effect = "mark"
+source = "calendar"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "net-zero-2050"
+date = "2050"
+title = "Net-zero target year stated by the European Union, the United Kingdom, the United States and others"
+kind = "treaty"
+where = "various"
+effect = "mark"
+source = "national law and pledges (EU Climate Law 2021; UK Climate Change Act as amended 2019)"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "net-zero-china-2060"
+date = "2060"
+title = "China's stated carbon-neutrality year"
+kind = "treaty"
+where = "China"
+effect = "mark"
+source = "announced at the UN General Assembly, September 2020"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "halley-2061"
+date = "2061-07-28"
+title = "Halley's Comet at perihelion"
+kind = "astronomy"
+where = "inner solar system"
+effect = "mark"
+source = "orbital computation"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "net-zero-india-2070"
+date = "2070"
+title = "India's stated net-zero year"
+kind = "treaty"
+where = "India"
+effect = "mark"
+source = "announced at COP26, November 2021"
+confidence = "recalled"
+checked = ""

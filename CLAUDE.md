@@ -202,6 +202,13 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   the ignitions, the fuel's age and the stakes; a time-since-last-fire layer is the ask) and *The actors*, a
   README figure (` ```esim actors `, `web/src/lib/Actors.svelte`): `name: caption` and `a -> b: words`
   lines, words ending in a parenthesis beginning "not" drawn dashed as what the world has and the model lacks.
+- The log ramp and the future-event lists (2026-11-05 morning, Anselm): `FieldMap` has a `log` colour stretch, the
+  default when a field's positive values span three decades (people per cell, days a year), because the linear ramp
+  to the run's maximum left the 2100 maps blank while the cover, drawn by hand on a log scale, showed the Sahel and
+  India. `data/events/future-known.toml` (24 dated events) and `future-speculative.toml` (17 with rough annual
+  chances and model-term effects) are reusable lists written from memory, every row `recalled` and unchecked, meant
+  for digitaltwins.wiki too; no module reads them yet (`events.timeline`, `events.shock` and `people.impact` are
+  designed in `devlog/20261105-impact-and-events.md`).
 - Docs sections and the telling page (2026-11-04 evening, Anselm): `<!-- section: name -->` on a docs page's second
   line groups it on `/docs` (Start here, The machine, Projects and the record, Telling it, Changing it; the order is
   `SECTIONS` in `DocsList.svelte`, the server writes `section` into `docs/index.json`). `docs/system/telling.md` is the

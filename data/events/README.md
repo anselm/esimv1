@@ -65,3 +65,15 @@ contents have not yet been read into rows:
 
 Mining is a job for an agent that reads a page and drafts rows into a `drafts/` file;
 rows move into these tables by review. Machines propose, humans promote.
+
+## Future events (2026-11-05)
+
+`future-known.toml` is a calendar of dated future events (sport, astronomy, politics, treaty
+years, space) for a run to mark on its time axis; `future-speculative.toml` is a list of
+things that could happen before 2100 with a rough annual chance and the effect a run could
+apply (a forcing pulse, an emissions scaling, a mortality fraction, a region). Both were
+written from memory on 2026-11-05 at Anselm's ask and no row has been checked; each row
+carries `confidence` and `checked` fields for that. Both are meant to be reused outside this
+repository (digitaltwins.wiki as a timeline is the stated home), so the schema is flat and
+documented at the top of each file. No module reads them yet; `events.timeline` and
+`events.shock` are planned (devlog 2026-11-05).

@@ -1,0 +1,206 @@
+# Speculative future events: things that could happen on the way to 2100, with the rough
+# chance per year that the literature or common estimate gives, and the effect a run could
+# apply if a seeded draw lands on one. A shock module (planned: events.shock) would draw at
+# most one per run from this list by its weights and apply its effect to the modules that
+# listen. The list is a data source for other tools too (digitaltwins.wiki may carry a copy
+# as a timeline of speculative events), so the schema is flat.
+#
+# Schema: id, title, kind (astronomy | geology | solar | disease | war | economy | politics |
+# ecology | technology), p_per_year (rough annual probability, a number or empty), effect
+# (a table of what a run could apply: forcing_w_m2 and forcing_years for a pulse on the
+# energy balance; emissions_scale and emissions_years for a scaling of emissions; mortality
+# as a fraction of world population; region as free text), magnitude (free text), source,
+# confidence ("recalled" until checked), checked.
+#
+# PROVENANCE: every row and every number below was written from memory on 2026-11-05 by the
+# esim session (Claude Fable 5.1) at Anselm's ask and NONE has been checked. The annual
+# probabilities are the order of magnitude commonly quoted, not a fit; the effects are the
+# session's own translation into the model's terms and should be read as placeholders until
+# a source is beside each. Check a row before relying on it.
+
+[[event]]
+id = "carrington-storm"
+title = "A Carrington-class geomagnetic storm"
+kind = "solar"
+p_per_year = 0.01
+magnitude = "grid and satellite damage over months; no direct climate effect"
+effect = { emissions_scale = 0.97, emissions_years = 1 }
+source = "Riley 2012 (about 12 percent per decade) is the commonly cited estimate"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "vei7-eruption"
+title = "A VEI 7 volcanic eruption (Tambora 1815 class)"
+kind = "geology"
+p_per_year = 0.0017
+magnitude = "a year without a summer; global cooling of about 1 degree C for two to three years"
+effect = { forcing_w_m2 = -4.0, forcing_years = 2 }
+source = "Cassidy and Mani 2022 put the century chance near one in six"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "vei6-eruption"
+title = "A VEI 6 eruption (Pinatubo 1991 class)"
+kind = "geology"
+p_per_year = 0.02
+magnitude = "global cooling of about half a degree for a year or two"
+effect = { forcing_w_m2 = -2.5, forcing_years = 1 }
+source = "roughly one or two per century in the record"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "supervolcano-vei8"
+title = "A VEI 8 super-eruption"
+kind = "geology"
+p_per_year = 0.00001
+magnitude = "volcanic winter for years; agricultural collapse over continents"
+effect = { forcing_w_m2 = -10.0, forcing_years = 5, mortality = 0.05 }
+source = "return period of order 100,000 years"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "tunguska-airburst"
+title = "A Tunguska-class airburst over a populated region"
+kind = "astronomy"
+p_per_year = 0.003
+magnitude = "a city-scale blast; no global effect"
+effect = { region = "one city" }
+source = "return period of order a few hundred years for the class, most over ocean or empty land"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "asteroid-1km"
+title = "Impact of an asteroid about a kilometre across"
+kind = "astronomy"
+p_per_year = 0.000002
+magnitude = "global dust veil, crop failure over years"
+effect = { forcing_w_m2 = -8.0, forcing_years = 3, mortality = 0.1 }
+source = "return period of order 500,000 years"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "gamma-ray-burst"
+title = "A nearby gamma-ray burst"
+kind = "astronomy"
+p_per_year = 0.0000001
+magnitude = "ozone loss; negligible chance on any human horizon"
+effect = { mortality = 0.0 }
+source = "order-of-magnitude estimates in the astrophysics literature"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "pandemic-1918-class"
+title = "A pandemic of the 1918 influenza's scale"
+kind = "disease"
+p_per_year = 0.01
+magnitude = "of order one to three percent of the world's people dead over two years"
+effect = { mortality = 0.02, emissions_scale = 0.93, emissions_years = 1 }
+source = "Marani et al. 2021 put the annual chance of a COVID-scale event near two percent and a 1918-scale one lower"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "cholera-resurgence"
+title = "A cholera resurgence across several regions in a hot, flooded decade"
+kind = "disease"
+p_per_year = 0.03
+magnitude = "hundreds of thousands dead a year in the worst years; regional"
+effect = { mortality = 0.0003, region = "South Asia, East Africa, the Middle East" }
+source = "WHO reporting on the 2022 to 2024 surge"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "great-power-war"
+title = "A war between great powers, conventional"
+kind = "war"
+p_per_year = 0.01
+magnitude = "millions dead; trade and emissions fall then rebound"
+effect = { mortality = 0.002, emissions_scale = 0.9, emissions_years = 3 }
+source = "no agreed figure; the order of magnitude of the twentieth century's record"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "nuclear-exchange-limited"
+title = "A limited nuclear exchange (of order 100 warheads)"
+kind = "war"
+p_per_year = 0.002
+magnitude = "tens of millions dead; soot cooling of about a degree for several years"
+effect = { mortality = 0.005, forcing_w_m2 = -3.0, forcing_years = 4, emissions_scale = 0.8, emissions_years = 3 }
+source = "Robock and Toon's regional-war studies for the cooling; the probability is a guess"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "global-financial-crisis"
+title = "A global financial crisis of 2008's scale"
+kind = "economy"
+p_per_year = 0.08
+magnitude = "emissions dip a few percent for a year or two"
+effect = { emissions_scale = 0.96, emissions_years = 2 }
+source = "roughly one per decade in the record"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "multi-breadbasket-failure"
+title = "Simultaneous harvest failure in several of the world's breadbaskets"
+kind = "ecology"
+p_per_year = 0.02
+magnitude = "food prices double; hunger and unrest in importing countries"
+effect = { mortality = 0.001, region = "food-importing countries" }
+source = "Gaupp et al. 2020 on the rising joint probability under warming"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "cascadia-m9"
+title = "A magnitude-9 earthquake and tsunami on the Cascadia subduction zone"
+kind = "geology"
+p_per_year = 0.003
+magnitude = "tens of thousands dead; a coastline rebuilt over a decade"
+effect = { region = "Pacific Northwest" }
+source = "USGS and OSSPAC estimates of 10 to 15 percent in fifty years"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "korean-reunification"
+title = "Reunification of Korea"
+kind = "politics"
+p_per_year = 0.01
+magnitude = "a reordering of East Asia; no direct climate effect"
+effect = { region = "Korea" }
+source = "no agreed figure"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "amoc-collapse"
+title = "Collapse of the Atlantic overturning circulation"
+kind = "ecology"
+p_per_year = 0.005
+magnitude = "northwest Europe cools, monsoons shift; already in the tipping table as an element"
+effect = { region = "North Atlantic" }
+source = "Armstrong McKay et al. 2022 for the threshold; the annual chance is a guess"
+confidence = "recalled"
+checked = ""
+
+[[event]]
+id = "ai-shock"
+title = "A sudden economic reordering from automation"
+kind = "technology"
+p_per_year = 0.03
+magnitude = "unknown sign on emissions; large on employment"
+effect = { region = "everywhere" }
+source = "no agreed figure"
+confidence = "recalled"
+checked = ""
