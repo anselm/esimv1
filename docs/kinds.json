@@ -220129,5 +220129,192 @@
         }
       ]
     }
+  },
+  {
+    "kind": "score.regions",
+    "name": "score.regions",
+    "summary": "A score per country in nine bands (living, means, fairness, voice, air, forest, protected, water, footprint), each a World Bank indicator turned into a 0 to 1 percentile rank among the countries that report it, so a band says where a country stands among its peers and never what a good number is; the total is the mean of the bands it has. The starting state is read from the record. From the run's first year the bands move by declared placeholder rules: a country whose people pass the heat thresholds loses part of its living and water bands, and a wild card knocks a band for some years by its kind. Published as a table for the globe view: the glyph at each country's centroid is the bands stacked, the total its height.",
+    "priority": 8,
+    "dt": "1 year (1 January); published every every_years, yearly from yearly_from",
+    "params": [
+      {
+        "name": "scale",
+        "default": "50m",
+        "note": "Natural Earth scale for the country list and centroids"
+      },
+      {
+        "name": "every_years",
+        "default": 5.0,
+        "unit": "yr",
+        "note": "how often the table is published before yearly_from"
+      },
+      {
+        "name": "yearly_from",
+        "default": 2020.0,
+        "unit": "year",
+        "note": "from this year the table is published every January"
+      },
+      {
+        "name": "heat_living",
+        "default": 0.75,
+        "note": "multiplier on the living band once half a country's people live past the climate niche (a guess)"
+      },
+      {
+        "name": "heat_water",
+        "default": 0.75,
+        "note": "multiplier on the water band once a country passes the niche (a guess)"
+      },
+      {
+        "name": "wetbulb_living",
+        "default": 0.75,
+        "note": "multiplier on the living band once a country passes the 31 °C wet-bulb limit, and again at 35 °C (a guess)"
+      }
+    ],
+    "publishes": [
+      {
+        "name": "region.scored",
+        "required": false,
+        "note": "{ year, bands: [{ name, code, what, higher_is_better }], by_iso3: { ISO3: { name, lat, lon, s: [nine 0..1 scores or null], total } } } every every_years, yearly from yearly_from"
+      }
+    ],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [
+      {
+        "name": "people.crossing",
+        "required": false,
+        "note": "{ iso3, kind } a country past the niche or a wet-bulb limit loses part of its living and water bands for good"
+      },
+      {
+        "name": "shock.crossing",
+        "required": false,
+        "note": "{ kind, forcing_years, emissions_years } a wild card knocks a band for some years by its kind: disease the living band, economy and technology the means, war the living and the voice, an eruption or an impact the air, an ecological card the water and the forest (all guesses, all global)"
+      }
+    ],
+    "fields_owned": [],
+    "fields_read": [],
+    "ledgers": [],
+    "frames": [],
+    "reports": [
+      {
+        "name": "region.countries_scored",
+        "required": false
+      },
+      {
+        "name": "region.mean_total",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "region.min_total",
+        "unit": "1",
+        "required": false
+      }
+    ],
+    "views": [
+      {
+        "kind": "globe",
+        "title": "the world, scored",
+        "source": "region.scored",
+        "obs": "",
+        "note": "each country a glyph at its centroid: nine bands stacked, the total its height; drag to turn, hover for the bands"
+      },
+      {
+        "kind": "chart",
+        "title": "mean total score",
+        "source": "region.mean_total",
+        "obs": "",
+        "note": "the plain mean over countries, not weighted by people"
+      }
+    ],
+    "assets": [
+      {
+        "key": "worldbank-wdi-api",
+        "note": "the nine indicators, latest value per country"
+      },
+      {
+        "key": "natural-earth-50m-countries",
+        "note": "the countries and their centroids"
+      }
+    ],
+    "notes": [
+      "The ranks are among the countries that report an indicator, so a country missing a band is not penalised and its total is the mean of what it has. Every rule that moves a band after the first year is a placeholder written on 2026-11-05 and declared in the parameters; the indicators themselves are read, not modelled, and their years differ by band (the table on the run page names each)."
+    ],
+    "tables": {
+      "bands": [
+        {
+          "code": "SP.DYN.LE00.IN",
+          "higher_is_better": true,
+          "name": "living",
+          "ranked_on_log": false,
+          "source": "World Bank, World Development Indicators (API v2)",
+          "what": "life expectancy at birth, years"
+        },
+        {
+          "code": "NY.GNP.PCAP.PP.CD",
+          "higher_is_better": true,
+          "name": "means",
+          "ranked_on_log": true,
+          "source": "World Bank, World Development Indicators (API v2)",
+          "what": "income per person, PPP dollars (ranked on the log)"
+        },
+        {
+          "code": "SI.POV.GINI",
+          "higher_is_better": false,
+          "name": "fairness",
+          "ranked_on_log": false,
+          "source": "World Bank, World Development Indicators (API v2)",
+          "what": "Gini index of income, lower is fairer; latest survey since 2012"
+        },
+        {
+          "code": "GOV_WGI_VA.EST",
+          "higher_is_better": true,
+          "name": "voice",
+          "ranked_on_log": false,
+          "source": "World Bank, Worldwide Governance Indicators (API source 3)",
+          "what": "Worldwide Governance Indicators, voice and accountability estimate"
+        },
+        {
+          "code": "EN.ATM.PM25.MC.M3",
+          "higher_is_better": false,
+          "name": "air",
+          "ranked_on_log": false,
+          "source": "World Bank, World Development Indicators (API v2)",
+          "what": "PM2.5 exposure, micrograms per cubic metre, lower is cleaner"
+        },
+        {
+          "code": "AG.LND.FRST.ZS",
+          "higher_is_better": true,
+          "name": "forest",
+          "ranked_on_log": false,
+          "source": "World Bank, World Development Indicators (API v2)",
+          "what": "forest, percent of land"
+        },
+        {
+          "code": "ER.PTD.TOTL.ZS",
+          "higher_is_better": true,
+          "name": "protected",
+          "ranked_on_log": false,
+          "source": "World Bank, World Development Indicators (API v2)",
+          "what": "protected land and sea, percent of territory"
+        },
+        {
+          "code": "ER.H2O.INTR.PC",
+          "higher_is_better": true,
+          "name": "water",
+          "ranked_on_log": true,
+          "source": "World Bank, World Development Indicators (API v2)",
+          "what": "renewable fresh water per person, cubic metres (ranked on the log)"
+        },
+        {
+          "code": "EN.GHG.CO2.PC.CE.AR5",
+          "higher_is_better": false,
+          "name": "footprint",
+          "ranked_on_log": false,
+          "source": "World Bank, World Development Indicators (API v2)",
+          "what": "CO2 per person, tonnes, lower is lighter"
+        }
+      ]
+    }
   }
 ]

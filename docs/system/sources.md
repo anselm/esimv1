@@ -189,6 +189,18 @@ Every record this simulator reads, from `data/catalog.toml`, with the publisher,
 - **url** `https://docs.google.com/spreadsheets/d/1aTCDS6v7vRSqrmdmtVNAinjJH156d3r7llwVxYKXTkY/gviz/tq?tqx=out:csv&gid={gid}`
 - **notes** UL's caveat: radio transcribed by machine and incomplete, 'should not be considered a complete record of events'. Carries a reported-acreage series from the radio and press (10 acres 10:43, 200 at 11:20, 772 at 12:12, 1,308 at 15:17, 2,921 at 18:50 local on 7 January) and the suppression record in prose; devlog/20261103-six-links.md.
 
+## observation table
+
+### World Bank indicators through the public API v2: World Development Indicators, and the Worldwide Governance Indicators under source=3
+
+- **id** `worldbank-wdi-api`
+- **publisher** World Bank Group open data; indicator codes SP.DYN.LE00.IN, NY.GNP.PCAP.PP.CD, SI.POV.GINI, GOV_WGI_VA.EST (source 3), EN.ATM.PM25.MC.M3, AG.LND.FRST.ZS, ER.PTD.TOTL.ZS, ER.H2O.INTR.PC, EN.GHG.CO2.PC.CE.AR5 as the score.regions module reads them
+- **licence** Creative Commons Attribution 4.0 as the agent recalls the World Bank's open data terms; the terms page to be fetched and stored before promotion
+- **units** per indicator
+- **verified** 2026-11-05 from canada1: the nine indicators answered anonymously with 161 to 265 countries each; the governance series only under its GOV_WGI_ prefix with source=3
+- **url** `https://api.worldbank.org/v2/country/all/indicator/{code}?format=json&per_page=4000`
+- **notes** Aggregates (regions, income groups) come back with an empty ISO3 and are dropped. The Gini series is sparse in any one year and is asked for over 2012 to 2025, latest per country.
+
 ## raster
 
 ### WorldPop, the spatial distribution of population in 2020, 1 km, global mosaic (unconstrained, not UN-adjusted)
