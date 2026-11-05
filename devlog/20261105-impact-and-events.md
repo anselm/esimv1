@@ -313,3 +313,21 @@ glyph that is read by position and size survives being small and being many, and
 that is read as a picture does not; the portrait is for one region on a page. The thing
 neither does yet, and the thing a run can do, is motion with one meaning: the block in 2050
 beside the block in 2025, the same slots, and a mark that moves when something happens.
+
+## The emoji totem (Anselm: "What if we had emoji on a cylinder?")
+
+"Our own approach earlier was a totem pole. What if we had emoji on a cylinder? The problem is
+the 9 block grid overlaps noisily in areas that are clustered together." Built as the globe's
+third glyph and its default: a thin cylinder standing on each country's centroid along the
+surface normal, the nine emoji printed up its skin in fixed slots, living at the foot and
+footprint at the top, each scaled so its area carries the band, the strip printed twice round
+so it reads from any side, the pole's height growing with the total, a territory with no band
+at all getting no pole. The crowding is solved in the screenshot: the Caribbean, a pile of
+blocks an hour earlier, is a fan of poles, thin where they stand and apart where they rise.
+What is lost is the reading at a distance: at the whole-hemisphere zoom the icons are coloured
+beads and the pole reads by its colour sequence, not its nouns; at a closer zoom the emoji
+read. That trade is the right one for a globe, since the overview is for seeing which regions
+differ and the zoom is for reading why. Not yet done: a wheel-driven close-up in the headless
+check (the synthetic wheel event did not reach the controls), fixed artwork in place of the
+device's emoji, and the pale silhouette behind each icon that makes a half-size icon read as
+half.

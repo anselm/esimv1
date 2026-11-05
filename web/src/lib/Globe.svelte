@@ -12,9 +12,13 @@
   // block of nine emoji in fixed positions, each scaled by its band (area carries the amount,
   // position names the measure, as the icon-block grammar on Anselm's Living Region page has
   // it; the artwork here is the device's emoji font, not fixed yet)
-  let glyph = $state('icons')
+  let glyph = $state('totem')
   const ICONS = ['🫀', '💰', '⚖️', '🗳️', '🌬️', '🌳', '🏞️', '💧', '👣']
   const ICON_SPRITE = 0.14
+  // the totem: a thin cylinder standing on the centroid, the nine emoji stacked up it in fixed
+  // slots, each scaled by its band, the strip printed twice around so it reads from any side;
+  // thin where the countries crowd, fanning out as the poles rise (Anselm, 2026-11-05)
+  const TOTEM_R = 0.014, TOTEM_H = 0.26
 
   // one colour per band, in the module's band order
   const BAND_COLOURS = ['#2a9d8f', '#e9c46a', '#f4a261', '#264653', '#8ecae6', '#588157', '#a7c957', '#219ebc', '#9a8c98']
@@ -129,6 +133,47 @@
     return cv
   }
 
+  // a vertical strip of emoji for the totem's skin: slot 0 at the bottom, each icon scaled by
+  // its band; a missing band leaves its slot empty
+  function totemCanvas(c, dark) {
+    const W = 64, S = 64 * 9
+    const cv = document.createElement('canvas'); cv.width = W; cv.height = S
+    const ctx = cv.getContext('2d')
+    ctx.fillStyle = dark ? '#2a2a2a' : '#f3f4f6'; ctx.fillRect(0, 0, W, S)
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
+    for (let i = 0; i < 9; i++) {
+      const v = c.s?.[i]
+      const cy = S - (i + 0.5) * W
+      if (v == null) continue
+      const size = W * (0.3 + 0.7 * Math.sqrt(Math.max(0, v)))
+      ctx.font = `${size}px "Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", sans-serif`
+      ctx.fillText(ICONS[i], W / 2, cy + size * 0.04)
+    }
+    return cv
+  }
+
+  // totem glyphs: one textured cylinder per country, standing on its centroid along the normal
+  $effect(() => {
+    if (!three || !table || glyph !== 'totem') return
+    const entries = Object.entries(table.by_iso3 ?? {})
+    const up = new THREE.Vector3(0, 1, 0)
+    const meshes = [], ids = []
+    for (const [iso3, c] of entries) {
+      if (c.total == null) continue   // a territory with no band at all has no pole
+      const tex = new THREE.CanvasTexture(totemCanvas(c, three.dark)); tex.colorSpace = THREE.SRGBColorSpace
+      tex.wrapS = THREE.RepeatWrapping; tex.repeat.set(2, 1)
+      const h = TOTEM_H * (0.6 + 0.8 * (c.total ?? 0.5))
+      const geo = new THREE.CylinderGeometry(TOTEM_R, TOTEM_R, h, 14, 1, false)
+      const m = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ map: tex }))
+      const normal = xyz(c.lat, c.lon, 1).normalize()
+      m.quaternion.setFromUnitVectors(up, normal)
+      m.position.copy(normal).multiplyScalar(R + h / 2)
+      three.globe.add(m); meshes.push(m); ids.push(iso3)
+    }
+    three.glyphs = meshes; three.ids = [ids]
+    return () => { for (const m of meshes) { three?.globe.remove(m); m.geometry.dispose(); m.material.map.dispose(); m.material.dispose() } }
+  })
+
   // icon glyphs: one sprite per country, a billboard at its centroid
   $effect(() => {
     if (!three || !table || glyph !== 'icons') return
@@ -189,7 +234,7 @@
     three.raycaster.setFromCamera(p, three.camera)
     const hits = three.raycaster.intersectObjects(three.glyphs, false)
     if (!hits.length) { hover = null; return }
-    const h = hits[0]; const b = three.glyphs.indexOf(h.object); const iso3 = glyph === 'icons' ? three.ids[0]?.[b] : three.ids[b]?.[h.instanceId]
+    const h = hits[0]; const b = three.glyphs.indexOf(h.object); const iso3 = glyph === 'bars' ? three.ids[b]?.[h.instanceId] : three.ids[0]?.[b]
     const c = iso3 ? table.by_iso3[iso3] : null
     hover = c ? { iso3, name: c.name, total: c.total, s: c.s, x: e.clientX - rect.left, y: e.clientY - rect.top } : null
   }
@@ -216,13 +261,13 @@
   <div class="mono mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] muted">
     {#if table}<span>{table.year} · {Object.keys(table.by_iso3 ?? {}).length} countries</span>{/if}
     {#each bands as b, i (b.name)}
-      <span class="inline-flex items-center gap-1" title={b.what}>{#if glyph === 'icons'}<span aria-hidden="true">{ICONS[i]}</span>{:else}<span class="inline-block h-2 w-2 rounded-[1px]" style="background:{BAND_COLOURS[i]}" aria-hidden="true"></span>{/if}{b.name}</span>
+      <span class="inline-flex items-center gap-1" title={b.what}>{#if glyph !== 'bars'}<span aria-hidden="true">{ICONS[i]}</span>{:else}<span class="inline-block h-2 w-2 rounded-[1px]" style="background:{BAND_COLOURS[i]}" aria-hidden="true"></span>{/if}{b.name}</span>
     {/each}
     <span class="inline-flex select-none" role="radiogroup" aria-label="glyph">
-      {#each ['icons', 'bars'] as m (m)}
+      {#each ['totem', 'icons', 'bars'] as m (m)}
         <button type="button" role="radio" aria-checked={glyph === m} class="px-1 leading-4 rounded-[2px] {glyph === m ? 'text-brand ring-1 ring-brand/40' : 'hover:text-neutral-900 dark:hover:text-neutral-100'}" onclick={() => { glyph = m }}>{m}</button>
       {/each}
     </span>
-    <span>· {glyph === 'icons' ? 'nine icons in fixed slots, each sized by its band, the block by the total' : 'the nine bands stacked, the height the sum'} · each band 0 to 1, a rank among the countries that report it · drag to turn, wheel to zoom</span>
+    <span>· {glyph === 'totem' ? 'nine icons up a pole in fixed slots, living at the foot and footprint at the top, each sized by its band, the pole by the total' : glyph === 'icons' ? 'nine icons in fixed slots, each sized by its band, the block by the total' : 'the nine bands stacked, the height the sum'} · each band 0 to 1, a rank among the countries that report it · drag to turn, wheel to zoom</span>
   </div>
 </figure>
