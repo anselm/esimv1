@@ -5,6 +5,51 @@ scientist. Every number on this page is drawn from the runs listed below it as t
 is read; if the runs change, the page changes with them. Nothing here is a forecast. Each
 line is one assumption about emissions after 2024, named, run through the same model.
 
+## The actors
+
+What decides where the planet is in 2100, drawn as the assessments draw it. The IPCC's 2021
+summary for policymakers opens with the sentence the whole field now stands on: "It is
+unequivocal that human influence has warmed the atmosphere, ocean and land." Its chain runs
+from emissions to the air to the heat: each 1,000 billion tonnes of CO₂ emitted warms the
+surface by a best estimate of 0.45 °C, likely between 0.27 and 0.63, and the land and the ocean
+have taken up "a near-constant proportion (globally about 56% per year)" of what people emit
+over the past six decades. The Global Carbon Budget counts that every year: in 2023 about
+11 billion tonnes of carbon went up, 5.9 stayed in the air, 2.9 went into the ocean and 2.3
+into the land (Friedlingstein and others, 2024). Behind the emissions stands Kaya's identity,
+the frame the IPCC's scenarios are built on: emissions are how many people there are, how
+rich, how much energy each unit of wealth takes, and how much carbon each unit of energy
+releases. Ahead of the warming stand the thresholds, the sixteen elements of Armstrong McKay
+and colleagues' 2022 assessment, each with the warming at which it likely tips. So the human
+model has six actors around the warming.
+
+This is the map people agree on, and it is not the simulation. A solid arrow is a relationship
+these runs model. A dashed one is a relationship the world has and the runs lack, and the
+largest is the first: here the emissions after 2024 are an assumption, named and held, not
+something the people in the model decide.
+
+```esim
+actors
+people: how many, how rich, how much energy, from what
+emissions: fossil fuel and cleared land
+sinks: the ocean and the land
+air: CO₂ for centuries, methane for a decade
+thresholds: ice sheets, permafrost, forest, reefs, currents
+sea: the water, the ice
+warming
+people -> emissions: set them (not derived here; an assumption)
+emissions -> air: most of it stays for centuries
+emissions -> sinks: about half is taken up
+sinks -> air: give back more as they warm and fill
+air -> warming: traps the heat
+warming -> thresholds: passes the doors one by one
+thresholds -> air: thaw and dieback give up carbon
+thresholds -> warming: darker ground, a slower ocean (not modelled)
+thresholds -> sea: ice sheets slide into it (not modelled)
+warming -> sea: swells the water
+warming -> people: heat past the niche, air too humid to cool in
+sea -> people: takes the coast (not modelled)
+```
+
 ## What a tipping point is
 
 Most of what warming does is gradual: a little hotter each decade, the sea a little
