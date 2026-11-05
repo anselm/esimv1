@@ -157,8 +157,10 @@ probably not the first; see the limits.
 Anselm, 2026-11-05: the era of cheap externalities is ending, regions differ in what they have
 left, in their ecosystems, air, water, wealth, fairness and institutions, and all of that
 together is a total bottom line a person should be able to read at a glance, for every region,
-on a globe, and watch move. The run pages now carry that globe. Every country is a glyph at its
-centroid, nine bands stacked, the total its height. The bands are nine World Bank
+on a globe, and watch move. The run pages now carry that globe, at the top. Every country is drawn by its own outline
+three times, one ring per group of bands, human, nature and economy, each a pastel, wider and
+brighter the higher the group's health; a country whose total falls under a floor, or well under
+its own start, fills with red. The nine bands are a click away, as a pole or a block. The bands are nine World Bank
 indicators, each the latest value the Bank holds for the country: life expectancy, income per
 person, the Gini index, the governance estimate of voice and accountability, fine-particle air
 pollution, forest cover, protected land and sea, renewable fresh water per person, and CO₂ per

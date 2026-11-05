@@ -331,3 +331,44 @@ differ and the zoom is for reading why. Not yet done: a wheel-driven close-up in
 check (the synthetic wheel event did not reach the controls), fixed artwork in place of the
 device's emoji, and the pale silhouette behind each icon that makes a half-size icon read as
 half.
+
+## Later: three groups, a rainbow outline, land, the red, and the globe at the top
+
+Anselm, in order: "we can split these into human factors, nature - specifically resilience,
+and hmm maybe a third one could just be vanilla gdp / economic output ... I'm not happy with
+glyphs or icons. Maybe we should try another option (can have a switch). Try summing up each
+grouping into a health score from 0.0 to 1.0 and draw the outline of the country as a rainbow
+of those summed bands, with some variation in thickness per band and or brightness. Each band
+has to choose a nice primary pastel color." Then: "The globe should be near the top and also
+it should have some kind of backdrop right now it seems to have no geography." Then: "Do we
+have a way of showing when entire countries tilt into red - like when they are really
+struggling? We need some total sum. And we should render that as a semi transparent red
+overlay on the whole country."
+
+Built, all in `Globe.svelte` and the viewer, nothing in the module:
+
+- Groups, in the viewer from the nine bands: human (living, fairness, voice, air), nature
+  (forest, protected, water, footprint), economy (means); a group's health the mean of the
+  bands it has. The grouping is a constant in the component for now.
+- The outline glyph, the new default with the switch keeping totem, icons and bars: each
+  country's own rings (`docs/country-outlines.json`, written by `web/scripts/country-outlines.mjs`
+  from the cached Natural Earth 50m file, outer rings thinned, 232 countries, 784 KB) drawn once
+  per group as fat lines (three's LineSegments2), stacked outward, the weakest group innermost,
+  width 1.2 to 5 px and opacity 0.35 to 1 by the score, pastels rose, green and blue with
+  lighter variants for dark mode.
+- Geography: an equirectangular canvas painted from the same rings, land on sea, wrapped onto
+  the sphere, in both themes.
+- The red: a second transparent sphere carrying a canvas where each country is filled red at
+  an opacity set by its distress, the larger of how far its total sits under a floor of 0.35
+  and how far it has fallen under its own total at the run's start, over 0.15; the legend
+  counts the countries in the red and the hover says how deep. Both constants are the
+  viewer's and are placeholders.
+- The globe at the top: the story module now carries the `globe` view (it already carried the
+  other modules' maps), the regions module keeps its chart; the 2100 variants rerun so their
+  describe carries it.
+
+Fat lines under software GL are slow enough that the headless screenshot timed out once; a
+real GPU will not notice. What is not done: the grouping and the red thresholds as parameters
+of the module rather than constants of the viewer, and a run in which something actually
+tilts a country into the red, since under held emissions the placeholder rules move totals by
+hundredths.

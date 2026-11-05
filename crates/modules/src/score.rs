@@ -140,8 +140,7 @@ impl Score {
             .publish("region.scored", "{ year, bands: [{ name, code, what, higher_is_better }], by_iso3: { ISO3: { name, lat, lon, s: [nine 0..1 scores or null], total } } } every every_years, yearly from yearly_from")
             .report("region.countries_scored", "").report("region.mean_total", "1").report("region.min_total", "1")
             .table("bands", json!(BANDS.iter().map(|b| json!({ "name": b.name, "code": b.code, "what": b.what, "higher_is_better": b.higher_is_better, "ranked_on_log": b.log, "source": if b.source == Some(3) { "World Bank, Worldwide Governance Indicators (API source 3)" } else { "World Bank, World Development Indicators (API v2)" } })).collect::<Vec<_>>()))
-            .view("globe", "the world, scored", "region.scored", "each country a glyph at its centroid: nine bands stacked, the total its height; drag to turn, hover for the bands")
-            .view("chart", "mean total score", "region.mean_total", "the plain mean over countries, not weighted by people")
+            .view("chart", "mean total score", "region.mean_total", "the plain mean over countries, not weighted by people; the globe itself is drawn at the top of the page by the story module")
             .asset("worldbank-wdi-api", "the nine indicators, latest value per country").asset(scale_asset(&scale), "the countries and their centroids")
             .note("The ranks are among the countries that report an indicator, so a country missing a band is not penalised and its total is the mean of what it has. Every rule that moves a band after the first year is a placeholder written on 2026-11-05 and declared in the parameters; the indicators themselves are read, not modelled, and their years differ by band (the table on the run page names each).")
     }

@@ -1313,6 +1313,7 @@ impl Story {
             .priority(9).dt("follows the crossing events")
             .subscribe("people.crossing", "sentences").subscribe("tipping.crossing", "sentences").subscribe("carbon.crossing", "sentences").subscribe("shock.crossing", "sentences: the wild cards").subscribe("people.population", "the count")
             .report("story.headlines", "")
+            .view("globe", "the world, scored", "region.scored", "each country a glyph at its centroid, from the regions module: three groups as rings of its outline, or nine bands as a pole; drag to turn, hover for the scores")
             .view("map", "people living outside the human climate niche", "people_outside_niche", "annual mean above 29 °C")
             .view("map", "days a year over 31 °C wet-bulb", "wetbulb_days_over_31", "")
             .view("map", "the year each place crossed 31 °C wet-bulb", "wetbulb_crossing_year", "")

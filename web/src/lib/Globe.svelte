@@ -5,6 +5,9 @@
   // from docs/outlines.json. Drag to turn, wheel to zoom, hover a glyph for the bands.
   import * as THREE from 'three'
   import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+  import { LineSegments2 } from 'three/examples/jsm/lines/LineSegments2.js'
+  import { LineSegmentsGeometry } from 'three/examples/jsm/lines/LineSegmentsGeometry.js'
+  import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js'
 
   let { run, base, cursor = null, source = 'region.scored' } = $props()
 
@@ -12,7 +15,18 @@
   // block of nine emoji in fixed positions, each scaled by its band (area carries the amount,
   // position names the measure, as the icon-block grammar on Anselm's Living Region page has
   // it; the artwork here is the device's emoji font, not fixed yet)
-  let glyph = $state('totem')
+  let glyph = $state('outline')
+  // the bands in three groups for the outline glyph (Anselm, 2026-11-05): human factors,
+  // nature and its resilience, and plain economic output; a group's health is the mean of
+  // the bands it has, 0 to 1; each group one pastel, drawn as a ring of the country's own
+  // outline, brightness and thickness by the score, the rings stacked outward like a rainbow
+  const GROUPS = [
+    { name: 'human', bands: [0, 2, 3, 4], light: '#e8809a', dark: '#f4a3b8' },     // living, fairness, voice, air
+    { name: 'nature', bands: [5, 6, 7, 8], light: '#5fb37a', dark: '#8fd4a3' },    // forest, protected, water, footprint
+    { name: 'economy', bands: [1], light: '#6c9fe0', dark: '#9cc2f0' },             // means
+  ]
+  const groupScore = (c, g) => { const v = g.bands.map((i) => c.s?.[i]).filter((x) => x != null); return v.length ? v.reduce((a, b) => a + b, 0) / v.length : null }
+  let countryRings = $state(null)   // { ISO3: [[ [lon, lat], ... ], ...] }
   const ICONS = ['🫀', '💰', '⚖️', '🗳️', '🌬️', '🌳', '🏞️', '💧', '👣']
   const ICON_SPRITE = 0.14
   // the totem: a thin cylinder standing on the centroid, the nine emoji stacked up it in fixed
@@ -46,6 +60,7 @@
       tables = out
     }).catch((e) => { if (live) error = e.message })
     fetch('/docs/outlines.json').then((r) => (r.ok ? r.json() : null)).then((o) => { if (live) outlines = o }).catch(() => {})
+    fetch('/docs/country-outlines.json').then((r) => (r.ok ? r.json() : null)).then((o) => { if (live) countryRings = o }).catch(() => {})
     return () => { live = false }
   })
 
@@ -64,6 +79,57 @@
     return new THREE.Vector3(-r * Math.sin(phi) * Math.cos(theta), r * Math.cos(phi), r * Math.sin(phi) * Math.sin(theta))
   }
 
+  // the geography: an equirectangular canvas with every country's rings filled as land,
+  // painted once from the same rings the outline glyph uses, and wrapped onto the sphere
+  function landTexture(rings, dark) {
+    const W = 2048, H = 1024
+    const cv = document.createElement('canvas'); cv.width = W; cv.height = H
+    const ctx = cv.getContext('2d')
+    ctx.fillStyle = dark ? '#161a1f' : '#dde6ef'; ctx.fillRect(0, 0, W, H)          // sea
+    ctx.fillStyle = dark ? '#2b2f33' : '#f4f1ea'                                      // land
+    ctx.strokeStyle = dark ? '#4a4f55' : '#aab2bb'; ctx.lineWidth = 1
+    for (const list of Object.values(rings)) for (const ring of list) {
+      ctx.beginPath()
+      ring.forEach(([lon, lat], i) => { const x = ((lon + 180) / 360) * W, y = ((90 - lat) / 180) * H; i ? ctx.lineTo(x, y) : ctx.moveTo(x, y) })
+      ctx.closePath(); ctx.fill(); ctx.stroke()
+    }
+    const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace
+    // three's sphere puts u = 0 on the -x axis and xyz() puts lon -180 there too, so no offset
+    return tex
+  }
+
+  // distress: a country tilts into red when its total falls under a floor, or falls far under
+  // its own total at the run's start; the whole country is filled with a red whose opacity
+  // is that distress, painted as an overlay sphere from the same rings
+  const RED_FLOOR = 0.35, RED_DROP = 0.15
+  const first = $derived(tables?.[0] ?? null)
+  function distress(c, c0) {
+    if (c?.total == null) return 0
+    const under = Math.max(0, (RED_FLOOR - c.total) / RED_FLOOR)
+    const drop = c0?.total != null ? Math.max(0, (c0.total - c.total) / RED_DROP) : 0
+    return Math.min(1, Math.max(under, drop))
+  }
+  function distressTexture(rings, t, t0) {
+    const W = 2048, H = 1024
+    const cv = document.createElement('canvas'); cv.width = W; cv.height = H
+    const ctx = cv.getContext('2d')
+    let n = 0
+    for (const [iso3, c] of Object.entries(t.by_iso3 ?? {})) {
+      const d = distress(c, t0?.by_iso3?.[iso3])
+      if (d <= 0.02 || !rings[iso3]) continue
+      n++
+      ctx.fillStyle = `rgba(220, 38, 38, ${(0.15 + 0.6 * d).toFixed(3)})`
+      for (const ring of rings[iso3]) {
+        ctx.beginPath()
+        ring.forEach(([lon, lat], i) => { const x = ((lon + 180) / 360) * W, y = ((90 - lat) / 180) * H; i ? ctx.lineTo(x, y) : ctx.moveTo(x, y) })
+        ctx.closePath(); ctx.fill()
+      }
+    }
+    const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace
+    return { tex, n }
+  }
+  let inRed = $state(0)
+
   let canvas = $state()
   let three = null   // { renderer, scene, camera, controls, globe, glyphs: InstancedMesh[], ids: [[iso3...] per band], raycaster }
 
@@ -80,6 +146,9 @@
     const sun = new THREE.DirectionalLight(0xffffff, dark ? 0.9 : 0.8); sun.position.set(-3, 2, 4); scene.add(sun)
     const globe = new THREE.Group()
     globe.add(new THREE.Mesh(new THREE.SphereGeometry(R, 96, 96), new THREE.MeshStandardMaterial({ color: dark ? 0x1c1c1c : 0xe9edf2, roughness: 1, metalness: 0 })))
+    const red = new THREE.Mesh(new THREE.SphereGeometry(R + 0.0015, 96, 96), new THREE.MeshBasicMaterial({ transparent: true, opacity: 1, depthWrite: false, visible: false }))
+    red.name = 'red'
+    globe.add(red)
     scene.add(globe)
     const controls = new OrbitControls(camera, canvas)
     controls.enableDamping = true; controls.enablePan = false; controls.minDistance = 1.4; controls.maxDistance = 6
@@ -97,6 +166,25 @@
     three.renderer.setSize(width, height, false)
     three.camera.aspect = width / height
     three.camera.updateProjectionMatrix()
+  })
+
+  // land on the sphere once the rings are here
+  $effect(() => {
+    if (!three || !countryRings) return
+    const tex = landTexture(countryRings, three.dark)
+    const sphere = three.globe.children.find((o) => o.geometry?.type === 'SphereGeometry')
+    if (sphere) { sphere.material.map = tex; sphere.material.color.set(0xffffff); sphere.material.needsUpdate = true }
+    return () => { tex.dispose(); if (sphere) { sphere.material.map = null; sphere.material.needsUpdate = true } }
+  })
+
+  // the red overlay follows the table at the cursor
+  $effect(() => {
+    if (!three || !countryRings || !table) return
+    const { tex, n } = distressTexture(countryRings, table, first)
+    inRed = n
+    const red = three.globe.getObjectByName('red')
+    if (red) { red.material.map = tex; red.material.visible = n > 0; red.material.needsUpdate = true }
+    return () => { tex.dispose(); if (red) { red.material.map = null; red.material.visible = false } }
   })
 
   // outlines as line segments just above the surface
@@ -151,6 +239,35 @@
     }
     return cv
   }
+
+  // outline glyphs: each country's own outline drawn once per group, stacked outward, the
+  // group's pastel at a brightness and width set by its score; the group with the lowest
+  // score sits innermost so the weakest ring is nearest the ground
+  $effect(() => {
+    if (!three || !table || !countryRings || glyph !== 'outline') return
+    const objs = [], ids = []
+    const res = new THREE.Vector2(width * (window.devicePixelRatio || 1), height * (window.devicePixelRatio || 1))
+    for (const [iso3, c] of Object.entries(table.by_iso3 ?? {})) {
+      const rings = countryRings[iso3]
+      if (!rings || c.total == null) continue
+      const scored = GROUPS.map((g, gi) => ({ gi, v: groupScore(c, g) })).filter((x) => x.v != null).sort((a, b) => a.v - b.v)
+      scored.forEach(({ gi, v }, layer) => {
+        const r = R + 0.003 + layer * 0.006
+        const pos = []
+        for (const ring of rings) for (let i = 0; i + 1 < ring.length; i++) {
+          const a = xyz(ring[i][1], ring[i][0], r), b = xyz(ring[i + 1][1], ring[i + 1][0], r)
+          pos.push(a.x, a.y, a.z, b.x, b.y, b.z)
+        }
+        const geo = new LineSegmentsGeometry(); geo.setPositions(pos)
+        const colour = new THREE.Color(three.dark ? GROUPS[gi].dark : GROUPS[gi].light)
+        const mat = new LineMaterial({ color: colour, linewidth: 1.2 + 3.8 * v, transparent: true, opacity: 0.35 + 0.65 * v, resolution: res, depthTest: true })
+        const m = new LineSegments2(geo, mat); m.computeLineDistances()
+        three.globe.add(m); objs.push(m); ids.push(iso3)
+      })
+    }
+    three.glyphs = objs; three.ids = [ids]
+    return () => { for (const m of objs) { three?.globe.remove(m); m.geometry.dispose(); m.material.dispose() } }
+  })
 
   // totem glyphs: one textured cylinder per country, standing on its centroid along the normal
   $effect(() => {
@@ -236,7 +353,7 @@
     if (!hits.length) { hover = null; return }
     const h = hits[0]; const b = three.glyphs.indexOf(h.object); const iso3 = glyph === 'bars' ? three.ids[b]?.[h.instanceId] : three.ids[0]?.[b]
     const c = iso3 ? table.by_iso3[iso3] : null
-    hover = c ? { iso3, name: c.name, total: c.total, s: c.s, x: e.clientX - rect.left, y: e.clientY - rect.top } : null
+    hover = c ? { iso3, name: c.name, total: c.total, s: c.s, groups: GROUPS.map((g) => groupScore(c, g)), red: distress(c, first?.by_iso3?.[iso3]), x: e.clientX - rect.left, y: e.clientY - rect.top } : null
   }
 
   const fmt = (v) => (v == null ? '—' : v.toFixed(2))
@@ -251,7 +368,10 @@
     {#if hover}
       <div class="pointer-events-none absolute z-10 rounded-[3px] border border-neutral-200 bg-white/95 px-2 py-1.5 text-xs shadow-sm dark:border-neutral-700 dark:bg-neutral-900/95" style="left:{Math.min(hover.x + 12, width - 170)}px; top:{Math.max(hover.y - 10, 0)}px">
         <div class="font-medium">{hover.name} <span class="mono muted">{hover.iso3}</span></div>
-        <div class="mono">total {fmt(hover.total)}</div>
+        <div class="mono">total {fmt(hover.total)}{#if hover.red > 0.02} <span class="text-leak">· in the red {Math.round(hover.red * 100)}%</span>{/if}</div>
+        {#each GROUPS as g, i (g.name)}
+          <div class="mono flex items-center gap-1.5"><span class="inline-block h-2 w-2 rounded-full" style="background:{g.light}"></span><span class="w-16">{g.name}</span><span>{fmt(hover.groups?.[i])}</span></div>
+        {/each}
         {#each bands as b, i (b.name)}
           <div class="mono flex items-center gap-1.5"><span class="inline-block h-2 w-2 rounded-[1px]" style="background:{BAND_COLOURS[i]}"></span><span class="w-16">{b.name}</span><span>{fmt(hover.s?.[i])}</span></div>
         {/each}
@@ -260,14 +380,20 @@
   </div>
   <div class="mono mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] muted">
     {#if table}<span>{table.year} · {Object.keys(table.by_iso3 ?? {}).length} countries</span>{/if}
-    {#each bands as b, i (b.name)}
+    <span class="inline-flex items-center gap-1" title="a country is filled red as its total falls under {RED_FLOOR}, or falls more than {RED_DROP} under its own total at the run's start"><span class="inline-block h-2 w-3 rounded-[1px]" style="background:rgba(220,38,38,0.55)" aria-hidden="true"></span>in the red · {inRed}</span>
+    {#if glyph === 'outline'}
+      {#each GROUPS as g (g.name)}
+        <span class="inline-flex items-center gap-1" title={g.bands.map((i) => bands[i]?.name).join(', ')}><span class="inline-block h-2 w-3 rounded-[1px]" style="background:{g.light}" aria-hidden="true"></span>{g.name}</span>
+      {/each}
+    {/if}
+    {#each (glyph === 'outline' ? [] : bands) as b, i (b.name)}
       <span class="inline-flex items-center gap-1" title={b.what}>{#if glyph !== 'bars'}<span aria-hidden="true">{ICONS[i]}</span>{:else}<span class="inline-block h-2 w-2 rounded-[1px]" style="background:{BAND_COLOURS[i]}" aria-hidden="true"></span>{/if}{b.name}</span>
     {/each}
     <span class="inline-flex select-none" role="radiogroup" aria-label="glyph">
-      {#each ['totem', 'icons', 'bars'] as m (m)}
+      {#each ['outline', 'totem', 'icons', 'bars'] as m (m)}
         <button type="button" role="radio" aria-checked={glyph === m} class="px-1 leading-4 rounded-[2px] {glyph === m ? 'text-brand ring-1 ring-brand/40' : 'hover:text-neutral-900 dark:hover:text-neutral-100'}" onclick={() => { glyph = m }}>{m}</button>
       {/each}
     </span>
-    <span>· {glyph === 'totem' ? 'nine icons up a pole in fixed slots, living at the foot and footprint at the top, each sized by its band, the pole by the total' : glyph === 'icons' ? 'nine icons in fixed slots, each sized by its band, the block by the total' : 'the nine bands stacked, the height the sum'} · each band 0 to 1, a rank among the countries that report it · drag to turn, wheel to zoom</span>
+    <span>· {glyph === 'outline' ? 'each country\'s outline drawn three times, one ring per group, the weakest innermost, brighter and wider the higher its score' : glyph === 'totem' ? 'nine icons up a pole in fixed slots, living at the foot and footprint at the top, each sized by its band, the pole by the total' : glyph === 'icons' ? 'nine icons in fixed slots, each sized by its band, the block by the total' : 'the nine bands stacked, the height the sum'} · each band 0 to 1, a rank among the countries that report it · drag to turn, wheel to zoom</span>
   </div>
 </figure>
