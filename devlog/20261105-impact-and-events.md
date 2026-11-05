@@ -126,3 +126,42 @@ decide the century and the shocks are weather on top, because no card in the dec
 path for good. A card that did (a war that halves emissions for a generation, a technology
 that zeroes them, a collapse that does both) would be the first to add, and the levers for it
 exist. The README has the section and the table.
+
+## Afternoon: the world scored, on a globe
+
+Anselm: "We live on a planet that is incrementally spending down or privatizing natural
+resources - effectively an era of cheap or abundant externalities, natural resources is
+ending ... All of these factors and others constitute a total bottom line; some use the term
+triple bottom line, but there are many independent factors, arguably rankable. We could try to
+identify scoring or values that distinguish or typify different regions of the world - and
+then we could score the world ... It may be possible to make a glyph that is a gestalt of all
+of these factors ... effectively scattering these totem poles or single glance markers ... if we
+simulate the world forward in time - to 2100 - we can visually see where there are knockbacks
+... I want to improve the 2100 page with a rendering of the state on a globe, with graphics
+like this per region. Is that possible?" He pointed at his globe widget at orbital-sim.exe.xyz
+(a textured three.js sphere with dot markers; read in the local checkout, not reused: the
+house style wants outlines on a plain sphere, and the widget's texture is a file of unknown
+origin).
+
+Built the same afternoon. The data: nine World Bank indicators through the public API,
+checked anonymous that morning (life expectancy, income per person PPP, Gini over 2012 to
+2025, WGI voice and accountability under its `GOV_WGI_` prefix with `source=3`, which took
+four tries to find, PM2.5, forest share, protected share, renewable water per person, CO2 per
+person). The score: each band a percentile rank among the countries that report it, so the
+page never has to say what a good number is; the total the mean of the bands present. The
+motion: placeholders declared as parameters, a quarter off living and water past the niche, a
+quarter more off living past a wet-bulb limit, a global knock per wild-card kind for some
+years. The picture: `Globe.svelte`, a plain sphere with the Natural Earth outlines as line
+segments and one instanced mesh per band, each country's bands stacked outward at its
+centroid (largest ring, shoelace), OrbitControls, hover for the bands, the table at the cursor
+from the run's `region.scored` events. 242 countries scored; Norway about 0.75, Canada 0.72,
+Brazil 0.62, the United States 0.60 (fairness 0.19, footprint 0.07), Bangladesh 0.39, Nigeria
+0.35. The mean over countries drifts from 0.503 to 0.501 by 2100 under held emissions: the
+rules are mild and global, which the README says.
+
+What this asks for next, in order: a place for the wild cards (a region field that names a
+country or continent so a card can take one region's air and water, the reactor leak Anselm
+named); the people's response layer feeding the living band from deaths and movers rather
+than from a crossing flag; a population-weighted world mean beside the plain one; and a
+choice of band set per project, since nine Bank indicators are one reading of a bottom line
+and the module should take its bands from a table rather than a constant.

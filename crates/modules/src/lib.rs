@@ -22,6 +22,7 @@ pub mod suppression;
 pub mod hotspots;
 pub mod firecells;
 pub mod shock;
+pub mod score;
 
 use esim_kernel::describe::Describe;
 use esim_kernel::Module;
@@ -74,6 +75,7 @@ pub static KINDS: &[Kind] = &[
     kind!("obs.hotspots", hotspots::Hotspots),
     kind!("fire.cells", firecells::Cells),
     kind!("events.shock", shock::Shock),
+    kind!("score.regions", score::Score),
 ];
 
 fn find(kind: &str) -> Result<&'static Kind, String> {

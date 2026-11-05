@@ -106,3 +106,12 @@ name = "wildcards"
 kind = "events.shock"
 [module.params]
 mode = "off"
+
+# the world scored by region, nine World Bank bands per country ranked among peers, moved by
+# the heat thresholds and the wild cards under declared placeholder rules, drawn on a globe
+# (Anselm, 2026-11-05: a total bottom line per region a person can read at a glance)
+[[module]]
+name = "regions"
+kind = "score.regions"
+[module.params]
+scale = "50m"

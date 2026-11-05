@@ -467,3 +467,15 @@ source = "NOAA National Centers for Environmental Prediction, High-Resolution Ra
 licence = "US federal public domain"
 verified = "2026-11-03 from canada1: 18Z on 2025-01-07 answered 150 MB with a 9 KB index; the 10 m wind at the Palisades ignition point read 9.9 m/s from 36 degrees with a 20.6 m/s gust, against the 25 km reanalysis's 6.9 and 13; the reader's values were cross-checked with GDAL"
 notes = "Only the window's block of each record is kept in the cache; the lock holds the raw record's hash and byte range."
+
+[[asset]]
+id = "worldbank-wdi-api"
+title = "World Bank indicators through the public API v2: World Development Indicators, and the Worldwide Governance Indicators under source=3"
+kind = "observation-table"
+units = "per indicator"
+format = "JSON: [meta, [{ countryiso3code, date, value, ... }]]; the fetcher keeps the latest value per ISO3"
+url_template = "https://api.worldbank.org/v2/country/all/indicator/{code}?format=json&per_page=4000"
+source = "World Bank Group open data; indicator codes SP.DYN.LE00.IN, NY.GNP.PCAP.PP.CD, SI.POV.GINI, GOV_WGI_VA.EST (source 3), EN.ATM.PM25.MC.M3, AG.LND.FRST.ZS, ER.PTD.TOTL.ZS, ER.H2O.INTR.PC, EN.GHG.CO2.PC.CE.AR5 as the score.regions module reads them"
+licence = "Creative Commons Attribution 4.0 as the agent recalls the World Bank's open data terms; the terms page to be fetched and stored before promotion"
+verified = "2026-11-05 from canada1: the nine indicators answered anonymously with 161 to 265 countries each; the governance series only under its GOV_WGI_ prefix with source=3"
+notes = "Aggregates (regions, income groups) come back with an empty ISO3 and are dropped. The Gini series is sparse in any one year and is asked for over 2012 to 2025, latest per country."

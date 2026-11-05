@@ -136,6 +136,13 @@ name = "wildcards"
 [module.params]
 mode = "off"
 
+[[module]]
+kind = "score.regions"
+name = "regions"
+
+[module.params]
+scale = "50m"
+
 [run]
 close_every = "30d"
 end = "2100-01-01"

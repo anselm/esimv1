@@ -202,6 +202,13 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   the ignitions, the fuel's age and the stakes; a time-since-last-fire layer is the ask) and *The actors*, a
   README figure (` ```esim actors `, `web/src/lib/Actors.svelte`): `name: caption` and `a -> b: words`
   lines, words ending in a parenthesis beginning "not" drawn dashed as what the world has and the model lacks.
+- The world scored (2026-11-05, Anselm: a total bottom line per region, a glyph per region on a globe, run forward
+  so knock-backs show): `score.regions` (`crates/modules/src/score.rs`) ranks nine World Bank indicators per country
+  (`crates/registry/src/worldbank.rs`, catalog `worldbank-wdi-api`, anonymous; governance only as `GOV_WGI_VA.EST`
+  with `source=3`) to 0..1 bands, total = mean of bands present, publishes `region.scored` tables (centroids from
+  the Natural Earth rings), moves bands by `people.crossing` and `shock.crossing` under declared placeholder rules.
+  `web/src/lib/Globe.svelte` (view kind `globe`, hooked in `ModuleViews`) draws the table at the cursor as stacked
+  instanced glyphs on a sphere with the outlines; three.js OrbitControls; hover for the bands. In the 2100 manifest.
 - Wild cards (2026-11-05, Anselm: "i just want a placeholder ... like a video game with wild card factors
   optionally"): `events.shock` (`crates/modules/src/shock.rs`) draws `data/events/future-speculative.toml` by the
   run's seed each year from `from` (default 2025), or plays one named card (`mode = "named"`, `event`, `at`);

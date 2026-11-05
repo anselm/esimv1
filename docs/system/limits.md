@@ -104,6 +104,12 @@ holds the history.
 - The wind is flat. Neither fire module adjusts it for terrain (no channelling down canyons,
   no lee), and neither feeds the fire back into it (no convective column, no indraft, no
   plume-driven spread); both are one-way models that read a wind and never write one.
+- The region scores (`score.regions`, 2026-11-05) are ranks, not measures: a band is where a country
+  stands among the countries that report that indicator, so the world's mean cannot fall by every
+  country getting worse together, only by the rules that move bands after the first year, and those
+  rules are placeholders (a quarter off living and water past the niche; a global knock per wild-card
+  kind). The indicators' years differ by band; the governance band is one of six the Bank publishes;
+  nothing regional happens to a region, since the wild cards carry no place yet.
 - Wild cards (`events.shock`, 2026-11-05) are placeholders: the deck's annual chances are recalled
   orders of magnitude, its effects are three blunt levers (a global forcing pulse, a global emissions
   factor, a global death fraction with no place or age), a card may repeat, and no card changes the

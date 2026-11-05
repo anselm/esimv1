@@ -141,6 +141,13 @@ in doubt, split at the point where two different people would hold different opi
   overrun), so a README table reads either. The seen area is a floor on the burned area: cloud, smoke
   and the gaps between passes. First used for Fort McMurray 2016. `fire.cells` can take its buildings
   from OpenStreetMap (`buildings = "osm"`) where no county footprint service exists.
+- `score.regions` (`crates/modules/src/score.rs`, 2026-11-05): the world scored by region for the globe
+  view. Nine bands per country, each a World Bank indicator (`registry::worldbank::latest_by_country`,
+  anonymous API, latest value per ISO3) ranked among the countries that report it to a 0 to 1 score; the
+  total the mean of the bands present. Published as a `region.scored` table (countries with centroids and
+  scores) every few years and yearly from 2020; moved by `people.crossing` and `shock.crossing` under
+  placeholder rules declared as parameters. The viewer's `Globe.svelte` draws the table at the cursor as
+  stacked glyphs on a sphere with the Natural Earth outlines.
 - `events.shock` (`crates/modules/src/shock.rs`, 2026-11-05): wild cards. A deck of speculative events
   (`data/events/future-speculative.toml`: eruptions, pandemics, wars, storms, crashes, each with a rough
   annual chance and an effect) drawn by the run's seed each year from a stated date, or one named card in

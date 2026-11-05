@@ -58914,6 +58914,60 @@ sha256 = "4784dcc368449e691622a4f5cf0a68bf6269b8bd92ef6fbf4df1eac18f592c82"
 bytes = 5635629
 fetched = "2026-11-02"
 
+[files."worldbank-wdi/AG.LND.FRST.ZS-latest.json"]
+url = "https://api.worldbank.org/v2/country/all/indicator/AG.LND.FRST.ZS?format=json&per_page=4000&mrv=1"
+sha256 = "cd4d6a5becbbfdbc3c6f4cc1cf4a57048e07e56a1445fb7aa60feb2cc33a5e5d"
+bytes = 58828
+fetched = "2026-11-05"
+
+[files."worldbank-wdi/EN.ATM.PM25.MC.M3-latest.json"]
+url = "https://api.worldbank.org/v2/country/all/indicator/EN.ATM.PM25.MC.M3?format=json&per_page=4000&mrv=1"
+sha256 = "a810aaef76ba96f2562b3b87db11ac035cdd039273c0cc8bcc055a0ec866ce55"
+bytes = 71312
+fetched = "2026-11-05"
+
+[files."worldbank-wdi/EN.GHG.CO2.PC.CE.AR5-latest.json"]
+url = "https://api.worldbank.org/v2/country/all/indicator/EN.GHG.CO2.PC.CE.AR5?format=json&per_page=4000&mrv=1"
+sha256 = "195208c304530a64aa9b148a518e3428037c0ea878fb7b03e9374d7d99a393c3"
+bytes = 73537
+fetched = "2026-11-05"
+
+[files."worldbank-wdi/ER.H2O.INTR.PC-latest.json"]
+url = "https://api.worldbank.org/v2/country/all/indicator/ER.H2O.INTR.PC?format=json&per_page=4000&mrv=1"
+sha256 = "c1995df3b2dfb1d6196ff1385b56555e473fe5c6f31ba34b99650a197c8f9c12"
+bytes = 68945
+fetched = "2026-11-05"
+
+[files."worldbank-wdi/ER.PTD.TOTL.ZS-latest.json"]
+url = "https://api.worldbank.org/v2/country/all/indicator/ER.PTD.TOTL.ZS?format=json&per_page=4000&mrv=1"
+sha256 = "90aab822d58547e0c72cb436fea83e533ff41a5e76bf339927b189164a207edb"
+bytes = 67438
+fetched = "2026-11-05"
+
+[files."worldbank-wdi/GOV_WGI_VA.EST-latest.json"]
+url = "https://api.worldbank.org/v2/country/all/indicator/GOV_WGI_VA.EST?format=json&per_page=4000&mrv=1&source=3"
+sha256 = "b50078c3d679d2ece549518fcf01a9b8a4a96b298529d4fd6f1818f6b1dd11ce"
+bytes = 55040
+fetched = "2026-11-05"
+
+[files."worldbank-wdi/NY.GNP.PCAP.PP.CD-latest.json"]
+url = "https://api.worldbank.org/v2/country/all/indicator/NY.GNP.PCAP.PP.CD?format=json&per_page=4000&mrv=1"
+sha256 = "17b724634700fd04104357f7819283c47f556053454c617ab3cdf5b9a23c8cfc"
+bytes = 62413
+fetched = "2026-11-05"
+
+[files."worldbank-wdi/SI.POV.GINI-2012-2025.json"]
+url = "https://api.worldbank.org/v2/country/all/indicator/SI.POV.GINI?format=json&per_page=4000&date=2012:2025"
+sha256 = "a8f44a2578f09b4749c5c2d4abe793c00567ea10709917c0679046fa126cab5b"
+bytes = 709897
+fetched = "2026-11-05"
+
+[files."worldbank-wdi/SP.DYN.LE00.IN-latest.json"]
+url = "https://api.worldbank.org/v2/country/all/indicator/SP.DYN.LE00.IN?format=json&per_page=4000&mrv=1"
+sha256 = "ed26521f7dfcd1afa9fc8b6d3b81390bc06c29be68720d6234b0b29f53fd8563"
+bytes = 60809
+fetched = "2026-11-05"
+
 [files."worldpop/ppp_2020_1km_Aggregated.tif"]
 url = "https://data.worldpop.org/GIS/Population/Global_2000_2020/2020/0_Mosaicked/ppp_2020_1km_Aggregated.tif"
 sha256 = "d98f9efd911ed4afed696dff9024b20a4e3ec5bf6c0e21f241a26725b7df0866"

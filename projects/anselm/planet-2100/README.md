@@ -152,6 +152,33 @@ reads humid extremes two to four degrees mild against the stations, and India's 
 is scaled from its own record, which has run cool. The China step is probably real and
 probably not the first; see the limits.
 
+## The world, scored
+
+Anselm, 2026-11-05: the era of cheap externalities is ending, regions differ in what they have
+left, in their ecosystems, air, water, wealth, fairness and institutions, and all of that
+together is a total bottom line a person should be able to read at a glance, for every region,
+on a globe, and watch move. The run pages now carry that globe. Every country is a glyph at its
+centroid, nine bands stacked, the total its height. The bands are nine World Bank
+indicators, each the latest value the Bank holds for the country: life expectancy, income per
+person, the Gini index, the governance estimate of voice and accountability, fine-particle air
+pollution, forest cover, protected land and sea, renewable fresh water per person, and CO₂ per
+person. Each is turned into a score from 0 to 1 by its rank among the countries that report it.
+So a band says where a country sits among its peers and never what a good number is, and a
+country missing a band is not penalised. Norway stands near the top at about three quarters,
+Canada and Brazil near seven tenths, the United States at six tenths with a low fairness band
+and the lowest footprint band of all, Bangladesh and Nigeria near four tenths. Those are the
+record's numbers, ranked, with nothing of ours in them.
+
+What moves the glyphs after the run's first year is ours, and a placeholder: a country whose
+people pass the climate niche loses a quarter of its living and water bands, one that passes
+the wet-bulb limits a quarter more of living, and a wild card knocks one band for the world for
+some years by its kind, a pandemic the living, a crash the means, a war the voice, an eruption
+the air. The rules are written in the module's parameters so they can be argued with. Drag the
+globe to turn it and hover a glyph for its bands; the mean score over countries is charted
+beside it. The knock-backs are small on this scale because the rules are mild and global; a
+reactor leak that takes one region's air and water for a decade is the kind of card that would
+show, and the deck does not hold it yet.
+
 ## Wild cards
 
 Nothing above happens by surprise. Emissions follow their assumption, the sinks their

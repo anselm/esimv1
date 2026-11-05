@@ -5,6 +5,7 @@
   import { isoDate, num } from './fmt.js'
   import FieldMap from './FieldMap.svelte'
   import Scene3D from './Scene3D.svelte'
+  import Globe from './Globe.svelte'
   import Chart from './Chart.svelte'
 
   let { describe, run, base, cursor, crossings = [], context = null } = $props()
@@ -21,6 +22,7 @@
   const maps = $derived(of('map'))
   // a scene needs the terrain frame beside the field it drapes
   const scenes = $derived(views.filter((v) => v.kind === 'scene' && run.fields?.[v.source] && run.fields?.terrain_elev_m))
+  const globes = $derived(views.filter((v) => v.kind === 'globe'))
   const charts = $derived(of('chart'))
   const texts = $derived(of('text'))
   const crossViews = $derived(of('crossings'))
@@ -70,6 +72,14 @@
         </div>
       {/each}
     {/if}
+  {#if globes.length}
+    {#each globes as v (v.source)}
+      <div class="mt-5 min-w-0">
+        <div class="mb-1 text-sm">{v.title}{#if v.note} <span class="muted">· {v.note}</span>{/if}</div>
+        <Globe {run} {base} {cursor} source={v.source} />
+      </div>
+    {/each}
+  {/if}
 
     {#if maps.length}
       <div class="mt-5 grid gap-x-6 gap-y-6 {grid(maps.length)}">
