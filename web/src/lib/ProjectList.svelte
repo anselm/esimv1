@@ -68,6 +68,8 @@
   {#if writable}<a use:link={{ isNew: true }} class="hover:text-brand" title="new project">+ project</a>{/if}
   <a use:link={{ kinds: true }} class="hover:text-brand" title="module kinds">kinds</a>
   <a use:link={{ docs: true }} class="hover:text-brand" title="documentation">docs</a>
+  <a href="https://github.com/anselm/esimv1" class="hover:text-brand" title="the code and the scenarios, on GitHub">github</a>
+  <a href="https://anselm.substack.com" class="hover:text-brand" title="Anselm's writing, on Substack">substack</a>
   <Account /><Badge />
 </div>
 

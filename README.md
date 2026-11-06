@@ -152,3 +152,5 @@ for the same thing are welcome; the record and the describes decide.
 The code is MIT (`LICENSE`). The records the simulator reads are not in this repository;
 each is fetched from its publisher under its own terms, listed in `data/catalog.toml` and
 on the Sources page, and several are free for non-commercial use only.
+
+The code and the scenarios are at [github.com/anselm/esimv1](https://github.com/anselm/esimv1); the pages at [esimv1.exe.xyz](https://esimv1.exe.xyz/); the writing around it at [anselm.substack.com](https://anselm.substack.com).
