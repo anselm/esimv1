@@ -25,6 +25,7 @@
 // Start: node server.mjs   (port 5181; ANTHROPIC_API_KEY in the environment for drafts)
 
 import http from 'node:http'
+import readline from 'node:readline'
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
@@ -263,11 +264,30 @@ function sendFile(req, res, file, cache) {
     else { res.setHeader('Content-Length', st.size); fs.createReadStream(file).pipe(res) }
   })
 }
+// A run's log filtered to one topic: `log.jsonl?topic=region.scored` streams only the lines
+// carrying that topic, so a view that wants one table need not pull a 19 MB log.
+function sendJsonlTopic(req, res, file, topic) {
+  fs.stat(file, (err, st) => {
+    if (err || !st.isFile()) { res.statusCode = 404; return res.end('not found') }
+    res.setHeader('Content-Type', TYPES['.jsonl'])
+    res.setHeader('Cache-Control', 'public, max-age=31536000, immutable')
+    res.setHeader('Vary', 'Accept-Encoding')
+    const needle = `"topic":${JSON.stringify(topic)}`
+    const gz = /\bgzip\b/.test(req.headers['accept-encoding'] || '')
+    const out = gz ? zlib.createGzip({ level: 6 }) : res
+    if (gz) { res.setHeader('Content-Encoding', 'gzip'); out.pipe(res) }
+    const rl = readline.createInterface({ input: fs.createReadStream(file), crlfDelay: Infinity })
+    rl.on('line', (line) => { if (line.includes(needle)) out.write(line + '\n') })
+    rl.on('close', () => out.end())
+  })
+}
 function serveStatic(req, res) {
   const url = decodeURIComponent((req.url || '/').split('?')[0])
+  const query = new URLSearchParams((req.url || '').split('?')[1] || '')
   const under = (prefix, root) => {
     const file = path.resolve(root, url.slice(prefix.length))
     if (!file.startsWith(root + path.sep) && file !== root) { res.statusCode = 403; res.end('forbidden'); return true }
+    if (file.endsWith('.jsonl') && query.get('topic')) { sendJsonlTopic(req, res, file, query.get('topic')); return true }
     // a run folder is named by its content hashes and never changes: cache it for a year;
     // indexes, projects and docs change and are revalidated
     const immutable = /\/runs\/[^/]+\/(?!index\.json)/.test(url)

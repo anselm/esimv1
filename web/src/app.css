@@ -11,6 +11,8 @@
 }
 
 html {
+  /* no pull-to-refresh: a drag on the globe must not reload the page */
+  overscroll-behavior-y: none;
   color-scheme: light dark;
 }
 

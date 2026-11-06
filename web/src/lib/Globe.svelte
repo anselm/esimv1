@@ -49,7 +49,7 @@
   $effect(() => {
     if (!base) return
     let live = true
-    fetch(`${base}/log.jsonl`).then((r) => (r.ok ? r.text() : '')).then((text) => {
+    fetch(`${base}/log.jsonl?topic=${encodeURIComponent(source)}`).then((r) => (r.ok ? r.text() : '')).then((text) => {
       if (!live) return
       const out = []
       for (const line of text.split('\n')) {
@@ -101,30 +101,29 @@
   // distress: a country tilts into red when its total falls under a floor, or falls far under
   // its own total at the run's start; the whole country is filled with a red whose opacity
   // is that distress, painted as an overlay sphere from the same rings
-  const RED_FLOOR = 0.35, RED_DROP = 0.15
-  const first = $derived(tables?.[0] ?? null)
+  const RED_FLOOR = 0.35
   // the red is the worst pressure, never a mean: the share of the country's people past the
-  // heat thresholds this year (the run's own stress), the weakest of its three groups under
-  // the floor, or a fall under its own start (Anselm: a rich person with a heart attack is not
-  // averaged well; some factors gate)
-  function distress(c, c0) {
+  // heat thresholds this year (the run's own stress), or the weakest of its three groups under
+  // the floor (Anselm: a rich person with a heart attack is not averaged well; some factors
+  // gate). A fall of the mean total is not a rule: a global wild card nudges every mean and
+  // painted the United States faintly red for a two-hundredths fall.
+  function distress(c) {
     if (c?.total == null) return 0
     const worst = Math.min(...GROUPS.map((g) => groupScore(c, g)).filter((v) => v != null).concat([1]))
     const under = Math.max(0, (RED_FLOOR - worst) / RED_FLOOR)
-    const drop = c0?.total != null ? Math.max(0, (c0.total - c.total) / RED_DROP) : 0
     const stress = c.stress ?? 0
-    return Math.min(1, Math.max(under, drop, stress))
+    return Math.min(1, Math.max(under, stress))
   }
-  function distressTexture(rings, t, t0) {
-    const W = 2048, H = 1024
+  function distressTexture(rings, t) {
+    const W = 1024, H = 512
     const cv = document.createElement('canvas'); cv.width = W; cv.height = H
     const ctx = cv.getContext('2d')
     let n = 0
     for (const [iso3, c] of Object.entries(t.by_iso3 ?? {})) {
-      const d = distress(c, t0?.by_iso3?.[iso3])
-      if (d <= 0.02 || !rings[iso3]) continue
+      const d = distress(c)
+      if (d < 0.05 || !rings[iso3]) continue
       n++
-      ctx.fillStyle = `rgba(220, 38, 38, ${(0.15 + 0.6 * d).toFixed(3)})`
+      ctx.fillStyle = `rgba(220, 38, 38, ${(0.7 * d).toFixed(3)})`   // proportional, so a small stress is a faint tint
       for (const ring of rings[iso3]) {
         ctx.beginPath()
         ring.forEach(([lon, lat], i) => { const x = ((lon + 180) / 360) * W, y = ((90 - lat) / 180) * H; i ? ctx.lineTo(x, y) : ctx.moveTo(x, y) })
@@ -186,7 +185,7 @@
   // the red overlay follows the table at the cursor
   $effect(() => {
     if (!three || !countryRings || !table) return
-    const { tex, n } = distressTexture(countryRings, table, first)
+    const { tex, n } = distressTexture(countryRings, table)
     inRed = n
     const red = three.globe.getObjectByName('red')
     if (red) { red.material.map = tex; red.material.visible = n > 0; red.material.needsUpdate = true }
@@ -267,18 +266,19 @@
   }
 
   // outline glyphs: each country's own outline drawn once per group, the three rings side by
-  // side from the border inward (economy on the border, then nature, then human), each the
-  // group's pastel at a brightness set by its score and a width that grows a little with it
+  // side from the border inward (economy on the border, then nature, then human). The
+  // geometry is built once from the rings; a new table only recolours the materials, since
+  // rebuilding seven hundred fat-line meshes on every cursor move is what made the page slow.
+  let ringMeshes = $state(null)   // { iso3: [mesh per group index] }
   $effect(() => {
-    if (!three || !table || !countryRings || glyph !== 'outline') return
-    const objs = [], ids = []
+    if (!three || !countryRings || glyph !== 'outline') return
     const res = new THREE.Vector2(width * (window.devicePixelRatio || 1), height * (window.devicePixelRatio || 1))
     const r = R + 0.003
-    for (const [iso3, c] of Object.entries(table.by_iso3 ?? {})) {
-      const rings = countryRings[iso3]
-      if (!rings || c.total == null) continue
-      const scored = GROUPS.map((g, gi) => ({ gi, v: groupScore(c, g) })).filter((x) => x.v != null).reverse()
-      scored.forEach(({ gi, v }, layer) => {
+    const built = {}, objs = [], ids = []
+    for (const [iso3, rings] of Object.entries(countryRings)) {
+      built[iso3] = []
+      GROUPS.forEach((g, gi) => {
+        const layer = GROUPS.length - 1 - gi      // economy outermost, human innermost
         const pos = []
         for (const ring0 of rings) {
           const ring = layer ? inset(ring0, 0.28 * layer) : ring0
@@ -288,14 +288,25 @@
           }
         }
         const geo = new LineSegmentsGeometry(); geo.setPositions(pos)
-        const colour = new THREE.Color(three.dark ? GROUPS[gi].dark : GROUPS[gi].light)
-        const mat = new LineMaterial({ color: colour, linewidth: 2 + 1.5 * v, transparent: true, opacity: 0.3 + 0.7 * v, resolution: res, depthTest: true })
-        const m = new LineSegments2(geo, mat); m.computeLineDistances()
-        three.globe.add(m); objs.push(m); ids.push(iso3)
+        const mat = new LineMaterial({ color: new THREE.Color(three.dark ? g.dark : g.light), linewidth: 2.5, transparent: true, opacity: 0, resolution: res, depthTest: true })
+        const m = new LineSegments2(geo, mat); m.computeLineDistances(); m.visible = false
+        three.globe.add(m); built[iso3][gi] = m; objs.push(m); ids.push(iso3)
       })
     }
     three.glyphs = objs; three.ids = [ids]
-    return () => { for (const m of objs) { three?.globe.remove(m); m.geometry.dispose(); m.material.dispose() } }
+    ringMeshes = built
+    return () => { ringMeshes = null; for (const m of objs) { three?.globe.remove(m); m.geometry.dispose(); m.material.dispose() } }
+  })
+  $effect(() => {
+    if (!ringMeshes || !table) return
+    for (const [iso3, meshes] of Object.entries(ringMeshes)) {
+      const c = table.by_iso3?.[iso3]
+      meshes.forEach((m, gi) => {
+        const v = c && c.total != null ? groupScore(c, GROUPS[gi]) : null
+        m.visible = v != null
+        if (v != null) { m.material.opacity = 0.3 + 0.7 * v; m.material.linewidth = 2 + 1.5 * v }
+      })
+    }
   })
 
   // totem glyphs: one textured cylinder per country, standing on its centroid along the normal
@@ -382,7 +393,7 @@
     if (!hits.length) { hover = null; return }
     const h = hits[0]; const b = three.glyphs.indexOf(h.object); const iso3 = glyph === 'bars' ? three.ids[b]?.[h.instanceId] : three.ids[0]?.[b]
     const c = iso3 ? table.by_iso3[iso3] : null
-    hover = c ? { iso3, name: c.name, total: c.total, s: c.s, groups: GROUPS.map((g) => groupScore(c, g)), red: distress(c, first?.by_iso3?.[iso3]), stress: c.stress ?? 0, x: e.clientX - rect.left, y: e.clientY - rect.top } : null
+    hover = c ? { iso3, name: c.name, total: c.total, s: c.s, groups: GROUPS.map((g) => groupScore(c, g)), red: distress(c), stress: c.stress ?? 0, x: e.clientX - rect.left, y: e.clientY - rect.top } : null
   }
 
   const fmt = (v) => (v == null ? '—' : v.toFixed(2))
@@ -390,7 +401,7 @@
 
 <figure class="min-w-0">
   <div class="relative mt-1 min-w-0 select-none" bind:clientWidth={width} bind:this={container}>
-    <canvas bind:this={canvas} class="block w-full rounded-[3px]" style="height:{height}px; touch-action:none; overscroll-behavior:contain" onmousemove={onMove} onmouseleave={() => { hover = null }} onwheel={(e) => e.preventDefault()}></canvas>
+    <canvas bind:this={canvas} class="block w-full rounded-[3px]" style="height:{height}px; touch-action:none; overscroll-behavior:contain" onmousemove={onMove} onmouseleave={() => { hover = null }} onwheel={(e) => e.preventDefault()} ontouchstart={(e) => e.preventDefault()} ontouchmove={(e) => e.preventDefault()}></canvas>
     {#if error}<p class="absolute left-2 top-2 text-sm text-leak">{error}</p>
     {:else if !tables}<p class="absolute left-2 top-2 muted text-sm">loading the scores…</p>
     {:else if !table}<p class="absolute left-2 top-2 muted text-sm">no scores in this run</p>{/if}
@@ -410,7 +421,7 @@
   </div>
   <div class="mono mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] muted">
     {#if table}<span>{table.year} · {Object.keys(table.by_iso3 ?? {}).length} countries</span>{/if}
-    <span class="inline-flex items-center gap-1" title="a country is filled red by the worst of its pressures, never a mean: the share of its people past the heat thresholds this year, its weakest group under {RED_FLOOR}, or a fall of more than {RED_DROP} under its own start"><span class="inline-block h-2 w-3 rounded-[1px]" style="background:rgba(220,38,38,0.55)" aria-hidden="true"></span>in the red · {inRed}</span>
+    <span class="inline-flex items-center gap-1" title="a country is filled red by the worst of its pressures, never a mean: the share of its people past the heat thresholds this year, or its weakest group under {RED_FLOOR}"><span class="inline-block h-2 w-3 rounded-[1px]" style="background:rgba(220,38,38,0.55)" aria-hidden="true"></span>in the red · {inRed}</span>
     {#if glyph === 'outline'}
       {#each GROUPS as g (g.name)}
         <span class="inline-flex items-center gap-1" title={g.bands.map((i) => bands[i]?.name).join(', ')}><span class="inline-block h-2 w-3 rounded-[1px]" style="background:{g.light}" aria-hidden="true"></span>{g.name}</span>

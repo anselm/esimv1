@@ -41,7 +41,7 @@ struct Region { iso3: String, name: String, lat: f64, lon: f64, base: Vec<Option
 #[derive(Serialize, Deserialize)]
 pub struct Score {
     name: String,
-    scale: String, every_years: i64, yearly_from: i64,
+    scale: String, every_years: i64, from_year: i64, every_years_after: i64,
     stress_living: f64, stress_water: f64, stress_means: f64,
     #[serde(skip)] regions: Vec<Region>,
     /// the outline-file index of each region, to read the country.index world field
@@ -96,7 +96,7 @@ impl Score {
     pub fn new(name: &str, p: &toml::Value) -> Result<Score, String> {
         let mut m = Score {
             name: name.to_string(), scale: param_str(p, "scale", "50m").to_string(),
-            every_years: param_f64(p, "every_years", 5.0) as i64, yearly_from: param_f64(p, "yearly_from", 2020.0) as i64,
+            every_years: param_f64(p, "every_years", 10.0) as i64, from_year: param_f64(p, "from_year", 2020.0) as i64, every_years_after: param_f64(p, "every_years_after", 5.0) as i64,
             stress_living: param_f64(p, "stress_living", 0.6), stress_water: param_f64(p, "stress_water", 0.5), stress_means: param_f64(p, "stress_means", 0.3),
             regions: Vec::new(), index_of: Vec::new(), stress: BTreeMap::new(), knocks: Vec::new(), last_published: -1_000_000,
         };
@@ -137,10 +137,11 @@ impl Score {
     pub fn describe(name: &str, p: &toml::Value) -> Describe {
         let scale = param_str(p, "scale", "50m").to_string();
         Describe::new("score.regions", name, "A score per country in nine bands (living, means, fairness, voice, air, forest, protected, water, footprint), each a World Bank indicator turned into a 0 to 1 percentile rank among the countries that report it, so a band says where a country stands among its peers and never what a good number is; the total is the mean of the bands it has. The starting state is read from the record. From the run's first year the bands move by declared placeholder rules: a country whose people pass the heat thresholds loses part of its living and water bands, and a wild card knocks a band for some years by its kind. Published as a table for the globe view: the glyph at each country's centroid is the bands stacked, the total its height.")
-            .priority(8).dt("1 year (1 January); published every every_years, yearly from yearly_from")
+            .priority(8).dt("1 year (1 January); the table published every every_years, and every every_years_after from from_year")
             .param("scale", scale.clone(), "", "Natural Earth scale for the country list and centroids")
-            .param("every_years", param_f64(p, "every_years", 5.0), "yr", "how often the table is published before yearly_from")
-            .param("yearly_from", param_f64(p, "yearly_from", 2020.0), "year", "from this year the table is published every January")
+            .param("every_years", param_f64(p, "every_years", 10.0), "yr", "how often the table is published before from_year")
+            .param("from_year", param_f64(p, "from_year", 2020.0), "year", "from this year the table is published every every_years_after")
+            .param("every_years_after", param_f64(p, "every_years_after", 5.0), "yr", "the cadence from from_year; each table is about 40 KB in the log, so the cadence is the page's weight")
             .param("stress_living", param_f64(p, "stress_living", 0.6), "", "the living band is multiplied by one minus this times the country's heat stress, the larger of the share of its people past the climate niche and the share past the 31 °C wet-bulb limit (a guess)")
             .param("stress_water", param_f64(p, "stress_water", 0.5), "", "the water band, by one minus this times the share past the niche (a guess)")
             .param("stress_means", param_f64(p, "stress_means", 0.3), "", "the means band, by one minus this times the heat stress (a guess)")
@@ -149,7 +150,7 @@ impl Score {
             .read("people.outside_niche", "persons", false, "people per cell past the climate niche, from the heat module in cells mode")
             .read("wetbulb.people_over_a", "persons", false, "people per cell past the 31 °C wet-bulb limit, from the wet-bulb module in cells mode")
             .subscribe("shock.crossing", "{ kind, forcing_years, emissions_years } a wild card knocks a band for some years by its kind: disease the living band, economy and technology the means, war the living and the voice, an eruption or an impact the air, an ecological card the water and the forest (all guesses, all global)")
-            .publish("region.scored", "{ year, bands: [{ name, code, what, higher_is_better }], by_iso3: { ISO3: { name, lat, lon, s: [nine 0..1 scores or null], total, stress, heat, wetbulb } } } every every_years, yearly from yearly_from; stress is the larger of the two shares")
+            .publish("region.scored", "{ year, bands: [{ name, code, what, higher_is_better }], by_iso3: { ISO3: { name, lat, lon, s: [nine 0..1 scores or null], total, stress, heat, wetbulb } } } at the stated cadence; stress is the larger of the two shares")
             .report("region.countries_scored", "").report("region.mean_total", "1").report("region.min_total", "1").report("region.countries_stressed", "").report("region.people_stress", "1")
             .table("bands", json!(BANDS.iter().map(|b| json!({ "name": b.name, "code": b.code, "what": b.what, "higher_is_better": b.higher_is_better, "ranked_on_log": b.log, "source": if b.source == Some(3) { "World Bank, Worldwide Governance Indicators (API source 3)" } else { "World Bank, World Development Indicators (API v2)" } })).collect::<Vec<_>>()))
             .view("chart", "mean total score", "region.mean_total", "the plain mean over countries, not weighted by people; the globe itself is drawn at the top of the page by the story module")
@@ -253,7 +254,8 @@ impl Module for Score {
                 let y = year_of(ctx.now());
                 self.knocks.retain(|(_, _, until)| *until >= y);
                 self.read_stress(ctx);
-                if y >= self.yearly_from || y - self.last_published >= self.every_years { self.publish(ctx); }
+                let every = if y >= self.from_year { self.every_years_after } else { self.every_years };
+                if y - self.last_published >= every { self.publish(ctx); }
                 ctx.schedule_with_priority(to_next_year(ctx.now()), 8, "tick", json!(null));
             }
             _ => {}

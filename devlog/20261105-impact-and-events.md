@@ -429,3 +429,25 @@ from the border inward, economy, nature, human, equal-ish width, brightness by t
 small country still collapses to one line, which is fair at that scale. The first: the canvas
 now declares touch-action none and swallows the wheel, so a drag turns the globe rather than
 the page; the page itself does not overflow at phone width (checked).
+
+## Lighter, and the United States not red
+
+Anselm: "Pull to drag resets the page. Is the globe super data heavy also? It is slow. Why
+is USA red in 2100."
+
+The red: in the held run no rule fired for the United States; in the wild-4x run its mean
+total fell from 0.597 to 0.576 because the global wild-card knocks nudge every country's air
+band, and the "fall under its own start" rule, over 0.15, painted it 14 percent red for a
+two-hundredths fall. That rule was a mean-based rule, the thing he had just said cannot
+express failing, so it is gone: the red is the stress share or the weakest group under the
+floor, nothing else.
+
+The weight: the globe fetched the run's whole log, 16 MB for a 2100 run, to find 115 score
+tables of 40 KB; and every cursor move rebuilt about seven hundred fat-line meshes, one per
+country per group. Now the server filters a log by topic (`log.jsonl?topic=region.scored`,
+streamed line by line, gzipped), the module publishes a table every ten years before 2020 and
+every five after (34 tables, 1.4 MB raw, 353 KB gzipped, against 16 MB), the ring geometry is
+built once from the rings and a new table only sets each mesh's opacity and width, and the
+red canvas is half the size. Pull-to-refresh: the page's root now has overscroll-behavior-y
+none and the canvas swallows touchstart and touchmove, so a downward drag on the globe turns
+it instead of reloading the page. Not measured on a phone.
