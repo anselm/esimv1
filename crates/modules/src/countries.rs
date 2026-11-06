@@ -998,6 +998,7 @@ impl PeopleWetBulb {
             .report("wetbulb.people_over_a", "persons").report("wetbulb.people_over_b", "persons").report("wetbulb.people_days_over_a", "person-days/yr")
             .asset(scale_asset(&scale), "names for the crossing events");
         if on_cells {
+            d = d.own("wetbulb.people_over_a", "persons");
             d = d.param("crossing_share", param_f64(p, "crossing_share", 0.5), "", "a country crosses when this share of its people live in cells past limit a")
                 .read("people.count", "persons", true, "people per cell")
                 .view("counter", "people living where 31 °C wet-bulb is passed on three days a year", "wetbulb.people_over_a", "the limit for healthy adults at rest; every populated cell")
@@ -1129,7 +1130,8 @@ impl PeopleWetBulb {
         let (mut over_a, mut over_b, mut tot_c, mut days_c) = (vec![0.0f64; n], vec![0.0f64; n], vec![0.0f64; n], vec![0.0f64; n]);
         let mut field = vec![f32::NAN; g.nx * g.ny];
         let mut year_field = vec![f32::NAN; g.nx * g.ny];
-        for (i, &k) in index.iter().enumerate() { if !k.is_nan() { field[i] = 0.0; if count[i] > 0.0 { tot_c[k as usize] += count[i] as f64; } } }
+        let mut over_field = vec![f32::NAN; g.nx * g.ny];
+        for (i, &k) in index.iter().enumerate() { if !k.is_nan() { field[i] = 0.0; over_field[i] = 0.0; if count[i] > 0.0 { tot_c[k as usize] += count[i] as f64; } } }
         let (mut cells_a, mut people_days) = (0usize, 0.0f64);
         for (row, &id) in self.cell_ids.iter().enumerate() {
             let i = id as usize;
@@ -1142,7 +1144,7 @@ impl PeopleWetBulb {
             let p = count[i].max(0.0) as f64;
             people_days += da * p; days_c[k] += da * p;
             if da > self.days_to_cross {
-                over_a[k] += p; cells_a += 1;
+                over_a[k] += p; cells_a += 1; over_field[i] = p as f32;
                 let e = self.cell_year.entry(id).or_insert(if self.baseline_done { y as i32 } else { 0 });
                 if *e > 0 { year_field[i] = *e as f32; }
             } else if let Some(e) = self.cell_year.get(&id) { if *e > 0 { year_field[i] = *e as f32; } }
@@ -1162,6 +1164,7 @@ impl PeopleWetBulb {
         }
         self.baseline_done = true;
         ctx.world_write("wetbulb.days_over_a", "d/yr", &g, field.clone());
+        ctx.world_write("wetbulb.people_over_a", "persons", &g, over_field);
         if y - self.last_frame_year >= self.frame_every_years {
             let fac = frame_factor(self.res_deg, self.frame_res_deg);
             let (cg, a) = coarsen(&g, &field, fac, Fold::Max); let (_, b) = coarsen(&g, &year_field, fac, Fold::Min);

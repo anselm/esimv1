@@ -372,3 +372,43 @@ real GPU will not notice. What is not done: the grouping and the red thresholds 
 of the module rather than constants of the viewer, and a run in which something actually
 tilts a country into the red, since under held emissions the placeholder rules move totals by
 hundredths.
+
+## The red driven by stress, and the mean that cannot fail
+
+Anselm: "if entire zones of the earth are past wet bulb by 2100 then one would imagine
+countries changing to be in the red - like when they are really struggling? ... conceptually
+the design should be showing stresses - unless everything is fine by 2100 still." And: "the
+mean of all scoring is not good enough to express a country failing. Some specific factors are
+gating. Lack of food, fuel, climate, being underwater comes to mind also ... A person for
+example may be rich but also have a heart attack - the mean of their wealth and their health is
+not averaged for a total wellness score. Do we need to use bio regions instead of countries in
+general?"
+
+Why nothing tilted: the crossing rule took a quarter off two of nine bands, about 0.03 of a
+total, and the red wanted a fall of 0.15; and only 22 countries crossed the niche by 2100 in
+the held run, since a crossing needs half a country's people past it, while the counters said
+1.3 billion people were outside the niche across many countries below that line. So the score
+module now reads the run's own stress each January from the world fields: the share of each
+country's people in cells past the climate niche (`people.outside_niche`, the heat module's)
+and past the 31 °C wet-bulb limit (`wetbulb.people_over_a`, a field the wet-bulb module now
+writes in cells mode). The bands move continuously by declared factors (living by 0.6 of the
+stress, means by 0.3, water by 0.5 of the niche share), the crossing flags are no longer used,
+and `region.scored` carries `stress`, `heat` and `wetbulb` per country beside the total. The
+globe's red is the worst pressure and never a mean: the stress share, or the weakest of the
+three groups under the floor, or a fall under the country's own start. At 2100 under held
+emissions 49 countries have a tenth or more of their people past a threshold: the Gulf states,
+the Sahel (Mali 0.99, Burkina Faso 0.94), Djibouti, the Caribbean islands and Samoa at 1.0.
+India 0.12. Bangladesh 0.0, which is the model's honest state and a known limit, not a result:
+its annual mean sits under 29 °C and the reanalysis beneath the wet-bulb count reads humid
+heat mild (limits page). That is the next thing to fix if Bangladesh is the case.
+
+On the two questions. Gating: yes, and the change above is the first half of it; the second
+half is food, fuel and the sea, which the model does not compute yet, so they cannot gate.
+When the impact layer brings deaths, movers and a flooded delta, each becomes a pressure that
+feeds the same red through the same rule, the worst of them. Bioregions: the data that make
+the bands are national, and the sea, the heat and the rivers are not. The honest shape is
+both: countries for the record (the Bank reports by country and so do the UN and the IDMC),
+bioregions for the physics, with the people counted at the cells they live in, which the
+model already does. A watershed or delta boundary could be a second region set that reads the
+same cell fields and the same stress rule; the Living Region page's "watershed edition" is
+that, and the cells make it a matter of a boundary file rather than a new model.

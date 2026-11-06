@@ -103,11 +103,17 @@
   // is that distress, painted as an overlay sphere from the same rings
   const RED_FLOOR = 0.35, RED_DROP = 0.15
   const first = $derived(tables?.[0] ?? null)
+  // the red is the worst pressure, never a mean: the share of the country's people past the
+  // heat thresholds this year (the run's own stress), the weakest of its three groups under
+  // the floor, or a fall under its own start (Anselm: a rich person with a heart attack is not
+  // averaged well; some factors gate)
   function distress(c, c0) {
     if (c?.total == null) return 0
-    const under = Math.max(0, (RED_FLOOR - c.total) / RED_FLOOR)
+    const worst = Math.min(...GROUPS.map((g) => groupScore(c, g)).filter((v) => v != null).concat([1]))
+    const under = Math.max(0, (RED_FLOOR - worst) / RED_FLOOR)
     const drop = c0?.total != null ? Math.max(0, (c0.total - c.total) / RED_DROP) : 0
-    return Math.min(1, Math.max(under, drop))
+    const stress = c.stress ?? 0
+    return Math.min(1, Math.max(under, drop, stress))
   }
   function distressTexture(rings, t, t0) {
     const W = 2048, H = 1024
@@ -353,7 +359,7 @@
     if (!hits.length) { hover = null; return }
     const h = hits[0]; const b = three.glyphs.indexOf(h.object); const iso3 = glyph === 'bars' ? three.ids[b]?.[h.instanceId] : three.ids[0]?.[b]
     const c = iso3 ? table.by_iso3[iso3] : null
-    hover = c ? { iso3, name: c.name, total: c.total, s: c.s, groups: GROUPS.map((g) => groupScore(c, g)), red: distress(c, first?.by_iso3?.[iso3]), x: e.clientX - rect.left, y: e.clientY - rect.top } : null
+    hover = c ? { iso3, name: c.name, total: c.total, s: c.s, groups: GROUPS.map((g) => groupScore(c, g)), red: distress(c, first?.by_iso3?.[iso3]), stress: c.stress ?? 0, x: e.clientX - rect.left, y: e.clientY - rect.top } : null
   }
 
   const fmt = (v) => (v == null ? '—' : v.toFixed(2))
@@ -369,6 +375,7 @@
       <div class="pointer-events-none absolute z-10 rounded-[3px] border border-neutral-200 bg-white/95 px-2 py-1.5 text-xs shadow-sm dark:border-neutral-700 dark:bg-neutral-900/95" style="left:{Math.min(hover.x + 12, width - 170)}px; top:{Math.max(hover.y - 10, 0)}px">
         <div class="font-medium">{hover.name} <span class="mono muted">{hover.iso3}</span></div>
         <div class="mono">total {fmt(hover.total)}{#if hover.red > 0.02} <span class="text-leak">· in the red {Math.round(hover.red * 100)}%</span>{/if}</div>
+        {#if hover.stress > 0.005}<div class="mono text-leak">heat stress {Math.round(hover.stress * 100)}% of its people</div>{/if}
         {#each GROUPS as g, i (g.name)}
           <div class="mono flex items-center gap-1.5"><span class="inline-block h-2 w-2 rounded-full" style="background:{g.light}"></span><span class="w-16">{g.name}</span><span>{fmt(hover.groups?.[i])}</span></div>
         {/each}
@@ -380,7 +387,7 @@
   </div>
   <div class="mono mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] muted">
     {#if table}<span>{table.year} · {Object.keys(table.by_iso3 ?? {}).length} countries</span>{/if}
-    <span class="inline-flex items-center gap-1" title="a country is filled red as its total falls under {RED_FLOOR}, or falls more than {RED_DROP} under its own total at the run's start"><span class="inline-block h-2 w-3 rounded-[1px]" style="background:rgba(220,38,38,0.55)" aria-hidden="true"></span>in the red · {inRed}</span>
+    <span class="inline-flex items-center gap-1" title="a country is filled red by the worst of its pressures, never a mean: the share of its people past the heat thresholds this year, its weakest group under {RED_FLOOR}, or a fall of more than {RED_DROP} under its own start"><span class="inline-block h-2 w-3 rounded-[1px]" style="background:rgba(220,38,38,0.55)" aria-hidden="true"></span>in the red · {inRed}</span>
     {#if glyph === 'outline'}
       {#each GROUPS as g (g.name)}
         <span class="inline-flex items-center gap-1" title={g.bands.map((i) => bands[i]?.name).join(', ')}><span class="inline-block h-2 w-3 rounded-[1px]" style="background:{g.light}" aria-hidden="true"></span>{g.name}</span>

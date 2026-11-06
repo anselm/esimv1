@@ -42,10 +42,13 @@ struct Region { iso3: String, name: String, lat: f64, lon: f64, base: Vec<Option
 pub struct Score {
     name: String,
     scale: String, every_years: i64, yearly_from: i64,
-    heat_living: f64, heat_water: f64, wetbulb_living: f64,
+    stress_living: f64, stress_water: f64, stress_means: f64,
     #[serde(skip)] regions: Vec<Region>,
-    /// multipliers on a country's bands from the thresholds it has crossed, by iso3 then band
-    crossed: BTreeMap<String, Vec<f64>>,
+    /// the outline-file index of each region, to read the country.index world field
+    #[serde(skip)] index_of: Vec<Option<usize>>,
+    /// heat stress per country: (share of its people past the climate niche, share past the
+    /// 31 °C wet-bulb limit), read from the world fields each January
+    stress: BTreeMap<String, (f64, f64)>,
     /// global knock-downs from wild cards: (band index, multiplier, last year inclusive)
     knocks: Vec<(usize, f64, i64)>,
     last_published: i64,
@@ -94,8 +97,8 @@ impl Score {
         let mut m = Score {
             name: name.to_string(), scale: param_str(p, "scale", "50m").to_string(),
             every_years: param_f64(p, "every_years", 5.0) as i64, yearly_from: param_f64(p, "yearly_from", 2020.0) as i64,
-            heat_living: param_f64(p, "heat_living", 0.75), heat_water: param_f64(p, "heat_water", 0.75), wetbulb_living: param_f64(p, "wetbulb_living", 0.75),
-            regions: Vec::new(), crossed: BTreeMap::new(), knocks: Vec::new(), last_published: -1_000_000,
+            stress_living: param_f64(p, "stress_living", 0.6), stress_water: param_f64(p, "stress_water", 0.5), stress_means: param_f64(p, "stress_means", 0.3),
+            regions: Vec::new(), index_of: Vec::new(), stress: BTreeMap::new(), knocks: Vec::new(), last_published: -1_000_000,
         };
         m.load()?;
         Ok(m)
@@ -107,10 +110,16 @@ impl Score {
         let url = |id: &str| -> Result<String, String> { Ok(cat.asset(id).ok_or_else(|| format!("catalog has no {id}"))?.url_template.clone()) };
         let cs = countries::natural_earth_countries(&mut f, &url(scale_asset(&self.scale))?)?;
         let wb = url("worldbank-wdi-api")?;
-        let mut regions: Vec<Region> = cs.iter().filter(|c| c.iso3.len() == 3 && c.iso3 != "-99").map(|c| {
-            let (lat, lon) = centroid(&c.rings);
-            Region { iso3: c.iso3.clone(), name: c.name.clone(), lat, lon, base: vec![None; BANDS.len()], year: vec![None; BANDS.len()] }
-        }).collect();
+        let mut regions: Vec<Region> = Vec::new();
+        let mut index_of = Vec::with_capacity(cs.len());
+        for c in &cs {
+            if c.iso3.len() == 3 && c.iso3 != "-99" {
+                let (lat, lon) = centroid(&c.rings);
+                index_of.push(Some(regions.len()));
+                regions.push(Region { iso3: c.iso3.clone(), name: c.name.clone(), lat, lon, base: vec![None; BANDS.len()], year: vec![None; BANDS.len()] });
+            } else { index_of.push(None); }
+        }
+        self.index_of = index_of;
         for (b, band) in BANDS.iter().enumerate() {
             let vals = worldbank::latest_by_country(&mut f, &wb, band.code, band.source, band.date)?;
             let mut present = Vec::new();
@@ -132,25 +141,29 @@ impl Score {
             .param("scale", scale.clone(), "", "Natural Earth scale for the country list and centroids")
             .param("every_years", param_f64(p, "every_years", 5.0), "yr", "how often the table is published before yearly_from")
             .param("yearly_from", param_f64(p, "yearly_from", 2020.0), "year", "from this year the table is published every January")
-            .param("heat_living", param_f64(p, "heat_living", 0.75), "", "multiplier on the living band once half a country's people live past the climate niche (a guess)")
-            .param("heat_water", param_f64(p, "heat_water", 0.75), "", "multiplier on the water band once a country passes the niche (a guess)")
-            .param("wetbulb_living", param_f64(p, "wetbulb_living", 0.75), "", "multiplier on the living band once a country passes the 31 °C wet-bulb limit, and again at 35 °C (a guess)")
-            .subscribe("people.crossing", "{ iso3, kind } a country past the niche or a wet-bulb limit loses part of its living and water bands for good")
+            .param("stress_living", param_f64(p, "stress_living", 0.6), "", "the living band is multiplied by one minus this times the country's heat stress, the larger of the share of its people past the climate niche and the share past the 31 °C wet-bulb limit (a guess)")
+            .param("stress_water", param_f64(p, "stress_water", 0.5), "", "the water band, by one minus this times the share past the niche (a guess)")
+            .param("stress_means", param_f64(p, "stress_means", 0.3), "", "the means band, by one minus this times the heat stress (a guess)")
+            .read("country.index", "index", false, "which country each cell belongs to")
+            .read("people.count", "persons", false, "people per cell, for the shares")
+            .read("people.outside_niche", "persons", false, "people per cell past the climate niche, from the heat module in cells mode")
+            .read("wetbulb.people_over_a", "persons", false, "people per cell past the 31 °C wet-bulb limit, from the wet-bulb module in cells mode")
             .subscribe("shock.crossing", "{ kind, forcing_years, emissions_years } a wild card knocks a band for some years by its kind: disease the living band, economy and technology the means, war the living and the voice, an eruption or an impact the air, an ecological card the water and the forest (all guesses, all global)")
-            .publish("region.scored", "{ year, bands: [{ name, code, what, higher_is_better }], by_iso3: { ISO3: { name, lat, lon, s: [nine 0..1 scores or null], total } } } every every_years, yearly from yearly_from")
-            .report("region.countries_scored", "").report("region.mean_total", "1").report("region.min_total", "1")
+            .publish("region.scored", "{ year, bands: [{ name, code, what, higher_is_better }], by_iso3: { ISO3: { name, lat, lon, s: [nine 0..1 scores or null], total, stress, heat, wetbulb } } } every every_years, yearly from yearly_from; stress is the larger of the two shares")
+            .report("region.countries_scored", "").report("region.mean_total", "1").report("region.min_total", "1").report("region.countries_stressed", "").report("region.people_stress", "1")
             .table("bands", json!(BANDS.iter().map(|b| json!({ "name": b.name, "code": b.code, "what": b.what, "higher_is_better": b.higher_is_better, "ranked_on_log": b.log, "source": if b.source == Some(3) { "World Bank, Worldwide Governance Indicators (API source 3)" } else { "World Bank, World Development Indicators (API v2)" } })).collect::<Vec<_>>()))
             .view("chart", "mean total score", "region.mean_total", "the plain mean over countries, not weighted by people; the globe itself is drawn at the top of the page by the story module")
             .asset("worldbank-wdi-api", "the nine indicators, latest value per country").asset(scale_asset(&scale), "the countries and their centroids")
-            .note("The ranks are among the countries that report an indicator, so a country missing a band is not penalised and its total is the mean of what it has. Every rule that moves a band after the first year is a placeholder written on 2026-11-05 and declared in the parameters; the indicators themselves are read, not modelled, and their years differ by band (the table on the run page names each).")
+            .note("The ranks are among the countries that report an indicator, so a country missing a band is not penalised and its total is the mean of what it has. Every rule that moves a band after the first year is a placeholder written on 2026-11-05 and declared in the parameters; the indicators themselves are read, not modelled, and their years differ by band (the table on the run page names each). The heat stress is the run's own: the share of a country's people living in cells past the niche or the wet-bulb limit this year, read from the heat and wet-bulb modules' fields, so it rises as the run warms and needs no crossing. A mean cannot say a country is failing, since a gating pressure (heat on its people, water, food, the sea) is not averaged away by wealth; the stress is published beside the total for that reason, and the globe reads it first.")
     }
     fn scores(&self, r: &Region, y: i64) -> (Vec<Option<f64>>, Option<f64>) {
-        let cross = self.crossed.get(&r.iso3);
+        let (heat, wb) = self.stress.get(&r.iso3).copied().unwrap_or((0.0, 0.0));
+        let stress = heat.max(wb);
         let mut s = Vec::with_capacity(BANDS.len());
         let (mut sum, mut n) = (0.0, 0);
         for b in 0..BANDS.len() {
             let v = r.base[b].map(|v| {
-                let mut v = v * cross.map(|c| c[b]).unwrap_or(1.0);
+                let mut v = v * match b { 0 => 1.0 - self.stress_living * stress, 1 => 1.0 - self.stress_means * stress, 7 => 1.0 - self.stress_water * heat, _ => 1.0 };
                 for (kb, m, until) in &self.knocks { if *kb == b && *until >= y { v *= m; } }
                 v.clamp(0.0, 1.0)
             });
@@ -162,12 +175,17 @@ impl Score {
     fn publish(&mut self, ctx: &mut Ctx) {
         let y = year_of(ctx.now());
         let mut by = serde_json::Map::new();
-        let (mut sum, mut n, mut min) = (0.0, 0usize, f64::INFINITY);
+        let (mut sum, mut n, mut min, mut stressed) = (0.0, 0usize, f64::INFINITY, 0usize);
         for r in &self.regions {
             let (s, total) = self.scores(r, y);
+            let (heat, wb) = self.stress.get(&r.iso3).copied().unwrap_or((0.0, 0.0));
+            let stress = heat.max(wb);
+            if stress >= 0.1 { stressed += 1; }
             if let Some(t) = total { sum += t; n += 1; if t < min { min = t; } }
-            by.insert(r.iso3.clone(), json!({ "name": r.name, "lat": (r.lat * 100.0).round() / 100.0, "lon": (r.lon * 100.0).round() / 100.0, "s": s.iter().map(|v| v.map(|x| (x * 1000.0).round() / 1000.0)).collect::<Vec<_>>(), "total": total.map(|t| (t * 1000.0).round() / 1000.0) }));
+            by.insert(r.iso3.clone(), json!({ "name": r.name, "lat": (r.lat * 100.0).round() / 100.0, "lon": (r.lon * 100.0).round() / 100.0, "s": s.iter().map(|v| v.map(|x| (x * 1000.0).round() / 1000.0)).collect::<Vec<_>>(), "total": total.map(|t| (t * 1000.0).round() / 1000.0),
+                "stress": (stress * 1000.0).round() / 1000.0, "heat": (heat * 1000.0).round() / 1000.0, "wetbulb": (wb * 1000.0).round() / 1000.0 }));
         }
+        ctx.report("region.countries_stressed", "", stressed as f64);
         ctx.publish("region.scored", json!({ "year": y, "bands": BANDS.iter().map(|b| json!({ "name": b.name, "code": b.code, "what": b.what, "higher_is_better": b.higher_is_better })).collect::<Vec<_>>(), "by_iso3": by }));
         ctx.report("region.countries_scored", "", n as f64);
         if n > 0 { ctx.report("region.mean_total", "1", sum / n as f64); ctx.report("region.min_total", "1", min); }
@@ -175,25 +193,48 @@ impl Score {
     }
 }
 
+impl Score {
+    /// The share of each country's people past the niche and past the wet-bulb limit this
+    /// year, from the world fields the people, heat and wet-bulb modules write.
+    fn read_stress(&mut self, ctx: &mut Ctx) {
+        let (Some(index), Some(count)) = (ctx.world_read("country.index"), ctx.world_read("people.count")) else { return };
+        let n = index.data.len();
+        if count.data.len() != n { return; }
+        let outside = ctx.world_read("people.outside_niche").filter(|f| f.data.len() == n).map(|f| f.data.clone());
+        let over = ctx.world_read("wetbulb.people_over_a").filter(|f| f.data.len() == n).map(|f| f.data.clone());
+        if outside.is_none() && over.is_none() { return; }
+        let (index, count) = (index.data.clone(), count.data.clone());
+        let m = self.regions.len();
+        let (mut tot, mut out, mut ov) = (vec![0.0f64; m], vec![0.0f64; m], vec![0.0f64; m]);
+        for i in 0..n {
+            let k = index[i]; if k.is_nan() { continue }
+            let Some(Some(r)) = self.index_of.get(k as usize) else { continue };
+            let c = count[i]; if !(c > 0.0) { continue }
+            tot[*r] += c as f64;
+            if let Some(o) = &outside { if o[i] > 0.0 { out[*r] += o[i] as f64; } }
+            if let Some(o) = &over { if o[i] > 0.0 { ov[*r] += o[i] as f64; } }
+        }
+        let mut people_stress = 0.0; let mut people = 0.0;
+        for (r, reg) in self.regions.iter().enumerate() {
+            if tot[r] <= 0.0 { continue }
+            let (h, w) = ((out[r] / tot[r]).clamp(0.0, 1.0), (ov[r] / tot[r]).clamp(0.0, 1.0));
+            self.stress.insert(reg.iso3.clone(), (h, w));
+            people += tot[r]; people_stress += tot[r] * h.max(w);
+        }
+        if people > 0.0 { ctx.report("region.people_stress", "1", people_stress / people); }
+    }
+}
+
 impl Module for Score {
     fn name(&self) -> &str { &self.name }
     fn init(&mut self, ctx: &mut Ctx) {
-        ctx.subscribe("people.crossing"); ctx.subscribe("shock.crossing");
+        ctx.subscribe("shock.crossing");
+        self.read_stress(ctx);
         self.publish(ctx);
         ctx.schedule_with_priority(to_next_year(ctx.now()), 8, "tick", json!(null));
     }
     fn handle(&mut self, ev: &Event, ctx: &mut Ctx) {
         match ev.topic.as_str() {
-            "people.crossing" => {
-                let Some(iso3) = ev.data["iso3"].as_str() else { return };
-                let kind = ev.data["kind"].as_str().unwrap_or("");
-                let c = self.crossed.entry(iso3.to_string()).or_insert_with(|| vec![1.0; BANDS.len()]);
-                match kind {
-                    "niche" => { c[0] *= self.heat_living; c[7] *= self.heat_water; }
-                    "wetbulb_a" | "wetbulb_b" => { c[0] *= self.wetbulb_living; }
-                    _ => {}
-                }
-            }
             "shock.crossing" => {
                 let y = year_of(ctx.now());
                 let kind = ev.data["kind"].as_str().unwrap_or("");
@@ -211,6 +252,7 @@ impl Module for Score {
             "tick" => {
                 let y = year_of(ctx.now());
                 self.knocks.retain(|(_, _, until)| *until >= y);
+                self.read_stress(ctx);
                 if y >= self.yearly_from || y - self.last_published >= self.every_years { self.publish(ctx); }
                 ctx.schedule_with_priority(to_next_year(ctx.now()), 8, "tick", json!(null));
             }

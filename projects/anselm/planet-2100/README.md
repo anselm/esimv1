@@ -159,8 +159,10 @@ left, in their ecosystems, air, water, wealth, fairness and institutions, and al
 together is a total bottom line a person should be able to read at a glance, for every region,
 on a globe, and watch move. The run pages now carry that globe, at the top. Every country is drawn by its own outline
 three times, one ring per group of bands, human, nature and economy, each a pastel, wider and
-brighter the higher the group's health; a country whose total falls under a floor, or well under
-its own start, fills with red. The nine bands are a click away, as a pole or a block. The bands are nine World Bank
+brighter the higher the group's health; a country fills with red by the worst of its pressures, never
+by its mean: the share of its people living past the heat thresholds that year, the weakest
+of its three groups under a floor, or a fall under its own start. A rich country with a heart
+attack is not averaged well. The nine bands are a click away, as a pole or a block. The bands are nine World Bank
 indicators, each the latest value the Bank holds for the country: life expectancy, income per
 person, the Gini index, the governance estimate of voice and accountability, fine-particle air
 pollution, forest cover, protected land and sea, renewable fresh water per person, and CO₂ per
@@ -171,11 +173,15 @@ Canada and Brazil near seven tenths, the United States at six tenths with a low 
 and the lowest footprint band of all, Bangladesh and Nigeria near four tenths. Those are the
 record's numbers, ranked, with nothing of ours in them.
 
-What moves the glyphs after the run's first year is ours, and a placeholder: a country whose
-people pass the climate niche loses a quarter of its living and water bands, one that passes
-the wet-bulb limits a quarter more of living, and a wild card knocks one band for the world for
-some years by its kind, a pandemic the living, a crash the means, a war the voice, an eruption
-the air. The rules are written in the module's parameters so they can be argued with. Drag the
+What moves the glyphs after the run's first year is ours, and a placeholder: each January
+the module reads the share of each country's people living in cells past the climate niche and
+past the 31 °C wet-bulb limit, the run's own stress, and takes part of the living, means and
+water bands in proportion; a wild card knocks one band for the world for some years by its
+kind, a pandemic the living, a crash the means, a war the voice, an eruption the air. By 2100
+with emissions held, 49 countries have a tenth or more of their people past a threshold: the
+Gulf, the Sahel, the Caribbean islands. Bangladesh is not among them, which is a limit of the
+model and not a finding: its annual mean sits under the niche's 29 °C, and the reanalysis
+under the wet-bulb count reads humid heat mild. The rules are written in the module's parameters so they can be argued with. Drag the
 globe to turn it and hover a glyph for its bands; the mean score over countries is charted
 beside it. The knock-backs are small on this scale because the rules are mild and global; a
 reactor leak that takes one region's air and water for a decade is the kind of card that would
