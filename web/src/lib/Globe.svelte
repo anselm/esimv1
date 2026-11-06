@@ -246,27 +246,50 @@
     return cv
   }
 
-  // outline glyphs: each country's own outline drawn once per group, stacked outward, the
-  // group's pastel at a brightness and width set by its score; the group with the lowest
-  // score sits innermost so the weakest ring is nearest the ground
+  // a ring pushed inward by d degrees along its own normal, so three rings sit side by side
+  // on the ground instead of on top of one another (a stack at three radii projects onto one
+  // line when seen from above, and the outermost hides the rest)
+  function inset(ring, d) {
+    const n = ring.length
+    let area = 0
+    for (let i = 0; i < n; i++) { const [x0, y0] = ring[i], [x1, y1] = ring[(i + 1) % n]; area += x0 * y1 - x1 * y0 }
+    const sign = area > 0 ? 1 : -1          // which side is inside depends on the ring's winding
+    const out = []
+    for (let i = 0; i < n; i++) {
+      const [px, py] = ring[(i - 1 + n) % n], [nx, ny] = ring[(i + 1) % n]
+      const cosl = Math.max(0.2, Math.cos((ring[i][1] * Math.PI) / 180))
+      let tx = (nx - px) * cosl, ty = ny - py
+      const len = Math.hypot(tx, ty) || 1
+      tx /= len; ty /= len
+      out.push([ring[i][0] + (sign * -ty * d) / cosl, ring[i][1] + sign * tx * d])
+    }
+    return out
+  }
+
+  // outline glyphs: each country's own outline drawn once per group, the three rings side by
+  // side from the border inward (economy on the border, then nature, then human), each the
+  // group's pastel at a brightness set by its score and a width that grows a little with it
   $effect(() => {
     if (!three || !table || !countryRings || glyph !== 'outline') return
     const objs = [], ids = []
     const res = new THREE.Vector2(width * (window.devicePixelRatio || 1), height * (window.devicePixelRatio || 1))
+    const r = R + 0.003
     for (const [iso3, c] of Object.entries(table.by_iso3 ?? {})) {
       const rings = countryRings[iso3]
       if (!rings || c.total == null) continue
-      const scored = GROUPS.map((g, gi) => ({ gi, v: groupScore(c, g) })).filter((x) => x.v != null).sort((a, b) => a.v - b.v)
+      const scored = GROUPS.map((g, gi) => ({ gi, v: groupScore(c, g) })).filter((x) => x.v != null).reverse()
       scored.forEach(({ gi, v }, layer) => {
-        const r = R + 0.003 + layer * 0.006
         const pos = []
-        for (const ring of rings) for (let i = 0; i + 1 < ring.length; i++) {
-          const a = xyz(ring[i][1], ring[i][0], r), b = xyz(ring[i + 1][1], ring[i + 1][0], r)
-          pos.push(a.x, a.y, a.z, b.x, b.y, b.z)
+        for (const ring0 of rings) {
+          const ring = layer ? inset(ring0, 0.28 * layer) : ring0
+          for (let i = 0; i + 1 < ring.length; i++) {
+            const a = xyz(ring[i][1], ring[i][0], r), b = xyz(ring[i + 1][1], ring[i + 1][0], r)
+            pos.push(a.x, a.y, a.z, b.x, b.y, b.z)
+          }
         }
         const geo = new LineSegmentsGeometry(); geo.setPositions(pos)
         const colour = new THREE.Color(three.dark ? GROUPS[gi].dark : GROUPS[gi].light)
-        const mat = new LineMaterial({ color: colour, linewidth: 1.2 + 3.8 * v, transparent: true, opacity: 0.35 + 0.65 * v, resolution: res, depthTest: true })
+        const mat = new LineMaterial({ color: colour, linewidth: 2 + 1.5 * v, transparent: true, opacity: 0.3 + 0.7 * v, resolution: res, depthTest: true })
         const m = new LineSegments2(geo, mat); m.computeLineDistances()
         three.globe.add(m); objs.push(m); ids.push(iso3)
       })
@@ -367,7 +390,7 @@
 
 <figure class="min-w-0">
   <div class="relative mt-1 min-w-0 select-none" bind:clientWidth={width} bind:this={container}>
-    <canvas bind:this={canvas} class="block w-full rounded-[3px]" style="height:{height}px" onmousemove={onMove} onmouseleave={() => { hover = null }}></canvas>
+    <canvas bind:this={canvas} class="block w-full rounded-[3px]" style="height:{height}px; touch-action:none; overscroll-behavior:contain" onmousemove={onMove} onmouseleave={() => { hover = null }} onwheel={(e) => e.preventDefault()}></canvas>
     {#if error}<p class="absolute left-2 top-2 text-sm text-leak">{error}</p>
     {:else if !tables}<p class="absolute left-2 top-2 muted text-sm">loading the scores…</p>
     {:else if !table}<p class="absolute left-2 top-2 muted text-sm">no scores in this run</p>{/if}
@@ -401,6 +424,6 @@
         <button type="button" role="radio" aria-checked={glyph === m} class="px-1 leading-4 rounded-[2px] {glyph === m ? 'text-brand ring-1 ring-brand/40' : 'hover:text-neutral-900 dark:hover:text-neutral-100'}" onclick={() => { glyph = m }}>{m}</button>
       {/each}
     </span>
-    <span>· {glyph === 'outline' ? 'each country\'s outline drawn three times, one ring per group, the weakest innermost, brighter and wider the higher its score' : glyph === 'totem' ? 'nine icons up a pole in fixed slots, living at the foot and footprint at the top, each sized by its band, the pole by the total' : glyph === 'icons' ? 'nine icons in fixed slots, each sized by its band, the block by the total' : 'the nine bands stacked, the height the sum'} · each band 0 to 1, a rank among the countries that report it · drag to turn, wheel to zoom</span>
+    <span>· {glyph === 'outline' ? 'each country\'s outline drawn three times, side by side from the border inward: economy, nature, human; brighter the higher the group\'s score' : glyph === 'totem' ? 'nine icons up a pole in fixed slots, living at the foot and footprint at the top, each sized by its band, the pole by the total' : glyph === 'icons' ? 'nine icons in fixed slots, each sized by its band, the block by the total' : 'the nine bands stacked, the height the sum'} · each band 0 to 1, a rank among the countries that report it · drag to turn, wheel to zoom</span>
   </div>
 </figure>

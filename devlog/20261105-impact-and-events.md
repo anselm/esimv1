@@ -412,3 +412,20 @@ bioregions for the physics, with the people counted at the cells they live in, w
 model already does. A watershed or delta boundary could be a second region set that reads the
 same cell fields and the same stress rule; the Living Region page's "watershed edition" is
 that, and the cells make it a matter of a boundary file rather than a new model.
+
+## Rings side by side, and the canvas keeping its touch
+
+Anselm: "I notice it can be hard to rotate the globe because the entire screen will move left
+and right. I do notice that a country's primary feature tends to dominate the rainbow -
+countries with strong nature show up as a green outline for example - ponder this."
+
+The second is geometry, not colour. The three rings were the same path at three radii, and a
+stack of lines at the same longitude and latitude projects onto one line when seen from above;
+only at the limb did they part. The outermost was also the strongest group and the widest, so
+it hid the rest and a country read as its best colour. Now each ring is pushed inward along
+the outline's own normal (0.28 degrees per layer, the lon step scaled by the cosine of the
+latitude, the side chosen by the ring's winding), so the three sit side by side on the ground
+from the border inward, economy, nature, human, equal-ish width, brightness by the score. A
+small country still collapses to one line, which is fair at that scale. The first: the canvas
+now declares touch-action none and swallows the wheel, so a drag turns the globe rather than
+the page; the page itself does not overflow at phone width (checked).
