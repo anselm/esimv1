@@ -8,6 +8,8 @@ first stages are a river basin in Iowa and the planet to 2100.
 
 **Live, read-only: https://esimv1.exe.xyz/** · version 0.1.0 · code MIT
 
+By Anselm Hook. The writing around this, and the reasons for it, are at **[anselm.substack.com](https://anselm.substack.com)**; the running commentary is **[@anselm](https://x.com/anselm)** on X. Subscribe and follow there if you want to see where it goes.
+
 The planet pages to start with:
 
 - [Earth 2100](https://esimv1.exe.xyz/anselm/planet-2100): one project, six
