@@ -2537,6 +2537,11 @@
         "name": "emissions.scale",
         "required": false,
         "note": "{ name, factor } a multiplier on the rate from other modules (wild cards), kept by name until replaced; the product of all applies"
+      },
+      {
+        "name": "emissions.capacity",
+        "required": false,
+        "note": "{ name, capacity } the capacity to cut, 0 to 1, from the policy module, kept by name; the product multiplies each year's planned fall in the rate (never a rise); a lost year of cutting is not made up, and after the plan reaches zero the cutting continues at the plan's last pace, still scaled, until the rate is zero"
       }
     ],
     "fields_owned": [],
@@ -2559,15 +2564,20 @@
         "name": "carbon.cumulative_gtc",
         "unit": "GtC",
         "required": false
+      },
+      {
+        "name": "carbon.emissions_planned_gtc_yr",
+        "unit": "GtC/yr",
+        "required": false
       }
     ],
     "views": [
       {
         "kind": "chart",
-        "title": "emissions",
+        "title": "emissions: the plan, and what was achieved",
         "source": "carbon.emissions_gtc_yr",
-        "obs": "",
-        "note": "the record to 2024, then the assumption"
+        "obs": "carbon.emissions_planned_gtc_yr",
+        "note": "the record to 2024, then the assumption; where a capacity module is on, the achieved rate falls short of the plan by what the heat, the wild cards and the conflicts left of the capacity to cut"
       }
     ],
     "assets": [
@@ -3213,7 +3223,7 @@
       {
         "name": "people.shock",
         "required": false,
-        "note": "{ id, title, year, fraction } from the wild cards: that fraction of every country's people is removed from this year on, and counted in people.shock_deaths"
+        "note": "{ id, title, year, fraction, iso3? } from the wild cards: that fraction of every country's people is removed from this year on, and counted in people.shock_deaths; with an iso3 (a conflict from the capacity module) the fraction is taken from that country alone"
       }
     ],
     "fields_owned": [
@@ -4611,15 +4621,21 @@
   {
     "kind": "tipping.elements",
     "name": "tipping.elements",
-    "summary": "The climate tipping elements from data/events/tipping.toml, each with the global warming at which an assessment judged it likely to tip (a central estimate and a range) and its timescale, checked every year against the run's global anomaly. A tipping.crossing event the first year the run passes an element's low end and again its central estimate. The table is the claim; the module only compares.",
+    "summary": "The climate tipping elements from data/events/tipping.toml, each with the global warming at which an assessment judged it likely to tip (a central estimate and a range) and its timescale, checked every year against the run's global anomaly. A tipping.crossing event the first year the run passes an element's low end and again its central estimate. The table is the claim; the module only compares. With coupling above zero the file's coupling rows act: once an element has passed its threshold, the elements it is coupled to have their thresholds lowered by the row's fraction times the strength, so one crossing can bring the next within reach in the same run (Wunderling et al. 2021: interacting elements lower each other's critical temperatures, the ice sheets start cascades, the Atlantic circulation carries them).",
     "priority": 5,
     "dt": "follows energy.state, once a year",
-    "params": [],
+    "params": [
+      {
+        "name": "coupling",
+        "default": 0.0,
+        "note": "0: each element is checked against the warming alone (the runs before 2026-11-07); 1: the full fractional shifts in the coupling rows, which are the paper's ensemble-mean lowering at its full interaction strength; between, a scaled share. The shifted thresholds apply to every level and to the carbon module downstream"
+      }
+    ],
     "publishes": [
       {
         "name": "tipping.crossing",
         "required": false,
-        "note": "{ id, title, year, level: low | central, threshold_c, gmst_c, timescale, consequence, source, confidence }"
+        "note": "{ id, title, year, level: low | central, threshold_c, unshifted_c, shifted_by, gmst_c, timescale, consequence, source, confidence }"
       }
     ],
     "sends": [],
@@ -4642,6 +4658,10 @@
       },
       {
         "name": "tipping.elements_past_central",
+        "required": false
+      },
+      {
+        "name": "tipping.elements_shifted",
         "required": false
       }
     ],
@@ -4671,6 +4691,43 @@
       "Passing a threshold does not tip the element in this run; nothing feeds back yet. It is a flag with a citation, which is what the words-only essays lack."
     ],
     "tables": {
+      "couplings": [
+        {
+          "confidence": "checked (the fraction); ours (applied once when either ice sheet has passed)",
+          "fraction": -0.55,
+          "from": [
+            "greenland-ice-sheet",
+            "west-antarctic-ice-sheet"
+          ],
+          "level": "central",
+          "mechanism": "meltwater from the ice sheets freshens the North Atlantic and weakens the overturning; the Antarctic link's sign is unclear in the paper",
+          "source": "Wunderling et al. 2021, Sect. 3.1 (2.75 °C, about 55 %, at full interaction strength)",
+          "to": "amoc"
+        },
+        {
+          "confidence": "checked (the fraction); ours (applied once when either has passed)",
+          "fraction": -0.4,
+          "from": [
+            "greenland-ice-sheet",
+            "amoc"
+          ],
+          "level": "central",
+          "mechanism": "sea level from Greenland's loss, and a weaker overturning that leaves the Southern Ocean warmer",
+          "source": "Wunderling et al. 2021, Sect. 3.1 (1.2 °C, about 40 %, at full interaction strength)",
+          "to": "west-antarctic-ice-sheet"
+        },
+        {
+          "confidence": "checked (the fraction); ours (the sign taken as the ensemble net)",
+          "fraction": -0.1,
+          "from": [
+            "amoc"
+          ],
+          "level": "central",
+          "mechanism": "a weaker overturning shifts the tropical rain belt south and changes the basin's rainfall; the paper calls the sign unclear and this is its ensemble net",
+          "source": "Wunderling et al. 2021, Sect. 3.1 (0.5 °C, about 10 %, at full interaction strength)",
+          "to": "amazon-rainforest"
+        }
+      ],
       "elements": [
         {
           "central_c": 1.5,
@@ -5012,6 +5069,11 @@
         "note": "sentences: the wild cards"
       },
       {
+        "name": "capacity.crossing",
+        "required": false,
+        "note": "sentences: the conflicts"
+      },
+      {
         "name": "people.population",
         "required": false,
         "note": "the count"
@@ -5106,6 +5168,20 @@
         "note": ""
       },
       {
+        "kind": "counter",
+        "title": "capacity to cut emissions",
+        "source": "capacity.world",
+        "obs": "",
+        "note": "one is the plan as written; what the heat, the wild cards and the conflicts leave of it (the policy module's placeholder rule)"
+      },
+      {
+        "kind": "counter",
+        "title": "the cut now needed to hold 2 °C",
+        "source": "options.cut_needed_pct_yr",
+        "obs": "",
+        "note": "percent a year from this year on; 100 when the budget is spent"
+      },
+      {
         "kind": "story",
         "title": "what has happened so far",
         "source": "crossing",
@@ -5115,7 +5191,7 @@
       {
         "kind": "text",
         "title": "what this run does not yet measure",
-        "source": "Not in this run, so not in these numbers: deaths from heat (a published exposure-response layer is next), harvests and food prices, biodiversity, fresh water, sea level from ice, migration, and any response by people to any of it. Of the tipping elements, only the carbon of permafrost and the Amazon feeds back, and only once the run passes the assessment's thresholds; the rest are flags. The population here is the UN's path, which assumes none of the above changes where people live. Every crossing above is a count of people living where a stated limit is passed, not a toll, and the model runs about 0.15 °C warm in 2024. The warming applied to a place is its country's, from the country record scaled by the run's global anomaly: wherever something has held a country's warming back so far, this holds it back still, and within a country the pattern of the recent past is held.",
+        "source": "Not in this run, so not in these numbers: deaths from heat (a published exposure-response layer is next), harvests and food prices, biodiversity, fresh water, sea level from ice, migration. The one response by people is the capacity module's, where a variant turns it on: the planned cut slowed by what the heat and the shocks do, under a placeholder rule. Of the tipping elements, only the carbon of permafrost and the Amazon feeds back, and only once the run passes the assessment's thresholds; the rest are flags. The population here is the UN's path, which assumes none of the above changes where people live. Every crossing above is a count of people living where a stated limit is passed, not a toll, and the model runs about 0.15 °C warm in 2024. The warming applied to a place is its country's, from the country record scaled by the run's global anomaly: wherever something has held a country's warming back so far, this holds it back still, and within a country the pattern of the recent past is held.",
         "obs": "",
         "note": ""
       }
@@ -220187,7 +220263,12 @@
       {
         "name": "region.scored",
         "required": false,
-        "note": "{ year, bands: [{ name, code, what, higher_is_better }], by_iso3: { ISO3: { name, lat, lon, s: [nine 0..1 scores or null], total, stress, heat, wetbulb } } } at the stated cadence; stress is the larger of the two shares"
+        "note": "{ year, bands: [{ name, code, what, higher_is_better }], by_iso3: { ISO3: { name, lat, lon, people, s: [nine 0..1 scores or null], total, stress, heat, wetbulb } } } at the stated cadence; stress is the larger of the two shares"
+      },
+      {
+        "name": "region.pressure",
+        "required": false,
+        "note": "{ year, people, people_stress, voice, fairness, means } each January the fields are there: the share of the world's people under heat stress and the people-weighted voice, fairness and means bands, for the capacity module"
       }
     ],
     "sends": [],
@@ -220351,5 +220432,232 @@
         }
       ]
     }
+  },
+  {
+    "kind": "policy.capacity",
+    "name": "policy.capacity",
+    "summary": "Derailment: the world's capacity to cut emissions, 0 to 1, eroded by what the run's own warming does to people and recovering slowly, after Dyke (The Conversation, 2026-11-05): the consequences of climate change erode the capacity to address its causes, through debt, conflict and backlash, and collective action is easier to destroy than to build. Each January the capacity moves toward a target set by the share of people under heat stress (from the regions module), amplified where the people-weighted fairness band is low; it falls fast and recovers slowly, the recovery scaled by the voice band; a wild card knocks it by its kind for some years; and where a country's people are under stress a conflict may be drawn, which takes a fraction of that country's people and knocks the capacity by the country's share of the world. With mode = on the capacity goes to the emissions module, which slows every planned cut by it: a plan to zero by 2050 becomes zero by later or never. Beside it, the options: the carbon budget left to a stated warming level under a stated TCRE and the cut rate now needed to hold it, from the run's own series. Every number here is a placeholder and says so; the shape is the article's and the inputs are the run's.",
+    "priority": 9,
+    "dt": "1 year (1 January), after the regions module",
+    "params": [
+      {
+        "name": "mode",
+        "default": "watch",
+        "note": "off: nothing happens; watch: the capacity and the options are computed and reported, nothing is changed; on: the capacity is published to the emissions module and conflicts are drawn"
+      },
+      {
+        "name": "gain",
+        "default": 4.0,
+        "note": "the target capacity is one minus gain times the share of the world's people under heat stress (a guess: at today's 2% that is 0.92, at a fifth of everyone 0.2)"
+      },
+      {
+        "name": "inequality",
+        "default": 1.0,
+        "note": "the pressure is multiplied by one plus this times one minus the people-weighted fairness band (the article: conflict and backlash are stronger where inequality is high; a guess)"
+      },
+      {
+        "name": "fall",
+        "default": 0.5,
+        "unit": "1/yr",
+        "note": "the share of the gap to a lower target closed each year (fast)"
+      },
+      {
+        "name": "recover",
+        "default": 0.1,
+        "unit": "1/yr",
+        "note": "the share of the gap to a higher target closed each year, times the people-weighted voice band (slow; the article's asymmetry)"
+      },
+      {
+        "name": "floor",
+        "default": 0.0,
+        "note": "the capacity never falls below this"
+      },
+      {
+        "name": "knock_economy",
+        "default": 0.15,
+        "note": "a financial or technology wild card multiplies the capacity by one minus this for its emissions_years (a guess)"
+      },
+      {
+        "name": "knock_war",
+        "default": 0.2,
+        "note": "a war wild card, for five years (a guess)"
+      },
+      {
+        "name": "knock_disease",
+        "default": 0.1,
+        "note": "a pandemic wild card, for three years (a guess)"
+      },
+      {
+        "name": "knock_eruption",
+        "default": 0.05,
+        "note": "a cooling eruption or impact, for its forcing_years (a guess)"
+      },
+      {
+        "name": "conflict_gain",
+        "default": 0.02,
+        "unit": "1/yr",
+        "note": "a country's annual chance of conflict is this times the share of its people under heat stress, times one plus inequality times one minus its fairness band, times one minus half its voice band (a guess; mode = on only)"
+      },
+      {
+        "name": "conflict_mortality",
+        "default": 0.01,
+        "note": "the fraction of that country's people a conflict takes, once (a guess)"
+      },
+      {
+        "name": "conflict_knock",
+        "default": 0.02,
+        "note": "the world capacity is multiplied by one minus this for every percent of the world's people in the country, capped at 0.2, for conflict_years (a guess)"
+      },
+      {
+        "name": "conflict_years",
+        "default": 5.0,
+        "unit": "yr"
+      },
+      {
+        "name": "level_c",
+        "default": 2.0,
+        "unit": "degC",
+        "note": "the warming level the options are measured against"
+      },
+      {
+        "name": "level2_c",
+        "default": 3.0,
+        "unit": "degC",
+        "note": "a second, higher level, for when the first is spent"
+      },
+      {
+        "name": "tcre_c_per_gtc",
+        "default": 0.00165,
+        "unit": "degC/GtC",
+        "note": "transient climate response to cumulative emissions: AR6's best estimate of 0.45 °C per 1000 GtCO2, which is 1.65e-3 °C per GtC (recalled, not checked against the report)"
+      },
+      {
+        "name": "from",
+        "default": "2025-01-01",
+        "note": "no change before this date, so the hindcast is untouched"
+      }
+    ],
+    "publishes": [],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [
+      {
+        "name": "region.pressure",
+        "required": false,
+        "note": "{ year, people, people_stress, voice, fairness, means } each January from the regions module"
+      },
+      {
+        "name": "region.scored",
+        "required": false,
+        "note": "the per-country table, for the conflict draw and the capacity table"
+      },
+      {
+        "name": "shock.crossing",
+        "required": false,
+        "note": "{ kind, forcing_w_m2, forcing_years, emissions_years } wild cards knock the capacity by kind"
+      },
+      {
+        "name": "energy.state",
+        "required": false,
+        "note": "{ gmst_c } for the budget"
+      },
+      {
+        "name": "carbon.emitted",
+        "required": false,
+        "note": "{ gtc } summed over the year for the cut now needed"
+      }
+    ],
+    "fields_owned": [],
+    "fields_read": [],
+    "ledgers": [],
+    "frames": [],
+    "reports": [
+      {
+        "name": "capacity.world",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "capacity.target",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "capacity.pressure",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "options.budget_gtc",
+        "unit": "GtC",
+        "required": false
+      },
+      {
+        "name": "options.years_left",
+        "unit": "yr",
+        "required": false
+      },
+      {
+        "name": "options.cut_needed_pct_yr",
+        "unit": "%/yr",
+        "required": false
+      },
+      {
+        "name": "options.budget2_gtc",
+        "unit": "GtC",
+        "required": false
+      },
+      {
+        "name": "options.years_left2",
+        "unit": "yr",
+        "required": false
+      },
+      {
+        "name": "options.cut_needed2_pct_yr",
+        "unit": "%/yr",
+        "required": false
+      }
+    ],
+    "views": [
+      {
+        "kind": "chart",
+        "title": "capacity to cut emissions",
+        "source": "capacity.world",
+        "obs": "",
+        "note": "one is the plan as written; what the heat, the wild cards and the conflicts leave of it"
+      },
+      {
+        "kind": "chart",
+        "title": "the cut now needed to hold 2 °C",
+        "source": "options.cut_needed_pct_yr",
+        "obs": "",
+        "note": "percent a year from this year on, on a straight line to zero that spends the budget exactly; 100 when nothing is left"
+      },
+      {
+        "kind": "chart",
+        "title": "the cut now needed to hold 3 °C",
+        "source": "options.cut_needed2_pct_yr",
+        "obs": "",
+        "note": "the same, for the higher level"
+      },
+      {
+        "kind": "chart",
+        "title": "carbon budget left to 2 °C",
+        "source": "options.budget_gtc",
+        "obs": "",
+        "note": "under the stated TCRE, from the run's own warming"
+      },
+      {
+        "kind": "chart",
+        "title": "carbon budget left to 3 °C",
+        "source": "options.budget2_gtc",
+        "obs": "",
+        "note": ""
+      }
+    ],
+    "assets": [],
+    "notes": [
+      "The budget left is (level_c minus the run's warming) over the TCRE, in GtC, and zero once the level is passed; the years left are that over last year's emissions; the cut now needed is the constant percentage fall from today that spends exactly the budget on a straight line to zero, which is half the current rate over the budget, capped at 100 when nothing is left. The capacity applies to the planned fall only: a held or growing path is not helped by a weak capacity, and a lost year of cutting is not recovered when the capacity returns, which is the article's point. Conflicts here are a draw from the run's seed where the heat stress is, not a forecast of any war."
+    ]
   }
 ]
