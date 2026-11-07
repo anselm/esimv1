@@ -101,3 +101,48 @@ title = "Emissions held, wild cards drawn four times as often (seed 1)"
 "wildcards.mode" = "draw"
 "wildcards.scale" = 4
 "run.seed" = 1
+
+# Derailment and cascades (2026-11-07, Anselm: "we are still failing to really consider knock on
+# effects", with Dyke's Conversation piece of 2026-11-05 on derailment risk). The capacity module
+# reads the run's own pressures and slows the planned cut; the tipping couplings let a crossing
+# lower the next threshold. Placeholder numbers, declared in the modules' parameters.
+
+[[variant]]
+name = "zero-by-2050-derailed"
+title = "Emissions planned to zero by 2050, the cut slowed by what the warming does"
+[variant.set]
+"emissions.after_record" = "zero_by:2050"
+"capacity.mode" = "on"
+
+[[variant]]
+name = "zero-by-2050-derailed-wild"
+title = "Zero by 2050 derailed, with wild cards drawn (seed 1)"
+[variant.set]
+"emissions.after_record" = "zero_by:2050"
+"capacity.mode" = "on"
+"wildcards.mode" = "draw"
+"run.seed" = 1
+
+[[variant]]
+name = "falling-derailed"
+title = "Emissions planned to fall 3% a year, the cut slowed by what the warming does"
+[variant.set]
+"emissions.after_record" = "grow:-3"
+"capacity.mode" = "on"
+
+[[variant]]
+name = "held-cascade"
+title = "Emissions held; the tipping elements coupled at the paper's full strength"
+[variant.set]
+"emissions.after_record" = "hold"
+"tipping.coupling" = 1.0
+
+[[variant]]
+name = "zero-by-2050-everything"
+title = "Zero by 2050 derailed, elements coupled, wild cards drawn (seed 1)"
+[variant.set]
+"emissions.after_record" = "zero_by:2050"
+"capacity.mode" = "on"
+"tipping.coupling" = 1.0
+"wildcards.mode" = "draw"
+"run.seed" = 1

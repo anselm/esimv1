@@ -148,6 +148,26 @@ in doubt, split at the point where two different people would hold different opi
   scores) every few years and yearly from 2020; moved by `people.crossing` and `shock.crossing` under
   placeholder rules declared as parameters. The viewer's `Globe.svelte` draws the table at the cursor as
   stacked glyphs on a sphere with the Natural Earth outlines.
+- `policy.capacity` (`crates/modules/src/capacity.rs`, 2026-11-07): derailment, after Dyke's argument in The
+  Conversation (2026-11-05) that the consequences of climate change erode the capacity to address its causes.
+  A world capacity to cut emissions, 0 to 1, moved each January toward a target set by the share of the world's
+  people under heat stress (from `region.pressure`, which the regions module now publishes yearly with the
+  people-weighted voice, fairness and means bands), amplified where fairness is low; it falls fast and recovers
+  slowly, the recovery scaled by voice; a wild card knocks it by kind; where a country's people are under stress
+  a conflict may be drawn, which takes a fraction of that country alone (`people.shock` with an `iso3`) and knocks
+  the capacity by the country's share of the world. In `mode = "on"` the capacity goes to `carbon.emissions` as
+  `emissions.capacity`, and the emissions module multiplies each year's planned fall by it (never a rise, a lost
+  year never made up, the cutting continuing at the plan's last pace after the plan reaches zero), reporting the
+  plan beside what was achieved. Beside the capacity it reports the options: the carbon budget left to two
+  warming levels under a stated TCRE and the cut rate now needed to hold each. `mode = "watch"` reports and
+  changes nothing; every number is a declared placeholder.
+- `tipping.elements` gained couplings (2026-11-07): `[[coupling]]` rows in `data/events/tipping.toml`, from
+  Wunderling et al. 2021 (the ice sheets lower the AMOC's thresholds by about 55%, Greenland and the AMOC lower
+  West Antarctica's by about 40%, the AMOC lowers the Amazon's by about 10%, each the paper's ensemble net at its
+  full interaction strength, applied as fractions of our thresholds), scaled by the module's `coupling`
+  parameter (0 by default, so the runs before that day are unchanged). The year's check repeats until nothing
+  new passes, so a chain can close within a year; the crossing event carries the unshifted threshold and the
+  shift, and `carbon.tipped` follows the shifted crossings downstream.
 - `events.shock` (`crates/modules/src/shock.rs`, 2026-11-05): wild cards. A deck of speculative events
   (`data/events/future-speculative.toml`: eruptions, pandemics, wars, storms, crashes, each with a rough
   annual chance and an effect) drawn by the run's seed each year from a stated date, or one named card in

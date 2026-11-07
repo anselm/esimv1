@@ -51,6 +51,8 @@ pub struct Score {
     stress: BTreeMap<String, (f64, f64)>,
     /// global knock-downs from wild cards: (band index, multiplier, last year inclusive)
     knocks: Vec<(usize, f64, i64)>,
+    /// people per country this year, from the people field, for weights and the table
+    #[serde(default)] people: BTreeMap<String, f64>,
     last_published: i64,
 }
 
@@ -98,7 +100,7 @@ impl Score {
             name: name.to_string(), scale: param_str(p, "scale", "50m").to_string(),
             every_years: param_f64(p, "every_years", 10.0) as i64, from_year: param_f64(p, "from_year", 2020.0) as i64, every_years_after: param_f64(p, "every_years_after", 5.0) as i64,
             stress_living: param_f64(p, "stress_living", 0.6), stress_water: param_f64(p, "stress_water", 0.5), stress_means: param_f64(p, "stress_means", 0.3),
-            regions: Vec::new(), index_of: Vec::new(), stress: BTreeMap::new(), knocks: Vec::new(), last_published: -1_000_000,
+            regions: Vec::new(), index_of: Vec::new(), stress: BTreeMap::new(), knocks: Vec::new(), people: BTreeMap::new(), last_published: -1_000_000,
         };
         m.load()?;
         Ok(m)
@@ -150,7 +152,8 @@ impl Score {
             .read("people.outside_niche", "persons", false, "people per cell past the climate niche, from the heat module in cells mode")
             .read("wetbulb.people_over_a", "persons", false, "people per cell past the 31 °C wet-bulb limit, from the wet-bulb module in cells mode")
             .subscribe("shock.crossing", "{ kind, forcing_years, emissions_years } a wild card knocks a band for some years by its kind: disease the living band, economy and technology the means, war the living and the voice, an eruption or an impact the air, an ecological card the water and the forest (all guesses, all global)")
-            .publish("region.scored", "{ year, bands: [{ name, code, what, higher_is_better }], by_iso3: { ISO3: { name, lat, lon, s: [nine 0..1 scores or null], total, stress, heat, wetbulb } } } at the stated cadence; stress is the larger of the two shares")
+            .publish("region.scored", "{ year, bands: [{ name, code, what, higher_is_better }], by_iso3: { ISO3: { name, lat, lon, people, s: [nine 0..1 scores or null], total, stress, heat, wetbulb } } } at the stated cadence; stress is the larger of the two shares")
+            .publish("region.pressure", "{ year, people, people_stress, voice, fairness, means } each January the fields are there: the share of the world's people under heat stress and the people-weighted voice, fairness and means bands, for the capacity module")
             .report("region.countries_scored", "").report("region.mean_total", "1").report("region.min_total", "1").report("region.countries_stressed", "").report("region.people_stress", "1")
             .table("bands", json!(BANDS.iter().map(|b| json!({ "name": b.name, "code": b.code, "what": b.what, "higher_is_better": b.higher_is_better, "ranked_on_log": b.log, "source": if b.source == Some(3) { "World Bank, Worldwide Governance Indicators (API source 3)" } else { "World Bank, World Development Indicators (API v2)" } })).collect::<Vec<_>>()))
             .view("chart", "mean total score", "region.mean_total", "the plain mean over countries, not weighted by people; the globe itself is drawn at the top of the page by the story module")
@@ -184,7 +187,8 @@ impl Score {
             if stress >= 0.1 { stressed += 1; }
             if let Some(t) = total { sum += t; n += 1; if t < min { min = t; } }
             by.insert(r.iso3.clone(), json!({ "name": r.name, "lat": (r.lat * 100.0).round() / 100.0, "lon": (r.lon * 100.0).round() / 100.0, "s": s.iter().map(|v| v.map(|x| (x * 1000.0).round() / 1000.0)).collect::<Vec<_>>(), "total": total.map(|t| (t * 1000.0).round() / 1000.0),
-                "stress": (stress * 1000.0).round() / 1000.0, "heat": (heat * 1000.0).round() / 1000.0, "wetbulb": (wb * 1000.0).round() / 1000.0 }));
+                "stress": (stress * 1000.0).round() / 1000.0, "heat": (heat * 1000.0).round() / 1000.0, "wetbulb": (wb * 1000.0).round() / 1000.0,
+                "people": self.people.get(&r.iso3).map(|p| p.round()) }));
         }
         ctx.report("region.countries_stressed", "", stressed as f64);
         ctx.publish("region.scored", json!({ "year": y, "bands": BANDS.iter().map(|b| json!({ "name": b.name, "code": b.code, "what": b.what, "higher_is_better": b.higher_is_better })).collect::<Vec<_>>(), "by_iso3": by }));
@@ -220,9 +224,22 @@ impl Score {
             if tot[r] <= 0.0 { continue }
             let (h, w) = ((out[r] / tot[r]).clamp(0.0, 1.0), (ov[r] / tot[r]).clamp(0.0, 1.0));
             self.stress.insert(reg.iso3.clone(), (h, w));
+            self.people.insert(reg.iso3.clone(), tot[r]);
             people += tot[r]; people_stress += tot[r] * h.max(w);
         }
-        if people > 0.0 { ctx.report("region.people_stress", "1", people_stress / people); }
+        if people > 0.0 {
+            ctx.report("region.people_stress", "1", people_stress / people);
+            // the people-weighted bands the capacity module reads: voice, fairness, means
+            let y = year_of(ctx.now());
+            let mut acc = [(0.0f64, 0.0f64); 3];
+            for (r, reg) in self.regions.iter().enumerate() {
+                if tot[r] <= 0.0 { continue }
+                let (s, _) = self.scores(reg, y);
+                for (k, b) in [3usize, 2, 1].iter().enumerate() { if let Some(v) = s[*b] { acc[k].0 += tot[r] * v; acc[k].1 += tot[r]; } }
+            }
+            let w = |k: usize| if acc[k].1 > 0.0 { acc[k].0 / acc[k].1 } else { 0.5 };
+            ctx.publish("region.pressure", json!({ "year": y, "people": people.round(), "people_stress": people_stress / people, "voice": w(0), "fairness": w(1), "means": w(2) }));
+        }
     }
 }
 

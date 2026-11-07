@@ -75,6 +75,10 @@ pub struct EmissionsIn {
     fossil_total: f64, luc_total: f64,
     /// multipliers on the rate from other modules (wild cards), by name, until replaced
     #[serde(default)] scales: BTreeMap<String, f64>,
+    /// the capacity to cut, by name, from the policy module; and its product by year, so
+    /// the achieved path is a function of the year and this history
+    #[serde(default)] capacities: BTreeMap<String, f64>,
+    #[serde(default)] capacity_by_year: BTreeMap<i64, f64>,
     #[serde(skip)] data: Emissions,
 }
 
@@ -85,7 +89,7 @@ impl EmissionsIn {
             include_land_use: p.get("include_land_use").and_then(|v| v.as_bool()).unwrap_or(true),
             hold_last: p.get("hold_last").and_then(|v| v.as_bool()).unwrap_or(true),
             after_record: esim_kernel::manifest::param_str(p, "after_record", "hold").to_string(),
-            last_tick: None, fossil_total: 0.0, luc_total: 0.0, scales: BTreeMap::new(), data: Emissions::default(),
+            last_tick: None, fossil_total: 0.0, luc_total: 0.0, scales: BTreeMap::new(), capacities: BTreeMap::new(), capacity_by_year: BTreeMap::new(), data: Emissions::default(),
         };
         e.load()?;
         Ok(e)
@@ -97,9 +101,30 @@ impl EmissionsIn {
         self.data = planet::owid_world_emissions(&mut f, &asset_url(&cat, "owid-co2-data")?)?;
         Ok(())
     }
+    /// Annual rate for a year: the plan, slowed by the capacity to cut where one was
+    /// published. The plan's fall from one year to the next is multiplied by that year's
+    /// capacity; a rise is not; a lost year is never made up, and once the plan has reached
+    /// zero the cutting goes on at the plan's last pace, still scaled, until the rate is
+    /// zero: so zero by 2050 becomes zero by later. With no capacity ever published this is
+    /// the plan, bit for bit.
+    fn rate(&self, s: &BTreeMap<i64, f64>, y: i64) -> f64 {
+        if self.capacity_by_year.is_empty() { return self.plan(s, y); }
+        let Some((&ly, &lv)) = s.iter().next_back() else { return 0.0 };
+        if y <= ly { return self.plan(s, y); }
+        let (mut achieved, mut prev, mut last_fall) = (lv, lv, 0.0f64);
+        for yy in (ly + 1)..=y {
+            let plan = self.plan(s, yy);
+            let mut step = plan - prev;
+            if step < 0.0 { last_fall = step; } else if step == 0.0 && plan <= 0.0 { step = last_fall; }
+            let c = self.capacity_by_year.get(&yy).copied().unwrap_or(1.0);
+            achieved = (achieved + if step < 0.0 { c * step } else { step }).max(0.0);
+            prev = plan;
+        }
+        achieved
+    }
     /// Annual rate for a year; beyond the record, the stated assumption. This is the one
     /// place a planetary run stops being a hindcast, and the manifest must say which.
-    fn rate(&self, s: &BTreeMap<i64, f64>, y: i64) -> f64 {
+    fn plan(&self, s: &BTreeMap<i64, f64>, y: i64) -> f64 {
         if let Some(v) = s.get(&y) { return *v; }
         let Some((&ly, &lv)) = s.iter().next_back() else { return 0.0 };
         if y < ly { return 0.0; } // before the record: nothing (the start concentration carries it)
@@ -130,9 +155,10 @@ impl EmissionsIn {
             .param("after_record", esim_kernel::manifest::param_str(p, "after_record", "hold"), "", "assumption after the record's last year (2024): hold = the last rate for good; stop; zero_by:YYYY = a straight line to zero in that year; grow:P = compound growth of P percent a year; trend:N = the record's own mean growth over its last N years, continued. An assumption, never a forecast; the manifest notes must say which was chosen and why")
             .publish("carbon.emitted", "{ gtc, fossil_gtc, luc_gtc } for the month just added")
             .subscribe("emissions.scale", "{ name, factor } a multiplier on the rate from other modules (wild cards), kept by name until replaced; the product of all applies")
+            .subscribe("emissions.capacity", "{ name, capacity } the capacity to cut, 0 to 1, from the policy module, kept by name; the product multiplies each year's planned fall in the rate (never a rise); a lost year of cutting is not made up, and after the plan reaches zero the cutting continues at the plan's last pace, still scaled, until the rate is zero")
             .ledger(CARBON, "GtC", 1e-6)
-            .report("carbon.emissions_gtc_yr", "GtC/yr").report("carbon.cumulative_gtc", "GtC")
-            .view("chart", "emissions", "carbon.emissions_gtc_yr", "the record to 2024, then the assumption")
+            .report("carbon.emissions_gtc_yr", "GtC/yr").report("carbon.cumulative_gtc", "GtC").report("carbon.emissions_planned_gtc_yr", "GtC/yr")
+            .view_vs("emissions: the plan, and what was achieved", "carbon.emissions_gtc_yr", "carbon.emissions_planned_gtc_yr", "the record to 2024, then the assumption; where a capacity module is on, the achieved rate falls short of the plan by what the heat, the wild cards and the conflicts left of the capacity to cut")
             .asset("owid-co2-data", "World rows: co2 and land_use_change_co2, Mt CO2 per year")
             .note("Mt CO2 to GtC by 12.011/44.009. The annual total is spread evenly over the twelve months of the year.")
     }
@@ -143,12 +169,21 @@ impl Module for EmissionsIn {
     fn init(&mut self, ctx: &mut Ctx) {
         ctx.ledger(CARBON, "GtC", 1e-6);
         ctx.subscribe("emissions.scale");
+        ctx.subscribe("emissions.capacity");
         self.last_tick = Some(ctx.now());
         ctx.schedule_with_priority(to_next_month(ctx.now()), 0, "tick", json!(null));
     }
     fn handle(&mut self, ev: &Event, ctx: &mut Ctx) {
         if ev.topic == "emissions.scale" {
             if let (Some(n), Some(f)) = (ev.data["name"].as_str(), ev.data["factor"].as_f64()) { self.scales.insert(n.to_string(), f); }
+            return;
+        }
+        if ev.topic == "emissions.capacity" {
+            if let (Some(n), Some(c)) = (ev.data["name"].as_str(), ev.data["capacity"].as_f64()) {
+                self.capacities.insert(n.to_string(), c.clamp(0.0, 1.0));
+                let (y, _) = year_month(ctx.now());
+                self.capacity_by_year.insert(y, self.capacities.values().product());
+            }
             return;
         }
         if ev.topic != "tick" { return; }
@@ -164,6 +199,10 @@ impl Module for EmissionsIn {
         ctx.publish("carbon.emitted", json!({ "gtc": fossil + luc, "fossil_gtc": fossil, "luc_gtc": luc }));
         ctx.report("carbon.emissions_gtc_yr", "GtC/yr", (fossil + luc) / dt_yr);
         ctx.report("carbon.cumulative_gtc", "GtC", self.fossil_total + self.luc_total);
+        if !self.capacity_by_year.is_empty() {
+            let planned = (self.plan(&self.data.fossil_gtc, y) + if self.include_land_use { self.plan(&self.data.land_use_gtc, y) } else { 0.0 }) * factor;
+            ctx.report("carbon.emissions_planned_gtc_yr", "GtC/yr", planned);
+        }
         self.last_tick = Some(ctx.now());
         ctx.schedule_with_priority(to_next_month(ctx.now()), 0, "tick", json!(null));
     }

@@ -219,3 +219,59 @@ source = "Armstrong McKay et al. 2022, Table 1"
 confidence = "checked"
 checked = "2026-11-03, against Table 1 of the paper"
 # no carbon table: the paper's net effect (+0.14 °C) is the albedo's, which this model has no term for
+
+# Couplings between elements, read by tipping.elements when its `coupling` parameter is above
+# zero: once any element in `from` has passed its threshold at `level`, the thresholds of `to`
+# (low, central and high alike) are multiplied by one plus `fraction` times the strength.
+#
+# PROVENANCE: Wunderling, Donges, Kurths and Winkelmann 2021, "Interacting tipping elements
+# increase risk of climate domino effects under global warming", Earth System Dynamics 12,
+# 601-619, doi 10.5194/esd-12-601-2021, read on the publisher's page on 2026-11-07 (the text;
+# its Tables 1 and 2 are images and were not read). Four elements (Greenland, West Antarctica,
+# the AMOC, the Amazon) coupled in a conceptual model; at full interaction strength "the
+# ensemble average of the critical temperature ... is lowered by about 1.2 °C (≈40 %) for the
+# West Antarctic Ice Sheet, 2.75 °C (≈55 %) for the AMOC and 0.5 °C (≈10 %) for the Amazon
+# rainforest", while for Greenland "the critical temperature range ... tends to be raised" with
+# "a significant increase in overall uncertainty"; "for global warming up to 2.0 °C, tipping
+# occurs in 61 % of all simulations"; Greenland is "a dominant initiator of cascades" (in up to
+# 65 % of the ensemble) and the AMOC the dominant mediator. The links: Greenland to AMOC positive
+# (meltwater; [1; 10] after Kriegler et al. 2009), AMOC to Greenland negative (a weaker AMOC cools
+# Greenland), Greenland and West Antarctica mutually destabilising through sea level "with
+# different magnitudes", AMOC to West Antarctica destabilising (the bipolar see-saw), West
+# Antarctica to AMOC and AMOC to Amazon of unclear sign.
+#
+# WHAT IS OURS: the paper gives the net lowering per element, not the share per link, so each
+# row below applies the net fraction once, when any of the elements that push on it has passed;
+# the paper's critical ranges are Schellnhuber et al. 2016's and differ from Armstrong McKay et
+# al. 2022's above, so the shift is carried as a fraction of our thresholds, not as the paper's
+# degrees; the raised Greenland threshold is not applied (no number); the paper's cascades are
+# committed over long timescales and its authors say the model makes no predictions, and neither
+# does this. confidence = "checked" means the fraction is the paper's sentence; "ours" marks the
+# attribution of that fraction to the listed sources.
+
+[[coupling]]
+from = ["greenland-ice-sheet", "west-antarctic-ice-sheet"]
+to = "amoc"
+level = "central"
+fraction = -0.55
+mechanism = "meltwater from the ice sheets freshens the North Atlantic and weakens the overturning; the Antarctic link's sign is unclear in the paper"
+source = "Wunderling et al. 2021, Sect. 3.1 (2.75 °C, about 55 %, at full interaction strength)"
+confidence = "checked (the fraction); ours (applied once when either ice sheet has passed)"
+
+[[coupling]]
+from = ["greenland-ice-sheet", "amoc"]
+to = "west-antarctic-ice-sheet"
+level = "central"
+fraction = -0.40
+mechanism = "sea level from Greenland's loss, and a weaker overturning that leaves the Southern Ocean warmer"
+source = "Wunderling et al. 2021, Sect. 3.1 (1.2 °C, about 40 %, at full interaction strength)"
+confidence = "checked (the fraction); ours (applied once when either has passed)"
+
+[[coupling]]
+from = ["amoc"]
+to = "amazon-rainforest"
+level = "central"
+fraction = -0.10
+mechanism = "a weaker overturning shifts the tropical rain belt south and changes the basin's rainfall; the paper calls the sign unclear and this is its ensemble net"
+source = "Wunderling et al. 2021, Sect. 3.1 (0.5 °C, about 10 %, at full interaction strength)"
+confidence = "checked (the fraction); ours (the sign taken as the ensemble net)"

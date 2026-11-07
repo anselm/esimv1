@@ -85,9 +85,14 @@ year_from = 2011
 year_to = 2020
 crossing_share = 0.5
 
+# the thresholds, checked against the warming; coupling = 0 checks each alone, 1 lets a
+# crossing lower the thresholds of the elements it pushes on by the fractions in
+# data/events/tipping.toml (Wunderling et al. 2021); the project's cascade variants set it
 [[module]]
 name = "tipping"
 kind = "tipping.elements"
+[module.params]
+coupling = 0.0
 
 # the first cascade: permafrost and Amazon carbon into the carbon ledger once past the
 # assessment's central estimates (trigger = "low" for the sensitivity case)
@@ -115,3 +120,14 @@ name = "regions"
 kind = "score.regions"
 [module.params]
 scale = "50m"
+
+# derailment: the capacity to cut emissions, eroded by what the warming does to people (the
+# share under heat stress, the wild cards, conflicts drawn where the stress is), after Dyke
+# (The Conversation, 2026-11-05); watch computes and charts it and changes nothing, on sends it
+# to the emissions module, which slows every planned cut by it (Anselm, 2026-11-07: "we are
+# still failing to really consider knock on effects")
+[[module]]
+name = "capacity"
+kind = "policy.capacity"
+[module.params]
+mode = "watch"

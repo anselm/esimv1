@@ -110,6 +110,20 @@ holds the history.
   rules are placeholders (a quarter off living and water past the niche; a global knock per wild-card
   kind). The indicators' years differ by band; the governance band is one of six the Bank publishes;
   nothing regional happens to a region, since the wild cards carry no place yet.
+- Derailment (`policy.capacity`, 2026-11-07) is the shape of Dyke's argument with guessed numbers: the capacity
+  to cut falls with the share of people under heat stress by a gain of four, amplified by a people-weighted
+  inequality term, falls at half the gap a year and recovers at a tenth times the voice band; the wild-card
+  knocks and the conflict draw (two percent a year times the stress share, one percent of a country's people,
+  a knock by its share of the world) are placeholders declared in the parameters and nothing else. The
+  pressures it reads are the run's heat exposure, which this model under-reads over South Asia, so the capacity
+  falls less than a fuller impact layer would make it; the debt loop, the backlash and the loss of cooperation
+  the article names are all folded into one number with no finance, no politics and no countries' positions
+  in it. The options (budget and cut needed) use a recalled TCRE and the run's own warming, which is about
+  0.2 °C warm, so the 2 °C budget closes in the 2030s on every path; read them as the model's, not the world's.
+  The coupled tipping elements (`tipping.coupling`) carry the paper's ensemble-mean net lowering as a fraction
+  of a different assessment's thresholds, applied once per element when any of its pushers has passed, with
+  no timescale: the paper's cascades are committed over centuries, and here a shifted threshold is passed the
+  year the warming reaches it.
 - Wild cards (`events.shock`, 2026-11-05) are placeholders: the deck's annual chances are recalled
   orders of magnitude, its effects are three blunt levers (a global forcing pulse, a global emissions
   factor, a global death fraction with no place or age), a card may repeat, and no card changes the

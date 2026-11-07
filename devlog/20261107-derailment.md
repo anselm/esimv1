@@ -67,3 +67,63 @@ that one arrow.
 Everything above is a placeholder in its numbers and honest in its shape; the first and the
 fifth are a day, the second an afternoon once the paper is read, the third and fourth are
 the larger work already planned. Not built this morning.
+
+## Built, the same day (Anselm: "Let's try hard to add this level of detail to the 2100 scenario")
+
+Four of the five, in the order above, as placeholders that say so; the fourth (deaths and
+movers) stays planned. The work is in `crates/modules/src/capacity.rs` (kind `policy.capacity`),
+`planet.rs` (`emissions.capacity` on `carbon.emissions`), `score.rs` (`region.pressure` yearly:
+the share of people under heat stress and the people-weighted voice, fairness and means bands;
+`people` per country in the scored table), `countries.rs` (`people.shock` with an `iso3` takes one
+country; `tipping.elements` with `coupling` and the `[[coupling]]` rows; the story's new ports and
+counters), `data/events/tipping.toml` (three coupling rows with the paper's provenance block),
+the manifest (`capacity` in `mode = "watch"`, `tipping.coupling = 0.0`), five project variants,
+the compare page's label, the docs and the README.
+
+Decisions on the way:
+
+- The derailment goes through a new port, not `emissions.scale`. A factor on the rate cannot keep
+  a zero plan above zero; what derails is the cut, so the emissions module walks the plan year by
+  year from the record's last year and multiplies each planned fall by that year's capacity, never
+  a rise. With no capacity ever published the walk is skipped and the plan is returned bit for bit,
+  so every older run and the regression ladder are untouched.
+- The first run had zero-by-2050 stall at 1.9 GtC a year for ever, because after 2050 the plan has
+  no fall left to scale. That is not the article's picture (later, not never), so after the plan
+  reaches zero the cutting continues at the plan's last pace, still scaled, until the rate is zero:
+  zero by 2050 becomes zero by 2056 under the default numbers.
+- The conflict gain came down from five to two percent a year per unit of stress: fifty-four
+  conflicts in a run buried the thresholds in the story. Fourteen on the zero path, thirty-one on
+  the 3% path, drawn in the Gulf and the Sahel where the heat stress is.
+- `watch` mode so every variant reports the capacity and the options and only the derailed ones
+  act on them. The budget's TCRE is AR6's 0.45 °C per 1000 GtCO2, recalled, and declared so.
+- The couplings carry Wunderling et al. 2021's ensemble-mean net lowering per element (55, 40 and
+  10 percent at full interaction strength, read from the publisher's page this morning; its two
+  parameter tables are images and were not read) as fractions of our thresholds, applied once when
+  any of the pushing elements has passed; the split per link is not in the paper's text and is
+  marked as ours; the raised Greenland threshold has no number and is not applied. The year's check
+  loops until nothing new passes, so a chain can close in a year.
+
+What the runs say (all seventeen variants rerun after the manifest change, 5 s each):
+
+| variant | warming 2100 | emissions 2099, GtC/yr | capacity 2099 | conflicts |
+|---|---|---|---|---|
+| zero-by-2050 | 2.11 | 0 | 0.70 (not applied) | |
+| zero-by-2050-derailed | 2.16 | 0 (zero in 2056) | 0.68 | 14 |
+| zero-by-2050-derailed-wild | 2.18 | 0 | 0.58 | 15 |
+| falling (3%/yr) | 2.48 | 1.2 | 0.58 (not applied) | |
+| falling-derailed | 2.65 | 3.6 | 0.53 | 31 |
+| held | 3.36 | 11.8 | 0.21 (not applied) | |
+| held-cascade | 3.37 | 11.8 | | AMOC flagged 2029, Amazon releases from 2090, 18.6 GtC tipped against 15.8 |
+
+The honest reading: with these placeholders the loop is worth a few hundredths of a degree on the
+zero path and two tenths on the slow path, and the capacity's own fall on the held path (to a
+fifth) is the article's claim as a number, where there is no cut for it to slow. The 2 °C budget
+closes by 2040 on every path because the model runs 0.2 °C warm; the 3 °C budget is the one that
+moves. The surface of the everything run was checked against the describes by a script (no
+undeclared topic); the describe test passes; the regression ladder is unchanged.
+
+Not done: the per-country capacity table is published (`capacity.scored`) and nothing draws it
+yet; the globe could read it as a fourth ring or in the hover. Deaths and movers (the fourth way)
+are still the planned impact layer. The conflicts have no duration, no spread and no place beyond
+the country. Nothing in the capacity is finance or politics; it is one number with the article's
+shape.

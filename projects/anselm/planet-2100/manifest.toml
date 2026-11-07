@@ -122,6 +122,9 @@ year_to = 2020
 kind = "tipping.elements"
 name = "tipping"
 
+[module.params]
+coupling = 0.0
+
 [[module]]
 kind = "carbon.tipped"
 name = "tipped"
@@ -142,6 +145,13 @@ name = "regions"
 
 [module.params]
 scale = "50m"
+
+[[module]]
+kind = "policy.capacity"
+name = "capacity"
+
+[module.params]
+mode = "watch"
 
 [run]
 close_every = "30d"

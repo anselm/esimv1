@@ -141,6 +141,8 @@ pub struct PeopleCountries {
     /// every country alike, and the people it has taken
     #[serde(default = "one")] shock_factor: f64,
     #[serde(default)] shock_deaths: f64,
+    /// the same per country, for a people.shock that names an iso3 (a conflict)
+    #[serde(default)] shock_by_iso3: BTreeMap<String, f64>,
 }
 
 fn one() -> f64 { 1.0 }
@@ -153,7 +155,7 @@ impl PeopleCountries {
             hold_before_record: p.get("hold_before_record").and_then(|v| v.as_bool()).unwrap_or(true),
             scale: param_str(p, "scale", "110m"), distribution: param_str(p, "distribution", "even"),
             countries: Vec::new(), index: Vec::new(), land_km2: Vec::new(), weights: Vec::new(), wsum: Vec::new(), unassigned: 0, pop: BTreeMap::new(), last_frame_year: -1_000_000,
-            shock_factor: 1.0, shock_deaths: 0.0,
+            shock_factor: 1.0, shock_deaths: 0.0, shock_by_iso3: BTreeMap::new(),
         };
         m.load()?;
         Ok(m)
@@ -225,7 +227,7 @@ impl PeopleCountries {
             .param("distribution", param_str(p, "distribution", "even"), "", "even: a country's people spread evenly over its land cells; worldpop: in proportion to WorldPop's 1 km count")
             .own("country.index", "index").own("people.count", "persons").own("people.density_km2", "1/km2")
             .publish("people.population", "{ year, iso3: persons } each January")
-            .subscribe("people.shock", "{ id, title, year, fraction } from the wild cards: that fraction of every country's people is removed from this year on, and counted in people.shock_deaths")
+            .subscribe("people.shock", "{ id, title, year, fraction, iso3? } from the wild cards: that fraction of every country's people is removed from this year on, and counted in people.shock_deaths; with an iso3 (a conflict from the capacity module) the fraction is taken from that country alone")
             .report("people.world_total", "persons").report("people.countries_matched", "").report("people.shock_deaths", "persons")
             .view("counter", "people on Earth", "people.world_total", "the UN's estimates to 2023 and its medium projection after")
             .view("map", "people per square kilometre", "people_density_km2", if worldpop { "WorldPop's 2020 pattern, each country scaled to the UN count for the year" } else { "a country's people spread evenly over its land" })
@@ -255,9 +257,16 @@ impl Module for PeopleCountries {
         if ev.topic == "people.shock" {
             let f = ev.data["fraction"].as_f64().unwrap_or(0.0).clamp(0.0, 1.0);
             let y = year_of(ctx.now());
-            let alive: f64 = self.countries.iter().filter_map(|c| self.population(&c.iso3, y)).sum::<f64>() * self.shock_factor;
-            self.shock_deaths += alive * f;
-            self.shock_factor *= 1.0 - f;
+            if let Some(iso) = ev.data["iso3"].as_str() {
+                let k = self.shock_by_iso3.get(iso).copied().unwrap_or(1.0);
+                let alive = self.population(iso, y).unwrap_or(0.0) * self.shock_factor * k;
+                self.shock_deaths += alive * f;
+                self.shock_by_iso3.insert(iso.to_string(), k * (1.0 - f));
+            } else {
+                let alive: f64 = self.countries.iter().filter_map(|c| self.population(&c.iso3, y).map(|p| p * self.shock_by_iso3.get(&c.iso3).copied().unwrap_or(1.0))).sum::<f64>() * self.shock_factor;
+                self.shock_deaths += alive * f;
+                self.shock_factor *= 1.0 - f;
+            }
             ctx.report("people.shock_deaths", "persons", self.shock_deaths);
             return;
         }
@@ -277,7 +286,7 @@ impl PeopleCountries {
         let mut per_country = vec![0.0f64; self.countries.len()];
         let (mut total, mut matched) = (0.0, 0usize);
         for (k, c) in self.countries.iter().enumerate() {
-            if let Some(p) = self.population(&c.iso3, y) { let p = p * self.shock_factor; per_country[k] = p; total += p; matched += 1; table.insert(c.iso3.clone(), json!(p)); }
+            if let Some(p) = self.population(&c.iso3, y) { let p = p * self.shock_factor * self.shock_by_iso3.get(&c.iso3).copied().unwrap_or(1.0); per_country[k] = p; total += p; matched += 1; table.insert(c.iso3.clone(), json!(p)); }
         }
         let worldpop = self.distribution == "worldpop";
         let mut count = vec![f32::NAN; g.nx * g.ny];
@@ -718,38 +727,57 @@ impl PeopleHeat {
 #[derive(Clone, Serialize, Deserialize)]
 struct Element { id: String, title: String, low_c: f64, central_c: f64, high_c: f64, timescale: String, consequence: String, source: String, confidence: String }
 
+/// A coupling between elements: once any of `from` has passed its threshold at `level`,
+/// `to`'s thresholds are multiplied by one plus `fraction` times the module's coupling
+/// strength (a negative fraction lowers them).
+#[derive(Clone, Serialize, Deserialize)]
+struct Coupling { from: Vec<String>, to: String, #[serde(default = "central")] level: String, fraction: f64, #[serde(default)] mechanism: String, #[serde(default)] source: String, #[serde(default)] confidence: String }
+fn central() -> String { "central".into() }
+
 #[derive(Serialize, Deserialize)]
 pub struct Tipping {
     name: String,
     elements: Vec<Element>,
+    #[serde(default)] couplings: Vec<Coupling>,
+    /// the strength of the couplings, 0 (off) to 1 (the paper's full interaction)
+    #[serde(default)] coupling: f64,
+    /// the current fractional shift of each element's thresholds, from the couplings
+    #[serde(default)] shift: BTreeMap<String, f64>,
     passed_low: BTreeMap<String, i64>,
     passed_central: BTreeMap<String, i64>,
     gmst: f64,
 }
 
 impl Tipping {
-    pub fn new(name: &str, _p: &toml::Value) -> Result<Tipping, String> {
+    pub fn new(name: &str, p: &toml::Value) -> Result<Tipping, String> {
         let path = root().join("data/events/tipping.toml");
         let text = std::fs::read_to_string(&path).map_err(|e| format!("{}: {e}", path.display()))?;
         let v: toml::Value = toml::from_str(&text).map_err(|e| format!("tipping.toml: {e}"))?;
         let elements: Vec<Element> = v.get("element").and_then(|a| a.as_array()).into_iter().flatten()
             .map(|e| e.clone().try_into::<Element>().map_err(|err| format!("tipping.toml element: {err}"))).collect::<Result<_, _>>()?;
         if elements.is_empty() { return Err("tipping.toml has no elements".into()); }
-        Ok(Tipping { name: name.to_string(), elements, passed_low: BTreeMap::new(), passed_central: BTreeMap::new(), gmst: 0.0 })
+        let couplings: Vec<Coupling> = v.get("coupling").and_then(|a| a.as_array()).into_iter().flatten()
+            .map(|e| e.clone().try_into::<Coupling>().map_err(|err| format!("tipping.toml coupling: {err}"))).collect::<Result<_, _>>()?;
+        for c in &couplings {
+            for f in &c.from { if !elements.iter().any(|e| &e.id == f) { return Err(format!("tipping.toml coupling from unknown element {f}")); } }
+            if !elements.iter().any(|e| e.id == c.to) { return Err(format!("tipping.toml coupling to unknown element {}", c.to)); }
+        }
+        let coupling = param_f64(p, "coupling", 0.0);
+        if !(0.0..=1.0).contains(&coupling) { return Err(format!("{name}: coupling must be between 0 and 1")); }
+        Ok(Tipping { name: name.to_string(), elements, couplings, coupling, shift: BTreeMap::new(), passed_low: BTreeMap::new(), passed_central: BTreeMap::new(), gmst: 0.0 })
     }
-    pub fn describe(name: &str, _p: &toml::Value) -> Describe {
+    pub fn describe(name: &str, p: &toml::Value) -> Describe {
         // the rows as the run will read them, so a page can draw the rungs the run was checked against
-        let rows = std::fs::read_to_string(root().join("data/events/tipping.toml")).ok()
-            .and_then(|t| toml::from_str::<toml::Value>(&t).ok())
-            .and_then(|v| v.get("element").cloned())
-            .and_then(|a| serde_json::to_value(a).ok())
-            .unwrap_or(serde_json::Value::Array(vec![]));
-        Describe::new("tipping.elements", name, "The climate tipping elements from data/events/tipping.toml, each with the global warming at which an assessment judged it likely to tip (a central estimate and a range) and its timescale, checked every year against the run's global anomaly. A tipping.crossing event the first year the run passes an element's low end and again its central estimate. The table is the claim; the module only compares.")
+        let file = std::fs::read_to_string(root().join("data/events/tipping.toml")).ok().and_then(|t| toml::from_str::<toml::Value>(&t).ok());
+        let table = |k: &str| file.as_ref().and_then(|v| v.get(k).cloned()).and_then(|a| serde_json::to_value(a).ok()).unwrap_or(serde_json::Value::Array(vec![]));
+        let coupling = param_f64(p, "coupling", 0.0);
+        Describe::new("tipping.elements", name, "The climate tipping elements from data/events/tipping.toml, each with the global warming at which an assessment judged it likely to tip (a central estimate and a range) and its timescale, checked every year against the run's global anomaly. A tipping.crossing event the first year the run passes an element's low end and again its central estimate. The table is the claim; the module only compares. With coupling above zero the file's coupling rows act: once an element has passed its threshold, the elements it is coupled to have their thresholds lowered by the row's fraction times the strength, so one crossing can bring the next within reach in the same run (Wunderling et al. 2021: interacting elements lower each other's critical temperatures, the ice sheets start cascades, the Atlantic circulation carries them).")
             .priority(5).dt("follows energy.state, once a year")
-            .table("elements", rows)
+            .param("coupling", coupling, "", "0: each element is checked against the warming alone (the runs before 2026-11-07); 1: the full fractional shifts in the coupling rows, which are the paper's ensemble-mean lowering at its full interaction strength; between, a scaled share. The shifted thresholds apply to every level and to the carbon module downstream")
+            .table("elements", table("element")).table("couplings", table("coupling"))
             .subscribe("energy.state", "{ gmst_c }")
-            .publish("tipping.crossing", "{ id, title, year, level: low | central, threshold_c, gmst_c, timescale, consequence, source, confidence }")
-            .report("tipping.elements_past_low", "").report("tipping.elements_past_central", "")
+            .publish("tipping.crossing", "{ id, title, year, level: low | central, threshold_c, unshifted_c, shifted_by, gmst_c, timescale, consequence, source, confidence }")
+            .report("tipping.elements_past_low", "").report("tipping.elements_past_central", "").report("tipping.elements_shifted", "")
             .view("counter", "tipping elements past their central estimate", "tipping.elements_past_central", "a flag with a citation, not a tip in this run")
             .view("crossings", "tipping thresholds passed", "tipping.crossing", "every row checked against the paper's Table 1 on 2026-11-03; crossing the low end is what the assessment calls possible, the central estimate likely")
             .asset("events/tipping.toml", "the elements and their thresholds, with provenance and confidence per row")
@@ -765,22 +793,40 @@ impl Module for Tipping {
             "energy.state" => { if let Some(g) = ev.data.get("gmst_c").and_then(|v| v.as_f64()) { self.gmst = g; } }
             "tick" => {
                 let y = year_of(ctx.now());
-                for e in &self.elements {
-                    for (level, thr, book) in [("low", e.low_c, &mut self.passed_low), ("central", e.central_c, &mut self.passed_central)] {
-                        if self.gmst >= thr && !book.contains_key(&e.id) {
-                            book.insert(e.id.clone(), y);
-                            let sentence = if level == "central" {
-                                format!("{}: the warming passes {} °C, the central estimate at which {} becomes likely: {}, over {}.", y, thr, e.title.to_lowercase(), e.consequence, e.timescale)
-                            } else {
-                                format!("{}: the warming enters the range ({} °C and up) in which {} could be triggered.", y, thr, e.title.to_lowercase())
-                            };
-                            ctx.publish("tipping.crossing", json!({ "id": e.id, "title": e.title, "year": y, "level": level, "threshold_c": thr, "gmst_c": self.gmst,
-                                "timescale": e.timescale, "consequence": e.consequence, "source": e.source, "confidence": e.confidence, "sentence": sentence }));
+                // check, then let the couplings lower what the crossings reach, and check again
+                // until nothing new passes: a chain can close within the year
+                loop {
+                    let mut new = 0;
+                    for e in &self.elements {
+                        let shift = self.shift.get(&e.id).copied().unwrap_or(0.0);
+                        for (level, thr0, book) in [("low", e.low_c, &mut self.passed_low), ("central", e.central_c, &mut self.passed_central)] {
+                            let thr = ((thr0 * (1.0 + shift)) * 100.0).round() / 100.0;
+                            if self.gmst >= thr && !book.contains_key(&e.id) {
+                                book.insert(e.id.clone(), y); new += 1;
+                                let by = if shift != 0.0 { format!(" (lowered from {} °C by the elements already past)", thr0) } else { String::new() };
+                                let sentence = if level == "central" {
+                                    format!("{}: the warming passes {} °C{}, the central estimate at which {} becomes likely: {}, over {}.", y, thr, by, e.title.to_lowercase(), e.consequence, e.timescale)
+                                } else {
+                                    format!("{}: the warming enters the range ({} °C and up{}) in which {} could be triggered.", y, thr, by, e.title.to_lowercase())
+                                };
+                                ctx.publish("tipping.crossing", json!({ "id": e.id, "title": e.title, "year": y, "level": level, "threshold_c": thr, "unshifted_c": thr0, "shifted_by": shift, "gmst_c": self.gmst,
+                                    "timescale": e.timescale, "consequence": e.consequence, "source": e.source, "confidence": e.confidence, "sentence": sentence }));
+                            }
                         }
                     }
+                    if self.coupling > 0.0 {
+                        let mut shift: BTreeMap<String, f64> = BTreeMap::new();
+                        for c in &self.couplings {
+                            let book = if c.level == "low" { &self.passed_low } else { &self.passed_central };
+                            if c.from.iter().any(|f| book.contains_key(f)) { *shift.entry(c.to.clone()).or_insert(0.0) += c.fraction * self.coupling; }
+                        }
+                        self.shift = shift;
+                    }
+                    if new == 0 { break; }
                 }
                 ctx.report("tipping.elements_past_low", "", self.passed_low.len() as f64);
                 ctx.report("tipping.elements_past_central", "", self.passed_central.len() as f64);
+                ctx.report("tipping.elements_shifted", "", self.shift.values().filter(|s| **s != 0.0).count() as f64);
                 ctx.schedule_with_priority(to_next_year(ctx.now()), 5, "tick", json!(null));
             }
             _ => {}
@@ -1314,7 +1360,7 @@ impl Story {
     pub fn describe(name: &str, _p: &toml::Value) -> Describe {
         Describe::new("story.bottomline", name, "The bottom line of a planetary run, told as it happens: the headline numbers at the cursor and one plain sentence for every threshold crossed, each sentence written by the module that knows its source. It computes nothing new and it says, in the same place, what this run does not yet measure.")
             .priority(9).dt("follows the crossing events")
-            .subscribe("people.crossing", "sentences").subscribe("tipping.crossing", "sentences").subscribe("carbon.crossing", "sentences").subscribe("shock.crossing", "sentences: the wild cards").subscribe("people.population", "the count")
+            .subscribe("people.crossing", "sentences").subscribe("tipping.crossing", "sentences").subscribe("carbon.crossing", "sentences").subscribe("shock.crossing", "sentences: the wild cards").subscribe("capacity.crossing", "sentences: the conflicts").subscribe("people.population", "the count")
             .report("story.headlines", "")
             .view("globe", "the world, scored", "region.scored", "each country a glyph at its centroid, from the regions module: three groups as rings of its outline, or nine bands as a pole; drag to turn, hover for the scores")
             .view("map", "people living outside the human climate niche", "people_outside_niche", "annual mean above 29 °C")
@@ -1327,17 +1373,19 @@ impl Story {
             .view("counter", "person-days a year over the wet-bulb limit", "wetbulb.people_days_over_a", "people times days")
             .view("counter", "tipping elements past their central estimate", "tipping.elements_past_central", "")
             .view("counter", "sea level from expansion alone", "sea.thermal_m", "")
+            .view("counter", "capacity to cut emissions", "capacity.world", "one is the plan as written; what the heat, the wild cards and the conflicts leave of it (the policy module's placeholder rule)")
+            .view("counter", "the cut now needed to hold 2 °C", "options.cut_needed_pct_yr", "percent a year from this year on; 100 when the budget is spent")
             .view("story", "what has happened so far", "crossing", "one sentence per threshold crossed, newest first; the source is beside each")
-            .view("text", "what this run does not yet measure", "Not in this run, so not in these numbers: deaths from heat (a published exposure-response layer is next), harvests and food prices, biodiversity, fresh water, sea level from ice, migration, and any response by people to any of it. Of the tipping elements, only the carbon of permafrost and the Amazon feeds back, and only once the run passes the assessment's thresholds; the rest are flags. The population here is the UN's path, which assumes none of the above changes where people live. Every crossing above is a count of people living where a stated limit is passed, not a toll, and the model runs about 0.15 °C warm in 2024. The warming applied to a place is its country's, from the country record scaled by the run's global anomaly: wherever something has held a country's warming back so far, this holds it back still, and within a country the pattern of the recent past is held.", "")
+            .view("text", "what this run does not yet measure", "Not in this run, so not in these numbers: deaths from heat (a published exposure-response layer is next), harvests and food prices, biodiversity, fresh water, sea level from ice, migration. The one response by people is the capacity module's, where a variant turns it on: the planned cut slowed by what the heat and the shocks do, under a placeholder rule. Of the tipping elements, only the carbon of permafrost and the Amazon feeds back, and only once the run passes the assessment's thresholds; the rest are flags. The population here is the UN's path, which assumes none of the above changes where people live. Every crossing above is a count of people living where a stated limit is passed, not a toll, and the model runs about 0.15 °C warm in 2024. The warming applied to a place is its country's, from the country record scaled by the run's global anomaly: wherever something has held a country's warming back so far, this holds it back still, and within a country the pattern of the recent past is held.", "")
     }
 }
 
 impl Module for Story {
     fn name(&self) -> &str { &self.name }
-    fn init(&mut self, ctx: &mut Ctx) { ctx.subscribe("people.crossing"); ctx.subscribe("tipping.crossing"); ctx.subscribe("carbon.crossing"); ctx.subscribe("shock.crossing"); ctx.subscribe("people.population"); }
+    fn init(&mut self, ctx: &mut Ctx) { ctx.subscribe("people.crossing"); ctx.subscribe("tipping.crossing"); ctx.subscribe("carbon.crossing"); ctx.subscribe("shock.crossing"); ctx.subscribe("capacity.crossing"); ctx.subscribe("people.population"); }
     fn handle(&mut self, ev: &Event, ctx: &mut Ctx) {
         match ev.topic.as_str() {
-            "people.crossing" | "tipping.crossing" | "carbon.crossing" | "shock.crossing" => { self.headlines += 1; ctx.report("story.headlines", "", self.headlines as f64); }
+            "people.crossing" | "tipping.crossing" | "carbon.crossing" | "shock.crossing" | "capacity.crossing" => { self.headlines += 1; ctx.report("story.headlines", "", self.headlines as f64); }
             _ => {}
         }
     }

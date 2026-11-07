@@ -209,6 +209,21 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   the Natural Earth rings), moves bands by `people.crossing` and `shock.crossing` under declared placeholder rules.
   `web/src/lib/Globe.svelte` (view kind `globe`, hooked in `ModuleViews`) draws the table at the cursor as stacked
   instanced glyphs on a sphere with the outlines; three.js OrbitControls; hover for the bands. In the 2100 manifest.
+- Derailment and cascades (2026-11-07, Anselm: "we are still failing to really consider knock on effects", with
+  Dyke's Conversation piece of 2026-11-05 on derailment risk; `devlog/20261107-derailment.md`): `policy.capacity`
+  (`crates/modules/src/capacity.rs`) computes a world capacity to cut emissions from the run's own pressures
+  (`region.pressure`, published yearly by `score.regions`: the share of people under heat stress and the
+  people-weighted voice, fairness and means bands; wild-card knocks by kind; conflicts drawn where the stress is,
+  which take a fraction of one country through `people.shock { iso3 }`) with a fast fall and a slow recovery, and
+  in `mode = "on"` publishes `emissions.capacity`, which `carbon.emissions` applies to each year's planned fall
+  (`rate()` walks the plan from the record's last year; with no capacity ever published it returns the plan bit
+  for bit, so every older run is unchanged). It also reports the options: budget and cut rate now needed to hold
+  `level_c` and `level2_c` under a recalled TCRE. The manifest carries it in `mode = "watch"` (reports only).
+  `tipping.elements` has `coupling` (0 by default) and reads `[[coupling]]` rows from `data/events/tipping.toml`
+  (Wunderling et al. 2021, read on the publisher's page that day; the fractions are the paper's ensemble net at
+  full strength, the attribution per link is ours). Project variants: zero-by-2050-derailed, -derailed-wild,
+  falling-derailed, held-cascade, zero-by-2050-everything. After a manifest change: `esim project update
+  anselm/planet-2100 --manifest manifests/p4-planet-people.toml`, then rerun every variant (5 s each).
 - Wild cards (2026-11-05, Anselm: "i just want a placeholder ... like a video game with wild card factors
   optionally"): `events.shock` (`crates/modules/src/shock.rs`) draws `data/events/future-speculative.toml` by the
   run's seed each year from `from` (default 2025), or plays one named card (`mode = "named"`, `event`, `at`);

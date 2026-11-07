@@ -25,9 +25,11 @@ change the ocean, ice sheets raise the sea. So the human model has nine actors a
 warming, and each knock-on has its own arrow.
 
 This is the map people agree on, and it is not the simulation. A solid arrow is a relationship
-these runs model. A dashed one is a relationship the world has and the runs lack, and the
-largest is the first: here the emissions after 2024 are an assumption, named and held, not
-something the people in the model decide.
+these runs model. A dashed one is a relationship the world has and the runs lack. Until
+2026-11-07 the largest gap was the first arrow: the emissions after 2024 were an assumption,
+named and held, not something the people in the model decided. Now there is a tenth actor,
+the capacity to act, and the derailed variants below close that loop with a placeholder rule;
+the clean variants still hold the plan whatever the heat does, and say so.
 
 ```esim
 actors
@@ -40,8 +42,11 @@ reefs and currents: coral, the overturning circulation
 ice sheets: Greenland, West Antarctica
 sea: the water, the ice
 heat: days past the niche, air too humid to cool in
+capacity: the room to act, debt, conflict, consent
 warming
-people -> emissions: set them (not derived here)
+people -> emissions: set them, as a plan
+heat -> capacity: eats the room to act (derailed variants)
+capacity -> emissions: slows the cut (derailed variants)
 emissions -> air: most stays for centuries
 emissions -> sinks: about half is taken up
 sinks -> air: give back more as they warm and fill
@@ -50,6 +55,8 @@ warming -> thaw and dieback: passes their doors
 thaw and dieback -> air: give up their carbon
 warming -> reefs and currents: bleaches, slows
 reefs and currents -> warming: a slower ocean shifts the heat (not modelled)
+reefs and currents -> thaw and dieback: a slower Atlantic dries the Amazon (cascade variants)
+ice sheets -> reefs and currents: meltwater weakens the overturning (cascade variants)
 warming -> ice sheets: past their doors already
 ice sheets -> warming: darker ground where ice was (not modelled)
 ice sheets -> sea: slide into it over millennia (not modelled)
@@ -203,7 +210,7 @@ year from 2025 with three different seeds, draw it four times as often, or play 
 card, a Tambora-class eruption in 2040, on top of emissions held at the 2024 rate.
 
 ```esim
-table 2100 people.world_total=people energy.gmst_anom_c=warming shock.count=wild_cards people.shock_deaths=taken_by_wild_cards
+table 2100 people.world_total=people energy.gmst_anom_c=warming shock.count=wild_cards people.shock_deaths=taken_by_wild_cards_and_conflicts
 ```
 
 What the deck does to this model is small in the total and visible in the story. A seed
@@ -216,6 +223,66 @@ emissions held, the slow things decide the century and the shocks are weather on
 unless a shock is of the kind that changes the emissions path for good, which no card in this
 deck yet does. The run page lists every card drawn, with the chance it was drawn at and what
 the run did with it, in the story beside the thresholds crossed.
+
+## The loop closes: derailment
+
+Everything above runs one way. The emissions set the warming, the warming sets the heat, the
+heat is counted, and nothing the heat does reaches back to the emissions: a path to zero by
+2050 gets there whatever happens to the people on it. James Dyke, writing in The Conversation
+on 5 November 2026, calls the missing loop derailment risk: the consequences of climate change
+erode the capacity to address its causes. Storm damage and the debt it leaves crowd mitigation
+out of a poor country's budget; conflict breaks the cooperation that cutting emissions needs,
+more where inequality is high; a flood is followed by a backlash, Valencia in 2024 being his
+case; and collective action is easier to destroy than to build. Behind it the tipping points
+cascade, an Atlantic shutdown starving the Amazon, the ice sheets speeding each other.
+
+Since 2026-11-07 the project carries that loop as a placeholder with the article's shape and
+guessed numbers, declared in the module's parameters. A capacity module reads what the run
+already knows each year, the share of the world's people under heat stress and the voice and
+fairness bands weighted by people, and keeps a capacity to cut between one and zero: the
+target falls with the stress, more where fairness is low; the capacity falls fast toward a
+lower target and recovers slowly toward a higher one, the recovery scaled by voice, which is
+the article's asymmetry; a wild card knocks it for some years by its kind; and where a
+country's people are under heat stress a conflict may be drawn by the run's seed, which takes
+one percent of that country's people and knocks the capacity by the country's share of the
+world. In the derailed variants the capacity goes to the emissions module, which multiplies
+each year's planned cut by it. A lost year is never made up, and when the plan has reached
+zero the cutting goes on at the plan's last pace, still slowed, until the rate is zero. So a
+plan is a plan, and what is achieved is what the heat and the shocks left of it. The same
+module keeps the options: the carbon budget left to 2 and 3 °C under the assessment's response
+to cumulative emissions and the cut rate now needed to hold each, so a chart can show what must
+be done rising while what can be done falls.
+
+```esim
+table 2100 energy.gmst_anom_c=warming carbon.emissions_gtc_yr=emissions_in_2099 capacity.world=capacity_to_cut capacity.conflicts=conflicts_drawn tipping.elements_past_central=past_the_central_estimate carbon.tipped_cumulative_gtc=carbon_released_by_tipped_elements
+```
+
+What the loop does, with these numbers, is small on the zero path and large where the cut is
+slow. Zero by 2050, derailed, reaches zero in 2056 and ends the century 0.05 °C warmer. The
+3% a year path, the one Anderson and Bows examined, is derailed harder: the capacity slows a
+cut that never ends, so by 2099 the world is still emitting 3.6 billion tonnes of carbon a
+year against the plan's 1.2, thirty-one conflicts have been drawn in the Gulf and the Sahel,
+and the century ends 0.18 °C warmer than the plan. On the held path, where there is no cut
+to slow, the capacity itself is the finding: it falls to a fifth by 2100 as a sixth of
+everyone comes to live past the heat thresholds. The world that most needs to cut is the
+one the model leaves least able to, which is the article's claim as a number, and the
+number is a placeholder.
+
+Two more things the loop makes visible. The 2 °C budget, measured from the model's own
+warming, which runs 0.2 °C ahead of the record, is spent by 2040 on every path, including
+zero by 2050; the chart of the cut now needed climbs to a hundred percent and stays there,
+and the 3 °C budget is the one still open. And the tipping elements now push on each other
+in the cascade variants: Wunderling and colleagues found in 2021 that in a coupled model of
+four elements the ice sheets lower the Atlantic circulation's threshold by about 55%, the
+circulation and Greenland lower West Antarctica's by about 40%, and the circulation lowers the
+Amazon's by about 10%, at the full strength of the interactions they considered. Carried into
+the assessment's thresholds as fractions, that brings the Atlantic circulation's central
+estimate from 4.0 to 1.8 °C, which every path passes in 2029, and the Amazon's from 3.5 to
+3.15 °C, which the held path passes in 2090, so the Amazon begins to release its 30 billion
+tonnes of carbon ten years before the century ends. The paper's own words are that its model
+makes no predictions and its cascades are committed over long timescales; here a lowered
+threshold is passed the year the warming reaches it, and the ladder above still draws the
+unshifted rungs, so a cascade run's crossings sit below them.
 
 ## What the model does with a crossing
 
@@ -240,8 +307,8 @@ to the warming or the sea, and none is modelled yet.
   to the table.
 - The people counts are exposure, not deaths: people living where a stated limit is
   passed, on a settlement pattern held at 2020 and the UN's population path, in a world
-  where nobody moves. Deaths, harvests, water, migration and any response by anyone are
-  not in these runs. This is the largest thing the page gets wrong, and it is wrong in a
+  where nobody moves. Deaths, harvests, water and migration are not in these runs, and the
+  one response by anyone is the derailed variants' capacity rule, a placeholder. This is the largest thing the page gets wrong, and it is wrong in a
   known direction: the model's population climbs smoothly to 2100 everywhere, where a
   country like Bangladesh, low, crowded and in the path of both the sea and the humid
   heat, would in any granular reading see people leave in numbers and people die. Impact,
