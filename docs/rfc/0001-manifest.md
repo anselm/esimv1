@@ -2,7 +2,7 @@
 <!-- section: Standards -->
 # RFC 0001: a common transport for simulations
 
-Status: draft 1, 2026-11-07. Author: Anselm Hook, drafted with Claude in the esim session
+Status: draft 2, 2026-11-07. Author: Anselm Hook, drafted with Claude in the esim session
 of that day. Adopted by no engine yet, including this one.
 
 This is an argument, with a schema attached. It proposes that engines which couple
@@ -208,9 +208,118 @@ conduct rather than shape, because a manifest that lets a guessed number travel 
 checked one defeats the purpose of exchanging manifests at all. A chart does not carry
 this; a document can.
 
-## 7. What it leaves out, on purpose
+## 7. Who has done this before
 
-Not the engine: how a kernel orders events, stores fields or closes ledgers is the
+Every field that exchanges simulations has met this problem, and the ones that solved it
+made the same cut: a concrete document travels, and something richer writes it. Read on
+2026-11-07, through search results and the pages named; where only secondary sources were
+found the row says so.
+
+| where | what travels | the lesson |
+|---|---|---|
+| Systems biology: SBML, [SED-ML](https://sed-ml.org/), Antimony | SBML is the model as XML with MathML for the equations; SED-ML (Level 1 Version 5) is the experiment: models, simulations, tasks, repeated tasks over ranges, data generators, outputs. [Antimony](https://tellurium.readthedocs.io/en/latest/antimony.html) is the human text that converts to and from SBML, because SBML "was not designed to be readable or writable by humans". | The experiment is a document separate from the model, and it has one declarative loop: a repeated task over a range. People write a language; machines exchange the XML. |
+| Engineering co-simulation: FMI and [SSP](https://www.prostep.org/mediathek/fact-sheets/system-structure-and-parameterization-ssp) (Modelica Association, SSP 1.0 in March 2019) | A unit of model as a container with a self-description, and an XML system structure of components, their connections and their parameters. | The self-description is what makes the structure file checkable; one paper notes importers trust the unit's own ports over the structure's. Connections are scalar. |
+| Climate: [OASIS3-MCT](https://www.cerfacs.fr/oa4web/oasis3-mct/oasis3mct_UserGuide/node32.html), [ES-DOC](https://wcrp-cmip.github.io/WGCM_Infrastructure_Panel/Papers/CMIP6_ESDOC_documentation.pdf), CMIP6 vocabularies | The coupler's text file names the fields exchanged, their periods and remappings. ES-DOC's CIM documents models and experiments after the fact, not runnably. CMIP6 moved its controlled vocabularies and variable tables to JSON. | The field has a coupling file per coupler and a documentation standard, and no transport between engines; the vocabulary problem was solved by committee in JSON. |
+| Distributed simulation: HLA, IEEE 1516 | The Federation Object Model: the classes, interactions and data types a federation exchanges. | A standard can govern the vocabulary of a federation without governing its members. |
+| Agent-based models: the [ODD protocol](https://www.jasss.org/23/2/7.html) (2006, updated 2010 and 2020) | Prose under seven headings. The 2020 update argues for standard descriptions of simulation experiments beyond the model. | Prose did not make models comparable, and its own authors say so. |
+| Neuroscience: [LEMS](https://pmc.ncbi.nlm.nih.gov/articles/PMC4174883) under NeuroML 2 | Component types with parameters, dynamics as equations and structure, with dimensions on every quantity. | Definitions separate from instances; units in the core. |
+| Driving scenarios: ASAM OpenSCENARIO, [XML then DSL](https://www.asam.net/news-media/press-releases/detail/news/asam-openscenarior-1-and-2-split-into-separate-standards/) | 1.x was XML, "a low-level and concrete specification format, primarily designed to be read by simulation tools". 2.0 became a declarative language with parameters, constraints (`keep(t in [7..12.5]s)`) and composition, whose output is a "concrete scenario". The two are now separate standards. | The field found the concrete format too low to author in and too useful to drop. It kept both. |
+| Visualisation: [Vega](https://vega.github.io/vega/docs) and Vega-Lite | A JSON grammar; Vega-Lite compiles to Vega; inside, expressions are "a restricted subset of JavaScript" with no assignment, no `new`, no control flow, and a fixed set of functions. | A declarative JSON document with a small expression language in strings is enough for a whole discipline, and a higher language compiles down to it. |
+| 3D: VRML97 (ISO/IEC 14772) and X3D, [OpenUSD](https://nvidia-omniverse.github.io/LearnOpenUSD/composition-basics/strength-ordering.html) | VRML had a scene graph, `ROUTE`s between fields and a `Script` node in ECMAScript. USD has layers, references, payloads and variant sets with a fixed strength order. | Once a script node is in the file, interchange means "whatever the viewer runs". USD put composition and variants into the data model instead, and that is what made it a transport. |
+| Configuration: [Jsonnet](https://jsonnet.org/articles/design.html), [Starlark](https://github.com/bazelbuild/starlark/blob/master/spec.md), CUE | Jsonnet is a pure functional language that emits JSON; every JSON document is a Jsonnet program; Turing complete by choice. Starlark is a Python dialect that is "deterministic and hermetic", with finite execution and "no recursion or unbounded loops". CUE unifies types and values as constraints. | The industry settled on hermetic programs that generate JSON. None of them put the program into the JSON. |
+| This author's own: [orbital-sim](https://github.com/orbitalfoundation/orbital-sim) (2026) | A manifest is a JavaScript module: exported objects with an `inherits` path, run by Node. | Variables and loops for free, and one manifest reads an environment variable, which is the hermeticity leak the others legislate against. |
+
+## 8. Authoring, transport and math at run time
+
+A fully unrolled document is the right thing to exchange and the wrong thing to write.
+A manifest with 177 countries, thirty seeds and a sweep over three parameters is a
+program's output, not a person's. The prior art answers with one cut and one addition,
+and this draft adopts both.
+
+**The transport stays concrete.** What an engine runs, hashes and compares is the resolved
+JSON of sections 2 and 3. No variables, no loops, no scripts: that is what makes it
+checkable by a reader with no interpreter and the same on every machine. OpenSCENARIO's
+concrete scenario, SED-ML's experiment and Vega's compiled grammar are this layer.
+
+**Authoring is a program that writes it, and the standard does not pick the language.** A
+manifest may be generated by anything that satisfies one rule: the program is hermetic. It
+reads no clock, no environment, no network and no file outside the sources it declares,
+draws no randomness beyond the run seed, and given the same sources produces the same
+document. Starlark and Jsonnet have this by construction; JavaScript has it when run in a
+sandbox that provides nothing else, which is how the reference implementation will take
+orbital-sim's form: a module that exports the manifest, evaluated with no globals but the
+seed and the sources. The resolved manifest records where it came from:
+
+```json
+{
+  "from": {
+    "language": "javascript",
+    "entry": "planet.manifest.js",
+    "hash": "sha256:4c7a…",
+    "sources": { "countries.json": "sha256:a0b1…" }
+  }
+}
+```
+
+With that block anyone with the same interpreter regenerates the same document and
+checks the id; anyone without it still has the document. Loops over countries, variables
+for shared numbers, functions that stamp out patches: all live here, and the transport
+never sees them.
+
+**One declarative loop in the transport: ranges.** An ensemble of thirty seeds or a sweep
+over a parameter is not thirty documents; the engine needs to know the runs belong
+together, as SED-ML's repeated task does. A variant may carry a `range` instead of a fixed
+value:
+
+```json
+{ "name": "seeds", "title": "Thirty members", "range": { "run.seed": { "from": 1, "to": 30, "steps": 30 } } }
+```
+
+A range is the only place the transport does not unroll, and it unrolls trivially.
+
+**Math at run time is a small expression language, not a script.** Some numbers cannot be
+unrolled by any generator because they depend on the run: emissions as a function of the
+year and the warming so far, a rule that acts once a threshold is passed, a parameter that
+follows a series another module publishes. For these the transport carries an expression
+as a string, in a language with Vega's restrictions: arithmetic, comparison, conditionals,
+a fixed set of functions (`min`, `max`, `abs`, `exp`, `log`, `pow`, `clamp`, `step`), named
+inputs, and nothing else. No assignment, no loops, no recursion, no calls into the host;
+every expression is total and evaluates in bounded time in IEEE double precision. A kind
+declares which parameters take an expression and which names are in scope:
+
+```json
+{
+  "name": "after_record",
+  "type": "expr",
+  "vars": ["year", "last", "gmst_c"],
+  "default": "last",
+  "unit": "GtC/yr",
+  "note": "emissions each year after the record; last is the last recorded rate",
+  "provenance": "checked"
+}
+```
+
+and a manifest writes, in place of the reference implementation's `zero_by:2050`:
+
+```json
+{ "name": "emissions", "kind": "carbon.emissions", "params": { "after_record": "max(0, last * (1 - (year - 2024) / 26))" } }
+```
+
+The checker verifies that every name an expression uses is in the kind's scope and that
+the string parses. An implementation may keep the parsed form as a JSON tree in the
+resolved manifest (MathJSON is one such encoding), but the string is the transport,
+because a person has to read it. This is the lightweight math; it is as far as the
+document goes toward being a program, and the line is drawn where Vega drew it.
+
+Three layers, then: a language to write in, which the standard leaves open but requires
+to be hermetic; a concrete document to exchange, which it fixes; and expressions inside
+the document for what only the run can know, which it keeps small. VRML put the script in
+the file and lost the transport; USD and Vega kept it out and kept theirs.
+
+## 9. What it leaves out, on purpose
+
+Not the authoring language (section 8): any hermetic program may write a manifest and the
+manifest says which one did. Not the engine: how a kernel orders events, stores fields or closes ledgers is the
 vendor's. Not the protocol between a kernel and a module, which is a second document and
 lets a module be compiled in, loaded as WebAssembly or run as a process. Not the
 vocabulary: whether two engines mean the same thing by `energy.gmst_anom_c` is the real
@@ -222,7 +331,7 @@ An engine that needs more puts it under `ext`, keyed by its own name, and nothin
 `ext` may change a result. Readers ignore what they do not know there and preserve it
 through resolution.
 
-## 8. From practice
+## 10. From practice
 
 esim's TOML manifests map onto this one for one: `[run]`, `[place]`, `[[module]]` with its
 `[module.params]`, `[audit]`. Three things differ. esim keeps variants in the project
@@ -235,7 +344,7 @@ yet have.
 The reference implementation does not yet read this form. That is deliberate: the
 argument should stand before the code follows it.
 
-## 9. Security
+## 11. Security
 
 A manifest can name code and data by URL. An engine verifies the content hash before
 using either, and runs a fetched module with no more authority than the module protocol
@@ -243,12 +352,16 @@ grants: its parameters, its seed, its events, the fields it reads. Parameters ar
 evaluated as expressions. A manifest from a stranger is a document to check, not a program
 to run; levels one and two are safe on any input, level three is not.
 
-## 10. Open questions
+## 12. Open questions
 
 - Whether `place` should be a general grid declaration rather than a geographic window,
   so that a tank or an abstract lattice is first class.
 - Whether a variant may add a module, which would make "with and without this coupling"
   one document at the cost of variants no longer being a table of differences.
+- The expression language's exact grammar and function list, and whether a parsed form
+  travels beside the string.
+- Whether the reference implementation's first authoring language should be JavaScript in a
+  sandbox (orbital-sim's form, runnable in the viewer) or Starlark (hermetic by construction).
 - Where the vocabulary lives and how a version of it is named.
 - Whether the audit belongs in the manifest or in a document that names one.
 
@@ -263,3 +376,7 @@ to run; levels one and two are safe on any input, level three is not.
 ## Changes
 
 - Draft 1, 2026-11-07: first text.
+- Draft 2, 2026-11-07: prior art (section 7); authoring, ranges and run-time expressions
+  (section 8) after Anselm's note that a fully unrolled grammar cannot express variables and
+  loops and that orbital-sim's manifests were JavaScript used declaratively; `from`, `range`
+  and the `expr` parameter type in the schema.

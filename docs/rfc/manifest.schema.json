@@ -43,6 +43,7 @@
       "additionalProperties": { "$ref": "#/$defs/lock" },
       "description": "Resolved form only: every record the run read, keyed by asset id, with its content hash."
     },
+    "from": { "$ref": "#/$defs/from" },
     "ext": {
       "type": "object",
       "description": "Implementation-specific keys, namespaced by the implementation's name. Readers ignore what they do not know."
@@ -153,7 +154,8 @@
     },
     "variant": {
       "type": "object",
-      "required": ["name", "set"],
+      "required": ["name"],
+      "anyOf": [{ "required": ["set"] }, { "required": ["range"] }],
       "additionalProperties": false,
       "properties": {
         "name": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
@@ -164,8 +166,34 @@
           "propertyNames": { "pattern": "^(run\\.(end|start|seed|close_every|snapshot_every)|[a-z][a-z0-9_]*\\.[a-z][a-z0-9_]*)$" },
           "additionalProperties": { "$ref": "#/$defs/paramValue" },
           "description": "Overrides: run.<field> or <instance>.<parameter>."
+        },
+        "range": {
+          "type": "object",
+          "propertyNames": { "pattern": "^(run\\.seed|[a-z][a-z0-9_]*\\.[a-z][a-z0-9_]*)$" },
+          "additionalProperties": { "$ref": "#/$defs/range" },
+          "description": "Keys ranged over instead of set; the variant is then a family of runs, one per combination."
         }
       }
+    },
+    "from": {
+      "type": "object",
+      "required": ["language", "entry", "hash"],
+      "additionalProperties": false,
+      "properties": {
+        "language": { "type": "string", "description": "The authoring language that generated this document, e.g. javascript, starlark, jsonnet." },
+        "entry": { "type": "string", "description": "The program's entry file, by name." },
+        "hash": { "$ref": "#/$defs/hash", "description": "Content hash of the entry file." },
+        "sources": { "type": "object", "additionalProperties": { "$ref": "#/$defs/hash" }, "description": "Every other file the program read, by name, with its content hash. A hermetic program reads nothing else." }
+      },
+      "description": "Resolved form only: the hermetic program this document was generated from, so that anyone with the interpreter regenerates it and checks the id."
+    },
+    "range": {
+      "type": "object",
+      "oneOf": [
+        { "required": ["from", "to", "steps"], "properties": { "from": { "type": "number" }, "to": { "type": "number" }, "steps": { "type": "integer", "minimum": 1 } }, "additionalProperties": false },
+        { "required": ["values"], "properties": { "values": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/paramValue" } } }, "additionalProperties": false }
+      ],
+      "description": "A uniform range or an explicit list; the one declarative loop in the transport, for ensembles and sweeps."
     },
     "hash": {
       "type": "string",
@@ -201,7 +229,9 @@
               "default": { "$ref": "#/$defs/paramValue" },
               "unit": { "type": "string" },
               "note": { "type": "string" },
-              "provenance": { "type": "string", "enum": ["checked", "recalled", "guess", "fitted"] }
+              "provenance": { "type": "string", "enum": ["checked", "recalled", "guess", "fitted"] },
+              "type": { "type": "string", "enum": ["number", "string", "boolean", "array", "expr"], "description": "expr: the value is an expression string in the run-time expression language, over the names in vars." },
+              "vars": { "type": "array", "items": { "type": "string" }, "description": "For type expr: the names in scope." }
             }
           }
         },
