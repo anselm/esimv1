@@ -2,6 +2,7 @@
 area = "guest"
 name = "boone-dry-summer-2025"
 title = "Boone basin, a dry summer"
+featured = true
 description = "I want to see the Boone River basin in Iowa through the growing season of 2025: the weather, the soil water, the crop growing, and deer grazing on it, with the river flow checked against the USGS gauge. Spring to autumn."
 created = "2026-11-01"
 by = "web test, manifest drafted by gpt-oss:120b"

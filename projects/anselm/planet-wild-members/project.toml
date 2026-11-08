@@ -2,6 +2,7 @@
 area = "anselm"
 name = "planet-wild-members"
 title = "Eight draws of the deck"
+featured = true
 description = "Earth 2100 with emissions held and the wild-card deck in play, one member per seed: the spread the deck makes by 2100, from a JavaScript manifest."
 created = "2026-11-08"
 by = "anselm, in the esim session of 2026-11-07"

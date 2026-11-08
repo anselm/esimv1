@@ -2,6 +2,7 @@
 area = "anselm"
 name = "palisades-cells"
 title = "The Palisades fire, cell by cell"
+featured = true
 cover = "cover.png"
 cover_caption = "The ground as the engine saw it, from the run page's three-dimensional view: the terrain from the elevation model, every building a box of its stated height, the fire's arrival draped over both at the time cursor. The near-4 run, dark mode, 2026-11-03."
 description = "The same fire, the same ground and record, on an engine of our own: a heat budget on 30 m cells that know their elevation, land cover, buildings and roads, under NOAA's 3 km wind hour by hour. Every constant is a guess; one of them is fitted to the first infrared perimeter and declared; the structures the inspectors recorded are the test. Nobody fights the fire."

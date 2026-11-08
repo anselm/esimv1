@@ -2,6 +2,7 @@
 area = "anselm"
 name = "fortmcmurray-2016"
 title = "The Fort McMurray fire, May 2016"
+featured = true
 description = "Our own engine on the Fort McMurray fire: heat budget on 30 m cells, OpenStreetMap buildings, ERA5 wind at one point; scored against CWFIS satellite hotspots; unsuppressed; constants carried over from the Palisades."
 created = "2026-11-04"
 by = "anselm"

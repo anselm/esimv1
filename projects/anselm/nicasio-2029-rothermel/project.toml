@@ -2,6 +2,7 @@
 area = "anselm"
 name = "nicasio-2029-rothermel"
 title = "A fire at Devil's Gulch, October 2029: Rothermel's model"
+featured = true
 cover = "cover.png"
 cover_caption = "Where Rothermel's unsuppressed fire had reached by the end of the third day, coloured by the hour it arrived (yellow first, red last), on the borrowed ERA5 point wind; the roads from OpenStreetMap. Drawn from the run's own frames, 2026-11-08."
 description = "The same scenario as A fire at Devil's Gulch, October 2029, on the older engine: Rothermel's 1972 spread model on the same 30 m ground, fuel from land cover through the Scott and Burgan models, the wind as the ERA5 reanalysis at one 25 km point, borrowed from the Red Flag days of 27 to 29 October 2019 and played hour for hour. The stake is the same house. Nobody fights the fire. A separate simulation, as Anselm asked on 2026-11-08, so the two engines can be read against each other with no record between them."
