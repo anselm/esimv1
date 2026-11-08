@@ -1,0 +1,46 @@
+{
+  "entities": [
+    {
+      "id": "run",
+      "run": {
+        "close_every": "30d",
+        "end": "2025-01-01",
+        "name": "c1-halfmoonbay-oneline",
+        "notes": "The Half Moon Bay shoreline south of the Pillar Point Harbor breakwater, 1961 to 2025, on a one-line model with the reanalysis waves and the structures' shadows; today's shoreline, so rates are measured, not positions; the transport coefficient and the leak through the breakwater fitted to the Corps' rates and declared; everything else recalled or guessed; not a fluid dynamics model.",
+        "seed": 1,
+        "snapshot_every": "3650d",
+        "start": "1961-01-01"
+      }
+    },
+    {
+      "id": "place",
+      "place": {
+        "lat_n": 37.52,
+        "lat_s": 37.42,
+        "lon_e": -122.42,
+        "lon_w": -122.52,
+        "res_arcsec": 1
+      }
+    },
+    {
+      "id": "coast",
+      "kind": "coast.oneline",
+      "params": {
+        "breakwater": "on",
+        "k_cerc": 0.005,
+        "lat_n": 37.52,
+        "lat_s": 37.42,
+        "leak_frac": 0.2,
+        "lon_e": -122.42,
+        "lon_w": -122.52,
+        "res_arcsec": 1
+      }
+    }
+  ],
+  "from": {
+    "entry": "manifests/c1-halfmoonbay-oneline.toml",
+    "hash": "sha256:3fcf746b361a79d88470f7d2308cb2439fa566b0c0c630378dd6608e68fb2808",
+    "language": "toml"
+  },
+  "manifest": "manifest/1"
+}

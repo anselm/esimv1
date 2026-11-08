@@ -272,6 +272,19 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   The same scenario on `fire.rothermel` (which gained the same `wind_at`, ERA5 point wind) is `manifests/f6-nicasio-2029-rothermel.toml`,
   project `anselm/nicasio-2029-rothermel` with the Palisades' four variants: 16,000 to 23,000 acres, stops 1.3 to 2.2 km short of
   the house (Anselm: "add the rosenthal model also - a separate sim", read as Rothermel).
+- Half Moon Bay (2026-11-08 evening, Anselm: "a separate sim for the half moon bay dredging issue ... the army core of
+  engineers built sea walls back in the day and they are eroding the coastline and filling the harbor with silt. We may need
+  a new fluid dynamics model"; `devlog/20261108-halfmoonbay-shoreline.md`): `coast.oneline` (`crates/modules/src/coast.rs`,
+  readers `crates/registry/src/coast.rs`), a one-line shoreline model on today's OpenStreetMap coast from the East
+  Breakwater's root, ERA5-Ocean hourly waves through Open-Meteo's marine API (catalog `open-meteo-era5-ocean-waves`, the
+  half-degree cell 37.5/-122.5), the headland and breakwater as diffracting shadows, CERC transport at the faces between
+  transects (transport at the transects checkerboards), a bluff where the beach runs out, a fitted leak through the
+  breakwater into the harbor (`leak_frac` 0.2), a fitted direction offset (`dir_bias = "fit"`, -22.6 deg, zero net drift
+  beyond 3 km) and K fitted at 0.005 (80 times below SPM; the sweep is in the devlog); a `sand` ledger that must close.
+  Project `anselm/halfmoonbay-shoreline` (manifest `c1-halfmoonbay-oneline`; variants as-built, before-1959, sealed,
+  to-2075-held, to-2075-slr-high, to-2075-dredged), record `data/events/halfmoonbay/record.toml` (USACE 2015 draft EA
+  citing Lin et al. 2015; Griggs 2026 abstract; the Harbor District). `esim run --set` is not a thing: overrides go through
+  `esim project run --set`. The viewer has a diverging ramp for fields named change/anomaly/delta.
 - Wild cards (2026-11-05, Anselm: "i just want a placeholder ... like a video game with wild card factors
   optionally"): `events.shock` (`crates/modules/src/shock.rs`) draws `data/events/future-speculative.toml` by the
   run's seed each year from `from` (default 2025), or plays one named card (`mode = "named"`, `event`, `at`);

@@ -221070,5 +221070,556 @@
       }
     ],
     "notes": []
+  },
+  {
+    "kind": "coast.oneline",
+    "name": "coast.oneline",
+    "summary": "A one-line shoreline model for a bay behind a headland and a breakwater: today's coast as a line of transects; each hour the reanalysis cell's deep-water waves carried to each transect through the structures' shadows (diffracted, lower and from the tip inside a shadow), shoaled and refracted to breaking, and turned into longshore transport by the CERC formula; the transport's divergence moves the line, the line's own angle feeds back, the bluff retreats and yields sand where the beach is gone, a declared fraction of the sand moving past the breakwater's root is lost through its voids into the harbor, sea level rise moves the line by Bruun's rule, and a dredge every so many years puts harbor sand back on the first stretch of beach. Not a fluid dynamics model: no currents, no cross-shore profile, no setup, no reflection. Every coefficient is a published value recalled or a guess, declared so; the record it is read against is the Corps' and Griggs's numbers in the table below.",
+    "priority": 5,
+    "dt": "1d (the waves hour by hour within it)",
+    "params": [
+      {
+        "name": "lat_s",
+        "default": 37.42,
+        "unit": "deg"
+      },
+      {
+        "name": "lat_n",
+        "default": 37.52,
+        "unit": "deg"
+      },
+      {
+        "name": "lon_w",
+        "default": -122.52,
+        "unit": "deg"
+      },
+      {
+        "name": "lon_e",
+        "default": -122.42,
+        "unit": "deg"
+      },
+      {
+        "name": "res_arcsec",
+        "default": 1.0,
+        "unit": "arcsec"
+      },
+      {
+        "name": "frame_res_arcsec",
+        "default": 2.0,
+        "unit": "arcsec",
+        "note": "the shore_change_m frame"
+      },
+      {
+        "name": "root_lat",
+        "default": 37.49995,
+        "unit": "deg",
+        "note": "where the East Breakwater meets the shore: the first node of OpenStreetMap coastline way 638337850 (2026-11-08); the line of transects starts here and runs away from it"
+      },
+      {
+        "name": "root_lon",
+        "default": -122.47432,
+        "unit": "deg"
+      },
+      {
+        "name": "length_m",
+        "default": 8000.0,
+        "unit": "m",
+        "note": "how far along the coast the line runs: 8 km stops short of Miramontes Point, where the mapped coast turns"
+      },
+      {
+        "name": "dx_m",
+        "default": 50.0,
+        "unit": "m",
+        "note": "transect spacing"
+      },
+      {
+        "name": "breakwater",
+        "default": "on",
+        "note": "on: the East Breakwater shelters, from its root to its tip, and leaks sand into the harbor; off: the coast before 1959"
+      },
+      {
+        "name": "tip_lat",
+        "default": 37.49522,
+        "unit": "deg",
+        "note": "the breakwater's seaward end, OpenStreetMap coastline node (2026-11-08)"
+      },
+      {
+        "name": "tip_lon",
+        "default": -122.48573,
+        "unit": "deg"
+      },
+      {
+        "name": "headland",
+        "default": "on",
+        "note": "Pillar Point as a sheltering segment from its base to its tip"
+      },
+      {
+        "name": "head_base_lat",
+        "default": 37.5031,
+        "unit": "deg",
+        "note": "OpenStreetMap, the point's eastern base"
+      },
+      {
+        "name": "head_base_lon",
+        "default": -122.4851,
+        "unit": "deg"
+      },
+      {
+        "name": "head_tip_lat",
+        "default": 37.4927,
+        "unit": "deg",
+        "note": "Sail Rock, the point's southern tip (OpenStreetMap)"
+      },
+      {
+        "name": "head_tip_lon",
+        "default": -122.5005,
+        "unit": "deg"
+      },
+      {
+        "name": "wave_lat",
+        "default": 37.45,
+        "unit": "deg",
+        "note": "the reanalysis answers for the half-degree cell that holds the point (37.5, -122.5)"
+      },
+      {
+        "name": "wave_lon",
+        "default": -122.55,
+        "unit": "deg"
+      },
+      {
+        "name": "year_from",
+        "default": 1961.0,
+        "note": "first year of waves fetched"
+      },
+      {
+        "name": "year_to",
+        "default": 2024.0,
+        "note": "last; a run past it repeats the last year"
+      },
+      {
+        "name": "k_cerc",
+        "default": 0.39,
+        "note": "the CERC coefficient for significant wave height (Shore Protection Manual 1984, recalled); 0.2 to 0.4 in use on open coasts, and the number every one-line model is calibrated through. Here it also absorbs what the model lacks: the reanalysis cell's height is the open ocean's, and the point's refraction and the shelf's losses are not modelled, so a sheltered bay fits far below the open-coast value; the manifest says what it fitted"
+      },
+      {
+        "name": "gamma",
+        "default": 0.78,
+        "note": "breaker index, recalled"
+      },
+      {
+        "name": "d_closure_m",
+        "default": 8.0,
+        "unit": "m",
+        "note": "depth of closure, a guess for this coast"
+      },
+      {
+        "name": "berm_m",
+        "default": 2.0,
+        "unit": "m",
+        "note": "berm height, a guess"
+      },
+      {
+        "name": "beach_width_m",
+        "default": 20.0,
+        "unit": "m",
+        "note": "guess: the beach in front of the bluff today, taken uniform; where the line retreats past it the bluff retreats"
+      },
+      {
+        "name": "bluff_height_m",
+        "default": 10.0,
+        "unit": "m",
+        "note": "guess: the low marine terrace bluff south of the harbor"
+      },
+      {
+        "name": "bluff_sand_frac",
+        "default": 0.5,
+        "note": "guess: the sand fraction of the bluff that stays on the beach"
+      },
+      {
+        "name": "shadow_deg",
+        "default": 25.0,
+        "unit": "deg",
+        "note": "guess: inside a structure's shadow the height factor is 0.5 at the shadow line falling as exp(-angle/this) (the shape of the Penney and Price solution, rounded)"
+      },
+      {
+        "name": "lit_deg",
+        "default": 8.0,
+        "unit": "deg",
+        "note": "guess: on the lit side the factor rises from 0.5 at the line with this scale"
+      },
+      {
+        "name": "alpha_cap_deg",
+        "default": 45.0,
+        "unit": "deg",
+        "note": "beyond this deep-water angle to the shore normal the transport is the cap's value tapered by the cosine to nothing at grazing; beyond the cap the one-line equation is anti-diffusive (Ashton and Murray's high-angle instability, recalled) and a line of transects cannot carry what follows, a spit"
+      },
+      {
+        "name": "leak_frac",
+        "default": 0.02,
+        "note": "the one fitted number: the share of the longshore transport at the breakwater's root, either way, that passes through the rubble mound's voids into the harbor; a guess to be read against the Corps' harbor accretion"
+      },
+      {
+        "name": "slr_m_yr",
+        "default": 0.0,
+        "unit": "m/yr",
+        "note": "sea level rise from slr_from_year; 0.0044 is the Corps' intermediate 50-year case, 0.0126 its high case (0.71 and 2.06 ft in 50 years)"
+      },
+      {
+        "name": "slr_from_year",
+        "default": 2025.0
+      },
+      {
+        "name": "closure_distance_m",
+        "default": 500.0,
+        "unit": "m",
+        "note": "Bruun's rule: retreat = rise times this over the profile height; a guess"
+      },
+      {
+        "name": "dredge_every_years",
+        "default": 0.0,
+        "unit": "yr",
+        "note": "0: no dredging; otherwise harbor sand is moved to the first place_length_m of beach every this many years from dredge_from_year"
+      },
+      {
+        "name": "dredge_m3",
+        "default": 76000.0,
+        "unit": "m3",
+        "note": "the District's pilot: up to 100,000 cubic yards"
+      },
+      {
+        "name": "dredge_from_year",
+        "default": 2025.0
+      },
+      {
+        "name": "place_length_m",
+        "default": 305.0,
+        "unit": "m",
+        "note": "1,000 ft of Surfers Beach, the pilot's placement"
+      },
+      {
+        "name": "dir_bias",
+        "default": "fit",
+        "unit": "deg or fit",
+        "note": "an angle added to the reanalysis cell's wave directions. fit: chosen at the start so that the net transport along the line beyond fit_from_m, over the first three years of waves, is zero, because the record says the bay was in equilibrium before the breakwater and a 50 km cell's deep-water direction is not the direction at a sheltered shore; the fitted angle is reported as coast.dir_bias_deg. A number uses that number"
+      },
+      {
+        "name": "fit_from_m",
+        "default": 3000.0,
+        "unit": "m",
+        "note": "the open stretch the fit is made on, beyond the breakwater's shadow"
+      },
+      {
+        "name": "far_end",
+        "default": "open",
+        "note": "open: the transport at the last face passes the end of the line, to or from the coast beyond it toward Miramontes Point (booked as downcoast); closed: a point, nothing passes"
+      },
+      {
+        "name": "leak_reach_m",
+        "default": 300.0,
+        "unit": "m",
+        "note": "the leak is a share of the mean transport, either way, over this first stretch of beach"
+      },
+      {
+        "name": "near_m",
+        "default": 1400.0,
+        "unit": "m",
+        "note": "the stretch the near-breakwater erosion rate is summed over: Griggs's 1.4 km"
+      },
+      {
+        "name": "dt",
+        "default": "1d"
+      },
+      {
+        "name": "report_every",
+        "default": "30d"
+      },
+      {
+        "name": "frame_every",
+        "default": "365d"
+      }
+    ],
+    "publishes": [
+      {
+        "name": "coast.loaded",
+        "required": false,
+        "note": "{ transects, dx_m, length_m, structures, wave_cell, wave_hours, years, dir_bias_deg }"
+      },
+      {
+        "name": "coast.dredged",
+        "required": false,
+        "note": "{ m3, time, placed_along_m }"
+      }
+    ],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [],
+    "fields_owned": [],
+    "fields_read": [],
+    "ledgers": [
+      {
+        "name": "sand",
+        "unit": "m3",
+        "tolerance": 1.0
+      }
+    ],
+    "frames": [
+      {
+        "name": "shore_change_m",
+        "unit": "m",
+        "required": false
+      }
+    ],
+    "reports": [
+      {
+        "name": "coast.dir_bias_deg",
+        "unit": "deg",
+        "required": false
+      },
+      {
+        "name": "coast.hs_mean_m",
+        "unit": "m",
+        "required": false
+      },
+      {
+        "name": "coast.harbor_sand_m3",
+        "unit": "m3",
+        "required": false
+      },
+      {
+        "name": "coast.harbor_rate_m3_yr",
+        "unit": "m3/yr",
+        "required": false
+      },
+      {
+        "name": "coast.near_change_m3_yr",
+        "unit": "m3/yr",
+        "required": false
+      },
+      {
+        "name": "coast.gross_root_m3_yr",
+        "unit": "m3/yr",
+        "required": false
+      },
+      {
+        "name": "coast.shore_surfers_m",
+        "unit": "m",
+        "required": false
+      },
+      {
+        "name": "coast.shore_vallejo_m",
+        "unit": "m",
+        "required": false
+      },
+      {
+        "name": "coast.shore_miramar_m",
+        "unit": "m",
+        "required": false
+      },
+      {
+        "name": "coast.shore_south_m",
+        "unit": "m",
+        "required": false
+      },
+      {
+        "name": "coast.bluff_max_m",
+        "unit": "m",
+        "required": false
+      },
+      {
+        "name": "coast.bluff_mean_near_m",
+        "unit": "m",
+        "required": false
+      },
+      {
+        "name": "coast.downcoast_m3",
+        "unit": "m3",
+        "required": false
+      },
+      {
+        "name": "coast.upcoast_m3",
+        "unit": "m3",
+        "required": false
+      },
+      {
+        "name": "coast.placed_m3",
+        "unit": "m3",
+        "required": false
+      },
+      {
+        "name": "fit.near_erosion_ratio",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "fit.harbor_ratio",
+        "unit": "1",
+        "required": false
+      }
+    ],
+    "views": [
+      {
+        "kind": "map",
+        "title": "Shoreline change",
+        "source": "shore_change_m",
+        "obs": "",
+        "note": "metres seaward (+) or landward (-) of today's line, along the transects"
+      },
+      {
+        "kind": "chart",
+        "title": "Surfers Beach: the line",
+        "source": "coast.shore_surfers_m",
+        "obs": "",
+        "note": "mean change of the first 700 m, metres"
+      },
+      {
+        "kind": "chart",
+        "title": "Vallejo Beach: the line",
+        "source": "coast.shore_vallejo_m",
+        "obs": "",
+        "note": "700 to 1,400 m from the breakwater"
+      },
+      {
+        "kind": "chart",
+        "title": "Sand in the harbor",
+        "source": "coast.harbor_sand_m3",
+        "obs": "",
+        "note": "through the breakwater's voids, cumulative"
+      },
+      {
+        "kind": "chart",
+        "title": "Erosion within 1.4 km of the breakwater",
+        "source": "coast.near_change_m3_yr",
+        "obs": "",
+        "note": "m3 a year over the past year; the Corps' figure is a loss of 3,211 m3 a year (4,200 CY)"
+      },
+      {
+        "kind": "chart",
+        "title": "Bluff retreat, worst transect",
+        "source": "coast.bluff_max_m",
+        "obs": "",
+        "note": "metres since the start"
+      },
+      {
+        "kind": "chart",
+        "title": "Waves at the cell",
+        "source": "coast.hs_mean_m",
+        "obs": "",
+        "note": "30-day mean significant height"
+      }
+    ],
+    "assets": [
+      {
+        "key": "open-meteo-era5-ocean-waves",
+        "note": "hourly significant wave height, direction and period at the cell"
+      },
+      {
+        "key": "osm-overpass",
+        "note": "the coastline and the breakwater"
+      }
+    ],
+    "notes": [
+      "Zones: surfers 0 to 700 m from the root, vallejo 700 to 1,400 m, miramar 1,400 to 3,000 m, south beyond; the record's places (the Highway 1 and Mirada Road revetments) are not placed exactly.",
+      "The shoreline is today's, revetments and all; a run from 1961 on it measures rates, not positions."
+    ],
+    "tables": {
+      "record": [
+        {
+          "confidence": "checked",
+          "id": "breakwaters-built",
+          "source": "USACE San Francisco District, Draft Environmental Assessment, N. Half Moon Bay (Princeton) Pillar Point Harbor CAP Section 111 Feasibility Study, October 2015, section 1.3; Griggs 2026 (J. Mar. Sci. Eng. 14(16):1493) abstract: two breakwaters constructed between 1959 and 1961",
+          "title": "The East Breakwater was built by the Corps between 1959 and 1961",
+          "unit": "year complete",
+          "value": 1961.0
+        },
+        {
+          "confidence": "checked (abstract read; the paper's text was not reachable from canada1)",
+          "id": "bluff-retreat-pre",
+          "source": "Griggs 2026 abstract: 'the original very low (~8 cm/year) bluff recession rates'",
+          "title": "Bluff recession before the breakwaters",
+          "unit": "m/yr",
+          "value": 0.08
+        },
+        {
+          "confidence": "checked (abstract)",
+          "id": "bluff-retreat-post-max",
+          "source": "Griggs 2026 abstract: 'increased rapidly to as much as 2 m/year'",
+          "title": "Bluff recession after the breakwaters, at its worst",
+          "unit": "m/yr",
+          "value": 2.0
+        },
+        {
+          "confidence": "checked (abstract)",
+          "id": "erosion-reach",
+          "source": "Griggs 2026 abstract: 'Bluff erosion has progressed as far as 1.4 km downcoast'",
+          "title": "How far downcoast the bluff erosion has progressed",
+          "unit": "m",
+          "value": 1400.0
+        },
+        {
+          "confidence": "checked",
+          "id": "bluff-retreat-1993-2012",
+          "source": "USACE 2015 draft EA citing Lin, Li, Zoulas, Andes and Wu 2015: 'an approximately 2,200-foot (ft) long unprotected section of bluff between the two revetments (along Vallejo Beach) is retreating at a rate of 1.64 feet (ft) per year' (1.64 ft = 0.50 m)",
+          "title": "Bluff retreat along Vallejo Beach, between the two revetments, 1993 to 2012",
+          "unit": "m/yr",
+          "value": 0.5
+        },
+        {
+          "confidence": "checked",
+          "id": "bluff-retreat-background",
+          "source": "USACE 2015 draft EA, section 3.2: 'in the range of 0.23 ft/yr from 1993 to 2012' (Lin et al. 2015); 0.23 ft = 0.07 m",
+          "title": "Bluff retreat at a geologically similar unprotected section further down the coast, 1993 to 2012",
+          "unit": "m/yr",
+          "value": 0.07
+        },
+        {
+          "confidence": "checked",
+          "id": "beach-erosion-rate",
+          "source": "USACE 2015 draft EA, section 3.2: 'a high rate of net beach erosion (4,200 CY/yr) along and offshore of the coast extending from the East Breakwater to the Miranda Road revetment' (Lin et al. 2015); 4,200 cubic yards = 3,211 m3",
+          "title": "Net beach erosion from the East Breakwater to the Mirada Road revetment",
+          "unit": "m3/yr",
+          "value": 3211.0
+        },
+        {
+          "confidence": "checked, unit ambiguous",
+          "id": "harbor-accretion",
+          "source": "USACE 2015 draft EA, section 3.2: 'accompanied by significant accumulation of sand within Pillar Point Harbor (approximately 2,000 CY)' (Lin et al. 2015)",
+          "title": "Sand accumulating in Pillar Point Harbor beside the East Breakwater",
+          "unit": "m3 (the EA says 'approximately 2,000 CY' beside a per-year erosion rate; whether this is per year is not stated)",
+          "value": 1529.0
+        },
+        {
+          "confidence": "checked",
+          "id": "harbor-shoal-size",
+          "source": "USACE 2015 draft EA, section 1.3: 'a shoal along the harbor side of the breakwater that is approximately 200 to 250 ft wide and 2,000 ft long'",
+          "title": "The shoal along the harbor side of the East Breakwater",
+          "unit": "ft long by 200 to 250 ft wide",
+          "value": 2000.0
+        },
+        {
+          "confidence": "checked",
+          "id": "sand-through-breakwater",
+          "source": "USACE 2015 draft EA, section 3.1, alternative eliminated: 'sealing a 2,500 ft section of the East Breakwater with concrete to prevent sand from surging through voids in the breakwater'; modeling found it 'would decrease accretion of sediment within the harbor' but not reduce the erosion",
+          "title": "Sand surges through voids in the East Breakwater",
+          "unit": "ft of breakwater considered for sealing",
+          "value": 2500.0
+        },
+        {
+          "confidence": "checked, final volume unknown",
+          "id": "dredge-2025",
+          "source": "San Mateo County Harbor District, Completed Surfers Beach Sand Replenishment Pilot Project page, read 2026-11-08: 'dredging of up to 100,000 cubic yards (CY) of clean sand accumulated along the inside of Pillar Point Harbor's East Breakwater'; 'Dredging completed on October 26th' (2025 by the page's document list); the placed volume is not stated",
+          "title": "The Surfers Beach pilot: sand dredged from inside the East Breakwater and placed on about 1,000 ft of Surfers Beach",
+          "unit": "m3 at most (the District says up to 100,000 cubic yards, elsewhere 75,000 to 100,000)",
+          "value": 76455.0
+        },
+        {
+          "confidence": "checked",
+          "id": "slr-50yr",
+          "source": "USACE 2015 draft EA, section 3.2",
+          "title": "Sea level rise the Corps considered over 50 years, intermediate and high",
+          "unit": "m (intermediate, 0.71 ft); high 0.63 m (2.06 ft)",
+          "value": 0.22
+        }
+      ]
+    }
   }
 ]

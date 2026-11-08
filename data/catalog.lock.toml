@@ -15942,6 +15942,390 @@ sha256 = "19ac7863487268e9ebf046cfc0c4fc481858469d82b6388ceee786181b1b5f05"
 bytes = 251543
 fetched = "2026-11-01"
 
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1961.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1961-01-01&end_date=1961-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "af5c32e503a089e34f4b460db78e9e8e3f23682c5ba24c1314a7b723738a3a9d"
+bytes = 341158
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1962.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1962-01-01&end_date=1962-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "592f110e20f8ceaa70e140f7ead8964a3b879b82ae6b13ca265f2ab0af62634b"
+bytes = 341548
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1963.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1963-01-01&end_date=1963-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "4fd43eea06d2dc90683411862a2d505561c0a58cbe684d61e896e576a9270909"
+bytes = 342219
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1964.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1964-01-01&end_date=1964-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "f9ff40eb7f4e2d078d360431ce25642b5ec5caef1fb2da366818a5d6490e2d68"
+bytes = 341876
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1965.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1965-01-01&end_date=1965-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "087d15b2ccdab412364bd25d73b4f4c19e7830bbf2f8286443873eb3cdf0d5f9"
+bytes = 341060
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1966.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1966-01-01&end_date=1966-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "5800a3752141ab71921f4762e32aa936d444897a178aff1896f881ca36f92873"
+bytes = 341383
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1967.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1967-01-01&end_date=1967-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "3cbda64806335d30594e3957847ef0a73db6ac3d62b90884750bb7a266f413da"
+bytes = 342180
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1968.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1968-01-01&end_date=1968-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "300b8ff695c56825c4e4fd92242fdde376edddea2d742e108724a66533b43691"
+bytes = 342089
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1969.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1969-01-01&end_date=1969-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "0e604876b080e4fd93323ead049cbb38ed56ca66545e9d692d03c55d1c0de6c6"
+bytes = 341894
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1970.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1970-01-01&end_date=1970-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "936672cfd32151dc9767fcf678215938b75a75860319d4dee4f7d5ddd5a198d9"
+bytes = 341635
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1971.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1971-01-01&end_date=1971-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "744dff3518bd68a47a301d50acf67c5956790d7d82e120826a52c7e4c92272ab"
+bytes = 340680
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1972.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1972-01-01&end_date=1972-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "8738ae96ae608ab0410b980864a9f9daaac2ff90370aa274c0856fcf6c8102b8"
+bytes = 342051
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1973.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1973-01-01&end_date=1973-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "e7fa451dacdb202dfb12551f3fbfde73ca8a0bbdab250a3daedfbc85a36a13d2"
+bytes = 341140
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1974.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1974-01-01&end_date=1974-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "ca1b5a557326ac84d051343bb0d07861ab91e66490e47b315208a860bb3e29f7"
+bytes = 341236
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1975.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1975-01-01&end_date=1975-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "0e8e8c1d9ee9286302bdd0d742c73996c1175f50b7b58841d9be61c41d4f4e5f"
+bytes = 340898
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1976.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1976-01-01&end_date=1976-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "1175aa5885eb1496e312b2c110567e7bcc76655ff7d0b1b4c2d3ec47eca78bcc"
+bytes = 343182
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1977.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1977-01-01&end_date=1977-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "bc6206ea933499ae2a3f5199073a16131a8d1adac09ce94196a6315906b24783"
+bytes = 341567
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1978.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1978-01-01&end_date=1978-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "b157b62287098856ac1e37a1879fd723ab1e59d48da96956cf7c156fe1fc4e2f"
+bytes = 341818
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1979.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1979-01-01&end_date=1979-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "16bd64133214e66736f76e0efc3cde0ab4d79ea393d0a03027af836d4cebc994"
+bytes = 341448
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1980.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1980-01-01&end_date=1980-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "47b92e7244031bb97ec3023bbfb7fb511b481aa8d09e6f8aeb5b0320ee4dd792"
+bytes = 343207
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1981.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1981-01-01&end_date=1981-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "fbdc50066948bb270047844fe96b81f03a7fcd6797c2d5332c7c1eea63a15e58"
+bytes = 341488
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1982.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1982-01-01&end_date=1982-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "258407443d9acd2b35f30bd07de482e9a28a088b886b842da83b71dbb948d19b"
+bytes = 341887
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1983.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1983-01-01&end_date=1983-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "34f6e6bbdc8bec78f5d5bd5952e36918a17bb7cde72aa814ed81baa7852850ce"
+bytes = 342009
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1984.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1984-01-01&end_date=1984-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "8fa5db3815a502c18fbec685277171678e0cca120ce178048c9057a6398d9fc3"
+bytes = 342273
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1985.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1985-01-01&end_date=1985-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "29037f5ad2fbf2743a0419785dfbfebc3d407236d40cd32348303ce9491fcc70"
+bytes = 341796
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1986.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1986-01-01&end_date=1986-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "6a77f66c3bd37a2cc9d1279e8a3c4e6e0a6a75b5cfb68e499e218e83e23bffb6"
+bytes = 342710
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1987.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1987-01-01&end_date=1987-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "5cfb9ed02b48bafb2d19e7f46b79bee38876730d0714a33eb7f44560d32073a1"
+bytes = 343339
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1988.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1988-01-01&end_date=1988-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "e5dc2a7c63c256c8c35b3799e0b94c0ce87249fec3638389309755cd40881759"
+bytes = 343025
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1989.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1989-01-01&end_date=1989-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "46339b53c0be4e4c3405e9d010ee6f0bc18c9f7f0f981abe352af2ab5d1f8b62"
+bytes = 341495
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1990.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1990-01-01&end_date=1990-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "2017e0b35922af28821a264cf932971b500317a89eef8fd8b16b67cb33a09098"
+bytes = 341169
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1991.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1991-01-01&end_date=1991-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "d064156d08d3a8fd29234d16acfaf3fd4d988d514d29935481365cc49a4da707"
+bytes = 342679
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1992.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1992-01-01&end_date=1992-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "d29f9e6fa9542391b6ccc1da00f633ed5bcee2025ebe7c2da1c5072c9758edbe"
+bytes = 344111
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1993.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1993-01-01&end_date=1993-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "8a50c12192557eafcc877e42952ade8571daa383d27d1fcb6bf80ddfdcb6bc08"
+bytes = 343620
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1994.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1994-01-01&end_date=1994-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "cc0f7005c42e06c95171689a684efecf6dd004c0447638e1f0da253ea32e0f5d"
+bytes = 342641
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1995.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1995-01-01&end_date=1995-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "e32589bc2faefc81a02c6248226691c90053147de44e86fc5c8848aba583d3f8"
+bytes = 343243
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1996.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1996-01-01&end_date=1996-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "3603c54701c9de38f69a74bad589afbebcd9ff952de7b820763fbb4deb7dd3a5"
+bytes = 343508
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1997.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1997-01-01&end_date=1997-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "5a5db586982b3ecf55c9f4077518495e46075dbeaf001e2778527a95a67de17f"
+bytes = 342602
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1998.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1998-01-01&end_date=1998-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "c343df6d32e292a79e531803a00bd4fd203d74b3a82f5ac2ee26d9826f93fa24"
+bytes = 343602
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_1999.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=1999-01-01&end_date=1999-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "a5b7f9356469615a034ceb78538c8ab30b87037de4ebaa16230b64f1571781ed"
+bytes = 343446
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_2000.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=2000-01-01&end_date=2000-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "8b8bf850bc3a259b5ddf75484b7a4b2cd3a38a22afd357b74cbbf701863b2da9"
+bytes = 344142
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_2001.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=2001-01-01&end_date=2001-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "3070870706c496349552621dddad304b0006660e9f8e27c66b001886a239dec0"
+bytes = 342844
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_2002.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=2002-01-01&end_date=2002-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "bd1ade62bea5402f2ff1f8acb8de81f2022633a53b17146996c8311e71dd4cc7"
+bytes = 341712
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_2003.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=2003-01-01&end_date=2003-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "ed49172f6b59207271205de04b878eec5353033637ef93e2d52adc4d341195e8"
+bytes = 342712
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_2004.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=2004-01-01&end_date=2004-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "0f5e7dffa58c7b42e231c0991f0cc277814dba680cae6f993d74f868fc28af33"
+bytes = 342659
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_2005.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=2005-01-01&end_date=2005-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "215a6efa9d2466e6f4a74b6dff533880634cf5aeb3677636e3768ac729a654dd"
+bytes = 342501
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_2006.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=2006-01-01&end_date=2006-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "1ac0541ad09627b8a71716a0c4bf3f5e5f0c9030a48307b8dead01ef9b96f29f"
+bytes = 342430
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_2007.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=2007-01-01&end_date=2007-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "77f7d5b746b4b99a9d39234c7b051f87e64c5bb96fa718990bb67f4f25ed4beb"
+bytes = 341570
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_2008.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=2008-01-01&end_date=2008-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "64566c65cf7f8429ce8f1751f40409707110289872832cb40807e790450e8d83"
+bytes = 342690
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_2009.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=2009-01-01&end_date=2009-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "4761bc84b7fbf8be9345b184c933e5d728237ce52968c51b1b07cbd2a5dd1f9d"
+bytes = 341416
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_2010.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=2010-01-01&end_date=2010-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "ef36d26e848d8f2f0910b08422d3b902e5c6c0b24b1094d1d902f9b92d2af3e4"
+bytes = 342355
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_2011.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=2011-01-01&end_date=2011-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "0bcc5d2edfe9c514661742ce3f39d661b624ddbf78fc9bd3fa57e6266f851b67"
+bytes = 341890
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_2012.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=2012-01-01&end_date=2012-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "47bad39f779c2b26af9838c76859eea6a484791be4793919b6f9a5d4a350d33a"
+bytes = 342932
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_2013.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=2013-01-01&end_date=2013-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "130573d3c1bf4789d061ee50b5fa644efaa17c94ab6545c252d37d609fecfff8"
+bytes = 341503
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_2014.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=2014-01-01&end_date=2014-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "ccf46785fc81145371743e0f4451c693c1a8567a5d6b7bcb7f26fe10fd3f62d2"
+bytes = 342478
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_2015.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=2015-01-01&end_date=2015-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "9bd570dbd3a809303179a4dce3e9fc877a7d83d572c31988d2cec6046be23859"
+bytes = 342759
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_2016.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=2016-01-01&end_date=2016-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "efd5d65fe310afc458a6802c14bb999761b2bb88dc22cfe3b6fdf0dfa55debc3"
+bytes = 344145
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_2017.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=2017-01-01&end_date=2017-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "3247c24bf465ae44e55721a122013a3792f1d6d62c43f8d66898e9e6d37e3809"
+bytes = 341431
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_2018.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=2018-01-01&end_date=2018-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "71d899b8b33ee54d5d5a91845fee6f33d7aab1ad34db3811f578b3e33d7ee11f"
+bytes = 341312
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_2019.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=2019-01-01&end_date=2019-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "6ed2df8f345b16ddc3a1759d7666c80d068183420ac7c62e42d8a1ed3c6d8063"
+bytes = 341435
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_2020.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=2020-01-01&end_date=2020-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "a9fa1cb1c5cf0de2d4926d40628f7fe1b6e0e6b467da3ab6f4eb25b9436f15c7"
+bytes = 342317
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_2021.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=2021-01-01&end_date=2021-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "630a47b834dba5d3fd40631f83d933dbd89008d9e1cc96812f6ce2f325551f07"
+bytes = 341481
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_2022.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=2022-01-01&end_date=2022-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "fc3b34f7c74863cdef0c7deb6cc579f346ff24317746d0ee1ffd8356ace2ffaf"
+bytes = 341964
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_2023.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=2023-01-01&end_date=2023-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "63235bedb9642dd37be5382fe868a2e5867e8e4ee767e9cb4f5d4e88680b3e87"
+bytes = 342048
+fetched = "2026-11-08"
+
+[files."open-meteo-era5-ocean-waves/37.45_-122.55_2024.json"]
+url = "https://marine-api.open-meteo.com/v1/marine?latitude=37.45&longitude=-122.55&start_date=2024-01-01&end_date=2024-12-31&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC"
+sha256 = "ac73663817b05b1ac998bf961313734da22dfb5982bc76eef3e7654a9dd317fa"
+bytes = 341459
+fetched = "2026-11-08"
+
 [files."open-meteo-era5-wind/34.08_-118.59_2025-01-06_2025-01-14.json"]
 url = "https://archive-api.open-meteo.com/v1/archive?latitude=34.08&longitude=-118.59&start_date=2025-01-06&end_date=2025-01-14&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m&models=era5&timezone=UTC&wind_speed_unit=ms"
 sha256 = "3c822295af91f990533ed8daf2d12117d420a45f8c82d41f43b8f03290cb3658"
@@ -16254,6 +16638,12 @@ sha256 = "7620f8dac57b0c576128e5e3748e8599efad051e75a2b58a73fd6e9e2dbf1bbc"
 bytes = 3567130
 fetched = "2026-11-03"
 
+[files."osm-overpass/context_37.42_37.52_-122.52_-122.42.json"]
+url = "https://overpass.kumi.systems/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A180%5D%3B%28way%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%29%24%22%5D%2837.42%2C-122.52%2C37.52%2C-122.42%29%3Bnode%5B%22place%22~%22%5E%28city%7Ctown%7Csuburb%7Cneighbourhood%7Cvillage%7Cquarter%29%24%22%5D%2837.42%2C-122.52%2C37.52%2C-122.42%29%3Brelation%5B%22boundary%22%3D%22administrative%22%5D%5B%22admin_level%22%3D%228%22%5D%2837.42%2C-122.52%2C37.52%2C-122.42%29%3B%29%3Bout%20geom%3B"
+sha256 = "b22a485161c45bb46f8963ff5fba8cc2e96d7f29d7d14b571b4c26dcdfb93cdd"
+bytes = 274428
+fetched = "2026-11-08"
+
 [files."osm-overpass/context_37.97_38.08_-122.79_-122.61.json"]
 url = "https://overpass.kumi.systems/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A180%5D%3B%28way%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%29%24%22%5D%2837.97%2C-122.79%2C38.08%2C-122.61%29%3Bnode%5B%22place%22~%22%5E%28city%7Ctown%7Csuburb%7Cneighbourhood%7Cvillage%7Cquarter%29%24%22%5D%2837.97%2C-122.79%2C38.08%2C-122.61%29%3Brelation%5B%22boundary%22%3D%22administrative%22%5D%5B%22admin_level%22%3D%228%22%5D%2837.97%2C-122.79%2C38.08%2C-122.61%29%3B%29%3Bout%20geom%3B"
 sha256 = "fb601154b625c57700bbdaaa0a2868c0c9fa9322eba70bf2b095c59f1090f3a6"
@@ -16265,6 +16655,12 @@ url = "https://overpass.kumi.systems/api/interpreter?data=%5Bout%3Ajson%5D%5Btim
 sha256 = "c7f047f600e5b672571f7950e45826f5b368909e785f03185c7c911ce71e6c35"
 bytes = 472992
 fetched = "2026-11-04"
+
+[files."osm-overpass/shore_37.42_37.52_-122.52_-122.42.json"]
+url = "https://overpass.kumi.systems/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A180%5D%3B%28way%5B%22natural%22%3D%22coastline%22%5D%2837.42%2C-122.52%2C37.52%2C-122.42%29%3Bway%5B%22man_made%22%3D%22breakwater%22%5D%2837.42%2C-122.52%2C37.52%2C-122.42%29%3B%29%3Bout%20geom%3B"
+sha256 = "a3166c25fb92083973dfc6de538826684c88c5c9eb4bb78d2ae306af096e5384"
+bytes = 56001
+fetched = "2026-11-08"
 
 [files."owid/owid-co2-data.csv"]
 url = "https://raw.githubusercontent.com/owid/co2-data/master/owid-co2-data.csv"

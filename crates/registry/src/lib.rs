@@ -15,6 +15,7 @@ pub mod cells;
 pub mod wildfire;
 pub mod grib;
 pub mod worldbank;
+pub mod coast;
 
 pub const EARTH_RADIUS_M: f64 = 6_371_008.8;
 

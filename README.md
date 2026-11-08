@@ -22,6 +22,9 @@ The planet pages to start with:
 - [A fire that has not happened](https://esimv1.exe.xyz/anselm/nicasio-2029): a scenario with no
   record, an ignition in a Marin County state park in October 2029 under a borrowed Red Flag
   wind, with a named house as the stake; what the engine can and cannot say without a record.
+- [Half Moon Bay: the breakwater and the beach](https://esimv1.exe.xyz/anselm/halfmoonbay-shoreline):
+  a one-line shoreline model of the bay south of Pillar Point Harbor since the Corps built the
+  breakwater, read against the Corps' and Griggs's erosion rates, with the dredge and sea level to 2075.
 - [Two futures, one clock](https://esimv1.exe.xyz/anselm/planet-2100/compare): emissions
   held at today's rate beside emissions to zero by 2050, under one time cursor.
 - [Documentation](https://esimv1.exe.xyz/docs) and [the module kinds](https://esimv1.exe.xyz/kinds).

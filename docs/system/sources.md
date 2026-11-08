@@ -170,6 +170,16 @@ Every record this simulator reads, from `data/catalog.toml`, with the publisher,
 - **url** `https://noaa-gsod-pds.s3.amazonaws.com/{year}/{station}.csv`
 - **notes** Daily summaries of station observations; the wet-bulb layer estimates an afternoon wet-bulb from MAX and DEWP.
 
+### Open-Meteo marine API, the ERA5-Ocean wave reanalysis hourly at one point from 1940
+
+- **id** `open-meteo-era5-ocean-waves`
+- **publisher** Open-Meteo, serving the ECMWF ERA5 ocean wave reanalysis (Copernicus Climate Change Service)
+- **licence** As open-meteo-era5: free for non-commercial use only; attribute Copernicus
+- **units** wave_height m (significant), wave_direction degrees the waves come from, wave_period s (mean), wave_peak_period s
+- **verified** 2026-11-08 from canada1: 1993 at 37.4 N 122.7 W answered the cell 37.5, -122.5 with 8,760 hours, none missing, mean significant height 1.65 m, maximum 3.68 m, mean period 9.8 s, seven hours in ten from between 270 and 300 degrees; 1961 answers too
+- **url** `https://marine-api.open-meteo.com/v1/marine?latitude={lat}&longitude={lon}&start_date={start}&end_date={end}&hourly=wave_height,wave_direction,wave_period,wave_peak_period&models=era5_ocean&timezone=UTC`
+- **notes** A 50 km wave cell over a bay: the sheltering of Pillar Point and the breakwaters is not in it and must be modelled.
+
 ### Open-Meteo historical weather API, hourly at one point with wind direction and gusts
 
 - **id** `open-meteo-era5-wind`

@@ -14,7 +14,7 @@
   // own, a time slider when there is more than one frame, and a hover/tap
   // readout of lat, lon and value.
   import { isoDate, num } from './fmt.js'
-  import { LUT, RAMP_CSS, FIRE_LUT, FIRE_CSS, COVER, COVER_NAMES, rampFor } from './ramp.js'
+  import { LUT, RAMP_CSS, FIRE_LUT, FIRE_CSS, DIVERGE_LUT, DIVERGE_CSS, COVER, COVER_NAMES, rampFor } from './ramp.js'
 
   let { name, field, base, cursor = null, context = null } = $props()
   const ramp = $derived(rampFor(name, field.unit))
@@ -43,8 +43,11 @@
     }
     return lo <= hi ? [lo, hi] : null
   })
-  const lo = $derived(stretch === 'frame' && frameRange ? frameRange[0] : stretch === 'log' ? logFloor : field.min)
-  const hi = $derived(stretch === 'frame' && frameRange ? frameRange[1] : field.max)
+  // a diverging field is drawn symmetric about zero, so the middle colour means no change
+  const lo0 = $derived(stretch === 'frame' && frameRange ? frameRange[0] : stretch === 'log' ? logFloor : field.min)
+  const hi0 = $derived(stretch === 'frame' && frameRange ? frameRange[1] : field.max)
+  const lo = $derived(ramp === 'diverge' ? -Math.max(Math.abs(lo0), Math.abs(hi0)) : lo0)
+  const hi = $derived(ramp === 'diverge' ? Math.max(Math.abs(lo0), Math.abs(hi0)) : hi0)
 
   // Aspect in degrees, corrected by cos(latitude at the grid's centre) so a
   // degree of longitude is drawn shorter than a degree of latitude.
@@ -141,7 +144,7 @@
       else {
         const u = stretch === 'log' ? (v <= lo ? 0 : Math.log(v / lo) / logSpan) : (v - lo) / span
         const t = Math.min(255, Math.max(0, Math.round(u * 255)))
-        c = ramp === 'fire' ? FIRE_LUT[t] : LUT[t]
+        c = ramp === 'fire' ? FIRE_LUT[t] : ramp === 'diverge' ? DIVERGE_LUT[t] : LUT[t]
       }
       px[o] = c[0]; px[o + 1] = c[1]; px[o + 2] = c[2]; px[o + 3] = 255
     }
@@ -254,7 +257,7 @@
   {:else}
   <div class="mono mt-1.5 flex items-center gap-2 text-[10px] muted">
     <span>{stretch === 'log' ? '≤ ' : ''}{num(+lo.toPrecision(5))}</span>
-    <span class="h-2 flex-1 rounded-[2px]" style="background:{ramp === 'fire' ? FIRE_CSS : RAMP_CSS}" aria-hidden="true"></span>
+    <span class="h-2 flex-1 rounded-[2px]" style="background:{ramp === 'fire' ? FIRE_CSS : ramp === 'diverge' ? DIVERGE_CSS : RAMP_CSS}" aria-hidden="true"></span>
     <span>{num(+hi.toPrecision(5))}</span>
     <span>{field.unit}</span>
     <span class="ml-1 inline-flex select-none" role="radiogroup" aria-label="colour stretch" title="colour scale: run-wide, this frame's min/max, or logarithmic over the run's range">

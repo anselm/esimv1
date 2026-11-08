@@ -26,6 +26,7 @@ pub mod score;
 pub mod capacity;
 pub mod heatwaves;
 pub mod places;
+pub mod coast;
 
 use esim_kernel::describe::Describe;
 use esim_kernel::Module;
@@ -82,6 +83,7 @@ pub static KINDS: &[Kind] = &[
     kind!("policy.capacity", capacity::Capacity),
     kind!("weather.heatwaves", heatwaves::Heatwaves),
     kind!("obs.places", places::Places),
+    kind!("coast.oneline", coast::OneLine),
 ];
 
 fn find(kind: &str) -> Result<&'static Kind, String> {

@@ -1,0 +1,98 @@
+# The Pillar Point Harbor breakwaters and the Half Moon Bay shoreline: the record a model is read against.
+# Every row names its source and whether we read it ourselves. Nothing here is ours. Written 2026-11-08.
+
+[[fact]]
+id = "breakwaters-built"
+title = "The East Breakwater was built by the Corps between 1959 and 1961"
+value = 1961
+unit = "year complete"
+source = "USACE San Francisco District, Draft Environmental Assessment, N. Half Moon Bay (Princeton) Pillar Point Harbor CAP Section 111 Feasibility Study, October 2015, section 1.3; Griggs 2026 (J. Mar. Sci. Eng. 14(16):1493) abstract: two breakwaters constructed between 1959 and 1961"
+confidence = "checked"
+
+[[fact]]
+id = "bluff-retreat-pre"
+title = "Bluff recession before the breakwaters"
+value = 0.08
+unit = "m/yr"
+source = "Griggs 2026 abstract: 'the original very low (~8 cm/year) bluff recession rates'"
+confidence = "checked (abstract read; the paper's text was not reachable from canada1)"
+
+[[fact]]
+id = "bluff-retreat-post-max"
+title = "Bluff recession after the breakwaters, at its worst"
+value = 2.0
+unit = "m/yr"
+source = "Griggs 2026 abstract: 'increased rapidly to as much as 2 m/year'"
+confidence = "checked (abstract)"
+
+[[fact]]
+id = "erosion-reach"
+title = "How far downcoast the bluff erosion has progressed"
+value = 1400
+unit = "m"
+source = "Griggs 2026 abstract: 'Bluff erosion has progressed as far as 1.4 km downcoast'"
+confidence = "checked (abstract)"
+
+[[fact]]
+id = "bluff-retreat-1993-2012"
+title = "Bluff retreat along Vallejo Beach, between the two revetments, 1993 to 2012"
+value = 0.50
+unit = "m/yr"
+source = "USACE 2015 draft EA citing Lin, Li, Zoulas, Andes and Wu 2015: 'an approximately 2,200-foot (ft) long unprotected section of bluff between the two revetments (along Vallejo Beach) is retreating at a rate of 1.64 feet (ft) per year' (1.64 ft = 0.50 m)"
+confidence = "checked"
+
+[[fact]]
+id = "bluff-retreat-background"
+title = "Bluff retreat at a geologically similar unprotected section further down the coast, 1993 to 2012"
+value = 0.07
+unit = "m/yr"
+source = "USACE 2015 draft EA, section 3.2: 'in the range of 0.23 ft/yr from 1993 to 2012' (Lin et al. 2015); 0.23 ft = 0.07 m"
+confidence = "checked"
+
+[[fact]]
+id = "beach-erosion-rate"
+title = "Net beach erosion from the East Breakwater to the Mirada Road revetment"
+value = 3211
+unit = "m3/yr"
+source = "USACE 2015 draft EA, section 3.2: 'a high rate of net beach erosion (4,200 CY/yr) along and offshore of the coast extending from the East Breakwater to the Miranda Road revetment' (Lin et al. 2015); 4,200 cubic yards = 3,211 m3"
+confidence = "checked"
+
+[[fact]]
+id = "harbor-accretion"
+title = "Sand accumulating in Pillar Point Harbor beside the East Breakwater"
+value = 1529
+unit = "m3 (the EA says 'approximately 2,000 CY' beside a per-year erosion rate; whether this is per year is not stated)"
+source = "USACE 2015 draft EA, section 3.2: 'accompanied by significant accumulation of sand within Pillar Point Harbor (approximately 2,000 CY)' (Lin et al. 2015)"
+confidence = "checked, unit ambiguous"
+
+[[fact]]
+id = "harbor-shoal-size"
+title = "The shoal along the harbor side of the East Breakwater"
+value = 2000
+unit = "ft long by 200 to 250 ft wide"
+source = "USACE 2015 draft EA, section 1.3: 'a shoal along the harbor side of the breakwater that is approximately 200 to 250 ft wide and 2,000 ft long'"
+confidence = "checked"
+
+[[fact]]
+id = "sand-through-breakwater"
+title = "Sand surges through voids in the East Breakwater"
+value = 2500
+unit = "ft of breakwater considered for sealing"
+source = "USACE 2015 draft EA, section 3.1, alternative eliminated: 'sealing a 2,500 ft section of the East Breakwater with concrete to prevent sand from surging through voids in the breakwater'; modeling found it 'would decrease accretion of sediment within the harbor' but not reduce the erosion"
+confidence = "checked"
+
+[[fact]]
+id = "dredge-2025"
+title = "The Surfers Beach pilot: sand dredged from inside the East Breakwater and placed on about 1,000 ft of Surfers Beach"
+value = 76455
+unit = "m3 at most (the District says up to 100,000 cubic yards, elsewhere 75,000 to 100,000)"
+source = "San Mateo County Harbor District, Completed Surfers Beach Sand Replenishment Pilot Project page, read 2026-11-08: 'dredging of up to 100,000 cubic yards (CY) of clean sand accumulated along the inside of Pillar Point Harbor's East Breakwater'; 'Dredging completed on October 26th' (2025 by the page's document list); the placed volume is not stated"
+confidence = "checked, final volume unknown"
+
+[[fact]]
+id = "slr-50yr"
+title = "Sea level rise the Corps considered over 50 years, intermediate and high"
+value = 0.22
+unit = "m (intermediate, 0.71 ft); high 0.63 m (2.06 ft)"
+source = "USACE 2015 draft EA, section 3.2"
+confidence = "checked"

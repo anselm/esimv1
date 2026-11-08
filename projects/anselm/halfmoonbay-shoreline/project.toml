@@ -2,6 +2,7 @@
 area = "anselm"
 name = "halfmoonbay-shoreline"
 title = "Half Moon Bay: the breakwater and the beach"
+featured = true
 cover = "cover.png"
 cover_caption = "Shoreline change along the bay south of Pillar Point Harbor after 64 years of the reanalysis waves on the one-line model, as built: metres landward (red) or seaward (blue) of today's line, along the transects, on the run page's map. 2026-11-08."
 description = "The Half Moon Bay shoreline south of the Pillar Point Harbor breakwater, 1961 to 2025, on a one-line shoreline model: today's coast as transects, the ERA5-Ocean waves of the cell over the bay hour by hour, the headland and the breakwater as shadows with diffraction, the CERC transport, the bluff where the beach runs out, and two fitted numbers, the transport coefficient and the share of sand passing the breakwater's root that goes through its voids into the harbor. Read against the Corps' and Griggs's rates. Not a fluid dynamics model, and the page says so. Anselm asked for it on 2026-11-08: a separate sim for the Half Moon Bay dredging issue; the Army Corps built sea walls back in the day and they are eroding the coastline and filling the harbor with silt; this is a hard one."

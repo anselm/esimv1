@@ -215,6 +215,18 @@ holds the history.
 - Built-up land carries fire at a guessed rate; nothing about structures is physical.
   No spotting, no crown fire, no fire weather of the fire's own, no evacuation, no people.
 
+## The coast
+
+- Half Moon Bay (`anselm/halfmoonbay-shoreline`, 2026-11-08): a one-line shoreline model, not a fluid
+  dynamics model: no currents, no cross-shore profile, no setup, no reflection, no tide. The waves are a
+  50 km reanalysis cell's, their direction fitted so the bay starts in balance, and the transport
+  coefficient is fitted eighty times below the open-coast value to the Corps' bluff rate; the leak
+  through the breakwater is fitted to the harbor's accumulation. With those, the pattern stands
+  (erosion to 1.4 km, Miramar still, sealing the breakwater changes nothing on the beach) but the
+  headland-only line still loses half a metre of bluff a year where the record has eight centimetres, so
+  the breakwater's effect comes out a doubling where the record has seven times. Today's shoreline stands
+  in for 1961's; the revetments are not placed; the southern end imports sand.
+
 ## The system
 
 - Modules are compiled in; the wire binding is specified and not built, so a kind from
