@@ -22,6 +22,8 @@ The planet pages to start with:
 - [Two futures, one clock](https://esimv1.exe.xyz/anselm/planet-2100/compare): emissions
   held at today's rate beside emissions to zero by 2050, under one time cursor.
 - [Documentation](https://esimv1.exe.xyz/docs) and [the module kinds](https://esimv1.exe.xyz/kinds).
+- [Known future events](https://esimv1.exe.xyz/docs/events/known), the calendar to 2100 and beyond with a source per row, and [Wild cards](https://esimv1.exe.xyz/docs/events/wild-cards), the black swans a run can draw, with their rough chances and effects.
+- [RFC 0001](https://esimv1.exe.xyz/docs/rfc/0001-manifest), a proposal: the manifest as a common transport for simulations between competing engines, in JSON, with a schema.
 - [Limits today](https://esimv1.exe.xyz/docs/system/limits), to read before any number.
 
 The project page opens with the project's own README, "The road to 2100, and the

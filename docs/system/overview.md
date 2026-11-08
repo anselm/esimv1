@@ -36,6 +36,8 @@ time cursor.
 - [Data](/docs/system/data), [Scoring and tearing](/docs/system/scoring-and-tearing), [Evolution](/docs/system/evolution).
 - [Workspace](/docs/system/workspace), how the folders are laid out and how to behave in a shared one.
 - [Time](/docs/system/time), [Vocabulary](/docs/system/vocabulary), [Adding a module](/docs/system/adding-a-module), [Limits today](/docs/system/limits).
+- The future as tables: [Known future events](/docs/events/known), the calendar with a date and a source per row, and [Wild cards](/docs/events/wild-cards), the black swans with a rough chance a year and the effect a run applies.
+- A proposal: [RFC 0001](/docs/rfc/0001-manifest), the manifest as a common transport for simulations between engines, in JSON, with a schema.
 
 The design brief and every decision since are dated entries in the repository's
 `devlog/` folder. This documentation describes the system as it stands; the devlog says
