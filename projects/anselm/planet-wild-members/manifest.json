@@ -1,0 +1,263 @@
+{
+  "entities": [
+    {
+      "id": "run",
+      "run": {
+        "close_every": "30d",
+        "end": "2100-01-01",
+        "name": "j3-planet-wild-members",
+        "notes": "Earth 2100 with emissions held at the 2024 rate and the wild-card deck in play; one member per seed. Planet core plus people on half-degree cells, each country's warming from its record, heat and wet-bulb exposure cell by cell from a reanalysis baseline, and tipping thresholds, 1850 to 2100. After 2024 emissions follow the variant's assumption (default: held at the 2024 rate). CO2, CH4 and N2O forcing; the AR6 assessed series held after 2019; the Millar sink feedback; of the tipping elements, the carbon of permafrost and the Amazon feeds back once the run passes the assessment's central estimates, the rest are flags. The warming applied to each cell is its country's fitted slope times the run's global anomaly; the reanalysis's own trend map is drawn but not applied.",
+        "seed": 1,
+        "start": "1850-01-01"
+      }
+    },
+    {
+      "id": "story",
+      "kind": "story.bottomline"
+    },
+    {
+      "id": "emissions",
+      "kind": "carbon.emissions",
+      "params": {
+        "after_record": "hold",
+        "include_land_use": true
+      }
+    },
+    {
+      "id": "carbon",
+      "kind": "carbon.pools",
+      "params": {
+        "co2_start_ppm": 286.8
+      }
+    },
+    {
+      "id": "gases",
+      "kind": "carbon.gases"
+    },
+    {
+      "id": "assessed",
+      "kind": "forcing.ar6",
+      "params": {
+        "after_record": "hold"
+      }
+    },
+    {
+      "id": "energy",
+      "kind": "energy.twolayer",
+      "params": {
+        "co2_ref_ppm": 286.8
+      }
+    },
+    {
+      "id": "sea",
+      "kind": "sea.thermal"
+    },
+    {
+      "id": "obs",
+      "kind": "obs.planet",
+      "params": {
+        "baseline_from": 1850,
+        "baseline_to": 1900
+      }
+    },
+    {
+      "id": "people",
+      "kind": "people.countries",
+      "params": {
+        "distribution": "worldpop",
+        "frame_every_years": 10,
+        "frame_res_deg": 1,
+        "res_deg": 0.5,
+        "scale": "50m"
+      }
+    },
+    {
+      "id": "climate",
+      "kind": "climate.countries",
+      "params": {
+        "anom_from": 2011,
+        "anom_to": 2020,
+        "cells_clim_from": 2001,
+        "cells_clim_to": 2025,
+        "frame_every_years": 10,
+        "frame_res_deg": 1,
+        "pattern": "cells",
+        "res_deg": 0.5,
+        "scale": "50m"
+      }
+    },
+    {
+      "id": "heat",
+      "kind": "people.heat",
+      "params": {
+        "baseline": "cells",
+        "crossing_share": 0.5,
+        "frame_every_years": 10,
+        "frame_res_deg": 1,
+        "niche_c": 29,
+        "pattern": "country",
+        "res_deg": 0.5,
+        "scale": "50m"
+      }
+    },
+    {
+      "id": "wetbulb",
+      "kind": "people.wetbulb",
+      "params": {
+        "crossing_share": 0.5,
+        "frame_every_years": 10,
+        "frame_res_deg": 1,
+        "pattern": "country",
+        "res_deg": 0.5,
+        "scale": "50m",
+        "source": "cells",
+        "year_from": 2011,
+        "year_to": 2020
+      }
+    },
+    {
+      "id": "tipping",
+      "kind": "tipping.elements",
+      "params": {
+        "coupling": 0
+      }
+    },
+    {
+      "id": "tipped",
+      "kind": "carbon.tipped",
+      "params": {
+        "trigger": "central"
+      }
+    },
+    {
+      "id": "wildcards",
+      "kind": "events.shock",
+      "params": {
+        "mode": "draw"
+      }
+    },
+    {
+      "id": "regions",
+      "kind": "score.regions",
+      "params": {
+        "scale": "50m"
+      }
+    },
+    {
+      "id": "capacity",
+      "kind": "policy.capacity",
+      "params": {
+        "mode": "watch"
+      }
+    },
+    {
+      "audit": {
+        "scores": [
+          [
+            "carbon.co2_ppm",
+            "obs.co2_ppm"
+          ],
+          [
+            "energy.gmst_anom_c",
+            "obs.gmst_hadcrut5_c"
+          ],
+          [
+            "energy.gmst_anom_c",
+            "obs.gmst_gistemp_c"
+          ]
+        ]
+      },
+      "id": "audit"
+    },
+    {
+      "id": "seeds-1",
+      "variant": {
+        "notes": "The same planet, the same held emissions, a different draw of the deck each member.",
+        "set": {
+          "run.seed": 1
+        },
+        "title": "Deck drawn by seed (run.seed = 1)"
+      }
+    },
+    {
+      "id": "seeds-2",
+      "variant": {
+        "notes": "The same planet, the same held emissions, a different draw of the deck each member.",
+        "set": {
+          "run.seed": 2
+        },
+        "title": "Deck drawn by seed (run.seed = 2)"
+      }
+    },
+    {
+      "id": "seeds-3",
+      "variant": {
+        "notes": "The same planet, the same held emissions, a different draw of the deck each member.",
+        "set": {
+          "run.seed": 3
+        },
+        "title": "Deck drawn by seed (run.seed = 3)"
+      }
+    },
+    {
+      "id": "seeds-4",
+      "variant": {
+        "notes": "The same planet, the same held emissions, a different draw of the deck each member.",
+        "set": {
+          "run.seed": 4
+        },
+        "title": "Deck drawn by seed (run.seed = 4)"
+      }
+    },
+    {
+      "id": "seeds-5",
+      "variant": {
+        "notes": "The same planet, the same held emissions, a different draw of the deck each member.",
+        "set": {
+          "run.seed": 5
+        },
+        "title": "Deck drawn by seed (run.seed = 5)"
+      }
+    },
+    {
+      "id": "seeds-6",
+      "variant": {
+        "notes": "The same planet, the same held emissions, a different draw of the deck each member.",
+        "set": {
+          "run.seed": 6
+        },
+        "title": "Deck drawn by seed (run.seed = 6)"
+      }
+    },
+    {
+      "id": "seeds-7",
+      "variant": {
+        "notes": "The same planet, the same held emissions, a different draw of the deck each member.",
+        "set": {
+          "run.seed": 7
+        },
+        "title": "Deck drawn by seed (run.seed = 7)"
+      }
+    },
+    {
+      "id": "seeds-8",
+      "variant": {
+        "notes": "The same planet, the same held emissions, a different draw of the deck each member.",
+        "set": {
+          "run.seed": 8
+        },
+        "title": "Deck drawn by seed (run.seed = 8)"
+      }
+    }
+  ],
+  "from": {
+    "entry": "manifests/j3-planet-wild-members.js",
+    "hash": "sha256:89977556e3f76b5f0957127bc3e94130d0914fbeac8359e17525ce898042a233",
+    "language": "javascript",
+    "sources": {
+      "p4-planet-people.toml": "sha256:09e56b3d6b31ab98aa27c1387e21ffb35a729d1cc86dc12b3cad3a4a5954d064",
+      "planet-core.toml": "sha256:13c09466269de20d2bdb50a24a780d63b7eec4491876c9ebb588fb762c31ecda"
+    }
+  },
+  "manifest": "manifest/1"
+}

@@ -98,7 +98,12 @@ impl Manifest {
                 });
                 Ok(m)
             }
-            "js" | "mjs" => Err(format!("{}: JavaScript manifests are the next step and not read yet", path.display())),
+            "js" | "mjs" => {
+                let (doc, sources) = crate::js::evaluate(path)?;
+                let mut m = Manifest::from_entities(&doc).map_err(|e| format!("{}: {e}", path.display()))?;
+                m.from = Some(crate::entities::Source { language: "javascript".into(), sources, ..entry });
+                Ok(m)
+            }
             _ => {
                 let mut sources = Default::default();
                 let text = resolve_toml(path, &mut sources)?;

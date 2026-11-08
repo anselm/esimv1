@@ -1217,6 +1217,235 @@
   },
   {
     "area": "anselm",
+    "by": "anselm, in the esim session of 2026-11-07",
+    "created": "2026-11-08",
+    "description": "Earth 2100 with emissions held and the wild-card deck in play, one member per seed: the spread the deck makes by 2100, from a JavaScript manifest.",
+    "kinds": [
+      "story.bottomline",
+      "carbon.emissions",
+      "carbon.pools",
+      "carbon.gases",
+      "forcing.ar6",
+      "energy.twolayer",
+      "sea.thermal",
+      "obs.planet",
+      "people.countries",
+      "climate.countries",
+      "people.heat",
+      "people.wetbulb",
+      "tipping.elements",
+      "carbon.tipped",
+      "events.shock",
+      "score.regions",
+      "policy.capacity"
+    ],
+    "name": "planet-wild-members",
+    "path": "anselm/planet-wild-members",
+    "runs": [
+      {
+        "all_ledgers_closed": true,
+        "digest": "6e35a5b74f12b5df",
+        "end": 4102444800,
+        "events": 29497,
+        "id": "j3-planet-wild-members-1037c8b1-6e35a5b7",
+        "name": "j3-planet-wild-members",
+        "seed": 8,
+        "set": {
+          "run.seed": "8"
+        },
+        "start": -3786825600,
+        "variant": "seeds-8",
+        "verdict": null
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "c24af75c39c7220d",
+        "end": 4102444800,
+        "events": 29495,
+        "id": "j3-planet-wild-members-2a091ba7-c24af75c",
+        "name": "j3-planet-wild-members",
+        "seed": 7,
+        "set": {
+          "run.seed": "7"
+        },
+        "start": -3786825600,
+        "variant": "seeds-7",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "1ac63d4716d3929f",
+        "end": 4102444800,
+        "events": 29499,
+        "id": "j3-planet-wild-members-30613e34-1ac63d47",
+        "name": "j3-planet-wild-members",
+        "seed": 6,
+        "set": {
+          "run.seed": "6"
+        },
+        "start": -3786825600,
+        "variant": "seeds-6",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "c69b7cd5ae87c6d6",
+        "end": 4102444800,
+        "events": 29493,
+        "id": "j3-planet-wild-members-63bab280-c69b7cd5",
+        "name": "j3-planet-wild-members",
+        "seed": 3,
+        "set": {
+          "run.seed": "3"
+        },
+        "start": -3786825600,
+        "variant": "seeds-3",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "dde4199b31f5313e",
+        "end": 4102444800,
+        "events": 29486,
+        "id": "j3-planet-wild-members-81533cb5-dde4199b",
+        "name": "j3-planet-wild-members",
+        "seed": 2,
+        "set": {
+          "run.seed": "2"
+        },
+        "start": -3786825600,
+        "variant": "seeds-2",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "6a1b3f619731f28a",
+        "end": 4102444800,
+        "events": 29495,
+        "id": "j3-planet-wild-members-81a295cb-6a1b3f61",
+        "name": "j3-planet-wild-members",
+        "seed": 1,
+        "set": null,
+        "start": -3786825600,
+        "variant": null,
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "9cb9adce612fb41b",
+        "end": 4102444800,
+        "events": 29499,
+        "id": "j3-planet-wild-members-d1f307f5-9cb9adce",
+        "name": "j3-planet-wild-members",
+        "seed": 4,
+        "set": {
+          "run.seed": "4"
+        },
+        "start": -3786825600,
+        "variant": "seeds-4",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "6a1b3f619731f28a",
+        "end": 4102444800,
+        "events": 29495,
+        "id": "j3-planet-wild-members-d6859f23-6a1b3f61",
+        "name": "j3-planet-wild-members",
+        "seed": 1,
+        "set": {
+          "run.seed": "1"
+        },
+        "start": -3786825600,
+        "variant": "seeds-1",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "b47c689296c96671",
+        "end": 4102444800,
+        "events": 29505,
+        "id": "j3-planet-wild-members-e5df3d6b-b47c6892",
+        "name": "j3-planet-wild-members",
+        "seed": 5,
+        "set": {
+          "run.seed": "5"
+        },
+        "start": -3786825600,
+        "variant": "seeds-5",
+        "verdict": "holds"
+      }
+    ],
+    "title": "Eight draws of the deck",
+    "variant": [
+      {
+        "name": "seeds-1",
+        "notes": "The same planet, the same held emissions, a different draw of the deck each member.",
+        "set": {
+          "run.seed": 1
+        },
+        "title": "Deck drawn by seed (run.seed = 1)"
+      },
+      {
+        "name": "seeds-2",
+        "notes": "The same planet, the same held emissions, a different draw of the deck each member.",
+        "set": {
+          "run.seed": 2
+        },
+        "title": "Deck drawn by seed (run.seed = 2)"
+      },
+      {
+        "name": "seeds-3",
+        "notes": "The same planet, the same held emissions, a different draw of the deck each member.",
+        "set": {
+          "run.seed": 3
+        },
+        "title": "Deck drawn by seed (run.seed = 3)"
+      },
+      {
+        "name": "seeds-4",
+        "notes": "The same planet, the same held emissions, a different draw of the deck each member.",
+        "set": {
+          "run.seed": 4
+        },
+        "title": "Deck drawn by seed (run.seed = 4)"
+      },
+      {
+        "name": "seeds-5",
+        "notes": "The same planet, the same held emissions, a different draw of the deck each member.",
+        "set": {
+          "run.seed": 5
+        },
+        "title": "Deck drawn by seed (run.seed = 5)"
+      },
+      {
+        "name": "seeds-6",
+        "notes": "The same planet, the same held emissions, a different draw of the deck each member.",
+        "set": {
+          "run.seed": 6
+        },
+        "title": "Deck drawn by seed (run.seed = 6)"
+      },
+      {
+        "name": "seeds-7",
+        "notes": "The same planet, the same held emissions, a different draw of the deck each member.",
+        "set": {
+          "run.seed": 7
+        },
+        "title": "Deck drawn by seed (run.seed = 7)"
+      },
+      {
+        "name": "seeds-8",
+        "notes": "The same planet, the same held emissions, a different draw of the deck each member.",
+        "set": {
+          "run.seed": 8
+        },
+        "title": "Deck drawn by seed (run.seed = 8)"
+      }
+    ]
+  },
+  {
+    "area": "anselm",
     "by": "anselm, via claude 2026-11-01",
     "created": "2026-11-01",
     "description": "The trivial rung: a source feeding two leaky buckets at different rates; the water ledger must close. A formula check, labelled as one.",

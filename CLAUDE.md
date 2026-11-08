@@ -226,10 +226,24 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   anselm/planet-2100 --manifest manifests/p4-planet-people.toml`, then rerun every variant (5 s each).
 - RFC 0001 (2026-11-07, Anselm: a public schema for a manifest as an RFC, a theory of an interoperability
   standard between implementations of this engine, in JSON, written to persuade): `docs/rfc/0001-manifest.md`
-  with `docs/rfc/manifest.schema.json`; docs area `rfc`, section "Standards". esim does not read the JSON form.
+  with `docs/rfc/manifest.schema.json`; docs area `rfc`, section "Standards". Draft 4 names the source form.
   `esim events --write` renders `data/events/future-known.toml` and `future-speculative.toml` as `docs/events/known.md` and
   `wild-cards.md` (section "The future"); the deploy runs it, so those pages are regenerated and must be committed like the
   indexes. The overview page and the root README link the RFC as a proposal and the two event pages (Anselm, 2026-11-07).
+- Three notations and the bus (2026-11-07 evening, Anselm: "support a .js notation (we can presume quickjs) ... also support
+  json ... continue to support existing notation"; "refactor the core engine to be an event bus and to handle dynamic
+  registration of listeners"; `devlog/20261107-three-notations.md`): `Manifest::load` reads `.toml` (as before), `.json`
+  (the entity form of RFC 0001, `crates/kernel/src/entities.rs`: presence is type, replacement by id, ranges unroll to
+  variants, unknown components carried and reported by the check) and `.js` (`crates/kernel/src/js.rs`, rquickjs 0.14:
+  exports are entities, export name is id, arrays spliced, `run`/`place`/`audit` short form, no Date, Math.random throws,
+  imports only of neighbours by relative path, `.toml` imports give an entity list, 10 s and 256 MB budget). All three
+  resolve to one `Manifest`; `esim manifest <file> [--toml|--js|--id]`; the id is the sha256 of the canonical entity text
+  (JCS style, `entities::es_number`) and is the same for the TOML planet and its `.js` twin. Run and project folders keep
+  `manifest.json` (with `from`) beside `manifest.toml`; a project from a program keeps `source/`. The kernel plays the
+  manifest onto the bus: `manifest.entity` events at the start (no sequence numbers, so no digest moved), births mid-run
+  from any module's publish, `manifest.refused` for a refused one, snapshots carry `born`. `events.shock` modes are
+  off, draw, named (the check does not catch a wrong mode; the build does). Project `anselm/planet-wild-members` is the
+  worked example from `manifests/j3-planet-wild-members.js` (eight seeds of the deck, emissions held).
 - Wild cards (2026-11-05, Anselm: "i just want a placeholder ... like a video game with wild card factors
   optionally"): `events.shock` (`crates/modules/src/shock.rs`) draws `data/events/future-speculative.toml` by the
   run's seed each year from `from` (default 2025), or plays one named card (`mode = "named"`, `event`, `at`);

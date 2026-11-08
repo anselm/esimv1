@@ -1,0 +1,232 @@
+[run]
+name = "j3-planet-wild-members"
+start = "1850-01-01"
+end = "2100-01-01"
+seed = 1
+close_every = "30d"
+notes = "Earth 2100 with emissions held at the 2024 rate and the wild-card deck in play; one member per seed. Planet core plus people on half-degree cells, each country's warming from its record, heat and wet-bulb exposure cell by cell from a reanalysis baseline, and tipping thresholds, 1850 to 2100. After 2024 emissions follow the variant's assumption (default: held at the 2024 rate). CO2, CH4 and N2O forcing; the AR6 assessed series held after 2019; the Millar sink feedback; of the tipping elements, the carbon of permafrost and the Amazon feeds back once the run passes the assessment's central estimates, the rest are flags. The warming applied to each cell is its country's fitted slope times the run's global anomaly; the reanalysis's own trend map is drawn but not applied."
+
+[[module]]
+name = "story"
+kind = "story.bottomline"
+
+[module.params]
+
+[[module]]
+name = "emissions"
+kind = "carbon.emissions"
+
+[module.params]
+after_record = "hold"
+include_land_use = true
+
+[[module]]
+name = "carbon"
+kind = "carbon.pools"
+
+[module.params]
+co2_start_ppm = 286.8
+
+[[module]]
+name = "gases"
+kind = "carbon.gases"
+
+[module.params]
+
+[[module]]
+name = "assessed"
+kind = "forcing.ar6"
+
+[module.params]
+after_record = "hold"
+
+[[module]]
+name = "energy"
+kind = "energy.twolayer"
+
+[module.params]
+co2_ref_ppm = 286.8
+
+[[module]]
+name = "sea"
+kind = "sea.thermal"
+
+[module.params]
+
+[[module]]
+name = "obs"
+kind = "obs.planet"
+
+[module.params]
+baseline_from = 1850
+baseline_to = 1900
+
+[[module]]
+name = "people"
+kind = "people.countries"
+
+[module.params]
+distribution = "worldpop"
+frame_every_years = 10
+frame_res_deg = 1
+res_deg = 0.5
+scale = "50m"
+
+[[module]]
+name = "climate"
+kind = "climate.countries"
+
+[module.params]
+anom_from = 2011
+anom_to = 2020
+cells_clim_from = 2001
+cells_clim_to = 2025
+frame_every_years = 10
+frame_res_deg = 1
+pattern = "cells"
+res_deg = 0.5
+scale = "50m"
+
+[[module]]
+name = "heat"
+kind = "people.heat"
+
+[module.params]
+baseline = "cells"
+crossing_share = 0.5
+frame_every_years = 10
+frame_res_deg = 1
+niche_c = 29
+pattern = "country"
+res_deg = 0.5
+scale = "50m"
+
+[[module]]
+name = "wetbulb"
+kind = "people.wetbulb"
+
+[module.params]
+crossing_share = 0.5
+frame_every_years = 10
+frame_res_deg = 1
+pattern = "country"
+res_deg = 0.5
+scale = "50m"
+source = "cells"
+year_from = 2011
+year_to = 2020
+
+[[module]]
+name = "tipping"
+kind = "tipping.elements"
+
+[module.params]
+coupling = 0
+
+[[module]]
+name = "tipped"
+kind = "carbon.tipped"
+
+[module.params]
+trigger = "central"
+
+[[module]]
+name = "wildcards"
+kind = "events.shock"
+
+[module.params]
+mode = "draw"
+
+[[module]]
+name = "regions"
+kind = "score.regions"
+
+[module.params]
+scale = "50m"
+
+[[module]]
+name = "capacity"
+kind = "policy.capacity"
+
+[module.params]
+mode = "watch"
+
+[audit]
+scores = [
+    [
+    "carbon.co2_ppm",
+    "obs.co2_ppm",
+],
+    [
+    "energy.gmst_anom_c",
+    "obs.gmst_hadcrut5_c",
+],
+    [
+    "energy.gmst_anom_c",
+    "obs.gmst_gistemp_c",
+],
+]
+
+[[variant]]
+name = "seeds-1"
+title = "Deck drawn by seed (run.seed = 1)"
+notes = "The same planet, the same held emissions, a different draw of the deck each member."
+
+[variant.set]
+"run.seed" = 1
+
+[[variant]]
+name = "seeds-2"
+title = "Deck drawn by seed (run.seed = 2)"
+notes = "The same planet, the same held emissions, a different draw of the deck each member."
+
+[variant.set]
+"run.seed" = 2
+
+[[variant]]
+name = "seeds-3"
+title = "Deck drawn by seed (run.seed = 3)"
+notes = "The same planet, the same held emissions, a different draw of the deck each member."
+
+[variant.set]
+"run.seed" = 3
+
+[[variant]]
+name = "seeds-4"
+title = "Deck drawn by seed (run.seed = 4)"
+notes = "The same planet, the same held emissions, a different draw of the deck each member."
+
+[variant.set]
+"run.seed" = 4
+
+[[variant]]
+name = "seeds-5"
+title = "Deck drawn by seed (run.seed = 5)"
+notes = "The same planet, the same held emissions, a different draw of the deck each member."
+
+[variant.set]
+"run.seed" = 5
+
+[[variant]]
+name = "seeds-6"
+title = "Deck drawn by seed (run.seed = 6)"
+notes = "The same planet, the same held emissions, a different draw of the deck each member."
+
+[variant.set]
+"run.seed" = 6
+
+[[variant]]
+name = "seeds-7"
+title = "Deck drawn by seed (run.seed = 7)"
+notes = "The same planet, the same held emissions, a different draw of the deck each member."
+
+[variant.set]
+"run.seed" = 7
+
+[[variant]]
+name = "seeds-8"
+title = "Deck drawn by seed (run.seed = 8)"
+notes = "The same planet, the same held emissions, a different draw of the deck each member."
+
+[variant.set]
+"run.seed" = 8

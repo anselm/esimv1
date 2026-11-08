@@ -34,6 +34,11 @@ accounts, cell addressing. The vocabulary is governed separately (see the end).
   and a leak larger than the tolerance fails the run.
 - A **cell** is an index into a grid, row major from the north-west corner. Grids are
   declared with a field; a cell address is only meaningful against the grid it names.
+- A **birth** is an event on the topic `manifest.entity` with data `{ id, kind, params }`.
+  The manifest's own modules arrive this way at the start instant, ahead of everything
+  else; a module may publish one later and the kernel builds, initialises and registers
+  the module when it is delivered, then passes the event on to the topic's subscribers. A
+  refused birth is logged on `manifest.refused` with its reason (since 2026-11-07).
 
 ## Lifecycle
 

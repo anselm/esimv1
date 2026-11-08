@@ -17,6 +17,7 @@ pub mod hash;
 pub mod world;
 pub mod describe;
 pub mod entities;
+pub mod js;
 
 pub use event::{Event, Priority};
 pub use kernel::{FieldMeta, Kernel, RunOutput};

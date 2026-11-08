@@ -1,0 +1,133 @@
+# P4: the planet core with people on it, to 2100. People on half-degree cells (WorldPop's
+# 1 km pattern, the UN's count per country, its medium projection after 2023, labelled);
+# each country's temperature from its own record scaled by the run's global anomaly and
+# applied to its cells; each populated cell's own climatology and baseline decade of daily
+# heat and humidity from the MERRA-2 reanalysis (NASA POWER); the people living where the
+# human climate niche and the wet-bulb limits are passed, cell by cell; the tipping
+# elements' thresholds checked against the warming. Emissions after 2024 are an
+# assumption; the project's variants state which. Everything the core leaves out
+# (aerosols, sink saturation, feedbacks) is still left out. Since 2026-11-02; before that
+# the same manifest ran on 2-degree countries with one station per capital (the modules'
+# default modes, kept for comparison).
+#
+# First run: `esim warm cells` fetches the reanalysis boxes (about two hours, once).
+
+# The story module computes nothing; it is first because a manifest's module order is
+# the page order, and the bottom line belongs at the top. The planet core is spliced in
+# after it by the include entry below.
+[[module]]
+name = "story"
+kind = "story.bottomline"
+
+[[module]]
+include = "planet-core.toml"
+
+[run]
+name = "p4-planet-people"
+start = "1850-01-01"
+end = "2100-01-01"
+seed = 1
+close_every = "30d"
+notes = "Planet core plus people on half-degree cells, each country's warming from its record, heat and wet-bulb exposure cell by cell from a reanalysis baseline, and tipping thresholds, 1850 to 2100. After 2024 emissions follow the variant's assumption (default: held at the 2024 rate). CO2, CH4 and N2O forcing; the AR6 assessed series held after 2019; the Millar sink feedback; of the tipping elements, the carbon of permafrost and the Amazon feeds back once the run passes the assessment's central estimates, the rest are flags. The warming applied to each cell is its country's fitted slope times the run's global anomaly; the reanalysis's own trend map is drawn but not applied."
+
+[[module]]
+name = "people"
+kind = "people.countries"
+[module.params]
+res_deg = 0.5
+frame_res_deg = 1.0
+frame_every_years = 10
+scale = "50m"
+distribution = "worldpop"
+
+[[module]]
+name = "climate"
+kind = "climate.countries"
+[module.params]
+res_deg = 0.5
+frame_res_deg = 1.0
+frame_every_years = 10
+scale = "50m"
+# the wet-bulb cells' observed decade, so tas_anom_c is the warming since it
+anom_from = 2011
+anom_to = 2020
+# POWER's climatology period, so tas_anom_cells_c is the warming since it
+cells_clim_from = 2001
+cells_clim_to = 2025
+# the reanalysis's own 1981 to 2025 trend per cell, drawn as a map for the record only: over South
+# Asia MERRA-2 cools while the globe warms, so the cell layers below keep the country slope (2026-11-03)
+pattern = "cells"
+
+[[module]]
+name = "heat"
+kind = "people.heat"
+[module.params]
+res_deg = 0.5
+frame_res_deg = 1.0
+frame_every_years = 10
+scale = "50m"
+baseline = "cells"
+pattern = "country"   # "cells" would use the reanalysis trend map, which fails over South Asia; see the devlog
+niche_c = 29.0
+crossing_share = 0.5
+
+[[module]]
+name = "wetbulb"
+kind = "people.wetbulb"
+[module.params]
+res_deg = 0.5
+frame_res_deg = 1.0
+frame_every_years = 10
+scale = "50m"
+source = "cells"
+pattern = "country"   # as above
+year_from = 2011
+year_to = 2020
+crossing_share = 0.5
+
+# the thresholds, checked against the warming; coupling = 0 checks each alone, 1 lets a
+# crossing lower the thresholds of the elements it pushes on by the fractions in
+# data/events/tipping.toml (Wunderling et al. 2021); the project's cascade variants set it
+[[module]]
+name = "tipping"
+kind = "tipping.elements"
+[module.params]
+coupling = 0.0
+
+# the first cascade: permafrost and Amazon carbon into the carbon ledger once past the
+# assessment's central estimates (trigger = "low" for the sensitivity case)
+[[module]]
+name = "tipped"
+kind = "carbon.tipped"
+[module.params]
+trigger = "central"
+
+# wild cards: speculative events from data/events/future-speculative.toml, drawn by the run's
+# seed and applied as forcing pulses, emissions scalings and deaths. Off here; the project's
+# wild variants turn the draw on, and one names an eruption (Anselm, 2026-11-05: a placeholder,
+# like a video game's wild-card factors, so some runs end in unexpected places).
+[[module]]
+name = "wildcards"
+kind = "events.shock"
+[module.params]
+mode = "off"
+
+# the world scored by region, nine World Bank bands per country ranked among peers, moved by
+# the heat thresholds and the wild cards under declared placeholder rules, drawn on a globe
+# (Anselm, 2026-11-05: a total bottom line per region a person can read at a glance)
+[[module]]
+name = "regions"
+kind = "score.regions"
+[module.params]
+scale = "50m"
+
+# derailment: the capacity to cut emissions, eroded by what the warming does to people (the
+# share under heat stress, the wild cards, conflicts drawn where the stress is), after Dyke
+# (The Conversation, 2026-11-05); watch computes and charts it and changes nothing, on sends it
+# to the emissions module, which slows every planned cut by it (Anselm, 2026-11-07: "we are
+# still failing to really consider knock on effects")
+[[module]]
+name = "capacity"
+kind = "policy.capacity"
+[module.params]
+mode = "watch"

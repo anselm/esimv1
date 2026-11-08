@@ -1,0 +1,63 @@
+# A project: who asked for what, in their words, and the manifest beside it.
+area = "anselm"
+name = "planet-wild-members"
+title = "Eight draws of the deck"
+description = "Earth 2100 with emissions held and the wild-card deck in play, one member per seed: the spread the deck makes by 2100, from a JavaScript manifest."
+created = "2026-11-08"
+by = "anselm, in the esim session of 2026-11-07"
+
+[[variant]]
+name = "seeds-1"
+title = "Deck drawn by seed (run.seed = 1)"
+notes = "The same planet, the same held emissions, a different draw of the deck each member."
+[variant.set]
+"run.seed" = 1
+
+[[variant]]
+name = "seeds-2"
+title = "Deck drawn by seed (run.seed = 2)"
+notes = "The same planet, the same held emissions, a different draw of the deck each member."
+[variant.set]
+"run.seed" = 2
+
+[[variant]]
+name = "seeds-3"
+title = "Deck drawn by seed (run.seed = 3)"
+notes = "The same planet, the same held emissions, a different draw of the deck each member."
+[variant.set]
+"run.seed" = 3
+
+[[variant]]
+name = "seeds-4"
+title = "Deck drawn by seed (run.seed = 4)"
+notes = "The same planet, the same held emissions, a different draw of the deck each member."
+[variant.set]
+"run.seed" = 4
+
+[[variant]]
+name = "seeds-5"
+title = "Deck drawn by seed (run.seed = 5)"
+notes = "The same planet, the same held emissions, a different draw of the deck each member."
+[variant.set]
+"run.seed" = 5
+
+[[variant]]
+name = "seeds-6"
+title = "Deck drawn by seed (run.seed = 6)"
+notes = "The same planet, the same held emissions, a different draw of the deck each member."
+[variant.set]
+"run.seed" = 6
+
+[[variant]]
+name = "seeds-7"
+title = "Deck drawn by seed (run.seed = 7)"
+notes = "The same planet, the same held emissions, a different draw of the deck each member."
+[variant.set]
+"run.seed" = 7
+
+[[variant]]
+name = "seeds-8"
+title = "Deck drawn by seed (run.seed = 8)"
+notes = "The same planet, the same held emissions, a different draw of the deck each member."
+[variant.set]
+"run.seed" = 8

@@ -2,7 +2,7 @@
 //! esim verify <manifest.toml>             prove determinism and replay-from-snapshot
 //! esim check <manifest.toml>              check the wiring from the modules' descriptions, fetching nothing
 //! esim describe <manifest.toml>           the wired modules' descriptions and findings as JSON
-//! esim manifest <file> [--toml] [--id]    a manifest in the entity form of RFC 0001 (JSON), or back to TOML, or its id
+//! esim manifest <file> [--toml|--js|--id]  a manifest (TOML, JSON or JavaScript) in the entity form of RFC 0001, or as TOML, or as a JavaScript module, or its id
 //! esim kinds [--json]                     list module kinds, or describe each under default parameters
 //! esim audit <run_dir>                    the independent auditor: spend-down, diversity, shocks, tears
 //! esim project new <area/name> [--manifest f] [--title t] [--description d]   a project folder under projects/
@@ -91,10 +91,29 @@ fn describe(path: &Path) -> Result<(), String> {
 
 /// esim manifest <file> [--toml] [--id]: the manifest in any notation, written out in the
 /// entity form of RFC 0001 with its `from` block (the default), as TOML, or as its id.
-fn manifest_cmd(path: &Path, as_toml: bool, id: bool) -> Result<(), String> {
+fn manifest_cmd(path: &Path, as_toml: bool, as_js: bool, id: bool) -> Result<(), String> {
     let m = Manifest::load(path)?;
     if id { println!("{}", m.id()); return Ok(()); }
     if as_toml { print!("{}", m.to_toml_text()?); return Ok(()); }
+    if as_js {
+        // one export per entity where the id is an identifier, the rest in a default list;
+        // a starting point for a program, not a program
+        let doc = m.to_entities();
+        println!("// {} as a JavaScript manifest, written by esim manifest --js. The exports are the\n// entities; the export name is the id. Edit freely: variables, loops and imports of the\n// files beside this one are the point of this form.\n", path.display());
+        let mut rest: Vec<&serde_json::Value> = Vec::new();
+        for e in doc["entities"].as_array().into_iter().flatten() {
+            let id = e["id"].as_str().unwrap_or("");
+            let mut body = e.as_object().cloned().unwrap_or_default();
+            body.remove("id");
+            let ident = !id.is_empty() && !id.contains('-') && !["default", "import", "export", "class", "function", "var", "let", "const", "new", "delete", "in", "if", "for"].contains(&id);
+            if !ident { rest.push(e); continue; }
+            // the short form for the singletons
+            let body = if ["run", "place", "audit"].contains(&id) && body.len() == 1 && body.contains_key(id) { body[id].clone() } else { serde_json::Value::Object(body) };
+            println!("export const {id} = {};\n", serde_json::to_string_pretty(&body).unwrap());
+        }
+        if !rest.is_empty() { println!("export default {};", serde_json::to_string_pretty(&rest).unwrap()); }
+        return Ok(());
+    }
     println!("{}", serde_json::to_string_pretty(&m.to_entities()).unwrap());
     Ok(())
 }
@@ -109,6 +128,27 @@ fn write_entities(dir: &Path, m: &Manifest, from: &Path) -> Result<(), String> {
         m.from = Some(esim_kernel::Source { language: from.extension().and_then(|e| e.to_str()).unwrap_or("toml").into(), entry: from.display().to_string(), hash: esim_kernel::entities::sha256_hex(&bytes), sources: Default::default() });
     }
     fs::write(dir.join("manifest.json"), serde_json::to_string_pretty(&m.to_entities()).unwrap()).map_err(|e| e.to_string())
+}
+
+/// A project made from a JavaScript or JSON manifest keeps the program beside the resolved
+/// document, under `source/`: the entry file and every file it read, so the folder stands
+/// alone and the page can show what was written as well as what it resolved to.
+fn copy_sources(dir: &Path, m: &Manifest) -> Result<(), String> {
+    let Some(from) = &m.from else { return Ok(()) };
+    if from.language == "toml" { return Ok(()); }
+    let entry = Path::new(&from.entry);
+    let entry_dir = entry.parent().unwrap_or(Path::new("."));
+    let out = dir.join("source");
+    fs::create_dir_all(&out).map_err(|e| e.to_string())?;
+    fs::copy(entry, out.join(entry.file_name().unwrap())).map_err(|e| format!("{}: {e}", entry.display()))?;
+    for rel in from.sources.keys() {
+        let src = [entry_dir.join(rel), PathBuf::from(rel)].into_iter().find(|p| p.exists());
+        let Some(src) = src else { continue };
+        let clean: PathBuf = Path::new(rel).components().filter(|c| matches!(c, std::path::Component::Normal(_))).collect();
+        if let Some(parent) = clean.parent() { fs::create_dir_all(out.join(parent)).map_err(|e| e.to_string())?; }
+        fs::copy(&src, out.join(&clean)).map_err(|e| format!("{}: {e}", src.display()))?;
+    }
+    Ok(())
 }
 
 /// esim kinds [--json]: the kinds, or their full descriptions under default parameters.
@@ -253,6 +293,7 @@ fn project_new(path: &str, manifest: Option<&Path>, title: Option<&str>, descrip
     // the project folder stands alone: includes are folded in before the copy
     fs::write(dir.join("manifest.toml"), Manifest::resolve_text(manifest.unwrap())?).map_err(|e| e.to_string())?;
     write_entities(&dir, &m, manifest.unwrap())?;
+    copy_sources(&dir, &m)?;
     let (area, name) = path.trim_matches('/').split_once('/').unwrap();
     let mut meta = format!(
         "# A project: who asked for what, in their words, and the manifest beside it.
@@ -313,6 +354,7 @@ fn project_update(path: &str, manifest: &Path) -> Result<(), String> {
     let m = load(manifest)?;
     fs::write(dir.join("manifest.toml"), Manifest::resolve_text(manifest)?).map_err(|e| e.to_string())?;
     write_entities(&dir, &m, manifest)?;
+    copy_sources(&dir, &m)?;
     projects_index()?;
     println!("project  {path}: manifest replaced from {}", manifest.display());
     Ok(())
@@ -935,7 +977,7 @@ fn main() {
         Some("regress") => regress(args.iter().any(|a| a == "--accept"), args.iter().position(|a| a == "--only").and_then(|i| args.get(i + 1)).map(String::as_str)),
         Some("check") => match args.get(2) { Some(p) => check(Path::new(p)), None => Err("usage: esim check <manifest.toml>".into()) },
         Some("describe") => match args.get(2) { Some(p) => describe(Path::new(p)), None => Err("usage: esim describe <manifest.toml>".into()) },
-        Some("manifest") => match args.get(2) { Some(p) => manifest_cmd(Path::new(p), args.iter().any(|a| a == "--toml"), args.iter().any(|a| a == "--id")), None => Err("usage: esim manifest <file.toml|file.json> [--toml] [--id]".into()) },
+        Some("manifest") => match args.get(2) { Some(p) => manifest_cmd(Path::new(p), args.iter().any(|a| a == "--toml"), args.iter().any(|a| a == "--js"), args.iter().any(|a| a == "--id")), None => Err("usage: esim manifest <file.toml|file.json|file.js> [--toml|--js|--id]".into()) },
         _ => Err("usage: esim run|verify|ensemble|sweep|score|audit|check|describe|manifest|kinds|project|projects|sources|events|warm|regress".into()),
     };
     if let Err(e) = res { eprintln!("error: {e}"); std::process::exit(1); }

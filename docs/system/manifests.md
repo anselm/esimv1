@@ -2,10 +2,13 @@
 <!-- section: The machine -->
 # Manifests
 
-A manifest is the whole arrangement of a simulation in one TOML document. It is the
+A manifest is the whole arrangement of a simulation in one document. It is the
 higher-level grammar: the kinds are the vocabulary, the manifest is the sentence. In the
 way a game engine's blueprints wire prefabricated behaviours without writing the
-behaviours, a manifest wires modules without writing modules.
+behaviours, a manifest wires modules without writing modules. It comes in three
+notations, TOML, JSON and JavaScript, which resolve to one thing (see [Three
+notations](#three-notations) below); the grammar is shown in TOML first because that is
+what the manifests in the repository are written in.
 
 ## The grammar
 
@@ -88,10 +91,59 @@ errors, warnings and information; `esim run` refuses errors. Information lines a
 reading: "the water module would read rules.no_crop but nothing writes it" tells a person
 or a model what the manifest could gain.
 
+## Three notations
+
+Since 2026-11-07 a manifest file may be written three ways, told apart by its extension,
+and `esim run`, `check`, `describe` and `project` take any of them.
+
+- **TOML**, `.toml`: the form above, with `include`. Every manifest in `manifests/` is one.
+- **JSON**, `.json`: the entity form of [RFC 0001](/docs/rfc/0001-manifest). A manifest
+  is a list of entities, each an `id` and a bag of components; an entity with a `run` is
+  the run, with a `kind` a module instance, with a `place`, an `audit` or a `variant` that
+  thing. A later entity with an earlier id replaces it component by component. A component
+  nothing here reads is carried and the check reports it. This is the *object form*: plain
+  data, no variables, no loops but the `range` on a variant, which unrolls to one variant
+  per member.
+- **JavaScript**, `.js`: the *source form*. A module whose exports are the entities: the
+  export name is the id, an exported array is spliced in, `export default` may be the whole
+  list, and an export named `run`, `place` or `audit` that carries no component is that
+  component. The program runs on QuickJS with nothing but the language: `Date` is gone,
+  `Math.random` throws, there is no network, no process and no file system, and `import`
+  reaches only files beside the entry, by relative path. Importing a `.toml` manifest gives
+  its entity list with includes folded, so a program can start from any manifest in the
+  repository and restate what it wants; importing `.json` gives the value. Functions do not
+  survive: exports are read through JSON.stringify, so a component is data or it is dropped.
+  Export order is layout order; variables, loops and comments are the point.
+
+Whatever wrote it, the engine resolves a manifest to the same entity list, and the
+manifest's id is the sha256 of that list's canonical text, so `esim manifest
+manifests/p1-planet-co2-1850-2025.toml --id` and the same for the `.js` beside it print one
+id. `esim manifest <file>` prints the entity form of any manifest, `--toml` the TOML,
+`--js` a JavaScript module to start editing from. A run folder and a project folder keep
+`manifest.toml` (the resolved TOML the pages read) and `manifest.json` (the entity form
+with a `from` block naming the file it came from, its hash and every file folded in); a
+project made from a JavaScript manifest also keeps the program and its imports under
+`source/`. `manifests/j3-planet-wild-members.js`, the manifest of
+[Eight draws of the deck](/anselm/planet-wild-members), is the worked example: it imports
+the Earth 2100 manifest, restates two entities and declares an ensemble as a range.
+
+## Births
+
+The kernel is an event bus and the manifest is played onto it: each module entry is a
+`manifest.entity` event at the start, and the kernel builds the module when the event
+comes by. A module may publish the same topic later, `{ id, kind, params }`, and a module
+is born mid-run, initialised, logged, and delivered to whoever subscribes to births; a
+snapshot carries it so a replay rebuilds the same list. A birth the kernel refuses, an id
+already taken, a kind nobody has, a factory that fails, is logged as `manifest.refused`
+and the run goes on. The wiring check is static and covers the entities present at the
+start; a later birth is checked for its kind and id, not for what it reads and writes.
+No first-party module publishes a birth yet.
+
 ## As a standard
 
-[RFC 0001](/docs/rfc/0001-manifest) proposes the manifest, in JSON, as a common transport
-between engines of this kind, with a schema beside it. esim does not read that form yet.
+[RFC 0001](/docs/rfc/0001-manifest) proposes the entity form, in JSON, as a common
+transport between engines of this kind, with a schema beside it, and the JavaScript form
+as the source form above it. esim reads and writes both since 2026-11-07.
 
 ## Writing them
 

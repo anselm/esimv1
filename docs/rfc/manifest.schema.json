@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://esimv1.exe.xyz/docs/rfc/manifest.schema.json",
-  "title": "Simulation manifest, version 1 (draft 3)",
+  "title": "Simulation manifest, version 1 (draft 4)",
   "description": "A list of entities, each a bag of named components, with an envelope that says what version, vocabulary and program it came from and, once resolved, what it rests on. RFC 0001 (/docs/rfc/0001-manifest) is the normative text. Part I of the RFC is the envelope and the entity rule; Part II is the components named under $defs/components.",
   "type": "object",
   "required": [
@@ -18,14 +18,6 @@
     "vocabulary": {
       "type": "string",
       "description": "The shared vocabulary (kind, topic, field, ledger and unit names) the components are named in; a name or a URL. Absent means the implementation's own."
-    },
-    "include": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "minLength": 1
-      },
-      "description": "Other manifests folded in first, in order, by path relative to this document or by URL; a later entity with an earlier id replaces it component by component. Absent from a resolved manifest."
     },
     "entities": {
       "type": "array",
@@ -382,7 +374,7 @@
       "properties": {
         "language": {
           "type": "string",
-          "description": "The hermetic authoring language that generated this document, e.g. javascript, starlark, jsonnet."
+          "description": "The language of the source this document was resolved from: javascript, the source form this standard names; starlark or jsonnet for other hermetic programs; toml or json for a document that was written directly."
         },
         "entry": {
           "type": "string"
@@ -395,10 +387,10 @@
           "additionalProperties": {
             "$ref": "#/$defs/hash"
           },
-          "description": "Every other file the program read, by name, with its hash. A hermetic program reads nothing else."
+          "description": "Every other file the program read, by path relative to the entry, with its hash. A hermetic program reads nothing else."
         }
       },
-      "description": "Resolved form only: the program this document was generated from, so that anyone with the interpreter regenerates it and checks the id."
+      "description": "Provenance, not a dependency: the file this document was resolved from, so that anyone with the interpreter regenerates it and checks the id. A document without it is complete; a document edited by hand has a stale one."
     },
     "lock": {
       "type": "object",

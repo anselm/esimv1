@@ -13,6 +13,9 @@
   let { path } = $props()
   let meta = $state(null)
   let manifest = $state('')
+  // the program a project was made from, when it was a JavaScript or JSON manifest: kept
+  // under source/ beside the resolved document, named by manifest.json's from block
+  let source = $state(null)
   let runs = $state([])
   let error = $state(null)
   let live = $state(false)
@@ -56,6 +59,13 @@
       } catch (e2) { error = e2.message }
     }
     runs = runs.slice().sort((a, b) => (b.start ?? 0) - (a.start ?? 0))
+    fetch(`/projects/${path}/manifest.json`, { cache: 'no-store' }).then((r) => (r.ok ? r.json() : null)).then(async (doc) => {
+      const from = doc?.from
+      if (!from || !['javascript', 'json'].includes(from.language)) return
+      const name = String(from.entry).split('/').pop()
+      const r = await fetch(`/projects/${path}/source/${name}`, { cache: 'no-store' })
+      if (r.ok) source = { name, language: from.language, text: await r.text(), sources: Object.keys(from.sources || {}) }
+    }).catch(() => {})
     fetch(`/projects/${path}/README.md`, { cache: 'no-store' }).then((r) => (r.ok ? r.text() : null)).then((t) => { readme = t && t.trim() ? t : null }).catch(() => {})
     await Promise.all(runs.map(async (run) => {
       try {
@@ -174,6 +184,13 @@
     </section>
   {/if}
 
+  {#if source}
+    <details class="mb-4" open>
+      <summary class="label cursor-pointer">source <span class="mono normal-case opacity-60">{source.name}</span></summary>
+      <p class="mt-2 text-xs opacity-70">The program this project was made from, in {source.language === 'javascript' ? 'JavaScript' : 'JSON'}{source.sources.length ? `, with ${source.sources.join(', ')}` : ''}. The manifest below is what it resolved to.</p>
+      <pre class="mono mt-2 overflow-x-auto rounded-[3px] bg-neutral-50 p-3 text-xs leading-relaxed dark:bg-neutral-900">{source.text}</pre>
+    </details>
+  {/if}
   <details class="mb-8">
     <summary class="label cursor-pointer">manifest</summary>
     <pre class="mono mt-2 overflow-x-auto rounded-[3px] bg-neutral-50 p-3 text-xs leading-relaxed dark:bg-neutral-900">{manifest}</pre>

@@ -101,6 +101,7 @@ cargo build --release
 ./target/release/esim run manifests/m3-water-boone.toml            # a year of basin hydrology, about 40 s
 ./target/release/esim verify manifests/m2-heat-boone-week.toml     # determinism and replay
 ./target/release/esim regress                                      # the hindcast ladder against regress/baseline.json; --accept records a new one
+./target/release/esim manifest manifests/j3-planet-wild-members.js # a JavaScript manifest as the entity list it resolves to; --id for its hash
 cargo test --release                                               # about 40 s with the data cached
 
 # projects: a folder with a manifest, a description and runs; variants are named overrides
@@ -113,7 +114,9 @@ cd web && npm install && npm run build && node server.mjs          # http://loca
 cd web && npm run dev                                              # development: hot reload, socket proxied to :5181
 ```
 
-A manifest is a short TOML document; `docs/system/manifests.md` has the grammar. The
+A manifest is a short document in TOML, JSON (the entity form of RFC 0001) or JavaScript
+(a hermetic module whose exports are the entities; `esim manifest <file>` prints what any
+of them resolves to); `docs/system/manifests.md` has the grammar. The
 conversational way to make one is the "+ project" form in the viewer, which asks a model
 to draft a manifest from a description against the kinds' own descriptions and has the
 kernel check it before anything runs.

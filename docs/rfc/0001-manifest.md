@@ -2,8 +2,9 @@
 <!-- section: Standards -->
 # RFC 0001: a common transport for simulations
 
-Status: draft 3, 2026-11-07. Author: Anselm Hook, drafted with Claude in the esim session
-of that day. Adopted by no engine yet, including this one.
+Status: draft 4, 2026-11-07. Author: Anselm Hook, drafted with Claude in the esim session
+of that day. Read and written by one engine, this one, in both of its forms since the
+evening of that day; adopted by no other.
 
 This is an argument, with a schema attached. It proposes that engines which couple
 modules of science on one clock should exchange their simulations as a single document,
@@ -61,7 +62,7 @@ The grammar has two levels, and most of the confusion in this field comes from w
 them as one.
 
 The lower level is the **meta grammar**: how to express a collection of state succinctly
-at all. Entities, components, identity, order, includes, inheritance, variables, loops,
+at all. Entities, components, identity, order, imports, inheritance, variables, loops,
 the expressions a document may carry, how it is made canonical and hashed. Nothing at this
 level knows what a river is. It is the same question a scene description, a game level, a
 configuration system and a user interface layout all answer, and the answers are old.
@@ -122,7 +123,7 @@ Four rules make this a transport rather than a pile of objects.
 
 **Identity.** `id` is unique in the document, lower case, a letter first. Other entities
 address an entity by it. A later entity with an earlier entity's `id` replaces it
-component by component, which is how includes and variants work (section 5).
+component by component, which is how imports and variants work (section 5).
 
 **Presence is type.** A reader asks "does this entity have a `kind`", never "is this a
 module". A component the reader does not know is carried, never rejected; the checker
@@ -165,18 +166,64 @@ found the row says so.
 | Games: the entity component system | A pattern from game engines (its origin in the early 2000s is recalled, not checked): no classes, only instances; an instance is a bag of named components, plain data; systems act on every instance that has the components they need. Unity's DOTS, Bevy and flecs are current engines built on it. | Type is presence. A thing is what its components say it is, and a new kind of thing needs no change to the grammar. |
 | This author's own: [orbital-sim](https://github.com/orbitalfoundation/orbital-sim) and the [orbital bus](https://github.com/orbitalfoundation/orbital-bus) (2024 to 2026) | A manifest is a JavaScript module whose named exports are entities, each a bag of components, with an `inherits` path; the loader turns exports into messages, and listeners match a message by the presence of keys, not their values. The 2024 docs: "you have only instances, and instances are decorated with components"; "a manifest is only a series of events over time". The bus primer names the layers: the bus is the message substrate, ECS a layer above it, manifests an authoring convention above that. | The same grammar expresses the arrangement, the state and the messages. Variables and loops come free from the host language, and one manifest reads an environment variable, which is the hermeticity leak the others legislate against. |
 
-### 5. Succinctness: authoring, includes and ranges
+### 5. Succinctness: the source form, ranges and imports
 
 A fully unrolled list of entities is the right thing to exchange and the wrong thing to
 write. A manifest with 177 countries, thirty seeds and a sweep over three parameters is a
-program's output, not a person's. The meta grammar answers at three levels of power, and
-keeps the transport at the lowest.
+program's output, not a person's. HTML is long for the same reason, and the web did not
+fix it with a `repeat` tag; it kept the output dumb and moved the authors to the programs
+that write it. This standard does the same, and names the program.
 
-**Includes and replacement, in the document.** `include` names other manifests, folded in
-first and in order; the including document's entities come after; an entity that restates
-an earlier `id` replaces it component by component. That is the whole composition rule,
-the same one OpenUSD and the orbital loader use, and it lets a short manifest change one
-parameter on top of a shared bundle without any language at all.
+**Two forms, one document.** The standard has a *source form* and an *object form*. The
+object form is the entity list of section 3: plain data, the thing two engines compare and
+hash. The source form is a JavaScript module whose exports are the entities. A conforming
+engine must accept the object form and may accept the source form; a conforming resolver
+turns the one into the other; two resolvers given the same source and the same files
+produce the same bytes; the id (section 7) is of the object form. This is the pairing
+Antimony has with SBML, TeX with DVI and TypeScript with JavaScript. A reader on a small
+board needs a JSON parser and nothing more. A person who wants to see the loop opens the
+source, and the object form says where it is.
+
+**The source form.** The rules are the orbital loader's, which is the pattern the author
+used for years before this document. The export name is the entity's id. An exported array
+is spliced in, so a loop produces entities. `export default` may be the whole list or the
+envelope. An export named `run`, `place` or `audit` that carries no component of its own is
+that component, so `export const run = { start, end, seed: 1 }` reads as it should. Export
+order is layout order. Values are read as JSON, so a function is dropped and a component is
+data or it is nothing, as section 3 requires. The language is JavaScript as the engine's
+interpreter has it, with everything that is not the language taken away:
+
+- no clock: `Date` is removed;
+- no randomness: `Math.random` throws, since the only randomness in a run is its seed;
+- no network, no process, no file system, no timers;
+- `import` reaches only files beside the entry, by relative path, and every file read is
+  hashed into the `from` block. A `.json` import is its value. A `.toml` import, in this
+  implementation, is that manifest's entity list, so a program can begin from any existing
+  manifest and restate what it wants;
+- a budget of time and memory, after which the program is refused.
+
+Given the same files the program produces the same document, which is the whole of what
+"hermetic" means here; Starlark and Jsonnet have the property by construction, and a
+JavaScript engine with its environment stripped has it in practice. The choice of
+JavaScript over those is a choice of readers: every web developer reads it, Vega chose a
+subset of it for the same reason, and the author's manifests have been JavaScript since
+2024. QuickJS runs it in a few hundred kilobytes.
+
+```js
+// planet-2100.js: the source form. Ten farms in three lines, and an ensemble as a range.
+import planet from "./planet-core.toml";
+const horizon = 2100;
+const farms = Array.from({ length: 10 }, (_, i) => ({
+  id: `farm-${i}`, kind: "farm.agent", params: { acres: 160 + 40 * i, crop: i % 2 ? "corn" : "soy" },
+}));
+export default planet;
+export const run = { start: "1850-01-01", end: `${horizon}-01-01`, seed: 1, close_every: "30d" };
+export { farms };
+export const seeds = { title: "Thirty members", range: { "run.seed": { from: 1, to: 30, steps: 30 } } };
+```
+
+What the engine receives is the array this evaluates to, every farm spelled out, with a
+`from` block naming this file and its hash.
 
 **Ranges, in the document.** An ensemble of thirty seeds or a sweep over a parameter is
 not thirty documents; the engine needs to know the runs belong together, as SED-ML's
@@ -186,32 +233,46 @@ repeated task does. A variant may carry a `range` instead of a fixed value:
 { "id": "seeds", "variant": { "title": "Thirty members", "range": { "run.seed": { "from": 1, "to": 30, "steps": 30 } } } }
 ```
 
-A range is the only loop the transport carries, and it unrolls trivially.
+A range is the only loop the object form carries, and it unrolls trivially. The test for
+admitting a construct into the object form is this: it stays only if unrolling it destroys
+something the reader needs (the ensemble as one thing) or if it cannot be evaluated before
+the run (section 6). Everything else is the program's business. The next candidate will be
+a conditional, and the test says no.
 
-**Everything else, in a program that writes the document.** Variables for shared numbers,
-loops over countries, functions that stamp out patches, inheritance: these live in an
-authoring language, and the standard does not pick it. It requires one thing: the program
-is hermetic. It reads no clock, no environment, no network and no file outside the sources
-it declares, draws no randomness beyond the run seed, and given the same sources produces
-the same document. Starlark and Jsonnet have this by construction; JavaScript has it when
-run in a sandbox that provides nothing else, which is orbital's form and the one the
-reference implementation will take first: a module whose named exports are the entities,
-evaluated with no globals but the seed and the declared sources. The resolved manifest
-records where it came from:
+**Imports are authoring, not transport.** An earlier draft had `include` in the document.
+It is gone, for the reason variables are: an include is a dependency the reader must
+resolve before it can read the document at all, so a reader with a JSON parser cannot read
+it, and hashing the text hashes a pointer, so the same bytes mean different scenarios when
+the included file changes. A module reference (`ref`, section 8) is also a URL with a hash,
+but the document is complete without fetching it; only running needs the bytes. That is the
+line: a reference the engine resolves at run time may stay, a reference the reader must
+resolve to read the document is folded by the program. What survives is the replacement
+rule of section 3, a later entity with an earlier id replaces it component by component,
+which is what `import planet; export const run = {...}` relies on, and what lets an
+ensemble member be the base plus one entity. The resolved manifest records where it came
+from:
 
 ```json
 {
   "from": {
     "language": "javascript",
-    "entry": "planet.manifest.js",
+    "entry": "planet-2100.js",
     "hash": "sha256:4c7a…",
-    "sources": { "countries.json": "sha256:a0b1…" }
+    "sources": { "planet-core.toml": "sha256:09e5…", "countries.json": "sha256:a0b1…" }
   }
 }
 ```
 
-With that block anyone with the same interpreter regenerates the same document and
-checks the id; anyone without it still has the document.
+With that block anyone with the same interpreter regenerates the same document and checks
+the id; anyone without it still has the document; anyone who edits the document by hand
+has a valid manifest whose `from` is stale, which is provenance going out of date, not a
+broken file.
+
+**What this costs.** Diffs between two object forms are noisier than diffs between two
+short programs, and a hundred-member ensemble with per-member overrides is a long document.
+A reader's rendering of an object form back into something a person reads is a tool nobody
+has written, and this document does not pretend otherwise. The web lives with the same
+split: view source on a built page is not what the author wrote.
 
 ### 6. Math at run time
 
@@ -259,10 +320,10 @@ in the file and lost the transport; USD and Vega kept it out and kept theirs.
 A configuration file depends on the machine that reads it: its defaults, its library, its
 copy of the data. A transport cannot.
 
-**Resolution.** Before a run the engine folds the includes, replaces entities by `id`,
-copies the place down into every module that does not set its keys, fills every parameter
-from the kind's default, applies the variant, and writes the result as the run's own
-manifest. That document is complete: the engine must be able to run from it alone, and a
+**Resolution.** Before a run the engine evaluates the source form if that is what it was
+handed, replaces entities by `id`, copies the place down into every module that does not
+set its keys, fills every parameter from the kind's default, applies the variant, and
+writes the result as the run's own manifest. That document is complete: the engine must be able to run from it alone, and a
 reader must see every number the run used without knowing any engine's defaults.
 
 **The resolved form carries what it rests on.** `kinds` holds the self-description of
@@ -385,15 +446,26 @@ though section 3 says why it should be the same grammar.
 
 esim's TOML manifests map onto this form: `[run]` is the run entity, `[place]` the place,
 each `[[module]]` with its `[module.params]` an entity with `kind` and `params`, `[audit]`
-the audit; the instance name becomes the `id`. Three things differ. esim keeps variants in
-the project beside the manifest, where this document puts them in it, because a family of
-assumptions is the thing worth sending. esim keeps the kind descriptions and the data
-locks in files beside a run, which is the same information in a shape a reader elsewhere
-cannot use. And esim's include can be spliced at a point in the module order, which this
-document does not yet have.
+the audit; the instance name becomes the `id`. Since the evening of 2026-11-07 the engine
+reads and writes the object form (`.json`) and the source form (`.js`) beside its TOML, and
+all three resolve to one entity list: `esim manifest <file>` prints it for any of them,
+`--id` prints the id, and the TOML planet manifest and its JavaScript twin print one id.
+Every run and project folder keeps the object form with its `from` block beside the TOML
+the pages read; a project made from a program keeps the program and its imports too. The
+worked example is `manifests/j3-planet-wild-members.js`, which imports the Earth 2100
+manifest, restates two entities and declares an eight-member ensemble as a range.
 
-The reference implementation does not yet read this form. That is deliberate: the
-argument should stand before the code follows it.
+The same day the kernel became what section 3 assumes: an event bus onto which the
+manifest is played. Each entity is an event at the start instant and a built-in listener
+builds the module when the event comes by, so a module that publishes an entity later
+gives birth to a module mid-run, logged and carried by snapshots. That is orbital's design
+and the reason to choose entities: the arrangement, the messages and, in time, the state
+are one grammar.
+
+Two things still differ. esim keeps the kind descriptions and the data locks in files
+beside a run, which is the same information in a shape a reader elsewhere cannot use.
+And its wiring check is static, over the entities present at the start; a later birth is
+checked for its kind and id, not for what it reads and writes.
 
 ### 14. Security
 
@@ -412,8 +484,10 @@ levels one and two are safe on any input, level three is not.
   one document at the cost of variants no longer being a table of differences.
 - The expression language's exact grammar and function list, and whether a parsed form
   travels beside the string.
-- Whether the reference implementation's first authoring language should be JavaScript in a
-  sandbox (orbital's form, runnable in the viewer) or Starlark (hermetic by construction).
+- Whether the source form should also be specified in Starlark, which is hermetic by
+  construction, for engines that will not carry a JavaScript interpreter.
+- Whether a source-form program may be shipped as the transport between engines that both
+  accept it, and what the conformance test for two interpreters is beyond identical bytes.
 - The snapshot and the log as entities: the same grammar for arrangement, state and
   messages, which is orbital's bet and would make a run folder one kind of document.
 - Where the vocabulary lives and how a version of it is named.
@@ -441,3 +515,10 @@ levels one and two are safe on any input, level three is not.
   grammar - related to modeling the world"). Part I is the meta grammar: a manifest is a list of
   entities, each a bag of components, presence is type, unknown components are carried not
   rejected; Part II names the components for the world. The schema follows.
+- Draft 4, 2026-11-07: the source form named (Anselm: "i am sorely tempted to use actual
+  javascript or some subset of the grammar. I think an absolutely purely declarative notation
+  is simple to parse, but hard for humans to understand"): a JavaScript module whose exports
+  are the entities, hermetic by subtraction, beside the object form; `include` removed from the
+  document, imports are the program's; the test for what the object form keeps; section 13
+  rewritten now that the reference implementation reads and writes both forms and plays the
+  manifest onto its bus.
