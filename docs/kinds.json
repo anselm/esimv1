@@ -5074,6 +5074,11 @@
         "note": "sentences: the conflicts"
       },
       {
+        "name": "heat.crossing",
+        "required": false,
+        "note": "sentences: the first month-long and season-long heatwaves"
+      },
+      {
         "name": "people.population",
         "required": false,
         "note": "the count"
@@ -220658,6 +220663,298 @@
     "assets": [],
     "notes": [
       "The budget left is (level_c minus the run's warming) over the TCRE, in GtC, and zero once the level is passed; the years left are that over last year's emissions; the cut now needed is the constant percentage fall from today that spends exactly the budget on a straight line to zero, which is half the current rate over the budget, capped at 100 when nothing is left. The capacity applies to the planned fall only: a held or growing path is not helped by a weak capacity, and a lost year of cutting is not recovered when the capacity returns, which is the article's point. Conflicts here are a draw from the run's seed where the heat stress is, not a forecast of any war."
+    ]
+  },
+  {
+    "kind": "weather.heatwaves",
+    "name": "weather.heatwaves",
+    "summary": "A weather generator for the planet: each year one observed year of daily maximum temperature per populated one-degree cell (MERRA-2 through NASA POWER, a baseline decade) is drawn by the run's seed and replayed, shifted by the cell's warming since that decade, and heatwaves are counted as Aglas-Leitner et al. 2026 count them: three or more days over the calendar-day 90th percentile, severity in units of the threshold's excess over the climatology, cumulative heat, duration, and the share of a country's people under extreme heat on the peak day. A country's heatwave is judged on its people-weighted mean. Counts and events, not deaths.",
+    "priority": 5,
+    "dt": "follows climate.country_tas",
+    "params": [
+      {
+        "name": "res_deg",
+        "default": 0.5,
+        "unit": "deg",
+        "note": "the shared grid; must match people.countries"
+      },
+      {
+        "name": "work_res_deg",
+        "default": 1.0,
+        "unit": "deg",
+        "note": "the daily series' grid, coarser than the shared one to keep a decade of days in memory (about 125 MB at one degree)"
+      },
+      {
+        "name": "frame_res_deg",
+        "default": 1.0,
+        "unit": "deg",
+        "note": "frames folded to this grid"
+      },
+      {
+        "name": "frame_every_years",
+        "default": 5.0,
+        "unit": "yr"
+      },
+      {
+        "name": "scale",
+        "default": "110m",
+        "note": "must match people.countries"
+      },
+      {
+        "name": "year_from",
+        "default": 2011,
+        "unit": "yr",
+        "note": "the observed decade replayed and used as the base; POWER begins in 1981, the paper's base is 1961 to 1990, so exceptional here means exceptional for this decade"
+      },
+      {
+        "name": "year_to",
+        "default": 2020,
+        "unit": "yr"
+      },
+      {
+        "name": "pattern",
+        "default": "country",
+        "note": "country: every cell warms by its country's fitted share of the global anomaly; cells: by its own reanalysis slope"
+      },
+      {
+        "name": "pattern_from",
+        "default": 1981.0,
+        "unit": "yr",
+        "note": "cells only"
+      },
+      {
+        "name": "pattern_to",
+        "default": 2025.0,
+        "unit": "yr"
+      },
+      {
+        "name": "threshold_pct",
+        "default": 90.0,
+        "unit": "%",
+        "note": "the calendar-day percentile a heatwave day exceeds (Tx90p in the paper; it also reports 95, 97.5 and 99)"
+      },
+      {
+        "name": "window_days",
+        "default": 15.0,
+        "unit": "d",
+        "note": "days either side of the calendar day pooled for the climatology and the threshold (the paper's first window; its second 31-day smoothing is not applied)"
+      },
+      {
+        "name": "min_days",
+        "default": 3.0,
+        "unit": "d",
+        "note": "consecutive days over the threshold that make a heatwave (Perkins and Alexander 2013, as the paper applies it)"
+      },
+      {
+        "name": "spread_per_degree",
+        "default": 0.0,
+        "unit": "1/degC",
+        "note": "a guess with no paper behind it: how much each day's anomaly from the climatology widens per degree of local warming; 0 is the pure delta method, which the paper's results say understates future length and area"
+      },
+      {
+        "name": "notable_days",
+        "default": 14.0,
+        "unit": "d",
+        "note": "a country's heatwave at least this long is published as an event (the longest per country per year)"
+      },
+      {
+        "name": "month_days",
+        "default": 30.0,
+        "unit": "d",
+        "note": "the first year a country has a heatwave this long is a crossing"
+      },
+      {
+        "name": "season_days",
+        "default": 60.0,
+        "unit": "d",
+        "note": "and this long a second one"
+      },
+      {
+        "name": "area_share",
+        "default": 0.5,
+        "note": "the share of a country's people under extreme heat on a day for the country to count as covered"
+      }
+    ],
+    "publishes": [
+      {
+        "name": "heat.wave",
+        "required": false,
+        "note": "{ iso3, name, year, start_doy, days, max_severity, cumulative_c_days, area, persons, replayed_year, sentence } the longest notable heatwave per country each year"
+      },
+      {
+        "name": "heat.crossing",
+        "required": false,
+        "note": "{ iso3, name, year, kind: heatwave_month | heatwave_season, days, area, persons, sentence, source } the first year a country's heatwave passes a month, and a season"
+      },
+      {
+        "name": "heat.pressure",
+        "required": false,
+        "note": "{ year, by_iso3: { days, longest, covered } } each year: people-weighted heatwave days, the longest run, and whether a month-long heatwave covered the stated share"
+      }
+    ],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [
+      {
+        "name": "climate.country_tas",
+        "required": false,
+        "note": "{ year, gmst_c, by_iso3: { slope } }"
+      }
+    ],
+    "fields_owned": [],
+    "fields_read": [
+      {
+        "name": "country.index",
+        "unit": "index",
+        "required": true,
+        "note": "which cell is which country"
+      },
+      {
+        "name": "people.count",
+        "unit": "persons",
+        "required": true,
+        "note": "people per cell"
+      }
+    ],
+    "ledgers": [],
+    "frames": [
+      {
+        "name": "heatwave_days",
+        "unit": "d/yr",
+        "required": false
+      },
+      {
+        "name": "heatwave_longest_days",
+        "unit": "d",
+        "required": false
+      },
+      {
+        "name": "heatwave_max_severity",
+        "unit": "1",
+        "required": false
+      }
+    ],
+    "reports": [
+      {
+        "name": "heat.people_days",
+        "unit": "person-days/yr",
+        "required": false
+      },
+      {
+        "name": "heat.people_month_long",
+        "unit": "persons",
+        "required": false
+      },
+      {
+        "name": "heat.longest_days",
+        "unit": "d",
+        "required": false
+      },
+      {
+        "name": "heat.countries_month_long",
+        "required": false
+      },
+      {
+        "name": "heat.events",
+        "required": false
+      },
+      {
+        "name": "heat.max_severity",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "heat.replayed_year",
+        "unit": "yr",
+        "required": false
+      }
+    ],
+    "views": [
+      {
+        "kind": "counter",
+        "title": "person-days of heatwave a year",
+        "source": "heat.people_days",
+        "obs": "",
+        "note": "people times days over the 90th percentile in runs of three or more"
+      },
+      {
+        "kind": "counter",
+        "title": "people in a month-long heatwave",
+        "source": "heat.people_month_long",
+        "obs": "",
+        "note": "living in a cell with a run of 30 days or more this year"
+      },
+      {
+        "kind": "counter",
+        "title": "the longest heatwave anywhere",
+        "source": "heat.longest_days",
+        "obs": "",
+        "note": "days, in the worst cell"
+      },
+      {
+        "kind": "map",
+        "title": "heatwave days this year",
+        "source": "heatwave_days",
+        "obs": "",
+        "note": "days over the calendar-day 90th percentile of 2011 to 2020, in runs of three or more"
+      },
+      {
+        "kind": "map",
+        "title": "the longest heatwave this year",
+        "source": "heatwave_longest_days",
+        "obs": "",
+        "note": "days"
+      },
+      {
+        "kind": "map",
+        "title": "the worst day's severity",
+        "source": "heatwave_max_severity",
+        "obs": "",
+        "note": "2 means the day's excess over the climatology was twice the threshold's"
+      },
+      {
+        "kind": "crossings",
+        "title": "heatwaves",
+        "source": "heat.wave",
+        "obs": "",
+        "note": "the longest notable heatwave per country each year, with its severity and the share of people under it"
+      },
+      {
+        "kind": "chart",
+        "title": "person-days of heatwave",
+        "source": "heat.people_days",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "chart",
+        "title": "the longest heatwave anywhere",
+        "source": "heat.longest_days",
+        "obs": "",
+        "note": ""
+      }
+    ],
+    "assets": [
+      {
+        "key": "worldpop-2020-1km",
+        "note": "which cells have people"
+      },
+      {
+        "key": "nasa-power-daily-regional",
+        "note": "daily maximum temperature per cell for the baseline decade"
+      },
+      {
+        "key": "hadcrut5-global-annual",
+        "note": "the global anomaly of the baseline decade, which the run's anomaly is shifted from"
+      },
+      {
+        "key": "natural-earth-110m-countries",
+        "note": "names for the events"
+      }
+    ],
+    "notes": [
+      "Imperfect on purpose. The weather of one observed year is replayed whole, shifted by the warming: days within a year are coherent, years are independent, and the spread of the days stays as it was unless spread_per_degree says otherwise. Aglas-Leitner et al. 2026 (Nature Communications 17:11456, read 2026-11-07) find that projected heatwaves grow longer and wider faster than the mean warming alone would make them, so with the default this layer is a floor. The base is the replayed decade, which was already about a degree warmer than 1850 to 1900, so a heatwave here is exceptional against 2011 to 2020, not against the paper's 1961 to 1990.",
+      "MERRA-2 is a reanalysis at about 50 km and reads extremes conservatively; a country's heatwave is judged on the people-weighted mean of its cells, so a large country with its people in one corner is that corner."
     ]
   }
 ]
