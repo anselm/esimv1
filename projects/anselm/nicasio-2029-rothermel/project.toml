@@ -1,0 +1,35 @@
+# A project: who asked for what, in their words, and the manifest beside it.
+area = "anselm"
+name = "nicasio-2029-rothermel"
+title = "A fire at Devil's Gulch, October 2029: Rothermel's model"
+cover = "cover.png"
+cover_caption = "Where Rothermel's unsuppressed fire had reached by the end of the third day, coloured by the hour it arrived (yellow first, red last), on the borrowed ERA5 point wind; the roads from OpenStreetMap. Drawn from the run's own frames, 2026-11-08."
+description = "The same scenario as A fire at Devil's Gulch, October 2029, on the older engine: Rothermel's 1972 spread model on the same 30 m ground, fuel from land cover through the Scott and Burgan models, the wind as the ERA5 reanalysis at one 25 km point, borrowed from the Red Flag days of 27 to 29 October 2019 and played hour for hour. The stake is the same house. Nobody fights the fire. A separate simulation, as Anselm asked on 2026-11-08, so the two engines can be read against each other with no record between them."
+created = "2026-11-08"
+by = "anselm, via claude 2026-11-08"
+
+# Variants: the first Palisades project's four, unchanged.
+
+[[variant]]
+name = "reanalysis"
+title = "The ERA5 wind as read, 25 km, at the window's centre"
+[variant.set]
+"fire.wind_source" = "mean"
+
+[[variant]]
+name = "gusts"
+title = "The ERA5 hourly gust as the wind: the upper bound the reanalysis allows"
+[variant.set]
+"fire.wind_source" = "gust"
+
+[[variant]]
+name = "built-barrier"
+title = "Built-up land does not carry fire"
+[variant.set]
+"fire.built_ros_m_min" = 0
+
+[[variant]]
+name = "sh7"
+title = "Shrubland as the very high load model SH7"
+[variant.set]
+"fire.shrub_fuel" = "SH7"

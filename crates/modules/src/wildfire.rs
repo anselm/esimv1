@@ -165,6 +165,7 @@ pub struct Rothermel {
     ignition_time: String,
     ignition_lat: f64, ignition_lon: f64,
     wind_start: String, wind_end: String,
+    wind_at: String,           // the simulated instant wind_start's midnight stands for; empty: itself
     wind_source: String,       // "mean" | "gust"
     wind_scale: f64,
     live_moisture_pct: f64,
@@ -210,6 +211,7 @@ impl Rothermel {
             ignition_time: param_str(p, "ignition_time", "2025-01-07T18:30:00Z").to_string(),
             ignition_lat: param_f64(p, "ignition_lat", 34.0723), ignition_lon: param_f64(p, "ignition_lon", -118.5451),
             wind_start: param_str(p, "wind_start", "2025-01-06").to_string(), wind_end: param_str(p, "wind_end", "2025-01-14").to_string(),
+            wind_at: param_str(p, "wind_at", "").to_string(),
             wind_source: param_str(p, "wind_source", "mean").to_string(),
             wind_scale: param_f64(p, "wind_scale", 1.0),
             live_moisture_pct: param_f64(p, "live_moisture_pct", 60.0),
@@ -292,7 +294,9 @@ impl Rothermel {
     /// This hour's weather: (wind m/s, direction the wind comes from deg, gust m/s, rh %, t2m C)
     fn weather_at(&self, t: Time) -> (f64, f64, f64, f64, f64) {
         let Some(w) = &self.wind else { return (0.0, 0.0, 0.0, 50.0, 15.0) };
-        let Some(i) = w.index_at(t.0) else { return (0.0, 0.0, 0.0, 50.0, 15.0) };
+        // a borrowed wind: the record's hours from wind_start are played from wind_at in the run
+        let shift = if self.wind_at.trim().is_empty() { 0 } else { match (Time::parse(&self.wind_start), Time::parse(&self.wind_at)) { (Ok(a), Ok(b)) => a.0 - b.0, _ => 0 } };
+        let Some(i) = w.index_at(t.0 + shift) else { return (0.0, 0.0, 0.0, 50.0, 15.0) };
         let g = |v: &Vec<f32>| v.get(i).copied().unwrap_or(f32::NAN) as f64;
         (g(&w.wind_m_s), g(&w.dir_deg), g(&w.gust_m_s), g(&w.rh_pct), g(&w.t2m_c))
     }
@@ -470,7 +474,7 @@ impl Rothermel {
             .param("res_arcsec", 1.0, "arcsec", "one arc-second is the DEM's own 30 m")
             .param("dt", "1h", "", "the weather step; spread runs in substeps inside it").param("frame_every", "1h", "", "arrival-time frames").param("frame_res_arcsec", 3.0, "arcsec", "frames are reduced to blocks of this size (earliest arrival, most common cover), so an hourly series stays small")
             .param("ignition_time", "2025-01-07T18:30:00Z", "", "").param("ignition_lat", 34.0723, "deg", "").param("ignition_lon", -118.5451, "deg", "the ignition point in the California WFTIIC record for the Palisades fire")
-            .param("wind_start", "2025-01-06", "date", "").param("wind_end", "2025-01-14", "date", "")
+            .param("wind_start", "2025-01-06", "date", "").param("wind_end", "2025-01-14", "date", "").param("wind_at", "", "", "the simulated instant that midnight UTC of wind_start stands for, when a run borrows another day's weather (a scenario in a year with no record); empty means the record's own time, so every run made before this exists is unchanged")
             .param("wind_source", "mean", "", "mean: the hourly 10 m wind; gust: the hourly gust, as a what-if for a reanalysis that reads a Santa Ana event mild")
             .param("wind_scale", 1.0, "", "multiplier on the wind, for sensitivity runs; 1 is the data")
             .param("live_moisture_pct", 60.0, "%", "live fuel moisture; a guess for chaparral in January after a dry autumn")

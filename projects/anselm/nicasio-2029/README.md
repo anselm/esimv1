@@ -74,6 +74,13 @@ between, not when the wind brings it. And the road itself is the only break the 
 there. A real October day with the ridges in a Diablo wind, a real suppression effort and the real
 state of the fuel in 2029 would each move the hour by more than the runs disagree.
 
+## The same fire on the older model
+
+[The same scenario on Rothermel's model](/anselm/nicasio-2029-rothermel) runs the first Palisades
+project's engine on this ground and wind. Its fire burns 16,000 to 23,000 acres and stops one to
+two kilometres short of the house. With no record, the two engines are the only check on each
+other, and the page says what that is worth.
+
 ## The view
 
 The run pages open on the three-dimensional view: the ground from the elevation model with the

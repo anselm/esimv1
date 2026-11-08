@@ -1,0 +1,87 @@
+{
+  "entities": [
+    {
+      "id": "run",
+      "run": {
+        "close_every": "1d",
+        "end": "2029-10-04T07:00:00Z",
+        "name": "f6-nicasio-2029-rothermel",
+        "notes": "A scenario, not a forecast: the Devil's Gulch ignition of 1 October 2029 on Rothermel's spread model with the ERA5 point wind of 27 to 29 October 2019 played hour for hour; the stake is 550 Nicasio Valley Road; unsuppressed; fuel parameters recalled from Scott and Burgan 2005 and not yet checked.",
+        "seed": 1,
+        "snapshot_every": "10d",
+        "start": "2029-10-01T07:00:00Z"
+      }
+    },
+    {
+      "id": "place",
+      "place": {
+        "lat_n": 38.08,
+        "lat_s": 37.97,
+        "lon_e": -122.61,
+        "lon_w": -122.79,
+        "res_arcsec": 1
+      }
+    },
+    {
+      "id": "fire",
+      "kind": "fire.rothermel",
+      "params": {
+        "ignition_lat": 38.0316,
+        "ignition_lon": -122.7328,
+        "ignition_time": "2029-10-01T10:00:00Z",
+        "lat_n": 38.08,
+        "lat_s": 37.97,
+        "lon_e": -122.61,
+        "lon_w": -122.79,
+        "res_arcsec": 1,
+        "wind_at": "2029-10-01T00:00:00Z",
+        "wind_end": "2019-10-31",
+        "wind_start": "2019-10-27"
+      }
+    },
+    {
+      "id": "places",
+      "kind": "obs.places",
+      "params": {
+        "lat_n": 38.08,
+        "lat_s": 37.97,
+        "lon_e": -122.61,
+        "lon_w": -122.79,
+        "places": [
+          {
+            "lat": 38.0283,
+            "lon": -122.6675,
+            "name": "550 Nicasio Valley Road",
+            "note": "the home of Jim Fournier's Planetwork and Solstice Grove, as Anselm describes it; position interpolated along the road by the US Census geocoder, 2026-11-08"
+          },
+          {
+            "lat": 38.0316,
+            "lon": -122.7328,
+            "name": "Devil's Gulch campsite",
+            "note": "the ignition; OpenStreetMap relation 17685328, 2026-11-08"
+          }
+        ],
+        "res_arcsec": 1
+      }
+    },
+    {
+      "id": "suppression",
+      "kind": "fire.suppression",
+      "params": {
+        "lat_n": 38.08,
+        "lat_s": 37.97,
+        "line_width_m": 30,
+        "lon_e": -122.61,
+        "lon_w": -122.79,
+        "mode": "off",
+        "res_arcsec": 1
+      }
+    }
+  ],
+  "from": {
+    "entry": "manifests/f6-nicasio-2029-rothermel.toml",
+    "hash": "sha256:d98fc7a8ecf05030a8b059f229793d399b5544fb6d446dc2b85cbf0de0a6897d",
+    "language": "toml"
+  },
+  "manifest": "manifest/1"
+}

@@ -1,0 +1,51 @@
+# F6: the Devil's Gulch scenario of F5 on the older engine: Rothermel's 1972 spread model on the
+# same 30 m ground, fuel from land cover through the Scott and Burgan models, the wind as the ERA5
+# reanalysis at one 25 km point, borrowed from the same Red Flag days (27 to 29 October 2019) and
+# played hour for hour from midnight Pacific daylight time on 1 October 2029. The two engines on one
+# scenario, as on the Palisades, so the reader can see what is the fire and what is the engine.
+# Nothing here is a forecast. Nobody fights the fire.
+
+[run]
+name = "f6-nicasio-2029-rothermel"
+start = "2029-10-01T07:00:00Z"
+end = "2029-10-04T07:00:00Z"
+seed = 1
+close_every = "1d"
+snapshot_every = "10d"
+notes = "A scenario, not a forecast: the Devil's Gulch ignition of 1 October 2029 on Rothermel's spread model with the ERA5 point wind of 27 to 29 October 2019 played hour for hour; the stake is 550 Nicasio Valley Road; unsuppressed; fuel parameters recalled from Scott and Burgan 2005 and not yet checked."
+
+[place]
+lat_s = 37.97
+lat_n = 38.08
+lon_w = -122.79
+lon_e = -122.61
+res_arcsec = 1
+
+[[module]]
+name = "fire"
+kind = "fire.rothermel"
+[module.params]
+# Devil's Gulch Campsite: OpenStreetMap relation 17685328 (read 2026-11-08); 03:00 Pacific daylight time
+ignition_time = "2029-10-01T10:00:00Z"
+ignition_lat = 38.0316
+ignition_lon = -122.7328
+# the ERA5 hours of the borrowed days; midnight UTC of wind_start falls on midnight UTC of 1 October 2029
+wind_start = "2019-10-27"
+wind_end = "2019-10-31"
+wind_at = "2029-10-01T00:00:00Z"
+
+[[module]]
+name = "places"
+kind = "obs.places"
+[module.params]
+places = [
+  { name = "550 Nicasio Valley Road", lat = 38.0283, lon = -122.6675, note = "the home of Jim Fournier's Planetwork and Solstice Grove, as Anselm describes it; position interpolated along the road by the US Census geocoder, 2026-11-08" },
+  { name = "Devil's Gulch campsite", lat = 38.0316, lon = -122.7328, note = "the ignition; OpenStreetMap relation 17685328, 2026-11-08" },
+]
+
+[[module]]
+name = "suppression"
+kind = "fire.suppression"
+[module.params]
+mode = "off"
+line_width_m = 30

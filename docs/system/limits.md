@@ -206,6 +206,10 @@ holds the history.
   whole window in two days at thresholds times 3 or 5) and nothing (times 8): the hour the fire reaches
   the house runs from 19 to 34 hours or never. The house is a geocoded point on the road centreline,
   reached within 50 m. Nobody fights the fire.
+- The same scenario on Rothermel's model (`anselm/nicasio-2029-rothermel`): 16,000 to 23,000 acres and
+  one to two kilometres short of the house, on a 25 km reanalysis point from the same borrowed days and
+  recalled fuel loads, with TU1 standing in for a redwood canyon. Two unscored engines agreeing on the
+  direction and the slowing is the only check either has.
 - The 3D view takes building heights as feet because the county's service does not state a
   unit.
 - Built-up land carries fire at a guessed rate; nothing about structures is physical.

@@ -40,6 +40,10 @@ across the highest peaks"; the county's page has since moved and the text was no
 What the analysis actually puts over the window is in each run's `fire.wind_m_s` and
 `fire.wind_from_deg` series, and on the page.
 
+The Rothermel project (`anselm/nicasio-2029-rothermel`) borrows the same days from the ERA5
+reanalysis through Open-Meteo's archive at one point, the window's centre, 27 to 31 October 2019,
+with midnight UTC of the 27th standing for midnight UTC of 1 October 2029.
+
 ## The ground
 
 Copernicus GLO-30 elevation, ESA WorldCover 2021, OpenStreetMap buildings and major roads through

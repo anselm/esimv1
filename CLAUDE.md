@@ -269,6 +269,9 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   campsite is OpenStreetMap relation 17685328; the house is the US Census geocoder's interpolation (on the road); the
   description of the place is Anselm's. At thresholds times 3 or 5 the fire takes the whole window in two days and reaches
   the house at 19 to 34 hours; at 8 it never leaves its cell: the engine does not know, and the page says so.
+  The same scenario on `fire.rothermel` (which gained the same `wind_at`, ERA5 point wind) is `manifests/f6-nicasio-2029-rothermel.toml`,
+  project `anselm/nicasio-2029-rothermel` with the Palisades' four variants: 16,000 to 23,000 acres, stops 1.3 to 2.2 km short of
+  the house (Anselm: "add the rosenthal model also - a separate sim", read as Rothermel).
 - Wild cards (2026-11-05, Anselm: "i just want a placeholder ... like a video game with wild card factors
   optionally"): `events.shock` (`crates/modules/src/shock.rs`) draws `data/events/future-speculative.toml` by the
   run's seed each year from `from` (default 2025), or plays one named card (`mode = "named"`, `event`, `at`);
