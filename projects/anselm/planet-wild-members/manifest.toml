@@ -117,6 +117,15 @@ year_from = 2011
 year_to = 2020
 
 [[module]]
+name = "heatwaves"
+kind = "weather.heatwaves"
+
+[module.params]
+pattern = "country"
+res_deg = 0.5
+scale = "50m"
+
+[[module]]
 name = "tipping"
 kind = "tipping.elements"
 

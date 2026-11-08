@@ -88,6 +88,18 @@ crossing_share = 0.5
 # the thresholds, checked against the warming; coupling = 0 checks each alone, 1 lets a
 # crossing lower the thresholds of the elements it pushes on by the fractions in
 # data/events/tipping.toml (Wunderling et al. 2021); the project's cascade variants set it
+# the weather generator: one observed year of daily maximum temperature per populated
+# one-degree cell replayed each year by the seed, shifted by the warming; heatwaves counted
+# the way Aglas-Leitner et al. 2026 count them (2026-11-07). Imperfect on purpose: the
+# describe says how.
+[[module]]
+name = "heatwaves"
+kind = "weather.heatwaves"
+[module.params]
+res_deg = 0.5
+scale = "50m"
+pattern = "country"
+
 [[module]]
 name = "tipping"
 kind = "tipping.elements"

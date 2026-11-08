@@ -1,0 +1,191 @@
+{
+  "entities": [
+    {
+      "id": "run",
+      "run": {
+        "close_every": "30d",
+        "end": "2100-01-01",
+        "name": "p4-planet-people",
+        "notes": "Planet core plus people on half-degree cells, each country's warming from its record, heat and wet-bulb exposure cell by cell from a reanalysis baseline, and tipping thresholds, 1850 to 2100. After 2024 emissions follow the variant's assumption (default: held at the 2024 rate). CO2, CH4 and N2O forcing; the AR6 assessed series held after 2019; the Millar sink feedback; of the tipping elements, the carbon of permafrost and the Amazon feeds back once the run passes the assessment's central estimates, the rest are flags. The warming applied to each cell is its country's fitted slope times the run's global anomaly; the reanalysis's own trend map is drawn but not applied.",
+        "seed": 1,
+        "start": "1850-01-01"
+      }
+    },
+    {
+      "id": "story",
+      "kind": "story.bottomline"
+    },
+    {
+      "id": "emissions",
+      "kind": "carbon.emissions",
+      "params": {
+        "after_record": "hold",
+        "include_land_use": true
+      }
+    },
+    {
+      "id": "carbon",
+      "kind": "carbon.pools",
+      "params": {
+        "co2_start_ppm": 286.8
+      }
+    },
+    {
+      "id": "gases",
+      "kind": "carbon.gases"
+    },
+    {
+      "id": "assessed",
+      "kind": "forcing.ar6",
+      "params": {
+        "after_record": "hold"
+      }
+    },
+    {
+      "id": "energy",
+      "kind": "energy.twolayer",
+      "params": {
+        "co2_ref_ppm": 286.8
+      }
+    },
+    {
+      "id": "sea",
+      "kind": "sea.thermal"
+    },
+    {
+      "id": "obs",
+      "kind": "obs.planet",
+      "params": {
+        "baseline_from": 1850,
+        "baseline_to": 1900
+      }
+    },
+    {
+      "id": "people",
+      "kind": "people.countries",
+      "params": {
+        "distribution": "worldpop",
+        "frame_every_years": 10,
+        "frame_res_deg": 1.0,
+        "res_deg": 0.5,
+        "scale": "50m"
+      }
+    },
+    {
+      "id": "climate",
+      "kind": "climate.countries",
+      "params": {
+        "anom_from": 2011,
+        "anom_to": 2020,
+        "cells_clim_from": 2001,
+        "cells_clim_to": 2025,
+        "frame_every_years": 10,
+        "frame_res_deg": 1.0,
+        "pattern": "cells",
+        "res_deg": 0.5,
+        "scale": "50m"
+      }
+    },
+    {
+      "id": "heat",
+      "kind": "people.heat",
+      "params": {
+        "baseline": "cells",
+        "crossing_share": 0.5,
+        "frame_every_years": 10,
+        "frame_res_deg": 1.0,
+        "niche_c": 29.0,
+        "pattern": "country",
+        "res_deg": 0.5,
+        "scale": "50m"
+      }
+    },
+    {
+      "id": "wetbulb",
+      "kind": "people.wetbulb",
+      "params": {
+        "crossing_share": 0.5,
+        "frame_every_years": 10,
+        "frame_res_deg": 1.0,
+        "pattern": "country",
+        "res_deg": 0.5,
+        "scale": "50m",
+        "source": "cells",
+        "year_from": 2011,
+        "year_to": 2020
+      }
+    },
+    {
+      "id": "heatwaves",
+      "kind": "weather.heatwaves",
+      "params": {
+        "pattern": "country",
+        "res_deg": 0.5,
+        "scale": "50m"
+      }
+    },
+    {
+      "id": "tipping",
+      "kind": "tipping.elements",
+      "params": {
+        "coupling": 0.0
+      }
+    },
+    {
+      "id": "tipped",
+      "kind": "carbon.tipped",
+      "params": {
+        "trigger": "central"
+      }
+    },
+    {
+      "id": "wildcards",
+      "kind": "events.shock",
+      "params": {
+        "mode": "off"
+      }
+    },
+    {
+      "id": "regions",
+      "kind": "score.regions",
+      "params": {
+        "scale": "50m"
+      }
+    },
+    {
+      "id": "capacity",
+      "kind": "policy.capacity",
+      "params": {
+        "mode": "watch"
+      }
+    },
+    {
+      "audit": {
+        "scores": [
+          [
+            "carbon.co2_ppm",
+            "obs.co2_ppm"
+          ],
+          [
+            "energy.gmst_anom_c",
+            "obs.gmst_hadcrut5_c"
+          ],
+          [
+            "energy.gmst_anom_c",
+            "obs.gmst_gistemp_c"
+          ]
+        ]
+      },
+      "id": "audit"
+    }
+  ],
+  "from": {
+    "entry": "manifests/p4-planet-people.toml",
+    "hash": "sha256:534670f833e115a8d77b3ded385864abb159bc5b9bd4ae25ec4c3694e41aac47",
+    "language": "toml",
+    "sources": {
+      "manifests/planet-core.toml": "sha256:13c09466269de20d2bdb50a24a780d63b7eec4491876c9ebb588fb762c31ecda"
+    }
+  },
+  "manifest": "manifest/1"
+}

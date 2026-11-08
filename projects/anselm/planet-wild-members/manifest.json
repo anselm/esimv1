@@ -116,6 +116,15 @@
       }
     },
     {
+      "id": "heatwaves",
+      "kind": "weather.heatwaves",
+      "params": {
+        "pattern": "country",
+        "res_deg": 0.5,
+        "scale": "50m"
+      }
+    },
+    {
       "id": "tipping",
       "kind": "tipping.elements",
       "params": {
@@ -255,7 +264,7 @@
     "hash": "sha256:89977556e3f76b5f0957127bc3e94130d0914fbeac8359e17525ce898042a233",
     "language": "javascript",
     "sources": {
-      "p4-planet-people.toml": "sha256:09e56b3d6b31ab98aa27c1387e21ffb35a729d1cc86dc12b3cad3a4a5954d064",
+      "p4-planet-people.toml": "sha256:534670f833e115a8d77b3ded385864abb159bc5b9bd4ae25ec4c3694e41aac47",
       "planet-core.toml": "sha256:13c09466269de20d2bdb50a24a780d63b7eec4491876c9ebb588fb762c31ecda"
     }
   },

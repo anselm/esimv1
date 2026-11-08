@@ -754,6 +754,7 @@
       "climate.countries",
       "people.heat",
       "people.wetbulb",
+      "weather.heatwaves",
       "tipping.elements",
       "carbon.tipped",
       "events.shock",
@@ -765,93 +766,10 @@
     "runs": [
       {
         "all_ledgers_closed": true,
-        "digest": "26b0ad5350dfcdd5",
+        "digest": "e0fe18a311d45c81",
         "end": 4102444800,
-        "events": 28826,
-        "id": "p4-planet-people-2a3079bf-26b0ad53",
-        "name": "p4-planet-people",
-        "seed": 1,
-        "set": {
-          "capacity.mode": "\"on\"",
-          "emissions.after_record": "\"zero_by:2050\""
-        },
-        "start": -3786825600,
-        "variant": "zero-by-2050-derailed",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "dde4199b31f5313e",
-        "end": 4102444800,
-        "events": 29486,
-        "id": "p4-planet-people-3182f50f-dde4199b",
-        "name": "p4-planet-people",
-        "seed": 2,
-        "set": {
-          "emissions.after_record": "\"hold\"",
-          "run.seed": "2",
-          "wildcards.mode": "\"draw\""
-        },
-        "start": -3786825600,
-        "variant": "wild-2",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "15cb7d0d11c312a9",
-        "end": 4102444800,
-        "events": 29553,
-        "id": "p4-planet-people-37a44051-15cb7d0d",
-        "name": "p4-planet-people",
-        "seed": 1,
-        "set": {
-          "emissions.after_record": "\"hold\"",
-          "run.seed": "1",
-          "wildcards.mode": "\"draw\"",
-          "wildcards.scale": "4"
-        },
-        "start": -3786825600,
-        "variant": "wild-4x",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "c69b7cd5ae87c6d6",
-        "end": 4102444800,
-        "events": 29493,
-        "id": "p4-planet-people-38592af2-c69b7cd5",
-        "name": "p4-planet-people",
-        "seed": 3,
-        "set": {
-          "emissions.after_record": "\"hold\"",
-          "run.seed": "3",
-          "wildcards.mode": "\"draw\""
-        },
-        "start": -3786825600,
-        "variant": "wild-3",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "8fe66d5b96e91970",
-        "end": 4102444800,
-        "events": 28722,
-        "id": "p4-planet-people-3ffc1a4f-8fe66d5b",
-        "name": "p4-planet-people",
-        "seed": 1,
-        "set": {
-          "emissions.after_record": "\"hold\""
-        },
-        "start": -3786825600,
-        "variant": "held",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "40055e5062d6496b",
-        "end": 4102444800,
-        "events": 28824,
-        "id": "p4-planet-people-57feabe4-40055e50",
+        "events": 35390,
+        "id": "p4-planet-people-025f2fd5-e0fe18a3",
         "name": "p4-planet-people",
         "seed": 1,
         "set": {
@@ -864,10 +782,41 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "308143a39244d42e",
+        "digest": "8b301f0e9a46b2d4",
         "end": 4102444800,
-        "events": 28868,
-        "id": "p4-planet-people-728a94e8-308143a3",
+        "events": 32980,
+        "id": "p4-planet-people-0864ec21-8b301f0e",
+        "name": "p4-planet-people",
+        "seed": 1,
+        "set": {
+          "capacity.mode": "\"on\"",
+          "emissions.after_record": "\"zero_by:2050\""
+        },
+        "start": -3786825600,
+        "variant": "zero-by-2050-derailed",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "b0c3bac21b5d90d5",
+        "end": 1735689600,
+        "events": 20680,
+        "id": "p4-planet-people-1b2cf39b-b0c3bac2",
+        "name": "p4-planet-people",
+        "seed": 1,
+        "set": {
+          "run.end": "\"2025-01-01\""
+        },
+        "start": -3786825600,
+        "variant": "hindcast",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "90e094cc56856c41",
+        "end": 4102444800,
+        "events": 33987,
+        "id": "p4-planet-people-1f3349b1-90e094cc",
         "name": "p4-planet-people",
         "seed": 1,
         "set": {
@@ -880,44 +829,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "1d35a975d45c938a",
-        "end": 1735689600,
-        "events": 20042,
-        "id": "p4-planet-people-79b1252f-1d35a975",
-        "name": "p4-planet-people",
-        "seed": 1,
-        "set": {
-          "run.end": "\"2025-01-01\""
-        },
-        "start": -3786825600,
-        "variant": "hindcast",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "a9cd73bed959328c",
+        "digest": "603b7b75c65f85bc",
         "end": 4102444800,
-        "events": 29602,
-        "id": "p4-planet-people-7c1c66b5-a9cd73be",
-        "name": "p4-planet-people",
-        "seed": 1,
-        "set": {
-          "capacity.mode": "\"on\"",
-          "emissions.after_record": "\"zero_by:2050\"",
-          "run.seed": "1",
-          "tipping.coupling": "1.0",
-          "wildcards.mode": "\"draw\""
-        },
-        "start": -3786825600,
-        "variant": "zero-by-2050-everything",
-        "verdict": null
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "f5dcc8f4e0a2ca0b",
-        "end": 4102444800,
-        "events": 28752,
-        "id": "p4-planet-people-8834cc49-f5dcc8f4",
+        "events": 36091,
+        "id": "p4-planet-people-4f84fb6b-603b7b75",
         "name": "p4-planet-people",
         "seed": 1,
         "set": {
@@ -929,73 +844,29 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "aad1128d0bf9d868",
+        "digest": "12e4e40f0c88d469",
         "end": 4102444800,
-        "events": 28712,
-        "id": "p4-planet-people-9611edef-aad1128d",
+        "events": 33727,
+        "id": "p4-planet-people-4f9aa8e2-12e4e40f",
         "name": "p4-planet-people",
         "seed": 1,
         "set": {
-          "emissions.after_record": "\"grow:-3\""
-        },
-        "start": -3786825600,
-        "variant": "falling",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "9f3b1e34b64cad45",
-        "end": 4102444800,
-        "events": 28706,
-        "id": "p4-planet-people-a4c5cd75-9f3b1e34",
-        "name": "p4-planet-people",
-        "seed": 1,
-        "set": {
-          "emissions.after_record": "\"zero_by:2050\""
-        },
-        "start": -3786825600,
-        "variant": "zero-by-2050",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "6a1b3f619731f28a",
-        "end": 4102444800,
-        "events": 29495,
-        "id": "p4-planet-people-c4f8f626-6a1b3f61",
-        "name": "p4-planet-people",
-        "seed": 1,
-        "set": {
-          "emissions.after_record": "\"hold\"",
+          "capacity.mode": "\"on\"",
+          "emissions.after_record": "\"zero_by:2050\"",
           "run.seed": "1",
+          "tipping.coupling": "1.0",
           "wildcards.mode": "\"draw\""
         },
         "start": -3786825600,
-        "variant": "wild-1",
+        "variant": "zero-by-2050-everything",
         "verdict": "holds"
       },
       {
         "all_ledgers_closed": true,
-        "digest": "bad1ba28b8d50f8c",
+        "digest": "7b29853a15297a5c",
         "end": 4102444800,
-        "events": 28736,
-        "id": "p4-planet-people-d674aea0-bad1ba28",
-        "name": "p4-planet-people",
-        "seed": 1,
-        "set": {
-          "emissions.after_record": "\"hold\"",
-          "tipping.coupling": "1.0"
-        },
-        "start": -3786825600,
-        "variant": "held-cascade",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "af084708a5b02744",
-        "end": 4102444800,
-        "events": 29601,
-        "id": "p4-planet-people-db307151-af084708",
+        "events": 33726,
+        "id": "p4-planet-people-652a7bb4-7b29853a",
         "name": "p4-planet-people",
         "seed": 1,
         "set": {
@@ -1010,10 +881,155 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "0469ac4911ee7767",
+        "digest": "c64235fcaba43238",
         "end": 4102444800,
-        "events": 29473,
-        "id": "p4-planet-people-e8a3380f-0469ac49",
+        "events": 35853,
+        "id": "p4-planet-people-79ed7546-c64235fc",
+        "name": "p4-planet-people",
+        "seed": 1,
+        "set": {
+          "emissions.after_record": "\"hold\"",
+          "run.seed": "1",
+          "wildcards.mode": "\"draw\""
+        },
+        "start": -3786825600,
+        "variant": "wild-1",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "4f6574164c6326c0",
+        "end": 4102444800,
+        "events": 34863,
+        "id": "p4-planet-people-81f2a5f5-4f657416",
+        "name": "p4-planet-people",
+        "seed": 1,
+        "set": {
+          "emissions.after_record": "\"hold\"",
+          "run.seed": "1",
+          "wildcards.mode": "\"draw\"",
+          "wildcards.scale": "4"
+        },
+        "start": -3786825600,
+        "variant": "wild-4x",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "852df1612e860e00",
+        "end": 4102444800,
+        "events": 35201,
+        "id": "p4-planet-people-afc2a651-852df161",
+        "name": "p4-planet-people",
+        "seed": 1,
+        "set": {
+          "emissions.after_record": "\"hold\""
+        },
+        "start": -3786825600,
+        "variant": "held",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "e2241eb3e9c1d0f7",
+        "end": 4102444800,
+        "events": 35723,
+        "id": "p4-planet-people-b0723d60-e2241eb3",
+        "name": "p4-planet-people",
+        "seed": 1,
+        "set": {
+          "emissions.after_record": "\"trend:10\""
+        },
+        "start": -3786825600,
+        "variant": "trend",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "f5d11a1dc6f1a3da",
+        "end": 4102444800,
+        "events": 36057,
+        "id": "p4-planet-people-b18e37f3-f5d11a1d",
+        "name": "p4-planet-people",
+        "seed": 3,
+        "set": {
+          "emissions.after_record": "\"hold\"",
+          "run.seed": "3",
+          "wildcards.mode": "\"draw\""
+        },
+        "start": -3786825600,
+        "variant": "wild-3",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "00c6005d50296540",
+        "end": 4102444800,
+        "events": 35962,
+        "id": "p4-planet-people-b440222b-00c6005d",
+        "name": "p4-planet-people",
+        "seed": 2,
+        "set": {
+          "emissions.after_record": "\"hold\"",
+          "run.seed": "2",
+          "wildcards.mode": "\"draw\""
+        },
+        "start": -3786825600,
+        "variant": "wild-2",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "ade509b300c0940f",
+        "end": 4102444800,
+        "events": 32713,
+        "id": "p4-planet-people-bd951aec-ade509b3",
+        "name": "p4-planet-people",
+        "seed": 1,
+        "set": {
+          "emissions.after_record": "\"zero_by:2050\""
+        },
+        "start": -3786825600,
+        "variant": "zero-by-2050",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "608a9f652fa0fc8a",
+        "end": 4102444800,
+        "events": 35217,
+        "id": "p4-planet-people-d7efa189-608a9f65",
+        "name": "p4-planet-people",
+        "seed": 1,
+        "set": {
+          "emissions.after_record": "\"hold\"",
+          "tipping.coupling": "1.0"
+        },
+        "start": -3786825600,
+        "variant": "held-cascade",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "9c843ad4807a66ca",
+        "end": 4102444800,
+        "events": 33542,
+        "id": "p4-planet-people-e482d639-9c843ad4",
+        "name": "p4-planet-people",
+        "seed": 1,
+        "set": {
+          "emissions.after_record": "\"grow:-3\""
+        },
+        "start": -3786825600,
+        "variant": "falling",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "591ea060aa5180d6",
+        "end": 4102444800,
+        "events": 35634,
+        "id": "p4-planet-people-f2e30f39-591ea060",
         "name": "p4-planet-people",
         "seed": 1,
         "set": {
@@ -1024,21 +1040,6 @@
         },
         "start": -3786825600,
         "variant": "eruption-2040",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "d09b7a8a19ded21a",
-        "end": 4102444800,
-        "events": 28740,
-        "id": "p4-planet-people-faed1998-d09b7a8a",
-        "name": "p4-planet-people",
-        "seed": 1,
-        "set": {
-          "emissions.after_record": "\"trend:10\""
-        },
-        "start": -3786825600,
-        "variant": "trend",
         "verdict": "holds"
       }
     ],
@@ -1233,6 +1234,7 @@
       "climate.countries",
       "people.heat",
       "people.wetbulb",
+      "weather.heatwaves",
       "tipping.elements",
       "carbon.tipped",
       "events.shock",
@@ -1244,113 +1246,10 @@
     "runs": [
       {
         "all_ledgers_closed": true,
-        "digest": "6e35a5b74f12b5df",
+        "digest": "c64235fcaba43238",
         "end": 4102444800,
-        "events": 29497,
-        "id": "j3-planet-wild-members-1037c8b1-6e35a5b7",
-        "name": "j3-planet-wild-members",
-        "seed": 8,
-        "set": {
-          "run.seed": "8"
-        },
-        "start": -3786825600,
-        "variant": "seeds-8",
-        "verdict": null
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "c24af75c39c7220d",
-        "end": 4102444800,
-        "events": 29495,
-        "id": "j3-planet-wild-members-2a091ba7-c24af75c",
-        "name": "j3-planet-wild-members",
-        "seed": 7,
-        "set": {
-          "run.seed": "7"
-        },
-        "start": -3786825600,
-        "variant": "seeds-7",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "1ac63d4716d3929f",
-        "end": 4102444800,
-        "events": 29499,
-        "id": "j3-planet-wild-members-30613e34-1ac63d47",
-        "name": "j3-planet-wild-members",
-        "seed": 6,
-        "set": {
-          "run.seed": "6"
-        },
-        "start": -3786825600,
-        "variant": "seeds-6",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "c69b7cd5ae87c6d6",
-        "end": 4102444800,
-        "events": 29493,
-        "id": "j3-planet-wild-members-63bab280-c69b7cd5",
-        "name": "j3-planet-wild-members",
-        "seed": 3,
-        "set": {
-          "run.seed": "3"
-        },
-        "start": -3786825600,
-        "variant": "seeds-3",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "dde4199b31f5313e",
-        "end": 4102444800,
-        "events": 29486,
-        "id": "j3-planet-wild-members-81533cb5-dde4199b",
-        "name": "j3-planet-wild-members",
-        "seed": 2,
-        "set": {
-          "run.seed": "2"
-        },
-        "start": -3786825600,
-        "variant": "seeds-2",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "6a1b3f619731f28a",
-        "end": 4102444800,
-        "events": 29495,
-        "id": "j3-planet-wild-members-81a295cb-6a1b3f61",
-        "name": "j3-planet-wild-members",
-        "seed": 1,
-        "set": null,
-        "start": -3786825600,
-        "variant": null,
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "9cb9adce612fb41b",
-        "end": 4102444800,
-        "events": 29499,
-        "id": "j3-planet-wild-members-d1f307f5-9cb9adce",
-        "name": "j3-planet-wild-members",
-        "seed": 4,
-        "set": {
-          "run.seed": "4"
-        },
-        "start": -3786825600,
-        "variant": "seeds-4",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "6a1b3f619731f28a",
-        "end": 4102444800,
-        "events": 29495,
-        "id": "j3-planet-wild-members-d6859f23-6a1b3f61",
+        "events": 35853,
+        "id": "j3-planet-wild-members-14bfa83f-c64235fc",
         "name": "j3-planet-wild-members",
         "seed": 1,
         "set": {
@@ -1362,10 +1261,25 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "b47c689296c96671",
+        "digest": "00c6005d50296540",
         "end": 4102444800,
-        "events": 29505,
-        "id": "j3-planet-wild-members-e5df3d6b-b47c6892",
+        "events": 35962,
+        "id": "j3-planet-wild-members-37c96e40-00c6005d",
+        "name": "j3-planet-wild-members",
+        "seed": 2,
+        "set": {
+          "run.seed": "2"
+        },
+        "start": -3786825600,
+        "variant": "seeds-2",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "142b02af519151ea",
+        "end": 4102444800,
+        "events": 35286,
+        "id": "j3-planet-wild-members-3f41b554-142b02af",
         "name": "j3-planet-wild-members",
         "seed": 5,
         "set": {
@@ -1373,6 +1287,94 @@
         },
         "start": -3786825600,
         "variant": "seeds-5",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "28bfeb4debef0636",
+        "end": 4102444800,
+        "events": 35929,
+        "id": "j3-planet-wild-members-5ed5c445-28bfeb4d",
+        "name": "j3-planet-wild-members",
+        "seed": 6,
+        "set": {
+          "run.seed": "6"
+        },
+        "start": -3786825600,
+        "variant": "seeds-6",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "f5d11a1dc6f1a3da",
+        "end": 4102444800,
+        "events": 36057,
+        "id": "j3-planet-wild-members-8fc9576f-f5d11a1d",
+        "name": "j3-planet-wild-members",
+        "seed": 3,
+        "set": {
+          "run.seed": "3"
+        },
+        "start": -3786825600,
+        "variant": "seeds-3",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "9848021b9375ef33",
+        "end": 4102444800,
+        "events": 35641,
+        "id": "j3-planet-wild-members-9110dcb8-9848021b",
+        "name": "j3-planet-wild-members",
+        "seed": 8,
+        "set": {
+          "run.seed": "8"
+        },
+        "start": -3786825600,
+        "variant": "seeds-8",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "a3779ed5ee85c9f4",
+        "end": 4102444800,
+        "events": 35627,
+        "id": "j3-planet-wild-members-915df65b-a3779ed5",
+        "name": "j3-planet-wild-members",
+        "seed": 7,
+        "set": {
+          "run.seed": "7"
+        },
+        "start": -3786825600,
+        "variant": "seeds-7",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "3c33156d9c092a57",
+        "end": 4102444800,
+        "events": 35344,
+        "id": "j3-planet-wild-members-a95f5d01-3c33156d",
+        "name": "j3-planet-wild-members",
+        "seed": 4,
+        "set": {
+          "run.seed": "4"
+        },
+        "start": -3786825600,
+        "variant": "seeds-4",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "c64235fcaba43238",
+        "end": 4102444800,
+        "events": 35853,
+        "id": "j3-planet-wild-members-eacc23ef-c64235fc",
+        "name": "j3-planet-wild-members",
+        "seed": 1,
+        "set": null,
+        "start": -3786825600,
+        "variant": null,
         "verdict": "holds"
       }
     ],
