@@ -97,3 +97,45 @@ Schema: `from`, `variant.range` (uniform or explicit values), `describe.params[]
 with `expr` and `vars`. Every example in the text validates (the shortened hashes excused).
 esim reads none of this yet; `events.shock`, `carbon.emissions`'s `after_record` and the
 project variants are the three places it would first apply.
+
+## Draft 3, later the same afternoon: two levels, and the entity component pattern
+
+Anselm: "The grammar exists at 2 levels. There is a meta level - variables, loops, includes,
+layout. Also I used an ecs pattern for a lot of my work - may take you a bit of research to
+find that. This is above the use case - basically 'how do we express manifests or state
+succinctly?' Then there are the structures we are building in the grammar - related to
+modeling the world."
+
+Found on disk (2026-11-07): the 2024 orbital website docs in
+`~/projects/2027/orbital/reference/orbital-website-2024/docs/` (`34-entities.js`: "Instead you
+have only instances, and instances are decorated with components"; `33-manifests.js`: "a
+manifest is only a series of events over time, that are inhaled by the system, that observers
+watch"; the argument that JavaScript is a "good enough" meta-grammar and that the base grammar
+matters less than the separation of declarations from procedure; `37-manifests.js`: "transport
+grammars for reflecting system state must be human editable"), the orbital bus `SPEC.md`
+(filters match on key presence; manifests are `{ load }` of ESM modules whose named exports get
+the export name as id) and `PRIMER.md` ("The bus is the message substrate. ECS is a layer above
+it. Manifests are an authoring convention above that."; ECS from the blackboard pedigree), the
+`orbital-sys` readme, and the harness memory notes on the orbital conventions (entities are
+component bags with presence-as-type).
+
+The RFC is now in three parts. Part I, the meta grammar: a manifest is a list of entities, each
+an `id` and a bag of components that are plain data; presence is type (an entity with `kind` is
+a module instance, with `run` the run, with `variant` a variant); a later entity with an
+earlier id replaces it component by component, which is the whole include and variant rule; a
+component a reader does not know is carried, never rejected, and the checker reports "no system
+observes it", which replaces the namespaced `ext` escape hatch; order is layout; the authoring
+program, ranges, expressions, resolution and identity follow. Part II names the components for
+the world (run, place, kind, params, ref, audit, variant) and says why ledgers, fields and
+topics are not components: they are declared by kinds, derived by the checker, governed by the
+vocabulary. Part III is what an engine promises (the five levels, honesty, what is left out,
+practice, security, open questions). The prior-art table gained the entity component system
+(its game-engine origin marked recalled) and the orbital row now quotes the 2024 docs.
+
+The schema is rewritten in the entity form: `entities[]` with the named components under
+`$defs/components`, `additionalProperties` allowed on an entity (data only, never a function),
+`params` and `ref` dependent on `kind`, `variant` requiring `set` or `range`, `ext` gone. Every
+example validates and five negative cases behave as the text says (unknown version, params
+without kind, upper-case id and a variant with neither set nor range are rejected; an unknown
+component passes). The snapshot and the log as entities, which would make a run folder one kind
+of document, is the new open question; orbital already does this.
