@@ -109,3 +109,34 @@ regions are boxes around past events, ours are countries and half-degree cells.
 
 Not to do: a heatwave row in the speculative deck; a mortality number, which the paper
 refuses to give and we have no curve for.
+
+## Built, the same night (Anselm: "lets do some kind of weather generator - can be imperfect")
+
+The second way, as `weather.heatwaves` in `crates/modules/src/heatwaves.rs`. One observed
+year of daily maximum temperature per populated one-degree cell, drawn by the run's seed
+each simulated year and replayed with the cell's warming since the decade; the paper's six
+characteristics counted per cell and, on the people-weighted mean, per country; the longest
+notable heatwave per country published each year, the first month-long and season-long one
+over half a country's people as crossings the story hears, and a per-country pressure event
+for the capacity module to read one day. The decade's tables (series, calendar-day
+climatology and 90th percentile per cell) are built once from the wet-bulb layer's POWER
+boxes, 26 s, and cached; a 2100 run takes 12 s instead of 5.
+
+The first run on the held path: person-days of heatwave 16 billion in 1900, 286 billion in
+2020, 1.05 trillion in 2099; people in a month-long heatwave 27 thousand, 45 million, 1.47
+billion; countries with one 0, 5, 48; the longest run anywhere reaches 365 days in the 2050s,
+a cell past its 2011 to 2020 threshold every day, which is the delta method and the fixed base
+doing exactly what they do and the paper's six-month ceiling without the ceiling. Severity in
+the worst country-mean event climbs from about 3 to about 10 in the paper's unit by 2099.
+Pre-industrial years show heatwaves too (Sierra Leone, 14 days, 1856), which is the replayed
+year's own weather with a cooler mean, and is right.
+
+What is imperfect, said in the describe and the README: the base is the replayed decade;
+the spread of days does not widen with warming unless `spread_per_degree` is set, and no
+paper gives that number, so it is zero and the layer is a floor; years are independent;
+MERRA-2 reads extremes conservatively; a country is its people-weighted mean. Small island
+states cross first and often, because one cell is the country. Not done: nothing reads
+`heat.pressure` yet (the derailment loop still runs on annual-mean stress); the paper's
+lookup (the first way) is not built, so the layer has no check against the ensembles yet;
+the humid version on the same days is the obvious next step since the dew points are in the
+same cache.

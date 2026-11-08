@@ -55,10 +55,11 @@ what the run does not yet measure.
   two-layer energy balance, thermal sea level, the records as scoreboards; then people on
   half-degree cells: WorldPop's pattern at the UN's count, each country's temperature from
   its own record, the human climate niche and the wet-bulb limits checked cell by cell
-  against a reanalysis baseline, the tipping elements' thresholds (every row checked against
-  the assessment's table), the first cascade (permafrost and Amazon carbon released into the
-  carbon ledger once an element is past its threshold), and a bottom-line module that tells
-  the run as sentences with sources.
+  against a reanalysis baseline, a weather generator that replays a decade of observed days
+  with the warming and counts heatwaves by a published definition, the tipping elements'
+  thresholds (every row checked against the assessment's table), the first cascade
+  (permafrost and Amazon carbon released into the carbon ledger once an element is past its
+  threshold), and a bottom-line module that tells the run as sentences with sources.
 - **Auditor** (`crates/audit`): reads a finished run and never the live one: every stock
   spent or built, diversity, shocks and recovery against recurrence, crossings, tears,
   and a verdict of holds, stretching or tearing. It lists what it could not measure.

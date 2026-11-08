@@ -45,19 +45,20 @@ use std::collections::BTreeMap;
 use std::path::PathBuf;
 
 /// "1.7 billion", "95 million", "600,000".
-fn people_words(p: f64) -> String {
+pub(crate) fn people_words(p: f64) -> String {
     if p >= 1e9 { format!("{:.1} billion", p / 1e9) } else if p >= 1e6 { format!("{:.0} million", p / 1e6) } else { format!("{}", (p as i64).to_string().as_bytes().rchunks(3).rev().map(|c| std::str::from_utf8(c).unwrap()).collect::<Vec<_>>().join(",")) }
 }
 
-fn root() -> PathBuf { std::env::var("ESIM_ROOT").ok().map(PathBuf::from).unwrap_or_else(|| PathBuf::from(".")) }
-fn asset_url(cat: &Catalog, id: &str) -> Result<String, String> { Ok(cat.asset(id).ok_or_else(|| format!("catalog has no {id}"))?.url_template.clone()) }
-fn year_of(t: Time) -> i64 { t.to_iso()[0..4].parse().unwrap() }
-fn to_next_year(now: Time) -> Duration { Time::parse(&format!("{:04}-01-01", year_of(now) + 1)).unwrap().since(now) }
-fn world_grid(res_deg: f64) -> LatLonGrid {
+pub(crate) fn root() -> PathBuf { std::env::var("ESIM_ROOT").ok().map(PathBuf::from).unwrap_or_else(|| PathBuf::from(".")) }
+pub(crate) fn asset_url(cat: &Catalog, id: &str) -> Result<String, String> { Ok(cat.asset(id).ok_or_else(|| format!("catalog has no {id}"))?.url_template.clone()) }
+pub(crate) fn year_of(t: Time) -> i64 { t.to_iso()[0..4].parse().unwrap() }
+pub(crate) fn to_next_year(now: Time) -> Duration { Time::parse(&format!("{:04}-01-01", year_of(now) + 1)).unwrap().since(now) }
+pub(crate) fn world_grid(res_deg: f64) -> LatLonGrid {
     LatLonGrid { nx: (360.0 / res_deg).round() as usize, ny: (180.0 / res_deg).round() as usize, dlon: res_deg, dlat: res_deg, lon_w: -180.0, lat_n: 90.0 }
 }
+pub(crate) fn scale_asset_name(scale: &str) -> &'static str { scale_asset(scale) }
 fn scale_asset(scale: &str) -> &'static str { if scale == "50m" { "natural-earth-50m-countries" } else { "natural-earth-110m-countries" } }
-fn load_countries(scale: &str) -> Result<Vec<Country>, String> {
+pub(crate) fn load_countries(scale: &str) -> Result<Vec<Country>, String> {
     let root = root();
     let cat = Catalog::load(&root.join("data/catalog.toml"))?;
     let mut f = Fetcher::default_for(&root)?;
@@ -84,10 +85,10 @@ fn param_str(p: &toml::Value, key: &str, default: &str) -> String { esim_kernel:
 
 /// How a fine field is folded into a coarser frame for the page.
 #[derive(Clone, Copy)]
-enum Fold { Sum, Mean, Max, Min }
+pub(crate) enum Fold { Sum, Mean, Max, Min }
 
 /// A frame on a grid `factor` times coarser than `g`, NaN where every fine cell is NaN.
-fn coarsen(g: &LatLonGrid, data: &[f32], factor: usize, how: Fold) -> (LatLonGrid, Vec<f32>) {
+pub(crate) fn coarsen(g: &LatLonGrid, data: &[f32], factor: usize, how: Fold) -> (LatLonGrid, Vec<f32>) {
     if factor <= 1 { return (g.clone(), data.to_vec()); }
     let cg = LatLonGrid { nx: g.nx / factor, ny: g.ny / factor, dlon: g.dlon * factor as f64, dlat: g.dlat * factor as f64, lon_w: g.lon_w, lat_n: g.lat_n };
     let mut out = vec![f32::NAN; cg.nx * cg.ny];
@@ -105,13 +106,13 @@ fn coarsen(g: &LatLonGrid, data: &[f32], factor: usize, how: Fold) -> (LatLonGri
     }
     (cg, out)
 }
-fn frame_factor(res_deg: f64, frame_res_deg: f64) -> usize { ((frame_res_deg / res_deg).round() as usize).max(1) }
+pub(crate) fn frame_factor(res_deg: f64, frame_res_deg: f64) -> usize { ((frame_res_deg / res_deg).round() as usize).max(1) }
 
 /// The 10-degree POWER box a cell centre falls in.
-fn box_of(lat: f64, lon: f64) -> (i32, i32) { (((lat / 10.0).floor() * 10.0) as i32, ((lon / 10.0).floor() * 10.0) as i32) }
+pub(crate) fn box_of(lat: f64, lon: f64) -> (i32, i32) { (((lat / 10.0).floor() * 10.0) as i32, ((lon / 10.0).floor() * 10.0) as i32) }
 
 /// For a POWER box answer, the index of the point nearest each listed cell centre.
-fn points_for(b: &cells::PowerBox, g: &LatLonGrid, cells_in: &[usize]) -> Vec<Option<usize>> {
+pub(crate) fn points_for(b: &cells::PowerBox, g: &LatLonGrid, cells_in: &[usize]) -> Vec<Option<usize>> {
     let key = |la: f32, lo: f32| ((la * 2.0).round() as i32, (lo * 1000.0).round() as i32);
     let map: std::collections::HashMap<(i32, i32), usize> = b.points.iter().enumerate().map(|(i, &(la, lo))| (key(la, lo), i)).collect();
     cells_in.iter().map(|&i| {
@@ -315,7 +316,7 @@ impl PeopleCountries {
 
 /// The global anomaly record (HadCRUT5 annual, re-zeroed to 1850 to 1900), which the
 /// country fit and the cells' warming pattern are both regressed on.
-fn global_anomaly(f: &mut Fetcher, cat: &Catalog) -> Result<BTreeMap<i64, f64>, String> {
+pub(crate) fn global_anomaly(f: &mut Fetcher, cat: &Catalog) -> Result<BTreeMap<i64, f64>, String> {
     let had = esim_registry::planet::hadcrut5_annual(f, &asset_url(cat, "hadcrut5-global-annual")?)?;
     let base = esim_registry::planet::window_mean(&had, 1850, 1900).unwrap_or(0.0);
     Ok(had.iter().map(|(y, v)| (*y, v - base)).collect())
@@ -324,7 +325,7 @@ fn global_anomaly(f: &mut Fetcher, cat: &Catalog) -> Result<BTreeMap<i64, f64>, 
 /// The cells' warming pattern, degrees of local warming per degree of global warming,
 /// for every populated cell (NaN elsewhere): the reanalysis's own trend, see
 /// `cells::warming_pattern`.
-fn load_pattern(f: &mut Fetcher, cat: &Catalog, res_deg: f64, from: i64, to: i64) -> Result<Vec<f32>, String> {
+pub(crate) fn load_pattern(f: &mut Fetcher, cat: &Catalog, res_deg: f64, from: i64, to: i64) -> Result<Vec<f32>, String> {
     let people = cells::worldpop_count(f, &asset_url(cat, "worldpop-2020-1km")?, res_deg)?;
     let g = global_anomaly(f, cat)?;
     cells::warming_pattern(f, res_deg, from, to, &g, &people)
@@ -332,7 +333,7 @@ fn load_pattern(f: &mut Fetcher, cat: &Catalog, res_deg: f64, from: i64, to: i64
 
 /// The warming a cell gets this year: its own slope times the global anomaly when the
 /// pattern is on cells and the cell has one, else its country's number.
-fn cell_warming(pattern_on: bool, slope: &[f32], i: usize, global_anom: Option<f64>, country: f64) -> f64 {
+pub(crate) fn cell_warming(pattern_on: bool, slope: &[f32], i: usize, global_anom: Option<f64>, country: f64) -> f64 {
     match (pattern_on, global_anom, slope.get(i)) {
         (true, Some(ga), Some(sl)) if sl.is_finite() => *sl as f64 * ga,
         _ => country,
@@ -1360,7 +1361,7 @@ impl Story {
     pub fn describe(name: &str, _p: &toml::Value) -> Describe {
         Describe::new("story.bottomline", name, "The bottom line of a planetary run, told as it happens: the headline numbers at the cursor and one plain sentence for every threshold crossed, each sentence written by the module that knows its source. It computes nothing new and it says, in the same place, what this run does not yet measure.")
             .priority(9).dt("follows the crossing events")
-            .subscribe("people.crossing", "sentences").subscribe("tipping.crossing", "sentences").subscribe("carbon.crossing", "sentences").subscribe("shock.crossing", "sentences: the wild cards").subscribe("capacity.crossing", "sentences: the conflicts").subscribe("people.population", "the count")
+            .subscribe("people.crossing", "sentences").subscribe("tipping.crossing", "sentences").subscribe("carbon.crossing", "sentences").subscribe("shock.crossing", "sentences: the wild cards").subscribe("capacity.crossing", "sentences: the conflicts").subscribe("heat.crossing", "sentences: the first month-long and season-long heatwaves").subscribe("people.population", "the count")
             .report("story.headlines", "")
             .view("globe", "the world, scored", "region.scored", "each country a glyph at its centroid, from the regions module: three groups as rings of its outline, or nine bands as a pole; drag to turn, hover for the scores")
             .view("map", "people living outside the human climate niche", "people_outside_niche", "annual mean above 29 °C")
@@ -1382,10 +1383,10 @@ impl Story {
 
 impl Module for Story {
     fn name(&self) -> &str { &self.name }
-    fn init(&mut self, ctx: &mut Ctx) { ctx.subscribe("people.crossing"); ctx.subscribe("tipping.crossing"); ctx.subscribe("carbon.crossing"); ctx.subscribe("shock.crossing"); ctx.subscribe("capacity.crossing"); ctx.subscribe("people.population"); }
+    fn init(&mut self, ctx: &mut Ctx) { ctx.subscribe("people.crossing"); ctx.subscribe("tipping.crossing"); ctx.subscribe("carbon.crossing"); ctx.subscribe("shock.crossing"); ctx.subscribe("capacity.crossing"); ctx.subscribe("heat.crossing"); ctx.subscribe("people.population"); }
     fn handle(&mut self, ev: &Event, ctx: &mut Ctx) {
         match ev.topic.as_str() {
-            "people.crossing" | "tipping.crossing" | "carbon.crossing" | "shock.crossing" | "capacity.crossing" => { self.headlines += 1; ctx.report("story.headlines", "", self.headlines as f64); }
+            "people.crossing" | "tipping.crossing" | "carbon.crossing" | "shock.crossing" | "capacity.crossing" | "heat.crossing" => { self.headlines += 1; ctx.report("story.headlines", "", self.headlines as f64); }
             _ => {}
         }
     }

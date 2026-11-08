@@ -70,6 +70,19 @@ holds the history.
   cross in any run, which station records contradict; the reanalysis baseline reads humid
   extremes mild and India's warming is scaled from a record that has run cool. The China
   step is probably real and probably not first.
+- The heatwaves (since 2026-11-07) are replayed weather, not weather: one observed year of
+  daily maximum temperature per one-degree cell (2011 to 2020, MERRA-2) drawn by the seed each
+  year and shifted by the warming. The base is that decade itself, so "exceptional" means
+  exceptional for the 2010s, a decade already a degree warmer than the 1961 to 1990 base the
+  heatwave literature uses. The spread of the days does not widen as the mean climbs unless a
+  knob with no paper behind it is set, and Aglas-Leitner et al. 2026 find projected
+  heatwaves lengthen and widen faster than the mean alone would make them, so the layer is a
+  floor. Years are independent, so a run has no persistent drought or blocking. By the 2050s
+  on the held path some tropical cells are over their threshold every day, which is the
+  method's answer and should be read as "the whole year is now a 2010s summer", not as a
+  365-day heatwave. A country's heatwave is judged on the people-weighted mean of its cells,
+  so a one-cell island crosses first and often. Nothing in the model reads the heatwaves
+  yet: the derailment loop still runs on annual-mean stress.
 - A country "crosses" a limit when half its people live where the limit is passed on more
   than three days a year. The counts of people and person-days are continuous; the
   country event is a stated rule on them, chosen so that a sentence can be written, and

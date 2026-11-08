@@ -41,7 +41,7 @@ thaw and dieback: permafrost, the Amazon
 reefs and currents: coral, the overturning circulation
 ice sheets: Greenland, West Antarctica
 sea: the water, the ice
-heat: days past the niche, air too humid to cool in
+heat: days past the niche, air too humid to cool in, heatwaves replayed from a decade
 capacity: the room to act, debt, conflict, consent
 warming
 people -> emissions: set them, as a plan
@@ -61,7 +61,7 @@ warming -> ice sheets: past their doors already
 ice sheets -> warming: darker ground where ice was (not modelled)
 ice sheets -> sea: slide into it over millennia (not modelled)
 warming -> sea: swells the water
-warming -> heat: more days past the limits
+warming -> heat: more days past the limits, longer heatwaves
 heat -> people: counted (not moved, not killed)
 sea -> people: takes the coast (not modelled)
 ```
@@ -158,6 +158,46 @@ line for humid heat, barely cross in these runs. The baseline here is a reanalys
 reads humid extremes two to four degrees mild against the stations, and India's warming
 is scaled from its own record, which has run cool. The China step is probably real and
 probably not the first; see the limits.
+
+## Heatwaves, replayed
+
+Until the evening of 2026-11-07 nothing on this page could be hot on a Tuesday. The planet
+is an energy balance, one number for the whole Earth, and the people layers shift a
+climatology by it; a heatwave is a run of days, and there were no days. Now there are,
+of a kind. For every populated one-degree cell the model holds a decade of observed daily
+maximum temperatures (2011 to 2020, from the MERRA-2 reanalysis through NASA POWER). Each
+simulated year it draws one of those ten years by the run's seed and replays it, shifted
+by the cell's warming since that decade, and counts heatwaves the way Aglas-Leitner and
+colleagues count them in *Recent extreme heatwaves are no match for future events*
+(Nature Communications, 5 November 2026, read on the 7th): three or more days over the
+calendar-day 90th percentile, a severity in units of the threshold's own excess over the
+climatology, the days, the cumulative heat, and the share of a country's people under
+extreme heat on the worst day. A country's heatwave is judged on the mean over its people.
+
+```esim
+table 2100 heat.people_days=person_days_of_heatwave heat.people_month_long=people_in_a_month_long_heatwave heat.countries_month_long=countries_with_a_month_long_heatwave heat.longest_days=longest_heatwave_anywhere_days
+```
+
+What the paper finds, by global warming level, is the ladder this layer should be read
+against. At 2 °C the chance that a projected heatwave beats the worst severity of Europe
+2018 or of Northern Africa and the Middle East 2023 is about one in five; between 2.5 and
+3 °C those chances take their steepest step; past 3 °C most regions beat their worst
+observed event most of the time, and in 2060 to 2099 the model ensembles expect one or
+more such heatwaves a year in nearly every region whatever the emissions. Australia's
+2019 event is the exception, rare even then.
+
+Read this layer as a floor, and for three reasons it states itself. The replayed decade
+is the base, so "exceptional" here means exceptional for 2011 to 2020, a decade already a
+degree warmer than the paper's 1961 to 1990. The weather of one year is moved whole, so
+the spread of the days stays as it was while the mean climbs, and the paper's own result
+is that heatwaves lengthen and widen faster than the mean alone would make them; a knob
+exists to widen the days and is set to zero because no paper gives the number. And a year
+is drawn independently of the last, which is not the climate's memory. The one thing the
+layer does that no table could: by the 2050s on the held path some cells are above their
+threshold every day of the year, which is the model saying that a tropical summer as it
+was in the 2010s has become the whole year, and the paper's six-month maximum is the same
+finding with a ceiling on it. The crossings below list, for each country, the first year
+a month-long heatwave covered more than half its people, and the first season-long one.
 
 ## The world, scored
 

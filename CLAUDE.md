@@ -244,6 +244,18 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   from any module's publish, `manifest.refused` for a refused one, snapshots carry `born`. `events.shock` modes are
   off, draw, named (the check does not catch a wrong mode; the build does). Project `anselm/planet-wild-members` is the
   worked example from `manifests/j3-planet-wild-members.js` (eight seeds of the deck, emissions held).
+- Heatwaves (2026-11-07 night, Anselm: "we don't have heatwaves? ... there should be some kind of periodic heatwave ...
+  lets do some kind of weather generator - can be imperfect"; `devlog/20261107-heatwaves-no-match.md` has the paper and
+  the build): `weather.heatwaves` (`crates/modules/src/heatwaves.rs`, in the 2100 manifest after `wetbulb`) holds a decade
+  of daily T2M_MAX per populated one-degree cell (the wet-bulb layer's POWER boxes, `work_res_deg = 1.0`, tables cached as
+  `data/cache/heatwaves_*.bin`, about 125 MB), draws one observed year per simulated year by the kernel RNG, shifts it by
+  the cell's warming since the decade (`slope` from `climate.country_tas` times the global anomaly less the decade's
+  HadCRUT5 mean; `pattern = "cells"` uses the cell slope) and counts heatwaves as Aglas-Leitner et al. 2026 do (Tx90p of
+  the decade itself, 15-day window, runs of 3 or more; severity, cumulative heat, duration, people share at the peak).
+  Publishes `heat.wave` (the longest notable one per country per year), `heat.crossing` (first month-long and season-long
+  over half a country's people; the story hears it), `heat.pressure` (per country, for a capacity hook; nothing reads it
+  yet). `spread_per_degree` (0, a guess) is the only knob for the variability the delta method lacks. Adds about 7 s to a
+  2100 run. The country helpers in `countries.rs` are `pub(crate)` for it.
 - Wild cards (2026-11-05, Anselm: "i just want a placeholder ... like a video game with wild card factors
   optionally"): `events.shock` (`crates/modules/src/shock.rs`) draws `data/events/future-speculative.toml` by the
   run's seed each year from `from` (default 2025), or plays one named card (`mode = "named"`, `event`, `at`);
