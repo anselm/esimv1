@@ -88,6 +88,11 @@ errors, warnings and information; `esim run` refuses errors. Information lines a
 reading: "the water module would read rules.no_crop but nothing writes it" tells a person
 or a model what the manifest could gain.
 
+## As a standard
+
+[RFC 0001](/docs/rfc/0001-manifest) proposes the manifest, in JSON, as a common transport
+between engines of this kind, with a schema beside it. esim does not read that form yet.
+
 ## Writing them
 
 People rarely will. See [Conversation](/docs/system/conversation).

@@ -154,6 +154,9 @@ versioned list: the names the first-party modules use today are the seed of it
 shelf is where its definitions belong. Changing a name there is a change to every module
 that uses it; changing a message here is a change to the kernel only.
 
+The manifest that arranges modules under this protocol, as a transport between engines, is
+proposed separately in [RFC 0001](/docs/rfc/0001-manifest) (2026-11-07).
+
 ## Status
 
 - 2026-11-01: v0 written. In-process Rust binding complete, `describe` on all thirteen

@@ -1,0 +1,237 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://esimv1.exe.xyz/docs/rfc/manifest.schema.json",
+  "title": "Simulation manifest, version 1 (draft)",
+  "description": "The whole arrangement of a coupled simulation in one document: the run window, seed and cadences, an optional place, the modules with their parameters, the audit's scoreboards and, optionally, named variants. RFC 0001 (/docs/rfc/0001-manifest) is the normative text; this schema states its shape.",
+  "type": "object",
+  "required": ["manifest", "run", "modules"],
+  "additionalProperties": false,
+  "properties": {
+    "manifest": {
+      "type": "string",
+      "const": "manifest/1",
+      "description": "The version of this standard the document is written against."
+    },
+    "vocabulary": {
+      "type": "string",
+      "description": "The shared vocabulary (topic, field, ledger and unit names) the kinds are named in; a name or a URL. Absent means the implementation's own."
+    },
+    "include": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "description": "Other manifests folded in first, in order, by path relative to this document or by URL. Absent from a resolved manifest."
+    },
+    "run": { "$ref": "#/$defs/run" },
+    "place": { "$ref": "#/$defs/place" },
+    "modules": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/module" },
+      "description": "In order: the order is the layout of the result."
+    },
+    "audit": { "$ref": "#/$defs/audit" },
+    "variants": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/variant" }
+    },
+    "kinds": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/describe" },
+      "description": "Resolved form only: the description of every kind the manifest instantiates, keyed by kind name, so that a reader without the implementation can check the wiring."
+    },
+    "locks": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/lock" },
+      "description": "Resolved form only: every record the run read, keyed by asset id, with its content hash."
+    },
+    "ext": {
+      "type": "object",
+      "description": "Implementation-specific keys, namespaced by the implementation's name. Readers ignore what they do not know."
+    }
+  },
+  "$defs": {
+    "date": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}(T[0-9]{2}:[0-9]{2}:[0-9]{2}Z)?$",
+      "description": "A UTC instant: a calendar date, read as midnight UTC, or an RFC 3339 date-time with a Z offset."
+    },
+    "duration": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]*(s|min|h|d)$",
+      "description": "A fixed length of time: an integer and a unit of seconds, minutes, hours or days. Months and years are calendar, not durations, and are not written here."
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "description": "An instance name: lower case, starting with a letter."
+    },
+    "kindName": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)+$",
+      "description": "A kind name: family and kind, dotted, lower case."
+    },
+    "run": {
+      "type": "object",
+      "required": ["name", "start", "end"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "$ref": "#/$defs/name" },
+        "start": { "$ref": "#/$defs/date" },
+        "end": { "$ref": "#/$defs/date" },
+        "seed": { "type": "integer", "minimum": 0, "default": 0 },
+        "close_every": { "$ref": "#/$defs/duration", "default": "1d" },
+        "snapshot_every": { "$ref": "#/$defs/duration" },
+        "notes": { "type": "string" }
+      }
+    },
+    "place": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "lat_s": { "type": "number", "minimum": -90, "maximum": 90 },
+        "lat_n": { "type": "number", "minimum": -90, "maximum": 90 },
+        "lon_w": { "type": "number", "minimum": -180, "maximum": 180 },
+        "lon_e": { "type": "number", "minimum": -180, "maximum": 180 },
+        "res_arcsec": { "type": "number", "exclusiveMinimum": 0 }
+      },
+      "description": "A window and resolution stated once and copied into every module's parameters that does not set the same key itself. Any further key is copied the same way."
+    },
+    "module": {
+      "type": "object",
+      "required": ["name", "kind"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "$ref": "#/$defs/name" },
+        "kind": { "$ref": "#/$defs/kindName" },
+        "ref": { "$ref": "#/$defs/moduleRef" },
+        "params": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/paramValue" },
+          "description": "Only parameters the kind's description lists, in the kind's units."
+        },
+        "ext": { "type": "object" }
+      }
+    },
+    "moduleRef": {
+      "type": "object",
+      "required": ["url", "hash"],
+      "additionalProperties": false,
+      "properties": {
+        "url": { "type": "string", "format": "uri" },
+        "hash": { "$ref": "#/$defs/hash" },
+        "binding": { "type": "string", "enum": ["native", "wasm", "process"] }
+      },
+      "description": "Where the kind's implementation comes from when it is not in the running implementation's own library, locked by content hash."
+    },
+    "paramValue": {
+      "oneOf": [
+        { "type": "number" },
+        { "type": "string" },
+        { "type": "boolean" },
+        { "type": "array", "items": { "type": ["number", "string", "boolean"] } }
+      ]
+    },
+    "audit": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "scores": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "prefixItems": [{ "type": "string" }, { "type": "string" }],
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "description": "Pairs of series names, simulated then observed, scored at matching times."
+        },
+        "shock_topics": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Topics, or topic prefixes ending in a dot, whose events count as shocks."
+        }
+      }
+    },
+    "variant": {
+      "type": "object",
+      "required": ["name", "set"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+        "title": { "type": "string" },
+        "notes": { "type": "string" },
+        "set": {
+          "type": "object",
+          "propertyNames": { "pattern": "^(run\\.(end|start|seed|close_every|snapshot_every)|[a-z][a-z0-9_]*\\.[a-z][a-z0-9_]*)$" },
+          "additionalProperties": { "$ref": "#/$defs/paramValue" },
+          "description": "Overrides: run.<field> or <instance>.<parameter>."
+        }
+      }
+    },
+    "hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "lock": {
+      "type": "object",
+      "required": ["hash"],
+      "additionalProperties": false,
+      "properties": {
+        "url": { "type": "string" },
+        "hash": { "$ref": "#/$defs/hash" },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "fetched": { "$ref": "#/$defs/date" }
+      }
+    },
+    "describe": {
+      "type": "object",
+      "required": ["kind", "summary", "priority", "params"],
+      "additionalProperties": true,
+      "properties": {
+        "kind": { "$ref": "#/$defs/kindName" },
+        "summary": { "type": "string" },
+        "priority": { "type": "integer" },
+        "dt": { "$ref": "#/$defs/duration" },
+        "params": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "default"],
+            "properties": {
+              "name": { "type": "string" },
+              "default": { "$ref": "#/$defs/paramValue" },
+              "unit": { "type": "string" },
+              "note": { "type": "string" },
+              "provenance": { "type": "string", "enum": ["checked", "recalled", "guess", "fitted"] }
+            }
+          }
+        },
+        "publishes": { "type": "array", "items": { "type": "string" } },
+        "subscribes": { "type": "array", "items": { "type": "string" } },
+        "sends": { "type": "array", "items": { "type": "object", "required": ["to", "topic"], "properties": { "to": { "type": "string" }, "topic": { "type": "string" } } } },
+        "accepts": { "type": "array", "items": { "type": "string" } },
+        "fields_owned": { "type": "array", "items": { "$ref": "#/$defs/fieldDecl" } },
+        "fields_read": { "type": "array", "items": { "$ref": "#/$defs/fieldRead" } },
+        "ledgers": { "type": "array", "items": { "type": "object", "required": ["name", "unit"], "properties": { "name": { "type": "string" }, "unit": { "type": "string" }, "tolerance": { "type": "number" } } } },
+        "frames": { "type": "array", "items": { "$ref": "#/$defs/fieldDecl" } },
+        "reports": { "type": "array", "items": { "type": "object", "required": ["name"], "properties": { "name": { "type": "string" }, "unit": { "type": "string" } } } },
+        "assets": { "type": "array", "items": { "type": "string" } },
+        "notes": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "fieldDecl": {
+      "type": "object",
+      "required": ["name", "unit"],
+      "properties": { "name": { "type": "string" }, "unit": { "type": "string" } }
+    },
+    "fieldRead": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string" },
+        "unit": { "type": "string" },
+        "required": { "type": "boolean", "default": false },
+        "on": { "type": "string", "description": "A topic: the read happens when this event arrives rather than on the module's own tick." }
+      }
+    }
+  }
+}

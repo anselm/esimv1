@@ -224,6 +224,9 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   full strength, the attribution per link is ours). Project variants: zero-by-2050-derailed, -derailed-wild,
   falling-derailed, held-cascade, zero-by-2050-everything. After a manifest change: `esim project update
   anselm/planet-2100 --manifest manifests/p4-planet-people.toml`, then rerun every variant (5 s each).
+- RFC 0001 (2026-11-07, Anselm: a public schema for a manifest as an RFC, a theory of an interoperability
+  standard between implementations of this engine, in JSON, written to persuade): `docs/rfc/0001-manifest.md`
+  with `docs/rfc/manifest.schema.json`; docs area `rfc`, section "Standards". esim does not read the JSON form.
 - Wild cards (2026-11-05, Anselm: "i just want a placeholder ... like a video game with wild card factors
   optionally"): `events.shock` (`crates/modules/src/shock.rs`) draws `data/events/future-speculative.toml` by the
   run's seed each year from `from` (default 2025), or plays one named card (`mode = "named"`, `event`, `at`);
