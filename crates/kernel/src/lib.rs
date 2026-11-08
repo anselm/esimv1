@@ -16,12 +16,14 @@ pub mod kernel;
 pub mod hash;
 pub mod world;
 pub mod describe;
+pub mod entities;
 
 pub use event::{Event, Priority};
 pub use kernel::{FieldMeta, Kernel, RunOutput};
 pub use grid::{Grid, LatLonGrid, LocalTile};
 pub use ledger::{Ledger, LedgerReport};
-pub use manifest::Manifest;
+pub use manifest::{Manifest, Variant};
+pub use entities::Source;
 pub use module::{Ctx, FieldSeries, Module, ModuleFactory};
 pub use time::{Duration, Time};
 pub use world::{World, WorldField};

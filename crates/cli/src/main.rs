@@ -2,6 +2,7 @@
 //! esim verify <manifest.toml>             prove determinism and replay-from-snapshot
 //! esim check <manifest.toml>              check the wiring from the modules' descriptions, fetching nothing
 //! esim describe <manifest.toml>           the wired modules' descriptions and findings as JSON
+//! esim manifest <file> [--toml] [--id]    a manifest in the entity form of RFC 0001 (JSON), or back to TOML, or its id
 //! esim kinds [--json]                     list module kinds, or describe each under default parameters
 //! esim audit <run_dir>                    the independent auditor: spend-down, diversity, shocks, tears
 //! esim project new <area/name> [--manifest f] [--title t] [--description d]   a project folder under projects/
@@ -88,6 +89,28 @@ fn describe(path: &Path) -> Result<(), String> {
     Ok(())
 }
 
+/// esim manifest <file> [--toml] [--id]: the manifest in any notation, written out in the
+/// entity form of RFC 0001 with its `from` block (the default), as TOML, or as its id.
+fn manifest_cmd(path: &Path, as_toml: bool, id: bool) -> Result<(), String> {
+    let m = Manifest::load(path)?;
+    if id { println!("{}", m.id()); return Ok(()); }
+    if as_toml { print!("{}", m.to_toml_text()?); return Ok(()); }
+    println!("{}", serde_json::to_string_pretty(&m.to_entities()).unwrap());
+    Ok(())
+}
+
+/// The object form a run or project folder keeps beside `manifest.toml`: the entity list
+/// with a `from` block naming the file it was resolved from.
+fn write_entities(dir: &Path, m: &Manifest, from: &Path) -> Result<(), String> {
+    let mut m = m.clone();
+    for e in &mut m.modules { if let toml::Value::Table(t) = &mut e.params { t.remove("kind"); t.remove("seed"); } }
+    if m.from.is_none() {
+        let bytes = fs::read(from).map_err(|e| format!("{}: {e}", from.display()))?;
+        m.from = Some(esim_kernel::Source { language: from.extension().and_then(|e| e.to_str()).unwrap_or("toml").into(), entry: from.display().to_string(), hash: esim_kernel::entities::sha256_hex(&bytes), sources: Default::default() });
+    }
+    fs::write(dir.join("manifest.json"), serde_json::to_string_pretty(&m.to_entities()).unwrap()).map_err(|e| e.to_string())
+}
+
 /// esim kinds [--json]: the kinds, or their full descriptions under default parameters.
 fn kinds(json: bool) -> Result<(), String> {
     if !json { for k in esim_modules::kinds() { println!("{k}"); } return Ok(()); }
@@ -144,6 +167,8 @@ fn run_with(path: &Path, out_root: &Path, sets: &[Override], variant: Option<&st
     for w in &r.warnings { eprintln!("warning: {w}"); }
     if !r.errors.is_empty() { return Err(format!("manifest does not wire up:\n  {}", r.errors.join("\n  "))); }
     fold_params(&mut manifest);
+    // the provenance of the file as loaded (its hash, its includes, or the program that wrote it)
+    manifest.from = Manifest::load(path)?.from;
     let mut k = Kernel::new(manifest.clone(), factory)?;
     let out = k.run();
     // The log digest alone does not see parameters that change only ledger and series
@@ -153,6 +178,7 @@ fn run_with(path: &Path, out_root: &Path, sets: &[Override], variant: Option<&st
     let dir = out_root.join(&id);
     fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
     fs::write(dir.join("manifest.toml"), &mtext).map_err(|e| e.to_string())?;
+    write_entities(&dir, &manifest, path)?;
     // the modules' describes, in manifest order: what the viewer composes the page from
     fs::write(dir.join("describe.json"), serde_json::to_string(&r).unwrap()).map_err(|e| e.to_string())?;
     if variant.is_some() || !sets.is_empty() {
@@ -226,8 +252,9 @@ fn project_new(path: &str, manifest: Option<&Path>, title: Option<&str>, descrip
     fs::create_dir_all(dir.join("runs")).map_err(|e| e.to_string())?;
     // the project folder stands alone: includes are folded in before the copy
     fs::write(dir.join("manifest.toml"), Manifest::resolve_text(manifest.unwrap())?).map_err(|e| e.to_string())?;
+    write_entities(&dir, &m, manifest.unwrap())?;
     let (area, name) = path.trim_matches('/').split_once('/').unwrap();
-    let meta = format!(
+    let mut meta = format!(
         "# A project: who asked for what, in their words, and the manifest beside it.
 area = {}
 name = {}
@@ -239,6 +266,16 @@ by = {}
         toml::Value::String(area.into()), toml::Value::String(name.into()),
         toml::Value::String(title.unwrap_or(&m.run.name).into()), toml::Value::String(description.unwrap_or(&m.run.notes).into()),
         toml::Value::String(esim_registry::fetch::today_string()), toml::Value::String(by.into()));
+    // variants the document itself carries (the entity form does) become the project's
+    for v in &m.variants {
+        meta.push_str(&format!("\n[[variant]]\nname = {}\n", toml::Value::String(v.name.clone())));
+        if !v.title.is_empty() { meta.push_str(&format!("title = {}\n", toml::Value::String(v.title.clone()))); }
+        if !v.notes.is_empty() { meta.push_str(&format!("notes = {}\n", toml::Value::String(v.notes.clone()))); }
+        if !v.set.is_empty() {
+            meta.push_str("[variant.set]\n");
+            for (k, val) in &v.set { meta.push_str(&format!("{} = {}\n", toml::Value::String(k.clone()), val)); }
+        }
+    }
     fs::write(dir.join("project.toml"), meta).map_err(|e| e.to_string())?;
     fs::write(dir.join("runs").join("index.json"), "[]").map_err(|e| e.to_string())?;
     projects_index()?;
@@ -273,8 +310,9 @@ fn project_run(path: &str, variant: Option<&str>, extra: &[Override]) -> Result<
 fn project_update(path: &str, manifest: &Path) -> Result<(), String> {
     let dir = project_dir(path)?;
     if !dir.join("project.toml").exists() { return Err(format!("no project at {}", dir.display())); }
-    load(manifest)?;
+    let m = load(manifest)?;
     fs::write(dir.join("manifest.toml"), Manifest::resolve_text(manifest)?).map_err(|e| e.to_string())?;
+    write_entities(&dir, &m, manifest)?;
     projects_index()?;
     println!("project  {path}: manifest replaced from {}", manifest.display());
     Ok(())
@@ -897,7 +935,8 @@ fn main() {
         Some("regress") => regress(args.iter().any(|a| a == "--accept"), args.iter().position(|a| a == "--only").and_then(|i| args.get(i + 1)).map(String::as_str)),
         Some("check") => match args.get(2) { Some(p) => check(Path::new(p)), None => Err("usage: esim check <manifest.toml>".into()) },
         Some("describe") => match args.get(2) { Some(p) => describe(Path::new(p)), None => Err("usage: esim describe <manifest.toml>".into()) },
-        _ => Err("usage: esim run|verify|ensemble|sweep|score|audit|check|describe|kinds|project|projects|sources|events|warm|regress".into()),
+        Some("manifest") => match args.get(2) { Some(p) => manifest_cmd(Path::new(p), args.iter().any(|a| a == "--toml"), args.iter().any(|a| a == "--id")), None => Err("usage: esim manifest <file.toml|file.json> [--toml] [--id]".into()) },
+        _ => Err("usage: esim run|verify|ensemble|sweep|score|audit|check|describe|manifest|kinds|project|projects|sources|events|warm|regress".into()),
     };
     if let Err(e) = res { eprintln!("error: {e}"); std::process::exit(1); }
 }

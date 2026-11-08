@@ -177,6 +177,7 @@ pub fn check(m: &Manifest, describe: Describer) -> CheckReport {
             Err(err) => r.errors.push(format!("{}: {err}", e.name)),
         }
     }
+    for (id, component) in &m.unknown { r.info.push(format!("{id} carries a component {component} that no system here observes")); }
     // Owners of fields, publishers of topics, acceptors of directed topics.
     let mut owner: BTreeMap<&str, Vec<&Describe>> = BTreeMap::new();
     let mut publishers: BTreeMap<&str, Vec<&str>> = BTreeMap::new();

@@ -13,6 +13,35 @@ pub struct Manifest {
     pub place: Option<toml::Value>,
     #[serde(default, rename = "module")]
     pub modules: Vec<ModuleEntry>,
+    /// Optional `[audit]` table: `scores = [[sim, obs], ...]` and `shock_topics`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub audit: Option<toml::Value>,
+    /// Named overrides, `[[variant]]`; projects usually keep theirs in project.toml, the
+    /// entity form carries them in the document.
+    #[serde(default, rename = "variant", skip_serializing_if = "Vec::is_empty")]
+    pub variants: Vec<Variant>,
+    /// The vocabulary the names are drawn from (RFC 0001), a URL.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub vocabulary: Option<String>,
+    /// Where this came from, filled by `load`; not part of the document's identity.
+    #[serde(skip)]
+    pub from: Option<crate::entities::Source>,
+    /// Components on entities that nothing here reads: (entity id, component), for the check.
+    #[serde(skip)]
+    pub unknown: Vec<(String, String)>,
+}
+
+/// A named set of overrides, `"module.param" = value` (or `"run.seed"`), applied on top of
+/// the manifest when a run is made with `--variant name`.
+#[derive(Clone, Debug, Default, Serialize, Deserialize, PartialEq)]
+pub struct Variant {
+    pub name: String,
+    #[serde(default, skip_serializing_if = "String::is_empty")]
+    pub title: String,
+    #[serde(default, skip_serializing_if = "String::is_empty")]
+    pub notes: String,
+    #[serde(default)]
+    pub set: toml::value::Table,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -50,20 +79,43 @@ impl Manifest {
         m.fold_place();
         Ok(m)
     }
-    /// Read a manifest file, expanding `include = ["other.toml", ...]` (paths relative to
-    /// the file) into one document first. See `expand_includes`.
+    /// Read a manifest file in any of the three notations, by extension: `.toml` (includes
+    /// folded in first, see `expand_includes`), `.json` (the entity form of RFC 0001),
+    /// `.js` (a hermetic program whose exports are the entities). The result carries a
+    /// `from` block naming the file, its hash and every file folded in.
     pub fn load(path: &std::path::Path) -> Result<Manifest, String> {
-        Manifest::parse(&Manifest::resolve_text(path)?)
+        let ext = path.extension().and_then(|e| e.to_str()).unwrap_or("");
+        let bytes = std::fs::read(path).map_err(|e| format!("{}: {e}", path.display()))?;
+        let entry = crate::entities::Source { language: ext.to_string(), entry: path.display().to_string(), hash: crate::entities::sha256_hex(&bytes), sources: Default::default() };
+        match ext {
+            "json" => {
+                let doc: serde_json::Value = serde_json::from_slice(&bytes).map_err(|e| format!("{}: {e}", path.display()))?;
+                let mut m = Manifest::from_entities(&doc).map_err(|e| format!("{}: {e}", path.display()))?;
+                // a resolved document may already say where it came from; keep that and note this file
+                m.from = Some(match doc.get("from").and_then(|f| serde_json::from_value::<crate::entities::Source>(f.clone()).ok()) {
+                    Some(mut inner) => { inner.sources.insert(entry.entry.clone(), entry.hash.clone()); inner }
+                    None => entry,
+                });
+                Ok(m)
+            }
+            "js" | "mjs" => Err(format!("{}: JavaScript manifests are the next step and not read yet", path.display())),
+            _ => {
+                let mut sources = Default::default();
+                let text = resolve_toml(path, &mut sources)?;
+                let mut m = Manifest::parse(&text)?;
+                m.from = Some(crate::entities::Source { sources, ..entry });
+                Ok(m)
+            }
+        }
     }
     /// The resolved TOML text of a manifest file with its includes folded in. This is what
-    /// a run folder keeps as `manifest.toml`, so a run never depends on another file.
+    /// a run folder keeps as `manifest.toml`, so a run never depends on another file. A
+    /// `.json` manifest answers with its TOML rendering.
     pub fn resolve_text(path: &std::path::Path) -> Result<String, String> {
-        let text = std::fs::read_to_string(path).map_err(|e| format!("{}: {e}", path.display()))?;
-        let doc: toml::Value = toml::from_str(&text).map_err(|e| format!("{}: {e}", path.display()))?;
-        let module_includes = doc.get("module").and_then(|m| m.as_array()).map(|a| a.iter().any(|m| m.get("include").is_some())).unwrap_or(false);
-        if doc.get("include").is_none() && !module_includes { return Ok(text); }
-        let merged = expand_includes(doc, path.parent().unwrap_or(std::path::Path::new(".")), 0)?;
-        toml::to_string_pretty(&merged).map_err(|e| e.to_string())
+        match path.extension().and_then(|e| e.to_str()) {
+            Some("toml") | None => resolve_toml(path, &mut Default::default()),
+            _ => Manifest::load(path)?.to_toml_text(),
+        }
     }
     /// Copy every key of `[place]` into each module's params where the module has not
     /// set that key. Done at parse time so the check and the build see the same params.
@@ -93,6 +145,26 @@ impl Manifest {
 /// module's parameters on top of a bundle. Keys of `[place]` and `[audit]` merge, the
 /// includer's winning.
 pub fn expand_includes(doc: toml::Value, dir: &std::path::Path, depth: usize) -> Result<toml::Value, String> {
+    expand(doc, dir, depth, &mut Default::default())
+}
+
+fn resolve_toml(path: &std::path::Path, sources: &mut std::collections::BTreeMap<String, String>) -> Result<String, String> {
+    let text = std::fs::read_to_string(path).map_err(|e| format!("{}: {e}", path.display()))?;
+    let doc: toml::Value = toml::from_str(&text).map_err(|e| format!("{}: {e}", path.display()))?;
+    let module_includes = doc.get("module").and_then(|m| m.as_array()).map(|a| a.iter().any(|m| m.get("include").is_some())).unwrap_or(false);
+    if doc.get("include").is_none() && !module_includes { return Ok(text); }
+    let merged = expand(doc, path.parent().unwrap_or(std::path::Path::new(".")), 0, sources)?;
+    toml::to_string_pretty(&merged).map_err(|e| e.to_string())
+}
+
+fn read_included(p: &std::path::Path, sources: &mut std::collections::BTreeMap<String, String>) -> Result<toml::Value, String> {
+    let bytes = std::fs::read(p).map_err(|e| format!("include {}: {e}", p.display()))?;
+    sources.insert(p.display().to_string(), crate::entities::sha256_hex(&bytes));
+    let text = String::from_utf8(bytes).map_err(|e| format!("include {}: {e}", p.display()))?;
+    toml::from_str(&text).map_err(|e| format!("include {}: {e}", p.display()))
+}
+
+fn expand(doc: toml::Value, dir: &std::path::Path, depth: usize, sources: &mut std::collections::BTreeMap<String, String>) -> Result<toml::Value, String> {
     if depth > 8 { return Err("include: nested deeper than 8".into()); }
     let mut table = match doc { toml::Value::Table(t) => t, _ => return Err("manifest is not a table".into()) };
     let includes: Vec<String> = match table.remove("include") {
@@ -107,9 +179,8 @@ pub fn expand_includes(doc: toml::Value, dir: &std::path::Path, depth: usize) ->
     let mut run: Option<toml::Value> = None;
     for inc in includes {
         let p = dir.join(&inc);
-        let text = std::fs::read_to_string(&p).map_err(|e| format!("include {}: {e}", p.display()))?;
-        let d: toml::Value = toml::from_str(&text).map_err(|e| format!("include {}: {e}", p.display()))?;
-        let d = expand_includes(d, p.parent().unwrap_or(dir), depth + 1)?;
+        let d = read_included(&p, sources)?;
+        let d = expand(d, p.parent().unwrap_or(dir), depth + 1, sources)?;
         let t = d.as_table().unwrap();
         if let Some(toml::Value::Array(ms)) = t.get("module") { for m in ms { upsert_module(&mut modules, m.clone()); } }
         if let Some(toml::Value::Table(pl)) = t.get("place") { for (k, v) in pl { place.insert(k.clone(), v.clone()); } }
@@ -122,9 +193,8 @@ pub fn expand_includes(doc: toml::Value, dir: &std::path::Path, depth: usize) ->
         for m in ms {
             if let Some(inc) = m.get("include").and_then(|v| v.as_str()) {
                 let p = dir.join(inc);
-                let text = std::fs::read_to_string(&p).map_err(|e| format!("include {}: {e}", p.display()))?;
-                let d: toml::Value = toml::from_str(&text).map_err(|e| format!("include {}: {e}", p.display()))?;
-                let d = expand_includes(d, p.parent().unwrap_or(dir), depth + 1)?;
+                let d = read_included(&p, sources)?;
+                let d = expand(d, p.parent().unwrap_or(dir), depth + 1, sources)?;
                 let t = d.as_table().unwrap();
                 if let Some(toml::Value::Array(inner)) = t.get("module") { for im in inner { upsert_module(&mut modules, im.clone()); } }
                 if let Some(toml::Value::Table(pl)) = t.get("place") { for (k, v) in pl { place.entry(k.clone()).or_insert(v.clone()); } }

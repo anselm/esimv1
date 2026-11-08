@@ -9,3 +9,4 @@ description = "Scheduler, ledgers, event log, manifest and module trait for the 
 serde.workspace = true
 serde_json.workspace = true
 toml.workspace = true
+sha2.workspace = true
