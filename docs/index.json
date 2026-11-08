@@ -1,5 +1,11 @@
 [
   {
+    "path": "rfc/0001-manifest",
+    "title": "RFC 0001: a common transport for simulations",
+    "order": 1,
+    "section": "Standards"
+  },
+  {
     "path": "system/adding-a-module",
     "title": "Adding a module",
     "order": 15,
