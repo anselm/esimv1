@@ -112856,11 +112856,17 @@
       },
       {
         "name": "wind_start",
-        "default": "2025-01-07T18:00:00Z"
+        "default": "2025-01-07T18:00:00Z",
+        "note": "the first hour of the wind record fetched"
       },
       {
         "name": "wind_end",
         "default": "2025-01-12T00:00:00Z"
+      },
+      {
+        "name": "wind_at",
+        "default": "",
+        "note": "the simulated instant wind_start stands for, when a run borrows another day's weather (a scenario in a year with no record yet); empty means wind_start itself, so a run in the record's own time is unchanged. A borrowed wind is a borrowed wind: the page must say whose day it was"
       },
       {
         "name": "buildings",
@@ -220956,5 +220962,108 @@
       "Imperfect on purpose. The weather of one observed year is replayed whole, shifted by the warming: days within a year are coherent, years are independent, and the spread of the days stays as it was unless spread_per_degree says otherwise. Aglas-Leitner et al. 2026 (Nature Communications 17:11456, read 2026-11-07) find that projected heatwaves grow longer and wider faster than the mean warming alone would make them, so with the default this layer is a floor. The base is the replayed decade, which was already about a degree warmer than 1850 to 1900, so a heatwave here is exceptional against 2011 to 2020, not against the paper's 1961 to 1990.",
       "MERRA-2 is a reanalysis at about 50 km and reads extremes conservatively; a country's heatwave is judged on the people-weighted mean of its cells, so a large country with its people in one corner is that corner."
     ]
+  },
+  {
+    "kind": "obs.places",
+    "name": "obs.places",
+    "summary": "Named places in the window, the stakes of a scenario: each a point the manifest names with a note on what it is and where its position came from. Every place is published at the start so the views can draw and label it; each hour the module reads the fire module's burned cells, reports how far the nearest burned cell is from each place, and the hour a place's own cell burns, or a burned cell lies within reach_m of it, publishes that it was reached, once, with a sentence. Nothing in the model reacts to a place.",
+    "priority": 9,
+    "dt": "every hour",
+    "params": [
+      {
+        "name": "lat_s",
+        "default": 37.97,
+        "unit": "deg"
+      },
+      {
+        "name": "lat_n",
+        "default": 38.08,
+        "unit": "deg"
+      },
+      {
+        "name": "lon_w",
+        "default": -122.79,
+        "unit": "deg"
+      },
+      {
+        "name": "lon_e",
+        "default": -122.61,
+        "unit": "deg"
+      },
+      {
+        "name": "res_arcsec",
+        "default": 1.0,
+        "unit": "arcsec"
+      },
+      {
+        "name": "every",
+        "default": "1h"
+      },
+      {
+        "name": "reach_m",
+        "default": 50.0,
+        "unit": "m",
+        "note": "a place counts as reached when a burned cell lies within this of it, or its own cell burns; a geocoded address sits on the road's centreline, which carries no fuel, and the house stands beside it"
+      },
+      {
+        "name": "places",
+        "default": [],
+        "note": "[{ name, lat, lon, note }]: the note says where the position came from"
+      }
+    ],
+    "publishes": [
+      {
+        "name": "place.marked",
+        "required": false,
+        "note": "at the place's cell, at the start: { name, slug, lat, lon, note }"
+      },
+      {
+        "name": "place.reached",
+        "required": false,
+        "note": "at the place's cell, once: { name, slug, lat, lon, note, time, hours }"
+      },
+      {
+        "name": "place.crossing",
+        "required": false,
+        "note": "{ name, slug, kind: reached, time, hours, sentence }"
+      }
+    ],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [],
+    "fields_owned": [],
+    "fields_read": [
+      {
+        "name": "fire.burned_frac",
+        "unit": "1",
+        "required": false,
+        "note": "the fire module's burned cells"
+      }
+    ],
+    "ledgers": [],
+    "frames": [],
+    "reports": [
+      {
+        "name": "place.reached_count",
+        "unit": "places",
+        "required": false
+      }
+    ],
+    "views": [
+      {
+        "kind": "crossings",
+        "title": "Places reached",
+        "source": "place.crossing",
+        "obs": "",
+        "note": "the hour the fire reached each place, as a sentence"
+      }
+    ],
+    "assets": [
+      {
+        "key": "copernicus-dem-glo30",
+        "note": "the grid"
+      }
+    ],
+    "notes": []
   }
 ]
