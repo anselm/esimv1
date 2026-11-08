@@ -148,6 +148,116 @@
   },
   {
     "area": "anselm",
+    "by": "anselm, via claude 2026-11-08",
+    "cover": "cover.png",
+    "cover_caption": "The window from the run page's three-dimensional view: Samuel P. Taylor State Park and the Nicasio Valley from the elevation model, the vertical stretched twice, every OpenStreetMap building a box, the fire's arrival draped over the ground at the time cursor, and the two named places staked on it. The scale-5 run, dark mode, 2026-11-08.",
+    "created": "2026-11-08",
+    "description": "A scenario, not a forecast: an ignition at the Devil's Gulch campsite in Samuel P. Taylor State Park, Marin County, at 3 a.m. on 1 October 2029, under the Red Flag wind of 27 to 29 October 2019 played hour for hour, on today's ground. The stake is a house, 550 Nicasio Valley Road, six kilometres east. Nobody fights the fire. Anselm asked for it on 2026-11-08: a brand new simulation of 550 Nicasio Valley Road, a fire starting not far away at Devil's Gulch campsite, 1 October, in 2029, with some wind conditions.",
+    "kinds": [
+      "fire.cells",
+      "obs.places",
+      "fire.suppression"
+    ],
+    "name": "nicasio-2029",
+    "path": "anselm/nicasio-2029",
+    "runs": [
+      {
+        "all_ledgers_closed": true,
+        "digest": "fde33d3766a3d362",
+        "end": 1885791600,
+        "events": 226,
+        "id": "f5-nicasio-2029-465516cd-fde33d37",
+        "name": "f5-nicasio-2029",
+        "seed": 1,
+        "set": {
+          "fire.ignite_scale": "8"
+        },
+        "start": 1885532400,
+        "variant": "scale-8",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "4b7615887655606f",
+        "end": 1885791600,
+        "events": 764,
+        "id": "f5-nicasio-2029-73b9e5a6-4b761588",
+        "name": "f5-nicasio-2029",
+        "seed": 1,
+        "set": {
+          "fire.ignite_scale": "5",
+          "fire.wind_use": "\"gust\""
+        },
+        "start": 1885532400,
+        "variant": "gust",
+        "verdict": null
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "5639d288ebddd9ad",
+        "end": 1885791600,
+        "events": 378,
+        "id": "f5-nicasio-2029-849874a2-5639d288",
+        "name": "f5-nicasio-2029",
+        "seed": 1,
+        "set": {
+          "fire.ignite_scale": "3"
+        },
+        "start": 1885532400,
+        "variant": "scale-3",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "843cf62ba3f070db",
+        "end": 1885791600,
+        "events": 463,
+        "id": "f5-nicasio-2029-dc5f0eae-843cf62b",
+        "name": "f5-nicasio-2029",
+        "seed": 1,
+        "set": {
+          "fire.ignite_scale": "5"
+        },
+        "start": 1885532400,
+        "variant": "scale-5",
+        "verdict": "holds"
+      }
+    ],
+    "title": "A fire at Devil's Gulch, October 2029",
+    "variant": [
+      {
+        "name": "scale-3",
+        "set": {
+          "fire.ignite_scale": 3
+        },
+        "title": "Ignition thresholds times 3"
+      },
+      {
+        "name": "scale-5",
+        "set": {
+          "fire.ignite_scale": 5
+        },
+        "title": "Ignition thresholds times 5: the Palisades' setting, unchanged"
+      },
+      {
+        "name": "scale-8",
+        "set": {
+          "fire.ignite_scale": 8
+        },
+        "title": "Ignition thresholds times 8: the Fort McMurray setting"
+      },
+      {
+        "name": "gust",
+        "set": {
+          "fire.ignite_scale": 5,
+          "fire.wind_use": "gust"
+        },
+        "title": "Thresholds times 5, on the hour's gust instead of its mean wind"
+      }
+    ]
+  },
+  {
+    "area": "anselm",
     "by": "anselm, via claude 2026-11-03",
     "cover": "cover.png",
     "cover_caption": "Where the model's unsuppressed fire had reached 27 hours after ignition, coloured by the hour it arrived (yellow first, red last), on the reanalysis wind; in white the first infrared perimeter the incident mapped at that hour (15,824 acres), in blue the final perimeter (23,448 acres). Land cover beneath: trees, shrub, grass, built-up, the sea. Drawn from the run's own frames, 2026-11-03.",

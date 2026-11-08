@@ -45,12 +45,12 @@
     if (unit === 'persons') return x >= 1e9 ? `${(x / 1e9).toFixed(2)} bn` : x >= 1e6 ? `${Math.round(x / 1e6)} M` : num(Math.round(x))
     if (unit === 'degC') return `${x >= 0 ? '+' : ''}${x.toFixed(2)} °C`
     if (unit === 'ppm') return `${Math.round(x)} ppm`
-    if (unit === 'm') return `${(x * 100).toFixed(0)} cm`
+    if (unit === 'm') return Math.abs(x) < 2 ? `${(x * 100).toFixed(0)} cm` : `${num(Math.round(x))} m`
     if (Number.isInteger(x)) return num(x)
     return num(+x.toPrecision(4)) + (unit ? ` ${unit}` : '')
   }
   const soFar = (topic) => crossings.filter((c) => c.topic === topic && c.t <= cursor)
-  const label = (c) => c.topic === 'tipping.crossing' ? `${c.data.level} ${c.data.threshold_c}°` : c.topic === 'carbon.crossing' ? `releases ${Math.round(c.data.gtc_target)} GtC` : c.data.kind === 'niche' ? 'left the niche' : c.data.kind === 'wetbulb_a' ? '31° wet-bulb' : c.data.kind === 'wetbulb_b' ? '35° wet-bulb' : 'hottest month'
+  const label = (c) => c.topic === 'place.crossing' ? 'reached by the fire' : c.topic === 'tipping.crossing' ? `${c.data.level} ${c.data.threshold_c}°` : c.topic === 'carbon.crossing' ? `releases ${Math.round(c.data.gtc_target)} GtC` : c.data.kind === 'niche' ? 'left the niche' : c.data.kind === 'wetbulb_a' ? '31° wet-bulb' : c.data.kind === 'wetbulb_b' ? '35° wet-bulb' : 'hottest month'
   const who = (c) => c.topic === 'tipping.crossing' || c.topic === 'carbon.crossing' ? c.data.title : `${c.data.name}${c.data.capital ? ` (${c.data.capital})` : ''}`
   const persons = (c) => (c.data.persons ? `${Math.round(c.data.persons / 1e6)} M` : '')
   const grid = (n) => (n === 1 ? '' : n === 2 ? 'sm:grid-cols-2' : 'sm:grid-cols-2 lg:grid-cols-3')

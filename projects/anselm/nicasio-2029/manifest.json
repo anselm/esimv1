@@ -1,0 +1,95 @@
+{
+  "entities": [
+    {
+      "id": "run",
+      "run": {
+        "close_every": "1d",
+        "end": "2029-10-04T07:00:00Z",
+        "name": "f5-nicasio-2029",
+        "notes": "A scenario, not a forecast: an ignition at the Devil's Gulch campsite, Samuel P. Taylor State Park, Marin County, on 1 October 2029 under the Red Flag wind of 27 to 29 October 2019 (HRRR, hour for hour), on today's ground; the stake is 550 Nicasio Valley Road; unsuppressed; constants carried over from the Palisades.",
+        "seed": 1,
+        "snapshot_every": "10d",
+        "start": "2029-10-01T07:00:00Z"
+      }
+    },
+    {
+      "id": "place",
+      "place": {
+        "lat_n": 38.08,
+        "lat_s": 37.97,
+        "lon_e": -122.61,
+        "lon_w": -122.79,
+        "res_arcsec": 1
+      }
+    },
+    {
+      "id": "fire",
+      "kind": "fire.cells",
+      "params": {
+        "buildings": "osm",
+        "cooling": "idle",
+        "form": "vector",
+        "frame_res_arcsec": 4,
+        "ignite_scale": 5,
+        "ignition_lat": 38.0316,
+        "ignition_lon": -122.7328,
+        "ignition_time": "2029-10-01T10:00:00Z",
+        "lat_n": 38.08,
+        "lat_s": 37.97,
+        "lon_e": -122.61,
+        "lon_w": -122.79,
+        "reach_m": 45,
+        "res_arcsec": 1,
+        "slope_rate_gain": 20,
+        "wind": "hrrr",
+        "wind_at": "2029-10-01T07:00:00Z",
+        "wind_end": "2019-10-30T07:00:00Z",
+        "wind_start": "2019-10-27T07:00:00Z"
+      }
+    },
+    {
+      "id": "places",
+      "kind": "obs.places",
+      "params": {
+        "lat_n": 38.08,
+        "lat_s": 37.97,
+        "lon_e": -122.61,
+        "lon_w": -122.79,
+        "places": [
+          {
+            "lat": 38.0283,
+            "lon": -122.6675,
+            "name": "550 Nicasio Valley Road",
+            "note": "the home of Jim Fournier's Planetwork and Solstice Grove, as Anselm describes it; position interpolated along the road by the US Census geocoder, 2026-11-08"
+          },
+          {
+            "lat": 38.0316,
+            "lon": -122.7328,
+            "name": "Devil's Gulch campsite",
+            "note": "the ignition; OpenStreetMap relation 17685328, 2026-11-08"
+          }
+        ],
+        "res_arcsec": 1
+      }
+    },
+    {
+      "id": "suppression",
+      "kind": "fire.suppression",
+      "params": {
+        "lat_n": 38.08,
+        "lat_s": 37.97,
+        "line_width_m": 30,
+        "lon_e": -122.61,
+        "lon_w": -122.79,
+        "mode": "off",
+        "res_arcsec": 1
+      }
+    }
+  ],
+  "from": {
+    "entry": "manifests/f5-nicasio-2029.toml",
+    "hash": "sha256:98d2724c86e7f7025290a56fee7c5a99c879321ba81fc2f3eb66fec6090ef085",
+    "language": "toml"
+  },
+  "manifest": "manifest/1"
+}

@@ -19,6 +19,9 @@ The planet pages to start with:
   a known fire run again on its own ground, unsuppressed, and scored against the
   perimeters its mapping teams drew; the first local scenario, and the model's first
   honest overrun.
+- [A fire that has not happened](https://esimv1.exe.xyz/anselm/nicasio-2029): a scenario with no
+  record, an ignition in a Marin County state park in October 2029 under a borrowed Red Flag
+  wind, with a named house as the stake; what the engine can and cannot say without a record.
 - [Two futures, one clock](https://esimv1.exe.xyz/anselm/planet-2100/compare): emissions
   held at today's rate beside emissions to zero by 2050, under one time cursor.
 - [Documentation](https://esimv1.exe.xyz/docs) and [the module kinds](https://esimv1.exe.xyz/kinds).

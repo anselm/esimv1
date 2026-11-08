@@ -37,6 +37,7 @@ pub struct Cells {
     wind: String,            // hrrr | era5
     wind_use: String,        // mean | gust
     wind_start: String, wind_end: String,
+    wind_at: String,         // the simulated instant wind_start stands for; empty: wind_start itself
     buildings: String,       // lariac | osm | none
     buildings_service: String, buildings_where: String, buildings_key: String,
     // the guesses
@@ -89,6 +90,7 @@ pub struct Cells {
     #[serde(skip)] metres: Vec<(f64, f64)>,
     #[serde(skip)] hrrr: Vec<Option<HrrrHour>>,  // per hour from wind_start
     #[serde(skip)] hrrr_t0: i64,
+    #[serde(skip)] wind_shift: i64,              // record time minus simulated time, s
     #[serde(skip)] era5: Option<WindSeries>,
     #[serde(skip)] cell_wind: Vec<(f32, f32)>,   // this hour: (speed m/s, direction the wind blows TOWARD, rad)
     #[serde(skip)] cell_moist: Vec<f32>,
@@ -121,6 +123,7 @@ impl Cells {
             ignition_lat: param_f64(p, "ignition_lat", 34.0723), ignition_lon: param_f64(p, "ignition_lon", -118.5451),
             wind: param_str(p, "wind", "hrrr").to_string(), wind_use: param_str(p, "wind_use", "mean").to_string(),
             wind_start: param_str(p, "wind_start", "2025-01-07T18:00:00Z").to_string(), wind_end: param_str(p, "wind_end", "2025-01-12T00:00:00Z").to_string(),
+            wind_at: param_str(p, "wind_at", "").to_string(),
             buildings: param_str(p, "buildings", "lariac").to_string(),
             buildings_service: param_str(p, "buildings_service", "https://services.arcgis.com/RmCCgQtiZLDCtblq/arcgis/rest/services/2025_WildFire_LARIAC_BUILDINGS_100M_Plus_DINS_MaxMin_DAMAGE_NEW/FeatureServer/0").to_string(),
             buildings_where: param_str(p, "buildings_where", "Incident_Name LIKE '%Palisades%'").to_string(),
@@ -147,7 +150,7 @@ impl Cells {
             ignited: false, since_ignition_s: 0.0, last_frame: i64::MIN / 4,
             t_ign: Vec::new(), t_out: Vec::new(), heat: Vec::new(), heat_t: Vec::new(), active: Vec::new(), spots: 0, held_cells: 0, breaks_taken: 0,
             grid: None, frame_grid: None, elev: Vec::new(), slope: Vec::new(), aspect: Vec::new(), cover: Vec::new(), built_frac: Vec::new(), built_height: Vec::new(), road: Vec::new(), held: Vec::new(), kind: Vec::new(),
-            area_m2: Vec::new(), metres: Vec::new(), hrrr: Vec::new(), hrrr_t0: 0, era5: None, cell_wind: Vec::new(), cell_moist: Vec::new(), jitter: Vec::new(), offsets: Vec::new(),
+            area_m2: Vec::new(), metres: Vec::new(), hrrr: Vec::new(), hrrr_t0: 0, wind_shift: 0, era5: None, cell_wind: Vec::new(), cell_moist: Vec::new(), jitter: Vec::new(), offsets: Vec::new(),
             s_cell: Vec::new(), s_area: Vec::new(), s_fate: Vec::new(), s_jitter: Vec::new(), s_neigh: Vec::new(), cell_structs: Default::default(), cell_home: Default::default(),
         };
         c.load()?;
@@ -241,7 +244,10 @@ impl Cells {
         if self.structures == "on" { if let Some(bs) = &bodies_src { self.build_bodies(bs, &grid); } }
         // the wind: HRRR hours over the window, or the ERA5 point series
         let t0 = Time::parse(&self.wind_start)?.0; let t1 = Time::parse(&self.wind_end)?.0;
-        self.hrrr_t0 = t0;
+        // a borrowed wind: the record's hours from wind_start are played from wind_at in the run
+        let t_at = if self.wind_at.trim().is_empty() { t0 } else { Time::parse(&self.wind_at)?.0 };
+        self.hrrr_t0 = t_at;
+        self.wind_shift = t0 - t_at;
         if self.wind == "hrrr" {
             let hours = ((t1 - t0) / 3600).max(1) as usize + 1;
             self.hrrr = Vec::with_capacity(hours);
@@ -394,7 +400,7 @@ impl Cells {
                 self.cell_moist[k] = Self::dead_moisture(hh.at(&hh.t2m_c, lat, lon), hh.at(&hh.rh_pct, lat, lon));
             } }
         } else if let Some(w) = &self.era5 {
-            let Some(i) = w.index_at(now.0) else { return };
+            let Some(i) = w.index_at(now.0 + self.wind_shift) else { return };
             let spd = if use_gust { w.gust_m_s[i] } else { w.wind_m_s[i] };
             let toward = (w.dir_deg[i] + 180.0).to_radians();
             let m = Self::dead_moisture(w.t2m_c[i], w.rh_pct[i]);
@@ -444,7 +450,7 @@ impl Module for Cells {
         let g = self.grid.clone().unwrap();
         let n = g.nx * g.ny;
         let counts = |kk: u8| self.kind.iter().filter(|&&k| k == kk).count();
-        ctx.publish("ground.loaded", json!({ "cells": n, "grass": counts(1), "shrub": counts(2), "tree": counts(3), "built": counts(4), "road_cells": self.road.iter().filter(|&&r| r).count(), "hrrr_hours": self.hrrr.iter().filter(|h| h.is_some()).count(), "wind": self.wind }));
+        ctx.publish("ground.loaded", json!({ "cells": n, "wind_start": self.wind_start, "wind_at": if self.wind_at.trim().is_empty() { self.wind_start.clone() } else { self.wind_at.clone() }, "grass": counts(1), "shrub": counts(2), "tree": counts(3), "built": counts(4), "road_cells": self.road.iter().filter(|&&r| r).count(), "hrrr_hours": self.hrrr.iter().filter(|h| h.is_some()).count(), "wind": self.wind }));
         ctx.field("terrain_elev_m", "m", &g, self.elev.clone());
         ctx.field("building_height", "ft (as stated)", &g, self.built_height.clone());
         let fg = self.frame_grid.clone().unwrap();
@@ -687,7 +693,7 @@ impl Cells {
             .param("dt", "1h", "", "the weather step").param("substep_s", 30.0, "s", "").param("frame_every", "1h", "", "").param("frame_res_arcsec", 3.0, "arcsec", "")
             .param("ignition_time", "2025-01-07T18:30:00Z", "", "").param("ignition_lat", 34.0723, "deg", "").param("ignition_lon", -118.5451, "deg", "")
             .param("wind", "hrrr", "", "hrrr: NOAA's 3 km analysis, a field over the window each hour; era5: one 25 km point").param("wind_use", "mean", "", "mean or gust")
-            .param("wind_start", "2025-01-07T18:00:00Z", "", "").param("wind_end", "2025-01-12T00:00:00Z", "", "")
+            .param("wind_start", "2025-01-07T18:00:00Z", "", "the first hour of the wind record fetched").param("wind_end", "2025-01-12T00:00:00Z", "", "").param("wind_at", "", "", "the simulated instant wind_start stands for, when a run borrows another day's weather (a scenario in a year with no record yet); empty means wind_start itself, so a run in the record's own time is unchanged. A borrowed wind is a borrowed wind: the page must say whose day it was")
             .param("buildings", "lariac", "", "lariac: LA County's footprints with heights from the feature service below (the Palisades window); osm: OpenStreetMap buildings through Overpass for the window, heights from the height tag or building:levels times 3.2 m, else two storeys, a guess; none: built-up land from land cover alone")
             .param("buildings_service", "https://services.arcgis.com/RmCCgQtiZLDCtblq/arcgis/rest/services/2025_WildFire_LARIAC_BUILDINGS_100M_Plus_DINS_MaxMin_DAMAGE_NEW/FeatureServer/0", "", "").param("buildings_where", "Incident_Name LIKE '%Palisades%'", "", "").param("buildings_key", "lacounty-lariac/2025-palisades", "", "")
             .param("reach_m", 90.0, "m", "guess: how far a burning cell's heat is felt").param("lambda_m", 20.0, "m", "guess: e-folding distance of that heat in still air on the flat")

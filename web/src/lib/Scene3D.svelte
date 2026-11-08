@@ -49,7 +49,7 @@
   // the run's placed events, read from its log: the record's (obs.record: what people did, where
   // and when) and the fire's own ignition and spot fires. Each is drawn where it happened, pulses
   // for a while after its time at the cursor, and carries its time as a label.
-  const EVENT_TOPICS = ['record.event', 'fire.ignition', 'fire.spot']
+  const EVENT_TOPICS = ['record.event', 'fire.ignition', 'fire.spot', 'place.marked', 'place.reached']
   let events = $state(null)
   $effect(() => {
     if (!base) return
@@ -212,9 +212,9 @@
   })
 
   // ---- the marks: rings that pulse where an event happened, lines where a line was cut, labels with times
-  const COL = { record: 0x129a9a, planned: 0x7bbcbc, spot: 0xf28c1a, ignition: 0xd9261a }
+  const COL = { record: 0x129a9a, planned: 0x7bbcbc, spot: 0xf28c1a, ignition: 0xd9261a, place: 0x3b5bdb, reached: 0xd9261a }
   // how long after its time an event keeps pulsing, in hours of run time, and the ring's radius in metres
-  const SHOW = { record: [6, 80], line: [3, 0], spot: [1.5, 40], ignition: [1e9, 120] }
+  const SHOW = { record: [6, 80], line: [3, 0], spot: [1.5, 40], ignition: [1e9, 120], place: [1e9, 70], reached: [1e9, 110] }
   const LINE_FADE_H = 12       // a line is bright for SHOW.line[0] hours, fades until this, then goes; at the run's end every line stays
   let marks = null          // { ring: InstancedMesh, pts: [...], lines: [...] }
   let active = []           // the points pulsing at the cursor
@@ -248,10 +248,11 @@
         lines.push({ obj, t: e.t, mat, label: `${hm(e.t)} ${d.category}${d.length_m ? ' ' + Math.round(d.length_m) + ' m' : ''}${d.note ? ' · ' + d.note : ''}`, pos: worldAt(d.path[0][0], d.path[0][1], 4) })
         continue
       }
-      const kind = e.topic === 'fire.ignition' ? 'ignition' : e.topic === 'fire.spot' ? 'spot' : 'record'
-      const pos = (kind === 'record' && Number.isFinite(d.lat)) ? worldAt(d.lat, d.lon) : worldCell(e.at)
+      const kind = e.topic === 'fire.ignition' ? 'ignition' : e.topic === 'fire.spot' ? 'spot' : e.topic === 'place.marked' ? 'place' : e.topic === 'place.reached' ? 'reached' : 'record'
+      const pos = ((kind === 'record' || kind === 'place' || kind === 'reached') && Number.isFinite(d.lat)) ? worldAt(d.lat, d.lon) : worldCell(e.at)
       const t0 = kind === 'ignition' && d.time ? Math.round(Date.parse(d.time) / 1000) : e.t
-      const label = kind === 'ignition' ? `${hm(t0)} ignition` : kind === 'record' ? `${hm(e.t)} ${d.category}${d.label ? ' · ' + d.label : ''}${d.note ? ' · ' + d.note : ''}` : null
+      // a place is a stake: its name stays on the ground for the whole run; when the fire reaches it the label says so
+      const label = kind === 'ignition' ? `${hm(t0)} ignition` : kind === 'place' ? d.name : kind === 'reached' ? `${hm(e.t)} the fire reaches ${d.name}` : kind === 'record' ? `${hm(e.t)} ${d.category}${d.label ? ' · ' + d.label : ''}${d.note ? ' · ' + d.note : ''}` : null
       pts.push({ t: t0, kind, pos, label })
     }
     const ringGeom = new THREE.RingGeometry(0.72, 1, 40); ringGeom.rotateX(-Math.PI / 2)

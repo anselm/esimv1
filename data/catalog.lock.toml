@@ -48,6 +48,18 @@ sha256 = "eb5f76ce3183a33c76e24d00fd854598b490523f6cb325e3f234203a3bc011a8"
 bytes = 42718799
 fetched = "2026-11-03"
 
+[files."copernicus-dem-glo30/N37_W123.tif"]
+url = "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N37_00_W123_00_DEM/Copernicus_DSM_COG_10_N37_00_W123_00_DEM.tif"
+sha256 = "82343318fbf7265c32342d9cace0fda4eb48d4b567a1a3335cc37488d4a9a7d5"
+bytes = 20060161
+fetched = "2026-11-08"
+
+[files."copernicus-dem-glo30/N38_W123.tif"]
+url = "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N38_00_W123_00_DEM/Copernicus_DSM_COG_10_N38_00_W123_00_DEM.tif"
+sha256 = "505b215f5c272579fa1a474a3a9dda8ab5bc5f61e41731ff5c7e4800cb339d9a"
+bytes = 45763136
+fetched = "2026-11-08"
+
 [files."copernicus-dem-glo30/N42_W094.tif"]
 url = "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N42_00_W094_00_DEM/Copernicus_DSM_COG_10_N42_00_W094_00_DEM.tif"
 sha256 = "ed03509b743e06be040cb2ec8e8e623270a12d7232fcc9da09e23938d6a44fa0"
@@ -84,6 +96,12 @@ sha256 = "61e0909a51e2e76a6f153599316753370be937d0ce150261d023006a80613385"
 bytes = 101202142
 fetched = "2026-11-03"
 
+[files."esa-worldcover-2021/N36W123.tif"]
+url = "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N36W123_Map.tif"
+sha256 = "cd255268fb81c7073bf10e5325e1d11c601dde5dc5ccd9c1f0b40a8bcb8a9b29"
+bytes = 87597650
+fetched = "2026-11-08"
+
 [files."esa-worldcover-2021/N54W114.tif"]
 url = "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N54W114_Map.tif"
 sha256 = "b02113058cd9ef4cc2d18251f12f1771c70492c812b33c79f3ec2c5761acf893"
@@ -107,6 +125,2634 @@ url = "https://www.metoffice.gov.uk/hadobs/hadcrut5/data/HadCRUT.5.0.2.0/analysi
 sha256 = "a1441ab5aef8f3baf43cca417bca271f6d674d4f235ea01129f0432c948882e0"
 bytes = 7022
 fetched = "2026-11-01"
+
+[files."hrrr/20191027_t07z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t07z.wrfsfcf00.grib2.idx"
+sha256 = "2300ae8ea5741c9e44a3bd478253040394b5e7929dd46185b21b472f1f926b3c"
+bytes = 7689
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t07z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t07z.wrfsfcf00.grib2#bytes=3512055-4772595"
+sha256 = "d8b8db3cbd2c5f17036c81a0cfe8360add50b97207213db94eb4adfc39fa954a"
+bytes = 1260541
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t07z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t07z.wrfsfcf00.grib2#bytes=40913235-42385567"
+sha256 = "3c1da4ef8f7d6b6f8d1796bbb6ad6345a11fe2784cf4def0ad02b55e1c7f107d"
+bytes = 1472333
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t07z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t07z.wrfsfcf00.grib2#bytes=36214386-37448867"
+sha256 = "bbd8e13ddd4ccc88f351aee5b367637d89f75bae7417e47b77ec3bef5a6aa9a1"
+bytes = 1234482
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t07z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t07z.wrfsfcf00.grib2#bytes=42385568-43602869"
+sha256 = "4e823a0085cab5185dd67bc107f850a9b2fe1ce7faf64f99c29df9b6db0bf177"
+bytes = 1217302
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t07z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t07z.wrfsfcf00.grib2#bytes=43602870-44810042"
+sha256 = "6c7863c1d55fb648a7e2fa34246050fc1e747a84d496b9cb88d306c11ac2746a"
+bytes = 1207173
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t08z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t08z.wrfsfcf00.grib2.idx"
+sha256 = "ea2f4c53b353df85e8bf015ce29d78157ae48366de16191c78f49dfe2795e39e"
+bytes = 7689
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t08z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t08z.wrfsfcf00.grib2#bytes=3577585-4835138"
+sha256 = "67f6edc6a092b16d516b5e146133e66a6657257fc8f9d6b06de06cae268d628b"
+bytes = 1257554
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t08z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t08z.wrfsfcf00.grib2#bytes=41182402-42659615"
+sha256 = "625609cc7b205428c728d73337704b3d3d6ebd8d71d50bdcd584a90ba80f5982"
+bytes = 1477214
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t08z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t08z.wrfsfcf00.grib2#bytes=36478489-37714244"
+sha256 = "8dc3de96b3d4d71d632b6488daa4b142ec1d8ba850f183b93d91c7de71ec6c48"
+bytes = 1235756
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t08z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t08z.wrfsfcf00.grib2#bytes=42659616-43878441"
+sha256 = "be7fff049cef069b8e26cc66765439e196c44d2c44293b978d5dd9d214ed736a"
+bytes = 1218826
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t08z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t08z.wrfsfcf00.grib2#bytes=43878442-45084101"
+sha256 = "c4f84d781eac809c269f503747ab72b8de79cc6cab0c67f3ea2966506a8192dd"
+bytes = 1205660
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t09z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t09z.wrfsfcf00.grib2.idx"
+sha256 = "97d63822ac25d551ceac809f230786f3208494c196f67e1a251d34873f3b7650"
+bytes = 7689
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t09z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t09z.wrfsfcf00.grib2#bytes=3402786-4658099"
+sha256 = "0852a643bd857096efa4886daba303c17fcf71d4355ec19c4d5ae53228b55c43"
+bytes = 1255314
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t09z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t09z.wrfsfcf00.grib2#bytes=40854983-42335117"
+sha256 = "cbd9384fd2d45b1589d67160144a9016ad8b375580c7c1ed06bc4fd71c87df8d"
+bytes = 1480135
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t09z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t09z.wrfsfcf00.grib2#bytes=36137875-37375174"
+sha256 = "e21dde6da69bb8b8a61c755da64a170eb919f62a5c6204ecffb9f55edaf5562c"
+bytes = 1237300
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t09z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t09z.wrfsfcf00.grib2#bytes=42335118-43555051"
+sha256 = "a1c2c472a7ea5354805e557a9c4525c07b2d36ff869fef0734aef7702062500a"
+bytes = 1219934
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t09z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t09z.wrfsfcf00.grib2#bytes=43555052-44758311"
+sha256 = "a02877d9235d8f17cdc909e40ff1dd36873a54afbff980ec03a4041ca3008cf3"
+bytes = 1203260
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t10z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t10z.wrfsfcf00.grib2.idx"
+sha256 = "55706adb55346b3cee1958aba5f61372b5fce0d5cb7d24e76268b091843cce68"
+bytes = 7689
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t10z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t10z.wrfsfcf00.grib2#bytes=3326685-4587150"
+sha256 = "0927eeac33fcb38b677471f1b80486be3ecc7b012faff4904d8bba08b50b084d"
+bytes = 1260466
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t10z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t10z.wrfsfcf00.grib2#bytes=40770958-42250869"
+sha256 = "77a3442f60bb045b5de9aa21cb56fa842b00399c467551e7eeace839139a0594"
+bytes = 1479912
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t10z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t10z.wrfsfcf00.grib2#bytes=36061510-37296752"
+sha256 = "d2d9f14ee6cdff22d4119dc5977498c8b1aba90d39bbf9c13d5b63dc872172be"
+bytes = 1235243
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t10z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t10z.wrfsfcf00.grib2#bytes=42250870-43466529"
+sha256 = "b81128015134fa7ed144a3c5c0f516cc99af9a1eaa3ef4129c0bc7ceaab4fc43"
+bytes = 1215660
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t10z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t10z.wrfsfcf00.grib2#bytes=43466530-44667821"
+sha256 = "23d7fb2ce57684356d34b81467858d4d13853dc2e2e523d6fdd4efb93eb3846a"
+bytes = 1201292
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t11z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t11z.wrfsfcf00.grib2.idx"
+sha256 = "0cfe6ec5e601d2bd1ee840843bc3dd03174774709a2851a6a30be7591755de95"
+bytes = 7689
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t11z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t11z.wrfsfcf00.grib2#bytes=3312219-4571351"
+sha256 = "400acac9ff8ecd90ee870872f2768fd41a1e7e0e60b82c69b30ff1d7cb4a22d6"
+bytes = 1259133
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t11z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t11z.wrfsfcf00.grib2#bytes=40844795-42331136"
+sha256 = "3d9b1f1864a3b76c64e0913b9b8b5654241bc07b171995dd09bed16e3011ed74"
+bytes = 1486342
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t11z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t11z.wrfsfcf00.grib2#bytes=36127057-37363551"
+sha256 = "b90b00902ad3c5485512e8d05efe517faeaa5f2c588e6b363090d9b0c1ef647a"
+bytes = 1236495
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t11z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t11z.wrfsfcf00.grib2#bytes=42331137-43547500"
+sha256 = "d9d1735d41e0acfadedf56f347cc6d680f4f830c093012f9f29c4e557371e261"
+bytes = 1216364
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t11z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t11z.wrfsfcf00.grib2#bytes=43547501-44747637"
+sha256 = "cc02cb3d7214261068bcc3886a1633768ba385c6b2b9e701b386403150d61adc"
+bytes = 1200137
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t12z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t12z.wrfsfcf00.grib2.idx"
+sha256 = "a4cf5c60d2842b4adf20f9be79f8f3439137f66a1627c6243f46b8b24377143a"
+bytes = 7692
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t12z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t12z.wrfsfcf00.grib2#bytes=3308415-4568271"
+sha256 = "cb9a68cddaaaca764fd3d7d66b4c2f08f304bbd0b15ae01fc988ff9f44657fdc"
+bytes = 1259857
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t12z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t12z.wrfsfcf00.grib2#bytes=40832584-42315808"
+sha256 = "6996700ee93bd92aa39c55a084b7b294fc9d6554ceb06c752df7ca8b630d2e60"
+bytes = 1483225
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t12z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t12z.wrfsfcf00.grib2#bytes=36130201-37364800"
+sha256 = "8d17b48570bb4cb1de52c7e472dd6a231b24039de7de3c57cf9d2f6e0231fc9b"
+bytes = 1234600
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t12z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t12z.wrfsfcf00.grib2#bytes=42315809-43532368"
+sha256 = "662333a8c696ed34c649c12597ba923b10605492687f80b56c1f124e3bbbaae3"
+bytes = 1216560
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t12z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t12z.wrfsfcf00.grib2#bytes=43532369-44731753"
+sha256 = "4b3b249b7fe40dcd2c7b4ab2ec4ba9011e7e0ca64f26b027db0eb4063d91b6d7"
+bytes = 1199385
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t13z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t13z.wrfsfcf00.grib2.idx"
+sha256 = "df3c0a367799d071d9f7d34fafda114b5794cc346ff5b2d1d51cb11f211d660e"
+bytes = 7693
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t13z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t13z.wrfsfcf00.grib2#bytes=3316000-4562966"
+sha256 = "3cd9b2307e85bbc57f1a40f628a0047075a48246cfe65247c4d65996ea2df973"
+bytes = 1246967
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t13z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t13z.wrfsfcf00.grib2#bytes=40745915-42226939"
+sha256 = "5e1cd1ce72381927647e3bfe6a97ef1a212309370200aaf37a4874cf91351de7"
+bytes = 1481025
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t13z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t13z.wrfsfcf00.grib2#bytes=36078328-37307259"
+sha256 = "63968ec4be4446cacbf9bdf58711ffb03233cfc8a311fa98791527823c567d3c"
+bytes = 1228932
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t13z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t13z.wrfsfcf00.grib2#bytes=42226940-43438456"
+sha256 = "1bb3079c4664ad342bce6f6d1b47a3e7748b225ebbbb3fe30350e1dd50cd2e52"
+bytes = 1211517
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t13z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t13z.wrfsfcf00.grib2#bytes=43438457-44630497"
+sha256 = "4ec8ae839d7412f22c3e52759111dc9d97001b832ae98b3a49dde5fe2272468b"
+bytes = 1192041
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t14z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t14z.wrfsfcf00.grib2.idx"
+sha256 = "c49d227272b5330930019b26d911eda93b56543dee0ae44ac21988d8a54589c4"
+bytes = 7694
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t14z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t14z.wrfsfcf00.grib2#bytes=3372650-4597773"
+sha256 = "0bd2e12ae3ace7455364d456d9d473eac2c279884edf41211576434159e07b95"
+bytes = 1225124
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t14z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t14z.wrfsfcf00.grib2#bytes=40780465-42263153"
+sha256 = "29321cf6f7d3ee171f954a05098f18736e3945e333720b52433b60e2d255ca0c"
+bytes = 1482689
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t14z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t14z.wrfsfcf00.grib2#bytes=36176719-37386886"
+sha256 = "b6e051d6402a1d2dd431a2bccdedd8609efce20a4e2f1a716fc4725e7c2f2947"
+bytes = 1210168
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t14z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t14z.wrfsfcf00.grib2#bytes=42263154-43450450"
+sha256 = "71f2ae4a670dc0f73e3a64d724266dbd660d8080b09d6a462370a452b3585988"
+bytes = 1187297
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t14z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t14z.wrfsfcf00.grib2#bytes=43450451-44620209"
+sha256 = "143b16b89a6268dedf4f57a9e3a54c17bcac0dc6e301158c79b18b78f0f819ca"
+bytes = 1169759
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t15z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t15z.wrfsfcf00.grib2.idx"
+sha256 = "a61065057c90093e51db525b6ea10f2b7c837b353fdd3a6dbeb2821c43f32d2d"
+bytes = 7698
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t15z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t15z.wrfsfcf00.grib2#bytes=3256972-4429048"
+sha256 = "a9269b31444f88d75d5cf3b899627334094f28eae75d12baae1b9e535e77e73d"
+bytes = 1172077
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t15z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t15z.wrfsfcf00.grib2#bytes=40633539-42115506"
+sha256 = "0150e50920fc158e381670ef2ab7ad0ed69a9df09149f44530254ec8259d1d05"
+bytes = 1481968
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t15z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t15z.wrfsfcf00.grib2#bytes=36058733-37254051"
+sha256 = "eca0fba048eecd5c1895c6a96774b347140201c0be4075847b6f08d9c6653a23"
+bytes = 1195319
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t15z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t15z.wrfsfcf00.grib2#bytes=42115507-43264750"
+sha256 = "bbd4d6ca7c25ae1f14ab723775957dfa4080e114794cdfeb66bb66df2735836f"
+bytes = 1149244
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t15z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t15z.wrfsfcf00.grib2#bytes=43264751-44391260"
+sha256 = "1bfba70e0fdd0823e9e2c6339664e63281fabc909c846b15bbd085a0abeacb38"
+bytes = 1126510
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t16z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t16z.wrfsfcf00.grib2.idx"
+sha256 = "fdaf7dbf39cf00485fabf81afe61615f0d4db9674be1e56716a9c500e04220c2"
+bytes = 7698
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t16z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t16z.wrfsfcf00.grib2#bytes=3194323-4309157"
+sha256 = "d11019a6b4f30498246420f5f0bfae42915eb624e461429f4608596fdf47aae6"
+bytes = 1114835
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t16z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t16z.wrfsfcf00.grib2#bytes=40378050-41852563"
+sha256 = "69ec0b5ca844268875ef1a1b307e03045d83c84b7d311bb23e4a6b4af537a6b1"
+bytes = 1474514
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t16z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t16z.wrfsfcf00.grib2#bytes=35861255-37052819"
+sha256 = "9245403f1c4f288239b4afea34812480ace5112b89af452459d308d778933e49"
+bytes = 1191565
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t16z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t16z.wrfsfcf00.grib2#bytes=41852564-42965885"
+sha256 = "b9b8b2672c0d6b29890c31d1c1a5b8449793a651dcd1b7d36390b2f819c7ab4b"
+bytes = 1113322
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t16z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t16z.wrfsfcf00.grib2#bytes=42965886-44045269"
+sha256 = "9c66a901df2c264f0eb61f52cb07ae666f239b185a92016182f5cb77bae6cbf1"
+bytes = 1079384
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t17z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t17z.wrfsfcf00.grib2.idx"
+sha256 = "2b62bba027eaca7b703895a48eb6e72eee84b0e8bc6b43fc7066c025aa6709d6"
+bytes = 7698
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t17z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t17z.wrfsfcf00.grib2#bytes=3163031-4250301"
+sha256 = "db547f84ff10fc4864e2ecda863d64e45144afb722f2e5c59c6ef773e07062ef"
+bytes = 1087271
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t17z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t17z.wrfsfcf00.grib2#bytes=40103498-41574133"
+sha256 = "ee29c19e9e8591338d3e15e39c88cf555834d652bdbb5460c1c1ea555a42cec0"
+bytes = 1470636
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t17z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t17z.wrfsfcf00.grib2#bytes=35603144-36801619"
+sha256 = "c285b37b03ad1004e1d4fab547cd39ffb2d5117f934ac13bb5bce3ccfd36352b"
+bytes = 1198476
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t17z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t17z.wrfsfcf00.grib2#bytes=41574134-42663521"
+sha256 = "76620b45926d794b059b2645f1dbe260fea2bc5370ac40c8f386df7402258392"
+bytes = 1089388
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t17z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t17z.wrfsfcf00.grib2#bytes=42663522-43698009"
+sha256 = "b955dff1b1ed86ae5b2217ad1d89355c9aec8c4c8b967adf5b3fba8d2da80f0b"
+bytes = 1034488
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t18z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t18z.wrfsfcf00.grib2.idx"
+sha256 = "f180c792a44cec01095b6579527713daebd1fe1c64ba46e21db75a596b667574"
+bytes = 7698
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t18z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t18z.wrfsfcf00.grib2#bytes=3170953-4247310"
+sha256 = "337e0ab9805c66f7092ea6cad7ff1b9e474a6ecbc8708bfd87a8e49eca6c3632"
+bytes = 1076358
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t18z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t18z.wrfsfcf00.grib2#bytes=40159469-41625902"
+sha256 = "439788efceca2cbc388905fa5864a04b432b5fb73e9d8f2df0d774bb2260dcc0"
+bytes = 1466434
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t18z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t18z.wrfsfcf00.grib2#bytes=35679889-36882630"
+sha256 = "cd481f2b55e23d4bef3ff6ddf4eece7bf0b366f080bbb06574842eb8d096d4e3"
+bytes = 1202742
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t18z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t18z.wrfsfcf00.grib2#bytes=41625903-42691211"
+sha256 = "da5911114f739d51655a72329782c3e5c5d8fd77fcee0f0ccd44d1007b0b3ffc"
+bytes = 1065309
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t18z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t18z.wrfsfcf00.grib2#bytes=42691212-43710814"
+sha256 = "bb13a9de7c2e87ad3d5e8e4e3586850dbe63d47221f796c8ae400d335f71fed7"
+bytes = 1019603
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t19z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t19z.wrfsfcf00.grib2.idx"
+sha256 = "b993193e45bc6b1ff8d6388481ce141f6601c5632f11e9317dbffa1c5d36a801"
+bytes = 7694
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t19z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t19z.wrfsfcf00.grib2#bytes=3126980-4201411"
+sha256 = "850c94e1de2cadaac2b6431e05f90285b9ec5d74729bb65f359d28d2576158cf"
+bytes = 1074432
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t19z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t19z.wrfsfcf00.grib2#bytes=39640118-41097868"
+sha256 = "7b2732b09c144885549aedcb3738fbe4c83783aeb5e6ae5103f42c4cbf55231e"
+bytes = 1457751
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t19z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t19z.wrfsfcf00.grib2#bytes=35137575-36342828"
+sha256 = "2da32dd08b49850990936a14f982a0824b7d6186bf7a1eefe1bc185226bf60cc"
+bytes = 1205254
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t19z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t19z.wrfsfcf00.grib2#bytes=41097869-42160191"
+sha256 = "8a5a6145cb88e5bf8be6cb91a679f1bfa2bcb2d22f5f32e8d91b886b005d9f90"
+bytes = 1062323
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t19z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t19z.wrfsfcf00.grib2#bytes=42160192-43171196"
+sha256 = "89d53b45d6943e67355181a5ceae5e39c93ce27bd9004a56f84c4bfec3e578da"
+bytes = 1011005
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t20z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t20z.wrfsfcf00.grib2.idx"
+sha256 = "8a7a195eca39b894ef41198d2069d5c3670a5055363b62a842143a6339061259"
+bytes = 7693
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t20z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t20z.wrfsfcf00.grib2#bytes=3030990-4104248"
+sha256 = "12bfde66c830a2c344d6deeebcb6def5f2d4176c21fd339b7fe2ca96a936dd3a"
+bytes = 1073259
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t20z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t20z.wrfsfcf00.grib2#bytes=39680058-41129786"
+sha256 = "ed5072af1e9274010875f917a261056f990c7362f7a77871ebd4c4bdb45c4abc"
+bytes = 1449729
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t20z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t20z.wrfsfcf00.grib2#bytes=35205244-36409954"
+sha256 = "166efabcef106297e17c5deeef508cc593b06dc5020547e324a5dc7acf859e51"
+bytes = 1204711
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t20z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t20z.wrfsfcf00.grib2#bytes=41129787-42189989"
+sha256 = "9facacc2406381212a8b5b75cf188a876111afaaa0d71e8028606d7685cec52e"
+bytes = 1060203
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t20z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t20z.wrfsfcf00.grib2#bytes=42189990-43195771"
+sha256 = "9188669bdd9ffb6ec5fb2b046d71ce4b5a387163b86c37a980a515959038e4a0"
+bytes = 1005782
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t21z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t21z.wrfsfcf00.grib2.idx"
+sha256 = "acdc69fec44b39bb6170e0f6414d2b18b7ffbe97865a575b94ce5917f96ddb88"
+bytes = 7692
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t21z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t21z.wrfsfcf00.grib2#bytes=2965592-4024312"
+sha256 = "a3a6e880c0902056eb7bcd731564a1465dcd7e852a51352c9ae88c6711e62f8c"
+bytes = 1058721
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t21z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t21z.wrfsfcf00.grib2#bytes=39521384-40967921"
+sha256 = "67bc4d9ad56a18f741c6c140c4f8651ea5ddd003d8763a64c4ae95e885b7a765"
+bytes = 1446538
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t21z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t21z.wrfsfcf00.grib2#bytes=35040664-36244984"
+sha256 = "d1d8deee301806608139bdb6829ed81ed0c28b0b6b5a9c3428ca58fff98701ec"
+bytes = 1204321
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t21z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t21z.wrfsfcf00.grib2#bytes=40967922-42025299"
+sha256 = "16254abde952b86255a0c4d435d92e393f53531070eb6663d287c50f886592d8"
+bytes = 1057378
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t21z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t21z.wrfsfcf00.grib2#bytes=42025300-43028522"
+sha256 = "0960cfb4cfc22680d7c0e9b2a739c0ba248d56a325b021a919d3d72a486577ff"
+bytes = 1003223
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t22z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t22z.wrfsfcf00.grib2.idx"
+sha256 = "c918571aa4358e606c44d1b7b36e87f1a8a0156c2214cee7cf004721d2969ee2"
+bytes = 7689
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t22z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t22z.wrfsfcf00.grib2#bytes=2885493-3941160"
+sha256 = "161c2972d5c9ae85be59abb432956b9614e046b3c3f8e68a65916a76d03dfd06"
+bytes = 1055668
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t22z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t22z.wrfsfcf00.grib2#bytes=39282171-40726864"
+sha256 = "7e0670a8f9d254af23e9a6e4d0c5525d7e667b903bc56a07886ae447bae3c4bf"
+bytes = 1444694
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t22z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t22z.wrfsfcf00.grib2#bytes=34782773-35985642"
+sha256 = "793b648e13a2c7b286295e13f6259852cc9c36214d4dda205b631a8889ebc739"
+bytes = 1202870
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t22z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t22z.wrfsfcf00.grib2#bytes=40726865-41779573"
+sha256 = "86dffe8ad46bfb4d035592de001068c236b5d9e314212aa83a0ae7e2c8c5844e"
+bytes = 1052709
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t22z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t22z.wrfsfcf00.grib2#bytes=41779574-42798192"
+sha256 = "c7bf2cc6ed3f58a144989a5efc28ff6066ad80b97ae3d8bf5310b499ae93bf21"
+bytes = 1018619
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t23z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t23z.wrfsfcf00.grib2.idx"
+sha256 = "5a3a7e829c7f1fa1739728bebf8df38ca18c0de6ac50d59a707d1b6e1c7fb2fa"
+bytes = 7685
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t23z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t23z.wrfsfcf00.grib2#bytes=2846084-3910797"
+sha256 = "7d18a3fbc3dd5dd0015a2e4e4d7d0dd1218d80a85b0220c35ce357e86a3c7ec2"
+bytes = 1064714
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t23z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t23z.wrfsfcf00.grib2#bytes=39120758-40558299"
+sha256 = "27ccf87622fa826403942f8696b965bf228301a2382ca289d0dbb3020191955a"
+bytes = 1437542
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t23z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t23z.wrfsfcf00.grib2#bytes=34619800-35820255"
+sha256 = "75b785d7e69cf61ee98128df307c6c28e633a3a3700fea84ba5665e698f40fd6"
+bytes = 1200456
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t23z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t23z.wrfsfcf00.grib2#bytes=40558300-41616443"
+sha256 = "78d53a329a0e41e283b15aa432f58f9b5ee962b7cc64fe8a364ec3b5073bb79c"
+bytes = 1058144
+fetched = "2026-11-08"
+
+[files."hrrr/20191027_t23z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191027/conus/hrrr.t23z.wrfsfcf00.grib2#bytes=41616444-42633422"
+sha256 = "819a56fea8a9c296fe1202c4ade091ef008f7c223b389663cb558a1ebc6c3914"
+bytes = 1016979
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t00z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t00z.wrfsfcf00.grib2.idx"
+sha256 = "c1647538dc22d2bf03cd2eb9d30bc4e2f4bea1d0f57b23ab84064c26306b910c"
+bytes = 7684
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t00z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t00z.wrfsfcf00.grib2#bytes=2729404-3832583"
+sha256 = "0bbdf6067af4a255c224b3244da7350afb8c5088bf66efbea9d0e495bacc4ea8"
+bytes = 1103180
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t00z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t00z.wrfsfcf00.grib2#bytes=39413882-40845775"
+sha256 = "c3627b8d3f9c1b5e622d78668675b96ee61dddec76dc93c1f50306cd8d4dde4e"
+bytes = 1431894
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t00z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t00z.wrfsfcf00.grib2#bytes=34861590-36065136"
+sha256 = "06d3f4bf9e152df6eb9c60fbe3e1c08d3019b75616762e036972f2769660301b"
+bytes = 1203547
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t00z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t00z.wrfsfcf00.grib2#bytes=40845776-41949126"
+sha256 = "95ef8ac969b73012c26ee2aec7918b236d2a86dacaf2570fd0f87fc95cf25978"
+bytes = 1103351
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t00z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t00z.wrfsfcf00.grib2#bytes=41949127-43008938"
+sha256 = "5be7abccf85d7e54227b3b276d3e9f997b761b2284677b4b6aab7a9b43e0e3c9"
+bytes = 1059812
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t01z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t01z.wrfsfcf00.grib2.idx"
+sha256 = "fd283222d01888ddc0987d6b642379075fa8f4c32c3dac0698dce14e5b9c7c78"
+bytes = 7683
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t01z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t01z.wrfsfcf00.grib2#bytes=2622874-3798828"
+sha256 = "7d5f1279ce2e656aee06bb1ec4a9abba732999c23094c73d9d872b6974354e05"
+bytes = 1175955
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t01z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t01z.wrfsfcf00.grib2#bytes=39552085-40986192"
+sha256 = "5521ce4e55f6d7af9e1cf09699f14b32172201dccde818f2ec94d330e21605c8"
+bytes = 1434108
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t01z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t01z.wrfsfcf00.grib2#bytes=34961977-36167819"
+sha256 = "26ec58d6aa3e48a5d841ee5412116cd71892ed889e359bf3daaac5bd5bf02494"
+bytes = 1205843
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t01z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t01z.wrfsfcf00.grib2#bytes=40986193-42141956"
+sha256 = "82fbbf4e260f7774132fbd94a0f937b9a014e7c46f88cba8d5ad35cde2386866"
+bytes = 1155764
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t01z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t01z.wrfsfcf00.grib2#bytes=42141957-43257118"
+sha256 = "84a06a3604e3bd898548d9d7e6044d263414836cfa3d1f5672ca88a64eb8cc52"
+bytes = 1115162
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t02z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t02z.wrfsfcf00.grib2.idx"
+sha256 = "cf313b0f6853390cdbbad5684d86ab507b255dcc908bd22b86cee9f9d6c12a37"
+bytes = 7684
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t02z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t02z.wrfsfcf00.grib2#bytes=2645536-3870490"
+sha256 = "aefeb6761ef2734de4f4aa45fb39d7b3bc5baeaac4c4813964f01b68ce640b1f"
+bytes = 1224955
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t02z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t02z.wrfsfcf00.grib2#bytes=39837936-41285345"
+sha256 = "186d03cbd5e6351847cd48cfc7bea92ba25817252c1ece810e07a9ff0a0654af"
+bytes = 1447410
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t02z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t02z.wrfsfcf00.grib2#bytes=35169594-36380035"
+sha256 = "3c85598f9ce7c184904059eed367d0f9e87f074c2ac9d4292f2299578987606e"
+bytes = 1210442
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t02z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t02z.wrfsfcf00.grib2#bytes=41285346-42475879"
+sha256 = "1fcf7781441012cbf21106dc36647355cb770fa34fbb09f2ded9b41bf27d5d5a"
+bytes = 1190534
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t02z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t02z.wrfsfcf00.grib2#bytes=42475880-43626503"
+sha256 = "6a14ac0be082092a85b60129eb44f23d166fe2f2709da2e8129b3907ae420057"
+bytes = 1150624
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t03z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t03z.wrfsfcf00.grib2.idx"
+sha256 = "d6f98329c493f7d6b9787f97577c36668de31a514955164dde0c8b9615494609"
+bytes = 7684
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t03z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t03z.wrfsfcf00.grib2#bytes=2587665-3833350"
+sha256 = "08b82b3da50c422fdc297bd852c9013f3c140b5ee46fa336aabcc9716a6c7713"
+bytes = 1245686
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t03z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t03z.wrfsfcf00.grib2#bytes=39553848-41007763"
+sha256 = "99fe5efe98dbf4ccd4d5e8a6a0d6591850614b8def795b26f0a31098b0077a08"
+bytes = 1453916
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t03z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t03z.wrfsfcf00.grib2#bytes=34868495-36085214"
+sha256 = "ec6116e411a103643b83392ec97b8158bac43b4d937c934a63a6c973557c1f88"
+bytes = 1216720
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t03z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t03z.wrfsfcf00.grib2#bytes=41007764-42211295"
+sha256 = "8cadc0301a7d5f1fab4f07c14efc53ca815e2a8fb220af96759a4aac442c754c"
+bytes = 1203532
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t03z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t03z.wrfsfcf00.grib2#bytes=42211296-43374681"
+sha256 = "8f60e82a04dbd29e32ad1c5a2f949efa391a3bdad9af6fc8805b82ba43526d53"
+bytes = 1163386
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t04z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t04z.wrfsfcf00.grib2.idx"
+sha256 = "3d74c68cb477dffa5ecd9da067bcbd04a997b934619a505b69d688c86501a47b"
+bytes = 7684
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t04z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t04z.wrfsfcf00.grib2#bytes=2508838-3760808"
+sha256 = "1703d871227f01cabbbdb4753a0a15be3f7942e2e834ed04bb8387cb0384fbed"
+bytes = 1251971
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t04z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t04z.wrfsfcf00.grib2#bytes=39660827-41120323"
+sha256 = "f3391f303b342ad8500c308ede679a2b9f8518189644cdcdbd9e6ebfbaa9d06f"
+bytes = 1459497
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t04z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t04z.wrfsfcf00.grib2#bytes=34979138-36198130"
+sha256 = "28ebeac227a4e05c1f099f978908eb0962ac647fd908c6e63a07660e68f87c74"
+bytes = 1218993
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t04z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t04z.wrfsfcf00.grib2#bytes=41120324-42329173"
+sha256 = "ad69a04d39a6c14bbd30cd803d89f921fc874e3af80583eb1b2fe5c511317455"
+bytes = 1208850
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t04z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t04z.wrfsfcf00.grib2#bytes=42329174-43499626"
+sha256 = "964e959e13ba4682ce3df2624559f4812ec5587ebdb6030f0314076cfbc5c59d"
+bytes = 1170453
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t05z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t05z.wrfsfcf00.grib2.idx"
+sha256 = "30b887202be5383040996c04d4df86ec8f5a378124405b2b41a9c27db3593b4c"
+bytes = 7684
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t05z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t05z.wrfsfcf00.grib2#bytes=2588614-3843876"
+sha256 = "5f439a1b5c037fa14983bb686dec00f1ff439f0468271089962ae3ecf69ead02"
+bytes = 1255263
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t05z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t05z.wrfsfcf00.grib2#bytes=39758003-41224796"
+sha256 = "82edb4954468fcde094c71be0548a060b863edb271b9ef135e71ebba0d6253fe"
+bytes = 1466794
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t05z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t05z.wrfsfcf00.grib2#bytes=35063873-36284756"
+sha256 = "59c16a540dd0ea0b9291c60372e44f2cc9b9ff8d8e2467e02d1bf81942417e24"
+bytes = 1220884
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t05z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t05z.wrfsfcf00.grib2#bytes=41224797-42436936"
+sha256 = "1c018e99510409ff66ab4c74965f236ea56c7d2e5387688fa19e8932a714b45c"
+bytes = 1212140
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t05z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t05z.wrfsfcf00.grib2#bytes=42436937-43612404"
+sha256 = "da476fb9dea2ddcb6c88c4f89bc83a43566c0a272b0492879700d39757ff7a1d"
+bytes = 1175468
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t06z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t06z.wrfsfcf00.grib2.idx"
+sha256 = "50dcc8de23a14d3813cea2de90f578c3162c519c7e5195b6fad3617680b61536"
+bytes = 7684
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t06z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t06z.wrfsfcf00.grib2#bytes=2580901-3832519"
+sha256 = "7deedd5c8cc1e966e1a2d07704f1c32344af50f653ab83b7e496ea2c46350ffe"
+bytes = 1251619
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t06z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t06z.wrfsfcf00.grib2#bytes=39688109-41158211"
+sha256 = "b39fc7a0e95e746c78d40da8f32a585e9d34fe7782518b55326e5942610b1b59"
+bytes = 1470103
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t06z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t06z.wrfsfcf00.grib2#bytes=34988339-36208344"
+sha256 = "c8aec9c69b8e2a7789a5fc71c7639fbbc8325771144655da35ab941ebdbc9aea"
+bytes = 1220006
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t06z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t06z.wrfsfcf00.grib2#bytes=41158212-42369748"
+sha256 = "7e742689879475a5c633c6f4b78a11a8356466a698f24052bc9dba63c7ba80e6"
+bytes = 1211537
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t06z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t06z.wrfsfcf00.grib2#bytes=42369749-43546200"
+sha256 = "2eb57aac5dea3ed83f61a12e8fc464a1c2e6b94f0a0f5f581985f374077bb9fa"
+bytes = 1176452
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t07z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t07z.wrfsfcf00.grib2.idx"
+sha256 = "8759ba167ed192043b377e1c560714a99d79d634bc363bc2a1078b3e64c3205c"
+bytes = 7685
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t07z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t07z.wrfsfcf00.grib2#bytes=2534552-3785873"
+sha256 = "c9f3ae5aef9aedd1513dacc342c389d0f6fee7d71a784232c4fa235e70f1a17b"
+bytes = 1251322
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t07z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t07z.wrfsfcf00.grib2#bytes=39841500-41315837"
+sha256 = "651743b998097af4ac2eba758cce7098af36afe5109ac1998f5ab2b3d2ee4534"
+bytes = 1474338
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t07z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t07z.wrfsfcf00.grib2#bytes=35136816-36356020"
+sha256 = "bf9d4f7c101775aae707c876c3bc355f86981b7cbf3ce8fbaa3c33a7119c8f46"
+bytes = 1219205
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t07z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t07z.wrfsfcf00.grib2#bytes=41315838-42526963"
+sha256 = "890ed884a7f27343a02c066ba62ba68abf7e4ea04e45a56b24eadfcba0ec4df2"
+bytes = 1211126
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t07z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t07z.wrfsfcf00.grib2#bytes=42526964-43704512"
+sha256 = "3fefb7f4de6af20031d030941ac2d3d68104034c4cabba6dc15a7b5b17b6a9f9"
+bytes = 1177549
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t08z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t08z.wrfsfcf00.grib2.idx"
+sha256 = "1792788df203ab03dbb779c04924c62ee10e6c0c208901cf60e93945617ccbf8"
+bytes = 7685
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t08z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t08z.wrfsfcf00.grib2#bytes=2496134-3740101"
+sha256 = "55c82727c80cf8291fdd9b5e4537a16aba4e28622202622cd3ac9ff5a07e50b3"
+bytes = 1243968
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t08z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t08z.wrfsfcf00.grib2#bytes=39663476-41143201"
+sha256 = "c8c79fb578fb7d053e6f1ab0840d12f4248c62ab38d9b4c93105c635427feb35"
+bytes = 1479726
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t08z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t08z.wrfsfcf00.grib2#bytes=34954451-36172602"
+sha256 = "5a1359ca9575c7a2d03a31c101c9059b1e54b15779187409d35f493e985ec9d9"
+bytes = 1218152
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t08z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t08z.wrfsfcf00.grib2#bytes=41143202-42350329"
+sha256 = "a9c1c612709893c9992070fa6235470484999ef8e2c8b60063d1477b7f388e12"
+bytes = 1207128
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t08z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t08z.wrfsfcf00.grib2#bytes=42350330-43524962"
+sha256 = "a3a19c2f6f324e0b5d9a2bab0bb56dd7cce803dd708155920af2fe7e1b33cc0e"
+bytes = 1174633
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t09z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t09z.wrfsfcf00.grib2.idx"
+sha256 = "b3c21319b94d52441255818149a4efb0b5ddb8e57d3cdad907ee4c86476601c6"
+bytes = 7685
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t09z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t09z.wrfsfcf00.grib2#bytes=2530042-3773441"
+sha256 = "2a1a4cf0ce1243aa6a1b0b7357a7a41b9138fa65299d3844b9b9d2657a0ad70f"
+bytes = 1243400
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t09z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t09z.wrfsfcf00.grib2#bytes=39732852-41215845"
+sha256 = "bf6c932cc1bbf5e5041d48f4335b0daf7964f755f9c6daab53ddbf54a544aeba"
+bytes = 1482994
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t09z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t09z.wrfsfcf00.grib2#bytes=35012626-36232716"
+sha256 = "dce5c78197a4a7c144f0f36d9ac25e6a2f5ada0e432cbb12d2aefc20a05338bd"
+bytes = 1220091
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t09z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t09z.wrfsfcf00.grib2#bytes=41215846-42421645"
+sha256 = "cee1bc06706166c1b3802224fd44a06f3e7946da16f04cf264c8fabb7464eb53"
+bytes = 1205800
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t09z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t09z.wrfsfcf00.grib2#bytes=42421646-43596090"
+sha256 = "47c6ba5e860397d86301621a93fad95a654d583463fa5082a418d405520142b3"
+bytes = 1174445
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t10z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t10z.wrfsfcf00.grib2.idx"
+sha256 = "daebf4211b7514005effb422b37655ba9b5c070bef4198718a69630df71396a7"
+bytes = 7684
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t10z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t10z.wrfsfcf00.grib2#bytes=2455016-3690255"
+sha256 = "03171e4b98da4f940ac2c9e39b8599549af881a6e8c0e4b09bde3bd4ddb8b7df"
+bytes = 1235240
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t10z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t10z.wrfsfcf00.grib2#bytes=39507061-40986958"
+sha256 = "ddbd21b4a673f541f98c39c1299e73626b9d6a63d45936b924dab23e5480e984"
+bytes = 1479898
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t10z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t10z.wrfsfcf00.grib2#bytes=34769303-35990457"
+sha256 = "6b7d4c35ff163e6c69d29a242b635a9999ae87ab2fb1e0e365d90b9c0c6eaf40"
+bytes = 1221155
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t10z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t10z.wrfsfcf00.grib2#bytes=40986959-42184660"
+sha256 = "3283e86c27daa93900ed8c3f14476b6b0bae55aff9b9fe6f39460f31c24668b6"
+bytes = 1197702
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t10z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t10z.wrfsfcf00.grib2#bytes=42184661-43351952"
+sha256 = "d1cac0dd0110b9ee7901816a45d8f7fdc610bc006e4de4ec4d6bce274c9fd00a"
+bytes = 1167292
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t11z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t11z.wrfsfcf00.grib2.idx"
+sha256 = "a3bb7e14448f9e0ac9e5dfe9aca0a435f07a3d83b6ad3858341c737c51f5f8d6"
+bytes = 7685
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t11z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t11z.wrfsfcf00.grib2#bytes=2457081-3689638"
+sha256 = "5d3cb8253739e5e5124d2a42396815687ff33fd42daab8fcbec21b6c7ccc2a97"
+bytes = 1232558
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t11z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t11z.wrfsfcf00.grib2#bytes=39565041-41049046"
+sha256 = "e7914350936c5556b6f60533f7c7dcadde99a597e669fe66e7ca1863ad29f331"
+bytes = 1484006
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t11z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t11z.wrfsfcf00.grib2#bytes=34826697-36050268"
+sha256 = "14ccdda2c91506c590fe37657cd15c7ee2cbab2535197e5ccbaad80f39b0b142"
+bytes = 1223572
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t11z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t11z.wrfsfcf00.grib2#bytes=41049047-42243701"
+sha256 = "38d76b187a62a9fcb47062970dc2aa18f382aef4ccf45bc4f0f4b0dadeb386f7"
+bytes = 1194655
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t11z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t11z.wrfsfcf00.grib2#bytes=42243702-43410638"
+sha256 = "80d0022b2fc1e101640d879f97f2afebdc159604113fbc2c5d72eccb8d7b48f7"
+bytes = 1166937
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t12z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t12z.wrfsfcf00.grib2.idx"
+sha256 = "b0225e57804207f5cc1347e947c7899cc1c4ede3817e71aae81162b7a069254d"
+bytes = 7686
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t12z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t12z.wrfsfcf00.grib2#bytes=2503713-3731370"
+sha256 = "2e18532a0ad722a024996c40df5cf7fe301e11e504ed1b4c91232b92c7c551d9"
+bytes = 1227658
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t12z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t12z.wrfsfcf00.grib2#bytes=39687885-41178196"
+sha256 = "5a5e11c4be5378d752a87bb5384678b257a84276ceccb47d00f700e85d32907d"
+bytes = 1490312
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t12z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t12z.wrfsfcf00.grib2#bytes=34946023-36169506"
+sha256 = "a44c2890e3262b36c1453b36aa7b94cc020b49d07feb5b7c02d3e40b91a71dcf"
+bytes = 1223484
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t12z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t12z.wrfsfcf00.grib2#bytes=41178197-42371102"
+sha256 = "06b3e4b4015245202ab9c4d9933ff05c8196b0f311ab8272d732c99d76899333"
+bytes = 1192906
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t12z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t12z.wrfsfcf00.grib2#bytes=42371103-43537416"
+sha256 = "1f0622995c2142247be7bf894582e661ad4af06fdc9e89c6fe430815830b718b"
+bytes = 1166314
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t13z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t13z.wrfsfcf00.grib2.idx"
+sha256 = "187508a57897875e932f2efb6f668e687e6e777b3e69e1890dbd6785b31e6e43"
+bytes = 7690
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t13z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t13z.wrfsfcf00.grib2#bytes=2486209-3696161"
+sha256 = "557f31d2bd0c38b17b4bce41c25b19b17432dccdba0f0d76d88eb97327646a00"
+bytes = 1209953
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t13z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t13z.wrfsfcf00.grib2#bytes=39753555-41233773"
+sha256 = "00a054efedcac2fbe3b963344924fc4449eb8db1d1328a2f7bf67d16d9adc91a"
+bytes = 1480219
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t13z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t13z.wrfsfcf00.grib2#bytes=35078908-36291344"
+sha256 = "73d86fa5cc28d8ac7bf988e707c2aa29dcb4c3c42d7bcd993432d6f16620e6b8"
+bytes = 1212437
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t13z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t13z.wrfsfcf00.grib2#bytes=41233774-42413078"
+sha256 = "7fc975a81d264de98e5bb2b49087156fe44a8abbc340d2da0d753f3e4f47831e"
+bytes = 1179305
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t13z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t13z.wrfsfcf00.grib2#bytes=42413079-43572602"
+sha256 = "783617d65770f5cd466e8e3bf62fac9a98f4429505c5ac43061f18e010ae1a67"
+bytes = 1159524
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t14z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t14z.wrfsfcf00.grib2.idx"
+sha256 = "94e41616cbe6a63f659567137e505ac33ecbd19786743a7f0db32ad63135d5ca"
+bytes = 7691
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t14z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t14z.wrfsfcf00.grib2#bytes=2493636-3659261"
+sha256 = "63525aa3865a636235ec2b822e248133898ed3cae812e741638dd8ad153106cb"
+bytes = 1165626
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t14z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t14z.wrfsfcf00.grib2#bytes=39386215-40874939"
+sha256 = "3841ba7caf8186be9e24e43883bad95547f09fd87c3d08454c4cd16acf47ec1c"
+bytes = 1488725
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t14z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t14z.wrfsfcf00.grib2#bytes=34794117-35991614"
+sha256 = "cc5bd84292f92dfb251934df081ceecfb5fbeba141b70b45f2a519a4fd3610d4"
+bytes = 1197498
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t14z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t14z.wrfsfcf00.grib2#bytes=40874940-42022674"
+sha256 = "6bbd5eeb5c99f467df1c229264376510dfba5563bbe27e7e90b3a2dab3e2843e"
+bytes = 1147735
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t14z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t14z.wrfsfcf00.grib2#bytes=42022675-43150670"
+sha256 = "565a65b7f0d4a805d64dd6e8afe132b0f880ea070882ad41286fff5ce38cf308"
+bytes = 1127996
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t15z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t15z.wrfsfcf00.grib2.idx"
+sha256 = "59917caedd5a59312a8a637c5be301a61fe2cb2a077049c43d0e5ba2924fd280"
+bytes = 7693
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t15z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t15z.wrfsfcf00.grib2#bytes=2564340-3678453"
+sha256 = "b367f2764fe5a490f6dcad1f84449e5b754d9b78bcdb88204ad1e22a0376bba8"
+bytes = 1114114
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t15z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t15z.wrfsfcf00.grib2#bytes=39219306-40709109"
+sha256 = "5421d3dde965b18512347397efdadd7f36e112b509036db529c7ccc353b72eca"
+bytes = 1489804
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t15z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t15z.wrfsfcf00.grib2#bytes=34689350-35875939"
+sha256 = "c60077600e75b2566562070b446ed00ed6befac197698c84bf816622939e9d3c"
+bytes = 1186590
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t15z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t15z.wrfsfcf00.grib2#bytes=40709110-41814247"
+sha256 = "fcae1cbf169976d7b07b94332bf7c20b980f89241cabb12e45569ad222decc5d"
+bytes = 1105138
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t15z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t15z.wrfsfcf00.grib2#bytes=41814248-42900568"
+sha256 = "a0cc85438b6b2995a5288b2aefc6e41b85d4faf87cd519c1265135807146d5ab"
+bytes = 1086321
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t16z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t16z.wrfsfcf00.grib2.idx"
+sha256 = "e47c31762e2960054a6f8d32135b8ec0af09cf66417e30ab6d990328cb8a2613"
+bytes = 7693
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t16z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t16z.wrfsfcf00.grib2#bytes=2550714-3629974"
+sha256 = "e510cf92871525ec6b1a490559392d3850693cf9cad321e8d90d0fd59b015ea0"
+bytes = 1079261
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t16z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t16z.wrfsfcf00.grib2#bytes=38860824-40344120"
+sha256 = "a0a6d2473c9bb219d3b41645eda9ebc5a016aff29a50c0ee1461617ba6593109"
+bytes = 1483297
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t16z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t16z.wrfsfcf00.grib2#bytes=34322606-35511696"
+sha256 = "5fd6005af8e4e976b25992c330f7694dd971936b9ed9a5016cc8e92473cf480c"
+bytes = 1189091
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t16z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t16z.wrfsfcf00.grib2#bytes=40344121-41412952"
+sha256 = "223fdabdce71807cc131c7ff25a21d289ba6a0bf2acec7f5a9e8a7b208d38ec8"
+bytes = 1068832
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t16z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t16z.wrfsfcf00.grib2#bytes=41412953-42459900"
+sha256 = "13378e3bddc8f95ae61dec8d7f72c8a6befff91697600e3756104cab0bc1ab04"
+bytes = 1046948
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t17z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t17z.wrfsfcf00.grib2.idx"
+sha256 = "09f917f4e7d6b6869d50d2aa218595d1a8958d4720188c826f6700e6a79aafd4"
+bytes = 7696
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t17z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t17z.wrfsfcf00.grib2#bytes=2530128-3592875"
+sha256 = "e40d5e1b72bae423c44bae84e2489782808b0213ff0717f4b88cb944c94b5c36"
+bytes = 1062748
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t17z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t17z.wrfsfcf00.grib2#bytes=38931077-40403307"
+sha256 = "c787ebdcf1f4a3c953912b5c8364d852c001e4b8811d22d3ed2c5a6040725cd0"
+bytes = 1472231
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t17z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t17z.wrfsfcf00.grib2#bytes=34423698-35619582"
+sha256 = "0951eaad1a84e6d43ae4de5d2e18e93def1bf231ba4619c0861e3976d0b1e8e5"
+bytes = 1195885
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t17z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t17z.wrfsfcf00.grib2#bytes=40403308-41451879"
+sha256 = "a6d27f2e2fc7a637c4c464ff8412d0667ba373af39611b316a59127accf45ed2"
+bytes = 1048572
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t17z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t17z.wrfsfcf00.grib2#bytes=41451880-42474508"
+sha256 = "9803806a2eab2b38fde6f8f37d748015c85c8302efb30b96705fa02c5b046b70"
+bytes = 1022629
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t18z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t18z.wrfsfcf00.grib2.idx"
+sha256 = "d05e12166e4ce6c59a0d0818fee7c5ec3734c4242ede5b5c5c76258e6adb533c"
+bytes = 7696
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t18z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t18z.wrfsfcf00.grib2#bytes=2518365-3562114"
+sha256 = "7850cdd71bf62f4d020af737396a2671e698f7ef3ca3107d005e96f1677521e2"
+bytes = 1043750
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t18z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t18z.wrfsfcf00.grib2#bytes=38544643-40009077"
+sha256 = "fe0ba6f00f28e9ab4f4d0d96b6d1e3de3d97bab327b5a05bd431cc96cab54c5e"
+bytes = 1464435
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t18z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t18z.wrfsfcf00.grib2#bytes=34080585-35281595"
+sha256 = "2ea89275cdd4762ef75b6b1b56da1b9d54b1445d8b0f6ef3d75ae7f4c2aaef05"
+bytes = 1201011
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t18z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t18z.wrfsfcf00.grib2#bytes=40009078-41051357"
+sha256 = "926f2ab585bc1a90f126653a5dae22414719277eb254b9418e41af14fa658d18"
+bytes = 1042280
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t18z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t18z.wrfsfcf00.grib2#bytes=41051358-42050740"
+sha256 = "c6268b58d1954e75a116ee5ccb9e736957d72a66ed86934aaa77d82b9072025f"
+bytes = 999383
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t19z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t19z.wrfsfcf00.grib2.idx"
+sha256 = "8f1a3ee6a8aec8eee08fd81ce5ae6c7a2b6bec3f0219ccdff0f99af68d48f110"
+bytes = 7695
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t19z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t19z.wrfsfcf00.grib2#bytes=2585312-3629223"
+sha256 = "930978bdaca00e836bf7fa178c4415762c82da171aae9c21d045b71f6a755bfe"
+bytes = 1043912
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t19z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t19z.wrfsfcf00.grib2#bytes=38633040-40094081"
+sha256 = "2a28c119362c99833351795f2c9cd0ba9b073bbb8d0268a64856c41124d678d4"
+bytes = 1461042
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t19z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t19z.wrfsfcf00.grib2#bytes=34164776-35368040"
+sha256 = "6b0fbb9c5f352214db3208657b0aac160f02f60e9fd59df95f16873e42d741c2"
+bytes = 1203265
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t19z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t19z.wrfsfcf00.grib2#bytes=40094082-41135001"
+sha256 = "eaa1dc934a8cf9cfa4faabad5624e2960a2f7b484ff7a98eaa26c8cc149c184d"
+bytes = 1040920
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t19z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t19z.wrfsfcf00.grib2#bytes=41135002-42128651"
+sha256 = "6422e9e8815213e9d253f84b77431d5f8e183e440ca826ea781df1f608862bcb"
+bytes = 993650
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t20z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t20z.wrfsfcf00.grib2.idx"
+sha256 = "0cf82c53b90f250e60d3f78f2b569d438b0e7ca0397b6dcf6a8e39ad36094423"
+bytes = 7693
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t20z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t20z.wrfsfcf00.grib2#bytes=2523550-3567220"
+sha256 = "7562bfbdee33d271d95243a163613cfaf695983c71623aa9d0e0d58bb7196475"
+bytes = 1043671
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t20z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t20z.wrfsfcf00.grib2#bytes=38501470-39952613"
+sha256 = "dee3213b6addcd96d27147ffe5bf5439731d63e2c195f07537707ce96031d927"
+bytes = 1451144
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t20z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t20z.wrfsfcf00.grib2#bytes=34036542-35239282"
+sha256 = "7858fc3b627b679bc2b0317b8c707c50c558880f651d3ec08b71a4ed37b10496"
+bytes = 1202741
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t20z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t20z.wrfsfcf00.grib2#bytes=39952614-40975756"
+sha256 = "e1cf570aa84b55df655f93f96288f54e17cf9f54b89cc8985ba67e9103ad6597"
+bytes = 1023143
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t20z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t20z.wrfsfcf00.grib2#bytes=40975757-41978569"
+sha256 = "6258b36e0eda8783443306261df86b29337916ca9608f4454884bac478bf42cd"
+bytes = 1002813
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t21z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t21z.wrfsfcf00.grib2.idx"
+sha256 = "0bcd095ceefdbf70c658455d2078943c4af13eccf9aa82881e16ba7b6c812429"
+bytes = 7693
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t21z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t21z.wrfsfcf00.grib2#bytes=2597935-3647674"
+sha256 = "312f771395f3e6442ad84030635c45867745dbf3c6651e96cc059f08cc849bd5"
+bytes = 1049740
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t21z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t21z.wrfsfcf00.grib2#bytes=38583349-40033747"
+sha256 = "4a64c6f37a378c30b028948e57c75d9566cc59bd63313f74d0babd38ea16ffb1"
+bytes = 1450399
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t21z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t21z.wrfsfcf00.grib2#bytes=34097032-35297390"
+sha256 = "349d136143c1d1e7324a4b5e8b01cb26527fe430e355341f89e0cb46e12b17ad"
+bytes = 1200359
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t21z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t21z.wrfsfcf00.grib2#bytes=40033748-41058358"
+sha256 = "27aa113e4987152f8d16c600703d5c1a1be7210610197cff83b58f5b4d2fabf5"
+bytes = 1024611
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t21z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t21z.wrfsfcf00.grib2#bytes=41058359-42050184"
+sha256 = "ef90c8bddbb306909f8d29e6789c1488fa7623d82faba9b68da3611140849684"
+bytes = 991826
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t22z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t22z.wrfsfcf00.grib2.idx"
+sha256 = "7148240bbcc6613ff62d76a0e5a02e3ade5796ac97038240adeb11d3524bc84c"
+bytes = 7692
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t22z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t22z.wrfsfcf00.grib2#bytes=2854330-3906122"
+sha256 = "2eb53868370e2a318046e707fab31abddb0e7c324eabab5c3b822982a2daf0c4"
+bytes = 1051793
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t22z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t22z.wrfsfcf00.grib2#bytes=38838156-40283337"
+sha256 = "8ec9ba3056123ecda90dd497d950b0974eea71ca8643348ea01e51b8861dbb56"
+bytes = 1445182
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t22z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t22z.wrfsfcf00.grib2#bytes=34345860-35540634"
+sha256 = "13833fb3a307976fa1b75742f470aab2274758e4ebf985a76d99eb5bad5fdabd"
+bytes = 1194775
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t22z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t22z.wrfsfcf00.grib2#bytes=40283338-41306717"
+sha256 = "8cf7251a4648dd35d6bfec097ddd77121487e0a1bc299b145e8b8dff87268939"
+bytes = 1023380
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t22z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t22z.wrfsfcf00.grib2#bytes=41306718-42296454"
+sha256 = "c391ff23fd6d7808e749b274d30617efb85ff7bf3797bb7f8c38c5cf0aec6050"
+bytes = 989737
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t23z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t23z.wrfsfcf00.grib2.idx"
+sha256 = "492d0f2ff12fad5ccbb78b0ab1dff9da393cdc1877de480d27b1d72b72484b0f"
+bytes = 7690
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t23z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t23z.wrfsfcf00.grib2#bytes=2865938-3928117"
+sha256 = "5408494e481859d7fcf2935d06fc9a87632b6ccdc304ce849519908ac21552f1"
+bytes = 1062180
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t23z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t23z.wrfsfcf00.grib2#bytes=38888787-40324697"
+sha256 = "7cb0b08999faf56c8ad3336ddcce1e5b23d9c78a685ae7338bcc54df5c3aef1b"
+bytes = 1435911
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t23z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t23z.wrfsfcf00.grib2#bytes=34398191-35597149"
+sha256 = "ab0fcfbf8f21cb9a46ea78d3e581bdfbdfb52889c2376d16f3f3a78cf5bb3dd1"
+bytes = 1198959
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t23z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t23z.wrfsfcf00.grib2#bytes=40324698-41364332"
+sha256 = "46466c522a8a688cbb5728f080f7b7f083bb848533613fa4229022d703f2c086"
+bytes = 1039635
+fetched = "2026-11-08"
+
+[files."hrrr/20191028_t23z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191028/conus/hrrr.t23z.wrfsfcf00.grib2#bytes=41364333-42370856"
+sha256 = "088067b67226c6c365aa939d1801dbce8f58e3e0e2f56920a2b2626753bdada7"
+bytes = 1006524
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t00z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t00z.wrfsfcf00.grib2.idx"
+sha256 = "a9d6e5e1d8bdaa9a77cdf7c730fb3299facadcfc1cae3fd59081e026a99dbbc5"
+bytes = 7685
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t00z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t00z.wrfsfcf00.grib2#bytes=2598945-3717600"
+sha256 = "7a0f9e547e3f4d67294e2879355a0c7d8bcee115b29e9958960a6618ed488fd2"
+bytes = 1118656
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t00z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t00z.wrfsfcf00.grib2#bytes=38903315-40337907"
+sha256 = "7eb8bfc6fd0f0d71c0d5e0e25cc7d5e9ed47e87c5c89b33b14e720cd017f7af9"
+bytes = 1434593
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t00z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t00z.wrfsfcf00.grib2#bytes=34374800-35583313"
+sha256 = "bfdfab7a9353068daaa9d154cd92bb5c1596ebb524047c15a430c0b3f6eb8bb8"
+bytes = 1208514
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t00z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t00z.wrfsfcf00.grib2#bytes=40337908-41418099"
+sha256 = "01460c536030c0b6d1c279dd1757e282bb1f37ba22db1e276549e35843cd31b9"
+bytes = 1080192
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t00z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t00z.wrfsfcf00.grib2#bytes=41418100-42454091"
+sha256 = "a3e0319115a779d4d0077cffc466780e594fd020c9158a0aa1a748cd7c3d2438"
+bytes = 1035992
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t01z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t01z.wrfsfcf00.grib2.idx"
+sha256 = "3c985f2370974458b1a45a37c327c81563c728c6f23fa5785d69875619c5f9c8"
+bytes = 7685
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t01z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t01z.wrfsfcf00.grib2#bytes=2738342-3898203"
+sha256 = "abb88b40d27a8381e9516c2bf922b403800a70badd414e2d2e0b33ad91fcbaf9"
+bytes = 1159862
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t01z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t01z.wrfsfcf00.grib2#bytes=39273941-40708321"
+sha256 = "7f8abe0d07ef9b2dd7529c8d7d16c7a7d1cbc525922233ecafd85e7640b726c5"
+bytes = 1434381
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t01z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t01z.wrfsfcf00.grib2#bytes=34649396-35863699"
+sha256 = "095e9b1ed43a5aadb65df40dc0e68d2e97502e66aa68be619a450e087ac9f5e5"
+bytes = 1214304
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t01z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t01z.wrfsfcf00.grib2#bytes=40708322-41836458"
+sha256 = "395eabf9726b3f479d62eb8b13526c0f9e3536b77abc414ca50b441fcb9c26ef"
+bytes = 1128137
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t01z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t01z.wrfsfcf00.grib2#bytes=41836459-42925429"
+sha256 = "eac7240f310acd8170e4279e2a2986a67f62e52d4211b424154d3580587d6469"
+bytes = 1088971
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t02z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t02z.wrfsfcf00.grib2.idx"
+sha256 = "4c6e1a6256a0fd9542f3fa7a40dbbb54362b70e54501072c293bf37ed344625f"
+bytes = 7685
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t02z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t02z.wrfsfcf00.grib2#bytes=2706788-3917675"
+sha256 = "94d256beedc79f17a9e311423b1b09b366529fa5e1b69cd22d6a1a9166d7c62a"
+bytes = 1210888
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t02z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t02z.wrfsfcf00.grib2#bytes=39524144-40978926"
+sha256 = "ad680942eef168f3ff437b7f7e5ff5c9775602a1ccce8cf610b49e46bb02f6af"
+bytes = 1454783
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t02z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t02z.wrfsfcf00.grib2#bytes=34835809-36056308"
+sha256 = "5959cb88994ac7f61f38a5322d136b638dbe34e2b717f96adcab32d2ef6e27fd"
+bytes = 1220500
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t02z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t02z.wrfsfcf00.grib2#bytes=40978927-42142158"
+sha256 = "b6df30f36853294851d8eb9a9eda66196645f6de376779d5481bb9ff6c71081f"
+bytes = 1163232
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t02z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t02z.wrfsfcf00.grib2#bytes=42142159-43279279"
+sha256 = "2d48a9ecb51890d0325b3cdc4e822675d675d0f87020ad0114fdae8ef5cc59fd"
+bytes = 1137121
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t03z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t03z.wrfsfcf00.grib2.idx"
+sha256 = "16fd3cd19f0a431bd042e51cbc61351d754bc3d14b9019046f04b24f4b25b597"
+bytes = 7685
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t03z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t03z.wrfsfcf00.grib2#bytes=2725497-3946882"
+sha256 = "4ad2a21fa8bc046b2462afb7d659943efe8d89d79dcab067a30675e449750fdd"
+bytes = 1221386
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t03z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t03z.wrfsfcf00.grib2#bytes=39515895-40977322"
+sha256 = "2c7c05c6e1bbe06fd4f86f5171ce35ac986a56d78a68de96a58da5ad36f1e8d8"
+bytes = 1461428
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t03z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t03z.wrfsfcf00.grib2#bytes=34812977-36038771"
+sha256 = "8d5b53022a408c71145471de7827c5fcf758548dbe3548b59b75d48c4dd262dc"
+bytes = 1225795
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t03z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t03z.wrfsfcf00.grib2#bytes=40977323-42154221"
+sha256 = "3a2701111eabbcd4bdf90c12218663d9068d585ef89e3405a4db8d96d5eda8a4"
+bytes = 1176899
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t03z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t03z.wrfsfcf00.grib2#bytes=42154222-43305929"
+sha256 = "891bf1e81aa6775b3bf7fa19615a743dc11f06ad83384582f3441c8c8c63af36"
+bytes = 1151708
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t04z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t04z.wrfsfcf00.grib2.idx"
+sha256 = "228e68063cb16f0df0a9b0e372cee697c1ba187bd81e6e6e1f78e2faf87e4d01"
+bytes = 7685
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t04z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t04z.wrfsfcf00.grib2#bytes=2757178-3990267"
+sha256 = "163c58db9fb3637dcc7003650c6cdcee7961eb1be2845cc163eaf60a53e6c19c"
+bytes = 1233090
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t04z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t04z.wrfsfcf00.grib2#bytes=39669287-41136754"
+sha256 = "b44767c844802af5bef0011a6d78ce0ee052cdfe90cfa84a799cf6f431d331e4"
+bytes = 1467468
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t04z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t04z.wrfsfcf00.grib2#bytes=34954769-36184043"
+sha256 = "7237e0e0a19fba24426727a3243ea7fad453b3c24aa03ced49680b2e1a17f90f"
+bytes = 1229275
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t04z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t04z.wrfsfcf00.grib2#bytes=41136755-42319254"
+sha256 = "0d7aadbabb9e15a4c925aa115c548802171f0ae0804374506f26f12c6534a896"
+bytes = 1182500
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t04z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t04z.wrfsfcf00.grib2#bytes=42319255-43479209"
+sha256 = "204ae62eebf611863a278396b8e8b8523f8e21054bd374d27bf15da1abe54f84"
+bytes = 1159955
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t05z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t05z.wrfsfcf00.grib2.idx"
+sha256 = "00a7bda0a9a7b9c8a156726903f71f5cbeca47897f9fb26ebe91ab91d8d0aa8f"
+bytes = 7685
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t05z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t05z.wrfsfcf00.grib2#bytes=2729617-3964308"
+sha256 = "5a5ab6578c5d052e1c22ef09eba2dbaecbbd08a4837abc101b6f8facc18b621c"
+bytes = 1234692
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t05z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t05z.wrfsfcf00.grib2#bytes=39666236-41138954"
+sha256 = "b4dca28d9aed506a2c934f2aaad0cf5acbf5aa3139767521d025dbbfb23ad280"
+bytes = 1472719
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t05z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t05z.wrfsfcf00.grib2#bytes=34917405-36149354"
+sha256 = "78f027990249e118a882985a621bc76c6838d6a24f2b34546295222910bd13eb"
+bytes = 1231950
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t05z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t05z.wrfsfcf00.grib2#bytes=41138955-42325120"
+sha256 = "5ae685174763ab84ae5adfd5194d405606598913581ac87c51fdc194eb5ecf0f"
+bytes = 1186166
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t05z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t05z.wrfsfcf00.grib2#bytes=42325121-43490936"
+sha256 = "16cf5c0f2a7954c1990c80e5d350744e979be6d1d835dd3cc18a628eec69c6a0"
+bytes = 1165816
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t06z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t06z.wrfsfcf00.grib2.idx"
+sha256 = "83959baad6e27944bee90e83ed64182a8610797aff827faa9a43efa182e2c0a4"
+bytes = 7686
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t06z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t06z.wrfsfcf00.grib2#bytes=2808517-4049114"
+sha256 = "27cf31263cb667b94673165eb99266925822809aff2e6e0a2cd450af88c64538"
+bytes = 1240598
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t06z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t06z.wrfsfcf00.grib2#bytes=39925139-41402231"
+sha256 = "2dc4df171896b4e3cc858d991a6d6f51b36d661d96135ec7836f0fd1ff771f11"
+bytes = 1477093
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t06z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t06z.wrfsfcf00.grib2#bytes=35169947-36404030"
+sha256 = "0ae23eee5c66f54115bf31293b5e8f77cf73d19829cd2e48a4c36893707c21c9"
+bytes = 1234084
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t06z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t06z.wrfsfcf00.grib2#bytes=41402232-42591750"
+sha256 = "a270fd055ea96359e6ea4d8da310893ed1d5d7e0a725e3026c8cc33554b3ae26"
+bytes = 1189519
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t06z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t06z.wrfsfcf00.grib2#bytes=42591751-43759571"
+sha256 = "69fcceff21a67a14fb010320471716f3ad4c37ca7a19939f15f03026bdfac6da"
+bytes = 1167821
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t07z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t07z.wrfsfcf00.grib2.idx"
+sha256 = "aaa2aefbf2212c9f17238e6e0b7558cb640f70d3fbbb2dc478f4fb2eee76a251"
+bytes = 7686
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t07z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t07z.wrfsfcf00.grib2#bytes=2813239-4061991"
+sha256 = "1c4af4daa2112aaf00a04e3b00f4a6a0ddf9dce63a208840e705454459cff477"
+bytes = 1248753
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t07z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t07z.wrfsfcf00.grib2#bytes=39873396-41356977"
+sha256 = "1de8f6d32b6bf8074536e5ee526c7fe61c0775ed4d8b8d19b01dd6fb46787da5"
+bytes = 1483582
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t07z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t07z.wrfsfcf00.grib2#bytes=35119341-36354173"
+sha256 = "1ff94cd22a5807e2890b25a293ba6865abe2a86d6b927a0529a6237ec770aa37"
+bytes = 1234833
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t07z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t07z.wrfsfcf00.grib2#bytes=41356978-42551956"
+sha256 = "aad51aba15cd2080efd928a4c1bb15627cacc23a6fc1aa3dafeaec3b2dd9fa40"
+bytes = 1194979
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t07z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t07z.wrfsfcf00.grib2#bytes=42551957-43724058"
+sha256 = "b988cce2f006b744a144e2980da6e2ea4150ff1e808c62571883b0bf145e695f"
+bytes = 1172102
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t08z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t08z.wrfsfcf00.grib2.idx"
+sha256 = "6819be2edd16ca435204325cfcee28ad553460a15f36755e9db31c1df9bf500b"
+bytes = 7688
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t08z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t08z.wrfsfcf00.grib2#bytes=2873895-4123964"
+sha256 = "c2504f059921452249d04e64d32b1d27c9cdc0ae2f4860031c67fb1d6bc4a5b2"
+bytes = 1250070
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t08z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t08z.wrfsfcf00.grib2#bytes=40090335-41574374"
+sha256 = "4009a49aff2b2406a2e8fb8f4fe11718266abc8c0bf77b7cc2fb35fd6b0148c8"
+bytes = 1484040
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t08z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t08z.wrfsfcf00.grib2#bytes=35341533-36574920"
+sha256 = "4385a94a7e8386a278dff6b3c617da5ecf0974e4fceb311de1d29c18043987c4"
+bytes = 1233388
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t08z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t08z.wrfsfcf00.grib2#bytes=41574375-42771932"
+sha256 = "91743434a4947e0d5def3c55f16e9ccba67b953124dce5dfe81e3652ad769c71"
+bytes = 1197558
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t08z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t08z.wrfsfcf00.grib2#bytes=42771933-43947861"
+sha256 = "0bd35722d9d816ab3c826a0d38385d148991d76f57b7b6e3b2e90ab26c0cca22"
+bytes = 1175929
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t09z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t09z.wrfsfcf00.grib2.idx"
+sha256 = "72efb025464b82b5ab4f7e9011b846881c178fc55e1d2538dbd32d29367fa3c4"
+bytes = 7688
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t09z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t09z.wrfsfcf00.grib2#bytes=2928176-4176030"
+sha256 = "25445b3aa0def4ac154b0676a2172450afaeed818039c1be0548cd41e2819e40"
+bytes = 1247855
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t09z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t09z.wrfsfcf00.grib2#bytes=40235669-41721552"
+sha256 = "79ddaac28025c3a1c9157abc3f3cb5d05585e1ab8b5bf10a164330d80b38b886"
+bytes = 1485884
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t09z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t09z.wrfsfcf00.grib2#bytes=35490982-36724211"
+sha256 = "1197f45d68d8e6772e3704d15f91998539315fea5358d227c3871f388dfe92f9"
+bytes = 1233230
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t09z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t09z.wrfsfcf00.grib2#bytes=41721553-42921564"
+sha256 = "dc194832084abb5b9a7b777d9d021709bc089c6bc8c4a981756cda8092907c4b"
+bytes = 1200012
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t09z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t09z.wrfsfcf00.grib2#bytes=42921565-44097251"
+sha256 = "141dc750892708fdd9e2a1afc46df6714b13655c842a3e8b0f6d0ff7d8126d00"
+bytes = 1175687
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t10z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t10z.wrfsfcf00.grib2.idx"
+sha256 = "bc6e8770167839491ca4cb11e2d0e7f65714d40b27d4efa191ff481702bfaffc"
+bytes = 7687
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t10z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t10z.wrfsfcf00.grib2#bytes=2875854-4126010"
+sha256 = "ce842ffec4a10fba3fc8a8a600c9f8ea359221a066319b8eae6fb43e59478d47"
+bytes = 1250157
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t10z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t10z.wrfsfcf00.grib2#bytes=40084985-41566996"
+sha256 = "3a451012338eaf312fab47f791b35f1c3f3e5ec091ea0c2d01dbb14fc9e3903e"
+bytes = 1482012
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t10z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t10z.wrfsfcf00.grib2#bytes=35358273-36589760"
+sha256 = "5bd0d223433786140a7e8df6d9853295b80b56b93b427dec1e7b76350a987397"
+bytes = 1231488
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t10z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t10z.wrfsfcf00.grib2#bytes=41566997-42761900"
+sha256 = "7f65b59cc7331434f88c4013e3c31cd9a870f0eda400334bfd3d12f6819ae607"
+bytes = 1194904
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t10z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t10z.wrfsfcf00.grib2#bytes=42761901-43921386"
+sha256 = "ce6e20a7eec4b6fd7363eabfce743f55a67cf1a9fd573117ae24205c5b8aa7b7"
+bytes = 1159486
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t11z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t11z.wrfsfcf00.grib2.idx"
+sha256 = "32ac4c1df7aff45fa1f6f2b69b6a7c39d3398911f77ae834b9d497c338401555"
+bytes = 7688
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t11z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t11z.wrfsfcf00.grib2#bytes=2936820-4186378"
+sha256 = "69ced99b2a65bbe770ef22ea331edd89cc43b1cc9b4657435fc7fd4d1222c685"
+bytes = 1249559
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t11z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t11z.wrfsfcf00.grib2#bytes=40218722-41701889"
+sha256 = "893bf0c99755c1670f8ca81b22664f15ee6aea600eaa29198e598f4ec9d0543b"
+bytes = 1483168
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t11z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t11z.wrfsfcf00.grib2#bytes=35484840-36716779"
+sha256 = "23599c54ffe255c2b349f46d4c7e5d7d1c60da3d25e02371d79129d3bf55945e"
+bytes = 1231940
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t11z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t11z.wrfsfcf00.grib2#bytes=41701890-42897879"
+sha256 = "45ec5ab139ea84262a123f2de94aac1f08c90581175c63c470616880e593ad40"
+bytes = 1195990
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t11z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t11z.wrfsfcf00.grib2#bytes=42897880-44073945"
+sha256 = "5a4dad835bc9a1a3d454e2dae60378faa929b06c1343d021e33ce7efeb8222f1"
+bytes = 1176066
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t12z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t12z.wrfsfcf00.grib2.idx"
+sha256 = "a007f8413ea569183784869cec5fcfcf7d3569ff3713700107b96dc6488dd656"
+bytes = 7691
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t12z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t12z.wrfsfcf00.grib2#bytes=2893882-4140661"
+sha256 = "0d27ac2277dbf83a9270cb19d84594a2eb66b26f05b09c51cb5981308f9cedbf"
+bytes = 1246780
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t12z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t12z.wrfsfcf00.grib2#bytes=40213007-41701049"
+sha256 = "c200eeec2629b0358635a1d6d00627e32732bd942d6e89906c0d41214709b8b1"
+bytes = 1488043
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t12z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t12z.wrfsfcf00.grib2#bytes=35486342-36715707"
+sha256 = "1a05fc73ec389db5a6366ea81cbaff6d286a0e32e2f48812084884482d71780b"
+bytes = 1229366
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t12z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t12z.wrfsfcf00.grib2#bytes=41701050-42900181"
+sha256 = "69e18a7f054b7e01bad0fd5a64d5282d631e132046ad7542886fcc3ea598f198"
+bytes = 1199132
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t12z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t12z.wrfsfcf00.grib2#bytes=42900182-44077496"
+sha256 = "8abdb4a1d7cf9f7faf77c328b3d1c21eb941e80ad6bb33bc94d84d2b51f77590"
+bytes = 1177315
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t13z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t13z.wrfsfcf00.grib2.idx"
+sha256 = "d451be2ea874950b7548e7ea19aaab021d673adad95593097e46ecca52f03a6f"
+bytes = 7692
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t13z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t13z.wrfsfcf00.grib2#bytes=2824922-4060592"
+sha256 = "a7748504911a792c756600b4ac50f30cb8fd4b0b77c61e2794686fd82264bf7b"
+bytes = 1235671
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t13z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t13z.wrfsfcf00.grib2#bytes=40167334-41649623"
+sha256 = "31b6d6ca51188527fd98d4b8027e9deb8b6f7e8be7ffc29be17dffb3798d0c9e"
+bytes = 1482290
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t13z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t13z.wrfsfcf00.grib2#bytes=35510818-36730225"
+sha256 = "63b318c471e66a6f1f4a1a9c8426acc1c19c93299e0caa77f9182c8b56d9adcc"
+bytes = 1219408
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t13z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t13z.wrfsfcf00.grib2#bytes=41649624-42844407"
+sha256 = "e7ef91714cfd9d5005723836a80a4c9d17fb627fd428c9c4a02dd57234ea4f5a"
+bytes = 1194784
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t13z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t13z.wrfsfcf00.grib2#bytes=42844408-44018047"
+sha256 = "bad13461d0ffa7cf830a798ad40fbacfc88ee81335f9d2193cb2aa6935fde340"
+bytes = 1173640
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t14z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t14z.wrfsfcf00.grib2.idx"
+sha256 = "c6ec8e76dbd70b63fa9953b257e2fa7506f13f5bf0706cb5400c1559c80f7160"
+bytes = 7698
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t14z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t14z.wrfsfcf00.grib2#bytes=2885749-4081484"
+sha256 = "470636538eb9eaa249e4421f53d7f9c294de2282b0e55dbb3381c55bd0946c25"
+bytes = 1195736
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t14z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t14z.wrfsfcf00.grib2#bytes=40081347-41569818"
+sha256 = "49b4969cd5073d78cbaad215de3d661d88e85c5a320effd35e8ff074bfb1208c"
+bytes = 1488472
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t14z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t14z.wrfsfcf00.grib2#bytes=35502166-36705568"
+sha256 = "7ed307244b6137760a2d55697a0194588358fb1c185c40292c4be387bb6be92b"
+bytes = 1203403
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t14z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t14z.wrfsfcf00.grib2#bytes=41569819-42739547"
+sha256 = "563449e92e3d2ed54acc1d4cdefd14149cd35e8837e127d46252e03d005ca53c"
+bytes = 1169729
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t14z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t14z.wrfsfcf00.grib2#bytes=42739548-43884366"
+sha256 = "fbb903aea25216b61170103eca45ab151ed91a2cbb47cf77747be493306987bc"
+bytes = 1144819
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t15z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t15z.wrfsfcf00.grib2.idx"
+sha256 = "2bc54415912b3c528b8381a9540fe6c4a4c963f4948b495fae10db77afd16435"
+bytes = 7698
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t15z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t15z.wrfsfcf00.grib2#bytes=2907762-4050585"
+sha256 = "cb5dd2af6cab13305ded98356180aac3ea6af02cb1aca9548997015122d61487"
+bytes = 1142824
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t15z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t15z.wrfsfcf00.grib2#bytes=39957624-41446116"
+sha256 = "da9ed9c9f110b189f796b7f7df896c6d67efeb92522d82324a4b82281ed8a572"
+bytes = 1488493
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t15z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t15z.wrfsfcf00.grib2#bytes=35418084-36607874"
+sha256 = "d46747daf34b05f4a15b212510aa1384253ceb83d1cd2b89cc3631f009b9df0a"
+bytes = 1189791
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t15z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t15z.wrfsfcf00.grib2#bytes=41446117-42580948"
+sha256 = "e2f3eca132c76e254d7577d25997957f64836bd8bf6bd9fc96005e7bc7951485"
+bytes = 1134832
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t15z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t15z.wrfsfcf00.grib2#bytes=42580949-43687772"
+sha256 = "930f11ebcf6873c6ef940d098b1a0c56a4a63261026b099c399b8f9791536668"
+bytes = 1106824
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t16z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t16z.wrfsfcf00.grib2.idx"
+sha256 = "047eeacf5375caed0b6534c1c6cb6b9ab0eca5bc8642b9dcae8a9af4e1ef9b9e"
+bytes = 7696
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t16z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t16z.wrfsfcf00.grib2#bytes=2864392-3965416"
+sha256 = "d136a26579280f72b2839e87ef690119fc6b7450fdab7465f25b3c2cce59577b"
+bytes = 1101025
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t16z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t16z.wrfsfcf00.grib2#bytes=39592441-41072889"
+sha256 = "79027b39849d990b6467a9057b9d9578acef1550c7daa4297a722189eafe6e42"
+bytes = 1480449
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t16z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t16z.wrfsfcf00.grib2#bytes=35108712-36294731"
+sha256 = "a7da02b1c10e61474594f2ab312da763e6f6216fc537eaabc311219264fc87bf"
+bytes = 1186020
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t16z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t16z.wrfsfcf00.grib2#bytes=41072890-42171182"
+sha256 = "660acb542c31b28725a0b454a3a7d4613bf96d4c82c69d0795a0d6101acf4c67"
+bytes = 1098293
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t16z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t16z.wrfsfcf00.grib2#bytes=42171183-43232800"
+sha256 = "2ac7f49c78677f9f3e490b0834900aac3dc5a8b53dfbf799e3e95e3706383452"
+bytes = 1061618
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t17z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t17z.wrfsfcf00.grib2.idx"
+sha256 = "154f0d54d02b32e02223685facf80f10adac5791eb193e34ac855b2f985471a3"
+bytes = 7696
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t17z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t17z.wrfsfcf00.grib2#bytes=2892376-3976338"
+sha256 = "7b46d568e282a957b44dcafbc831dabcfe397395afe7364c91628176a138894f"
+bytes = 1083963
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t17z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t17z.wrfsfcf00.grib2#bytes=39697486-41173884"
+sha256 = "ae4d266236f26b767dc6996547bfb8e47f7d32b48dd8dc10f2ec92fcc8c9ceea"
+bytes = 1476399
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t17z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t17z.wrfsfcf00.grib2#bytes=35226580-36420146"
+sha256 = "4f25a9dd01378ab2b5151e693533b73c0470759463730f8ce3e6ff6f70b73034"
+bytes = 1193567
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t17z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t17z.wrfsfcf00.grib2#bytes=41173885-42253825"
+sha256 = "8cbcd861f6134bf1d56f53cd98313347b2ed7887219778662e5a72d47ca461dc"
+bytes = 1079941
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t17z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t17z.wrfsfcf00.grib2#bytes=42253826-43291414"
+sha256 = "1cf136133940e65d0ea3996d1a2cbc967150a7e95635babb8df7c51e5eedc335"
+bytes = 1037589
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t18z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t18z.wrfsfcf00.grib2.idx"
+sha256 = "2ebd44cda95060e71efccde943af9b0be774275faebaf921a31723b975982158"
+bytes = 7698
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t18z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t18z.wrfsfcf00.grib2#bytes=2948655-4023546"
+sha256 = "6cf8dd3e3b6068e001e8793e9201a8a00eb1a86e5d73215fbd5739585ca4777d"
+bytes = 1074892
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t18z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t18z.wrfsfcf00.grib2#bytes=39525125-40997412"
+sha256 = "40899c900e958c149fa1460b80380273c94d580e5c0f661265a216373429fd64"
+bytes = 1472288
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t18z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t18z.wrfsfcf00.grib2#bytes=35073984-36271049"
+sha256 = "aa1840d68b4a1c4024aab7b0e7fa9929b80bbe2b1a81b38393f1947875071982"
+bytes = 1197066
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t18z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t18z.wrfsfcf00.grib2#bytes=40997413-42067347"
+sha256 = "39282f11238333412f51572214c0bf5109be0e1cdcf5e0c7643faa87e2cfd6cb"
+bytes = 1069935
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t18z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t18z.wrfsfcf00.grib2#bytes=42067348-43077120"
+sha256 = "0e2542f04196220663cf1baf808bcd730e864dea035c9ed6a423bfddb99c845e"
+bytes = 1009773
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t19z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t19z.wrfsfcf00.grib2.idx"
+sha256 = "710d607f54a7f48d68431a80795fc5429df844c77f155b786ddfbdefc8eaabff"
+bytes = 7698
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t19z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t19z.wrfsfcf00.grib2#bytes=2968263-4039006"
+sha256 = "2aade0219f69dbbecc87cecdabcf38ff8f5ddbff81d99c228890327b691e49a5"
+bytes = 1070744
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t19z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t19z.wrfsfcf00.grib2#bytes=39546060-41028183"
+sha256 = "b7531fac5e90afbfed624b854375b62fc9387938b29587e21914730788902a20"
+bytes = 1482124
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t19z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t19z.wrfsfcf00.grib2#bytes=35104801-36302286"
+sha256 = "9c1683ca6f5b46aad9cfc9bbf05df340490d5aaa74d6d101eddc973bd63ff885"
+bytes = 1197486
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t19z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t19z.wrfsfcf00.grib2#bytes=41028184-42096068"
+sha256 = "0681d40f84bf120ef113bfc660a6bcc99543fcfe944ea5d324cfec328ccd369a"
+bytes = 1067885
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t19z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t19z.wrfsfcf00.grib2#bytes=42096069-43113996"
+sha256 = "61274b43931a6eeaf47389fe8de77dcf388cf9d4577bc3cd4bb2712678607826"
+bytes = 1017928
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t20z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t20z.wrfsfcf00.grib2.idx"
+sha256 = "2c4133e32e47ac39d31e011d8897fa1fa96cefc6a94f83a588bb4e4046cbcb17"
+bytes = 7698
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t20z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t20z.wrfsfcf00.grib2#bytes=3034059-4102562"
+sha256 = "feb314b5d5d31b49ce3fca224d943f80c599ebf4d9c2ae82edf8cacaf3706a53"
+bytes = 1068504
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t20z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t20z.wrfsfcf00.grib2#bytes=39719117-41190624"
+sha256 = "4bdf4e3755fd8c5cfa0c9d2a597d03bb418096fbd2ef8806a18e39cad1b4d300"
+bytes = 1471508
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t20z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t20z.wrfsfcf00.grib2#bytes=35300688-36495206"
+sha256 = "968d7a9ac0849ff1d218f914bc4ce6c285194cd0586206b30887b8d19897bf86"
+bytes = 1194519
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t20z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t20z.wrfsfcf00.grib2#bytes=41190625-42256834"
+sha256 = "bd9225c810cd3b011380333a11beb6b0ef801f7359dde9e570c769c884c09f16"
+bytes = 1066210
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t20z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t20z.wrfsfcf00.grib2#bytes=42256835-43259075"
+sha256 = "3bee55b5fabfd461986127dd904d7bb01df35b53018fc91fa2ec8618232360d5"
+bytes = 1002241
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t21z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t21z.wrfsfcf00.grib2.idx"
+sha256 = "184cdb17ac6c0b00fdb8647ecca39d6a10ddd271e1e5fcf0246218e871eceecf"
+bytes = 7696
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t21z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t21z.wrfsfcf00.grib2#bytes=2997435-4066294"
+sha256 = "996957d60be4ba7ac8669909e9a9f4fb1f60b3095652fc3bb71fffbb00c4654b"
+bytes = 1068860
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t21z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t21z.wrfsfcf00.grib2#bytes=39589272-41050564"
+sha256 = "3075f59b5ec0b0f435f30791ab9fd03fb0c4fdbd0e3aa0e4daef35358ae5e93d"
+bytes = 1461293
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t21z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t21z.wrfsfcf00.grib2#bytes=35191361-36381077"
+sha256 = "10cf5f197031e16db3f43fe0db63823c6d3feb7c9cef41c401e01e25b1ecd997"
+bytes = 1189717
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t21z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t21z.wrfsfcf00.grib2#bytes=41050565-42116972"
+sha256 = "0e56ac761ab5ddb0407efc423590505449e0c95802432e253a920a812b8f4680"
+bytes = 1066408
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t21z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t21z.wrfsfcf00.grib2#bytes=42116973-43122222"
+sha256 = "686d4f9f0735fa171bd9ad83660d8cc4cec30d089d3c39ef0dbcbf868dd8c74d"
+bytes = 1005250
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t22z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t22z.wrfsfcf00.grib2.idx"
+sha256 = "83a852f58d73b87de5f47172faf0c1257ad487fc5f866c248d7780f3b5443978"
+bytes = 7693
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t22z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t22z.wrfsfcf00.grib2#bytes=3102937-4178040"
+sha256 = "bc16e7e738b354801eb84ae6671d691a7f410620e17f5fab8bb963e116f062fb"
+bytes = 1075104
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t22z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t22z.wrfsfcf00.grib2#bytes=39573812-41019219"
+sha256 = "506bd9d94eb4bd3ced6da31f3708017769839adbd027bc0642eb94c9348024ff"
+bytes = 1445408
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t22z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t22z.wrfsfcf00.grib2#bytes=35193227-36378545"
+sha256 = "cc6b659675596544b7a0da986527a5b6cd2794068f74ba182f11c8d40d521f40"
+bytes = 1185319
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t22z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t22z.wrfsfcf00.grib2#bytes=41019220-42090075"
+sha256 = "5cef5bbac0d2bfd1475b7133f0e2b6808149475653b96b44013ac9e58baad4fd"
+bytes = 1070856
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t22z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t22z.wrfsfcf00.grib2#bytes=42090076-43114251"
+sha256 = "f4b8537a50ad002c57a6aa29e903880fa25c97e518e1b8d808b11e71de7d16cb"
+bytes = 1024176
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t23z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t23z.wrfsfcf00.grib2.idx"
+sha256 = "5e0bff6c4c48d3a627fe6229510a9bb424224e9b9c587c5b46f8ad3c114273b6"
+bytes = 7692
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t23z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t23z.wrfsfcf00.grib2#bytes=3148157-4234659"
+sha256 = "67fbded11fde3265c9ea47d76c4048a57ae5a9cf4bc63162fa0cf19d2079eb6d"
+bytes = 1086503
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t23z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t23z.wrfsfcf00.grib2#bytes=39619600-41035486"
+sha256 = "0629141a9073144df06dfde7d03d89497e6894527dbd62537d1626cb58595a89"
+bytes = 1415887
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t23z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t23z.wrfsfcf00.grib2#bytes=35262040-36445072"
+sha256 = "622f7c7630679e934caa40486dda82dd6fdcd86493a804e0193866eea898b613"
+bytes = 1183033
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t23z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t23z.wrfsfcf00.grib2#bytes=41035487-42119329"
+sha256 = "b5d1514b2fbcb3c19712a9df27809e001ba7b0aa225ede010b052faf0188acaa"
+bytes = 1083843
+fetched = "2026-11-08"
+
+[files."hrrr/20191029_t23z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191029/conus/hrrr.t23z.wrfsfcf00.grib2#bytes=42119330-43157627"
+sha256 = "a90db22fb037cbc07aa738eb309b8b302a3d06d198c92ea76e644300bc50276f"
+bytes = 1038298
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t00z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t00z.wrfsfcf00.grib2.idx"
+sha256 = "7b80688a3d0c89b1605a6595b45f2798addb01ea0d2ae11f2b4969a430a8d6d8"
+bytes = 7688
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t00z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t00z.wrfsfcf00.grib2#bytes=3175456-4313282"
+sha256 = "bb147b48ecc0c549c8f83c649f12db9d93231e3527909aef954985a2590313a9"
+bytes = 1137827
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t00z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t00z.wrfsfcf00.grib2#bytes=39883590-41299300"
+sha256 = "1e86b12d97a0d01367add295f2ca7f0f5b437f63298eda1e53d1a9fd9b103cda"
+bytes = 1415711
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t00z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t00z.wrfsfcf00.grib2#bytes=35457820-36644586"
+sha256 = "bfc35cf1d16c67c54d8df272c66949c56fce2abe31dcd9952bd326d75c95aeb0"
+bytes = 1186767
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t00z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t00z.wrfsfcf00.grib2#bytes=41299301-42415687"
+sha256 = "02c129b76e47588166a168da392b5f35ba147e26af79f787085050d6b516a355"
+bytes = 1116387
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t00z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t00z.wrfsfcf00.grib2#bytes=42415688-43484140"
+sha256 = "9f4bfcddf11b79aca58c208719b7c699ed6f48899d16a5c1ea5e45464bc9f938"
+bytes = 1068453
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t01z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t01z.wrfsfcf00.grib2.idx"
+sha256 = "bdbc4a20c10e37937922b05b281669a4d5083bc20aef9b845bb37b219c6593fb"
+bytes = 7687
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t01z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t01z.wrfsfcf00.grib2#bytes=3184819-4370642"
+sha256 = "53c5227f1d3db40d0152abce44803a733b44ee3c252b1fe39b9dbd8a5419be0d"
+bytes = 1185824
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t01z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t01z.wrfsfcf00.grib2#bytes=40055808-41475640"
+sha256 = "37cd110070cd8de18ca48c2add362fcc98269144b0b3b9b9632db1d5108c0246"
+bytes = 1419833
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t01z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t01z.wrfsfcf00.grib2#bytes=35553560-36743069"
+sha256 = "5bd50e126169b31033713cc2b5615e0efb27a2a81f8a5971f082252dbd639730"
+bytes = 1189510
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t01z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t01z.wrfsfcf00.grib2#bytes=41475641-42636989"
+sha256 = "c45a500d7afd4489a054576735036dcbf289ddfaea1bd8e735d0c7551bc87328"
+bytes = 1161349
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t01z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t01z.wrfsfcf00.grib2#bytes=42636990-43749838"
+sha256 = "2ae5953f711e3850554b5d182c9d8b6163acc742dd09f5a4f0621e2d3dacafdd"
+bytes = 1112849
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t02z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t02z.wrfsfcf00.grib2.idx"
+sha256 = "3de239e427192ff076102cc3a24722d61c6480c99ce2aa42db5ee89e09a62c06"
+bytes = 7687
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t02z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t02z.wrfsfcf00.grib2#bytes=3117102-4339880"
+sha256 = "022862e9dc31a63cb397844b3e31204a1e33621d49ce9cd491d37e2ff27b799a"
+bytes = 1222779
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t02z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t02z.wrfsfcf00.grib2#bytes=40158019-41591100"
+sha256 = "d1b69c32609c3161c83272cc1d55ef5c540d82621ec5da29f2c1883fa645b143"
+bytes = 1433082
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t02z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t02z.wrfsfcf00.grib2#bytes=35611167-36802751"
+sha256 = "88e66310c7f1c6f0015cddd43372a25ca1ec9f23d50d007a825beb587225be35"
+bytes = 1191585
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t02z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t02z.wrfsfcf00.grib2#bytes=41591101-42778533"
+sha256 = "d272d0857ad931750fad3247d817569664dcff1e3503361d9fd370508e83089d"
+bytes = 1187433
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t02z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t02z.wrfsfcf00.grib2#bytes=42778534-43919645"
+sha256 = "fd58978861abb31953896dae4cee903ddf540093f8a76986b04b28e1e1c198fe"
+bytes = 1141112
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t03z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t03z.wrfsfcf00.grib2.idx"
+sha256 = "002f9d5617a7a1201b17672e545c8791607a7fb4f0e23f8447ebfc51802f0999"
+bytes = 7688
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t03z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t03z.wrfsfcf00.grib2#bytes=3243075-4477460"
+sha256 = "b0967055da2b2be995152f7812c3864ab8684cfa198b7b9eabba5f644e2cbc81"
+bytes = 1234386
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t03z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t03z.wrfsfcf00.grib2#bytes=40523475-41963333"
+sha256 = "bc5c112dbd4ae6629762061df65fc3eb1f8dc96c7844db1380facf5b1e473691"
+bytes = 1439859
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t03z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t03z.wrfsfcf00.grib2#bytes=35949538-37147946"
+sha256 = "bbc225ab13c2f0990e243df6787a1cbab09b501d5b91b06a59633fe31632f2ef"
+bytes = 1198409
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t03z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t03z.wrfsfcf00.grib2#bytes=41963334-43162435"
+sha256 = "511ab626774750cd4c49e3bce76b0ebea9ef7fa41cd30d727e07b3f1ba6b3b40"
+bytes = 1199102
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t03z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t03z.wrfsfcf00.grib2#bytes=43162436-44314464"
+sha256 = "0e9b5af4d78fe81d8c2dfefeafdef85b35c310fc8f8a927e861349fd9467f133"
+bytes = 1152029
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t04z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t04z.wrfsfcf00.grib2.idx"
+sha256 = "dd86ebe38684f954d102e32e3cc766aedc03dc18d72503fec624b772bf4f953b"
+bytes = 7688
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t04z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t04z.wrfsfcf00.grib2#bytes=3244329-4486413"
+sha256 = "fd54ee49e5142f596e6e07e6e96d8912ef11fc7b79e2f9d329e0d504691c8665"
+bytes = 1242085
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t04z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t04z.wrfsfcf00.grib2#bytes=40415906-41862484"
+sha256 = "de0c5f01d58211f165b49d8cdc81ec620d4d8788ca34aa82e02ea47ee637980e"
+bytes = 1446579
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t04z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t04z.wrfsfcf00.grib2#bytes=35833189-37034259"
+sha256 = "30d0caf4cee1ecb888b57ef41ca41ce9bd03752dcd4c5dde7792d7552899e737"
+bytes = 1201071
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t04z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t04z.wrfsfcf00.grib2#bytes=41862485-43066315"
+sha256 = "49b6eef7f9a0ddc1b14b3abfde0045c45a35069d2f44a6f3923366904012c67d"
+bytes = 1203831
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t04z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t04z.wrfsfcf00.grib2#bytes=43066316-44224792"
+sha256 = "6b1266e0e52c7eefe93e5883377e7e01679d770a2efb2a85c87829c049eba9f4"
+bytes = 1158477
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t05z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t05z.wrfsfcf00.grib2.idx"
+sha256 = "8a894d0e6f9eadf1acacf4e26fc6e02c8ed2914aeaab7cd7b8ea008c93c22838"
+bytes = 7688
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t05z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t05z.wrfsfcf00.grib2#bytes=3285761-4530490"
+sha256 = "26ac690e042b85ed9dd94df1107ac397a1c6e6fa7f4cd0248201101a712ada81"
+bytes = 1244730
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t05z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t05z.wrfsfcf00.grib2#bytes=40814313-42267406"
+sha256 = "48fed826df767f60f1a1ae054cb5ba3ca9b16b5e7d651b66dafe1c892d3634ad"
+bytes = 1453094
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t05z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t05z.wrfsfcf00.grib2#bytes=36216045-37421169"
+sha256 = "23c57ecd08ca78f42b02044e0a4accd6e7b7d5cc2e95a9e83ab9dbce3829d0ae"
+bytes = 1205125
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t05z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t05z.wrfsfcf00.grib2#bytes=42267407-43476006"
+sha256 = "9353fb57f8a322d65c59ed76aa65ad0b2892aad69f6bf4d0a334d77a784cde6f"
+bytes = 1208600
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t05z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t05z.wrfsfcf00.grib2#bytes=43476007-44639931"
+sha256 = "85f3d1e9e9406b44aac12ac8ba53f0eaa6eef2ad4bf34f7a585b805f3248680e"
+bytes = 1163925
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t06z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t06z.wrfsfcf00.grib2.idx"
+sha256 = "3b06c234b00ab49979ecd8293f8d6535850daf2ef7027130a7cdf705d105f0f8"
+bytes = 7688
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t06z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t06z.wrfsfcf00.grib2#bytes=3265124-4516646"
+sha256 = "17a5360065e7e37bd6d5609a7e6e00b36bda9c318c7ac83298c5f7174215fcfd"
+bytes = 1251523
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t06z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t06z.wrfsfcf00.grib2#bytes=40814820-42271231"
+sha256 = "0c21c0f5949f45e3f1540f0641ca6c433c61afdb52559b3c98926a31751f9a9e"
+bytes = 1456412
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t06z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t06z.wrfsfcf00.grib2#bytes=36206876-37413219"
+sha256 = "74fc2c6583a341a243bf47c72d6ff7982a65fac8a0d161f8a0fbd82b81fd3983"
+bytes = 1206344
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t06z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t06z.wrfsfcf00.grib2#bytes=42271232-43481922"
+sha256 = "13b500396eb63bb05f2bbed1b6e10276d45d599460bc6579f1f59fe7e7385073"
+bytes = 1210691
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t06z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t06z.wrfsfcf00.grib2#bytes=43481923-44649878"
+sha256 = "fdd61eb2d6dcb33e652d1b917f00e3d01e09ecbfffac2de95f22bd4f0ef5b48c"
+bytes = 1167956
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t07z.idx"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t07z.wrfsfcf00.grib2.idx"
+sha256 = "1283249d28cbf50e5ed785cb2ccb89254877aee61a66f38f81eebf3f2a36d624"
+bytes = 7688
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t07z_GUST_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t07z.wrfsfcf00.grib2#bytes=3286806-4539596"
+sha256 = "26fb2eb16b748942985b2c07c25301c4b66dcad54b9131d57a19eab519c49df3"
+bytes = 1252791
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t07z_RH_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t07z.wrfsfcf00.grib2#bytes=40883464-42345880"
+sha256 = "395610bd9553e3a04659d5e79129db36a18105f3c5d22a1c31205214dd8a43ae"
+bytes = 1462417
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t07z_TMP_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t07z.wrfsfcf00.grib2#bytes=36267050-37475123"
+sha256 = "bcd90c92c89c3a4882d2e88aa960d1d848ae1f1197e123804c9c35e9e93b9b01"
+bytes = 1208074
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t07z_UGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t07z.wrfsfcf00.grib2#bytes=42345881-43560563"
+sha256 = "f2a983a3c03824b77414f3b268917d06794e35005d6ca6443c47314ae80bc43a"
+bytes = 1214683
+fetched = "2026-11-08"
+
+[files."hrrr/20191030_t07z_VGRD_37.97_38.08_-122.79_-122.61.json"]
+url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20191030/conus/hrrr.t07z.wrfsfcf00.grib2#bytes=43560564-44732763"
+sha256 = "42ba8828300b4f90ffbc9bb0de99b168e1e91364c788b95093703ab1aed6e94d"
+bytes = 1172200
+fetched = "2026-11-08"
 
 [files."hrrr/20250107_t18z.idx"]
 url = "https://noaa-hrrr-bdp-pds.s3.amazonaws.com/hrrr.20250107/conus/hrrr.t18z.wrfsfcf00.grib2.idx"
@@ -13584,6 +16230,12 @@ sha256 = "0201a5a1ccb4461ef213d914d24f05f66d0f5aff93145cd8b921f1d83e0dc83d"
 bytes = 4361540
 fetched = "2026-11-01"
 
+[files."osm-overpass/buildings_37.97_38.08_-122.79_-122.61.json"]
+url = "https://overpass.kumi.systems/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A180%5D%3B%28way%5B%22building%22%5D%2837.97%2C-122.79%2C38.08%2C-122.61%29%3B%29%3Bout%20geom%3B"
+sha256 = "9fdd09bbc6480839ecd4a97617b0ad010e4def0fd5fe45b5b7b668cfc6c390c2"
+bytes = 2225941
+fetched = "2026-11-08"
+
 [files."osm-overpass/buildings_56.55_56.85_-111.75_-111.15.json"]
 url = "https://overpass.kumi.systems/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A180%5D%3B%28way%5B%22building%22%5D%2856.55%2C-111.75%2C56.85%2C-111.15%29%3B%29%3Bout%20geom%3B"
 sha256 = "f3fb2b78c78b807aa087af972249fd682f21627f85901157e74ad0098ec71234"
@@ -13595,6 +16247,12 @@ url = "https://overpass.kumi.systems/api/interpreter?data=%5Bout%3Ajson%5D%5Btim
 sha256 = "7620f8dac57b0c576128e5e3748e8599efad051e75a2b58a73fd6e9e2dbf1bbc"
 bytes = 3567130
 fetched = "2026-11-03"
+
+[files."osm-overpass/context_37.97_38.08_-122.79_-122.61.json"]
+url = "https://overpass.kumi.systems/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A180%5D%3B%28way%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%29%24%22%5D%2837.97%2C-122.79%2C38.08%2C-122.61%29%3Bnode%5B%22place%22~%22%5E%28city%7Ctown%7Csuburb%7Cneighbourhood%7Cvillage%7Cquarter%29%24%22%5D%2837.97%2C-122.79%2C38.08%2C-122.61%29%3Brelation%5B%22boundary%22%3D%22administrative%22%5D%5B%22admin_level%22%3D%228%22%5D%2837.97%2C-122.79%2C38.08%2C-122.61%29%3B%29%3Bout%20geom%3B"
+sha256 = "fb601154b625c57700bbdaaa0a2868c0c9fa9322eba70bf2b095c59f1090f3a6"
+bytes = 272679
+fetched = "2026-11-08"
 
 [files."osm-overpass/context_56.55_56.85_-111.75_-111.15.json"]
 url = "https://overpass.kumi.systems/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A180%5D%3B%28way%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%29%24%22%5D%2856.55%2C-111.75%2C56.85%2C-111.15%29%3Bnode%5B%22place%22~%22%5E%28city%7Ctown%7Csuburb%7Cneighbourhood%7Cvillage%7Cquarter%29%24%22%5D%2856.55%2C-111.75%2C56.85%2C-111.15%29%3B%29%3Bout%20geom%3B"

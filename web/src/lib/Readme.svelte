@@ -56,7 +56,7 @@
     if (unit === 'persons') return v >= 1e9 ? `${(v / 1e9).toFixed(2)} bn` : v >= 1e6 ? `${Math.round(v / 1e6)} M` : Math.round(v).toLocaleString('en-US')
     if (unit === '%') return `${v.toFixed(1)}%`
     if (unit === 'GtC') return `${v.toFixed(1)} GtC`
-    if (unit === 'm') return `${(v * 100).toFixed(0)} cm`
+    if (unit === 'm') return Math.abs(v) < 2 ? `${(v * 100).toFixed(0)} cm` : `${Math.round(v).toLocaleString('en-US')} m`
     if (unit === 'person-days/yr') return v >= 1e9 ? `${(v / 1e9).toFixed(1)} bn` : `${Math.round(v / 1e6)} M`
     return Number.isInteger(v) ? String(v) : v.toPrecision(3)
   }

@@ -199,6 +199,13 @@ holds the history.
   is one "tree" kind for a spruce forest; the hotspot area is a floor, not a perimeter. Above 50°N the
   elevation model's pixels are 1.5 arcsec wide; until this afternoon the sampler left one cell in three
   empty there (`terrain-v4` fills them from the nearest pixel).
+- Devil's Gulch 2029 (`anselm/nicasio-2029`, 2026-11-08): a scenario with no record, so nothing scores it.
+  The wind is another year's (27 to 29 October 2019, HRRR, through `wind_at`), and at 3 km it reads 1 to
+  8 m/s at the canyon floor on a day the forecast office warned of ridge gusts; the ridges are not modelled.
+  Two thirds of the window is one fuel, "tree", and the engine's pace there is between everything (the
+  whole window in two days at thresholds times 3 or 5) and nothing (times 8): the hour the fire reaches
+  the house runs from 19 to 34 hours or never. The house is a geocoded point on the road centreline,
+  reached within 50 m. Nobody fights the fire.
 - The 3D view takes building heights as feet because the county's service does not state a
   unit.
 - Built-up land carries fire at a guessed rate; nothing about structures is physical.

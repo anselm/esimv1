@@ -256,6 +256,19 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   over half a country's people; the story hears it), `heat.pressure` (per country, for a capacity hook; nothing reads it
   yet). `spread_per_degree` (0, a guess) is the only knob for the variability the delta method lacks. Adds about 7 s to a
   2100 run. The country helpers in `countries.rs` are `pub(crate)` for it.
+- Devil's Gulch 2029 (2026-11-08, Anselm: "a brand new simulation of 550 Nicasio Valley Rd ... a fire starting not far
+  away at Devil's Gulch Campsite ... oct 1st ... in 2029 ... we probably need some wind conditions"; use the 3D view with the
+  vertical at least 2x; `devlog/20261108-nicasio-2029.md`): the first scenario with no record, `manifests/f5-nicasio-2029.toml`,
+  project `anselm/nicasio-2029` (variants scale-3, scale-5, scale-8, gust), sources in `data/events/nicasio-2029/README.md`.
+  `fire.cells` has `wind_at`, the simulated instant `wind_start` stands for, so a run can borrow another day's HRRR hours
+  (here 27 to 29 October 2019, the Bay Area office's Red Flag Warning 6 of 2019 in the IEM VTEC archive; empty leaves old runs
+  unchanged). `obs.places` (`crates/modules/src/places.rs`) stakes named points with a provenance note, publishes
+  `place.marked` at the start, reads `fire.burned_frac` hourly, reports the distance to the nearest burned cell per place and
+  publishes `place.reached` and a `place.crossing` sentence once (own cell burned or within `reach_m`, 50 m, because a
+  geocoded address sits on the road centreline). `Scene3D` draws both topics as marks with labels that do not fade. The
+  campsite is OpenStreetMap relation 17685328; the house is the US Census geocoder's interpolation (on the road); the
+  description of the place is Anselm's. At thresholds times 3 or 5 the fire takes the whole window in two days and reaches
+  the house at 19 to 34 hours; at 8 it never leaves its cell: the engine does not know, and the page says so.
 - Wild cards (2026-11-05, Anselm: "i just want a placeholder ... like a video game with wild card factors
   optionally"): `events.shock` (`crates/modules/src/shock.rs`) draws `data/events/future-speculative.toml` by the
   run's seed each year from `from` (default 2025), or plays one named card (`mode = "named"`, `event`, `at`);
