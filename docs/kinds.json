@@ -5279,6 +5279,11 @@
         "unit": "date"
       },
       {
+        "name": "wind_at",
+        "default": "",
+        "note": "the simulated instant that midnight UTC of wind_start stands for, when a run borrows another day's weather (a scenario in a year with no record); empty means the record's own time, so every run made before this exists is unchanged"
+      },
+      {
         "name": "wind_source",
         "default": "mean",
         "note": "mean: the hourly 10 m wind; gust: the hourly gust, as a what-if for a reanalysis that reads a Santa Ana event mild"
