@@ -221105,9 +221105,15 @@
       },
       {
         "name": "frame_res_arcsec",
-        "default": 2.0,
+        "default": 0.5,
         "unit": "arcsec",
-        "note": "the shore_change_m frame"
+        "note": "the frames: about 15 m, so a decade of retreat is a few cells"
+      },
+      {
+        "name": "frame_margin_m",
+        "default": 600.0,
+        "unit": "m",
+        "note": "the frames cover the line's own box plus this, not the whole window"
       },
       {
         "name": "root_lat",
@@ -221367,6 +221373,11 @@
         "name": "shore_change_m",
         "unit": "m",
         "required": false
+      },
+      {
+        "name": "shore_line",
+        "unit": "1",
+        "required": false
       }
     ],
     "reports": [
@@ -221459,10 +221470,17 @@
     "views": [
       {
         "kind": "map",
+        "title": "The line",
+        "source": "shore_line",
+        "obs": "",
+        "note": "the shoreline now, dark, and today's line, grey; about 15 m a cell"
+      },
+      {
+        "kind": "map",
         "title": "Shoreline change",
         "source": "shore_change_m",
         "obs": "",
-        "note": "metres seaward (+) or landward (-) of today's line, along the transects"
+        "note": "the strip between today's line and the line now: metres landward (-) or seaward (+)"
       },
       {
         "kind": "chart",

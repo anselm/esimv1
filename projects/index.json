@@ -2,6 +2,8 @@
   {
     "area": "anselm",
     "by": "anselm, via claude 2026-11-01",
+    "cover": "cover.png",
+    "cover_caption": "Two chart rows from the run page, dark mode, 2026-11-08: the vegetation series, the MODIS composites read and the 16-day NDVI observed against the model's, through the 2025 season with the forced September fire.",
     "created": "2026-11-01",
     "description": "The M6 crop, deer and predator stack with a forced fire on 5 September 2025: a shock to measure recovery against.",
     "featured": true,
@@ -36,6 +38,8 @@
   {
     "area": "anselm",
     "by": "anselm, via claude 2026-11-01",
+    "cover": "cover.png",
+    "cover_caption": "A chart row from the run page, dark mode, 2026-11-08: the herbivore and predator series through the 2025 season.",
     "created": "2026-11-01",
     "description": "Crop and grass growth from ERA5 weather, a deer herd grazing it, a predator cohort eating the deer; ledgers for animals, carbon, energy and water.",
     "featured": true,
@@ -69,6 +73,8 @@
   {
     "area": "anselm",
     "by": "anselm",
+    "cover": "cover.png",
+    "cover_caption": "The run page's three-dimensional view, dark mode, 2026-11-08: the Fort McMurray window from the elevation model with the fire's arrival draped on it, the vector-5 run at its end.",
     "created": "2026-11-04",
     "description": "Our own engine on the Fort McMurray fire: heat budget on 30 m cells, OpenStreetMap buildings, ERA5 wind at one point; scored against CWFIS satellite hotspots; unsuppressed; constants carried over from the Palisades.",
     "featured": true,
@@ -1585,6 +1591,8 @@
   {
     "area": "anselm",
     "by": "anselm, via claude 2026-11-01",
+    "cover": "cover.png",
+    "cover_caption": "Two chart rows from the run page, dark mode, 2026-11-08: the model's atmospheric CO2 against Mauna Loa and the ice cores, 1850 to 2025.",
     "created": "2026-11-01",
     "description": "Observed emissions into a carbon ledger, impulse-response sinks, a two-layer energy balance; scored against Mauna Loa, Law Dome, HadCRUT5 and GISTEMP. The bottom of the planetary cascade.",
     "featured": true,
@@ -1613,6 +1621,8 @@
   {
     "area": "anselm",
     "by": "anselm, in the esim session of 2026-11-07",
+    "cover": "cover.png",
+    "cover_caption": "The run page's globe, dark mode, 2026-11-08: the regions scored at the run's end, one member of the eight.",
     "created": "2026-11-08",
     "description": "Earth 2100 with emissions held and the wild-card deck in play, one member per seed: the spread the deck makes by 2100, from a JavaScript manifest.",
     "featured": true,
@@ -1844,6 +1854,8 @@
   {
     "area": "anselm",
     "by": "anselm, via claude 2026-11-01",
+    "cover": "cover.png",
+    "cover_caption": "Two chart rows from the run page, dark mode, 2026-11-08: the lower bucket's volume filling toward its balance and the rain poured in.",
     "created": "2026-11-01",
     "description": "The trivial rung: a source feeding two leaky buckets at different rates; the water ledger must close. A formula check, labelled as one.",
     "featured": true,
@@ -1871,6 +1883,8 @@
   {
     "area": "guest",
     "by": "web test, manifest drafted by gpt-oss:120b",
+    "cover": "cover.png",
+    "cover_caption": "Two chart rows from the run page, dark mode, 2026-11-08: the river at the outlet and the daily flow against the USGS gauge through the 2025 season.",
     "created": "2026-11-01",
     "description": "I want to see the Boone River basin in Iowa through the growing season of 2025: the weather, the soil water, the crop growing, and deer grazing on it, with the river flow checked against the USGS gauge. Spring to autumn.",
     "featured": true,
