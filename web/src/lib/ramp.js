@@ -29,6 +29,8 @@ export const FIRE_LUT = lut(FIRE)
 // A diverging ramp for signed change: loss red, gain blue, nothing pale in the middle.
 export const DIVERGE = ['#a8233a', '#d6403c', '#ec8c7a', '#f5d0c8', '#f2f2f2', '#c6dbf5', '#86b6ef', '#3987e5', '#184f95']
 export const DIVERGE_LUT = lut(DIVERGE)
+// A line drawn on the ground: today's in grey (0.4), the line now in the brand teal (1).
+export const LINE = { now: [15, 118, 110], then: [150, 150, 150] }
 export const DIVERGE_CSS = `linear-gradient(to right, ${DIVERGE.join(', ')})`
 export const FIRE_CSS = `linear-gradient(to right, ${FIRE.join(', ')})`
 // Which ramp a field gets, from its name and unit: fire arrival hours warm, land-cover codes categorical, everything else blue.
@@ -36,5 +38,6 @@ export function rampFor(name, unit) {
   if (unit === 'worldcover code') return 'cover'
   if (/arrival|burn|fire/.test(name) && unit === 'h') return 'fire'
   if (/change|anomaly|delta/.test(name)) return 'diverge'
+  if (/_line$/.test(name) && unit === '1') return 'line'
   return 'blue'
 }

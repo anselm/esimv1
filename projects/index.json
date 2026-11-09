@@ -49,7 +49,21 @@
     ],
     "name": "boone-predators-and-prey",
     "path": "anselm/boone-predators-and-prey",
-    "runs": [],
+    "runs": [
+      {
+        "all_ledgers_closed": true,
+        "digest": "1d66e0ac34f8033c",
+        "end": 1767225600,
+        "events": 94544,
+        "id": "m6-eaters-boone-2025-a5b81cdd-1d66e0ac",
+        "name": "m6-eaters-boone-2025",
+        "seed": 1,
+        "set": null,
+        "start": 1735689600,
+        "variant": null,
+        "verdict": null
+      }
+    ],
     "title": "Deer and predators in the Boone basin, 2025"
   },
   {

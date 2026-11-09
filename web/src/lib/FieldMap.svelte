@@ -14,7 +14,7 @@
   // own, a time slider when there is more than one frame, and a hover/tap
   // readout of lat, lon and value.
   import { isoDate, num } from './fmt.js'
-  import { LUT, RAMP_CSS, FIRE_LUT, FIRE_CSS, DIVERGE_LUT, DIVERGE_CSS, COVER, COVER_NAMES, rampFor } from './ramp.js'
+  import { LUT, RAMP_CSS, FIRE_LUT, FIRE_CSS, DIVERGE_LUT, DIVERGE_CSS, LINE, COVER, COVER_NAMES, rampFor } from './ramp.js'
 
   let { name, field, base, cursor = null, context = null } = $props()
   const ramp = $derived(rampFor(name, field.unit))
@@ -28,7 +28,8 @@
   // positive values span three decades or more (people per cell, days a year), since on a
   // linear ramp from zero to the run's maximum nearly every cell is invisible
   const logByDefault = field.min >= 0 && field.max > 0 && field.max / Math.max(field.min, field.max / 1e5, 1e-9) >= 1000
-  let stretch = $state(logByDefault ? 'log' : 'run')
+  // a change field is stretched to each frame's own range, so the first years are not white (Anselm, 2026-11-08)
+  let stretch = $state(logByDefault ? 'log' : rampFor(name, field.unit) === 'diverge' ? 'frame' : 'run')
   // the log ramp's floor: four decades under the maximum, and never under one unit for a
   // field that counts things (people, days), so zero and the tiniest values stay blank
   const logFloor = $derived(field.max > 0 ? Math.max(field.max / 1e4, field.max >= 10 ? 1 : 0) : 1)
@@ -141,6 +142,7 @@
       if (Number.isNaN(v)) { px[o + 3] = 0; continue }
       let c
       if (ramp === 'cover') { c = coverRgb[Math.round(v)]; if (!c) { px[o + 3] = 0; continue } }
+      else if (ramp === 'line') { c = v >= 0.9 ? LINE.now : LINE.then }
       else {
         const u = stretch === 'log' ? (v <= lo ? 0 : Math.log(v / lo) / logSpan) : (v - lo) / span
         const t = Math.min(255, Math.max(0, Math.round(u * 255)))
@@ -250,7 +252,12 @@
   </div>
 
   <!-- legend: labels follow the chosen stretch; a categorical field lists its classes -->
-  {#if ramp === 'cover'}
+  {#if ramp === 'line'}
+  <div class="mono mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[10px] muted">
+    <span class="inline-flex items-center gap-1"><span class="inline-block h-2 w-2 rounded-[1px]" style="background:rgb(15,118,110)" aria-hidden="true"></span>the line now</span>
+    <span class="inline-flex items-center gap-1"><span class="inline-block h-2 w-2 rounded-[1px]" style="background:rgb(150,150,150)" aria-hidden="true"></span>today's line</span>
+  </div>
+  {:else if ramp === 'cover'}
   <div class="mono mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[10px] muted">
     {#each Object.entries(COVER_NAMES) as [code, label] (code)}<span class="inline-flex items-center gap-1"><span class="inline-block h-2 w-2 rounded-[1px]" style="background:{COVER[code]}" aria-hidden="true"></span>{label}</span>{/each}
   </div>

@@ -121,3 +121,29 @@ year. The README says all of it.
 - The second rung: a two-dimensional wave and sediment field (what the Corps' CMS does) on the
   same record, scored against the same table. That is the fluid dynamics model Anselm named; this
   page is the yardstick for it.
+
+## Evening: the line moves, and the story
+
+Anselm, looking at the site: the runs "appear static ... There is an implication they are showing
+live state but visually appear to be static?" Checked: the shoreline frame did move with the cursor,
+but only its tint, because it painted the change along today's line. Now the frames cover the line's
+own box at half an arcsecond (about 15 m), `shore_change_m` paints the strip between today's line
+and the line now, and a second frame `shore_line` draws the line now in the brand teal over today's in
+grey; the viewer has a `line` ramp for frames named `*_line` and stretches change fields to each
+frame's own range by default (Anselm: "stretch the color range yes - within the fit"). The project
+covers stay stills (Anselm: "i don't think we need to update the main project pages").
+
+Then: "flesh out a bit of the deep story behind the half moon bay scenario - as per usual the text
+becomes important to the reader to contextualize why we are seeing erosion now." Four sections went
+in before the model: how a bay came to have a harbor (the district of 1933 and Redwood City, the
+fishing fleet's harbor of refuge, the Corps 1959 to 1961, the dogleg and the inner breakwaters, the
+pier and berths), what harbors do to sand (Griggs's beach compartments as bank accounts; Santa
+Barbara 1928 to 1930 and the erosion wave to Carpinteria at 1.7 km a year, from Griggs 2015, *Lost
+Neighborhoods of the California Coast*; Santa Cruz 1965; why Pillar Point is a different case), the
+sixty years since (the 1980s road, the revetments, 1993 to 2012, the 2011 meeting and the Section 111
+ceiling, the 2016 withdrawal, the district's seven-year path to the 2025 dredge, OneShoreline), and
+why now. Sources added to the event folder's README as they were read: the visitor bureau's history
+(the 1948 authorization is its claim, unchecked), the KPIX report of 1 September 2026 with Griggs's
+and residents' words, Coastside Buzz on the Coastal Commission's approval of 6 September 2023. Version
+bumped to 0.1.1; covers made for the seven projects that had none (chart rows and the 3D or globe
+views from their run pages, dark mode).

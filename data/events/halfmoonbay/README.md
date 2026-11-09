@@ -50,6 +50,30 @@ up to 100,000 cubic yards of that shoal and placed it on 1,000 ft of Surfers Bea
   called the breakwater "the largest cause of the erosion, mainly by pulling sand from Surfer's Beach
   into the harbor" (the article's paraphrase).
 
+- **The San Francisco Peninsula** (the county's visitor bureau), *Pillar Point Harbor in Half Moon Bay*,
+  23 June 2025, read 2026-11-08: the district formed by county election in 1933 to build a harbor at
+  Redwood City, the Depression, the coastside's push for a harbor of refuge for the fishing fleet, the
+  Corps' work begun after the war and finished in 1961, the Johnson Pier, 369 berths and the inner
+  breakwater in the 1970s and 1980s. A listing on the same site says Congress authorized the project in
+  1948; neither is checked against the Corps' or the Congressional record.
+- **Wikipedia**, *San Mateo County Harbor District*, read 2026-11-08: the 1931 state act, the 1933
+  formation by the Board of Supervisors, inactive until 1948.
+- **KPIX (CBS San Francisco)**, Kenny Choi, 1 September 2026, *Lasting effects of Half Moon Bay dredging
+  project to combat coastal erosion are uncertain*, read 2026-11-08: Griggs's words ("When they built those
+  two breakwaters, all the wave energy that was dissipated in that nice hook-shaped bay"; "Without a
+  complete redesign, it's just gonna continue"), the loss of Mirada Road and a wastewater line, a resident's
+  thirty years of pressing the county, the riprap, the agencies.
+- **Coastside Buzz**, 5 October 2023, on the Harbor District's meeting of 20 September 2023: the Coastal
+  Commission's approval of 6 September 2023, eelgrass to be relocated before dredging and a restoration
+  area in the west basin, up to 100,000 cubic yards onto about 1,000 feet of Surfers Beach.
+- **Griggs, G. B., 2015.** *Lost Neighborhoods of the California Coast.* Journal of Coastal Research
+  31(1), doi 10.2112/13a-00007.1, read as text from eScholarship 2026-11-08: the Santa Barbara breakwater
+  of 1928 to 1930, the beach widened 250 m behind it, the erosion wave downcoast at about 1.7 km a year
+  (citing Wiegel 1965) as far as Carpinteria, 75 m cut at Sand Point in January 1940.
+- **Griggs, G. B., 2018.** *California's Coastal Harbors, Beach Compartments and Sand Dredging*, Coastal
+  Care, 1 October 2018, read 2026-11-08: the Santa Cruz jetties of 1965 and the dredging since, beach
+  compartments as bank accounts, harbors in the middle or downcoast of a strong drift dredged forever.
+
 ## Data the model reads
 
 - **Waves**: the ERA5-Ocean wave reanalysis (ECMWF, Copernicus Climate Change Service) through

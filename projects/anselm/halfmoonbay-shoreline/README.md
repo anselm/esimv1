@@ -22,6 +22,108 @@ the harbor with silt. We may need a new fluid dynamics model - this is a hard on
 with what was and was not read, are in the project's event folder
 (`data/events/halfmoonbay/README.md`); the record's numbers are the table on each run page.
 
+## How a bay came to have a harbor
+
+The bay is a crescent of low ground between Pillar Point and Miramontes Point, with the towns of
+Princeton, El Granada and Miramar strung along it and Highway 1 behind them. By Griggs's account
+its shoreline before 1959 was a smooth hook, the shape a beach takes when swell wraps round a
+resistant point and arrives along the whole curve at the angle that moves no net sand: the
+headland-bay beach of the coastal textbooks, in which every stretch of shore is in balance with the
+refracted waves that reach it. The bluffs behind it are low and weak, and in that balance they gave
+up about eight centimetres a year.
+
+The harbor came from the land side. San Mateo County formed its Harbor District in 1933 under a
+1931 state act, to build a port at Redwood City on the bay side of the peninsula; the Depression
+stopped that, and the district lay inactive until 1948 (the district's own history and the county
+record; a visitor bureau's listing says Congress authorized the Pillar Point project in 1948, which
+we have not checked against the Corps' record). What revived it was the coastside's fishing fleet,
+which worked out of Princeton with no shelter from the winter sea and wanted a harbor of refuge.
+The Corps began the breakwater after the war and finished it in 1961: a West Breakwater off Pillar
+Point and the long East Breakwater from the El Granada shore, enclosing the water between. Griggs
+records that the design underestimated the waves that would come through the gap, so a dogleg
+extension was added, and that this too failed to quiet the water, so a second set of breakwaters
+was built inside the harbor to protect the moored boats. The Johnson Pier, the docks, 369 berths and
+the inner breakwater went in through the 1970s and 1980s. Today it is a working fishing harbor, the
+launching point for the Mavericks surf break off the point, and the home of the crab fleet.
+
+## What harbors do to sand
+
+A beach is a river of sand that happens to be standing still. Waves arriving at an angle push sand
+along the shore, winter one way and summer the other, and a beach keeps its width only while what
+leaves is replaced by what arrives. Griggs calls the stretches of coast between headlands beach
+compartments and likens them to bank accounts: build a dam on the river that feeds one, mine its
+sand, or put a jetty across the drift, and the balance falls. California learned this early. The
+Santa Barbara breakwater of 1928 to 1930 trapped the eastward drift and widened the beach behind it
+by 250 metres, land that now carries a stadium and parking lots, while the beaches downcoast as far as
+Carpinteria, twenty kilometres away, were starved: a wave of erosion that moved down the coast at
+about 1.7 kilometres a year, took the protective beach off the Carpinteria sand spit, and in January
+1940 cut 75 metres into Sand Point and collapsed houses (Griggs 2015, *Lost Neighborhoods of the
+California Coast*, Journal of Coastal Research 31(1), citing Wiegel 1965). Santa Cruz's harbor
+jetties of 1965 did the same on a smaller scale, and the harbor has been dredged every year since,
+"an endless and thankless task" in Griggs's words. His rule from a career of it: a harbor built in
+the middle or at the downcoast end of a compartment with a strong drift will be dredged forever;
+one built at the upcoast end, or beside a submarine canyon that swallows the sand anyway, as Moss
+Landing is, costs almost nothing to keep open.
+
+Pillar Point is a different case from Santa Barbara, and that is why it took so long to be
+understood. The East Breakwater does not stand across a strong drift and trap sand on one side. It
+stands at the head of a bay whose shore had no net drift to trap, and it changed the waves. By
+Griggs, the energy that the hook had spent evenly along its curve was concentrated instead at the
+breakwater's downcoast end, against the low bluffs of El Granada; the shoreline there was no longer
+the shape the waves wanted, and it began to move toward the shape they did. And the sand it
+shed did not pass down the coast to feed Miramar. It went into the harbor, through the voids of the
+rubble mound, where it is of no use to anyone and in the way of the boat launch. That is what the
+Corps' own planning chief told the first public meeting on the problem in June 2011: the breakwater
+is the largest cause of the erosion, mainly by pulling sand from Surfers Beach into the harbor.
+
+## The sixty years since
+
+The record of the damage is a record of things lost one at a time. Severe erosion in the 1980s
+destroyed a cliff-top road and threatened Highway 1 and buildings; the state and the county placed
+rubble-mound revetments, one in front of the highway at Surfers Beach and one in front of Mirada
+Road at Miramar (the Corps' 2015 account). Between the two, about 2,200 feet of unprotected bluff
+along Vallejo Beach went on retreating at 1.64 feet a year through 1993 to 2012, seven times the
+rate of a geologically similar bluff farther south. The beaches from the breakwater to Mirada Road
+lost a net 4,200 cubic yards a year. A resident who had pressed the county for thirty years told a
+television reporter in 2026, standing where Mirada Road used to run, "There was a road that's now
+gone."
+
+The remedy was slow because of who owns what. The breakwater is a federal navigation structure,
+the harbor is the district's under a state tidelands grant, the highway is Caltrans's, the road
+is the county's, the beach is the state's, and no one of them can act alone. The Corps has an
+authority, Section 111 of the River and Harbor Act of 1968, to mitigate shore damage caused by its
+own navigation works, with a ceiling the Corps' planners put at five million dollars at that 2011
+meeting. The Harbor District sponsored a Section 111 feasibility study from 2010; the Corps' coastal
+study measured the rates above, modelled the alternatives, and found that sealing the breakwater
+would keep sand out of the harbor but not save the beach, that a notch would release too little, that
+a spur breakwater with 230,000 cubic yards of fill would cost nine million dollars, and that moving
+the harbor's sand back onto Surfers Beach would work; and in 2016 the Corps concluded that such a
+project had no federal interest and withdrew. The district carried on alone: an engineering contract
+in 2018, a sediment study in 2019, a design in 2021, a biological assessment in 2022, the Coastal
+Commission's approval in September 2023 with eelgrass to be moved out of the dredge area and a new
+bed planted first, and in the autumn of 2025 the dredge itself, up to 100,000 cubic yards onto a
+thousand feet of beach, finished on 26 October. A year later the county was watching to see how long
+it would last; Griggs's reading was that the sand will go the way the beach went and that "without a
+complete redesign, it's just gonna continue." OneShoreline, the county's flood and sea level
+agency, began a shoreline management study for the harbor area in 2021, under a 2018 county
+assessment that found Highway 1 at Surfers Beach and Mirada Road "compromised and extremely
+vulnerable to sea level rise" and a third of Princeton's people and land under water in a hundred-year
+event with six feet of rise.
+
+## Why now
+
+Nothing about this is sudden. The shoreline has been moving toward the shape the altered waves ask
+of it since 1961, and sixty years is a short time for a coast; the model below, crude as it is, is
+still moving at the end of its run. What has changed is what stands in the way. The road, the sewer,
+the highway, the homes and the launch ramp were all placed on a shoreline that had held its position
+for as long as anyone measured, and a half metre a year is slow enough to argue about for a generation
+and fast enough to take a road in one. Sea level, which rose slowly through most of the record, now
+raises every winter's reach a little further up the bluff, and the Corps' own projections for the
+site assumed as much. And the sand that could have fed the beaches is sitting in the harbor in plain
+view, which makes the question of whether to move it, how often, and at whose cost, the thing the
+agencies now meet about. The runs on this page are an attempt to put numbers under those questions
+with the oldest model that can hold them, and to say plainly where the numbers stop.
+
 ## What this is, and is not
 
 It is not a fluid dynamics model. It is the oldest useful approximation in coastal engineering, the

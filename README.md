@@ -6,7 +6,7 @@ quantities through ledgers that must balance at every seam. A manifest arranges 
 into a scenario; a run is a folder anyone can replay, score, audit and look at. The
 first stages are a river basin in Iowa and the planet to 2100.
 
-**Live, read-only: https://esimv1.exe.xyz/** · version 0.1.0 · code MIT
+**Live, read-only: https://esimv1.exe.xyz/** · version 0.1.1 · code MIT
 
 By Anselm Hook. The writing around this, and the reasons for it, are at **[anselm.substack.com](https://anselm.substack.com)**; the running commentary is **[@anselm](https://x.com/anselm)** on X. Subscribe and follow there if you want to see where it goes.
 
