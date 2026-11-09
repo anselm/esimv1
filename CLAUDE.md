@@ -230,6 +230,11 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   `esim events --write` renders `data/events/future-known.toml` and `future-speculative.toml` as `docs/events/known.md` and
   `wild-cards.md` (section "The future"); the deploy runs it, so those pages are regenerated and must be committed like the
   indexes. The overview page and the root README link the RFC as a proposal and the two event pages (Anselm, 2026-11-07).
+- Reading lists (2026-11-08, Anselm: "we probably should track these articles in the readme"): a project README ends with
+  *What this page has read*, each article with the day it was read, what was taken and what is only recalled; the practice is
+  in `docs/system/telling.md`. Earth 2100's lists Dyke, Laybourn and Abrams 2026 (ERL 21 204029, the derailment paper, read in
+  full 2026-11-08; `policy.capacity` lacks its stabilising loop, a fiscal state and the social lowering of thresholds, noted as
+  the next knobs), the Conversation piece, Aglas-Leitner 2026, Wunderling 2021, Armstrong McKay 2022, and the recalled sets.
 - Three notations and the bus (2026-11-07 evening, Anselm: "support a .js notation (we can presume quickjs) ... also support
   json ... continue to support existing notation"; "refactor the core engine to be an event bus and to handle dynamic
   registration of listeners"; `devlog/20261107-three-notations.md`): `Manifest::load` reads `.toml` (as before), `.json`

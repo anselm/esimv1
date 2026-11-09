@@ -86,3 +86,11 @@ some grounding."
 - The runs' own figures: the ladder or the tables, drawn as the page is read.
 - A closing section on what the page cannot tell you, and a link to
   [Limits today](/docs/system/limits).
+
+## The reading list
+
+A project page ends with what it has read: each article or dataset the page rests on, the day it was
+read, what was taken from it, and which numbers are only recalled and not yet checked against their
+source. Newest first. A reader can then tell the sourced from the remembered without opening the
+describes, and the next article to arrive has a place to go (Anselm, 2026-11-08: "we probably should
+track these articles in the readme"). Earth 2100's *What this page has read* is the first.

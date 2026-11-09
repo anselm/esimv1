@@ -127,3 +127,26 @@ yet; the globe could read it as a fourth ring or in the hover. Deaths and movers
 are still the planned impact layer. The conflicts have no duration, no spread and no place beyond
 the country. Nothing in the capacity is finance or politics; it is one number with the article's
 shape.
+
+## 2026-11-08: the paper itself
+
+Anselm: "here is another article that talks about degrading ability to respond to the crisis -
+generally speaking we probably should track these articles in the readme also", with the ERL
+letter: Dyke, Laybourn and Abrams 2026, *Manage derailment risks to avoid Hothouse Earth*, Environ.
+Res. Lett. 21 204029, received 30 June, published 6 November 2026, open access; the paper the
+Conversation piece came from. Read in full from the PDF (fetched from iopscience, 8 pages). What it
+adds to the article: the definition; three agencies (work, economic, political) and the fiscal doom
+loop through them; the stabilising loop (figure 2a: impacts raising political will, Baccini and
+Leemann 2020 on European voting) beside the reinforcing one (2b); the asymmetry (Baumeister 2001,
+Slovic 1999) as a deformation of the stability landscape with a second, lower threshold (figure 3);
+a three-stage management framework with a food-security worked example; "duress ready" policy
+(automatic stabilisers, pre-committed triggers, distributed implementation); and a call for SSPs
+in which agency is endogenous, "a function that is determined by social conditions and biophysical
+shocks", assessed by sensitivity analysis. No numbers for the model. Against it, `policy.capacity`
+has the reinforcing loop, the asymmetry, conflict and inequality, and lacks the stabilising loop,
+a fiscal state, and any effect of social degradation on the biophysical thresholds; noted in the
+README as the next three knobs, the stabilising gain first.
+
+The README now ends with *What this page has read*: each article, the day it was read, what was
+taken, and which parameters are recalled rather than read. The practice goes to `docs/system/telling.md`
+and CLAUDE.md: a project page keeps its reading list.

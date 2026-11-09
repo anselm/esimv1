@@ -276,6 +276,23 @@ more where inequality is high; a flood is followed by a backlash, Valencia in 20
 case; and collective action is easier to destroy than to build. Behind it the tipping points
 cascade, an Atlantic shutdown starving the Amazon, the ice sheets speeding each other.
 
+The paper behind the article is Dyke, Laybourn and Abrams, *Manage derailment risks to avoid
+Hothouse Earth*, Environmental Research Letters 21, 204029, published 6 November 2026 and read
+here on the 8th. It defines derailment risk as "the possibility that escalating Earth system
+disruption weakens the social, political, and economic conditions required to sustain mitigation,
+adaptation, and ecological restoration", and makes four points the model should answer to. It
+splits agency in three, the work agency of energy and materials, the economic agency of finance,
+and the political agency to allocate and mandate, and traces how a fiscal "doom loop" in a
+climate-struck country eats the second, then the third, then the first. It insists the loop runs
+both ways: the experience of impacts has also raised the will to act, as in European voting after
+disasters, so a stabilising feedback competes with the reinforcing one. It argues the damage is
+asymmetric, that bad events weigh more than good and trust is easier to destroy than to build, so
+social conditions deform the stability landscape and a second, lower planetary threshold appears
+once a society has already been degraded. And it asks for scenario pathways in which agency is "a
+function that is determined by social conditions and biophysical shocks and so can vary over
+time", with sensitivity analysis as the first-order assessment. That last request is, in a crude
+form, what the module below is.
+
 Since 2026-11-07 the project carries that loop as a placeholder with the article's shape and
 guessed numbers, declared in the module's parameters. A capacity module reads what the run
 already knows each year, the share of the world's people under heat stress and the voice and
@@ -308,6 +325,16 @@ everyone comes to live past the heat thresholds. The world that most needs to cu
 one the model leaves least able to, which is the article's claim as a number, and the
 number is a placeholder.
 
+Read against the paper, the module has the reinforcing loop, the asymmetry and the conflict
+channel, and has the inequality dependence as a factor. It does not have the stabilising loop at
+all: no impact in these runs ever raises the capacity, where the paper's figure 2(a) says that
+disasters have, at times, done exactly that. It has no fiscal channel as such, no debt that
+compounds, only a capacity that falls with heat stress; the paper's doom loop would need a
+sovereign balance per country. And it leaves the biophysical thresholds where the assessment put
+them, where the paper argues a degraded society effectively lowers them. The next version of the
+placeholder should carry all three as declared knobs, the stabilising gain first, because it is
+the one that changes the sign.
+
 Two more things the loop makes visible. The 2 °C budget, measured from the model's own
 warming, which runs 0.2 °C ahead of the record, is spent by 2040 on every path, including
 zero by 2050; the chart of the cut now needed climbs to a hundred percent and stays there,
@@ -338,6 +365,39 @@ held-low variant) it is 69 billion tonnes and 0.07 °C. Small, because the big s
 release over centuries. What is not in the runs: ice into the sea, the overturning
 circulation slowing, the darker ground where forest or sea ice used to be. Each would add
 to the warming or the sea, and none is modelled yet.
+
+## What this page has read
+
+The articles this page rests on, with the day each was read and what was taken from it, so a
+reader can see what is sourced and what is only recalled. Anselm, 2026-11-08: "we probably should
+track these articles in the readme." Newest first.
+
+- **Dyke, J. G., Laybourn, L. and Abrams, J. F., 2026.** *Manage derailment risks to avoid Hothouse
+  Earth.* Environmental Research Letters 21, 204029, doi 10.1088/1748-9326/aeb1de, open access.
+  Read in full 2026-11-08. Taken: the definition of derailment risk, the three agencies, the fiscal
+  doom loop, the stabilising loop the model lacks, the asymmetry, the second threshold, the call for
+  pathways with endogenous agency. Nothing in it is a number for this model to use.
+- **Dyke, J. G., 2026.** *The worse climate change gets, the harder it becomes to stop it.* The
+  Conversation, 5 November 2026. Read 2026-11-07. Taken: the shape of the capacity module, the
+  Valencia backlash, the debt and conflict channels, the asymmetry.
+- **Aglas-Leitner, F. and others, 2026.** *Recent extreme heatwaves are no match for future events.*
+  Nature Communications 17, 11456. Read in full 2026-11-07 from the PDF. Taken: the heatwave
+  definition the weather generator counts by (Tx90p, 15-day window, runs of three days, severity,
+  cumulative heat, area), and the finding that the events at 2 and 3 °C are outside the observed
+  record, which the generator reproduces only in part.
+- **Wunderling, N. and others, 2021.** *Interacting tipping elements increase risk of climate domino
+  effects under global warming.* Earth System Dynamics, 2021 (volume and pages not rechecked). Read on the publisher's page
+  2026-11-07. Taken: the net fractions by which the ice sheets, the Atlantic circulation and the
+  Amazon lower each other's thresholds at full interaction strength, as the `[[coupling]]` rows; the
+  attribution per link is ours, and the paper says its model makes no predictions.
+- **Armstrong McKay, D. I. and others, 2022.** *Exceeding 1.5 °C global warming could trigger multiple
+  climate tipping points.* Science 377, eabn7950. Table 1 checked row by row 2026-11-03. Taken: every
+  threshold on the ladder, its range, and the permafrost and Amazon carbon the cascade releases.
+- **Anderson, K. and Bows, A., 2011.** *Beyond 'dangerous' climate change.* Philosophical Transactions
+  of the Royal Society A. Recalled, not reread, the citation included: the source of the 3% a year path's name.
+- **Millar, R. J. and others, 2017,** on the sink feedback in the carbon module, and the **IPCC AR6
+  assessed forcings** and the **transient response to cumulative emissions** of 0.45 °C per 1000 GtCO2:
+  recalled parameter sets, marked so in the describes, not yet checked against their sources.
 
 ## What this page cannot tell you
 
