@@ -230397,6 +230397,17 @@
         "note": "the event folder under data/events with the cut rasters and their README"
       },
       {
+        "name": "tz_offset_h",
+        "default": -8.0,
+        "unit": "h",
+        "note": "the local clock's offset from UTC, for the words only (PST -8, PDT -7)"
+      },
+      {
+        "name": "tz_name",
+        "default": "PST",
+        "note": "the local clock's name, for the words only"
+      },
+      {
         "name": "at",
         "default": "2027-01-26T22:00:00Z",
         "note": "the rupture instant (UTC); 26 January is the anniversary of the 1700 event, 14:00 Pacific is DOGAMI's daytime scenario"

@@ -193,20 +193,20 @@ queues at hospitals and shelters rather than as rates.
 
 ## What the runs say
 
-The scenario is the afternoon of 26 January 2027, the anniversary, at two o'clock, on saturated
+The scenario is Friday 26 March 2027 at two in the afternoon, Pacific daylight time, on saturated
 winter soils, which DOGAMI calls its highest-impact case. The table reads each run the day after
 and at the end of the year.
 
 ```esim
-table 2027-01-27 deaths.total=dead_all_causes quake.buildings_collapsed=buildings_collapsed quake.deaths_in_collapses=dead_in_them quake.portland_deaths=deaths_in_Portland quake.injuries_hospital=injuries_needing_a_hospital quake.displaced=people_displaced quake.buildings_extensive=buildings_extensive_or_complete quake.buildings_complete=buildings_complete fuel.river_gal=gallons_toward_the_river
+table 2027-03-27 deaths.total=dead_all_causes quake.buildings_collapsed=buildings_collapsed quake.deaths_in_collapses=dead_in_them quake.portland_deaths=deaths_in_Portland quake.injuries_hospital=injuries_needing_a_hospital quake.displaced=people_displaced quake.buildings_extensive=buildings_extensive_or_complete quake.buildings_complete=buildings_complete fuel.river_gal=gallons_toward_the_river
 ```
 
 ```esim
-table 2027-02-25 fuel.days_left=days_of_fuel_at_day_30 lifeline.hospitals_open=hospitals_open lifeline.crossings_open=crossings_open service.power_share=share_with_power
+table 2027-04-25 fuel.days_left=days_of_fuel_at_day_30 lifeline.hospitals_open=hospitals_open lifeline.crossings_open=crossings_open service.power_share=share_with_power
 ```
 
 ```esim
-table 2028-01-26 lifeline.crossings_open=crossings_open_after_a_year fuel.consumed_gal=gallons_burned_by_the_response fuel.delivered_gal=gallons_resupplied fuel.hub_gal=gallons_at_the_hub service.water_share=share_with_water
+table 2028-03-26 lifeline.crossings_open=crossings_open_after_a_year fuel.consumed_gal=gallons_burned_by_the_response fuel.delivered_gal=gallons_resupplied fuel.hub_gal=gallons_at_the_hub service.water_share=share_with_water
 ```
 
 What stands out:

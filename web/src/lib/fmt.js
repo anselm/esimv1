@@ -22,6 +22,16 @@ export function compact(data) {
 
 export const ms = (v) => (v == null ? '—' : v < 1000 ? `${v} ms` : `${(v / 1000).toFixed(2)} s`)
 
+// an event's local time in words: '2027-03-26 14:00 PDT' -> 'Friday 26 March 2027 at 14:00 PDT'
+export function eventWords(local) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}:\d{2})\s*(\S*)/.exec(local ?? '')
+  if (!m) return local ?? ''
+  const d = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3]))
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+  return `${days[d.getUTCDay()]} ${+m[3]} ${months[+m[2] - 1]} ${m[1]} at ${m[4]}${m[5] ? ' ' + m[5] : ''}`
+}
+
 // a moment relative to a run's event: "6 days before", "2 min in", "day 25"
 export function relTime(t, event) {
   if (event == null || t == null) return ''

@@ -2,7 +2,7 @@
   // One module's section of a run page, composed from the views its describe declared:
   // counters in a row, maps in a grid, crossings beside their map, charts in pairs, text
   // as prose. A module that declared no views gets a map per frame and a chart per report.
-  import { isoDate, isoTime, num, relTime } from './fmt.js'
+  import { isoDate, isoTime, num, relTime, eventWords } from './fmt.js'
   import FieldMap, { MARK_COLORS } from './FieldMap.svelte'
   import Scene3D from './Scene3D.svelte'
   import Globe from './Globe.svelte'
@@ -117,7 +117,10 @@
         <div class="min-w-0">
           <div class="mono text-xs muted">{isoTime(cursor)}</div>
           <div class="text-3xl font-medium leading-tight">{event !== null ? relTime(cursor, event) : v.title}</div>
-          {#if event !== null}<div class="mt-1 text-sm">{cursor < event ? 'before' : cursor - event < 3600 ? 'during' : 'after'} the earthquake of <span class="mono">{isoTime(event)}</span></div>{/if}
+          {#if event !== null}
+            {@const ev = crossings.find((c) => c.data?.kind === 'rupture' || c.data?.kind === 'ignition')}
+            <div class="mt-1 text-sm"><span class="font-medium text-[#b3261e]">{cursor < event ? 'Before' : cursor - event < 3600 ? 'During' : 'After'} the earthquake</span> of {ev?.data?.local ? eventWords(ev.data.local) : isoTime(event)}<span class="muted">&nbsp;({isoTime(event)})</span></div>
+          {/if}
           {#if sentences.length === 0}
             <p class="mt-3 text-[17px] leading-relaxed muted">Nothing has happened yet.</p>
           {:else}
@@ -246,7 +249,7 @@
       <div class="mt-5 grid gap-x-6 gap-y-5 sm:grid-cols-2">
         {#each charts as v (v.source + v.obs)}
           <Chart name={v.title} unit={run.series[v.source]?.unit ?? ''} points={run.series[v.source].points} t0={run.start} t1={run.end}
-            obs={v.obs && run.series[v.obs] ? run.series[v.obs].points : null} obsName={v.obs || null} {cursor} />
+            obs={v.obs && run.series[v.obs] ? run.series[v.obs].points : null} obsName={v.obs || null} {cursor} {event} />
         {/each}
       </div>
     {/if}

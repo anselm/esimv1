@@ -93,6 +93,7 @@ pub struct Ground {
     magnitude: f64,
     duration_s: f64,
     soils: String,
+    tz_offset_h: f64, tz_name: String,
     fired: bool,
     scheduled: bool,
     #[serde(skip)] grid: Option<LatLonGrid>,
@@ -113,6 +114,7 @@ impl Ground {
             magnitude: param_f64(p, "magnitude", 9.0),
             duration_s: param_f64(p, "duration_s", 240.0),
             soils: param_str(p, "soils", "wet").to_string(),
+            tz_offset_h: param_f64(p, "tz_offset_h", -8.0), tz_name: param_str(p, "tz_name", "PST").to_string(),
             fired: false, scheduled: false,
             grid: None, elev: Vec::new(), pga: Vec::new(), pgv: Vec::new(), liq_p: Vec::new(), liq_pgd: Vec::new(), ls_p: Vec::new(), ls_pgd: Vec::new(),
         };
@@ -147,6 +149,8 @@ impl Ground {
         Describe::new("quake.ground", name, "A published earthquake scenario's ground motion and ground failure on the window: DOGAMI's site peak ground acceleration and velocity for a simulated Cascadia M9.0 (synthetic bedrock motions from the USGS, the state's site response), its liquefaction and landslide probability and deformation for saturated or dry soils, read from the event folder and written as world fields; at the stated instant it publishes the rupture. Nothing about the earthquake is computed here: there is no record of this event, and the state's estimate is the best anyone has.")
             .priority(0).dt("once, at the rupture")
             .param("folder", param_str(p, "folder", "portland-cascadia"), "", "the event folder under data/events with the cut rasters and their README")
+            .param("tz_offset_h", param_f64(p, "tz_offset_h", -8.0), "h", "the local clock's offset from UTC, for the words only (PST -8, PDT -7)")
+            .param("tz_name", param_str(p, "tz_name", "PST"), "", "the local clock's name, for the words only")
             .param("at", param_str(p, "at", "2027-01-26T22:00:00Z"), "", "the rupture instant (UTC); 26 January is the anniversary of the 1700 event, 14:00 Pacific is DOGAMI's daytime scenario")
             .param("magnitude", param_f64(p, "magnitude", 9.0), "Mw", "DOGAMI's and the USGS ensemble's scenario magnitude")
             .param("duration_s", param_f64(p, "duration_s", 240.0), "s", "strong shaking; DOGAMI: 3 to 5 minutes for a megathrust")
@@ -205,10 +209,11 @@ impl Module for Ground {
         ctx.field("quake_mmi", "intensity", &g, self.pgv.iter().map(|&v| Self::mmi(v)).collect());
         let ok: Vec<f32> = self.pga.iter().copied().filter(|v| !v.is_nan()).collect();
         let (lo, hi) = (ok.iter().copied().fold(f32::INFINITY, f32::min), ok.iter().copied().fold(0.0f32, f32::max));
-        let local = Time(now.0 - 8 * 3600).to_iso();
-        let sentence = format!("{} Pacific standard time: a magnitude {:.1} rupture of the Cascadia subduction zone. Strong shaking for about {:.0} minutes; peak ground acceleration across the window {:.2} to {:.2} g on DOGAMI's site estimate, soils {}.", &local[..16].replace('T', " "), self.magnitude, self.duration_s / 60.0, lo, hi, self.soils);
+        let local = Time(now.0 + (self.tz_offset_h * 3600.0).round() as i64).to_iso();
+        let local_words = format!("{} {}", &local[..16].replace('T', " "), self.tz_name);
+        let sentence = format!("{} {}: a magnitude {:.1} rupture of the Cascadia subduction zone. Strong shaking for about {:.0} minutes; peak ground acceleration across the window {:.2} to {:.2} g on DOGAMI's site estimate, soils {}.", &local[..16].replace('T', " "), self.tz_name, self.magnitude, self.duration_s / 60.0, lo, hi, self.soils);
         ctx.publish("quake.rupture", json!({ "magnitude": self.magnitude, "duration_s": self.duration_s, "soils": self.soils, "at": now.to_iso(), "source": "DOGAMI O-18-02 site ground motion; USGS synthetic bedrock motion" }));
-        ctx.publish("quake.crossing", json!({ "id": "rupture", "title": "The rupture", "name": "Cascadia", "kind": "rupture", "time": now.to_iso(), "sentence": sentence, "source": "DOGAMI Open-File Report O-18-02 (2018)", "confidence": "a published scenario, not a forecast" }));
+        ctx.publish("quake.crossing", json!({ "id": "rupture", "title": "The rupture", "name": "Cascadia", "kind": "rupture", "time": now.to_iso(), "local": local_words, "sentence": sentence, "source": "DOGAMI Open-File Report O-18-02 (2018)", "confidence": "a published scenario, not a forecast" }));
     }
     fn snapshot(&self) -> serde_json::Value { serde_json::to_value(self).unwrap() }
     fn restore(&mut self, v: serde_json::Value) { let mut o: Ground = serde_json::from_value(v).unwrap(); o.load().expect("ground reload"); *self = o; }

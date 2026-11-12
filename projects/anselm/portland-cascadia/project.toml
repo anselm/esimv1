@@ -2,7 +2,7 @@
 area = "anselm"
 name = "portland-cascadia"
 title = "Portland, the year after Cascadia"
-description = "A scenario, not a forecast: a M9.0 Cascadia rupture at 14:00 PST on 26 January 2027 under Portland on DOGAMI's synthetic site motions, saturated soils, daytime occupancy; the toll on DOGAMI's inventory; the year after on the Resilience Plan's ranges and the county's fuel-hub study; every constant published or declared a guess."
+description = "A scenario, not a forecast: a M9.0 Cascadia rupture at 2 PM PDT on Friday 26 March 2027 under Portland on DOGAMI's synthetic site motions, saturated soils, daytime occupancy; the toll on DOGAMI's inventory; the year after on the Resilience Plan's ranges and the county's fuel-hub study; every constant published or declared a guess."
 created = "2026-11-12"
 by = "cli"
 featured = true
@@ -25,7 +25,7 @@ title = "Saturated soils, 2 AM: people at home"
 "buildings.time_of_day" = "night"
 "agents.time_of_day" = "night"
 "buildings.record" = "wet"
-"ground.at" = "2027-01-26T10:00:00Z"
+"ground.at" = "2027-03-26T09:00:00Z"
 
 [[variant]]
 name = "dry-day"

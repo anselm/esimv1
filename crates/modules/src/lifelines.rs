@@ -234,7 +234,7 @@ impl Module for Lifelines {
             let power = self.service_days("electricity");
             for h in &mut self.hospitals { let u = ctx.rng().f64(); h.grid_day = (power as f64 * u).round() as i64; h.generator_h = self.generator_h; }
             self.scheduled = true;
-            let local = Time(ctx.now().0 - 8 * 3600).to_iso();
+            let local = Time(ctx.now().0 - 7 * 3600).to_iso();  // the date only; a day either side of midnight does not matter here
             self.say(ctx, "before", "city", format!("{}: the city as it stands. About {} people live in the window; all {} Willamette crossings are open, the {} hospitals are on the grid, and the hub's tanks hold about {:.0} million gallons. The Cascadia subduction zone last slipped on the evening of 26 January 1700.", &local[..10], commas(self.residents_total), self.bridges.len(), self.hospitals.len(), self.hub_gal / 1e6), "DOGAMI's inventory for the people; the county's bridge list; OpenStreetMap's hospitals; the county's 2022 hub study at its 67 percent fill; Satake and others 1996 for the 1700 date (recalled)", "the record, before anything happens");
         }
         for b in &self.bridges { ctx.publish_at(b.cell, "lifeline.marked", json!({ "kind": "bridge", "name": b.name, "lat": b.lat, "lon": b.lon, "opened": b.opened })); }

@@ -32,6 +32,7 @@
     return () => clearTimeout(id)
   })
   const pct = $derived(((cursor - t0) / span) * 100)
+  const eventPct = $derived(event === null ? null : ((event - t0) / span) * 100)
   function key(e) {
     if (e.key === 'ArrowRight') { const n = next(cursor); if (n !== null) { cursor = n; e.preventDefault() } }
     else if (e.key === 'ArrowLeft') { let i = walk.findIndex((t) => t >= cursor); if (i < 0) i = walk.length; if (i > 0) { cursor = walk[i - 1]; e.preventDefault() } }
@@ -41,7 +42,10 @@
 <div class="sticky top-0 z-[5] -mx-4 mb-6 bg-white/90 px-4 py-2 backdrop-blur dark:bg-neutral-950/90 sm:-mx-6 sm:px-6">
   <div class="flex items-center gap-3 mono text-xs">
     <button class="w-6 rounded-[3px] ring-1 ring-neutral-300 hover:text-brand dark:ring-neutral-700" onclick={() => { if (cursor >= t1 && !playing) cursor = t0; playing = !playing }} aria-label={playing ? 'pause' : 'play'}>{playing ? '❚❚' : '▶'}</button>
-    <input type="range" min={t0} max={t1} step={1} bind:value={cursor} onkeydown={key} class="h-1 flex-1 accent-brand" aria-label="time" title="arrow keys step moment by moment" />
+    <div class="relative flex-1">
+      <input type="range" min={t0} max={t1} step={1} bind:value={cursor} onkeydown={key} class="h-1 w-full accent-brand" aria-label="time" title="arrow keys step moment by moment" />
+      {#if eventPct !== null && eventPct >= 0 && eventPct <= 100}<div class="pointer-events-none absolute -top-1.5 h-4 w-0.5 bg-[#b3261e]" style="left:calc({eventPct}% - 1px)" title="the event: {isoTime(event)}"></div>{/if}
+    </div>
     <span class="w-36 text-right tabular-nums">{isoTime(cursor)}</span>
     {#if event !== null}
       <span class="hidden w-28 text-right sm:inline" title="the event: {isoTime(event)}">{relTime(cursor, event)}</span>

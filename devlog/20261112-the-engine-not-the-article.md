@@ -148,3 +148,15 @@ now."
 - Noted for the fit: the collapse casualty rate is 0.05 recalled, tripled by the fitted scale to
   0.15; the tripling was fitted on the expected model and should be refitted on the drawn one,
   which is a sweep for another day.
+
+## The date, said (later)
+
+Anselm: "Can we very clearly show the date of the event and say the date clearly? Show a vertical
+red line in the timeline. Move the event date to march 2027 also." Done: the scenario is now Friday
+26 March 2027 at 2 PM Pacific daylight time (21:00 UTC; the run starts a week before and ends a year
+after; the wet-night variant at 2 AM PDT), on soils still saturated from the winter rains. The ground
+module gained `tz_offset_h` and `tz_name` for its words and puts the local time in the rupture
+crossing's data; the clock says "Before the earthquake of Friday 26 March 2027 at 14:00 PDT" on
+every moment, and a red line marks the instant on the timeline and on every chart. The 1700
+anniversary framing in the manifest's notes went with the date; the README's deep history keeps
+the 1700 event as what the fault did last time.

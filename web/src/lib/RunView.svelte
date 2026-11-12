@@ -147,7 +147,7 @@
           <div class="mono text-xs muted mb-2">{unit}</div>
           <div class="grid gap-x-6 gap-y-5 sm:grid-cols-2">
             {#each list as s (s.name)}
-              <Chart name={s.name} unit={s.unit} points={s.points} t0={run.start} t1={run.end} obs={s.obs ? run.series[s.obs].points : null} obsName={s.obs} {cursor} />
+              <Chart name={s.name} unit={s.unit} points={s.points} t0={run.start} t1={run.end} obs={s.obs ? run.series[s.obs].points : null} obsName={s.obs} {cursor} event={eventOf(crossings)} />
             {/each}
           </div>
         </div>

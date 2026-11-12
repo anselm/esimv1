@@ -1,6 +1,6 @@
 # Q1: Portland and the Cascadia earthquake, the year after. A scenario, not a forecast: the
-# magnitude 9.0 rupture the State of Oregon plans for, on the afternoon of 26 January 2027 (the
-# anniversary of the 1700 event; 2 PM is DOGAMI's daytime case), on saturated winter soils. The
+# magnitude 9.0 rupture the State of Oregon plans for, at two in the afternoon on Friday 26 March
+# 2027 (2 PM is DOGAMI's daytime case), on soils still saturated from the winter rains. The
 # ground motion and ground failure are DOGAMI's (Open-File Report O-18-02, 2018), the buildings
 # and the people are DOGAMI's inventory, the toll is our fragility fitted to DOGAMI's Hazus run,
 # and the year after is the Oregon Resilience Plan's restoration ranges and the county's 2022
@@ -11,12 +11,12 @@
 
 [run]
 name = "q1-portland-cascadia"
-start = "2027-01-19T20:00:00Z"
-end = "2028-01-26T20:00:00Z"
+start = "2027-03-19T21:00:00Z"
+end = "2028-03-19T21:00:00Z"
 seed = 1
 close_every = "1d"
 snapshot_every = "30d"
-notes = "A scenario, not a forecast: a M9.0 Cascadia rupture at 14:00 PST on 26 January 2027 under Portland on DOGAMI's synthetic site motions, saturated soils, daytime occupancy; the toll on DOGAMI's inventory; the year after on the Resilience Plan's ranges and the county's fuel-hub study; every constant published or declared a guess."
+notes = "A scenario, not a forecast: a M9.0 Cascadia rupture at 2 PM PDT on Friday 26 March 2027 under Portland on DOGAMI's synthetic site motions, saturated soils, daytime occupancy; the toll on DOGAMI's inventory; the year after on the Resilience Plan's ranges and the county's fuel-hub study; every constant published or declared a guess."
 
 [place]
 lat_s = 45.43
@@ -62,7 +62,9 @@ name = "ground"
 kind = "quake.ground"
 [module.params]
 folder = "portland-cascadia"
-at = "2027-01-26T22:00:00Z"
+at = "2027-03-26T21:00:00Z"
+tz_offset_h = -7
+tz_name = "PDT"
 soils = "wet"
 
 [[module]]
