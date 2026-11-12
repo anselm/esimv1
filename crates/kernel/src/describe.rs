@@ -127,6 +127,9 @@ impl Describe {
     pub fn note(mut self, s: &str) -> Self { self.notes.push(s.into()); self }
     pub fn table(mut self, name: &str, rows: serde_json::Value) -> Self { self.tables.insert(name.into(), rows); self }
     pub fn view(mut self, kind: &str, title: &str, source: &str, note: &str) -> Self { self.views.push(View { kind: kind.into(), title: title.into(), source: source.into(), obs: String::new(), note: note.into() }); self }
+    /// A film: one panel with a map, the moment, the newest sentences and the module's counters.
+    /// `sources` is a comma-separated list of frame names; the film shows the latest one that has begun.
+    pub fn view_film(mut self, title: &str, sources: &str, note: &str) -> Self { self.views.push(View { kind: "film".into(), title: title.into(), source: sources.into(), obs: String::new(), note: note.into() }); self }
     /// A chart of a model series with an observed series beside it.
     pub fn view_vs(mut self, title: &str, source: &str, obs: &str, note: &str) -> Self { self.views.push(View { kind: "chart".into(), title: title.into(), source: source.into(), obs: obs.into(), note: note.into() }); self }
 }
@@ -137,7 +140,8 @@ pub type Describer = fn(kind: &str, name: &str, params: &toml::Value) -> Result<
 /// Topics the kernel itself emits; subscribing to them needs no publisher.
 pub const KERNEL_TOPICS: &[&str] = &["kernel.close", "kernel.snapshot", "world.write"];
 
-/// One widget a module asks for. `kind` is one of: `map` (source is a frame name),
+/// One widget a module asks for. `kind` is one of: `map` (source is a frame name), `film` (a
+/// comma-separated list of frame names; one panel with the map, the moment, the sentences and the counters),
 /// `chart` (a report name; `obs` an observed report drawn beside it), `counter` (a
 /// report shown as one number at the cursor), `crossings` (a topic ending in `.crossing`,
 /// shown as the list of crossings so far), `text` (source is the text itself).

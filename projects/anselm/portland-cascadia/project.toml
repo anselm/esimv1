@@ -7,7 +7,7 @@ created = "2026-11-12"
 by = "cli"
 featured = true
 cover = "cover.png"
-cover_caption = "DOGAMI's chance of liquefaction and the ground deformation under Portland, from the base run; a still, the clock is on the run page"
+cover_caption = "The run page's clock on day 25 of the base run, dark mode: the damage DOGAMI's ground does to the buildings, the crossings closed and the hospitals on the grid or on generators as marks, the counts beside; a still, the clock is on the run page"
 
 [[variant]]
 name = "wet-day"
@@ -39,6 +39,12 @@ name = "cut-20"
 title = "The hub's stock cut by a fifth before the day: Ordinance 2026-312's 2036 target, applied to the stock"
 [variant.set]
 "lifelines.storage_cut" = 0.2
+
+[[variant]]
+name = "no-hub"
+title = "The hub elsewhere: no fuel stored on the bank before the day; fuel arrives from outside once the routes work"
+[variant.set]
+"lifelines.storage_cut" = 1.0
 
 [[variant]]
 name = "retrofit"

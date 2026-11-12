@@ -21,3 +21,14 @@ export function compact(data) {
 }
 
 export const ms = (v) => (v == null ? '—' : v < 1000 ? `${v} ms` : `${(v / 1000).toFixed(2)} s`)
+
+// a moment relative to a run's event: "6 days before", "2 min in", "day 25"
+export function relTime(t, event) {
+  if (event == null || t == null) return ''
+  const d = t - event, a = Math.abs(d)
+  if (a < 60) return d < 0 ? 'the minute before' : 'the first minute'
+  if (a < 3600) { const m = Math.round(a / 60); return d < 0 ? `${m} min before` : `${m} min in` }
+  if (a < 86400) { const h = Math.floor(a / 3600); return d < 0 ? `${h} h before` : `${h} h in` }
+  const days = Math.floor(a / 86400)
+  return d < 0 ? `${days} day${days === 1 ? '' : 's'} before` : `day ${days}`
+}

@@ -11,7 +11,7 @@
 
 [run]
 name = "q1-portland-cascadia"
-start = "2027-01-26T20:00:00Z"
+start = "2027-01-19T20:00:00Z"
 end = "2028-01-26T20:00:00Z"
 seed = 1
 close_every = "1d"

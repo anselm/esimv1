@@ -2,13 +2,13 @@
   // One module's section of a run page, composed from the views its describe declared:
   // counters in a row, maps in a grid, crossings beside their map, charts in pairs, text
   // as prose. A module that declared no views gets a map per frame and a chart per report.
-  import { isoDate, num } from './fmt.js'
-  import FieldMap from './FieldMap.svelte'
+  import { isoDate, isoTime, num, relTime } from './fmt.js'
+  import FieldMap, { MARK_COLORS } from './FieldMap.svelte'
   import Scene3D from './Scene3D.svelte'
   import Globe from './Globe.svelte'
   import Chart from './Chart.svelte'
 
-  let { describe, run, base, cursor, crossings = [], context = null } = $props()
+  let { describe, run, base, cursor, crossings = [], context = null, event = null } = $props()
 
   const views = $derived.by(() => {
     if (describe.views?.length) return describe.views
@@ -27,6 +27,38 @@
   const texts = $derived(of('text'))
   const crossViews = $derived(of('crossings'))
   const stories = $derived(views.filter((v) => v.kind === 'story'))
+  // a film: the latest of its fields that has begun (a frame after the run's first instant at or before the cursor)
+  const films = $derived(views.filter((v) => v.kind === 'film'))
+  // the marks a film draws: every component the run marked, with its state at the cursor, from the
+  // run's own log (lifeline.marked at the start, lifeline.failed and lifeline.restored as things happen)
+  let markLog = $state(null)
+  $effect(() => { if (films.length && markLog === null) { markLog = false; loadMarks() } })
+  async function loadMarks() {
+    const topics = ['lifeline.marked', 'lifeline.failed', 'lifeline.restored']
+    const texts = await Promise.all(topics.map((t) => fetch(`${base}/log.jsonl?topic=${t}`).then((r) => (r.ok ? r.text() : '')).catch(() => '')))
+    const lines = texts.join('\n').split('\n').filter(Boolean).map((l) => { try { return JSON.parse(l) } catch { return null } }).filter(Boolean)
+    markLog = lines.sort((a, b) => a.t - b.t || a.seq - b.seq)
+  }
+  const marksAt = $derived.by(() => {
+    if (!markLog || cursor === null) return []
+    const m = new Map()
+    for (const e of markLog) {
+      if (e.t > cursor) break
+      const d = e.data ?? {}; const key = `${d.kind}:${d.name}`
+      if (e.topic === 'lifeline.marked') m.set(key, { ...d, state: 'open' })
+      else if (e.topic === 'lifeline.failed') { const x = m.get(key); if (x) x.state = d.kind === 'hub' ? 'spilled' : d.kind === 'bridge' ? 'closed' : d.status === 'dark' ? 'dark' : 'damaged' }
+      else if (e.topic === 'lifeline.restored') { const x = m.get(key); if (x && x.state !== 'damaged') x.state = d.status === 'generator' ? 'generator' : 'open' }
+    }
+    return [...m.values()]
+  })
+  const STATES = [['open', 'open'], ['generator', 'on generator'], ['dark', 'dark, no fuel'], ['damaged', 'closed by damage'], ['closed', 'crossing closed'], ['spilled', 'hub, spilled']]
+  const legend = $derived(STATES.map(([state, label]) => ({ state, label, color: MARK_COLORS[state], n: marksAt.filter((x) => x.state === state).length })).filter((l) => l.n))
+  function filmField(v) {
+    const names = v.source.split(',').map((s) => s.trim()).filter((n) => run.fields?.[n])
+    let pick = names[0] ?? null
+    for (const n of names) { const ts = run.fields[n].times ?? []; if (ts.some((t) => t > run.start && t <= cursor)) pick = n }
+    return pick
+  }
   // every crossing so far with a sentence, newest first
   const sentences = $derived(crossings.filter((c) => c.t <= cursor && c.data?.sentence).slice().reverse())
 
@@ -46,6 +78,8 @@
     if (unit === 'degC') return `${x >= 0 ? '+' : ''}${x.toFixed(2)} °C`
     if (unit === 'ppm') return `${Math.round(x)} ppm`
     if (unit === 'm') return Math.abs(x) < 2 ? `${(x * 100).toFixed(0)} cm` : `${num(Math.round(x))} m`
+    if (unit === 'gal') return Math.abs(x) >= 1e6 ? `${(x / 1e6).toFixed(1)} M gal` : `${num(Math.round(x))} gal`
+    if (unit === 'people' || unit === 'buildings' || unit === 'crossings' || unit === 'hospitals' || unit === 'cells' || unit === 'd') return num(Math.round(x))
     if (Number.isInteger(x)) return num(x)
     return num(+x.toPrecision(4)) + (unit ? ` ${unit}` : '')
   }
@@ -63,6 +97,44 @@
       <span class="mono text-xs muted">{describe.kind}</span>
     </div>
     {#if describe.summary}<p class="mt-1 max-w-3xl text-sm muted">{describe.summary}</p>{/if}
+
+    {#each films as v (v.source)}
+      {@const f = filmField(v)}
+      <div class="mt-5 grid gap-x-6 gap-y-4 lg:grid-cols-[3fr_2fr]">
+        <div class="min-w-0">
+          {#if f}<FieldMap name={f} field={run.fields[f]} {base} {cursor} {context} marks={marksAt} />{/if}
+          {#if legend.length}
+            <div class="mono mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-xs">
+              {#each legend as l (l.state)}<span><span style="color:{l.color}">{l.state === 'closed' ? '■' : l.state === 'spilled' ? '◆' : '●'}</span> {l.label} <span class="muted">{l.n}</span></span>{/each}
+              <span class="muted">squares are crossings, circles hospitals</span>
+            </div>
+          {/if}
+        </div>
+        <div class="min-w-0">
+          <div class="mono text-xs muted">{isoTime(cursor)}</div>
+          <div class="text-3xl font-medium leading-tight">{event !== null ? relTime(cursor, event) : v.title}</div>
+          {#if sentences.length === 0}
+            <p class="mt-3 text-[17px] leading-relaxed muted">Nothing has happened yet.</p>
+          {:else}
+            <p class="mt-3 text-[17px] leading-relaxed">{sentences[0].data.sentence}</p>
+            {#each sentences.slice(1, 3) as c, i (c.t + c.topic + (c.data.id ?? i))}
+              <p class="mt-2 text-sm leading-relaxed muted">{c.data.sentence}</p>
+            {/each}
+          {/if}
+          {#if counters.length}
+            <div class="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 sm:grid-cols-3">
+              {#each counters.slice(0, 6) as c (c.source)}
+                <div>
+                  <div class="mono text-xl tabular-nums">{show(c)}</div>
+                  <div class="text-xs">{c.title}</div>
+                </div>
+              {/each}
+            </div>
+          {/if}
+          {#if v.note}<div class="mt-3 text-xs muted">{v.note}</div>{/if}
+        </div>
+      </div>
+    {/each}
 
     {#if scenes.length}
       {#each scenes as v (v.source)}
@@ -92,7 +164,7 @@
       </div>
     {/if}
 
-    {#if counters.length}
+    {#if counters.length && !films.length}
       <div class="mt-4 grid gap-x-6 gap-y-3 sm:grid-cols-2 lg:grid-cols-4">
         {#each counters as v (v.source)}
           <div>

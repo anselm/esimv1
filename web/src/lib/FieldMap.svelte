@@ -1,4 +1,7 @@
 <script module>
+  // the status palette for marks, shared with the legend (ModuleViews)
+  export const MARK_COLORS = { open: '#0e7c86', generator: '#c77d00', dark: '#b3261e', closed: '#b3261e', damaged: '#6b7280', spilled: '#b3261e' }
+
   // shared by every map on the page
   const frameCache = new Map()      // `${base}/${name}/${i}` -> Promise<Float32Array>
   let outlinesPromise = null
@@ -9,6 +12,7 @@
 </script>
 
 <script>
+
   // One field snapshot drawn to a canvas: nearest-neighbour blocks, a colour
   // scale that is either the run-wide min/max (default) or the current frame's
   // own, a time slider when there is more than one frame, and a hover/tap
@@ -16,7 +20,10 @@
   import { isoDate, num } from './fmt.js'
   import { LUT, RAMP_CSS, FIRE_LUT, FIRE_CSS, DIVERGE_LUT, DIVERGE_CSS, LINE, COVER, COVER_NAMES, rampFor } from './ramp.js'
 
-  let { name, field, base, cursor = null, context = null } = $props()
+  // marks: named points with a state at the cursor (a crossing closed, a hospital dark), drawn over the
+  // frame: a square for a crossing, a circle for a hospital, a diamond for the hub; a ring when open,
+  // filled when not; the colour is one of the status palette the legend beside the map names
+  let { name, field, base, cursor = null, context = null, marks = [] } = $props()
   const ramp = $derived(rampFor(name, field.unit))
   const coverRgb = Object.fromEntries(Object.entries(COVER).map(([k, h]) => [k, [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16))]))
 
@@ -180,6 +187,24 @@
         if (x < 0 || y < 0 || x > W || y > H) continue
         if (drawn.some(([dx, dy]) => Math.abs(dx - x) < 70 * dpr && Math.abs(dy - y) < 14 * dpr)) continue
         ctx.strokeText(p.name, x, y); ctx.fillText(p.name, x, y); drawn.push([x, y])
+      }
+    }
+    if (marks?.length) {
+      const dark = matchMedia('(prefers-color-scheme: dark)').matches
+      const sx = (lon) => ((lon - grid.lon_w) / (grid.nx * grid.dlon)) * W
+      const sy = (lat) => ((grid.lat_n - lat) / (grid.ny * grid.dlat)) * H
+      const r = 5 * dpr
+      for (const m of marks) {
+        const x = sx(m.lon), y = sy(m.lat)
+        if (x < 0 || y < 0 || x > W || y > H) continue
+        const col = MARK_COLORS[m.state] ?? '#6b7280'
+        ctx.beginPath()
+        if (m.kind === 'bridge') ctx.rect(x - r, y - r, 2 * r, 2 * r)
+        else if (m.kind === 'hub') { ctx.moveTo(x, y - 1.4 * r); ctx.lineTo(x + 1.4 * r, y); ctx.lineTo(x, y + 1.4 * r); ctx.lineTo(x - 1.4 * r, y); ctx.closePath() }
+        else ctx.arc(x, y, r, 0, 2 * Math.PI)
+        ctx.lineWidth = 4 * dpr; ctx.strokeStyle = dark ? 'rgba(0,0,0,0.7)' : 'rgba(255,255,255,0.85)'; ctx.stroke()
+        if (m.state === 'open') { ctx.lineWidth = 2 * dpr; ctx.strokeStyle = col; ctx.stroke(); ctx.fillStyle = dark ? 'rgba(0,0,0,0.35)' : 'rgba(255,255,255,0.5)'; ctx.fill() }
+        else { ctx.fillStyle = col; ctx.fill(); ctx.lineWidth = 1 * dpr; ctx.strokeStyle = col; ctx.stroke() }
       }
     }
     if (world && outlines) {

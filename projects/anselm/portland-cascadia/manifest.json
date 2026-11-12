@@ -9,7 +9,7 @@
         "notes": "A scenario, not a forecast: a M9.0 Cascadia rupture at 14:00 PST on 26 January 2027 under Portland on DOGAMI's synthetic site motions, saturated soils, daytime occupancy; the toll on DOGAMI's inventory; the year after on the Resilience Plan's ranges and the county's fuel-hub study; every constant published or declared a guess.",
         "seed": 1,
         "snapshot_every": "30d",
-        "start": "2027-01-26T20:00:00Z"
+        "start": "2027-01-19T20:00:00Z"
       }
     },
     {
@@ -83,7 +83,7 @@
   ],
   "from": {
     "entry": "manifests/q1-portland-cascadia.toml",
-    "hash": "sha256:399e3810209986e9802f9ea6c8e44f5856bcac669553e2471bca58b232ef948b",
+    "hash": "sha256:0f675fb51dee9a8bbca1d54493ba879f9aa6969e7f35354ee3dbad195a3b8ec1",
     "language": "toml"
   },
   "manifest": "manifest/1"

@@ -107,6 +107,22 @@ source = "Multnomah County's CEI Hub Seismic Risk Analysis page (read 2026-11-12
 confidence = "checked (the page), source behind it unknown"
 
 [[fact]]
+id = "county-summary-of-o-18-02"
+title = "The county's summary of DOGAMI O-18-02: up to 27,000 injuries from minor to fatal (about 20,000 minor), about 2 percent of the three-county population; 85,000 people needing shelter; 37 billion dollars in building damage"
+value = 27000
+unit = "injuries, minor to fatal, three counties"
+source = "Multnomah County, DOGAMI: Study estimates Cascadia earthquake impacts for Portland region, https://multco.us/info/dogami-study-estimates-cascadia-earthquake-impacts-portland-region (last reviewed 2024-11-27; sent by Anselm, read 2026-11-12)"
+confidence = "checked (the page); the report's own tables are in the loss CSVs here"
+
+[[fact]]
+id = "hub-direct-toll"
+title = "The hub's own toll if the spill ignites: 0 to 7 killed and 2 to 80 injured among about 1,200 workers on 1,500 acres, the BP Texas City 2005 and ExxonMobil Baton Rouge 2016 rates applied to the site"
+value = 7
+unit = "deaths, maximum"
+source = "CEI Hub Seismic Risk Analysis (2022) Table 11 and the Direct Impacts to People row of its summary table (read 2026-11-12)"
+confidence = "checked; the study's own method is two analogues"
+
+[[fact]]
 id = "ordinance-2026-312"
 title = "Portland's bulk fuel terminal capacity reduction: at least 20 percent of in-service storage capacity by 1 December 2036, at 11 terminals, aviation-fuel-only tanks exempt; passed to second reading 5 November 2026, 11 to 0, second reading 12 November 2026"
 value = 0.20

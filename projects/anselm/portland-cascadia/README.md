@@ -26,7 +26,11 @@ the slopes would fail, and put 615,852 footprints with their occupants through F
 model, at two in the afternoon and two in the morning, on dry soils and on saturated ones. For the
 City of Portland on a wet afternoon it came to 896 dead, 3,654 hurt badly enough for a hospital,
 30,627 people needing shelter, and 18.9 billion dollars of building damage. For the three counties,
-1,473 dead and 85,211 displaced. The report says what every scenario says, that these are
+1,473 dead and 85,211 displaced. The county's own summary of the study, the page it still keeps,
+puts it as up to 27,000 injuries from minor to fatal, about two percent of the three counties'
+people, 85,000 needing shelter and 37 billion dollars of building damage, and quotes the study's
+lead investigator: a Cascadia earthquake will happen, and how well we prepare will make all the
+difference in how well we bounce back. The report says what every scenario says, that these are
 planning figures with a lot of uncertainty and little detail, and it is the best anyone has.
 
 ## Why now
@@ -96,10 +100,19 @@ two sides of the thread can be run.
 
 ## What to show people
 
-Not the shaking map; the state has drawn that. The clock. Press play on a run and the first
-afternoon goes by in a sentence, and then the days: the generators run dry on the third, trucks
-move in the third week, the first bridge comes back in the fourth, power in the second month,
-water in the tenth. Then change one thing and run it again.
+Not the shaking map; the state has drawn that. The clock, with a before and an after. A run
+starts a week before the afternoon, with the people on the map, every crossing open, every hospital
+on the grid and the hub full, and says so in its first sentence. At the instant the map becomes
+the ground motion, four minutes later the damage, and from then on the crossings and the hospitals
+sit on it as marks that change state: a square for a crossing, a circle for a hospital, filled when
+closed or dark, with the key beside the map. Beside the map, the moment, the latest sentence and
+the counts: the dead, the crossings open, the hospitals open and dark, the people with power and
+water. Press play and the week before goes by in a second, the afternoon in a sentence, and then
+the days: the generators run dry on the third, trucks move in the third week, the first bridge
+comes back in the fourth, power in the second month, water in the tenth. The arrow keys step from
+moment to moment, and `?t=` with a time in the address holds the clock there, so a moment can be
+sent to someone. Then change one thing and run it again: the variants put the hub's storage cut by
+a fifth, every tank retrofitted, and no hub at all beside the base run.
 
 ```esim
 actors
@@ -134,7 +147,11 @@ winter soils, which DOGAMI calls its highest-impact case. The table reads each r
 and at the end of the year.
 
 ```esim
-table 2027-01-27 quake.deaths=deaths quake.portland_deaths=deaths_in_Portland quake.injuries_hospital=injuries_needing_a_hospital quake.displaced=people_displaced quake.buildings_extensive=buildings_extensive_or_complete quake.buildings_complete=buildings_complete fuel.river_gal=gallons_toward_the_river fuel.ground_gal=gallons_on_the_ground
+table 2027-01-27 toll.deaths=dead_all_causes hub.deaths=dead_at_the_hub quake.portland_deaths=deaths_in_Portland quake.injuries_hospital=injuries_needing_a_hospital quake.displaced=people_displaced quake.buildings_extensive=buildings_extensive_or_complete quake.buildings_complete=buildings_complete fuel.river_gal=gallons_toward_the_river
+```
+
+```esim
+table 2027-02-25 fuel.days_left=days_of_fuel_at_day_30 lifeline.hospitals_open=hospitals_open lifeline.crossings_open=crossings_open service.power_share=share_with_power
 ```
 
 ```esim
@@ -143,6 +160,17 @@ table 2028-01-26 lifeline.crossings_open=crossings_open_after_a_year fuel.consum
 
 What stands out:
 
+- **With and without the hub.** The county's 2022 study puts the hub's own toll, assuming the
+  spill ignites, at none to seven dead and two to eighty hurt among its twelve hundred workers,
+  the rates of Texas City in 2005 and Baton Rouge in 2016 applied to the site; the run draws in
+  that range and scales it by the release, so the base run adds about three dead to the 765 the
+  buildings kill, and the no-hub run adds none. On the record, then, the hub does not magnify the
+  earthquake's dead on the day; DOGAMI's run models no fire following the earthquake and says so,
+  and neither does this one, and that is the gap most worth closing. What the hub decides is the
+  year: at day thirty the base run has 317 days of the response's fuel in the tanks and the no-hub
+  run has 22, a week of deliveries, with the pipeline assumed back on day fourteen in both. The
+  state's argument and the activists' are both in the numbers; the spill is the activists' and the
+  stock is the state's.
 - **The spill is the fastest thing that happens.** In the base run about 150 million gallons leave
   the tanks in the first minutes, 64 million of them toward the river, a draw at the middle of the
   county study's range; the three seeds span 134 to 171 million. Cutting storage by a fifth before
@@ -212,6 +240,10 @@ visible in time, which the thread was having without it.
   statements on the downtown bridges, the dates and the budget.
 - OPB, *Fuel spill in Portland after a major earthquake could be bigger than Deepwater Horizon,
   study finds*, Monica Samayoa, 7 February 2022. Read 2026-11-12. Taken: the county chair's words.
+- Multnomah County, *DOGAMI: Study estimates Cascadia earthquake impacts for Portland region*,
+  the county's page on the 2018 study (last reviewed 27 November 2024), sent by Anselm, read
+  2026-11-12. Taken: the county's summary numbers (27,000 injuries, 85,000 needing shelter, 37
+  billion dollars), the lead investigator's words. The page says nothing of the bridges or the hub.
 - Gosia Wozniacka, *A Big One nightmare scenario drives Portland to cut fuel storage along the
   Willamette*, The Oregonian/OregonLive, 12 November 2026. Read 2026-11-12 from Anselm's paste of
   the text, the site having refused this machine. Taken: what the ordinance cuts and exempts, the

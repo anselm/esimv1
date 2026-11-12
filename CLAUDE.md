@@ -307,7 +307,17 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   14, closing to zero. Project `anselm/portland-cascadia` (manifest `q1-portland-cascadia`; variants wet-day,
   wet-night, dry-day, cut-20, retrofit, burnside-ready, seed-2, seed-3; six seconds a run). The story view on the
   lifelines module carries every `*.crossing` sentence. Not yet: a 3D scene (no heights in the inventory), the
-  USGS grid as an alternative ground, a hospital-level inventory, the water network.
+  USGS grid as an alternative ground, a hospital-level inventory, the water network. The clock as a film
+  (2026-11-12 evening, `devlog/20261112-the-clock-as-a-film.md`; Anselm: a before and an after, sober, drama in
+  the results, outages on a map, runs with and without the hub): the run starts a week before; the ground
+  module writes its motion maps at the rupture, not the start; the buildings reckon at the end of the shaking
+  and publish `quake.toll`; the `film` view kind (`Describe::view_film`, one panel: the latest field that has
+  begun, the moment relative to the run's event, the newest sentences, the counters, and marks from
+  `lifeline.marked/failed/restored` with a status key); the Timeline walks moments (every frame and crossing
+  time plus 400 steps, dwelling on moments under an hour apart; arrow keys; `?t=` holds the cursor); the hub's
+  own toll is the county study's 0 to 7 dead scaled by the release, `toll.deaths` is one total; variant
+  `no-hub`. A pulsing shaking map was built and removed on his word. Share cards and page tags the same evening:
+  `web/lib/meta.mjs` writes each route's head, `deploy/cards.sh` composes `card.png` per project.
 - Wild cards (2026-11-05, Anselm: "i just want a placeholder ... like a video game with wild card factors
   optionally"): `events.shock` (`crates/modules/src/shock.rs`) draws `data/events/future-speculative.toml` by the
   run's seed each year from `from` (default 2025), or plays one named card (`mode = "named"`, `event`, `at`);

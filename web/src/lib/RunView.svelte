@@ -22,6 +22,7 @@
 
   let { id, base, back = {}, backLabel = 'back' } = $props()
   let cursor = $state(null)
+  let held = $state(false)
   // roads, place names and city limits a module fetched for its window (its describe's `context` table)
   const contextOf = (run) => (run?.describe?.modules ?? []).map((m) => m.tables?.context).find(Boolean) ?? null
   let wantLog = $state(false)   // the event log is ten megabytes; fetched when its panel opens
@@ -32,8 +33,11 @@
     const run = await r.json()
     document.title = `${run.name} · esim`
     ;[run.scores, run.audit, run.describe] = await Promise.all([loadJson('scores.json'), loadJson('audit.json'), loadJson('describe.json')])
-    // the cursor starts at the beginning and plays, so the tip-over is seen, not just the end state
-    cursor = run.start
+    // the cursor starts at the beginning and plays, so the tip-over is seen, not just the end state;
+    // ?t=<unix seconds> puts it at a moment and holds it, so a moment can be shared
+    const want = Number(new URLSearchParams(location.search).get('t'))
+    held = Number.isFinite(want) && want > 0
+    cursor = held ? Math.min(run.end, Math.max(run.start, want)) : run.start
     return run
   }
   async function loadJson(name) {
@@ -51,13 +55,22 @@
     return r.ok ? r.text() : null
   }
 
+  // every frame time and every crossing's time: the moments the clock walks
+  function momentsOf(run, crossings) {
+    const out = []
+    for (const f of Object.values(run.fields ?? {})) for (const t of f.times ?? []) out.push(t)
+    for (const c of crossings ?? []) out.push(c.t)
+    return out
+  }
+  // the run's event, if one crossing is a rupture or an ignition: the clock's labels read relative to it
+  const eventOf = (crossings) => (crossings ?? []).find((c) => c.data?.kind === 'rupture' || c.data?.kind === 'ignition')?.t ?? null
   // Frames and series no module's views claimed (older runs without describe.json, or
   // outputs a describe does not list) are shown after the modules, grouped by unit.
   function unclaimed(run) {
     const claimedMaps = new Set(), claimedSeries = new Set()
     for (const d of run.describe?.modules ?? []) {
       const vs = d.views?.length ? d.views : [...(d.frames ?? []).map((f) => ({ kind: 'map', source: f.name })), ...(d.reports ?? []).map((r) => ({ kind: 'chart', source: r.name }))]
-      for (const v of vs) { if (v.kind === 'map') claimedMaps.add(v.source); else if (v.kind === 'chart' || v.kind === 'counter') { claimedSeries.add(v.source); if (v.obs) claimedSeries.add(v.obs) } }
+      for (const v of vs) { if (v.kind === 'map') claimedMaps.add(v.source); else if (v.kind === 'film') for (const s of v.source.split(',')) claimedMaps.add(s.trim()); else if (v.kind === 'chart' || v.kind === 'counter') { claimedSeries.add(v.source); if (v.obs) claimedSeries.add(v.obs) } }
       for (const f of d.frames ?? []) claimedMaps.add(f.name)
       for (const r of d.reports ?? []) claimedSeries.add(r.name)
     }
@@ -107,12 +120,12 @@
   </section>
 
   {#if cursor !== null}
-    <Timeline t0={run.start} t1={run.end} bind:cursor autoplay={true} />
+    <Timeline t0={run.start} t1={run.end} bind:cursor autoplay={!held} moments={momentsOf(run, crossings)} event={eventOf(crossings)} />
   {/if}
 
   <!-- the modules, in the manifest's order, each with the views it declared -->
   {#each run.describe?.modules ?? [] as d (d.name)}
-    <ModuleViews describe={d} {run} {base} {cursor} {crossings} context={contextOf(run)} />
+    <ModuleViews describe={d} {run} {base} {cursor} {crossings} context={contextOf(run)} event={eventOf(crossings)} />
   {/each}
 
   <!-- what no module claimed -->

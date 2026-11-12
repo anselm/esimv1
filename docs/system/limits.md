@@ -247,6 +247,7 @@ holds the history.
   is a number not a flow, and there is no tsunami, aftershock, fire, water-pipe, communications
   or migration layer. The hospitals' fates come from the generic fragility at their cells with a
   guessed code factor; in the base run all thirteen stand.
+- The hub's own toll is the county study's range for an explosion among its workers, none to seven dead, drawn by the seed and scaled by the release; neither DOGAMI's run nor this one models fire following the earthquake, so the deaths the spill could cause beyond the site are not in any number here. The no-hub variant removes the stock, not the hub's role as the place where the pipeline, the river and the roads meet.
 
 ## The system
 

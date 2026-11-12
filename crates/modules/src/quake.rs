@@ -166,8 +166,6 @@ impl Module for Ground {
         ctx.world_write("quake.ls_p", "1", &g, self.ls_p.clone());
         ctx.world_write("quake.ls_pgd_cm", "cm", &g, self.ls_pgd.clone());
         ctx.field("terrain_elev_m", "m", &g, self.elev.clone());
-        ctx.field("quake_pga_g", "g", &g, self.pga.clone());
-        ctx.field("quake_mmi", "intensity", &g, self.pgv.iter().map(|&v| Self::mmi(v)).collect());
         ctx.field("quake_liquefaction_p", "1", &g, self.liq_p.clone());
         ctx.field("quake_ground_pgd_cm", "cm", &g, self.liq_pgd.iter().zip(&self.ls_pgd).map(|(&a, &b)| if a.is_nan() { b } else if b.is_nan() { a } else { a.max(b) }).collect());
         let ok: Vec<f32> = self.pga.iter().copied().filter(|v| !v.is_nan()).collect();
@@ -190,6 +188,10 @@ impl Module for Ground {
         if ev.topic != "rupture" || self.fired { return; }
         self.fired = true;
         let now = ctx.now();
+        // the motion maps are written now, not at the start: before this instant there is nothing to map
+        let g = self.grid.clone().expect("grid");
+        ctx.field("quake_pga_g", "g", &g, self.pga.clone());
+        ctx.field("quake_mmi", "intensity", &g, self.pgv.iter().map(|&v| Self::mmi(v)).collect());
         let ok: Vec<f32> = self.pga.iter().copied().filter(|v| !v.is_nan()).collect();
         let (lo, hi) = (ok.iter().copied().fold(f32::INFINITY, f32::min), ok.iter().copied().fold(0.0f32, f32::max));
         let local = Time(now.0 - 8 * 3600).to_iso();
@@ -319,6 +321,7 @@ impl Buildings {
             .subscribe("quake.rupture", "the instant")
             .read_on("quake.pga_g", "g", true, "quake.rupture", "").read_on("quake.liq_p", "1", true, "quake.rupture", "").read_on("quake.liq_pgd_cm", "cm", true, "quake.rupture", "").read_on("quake.ls_p", "1", true, "quake.rupture", "").read_on("quake.ls_pgd_cm", "cm", true, "quake.rupture", "")
             .publish("quake.crossing", "{ kind: toll, sentence } deaths, injuries and displaced on the rupture; the fit against DOGAMI in the sentence")
+            .publish("quake.toll", "{ deaths, injuries_hospital, injuries_minor, displaced } the window's toll as numbers, once the shaking ends, for whoever keeps a total")
             .frame("buildings_count", "buildings").frame("building_damage_frac", "1").frame("buildings_destroyed", "buildings").frame("deaths", "people").frame("displaced", "people").frame("occupants", "people")
             .report("quake.buildings", "buildings").report("quake.buildings_moderate", "buildings").report("quake.buildings_extensive", "buildings").report("quake.buildings_complete", "buildings")
             .report("quake.deaths", "people").report("quake.injuries_hospital", "people").report("quake.injuries_minor", "people").report("quake.displaced", "people").report("quake.occupants", "people")
@@ -357,12 +360,20 @@ impl Module for Buildings {
         let g = self.grid.clone().expect("grid");
         ctx.field("buildings_count", "buildings", &g, self.count.clone());
         ctx.field("occupants", "people", &g, self.occupants.clone());
+        let n = g.nx * g.ny;
+        for f in [("building_damage_frac", "1"), ("buildings_destroyed", "buildings"), ("deaths", "people"), ("displaced", "people")] { ctx.field(f.0, f.1, &g, vec![0.0; n]); }
         ctx.report("quake.buildings", "buildings", self.count.iter().map(|&v| v as f64).sum());
         ctx.report("quake.occupants", "people", self.occupants.iter().map(|&v| v as f64).sum());
         for s in ["quake.buildings_moderate", "quake.buildings_extensive", "quake.buildings_complete", "quake.deaths", "quake.injuries_hospital", "quake.injuries_minor", "quake.displaced"] { ctx.report(s, "", 0.0); }
     }
     fn handle(&mut self, ev: &Event, ctx: &mut Ctx) {
-        if ev.topic != "quake.rupture" || self.done { return; }
+        if ev.topic == "quake.rupture" && !self.done {
+            // the reckoning waits for the shaking to end; the frames before it are the zeros written at the start
+            let d = ev.data.get("duration_s").and_then(|v| v.as_f64()).unwrap_or(0.0).max(0.0) as i64;
+            ctx.schedule_with_priority(Duration::secs(d), 1, "settle", json!(null));
+            return;
+        }
+        if ev.topic != "settle" || self.done { return; }
         self.done = true;
         let g = self.grid.clone().expect("grid");
         let n = g.nx * g.ny;
@@ -440,6 +451,7 @@ impl Module for Buildings {
         ctx.report("fit.units_deaths_r", "1", r_d);
         let sentence = format!("In the window, about {:.0} buildings extensively damaged or destroyed ({:.0} destroyed), {:.0} dead, {:.0} hurt badly enough for a hospital, {:.0} people displaced, {}time occupancy. In Portland's nine districts {:.0} dead against DOGAMI's {:.0} for the same scenario (ratio {:.2}); the damage pattern across the units correlates {:.2} with DOGAMI's.",
             tot[3] + tot[4], tot[4], d_tot, l23, disp, self.time_of_day, pdx.deaths, rp.deaths, ratio(pdx.deaths, rp.deaths), r_dmg);
+        ctx.publish("quake.toll", json!({ "deaths": d_tot, "injuries_hospital": l23, "injuries_minor": l1, "displaced": disp }));
         ctx.publish("quake.crossing", json!({ "id": "toll", "title": "The toll", "name": "the window", "kind": "toll", "time": ctx.now().to_iso(), "sentence": sentence, "source": "this run's fragility (recalled Hazus forms, two scales fitted) on DOGAMI's ground and inventory; the record is DOGAMI O-18-02's Hazus run", "confidence": "fitted" }));
     }
     fn snapshot(&self) -> serde_json::Value { serde_json::to_value(self).unwrap() }
