@@ -1,0 +1,93 @@
+# The engine, not the article
+
+2026-11-12, night. Anselm, on the Portland page's "a scenario, not a forecast" and its lifelines
+drawn from published ranges: "I want to brute force simulate near term outcomes - I do not want
+just a report. I want something similar to the palisades example - the goal of this engine is to
+build out capability to simulate the future and playtest outcomes." Then: "we need to redo this or
+run a real engine in parallel. This should be very clearly in our design doc - we don't want to just
+write 'articles' we want to exercise simulations - even if wrong."
+
+## The principle
+
+A page on this site exists to exercise a simulation, not to arrange published numbers into prose.
+The brief of 2026-10-31 asks for modules of science on one clock with ledgers that close; this
+entry adds the test a module must pass to count as one: it computes its outcome from the ground,
+the record and the clock, cell by cell or component by component, and it can be wrong in a way a
+record can catch. A number copied from a report, or a day drawn from a published range, is an input
+or a check, never the output. Where the engine cannot yet compute a thing, the page says so and the
+thing is the next rung, not the page's content.
+
+In practice:
+
+- **Compute first, arrange only as scaffolding.** A lifeline is components with fragilities on the
+  ground and crews on the clock, not a ramp to a day from a table. The table is what the computed
+  curve is checked against.
+- **Wrong is allowed, arranged is not.** The Palisades engine was eight times too slow on its first
+  day and the page said so; that is a simulation. A clock drawn to land inside the Resilience Plan's
+  range is an article with a slider.
+- **Run the real engine beside the arranged one** while both exist, as variants of one project, so
+  the reader sees the computed curve against the range it was supposed to fall in.
+- **Playtest through the engine.** A cut, a retrofit, a bridge, a crew rate: each a parameter the
+  modules read, run over seeds as an ensemble, compared under one cursor. Not a paragraph.
+- **Claims tables are inputs, not models.** The aftermath's rates from other disasters are declared
+  for what they are and are replaced by computed queues (hospitals with beds, people who leave) as
+  those are built.
+
+## What this changes tonight
+
+The Portland project's lifelines module was the arranged kind: twelve crossings with days drawn
+log-uniformly in "weeks to years", power and water as straight ramps to a day from the Plan. It is
+being redone as computed modules on DOGAMI's own impact bundle: `power.poles` (every transmission
+structure in the window with the state's chance of failure at it, corridors chained from the poles,
+crews repairing a stated number a day, the people-weighted share computed), `roads.segments` (the
+emergency route segments with the state's ground-deformation class at each, closure days by class,
+reachability of each hospital and the hub along open segments and open crossings). The old ramps
+stay as the `ranges` variant, so the computed curves are read against the Plan's one to three
+months. Fire following on the cell engine, the spill as a flow, and people as queues are the rungs
+after, in `20261112-the-clock-as-a-film.md`.
+
+The 2100 project is to be read against the same test: `policy.capacity` and `score.regions` move
+bands by declared rules, which is the arranged kind, and the devlog of 2026-11-09 on effects as
+claims is the way through.
+
+## The first computed run (later that night)
+
+Built: `hazard.components` (`crates/modules/src/components.rs`), tanks, crossings, poles and route
+segments as components on the ground at their cells, from `tanks.csv` (the county study's Appendix B,
+parsed from the PDF; 228 tanks carry the study's coordinates, the rest sit on OpenStreetMap tank
+footprints by property), `poles.csv` and `routes.toml` (DOGAMI's bundle, cut with GDAL, the route
+graph with the crossings as links), and `fragility.toml` (recalled Hazus curves, declared). The
+lifelines module has `inputs = "computed"`: the spill is the tanks' sum, the crossings are the
+components' states, the routes are reachability from the hub's segment, the power is the poles'
+people-weighted share and each hospital's own cell; `ranges` is the old behaviour as a variant.
+Preconditions are a parameter: `force = ["tank:KMW128:4"]` sets a component's state regardless of
+the draw, which is Anselm's "oil tank as an independent agent coupled to the ground".
+
+What the computed base run says, against its checks:
+
+| | computed | the check |
+|---|---|---|
+| tanks failed, release | 233 of 587, 61 M gal (26 M to the river) | the study: 95 to 194 M gal |
+| crossings standing on day 1 | 8 of 12 | the county: none expected usable at once |
+| poles failed, power back | 586; half at once, all by day 13 | the Plan: 1 to 3 months |
+| routes open on day 1 | 22 percent of length | DOGAMI: 74 percent of segments at risk |
+| deaths after the shaking | 2 | the ranges run: 66 |
+
+Every row is the engine wrong in a way the record catches, which is the principle above working.
+The tank curve under-fails where the study's rule says every old tank on deforming ground goes;
+the bridge curves are generic highway bridges, not Portland's, and ODOT's assessments are the
+input; a pole is the whole grid here, with no substation, line or distribution to fail, so the
+crews win in two weeks. The arranged run lands in the ranges because it was drawn from them.
+
+Anselm, while this ran: simulate people as super-persons, one agent for ten, 63,900 in reach? How
+do other scientists simulate large populations, trees, crowds? What do Cities: Skylines' people do?
+Answered in the session; the short form for the record: the super-individual is a named method
+(Scheffer and others, 1995, recalled) and the engine's daily tick makes a hundred thousand agents
+cheap; the data for each is already here (DOGAMI's occupants by cell day and night, emPOWER's
+device-dependent share, the census by tract for ages); the rungs are home and work cells, a state
+machine driven by the services at the cell, then trips on the route graph. Synthetic populations
+from census marginals (the RTI and the MATSim practice of a 10 percent sample scaled up) and
+individual-based forest models (gap models, cohorts) are the precedents; the Skylines agents are
+a fixed cap of citizens with home, work and leisure and path-finding on the road graph, which is a
+small version of the same thing. The goal stated tonight: make the point that sims are possible,
+for funding from the extended peer group; the compute later is significant.

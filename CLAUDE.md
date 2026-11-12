@@ -34,6 +34,12 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
 
 ## Project-specific facts
 
+- **The engine, not the article** (2026-11-12, Anselm: "we don't want to just write 'articles' we want to exercise
+  simulations - even if wrong"; `devlog/20261112-the-engine-not-the-article.md`, `docs/system/honesty.md`): a module
+  computes its outcome from the ground, the record and the clock and can be wrong in a way a record can catch; a number
+  copied from a report or a day drawn from a published range is an input or a check, never the output; the arranged
+  version runs beside the computed one as a variant while both exist; interventions are parameters run over seeds.
+
 - Toolchain: Rust stable via rustup in `~/.cargo` (installed 2026-10-31); Node 25;
   GDAL 3.8 (apt) as a cross-check tool only, never a dependency. Build with `--release`
   for any run longer than a week of simulated time.
@@ -328,7 +334,17 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   extended actors figure, a `wiring` embed (the latest run's describe), and says what is computed cell by cell
   (the buildings) against what is arranged (the lifelines, the aftermath). The brute-force ladder is in the devlog;
   DOGAMI's poles (`poles.csv`, 18,098 with failure probabilities) and emergency route segments (`routes.geojson`,
-  238 with risk classes) are cut into the record folder for `power.poles` and `roads.segments`, the next rungs.
+  238 with risk classes) are cut into the record folder. Then built the same night: `hazard.components`
+  (`crates/modules/src/components.rs`, kind `hazard.components`): tanks (`tanks.csv`, the county study's Appendix B
+  parsed from the PDF, placed on its coordinates or OpenStreetMap footprints), crossings, poles and route segments
+  (`routes.toml`, a graph with the crossings as links) as components on the ground at their cells with recalled
+  Hazus curves in `fragility.toml`; computes the tanks' releases by the study's age rule, the power service per
+  coarse cell from the poles that stand with crews at a stated rate, the crossings' states, and each hospital's
+  reachability from the hub; publishes `component.state`, `tank.release`, `hub.release`, `network.state`;
+  `force = ["kind:id:state"]` sets preconditions. `lifelines.recovery` has `inputs = "computed" | "ranges"`
+  (the manifest says computed; the `ranges` variant is the arranged version). The first computed run fails its
+  checks in instructive ways (devlog `20261112-the-engine-not-the-article.md`): the principle is that a module
+  computes and can be wrong in a way a record catches.
 - Wild cards (2026-11-05, Anselm: "i just want a placeholder ... like a video game with wild card factors
   optionally"): `events.shock` (`crates/modules/src/shock.rs`) draws `data/events/future-speculative.toml` by the
   run's seed each year from `from` (default 2025), or plays one named card (`mode = "named"`, `event`, `at`);

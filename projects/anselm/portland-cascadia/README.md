@@ -85,14 +85,24 @@ displaced and its deaths come out near DOGAMI's for the same afternoon. The toll
 state's by construction; what the model adds is the pattern on the map and the contrasts between
 the cases, and the fit is reported on every run so a reader can see how far it is off.
 
-Then the year after, which nobody has drawn for a reader. The lifelines module holds the twelve
-Willamette crossings, the thirteen hospitals, the power, the water and the hub as components with
-a fate each. The county says no downtown bridge is expected to be usable at once and that it could
-be weeks to years before any is; the run draws each crossing's day in that range by its seed. The
-Resilience Plan's valley ranges give the power and the water their days, and the run ramps them
-back in straight lines, which is a simplification the page says out loud. The hospitals stand or
-fall by the fragility at their cells, run on seventy-two hours of generator fuel, and are refuelled
-once trucks move and, east of the river, once a crossing is open. The hub is a ledger in gallons
+Then the year after, which nobody has drawn for a reader, and which this page now computes
+rather than arranges. A components module holds every physical thing as an agent with a place, a
+fragility, a state and a repair path: the hub's 587 active tanks from the county study's own
+per-tank table, placed on the study's coordinates where it gives them and on OpenStreetMap tank
+footprints where it does not; the twelve Willamette crossings; the 6,146 transmission structures
+DOGAMI mapped in the window with the state's chance of failure at each; the 137 emergency route
+segments with the state's ground-deformation class at each. On the rupture each reads the ground
+at its own cell and draws its state. A failed tank releases by the study's age rule, to the river
+where the study's zone says so. Crews repair poles at a stated rate, most people first; segments
+reopen by class; crossings by damage state. From what stands, the run computes each day the power
+service cell by cell, the people-weighted share, and whether each hospital can be reached from the
+hub along open segments and open crossings. The fragilities are recalled from Hazus and declared
+so; the study's release total and the county's words on its bridges are the checks, reported on
+every run, and the first runs fail them in instructive ways, below. The arranged version, with
+the crossings' days, the routes' day and the power ramp drawn from the published ranges, runs
+beside as the `ranges` variant. The hospitals stand or fall by the fragility at their cells, run
+on seventy-two hours of generator fuel, and are refuelled once trucks reach them. The water is
+still a ramp; the pipes are not in the state's bundle. The hub is a ledger in gallons
 that must close at every daily close: what the tanks held, what left them in the first minutes by
 the county study's range, what the response and the generators burn, and what comes back up the
 pipeline. Cutting the hub's storage by a fifth and retrofitting its tanks are variants, so the
@@ -119,18 +129,19 @@ actors
 fault: the Cascadia subduction zone, 1700 and next
 ground: DOGAMI's synthetic motion and the soils that liquefy
 buildings: 615,852 footprints and the people in them
-hub: 233 million gallons on the west bank
+hub: 587 tanks, 233 million gallons, each on its own ground
 bridges: twelve crossings, built 1908 to 2016
 hospitals: thirteen, on generators
 people: 935,195 in the window; 5,900 on medical devices that need power
-power: the grid, back in one to three months
+power: 6,146 transmission structures, crews at twelve a day
 water: pipes, back in a month to a year
 pipeline: the Olympic line from Puget Sound
 council: Ordinance 2026-312
 fault -> ground: slips, four minutes of shaking
 ground -> buildings: shakes and liquefies them
-ground -> hub: liquefies the bank under the tanks
-ground -> bridges: closes every one
+ground -> hub: each tank fails or stands on the ground at its cell
+ground -> bridges: each crossing by its own fragility
+ground -> power: each pole by the state's chance at it
 hub -> hospitals: diesel for the generators, once trucks move
 bridges -> hospitals: the east bank waits for a crossing
 power -> hospitals: the grid comes back, hospital by hospital
@@ -199,6 +210,21 @@ table 2028-01-26 lifeline.crossings_open=crossings_open_after_a_year fuel.consum
 
 What stands out:
 
+- **Computed against arranged.** The base run is now the computed one, and the ranges run is
+  beside it. On the tanks: 233 of the 587 fail on the ground at their cells and release 61 million
+  gallons, 26 million to the river, against the study's 95 to 194 million, so the recalled tank
+  fragility is too strong or the study's rule that every old tank on deforming ground fails is
+  stronger than a curve. On the crossings: eight of twelve stand on the first day and nine by day
+  thirty, where the county expects none usable at once, so the recalled highway-bridge curves do not
+  describe Portland's bridges, and ODOT's own assessments are the next input. On the power: 586
+  poles fail and twelve crews a day have the whole window back in thirteen days, against the Plan's
+  one to three months, because a pole is all the grid this model has; the substations, the lines and
+  the distribution are not in the state's bundle. On the routes: a fifth of the segment length is
+  open on the first day and the hospitals on the hub's bank are reached at once. Each of these is
+  the engine being wrong in a way a record catches, which is what it is for; the arranged run lands
+  inside the ranges because it was drawn from them, and says nothing. The deaths after the shaking
+  fall to a handful in the computed run because the power is back in two weeks, which is the same
+  error seen from the people's side.
 - **The deaths after the shaking.** The aftermath module adds about 66 dead over the year in the
   base run, a range of 11 to 121, nearly all from care interrupted by the loss of power at the rate
   Puerto Rico recorded after Maria, applied to 14.5 million person-days without power here; none
@@ -254,18 +280,19 @@ What stands out:
 
 ## What is wrong with it
 
-The fragility and casualty rates are recalled, not read, and two of the six fitted numbers (a
-13 to 25 percent collapse share, every casualty rate tripled) are large for what they stand in
-for, which is an inventory with no structure types. The night occupants sit in every building by
-floor area, which is why the night toll runs 1.7 times DOGAMI's. The displaced are a fitted share
-of residents in badly damaged buildings and come out double DOGAMI's on dry soils. The year after
-is published ranges and straight ramps: no network of pipes or poles, no priorities, no debris, no
-aftershocks, no fire following the spill, no tsunami because Portland has none, no Columbia
-bridges, no one leaving. The bridges' days are guesses inside the county's words. The hub is a
-stock and the spill is a number, not oil on a river. The hospitals have no beds. The ground is a
-model's and so is the record it is read against. What this page can honestly claim is that the
-state's own numbers, arranged on one clock with the guesses named, make the fuel hub argument
-visible in time, which the thread was having without it.
+The fragility and casualty rates are recalled, not read, and two of the six fitted numbers (a 13 to
+25 percent collapse share, every casualty rate tripled) are large for what they stand in for, which
+is an inventory with no structure types. The night occupants sit in every building by floor area,
+which is why the night toll runs 1.7 times DOGAMI's. The displaced are a fitted share of residents
+in badly damaged buildings and come out double DOGAMI's on dry soils. The components' curves are
+recalled too, and the first computed runs fail their checks: too few tanks fail, too many crossings
+stand, the power is back too soon because a pole is the whole grid here. The water is a ramp; the
+pipes are not in the bundle. No fire follows the earthquake, no debris lies on the routes, no
+tsunami because Portland has none, no Columbia bridges, no one leaves. The hospitals have no beds.
+The deaths after the shaking are rates from other disasters applied to the counts here. The ground
+is a model's and so is the record it is read against. What this page can honestly claim is that
+the state's own inventory, run as components on the state's own ground with the guesses named,
+produces a year that can be argued with piece by piece, which the thread was having without it.
 
 ## What this page has read
 
@@ -290,6 +317,15 @@ visible in time, which the thread was having without it.
   statements on the downtown bridges, the dates and the budget.
 - OPB, *Fuel spill in Portland after a major earthquake could be bigger than Deepwater Horizon,
   study finds*, Monica Samayoa, 7 February 2022. Read 2026-11-12. Taken: the county chair's words.
+- The county study's Appendix B, the per-tank table (621 rows with capacity, year, type, the
+  study's zone and its own release range for each), read 2026-11-12 from the report's PDF. Taken
+  whole, as `tanks.csv` in the record folder; 228 tanks carry the study's coordinates.
+- OpenStreetMap, the storage tanks and named terminals along the hub through the Overpass API,
+  read 2026-11-12. Taken: 352 tank footprints, on which the study's unlocated tanks are placed by
+  property, which is a guess within the property.
+- DOGAMI O-18-02's impact bundle, the transmission structures (18,098, 6,146 in the window, with the
+  state's deformation chance at each) and the emergency transportation routes (238 segments, 137 in
+  the window, with the deformation class at each), cut 2026-11-12 with GDAL.
 - Kishore et al., *Mortality in Puerto Rico after Hurricane Maria*, New England Journal of Medicine
   379:162-170, 2018. The abstract and the reporting on it read 2026-11-12, not the paper. Taken:
   4,645 excess deaths over 102 days with a wide interval, one third attributed to interrupted care;

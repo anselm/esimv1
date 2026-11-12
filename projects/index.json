@@ -1855,12 +1855,13 @@
     "area": "anselm",
     "by": "cli",
     "cover": "cover.png",
-    "cover_caption": "The run page's clock on day 25 of the base run, dark mode: the damage DOGAMI's ground does to the buildings, the crossings closed and the hospitals on the grid or on generators as marks, the counts beside; a still, the clock is on the run page",
+    "cover_caption": "The run page's clock on day 3 of the computed base run: the damage the ground does to the buildings, the crossings and hospitals as marks with their states, the counts beside; a still, the clock is on the run page",
     "created": "2026-11-12",
     "description": "A scenario, not a forecast: a M9.0 Cascadia rupture at 14:00 PST on 26 January 2027 under Portland on DOGAMI's synthetic site motions, saturated soils, daytime occupancy; the toll on DOGAMI's inventory; the year after on the Resilience Plan's ranges and the county's fuel-hub study; every constant published or declared a guess.",
     "featured": true,
     "kinds": [
       "lifelines.recovery",
+      "hazard.components",
       "people.aftermath",
       "quake.ground",
       "quake.buildings"
@@ -1870,27 +1871,57 @@
     "runs": [
       {
         "all_ledgers_closed": true,
-        "digest": "bebc3ac746ee54b2",
+        "digest": "352f8653ecc4e889",
         "end": 1832529600,
-        "events": 1217,
-        "id": "q1-portland-cascadia-0e98a88b-bebc3ac7",
+        "events": 3584,
+        "id": "q1-portland-cascadia-095ca5e0-352f8653",
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
-          "buildings.record": "\"dry\"",
-          "buildings.time_of_day": "\"day\"",
-          "ground.soils": "\"dry\""
+          "components.storage_cut": "0.2",
+          "lifelines.storage_cut": "0.2"
         },
         "start": 1800388800,
-        "variant": "dry-day",
+        "variant": "cut-20",
         "verdict": "tearing"
       },
       {
         "all_ledgers_closed": true,
-        "digest": "1201f3d7a6ab0245",
+        "digest": "3261b6b0ff5dac44",
         "end": 1832529600,
-        "events": 1217,
-        "id": "q1-portland-cascadia-1f1e0889-1201f3d7",
+        "events": 3614,
+        "id": "q1-portland-cascadia-13ffb351-3261b6b0",
+        "name": "q1-portland-cascadia",
+        "seed": 2,
+        "set": {
+          "run.seed": "2"
+        },
+        "start": 1800388800,
+        "variant": "seed-2",
+        "verdict": "stretching"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "e9b09cabf2c0f66e",
+        "end": 1832529600,
+        "events": 3584,
+        "id": "q1-portland-cascadia-18106037-e9b09cab",
+        "name": "q1-portland-cascadia",
+        "seed": 1,
+        "set": {
+          "components.retrofit": "true",
+          "lifelines.retrofit": "true"
+        },
+        "start": 1800388800,
+        "variant": "retrofit",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "9395c6bdfc94e8a0",
+        "end": 1832529600,
+        "events": 3584,
+        "id": "q1-portland-cascadia-21c79804-9395c6bd",
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
@@ -1904,25 +1935,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "41da608e76a38733",
+        "digest": "28ac9579912e8f18",
         "end": 1832529600,
-        "events": 1218,
-        "id": "q1-portland-cascadia-3c5f9660-41da608e",
-        "name": "q1-portland-cascadia",
-        "seed": 3,
-        "set": {
-          "run.seed": "3"
-        },
-        "start": 1800388800,
-        "variant": "seed-3",
-        "verdict": null
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "35e53df53be465c5",
-        "end": 1832529600,
-        "events": 1220,
-        "id": "q1-portland-cascadia-403111d4-35e53df5",
+        "events": 3589,
+        "id": "q1-portland-cascadia-589cee59-28ac9579",
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
@@ -1937,25 +1953,25 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "3a120e39db99d221",
+        "digest": "1eaed3bae87cd484",
         "end": 1832529600,
-        "events": 1221,
-        "id": "q1-portland-cascadia-77ca3ac4-3a120e39",
+        "events": 3607,
+        "id": "q1-portland-cascadia-a376214b-1eaed3ba",
         "name": "q1-portland-cascadia",
-        "seed": 2,
+        "seed": 1,
         "set": {
-          "run.seed": "2"
+          "lifelines.inputs": "\"ranges\""
         },
         "start": 1800388800,
-        "variant": "seed-2",
+        "variant": "ranges",
         "verdict": "tearing"
       },
       {
         "all_ledgers_closed": true,
-        "digest": "5a77b00d95072289",
+        "digest": "9395c6bdfc94e8a0",
         "end": 1832529600,
-        "events": 1217,
-        "id": "q1-portland-cascadia-8452d06e-5a77b00d",
+        "events": 3584,
+        "id": "q1-portland-cascadia-beb5551c-9395c6bd",
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
@@ -1967,28 +1983,29 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "a70ef95de21e0c03",
+        "digest": "04ff1d5ddd1b67c2",
         "end": 1832529600,
-        "events": 1217,
-        "id": "q1-portland-cascadia-8dfffa9c-a70ef95d",
+        "events": 3623,
+        "id": "q1-portland-cascadia-ddaf1b51-04ff1d5d",
         "name": "q1-portland-cascadia",
-        "seed": 1,
+        "seed": 3,
         "set": {
-          "lifelines.retrofit": "true"
+          "run.seed": "3"
         },
         "start": 1800388800,
-        "variant": "retrofit",
-        "verdict": "tearing"
+        "variant": "seed-3",
+        "verdict": null
       },
       {
         "all_ledgers_closed": true,
-        "digest": "dc37e3421dfd811c",
+        "digest": "e8623f99b9669b6a",
         "end": 1832529600,
-        "events": 1217,
-        "id": "q1-portland-cascadia-a984ddc4-dc37e342",
+        "events": 3584,
+        "id": "q1-portland-cascadia-e4748204-e8623f99",
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
+          "components.storage_cut": "1.0",
           "lifelines.storage_cut": "1.0"
         },
         "start": 1800388800,
@@ -1997,18 +2014,21 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "7025c617ad2ff349",
+        "digest": "a37ec9e4324c12b8",
         "end": 1832529600,
-        "events": 1217,
-        "id": "q1-portland-cascadia-c26810b7-7025c617",
+        "events": 3357,
+        "id": "q1-portland-cascadia-fd371086-a37ec9e4",
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
-          "lifelines.storage_cut": "0.2"
+          "buildings.record": "\"dry\"",
+          "buildings.time_of_day": "\"day\"",
+          "components.soils": "\"dry\"",
+          "ground.soils": "\"dry\""
         },
         "start": 1800388800,
-        "variant": "cut-20",
-        "verdict": "tearing"
+        "variant": "dry-day",
+        "verdict": "stretching"
       }
     ],
     "title": "Portland, the year after Cascadia",
@@ -2037,6 +2057,7 @@
         "set": {
           "buildings.record": "dry",
           "buildings.time_of_day": "day",
+          "components.soils": "dry",
           "ground.soils": "dry"
         },
         "title": "Dry soils, 2 PM: shaking and landslides, no liquefaction"
@@ -2044,6 +2065,7 @@
       {
         "name": "cut-20",
         "set": {
+          "components.storage_cut": 0.2,
           "lifelines.storage_cut": 0.2
         },
         "title": "The hub's stock cut by a fifth before the day: Ordinance 2026-312's 2036 target, applied to the stock"
@@ -2051,6 +2073,7 @@
       {
         "name": "no-hub",
         "set": {
+          "components.storage_cut": 1.0,
           "lifelines.storage_cut": 1.0
         },
         "title": "The hub elsewhere: no fuel stored on the bank before the day; fuel arrives from outside once the routes work"
@@ -2058,6 +2081,7 @@
       {
         "name": "retrofit",
         "set": {
+          "components.retrofit": true,
           "lifelines.retrofit": true
         },
         "title": "Every tank built to the post-2004 rule: at most a tenth of its contents leaves"
@@ -2070,6 +2094,13 @@
           ]
         },
         "title": "The earthquake-ready Burnside Bridge built: one crossing usable at once"
+      },
+      {
+        "name": "ranges",
+        "set": {
+          "lifelines.inputs": "ranges"
+        },
+        "title": "The arranged version: the crossings' days, the routes' day, the power ramp and the spill drawn from published ranges instead of computed from the components"
       },
       {
         "name": "seed-2",

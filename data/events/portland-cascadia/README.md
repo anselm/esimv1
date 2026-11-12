@@ -96,3 +96,28 @@ reached us only through a search summary), the tsunami (not Portland's), aftersh
 following the earthquake, the Columbia River bridges, and any Hazus fragility or casualty table:
 FEMA's technical manual was not downloadable from this machine, so the module's fragility and
 casualty rates are recalled and scaled to DOGAMI's totals, which the module says.
+
+## The components (2026-11-12, night)
+
+- `tanks.csv`: the county study's Appendix B per-tank table, parsed from the report's PDF text: area,
+  property, tank id, the study's coordinates where given (228 of 621), contents, capacity, expected
+  fill at 67 percent, year, type, tank group, flammability, hazard, the study's zone (on land,
+  potentially in water, material in water), tank failure or not, and the study's own percent and
+  volume lost, minimum and maximum. Unlocated tanks are placed on the nearest free OpenStreetMap
+  storage-tank footprint (Overpass, 352 along the hub) to the property's located tanks or named
+  area, else at the area's centre; the `placed` column says which. Commas inside fields became
+  semicolons.
+- `poles.csv`: DOGAMI O-18-02's Electrical_Transmission_Structures inside the window, cut with
+  ogr2ogr to EPSG:4326: the pole id, the state's deformation (cm) and chance of failure (percent),
+  wet and dry; a `corridor` column from chaining poles within 450 m (one component holds 6,088 of
+  6,146, so it is not used).
+- `routes.geojson` and `routes.toml`: the Emergency_Transportation_Routes inside the window (137
+  of 238 segment polygons, simplified), the class per segment (the state's potential ground
+  deformation: 0 under 50 cm, 1 50 to 100, 2 100 to 200, 3 over 200, wet and dry), and in the TOML
+  the graph: touching polygons as neighbours, each crossing linking its nearest segment on each
+  bank, each hospital and the hub given its nearest segment.
+- `fragility.toml`: the curves and repair rules the components module runs, every one recalled from
+  Hazus and unchecked; the file says so row by row.
+- `aftermath.toml`: the claims the aftermath module applies, with sources (Kishore et al. 2018; HHS
+  emPOWER's county layer, read 2026-11-12; the 2020 county populations recalled).
+

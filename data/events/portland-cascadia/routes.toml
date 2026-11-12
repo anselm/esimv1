@@ -1,0 +1,1339 @@
+# The emergency transportation route segments inside the window as a graph, from DOGAMI O-18-02's
+# impact bundle (Emergency_Transportation_Routes, 137 of 238 segments; the class is the state's
+# potential ground deformation under the segment, saturated soils: 0 under 50 cm, 1 50 to 100,
+# 2 100 to 200, 3 over 200). Adjacency is polygons that touch; a crossing links its nearest
+# segment on each bank; a hospital and the hub are given their nearest segment. Made 2026-11-12
+# by the esim session with GDAL from routes.geojson; the geometry stays there.
+
+[[segment]]
+id = 1
+class = 3
+class_dry = 0
+length_m = 4562
+lat = 45.60411
+lon = -122.68228
+neighbours = [2, 4, 124, 126, 139]
+
+[[segment]]
+id = 2
+class = 3
+class_dry = 0
+length_m = 4479
+lat = 45.61220
+lon = -122.67870
+neighbours = [1]
+
+[[segment]]
+id = 3
+class = 2
+class_dry = 0
+length_m = 5500
+lat = 45.58521
+lon = -122.54586
+neighbours = [4, 5, 11]
+
+[[segment]]
+id = 4
+class = 3
+class_dry = 0
+length_m = 22416
+lat = 45.59455
+lon = -122.60988
+neighbours = [1, 3, 11]
+
+[[segment]]
+id = 5
+class = 2
+class_dry = 0
+length_m = 2644
+lat = 45.57054
+lon = -122.53940
+neighbours = [3, 6, 9, 11]
+
+[[segment]]
+id = 6
+class = 2
+class_dry = 0
+length_m = 22480
+lat = 45.55773
+lon = -122.46338
+neighbours = [5, 9]
+
+[[segment]]
+id = 7
+class = 2
+class_dry = 0
+length_m = 10670
+lat = 45.54376
+lon = -122.44361
+neighbours = [8, 12, 23]
+
+[[segment]]
+id = 8
+class = 2
+class_dry = 0
+length_m = 10907
+lat = 45.55727
+lon = -122.50211
+neighbours = [7, 9, 12, 22, 23]
+
+[[segment]]
+id = 9
+class = 2
+class_dry = 0
+length_m = 552
+lat = 45.56665
+lon = -122.53275
+neighbours = [5, 6, 8, 10, 22]
+
+[[segment]]
+id = 10
+class = 2
+class_dry = 0
+length_m = 1908
+lat = 45.56698
+lon = -122.53883
+neighbours = [9, 11, 22]
+
+[[segment]]
+id = 11
+class = 2
+class_dry = 0
+length_m = 6948
+lat = 45.57112
+lon = -122.54995
+neighbours = [3, 4, 5, 10, 180, 227]
+
+[[segment]]
+id = 12
+class = 1
+class_dry = 0
+length_m = 788
+lat = 45.54422
+lon = -122.47728
+neighbours = [7, 8, 23, 71]
+
+[[segment]]
+id = 17
+class = 0
+class_dry = 0
+length_m = 11070
+lat = 45.51368
+lon = -122.44863
+neighbours = [18, 19]
+
+[[segment]]
+id = 18
+class = 0
+class_dry = 0
+length_m = 1477
+lat = 45.51915
+lon = -122.47253
+neighbours = [17, 19, 76]
+
+[[segment]]
+id = 19
+class = 0
+class_dry = 0
+length_m = 4860
+lat = 45.52982
+lon = -122.47717
+neighbours = [17, 18, 20, 71, 76, 104]
+
+[[segment]]
+id = 20
+class = 0
+class_dry = 0
+length_m = 9515
+lat = 45.52227
+lon = -122.50735
+neighbours = [19, 21, 105]
+
+[[segment]]
+id = 21
+class = 0
+class_dry = 0
+length_m = 4980
+lat = 45.53380
+lon = -122.53765
+neighbours = [20, 105, 107, 228]
+
+[[segment]]
+id = 22
+class = 2
+class_dry = 0
+length_m = 2076
+lat = 45.56160
+lon = -122.53621
+neighbours = [8, 9, 10, 23, 205, 206]
+
+[[segment]]
+id = 23
+class = 0
+class_dry = 0
+length_m = 9906
+lat = 45.55172
+lon = -122.50741
+neighbours = [7, 8, 12, 22, 205, 206]
+
+[[segment]]
+id = 71
+class = 2
+class_dry = 0
+length_m = 4995
+lat = 45.54172
+lon = -122.47754
+neighbours = [12, 19, 228]
+
+[[segment]]
+id = 76
+class = 0
+class_dry = 0
+length_m = 6442
+lat = 45.50484
+lon = -122.47577
+neighbours = [18, 19, 77, 78, 104]
+
+[[segment]]
+id = 77
+class = 2
+class_dry = 0
+length_m = 10336
+lat = 45.49575
+lon = -122.44598
+neighbours = [76, 78]
+
+[[segment]]
+id = 78
+class = 0
+class_dry = 0
+length_m = 10133
+lat = 45.49578
+lon = -122.50659
+neighbours = [76, 77, 79, 102, 103]
+
+[[segment]]
+id = 79
+class = 0
+class_dry = 0
+length_m = 4581
+lat = 45.48680
+lon = -122.53766
+neighbours = [78, 89, 91, 102, 103]
+
+[[segment]]
+id = 84
+class = 2
+class_dry = 0
+length_m = 18014
+lat = 45.42641
+lon = -122.51023
+neighbours = [90]
+
+[[segment]]
+id = 88
+class = 2
+class_dry = 0
+length_m = 8124
+lat = 45.47908
+lon = -122.56605
+neighbours = [90, 91, 96, 229]
+
+[[segment]]
+id = 89
+class = 2
+class_dry = 0
+length_m = 22198
+lat = 45.45499
+lon = -122.48725
+neighbours = [79, 91]
+
+[[segment]]
+id = 90
+class = 2
+class_dry = 0
+length_m = 29007
+lat = 45.44523
+lon = -122.56892
+neighbours = [84, 88]
+
+[[segment]]
+id = 91
+class = 0
+class_dry = 0
+length_m = 3867
+lat = 45.47644
+lon = -122.54900
+neighbours = [79, 88, 89]
+
+[[segment]]
+id = 92
+class = 3
+class_dry = 0
+length_m = 11332
+lat = 45.43336
+lon = -122.61043
+neighbours = [119]
+
+[[segment]]
+id = 93
+class = 0
+class_dry = 0
+length_m = 7237
+lat = 45.48107
+lon = -122.62266
+neighbours = [94, 95, 110]
+
+[[segment]]
+id = 94
+class = 0
+class_dry = 0
+length_m = 1889
+lat = 45.49751
+lon = -122.61700
+neighbours = [93, 95, 97, 100, 110]
+
+[[segment]]
+id = 95
+class = 0
+class_dry = 0
+length_m = 5962
+lat = 45.49887
+lon = -122.64173
+neighbours = [93, 94, 110, 119]
+
+[[segment]]
+id = 96
+class = 0
+class_dry = 0
+length_m = 1219
+lat = 45.48174
+lon = -122.57537
+neighbours = [88, 98, 99]
+
+[[segment]]
+id = 97
+class = 0
+class_dry = 0
+length_m = 6075
+lat = 45.48962
+lon = -122.59578
+neighbours = [94, 98, 99, 100]
+
+[[segment]]
+id = 98
+class = 2
+class_dry = 0
+length_m = 13127
+lat = 45.45360
+lon = -122.57897
+neighbours = [96, 97, 99]
+
+[[segment]]
+id = 99
+class = 0
+class_dry = 0
+length_m = 3308
+lat = 45.49026
+lon = -122.57884
+neighbours = [96, 97, 98, 100, 101, 186]
+
+[[segment]]
+id = 100
+class = 0
+class_dry = 0
+length_m = 5097
+lat = 45.49746
+lon = -122.59506
+neighbours = [94, 97, 99, 186]
+
+[[segment]]
+id = 101
+class = 0
+class_dry = 0
+length_m = 1831
+lat = 45.49740
+lon = -122.57290
+neighbours = [99, 186, 229]
+
+[[segment]]
+id = 102
+class = 0
+class_dry = 0
+length_m = 4159
+lat = 45.49646
+lon = -122.55092
+neighbours = [78, 79, 103, 229]
+
+[[segment]]
+id = 103
+class = 0
+class_dry = 0
+length_m = 4939
+lat = 45.50819
+lon = -122.53771
+neighbours = [78, 79, 102, 104, 105, 106]
+
+[[segment]]
+id = 104
+class = 0
+class_dry = 0
+length_m = 9476
+lat = 45.51913
+lon = -122.50749
+neighbours = [19, 76, 103, 105]
+
+[[segment]]
+id = 105
+class = 0
+class_dry = 0
+length_m = 860
+lat = 45.52097
+lon = -122.53779
+neighbours = [20, 21, 103, 104, 106, 107]
+
+[[segment]]
+id = 106
+class = 0
+class_dry = 0
+length_m = 4157
+lat = 45.51902
+lon = -122.55110
+neighbours = [103, 105, 229]
+
+[[segment]]
+id = 107
+class = 0
+class_dry = 0
+length_m = 4184
+lat = 45.52260
+lon = -122.55109
+neighbours = [21, 105, 229]
+
+[[segment]]
+id = 108
+class = 0
+class_dry = 0
+length_m = 1987
+lat = 45.51910
+lon = -122.57276
+neighbours = [186, 229]
+
+[[segment]]
+id = 109
+class = 0
+class_dry = 0
+length_m = 2026
+lat = 45.52275
+lon = -122.57259
+neighbours = [185, 186, 229]
+
+[[segment]]
+id = 110
+class = 0
+class_dry = 0
+length_m = 5823
+lat = 45.51044
+lon = -122.62282
+neighbours = [93, 94, 95, 111, 112, 113]
+
+[[segment]]
+id = 111
+class = 0
+class_dry = 0
+length_m = 6996
+lat = 45.52298
+lon = -122.60131
+neighbours = [110, 112, 113, 185, 186]
+
+[[segment]]
+id = 112
+class = 0
+class_dry = 0
+length_m = 2296
+lat = 45.52804
+lon = -122.62300
+neighbours = [110, 111, 113, 226]
+
+[[segment]]
+id = 113
+class = 0
+class_dry = 0
+length_m = 4477
+lat = 45.52293
+lon = -122.63722
+neighbours = [110, 111, 112, 121]
+
+[[segment]]
+id = 114
+class = 0
+class_dry = 0
+length_m = 4654
+lat = 45.52854
+lon = -122.63883
+neighbours = [121, 226]
+
+[[segment]]
+id = 115
+class = 0
+class_dry = 0
+length_m = 6473
+lat = 45.50106
+lon = -122.80363
+neighbours = [117, 143, 147]
+
+[[segment]]
+id = 116
+class = 3
+class_dry = 0
+length_m = 7563
+lat = 45.50539
+lon = -122.82365
+neighbours = [117, 152, 173, 234]
+
+[[segment]]
+id = 117
+class = 0
+class_dry = 0
+length_m = 2480
+lat = 45.48878
+lon = -122.81826
+neighbours = [115, 116, 147, 152]
+
+[[segment]]
+id = 118
+class = 3
+class_dry = 0
+length_m = 19304
+lat = 45.40718
+lon = -122.62278
+neighbours = [119]
+
+[[segment]]
+id = 119
+class = 3
+class_dry = 0
+length_m = 14837
+lat = 45.47271
+lon = -122.64534
+neighbours = [92, 95, 118, 120]
+
+[[segment]]
+id = 120
+class = 3
+class_dry = 0
+length_m = 8805
+lat = 45.51362
+lon = -122.66120
+neighbours = [119, 121, 219, 226]
+
+[[segment]]
+id = 121
+class = 3
+class_dry = 0
+length_m = 4776
+lat = 45.52322
+lon = -122.65909
+neighbours = [113, 114, 120, 136, 137, 219]
+
+[[segment]]
+id = 122
+class = 3
+class_dry = 0
+length_m = 14000
+lat = 45.54793
+lon = -122.66140
+neighbours = [123, 125, 219, 226]
+
+[[segment]]
+id = 123
+class = 2
+class_dry = 0
+length_m = 951
+lat = 45.57939
+lon = -122.66136
+neighbours = [122, 124, 125, 179, 221]
+
+[[segment]]
+id = 124
+class = 3
+class_dry = 0
+length_m = 5564
+lat = 45.59217
+lon = -122.66843
+neighbours = [1, 123, 179, 221]
+
+[[segment]]
+id = 125
+class = 0
+class_dry = 0
+length_m = 2527
+lat = 45.57722
+lon = -122.66939
+neighbours = [122, 123, 139, 222]
+
+[[segment]]
+id = 126
+class = 3
+class_dry = 0
+length_m = 3674
+lat = 45.60990
+lon = -122.69387
+neighbours = [1, 127, 128]
+
+[[segment]]
+id = 127
+class = 3
+class_dry = 0
+length_m = 18473
+lat = 45.62553
+lon = -122.74807
+neighbours = [126, 128, 129, 130]
+
+[[segment]]
+id = 128
+class = 3
+class_dry = 0
+length_m = 5534
+lat = 45.60402
+lon = -122.71512
+neighbours = [126, 127, 129, 221]
+
+[[segment]]
+id = 129
+class = 2
+class_dry = 0
+length_m = 7212
+lat = 45.60222
+lon = -122.74585
+neighbours = [127, 128, 130, 221]
+
+[[segment]]
+id = 130
+class = 2
+class_dry = 0
+length_m = 6161
+lat = 45.60179
+lon = -122.76279
+neighbours = [127, 129, 131, 220]
+
+[[segment]]
+id = 131
+class = 3
+class_dry = 0
+length_m = 2579
+lat = 45.58679
+lon = -122.76121
+neighbours = [130, 132, 177, 220]
+
+[[segment]]
+id = 132
+class = 3
+class_dry = 0
+length_m = 9587
+lat = 45.57023
+lon = -122.75344
+neighbours = [131, 133, 134, 177]
+
+[[segment]]
+id = 133
+class = 3
+class_dry = 0
+length_m = 7369
+lat = 45.54395
+lon = -122.71809
+neighbours = [132, 134, 135, 136]
+
+[[segment]]
+id = 134
+class = 3
+class_dry = 0
+length_m = 6258
+lat = 45.54822
+lon = -122.71548
+neighbours = [132, 133, 135, 136]
+
+[[segment]]
+id = 135
+class = 3
+class_dry = 0
+length_m = 14918
+lat = 45.52265
+lon = -122.68760
+neighbours = [133, 134, 136, 138, 140, 141, 142, 216, 217, 218]
+
+[[segment]]
+id = 136
+class = 3
+class_dry = 0
+length_m = 6681
+lat = 45.53365
+lon = -122.68224
+neighbours = [121, 133, 134, 135, 137, 140]
+
+[[segment]]
+id = 137
+class = 3
+class_dry = 0
+length_m = 2585
+lat = 45.51757
+lon = -122.67255
+neighbours = [121, 136, 140, 141]
+
+[[segment]]
+id = 138
+class = 3
+class_dry = 0
+length_m = 8689
+lat = 45.54186
+lon = -122.67350
+neighbours = [135, 219, 222]
+
+[[segment]]
+id = 139
+class = 3
+class_dry = 0
+length_m = 10771
+lat = 45.58997
+lon = -122.68155
+neighbours = [1, 125, 220, 221, 222]
+
+[[segment]]
+id = 140
+class = 3
+class_dry = 0
+length_m = 2336
+lat = 45.52304
+lon = -122.67775
+neighbours = [135, 136, 137]
+
+[[segment]]
+id = 141
+class = 0
+class_dry = 0
+length_m = 4462
+lat = 45.51343
+lon = -122.68176
+neighbours = [135, 137, 216]
+
+[[segment]]
+id = 142
+class = 2
+class_dry = 0
+length_m = 15489
+lat = 45.51795
+lon = -122.73212
+neighbours = [135, 143]
+
+[[segment]]
+id = 143
+class = 3
+class_dry = 0
+length_m = 11278
+lat = 45.51050
+lon = -122.78497
+neighbours = [115, 142, 144, 148, 234]
+
+[[segment]]
+id = 144
+class = 3
+class_dry = 0
+length_m = 3756
+lat = 45.50603
+lon = -122.76147
+neighbours = [143, 217]
+
+[[segment]]
+id = 145
+class = 3
+class_dry = 0
+length_m = 6075
+lat = 45.49770
+lon = -122.74141
+neighbours = [146, 149, 217, 225]
+
+[[segment]]
+id = 146
+class = 2
+class_dry = 0
+length_m = 11670
+lat = 45.48320
+lon = -122.71414
+neighbours = [145, 149, 214, 216, 225]
+
+[[segment]]
+id = 147
+class = 0
+class_dry = 0
+length_m = 2545
+lat = 45.48883
+lon = -122.80271
+neighbours = [115, 117, 151]
+
+[[segment]]
+id = 148
+class = 3
+class_dry = 0
+length_m = 3659
+lat = 45.49910
+lon = -122.78940
+neighbours = [143, 151]
+
+[[segment]]
+id = 149
+class = 0
+class_dry = 0
+length_m = 6444
+lat = 45.48638
+lon = -122.76978
+neighbours = [145, 146, 151, 225]
+
+[[segment]]
+id = 150
+class = 2
+class_dry = 0
+length_m = 8549
+lat = 45.49756
+lon = -122.76592
+neighbours = [151, 217]
+
+[[segment]]
+id = 151
+class = 3
+class_dry = 0
+length_m = 6104
+lat = 45.48810
+lon = -122.79257
+neighbours = [147, 148, 149, 150, 153, 158]
+
+[[segment]]
+id = 152
+class = 0
+class_dry = 0
+length_m = 834
+lat = 45.48770
+lon = -122.82614
+neighbours = [116, 117, 153, 154, 165, 173]
+
+[[segment]]
+id = 153
+class = 0
+class_dry = 0
+length_m = 4952
+lat = 45.48687
+lon = -122.81050
+neighbours = [151, 152, 154, 165]
+
+[[segment]]
+id = 154
+class = 3
+class_dry = 0
+length_m = 10639
+lat = 45.46191
+lon = -122.82606
+neighbours = [152, 153, 156, 162, 165]
+
+[[segment]]
+id = 156
+class = 3
+class_dry = 0
+length_m = 7086
+lat = 45.44377
+lon = -122.80490
+neighbours = [154, 224]
+
+[[segment]]
+id = 157
+class = 3
+class_dry = 0
+length_m = 4043
+lat = 45.43478
+lon = -122.76140
+neighbours = [159, 209, 211, 224]
+
+[[segment]]
+id = 158
+class = 3
+class_dry = 0
+length_m = 8396
+lat = 45.46863
+lon = -122.78711
+neighbours = [151, 224, 225]
+
+[[segment]]
+id = 159
+class = 3
+class_dry = 0
+length_m = 38053
+lat = 45.37229
+lon = -122.83732
+neighbours = [157]
+
+[[segment]]
+id = 160
+class = 3
+class_dry = 1
+length_m = 19631
+lat = 45.45194
+lon = -122.66432
+neighbours = [215, 218]
+
+[[segment]]
+id = 162
+class = 3
+class_dry = 0
+length_m = 15794
+lat = 45.42523
+lon = -122.87048
+neighbours = [154]
+
+[[segment]]
+id = 165
+class = 3
+class_dry = 0
+length_m = 22073
+lat = 45.46575
+lon = -122.88728
+neighbours = [152, 153, 154]
+
+[[segment]]
+id = 173
+class = 2
+class_dry = 0
+length_m = 6608
+lat = 45.49189
+lon = -122.84680
+neighbours = [116, 152]
+
+[[segment]]
+id = 174
+class = 3
+class_dry = 0
+length_m = 5088
+lat = 45.53311
+lon = -122.85242
+neighbours = [230, 233]
+
+[[segment]]
+id = 177
+class = 3
+class_dry = 1
+length_m = 21441
+lat = 45.61604
+lon = -122.80599
+neighbours = [131, 132]
+
+[[segment]]
+id = 179
+class = 1
+class_dry = 0
+length_m = 13388
+lat = 45.57227
+lon = -122.62043
+neighbours = [123, 124, 180]
+
+[[segment]]
+id = 180
+class = 3
+class_dry = 0
+length_m = 14388
+lat = 45.57829
+lon = -122.57552
+neighbours = [11, 179, 181, 182]
+
+[[segment]]
+id = 181
+class = 0
+class_dry = 0
+length_m = 2245
+lat = 45.56291
+lon = -122.57125
+neighbours = [180, 227]
+
+[[segment]]
+id = 182
+class = 0
+class_dry = 0
+length_m = 3255
+lat = 45.55946
+lon = -122.57812
+neighbours = [180, 183, 184, 185]
+
+[[segment]]
+id = 183
+class = 0
+class_dry = 0
+length_m = 2065
+lat = 45.55476
+lon = -122.57297
+neighbours = [182, 185, 227]
+
+[[segment]]
+id = 184
+class = 0
+class_dry = 0
+length_m = 8729
+lat = 45.54284
+lon = -122.60292
+neighbours = [182, 185, 226]
+
+[[segment]]
+id = 185
+class = 0
+class_dry = 0
+length_m = 6705
+lat = 45.53769
+lon = -122.57893
+neighbours = [109, 111, 182, 183, 184, 186, 226]
+
+[[segment]]
+id = 186
+class = 0
+class_dry = 0
+length_m = 5640
+lat = 45.51011
+lon = -122.57880
+neighbours = [99, 100, 101, 108, 109, 111, 185]
+
+[[segment]]
+id = 205
+class = 0
+class_dry = 0
+length_m = 3573
+lat = 45.55833
+lon = -122.54906
+neighbours = [22, 23, 206, 227]
+
+[[segment]]
+id = 206
+class = 0
+class_dry = 0
+length_m = 2367
+lat = 45.55190
+lon = -122.53732
+neighbours = [22, 23, 205, 228]
+
+[[segment]]
+id = 207
+class = 2
+class_dry = 0
+length_m = 20534
+lat = 45.53710
+lon = -122.56279
+neighbours = [226, 227, 228, 229]
+
+[[segment]]
+id = 209
+class = 3
+class_dry = 0
+length_m = 9457
+lat = 45.42289
+lon = -122.74689
+neighbours = [157, 213]
+
+[[segment]]
+id = 211
+class = 0
+class_dry = 0
+length_m = 2971
+lat = 45.43998
+lon = -122.75090
+neighbours = [157, 213]
+
+[[segment]]
+id = 212
+class = 3
+class_dry = 0
+length_m = 7365
+lat = 45.45367
+lon = -122.71949
+neighbours = [213, 214, 215]
+
+[[segment]]
+id = 213
+class = 3
+class_dry = 0
+length_m = 14675
+lat = 45.44477
+lon = -122.73232
+neighbours = [209, 211, 212, 215]
+
+[[segment]]
+id = 214
+class = 2
+class_dry = 0
+length_m = 6022
+lat = 45.47081
+lon = -122.68782
+neighbours = [146, 212, 215, 216]
+
+[[segment]]
+id = 215
+class = 3
+class_dry = 0
+length_m = 10886
+lat = 45.47449
+lon = -122.68440
+neighbours = [160, 212, 213, 214, 218]
+
+[[segment]]
+id = 216
+class = 3
+class_dry = 0
+length_m = 7501
+lat = 45.49546
+lon = -122.67882
+neighbours = [135, 141, 146, 214, 218]
+
+[[segment]]
+id = 217
+class = 3
+class_dry = 0
+length_m = 11900
+lat = 45.50981
+lon = -122.72185
+neighbours = [135, 144, 145, 150]
+
+[[segment]]
+id = 218
+class = 3
+class_dry = 0
+length_m = 4483
+lat = 45.50024
+lon = -122.67382
+neighbours = [135, 160, 215, 216, 219]
+
+[[segment]]
+id = 219
+class = 3
+class_dry = 0
+length_m = 8583
+lat = 45.51915
+lon = -122.66636
+neighbours = [120, 121, 122, 138, 218, 226]
+
+[[segment]]
+id = 220
+class = 0
+class_dry = 0
+length_m = 12169
+lat = 45.58178
+lon = -122.71818
+neighbours = [130, 131, 139]
+
+[[segment]]
+id = 221
+class = 3
+class_dry = 0
+length_m = 10692
+lat = 45.58812
+lon = -122.69400
+neighbours = [123, 124, 128, 129, 139]
+
+[[segment]]
+id = 222
+class = 3
+class_dry = 0
+length_m = 8751
+lat = 45.56271
+lon = -122.67859
+neighbours = [125, 138, 139]
+
+[[segment]]
+id = 224
+class = 3
+class_dry = 0
+length_m = 8087
+lat = 45.44662
+lon = -122.77925
+neighbours = [156, 157, 158]
+
+[[segment]]
+id = 225
+class = 2
+class_dry = 0
+length_m = 9283
+lat = 45.47241
+lon = -122.76888
+neighbours = [145, 146, 149, 158]
+
+[[segment]]
+id = 226
+class = 3
+class_dry = 0
+length_m = 17727
+lat = 45.53113
+lon = -122.61714
+neighbours = [112, 114, 120, 122, 184, 185, 207, 219]
+
+[[segment]]
+id = 227
+class = 2
+class_dry = 0
+length_m = 9812
+lat = 45.55777
+lon = -122.56430
+neighbours = [11, 181, 183, 205, 207, 227]
+
+[[segment]]
+id = 227
+class = 2
+class_dry = 0
+length_m = 1923
+lat = 45.56568
+lon = -122.55717
+neighbours = [11, 181, 183, 205, 207, 227]
+
+[[segment]]
+id = 227
+class = 2
+class_dry = 0
+length_m = 1937
+lat = 45.56548
+lon = -122.55667
+neighbours = [11, 181, 183, 205, 207, 227]
+
+[[segment]]
+id = 228
+class = 0
+class_dry = 0
+length_m = 11496
+lat = 45.54457
+lon = -122.52249
+neighbours = [21, 71, 206, 207]
+
+[[segment]]
+id = 229
+class = 2
+class_dry = 0
+length_m = 14563
+lat = 45.50528
+lon = -122.56549
+neighbours = [88, 101, 102, 106, 107, 108, 109, 207]
+
+[[segment]]
+id = 230
+class = 3
+class_dry = 0
+length_m = 5220
+lat = 45.52683
+lon = -122.82774
+neighbours = [174, 233, 234]
+
+[[segment]]
+id = 233
+class = 3
+class_dry = 0
+length_m = 8173
+lat = 45.53598
+lon = -122.85194
+neighbours = [174, 230]
+
+[[segment]]
+id = 234
+class = 3
+class_dry = 0
+length_m = 3693
+lat = 45.52006
+lon = -122.80986
+neighbours = [116, 143, 230]
+
+[[link]]
+bridge = "Sellwood Bridge"
+west = 215
+east = 160
+west_km = 1.49
+east_km = 0.34
+
+[[link]]
+bridge = "Ross Island Bridge"
+west = 215
+east = 119
+west_km = 1.31
+east_km = 0.38
+
+[[link]]
+bridge = "Tilikum Crossing"
+west = 216
+east = 219
+west_km = 1.16
+east_km = 0.39
+
+[[link]]
+bridge = "Marquam Bridge"
+west = 141
+east = 219
+west_km = 0.81
+east_km = 0.0
+
+[[link]]
+bridge = "Hawthorne Bridge"
+west = 141
+east = 219
+west_km = 0.52
+east_km = 0.27
+
+[[link]]
+bridge = "Morrison Bridge"
+west = 136
+east = 137
+west_km = 0.58
+east_km = 0.24
+
+[[link]]
+bridge = "Burnside Bridge"
+west = 136
+east = 121
+west_km = 0.29
+east_km = 0.0
+
+[[link]]
+bridge = "Steel Bridge"
+west = 136
+east = 219
+west_km = 0.21
+east_km = 0.33
+
+[[link]]
+bridge = "Broadway Bridge"
+west = 136
+east = 138
+west_km = 0.23
+east_km = 0.69
+
+[[link]]
+bridge = "Fremont Bridge"
+west = 135
+east = 138
+west_km = 0.0
+east_km = 0.56
+
+[[link]]
+bridge = "BNSF Railway Bridge 5.1"
+west = 132
+east = 125
+west_km = 1.07
+east_km = 7.78
+
+[[link]]
+bridge = "St. Johns Bridge"
+west = 131
+east = 124
+west_km = 0.0
+east_km = 9.69
+
+[nearest]
+hub = 132
+"Oregon Health & Science University Hospital" = 216
+"Doernbecher Children's Hospital" = 216
+"Portland VA Medical Center" = 216
+"Shriners Hospitals for Children" = 135
+"Legacy Emanuel Medical Center" = 138
+"Randall Children's Hospital at Legacy Emanuel" = 138
+"Legacy Good Samaritan Medical Center" = 135
+"Providence Portland Medical Center" = 226
+"Providence Saint Vincent Hospital" = 142
+"Adventist Health Portland" = 106
+"Cedar Hills Hospital" = 143
+"Providence Milwaukie Hospital" = 92
+"Kaiser Sunnyside Medical Center" = 84

@@ -66,3 +66,15 @@ measured definitions here: recovery faster than recurrence, or not.
 A parameter's note, a catalog entry's licence and verification date, a tipping row's
 source and confidence, a project's "by" line: each is kept next to what it describes and
 shown wherever the number is shown.
+
+## The engine, not the article
+
+A page exists to exercise a simulation, not to arrange published numbers into prose. A module
+counts as one when it computes its outcome from the ground, the record and the clock, component by
+component or cell by cell, and can be wrong in a way a record can catch. A number copied from a
+report or a day drawn from a published range is an input or a check, never the output. Where the
+engine cannot yet compute a thing, the page says so, the arranged version runs beside the computed
+one as a variant while both exist, and the thing is the next rung. Interventions are parameters the
+modules read, run over seeds and compared under one cursor, not paragraphs
+(`devlog/20261112-the-engine-not-the-article.md`, Anselm, 2026-11-12).
+

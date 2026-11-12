@@ -1,0 +1,28 @@
+# Fragilities and repair rules for the components the `hazard.components` module runs: tanks,
+# crossings, poles, route segments. Every curve here is recalled from FEMA's Hazus earthquake
+# model and not checked against the manual, which could not be downloaded on 2026-11-12; the
+# county study's totals and DOGAMI's statements are the checks the runs report against.
+
+[tank]
+medians_g = [0.15, 0.35, 0.55, 0.80]   # slight, moderate, extensive, complete; unanchored steel tanks, recalled, unchecked
+beta = 0.6
+gf_median_cm = 25.0                    # ground failure: liquefaction or landslide deformation at which half fail (the buildings' fitted value)
+gf_beta = 0.7
+fail_state = 3                         # a tank at extensive damage or worse releases
+pre_1993_release = "the study's per-tank range (50 to 100 percent of contents)"
+post_1993_release_max = 0.10           # the study: designed for shaking; up to 10 percent
+
+[bridge]
+medians_g = [0.35, 0.45, 0.55, 0.80]   # conventional highway bridges without seismic design, recalled, unchecked
+beta = 0.6
+gf_median_cm = 20.0
+gf_beta = 0.7
+restore_days = [1, 7, 75, 230]         # days closed by damage state, slight to complete; recalled Hazus means, unchecked
+closed_state = 2                       # moderate damage or worse closes a crossing (a judgement)
+
+[pole]
+crews_per_day = 12                     # transmission structures repaired a day in the window (a guess; the Resilience Plan's one to three months is the check)
+served_poles = 2                       # a cell has power when its nearest poles this many all stand (topology stands in for the network we lack)
+
+[route]
+closure_days_by_class = [[0, 0], [7, 21], [21, 75], [60, 180]]   # DOGAMI's deformation classes 0 to 3 (under 50 cm, 50 to 100, 100 to 200, over 200): days closed, drawn uniformly; guesses with Hazus's highway restoration means in mind

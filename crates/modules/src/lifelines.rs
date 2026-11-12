@@ -25,6 +25,7 @@ struct Hub { lat: f64, lon: f64, contents_gal: f64, release_min: f64, release_ma
 #[derive(Clone, Serialize, Deserialize)]
 struct Service { name: String, min_days: i64, max_days: i64, text: String, days: i64 }
 
+fn default_inputs() -> String { "ranges".into() }
 pub(crate) fn commas(v: f64) -> String { let s = format!("{:.0}", v); let mut out = String::new(); for (i, c) in s.chars().enumerate() { if i > 0 && (s.len() - i) % 3 == 0 { out.push(','); } out.push(c); } out }
 fn tf(t: &toml::Value, k: &str) -> f64 { t.get(k).and_then(|v| v.as_float().or_else(|| v.as_integer().map(|i| i as f64))).unwrap_or(0.0) }
 fn ts(t: &toml::Value, k: &str) -> String { t.get(k).and_then(|v| v.as_str()).unwrap_or("").to_string() }
@@ -35,6 +36,7 @@ pub struct Lifelines {
     lat_s: f64, lat_n: f64, lon_w: f64, lon_e: f64, res_arcsec: f64,
     folder: String,
     storage_cut: f64, retrofit: bool, retrofit_release: f64,
+    #[serde(default = "default_inputs")] inputs: String, #[serde(default)] net: serde_json::Value,
     bridge_ready: Vec<String>, bridge_min_days: f64, bridge_max_days: f64, new_bridge_year: i64,
     hospital_median_scale: f64, beta: f64,
     generator_h: f64, hospital_gal_day: f64, emergency_gal_day: f64, resupply_day: i64, resupply_gal_day: f64,
@@ -59,6 +61,7 @@ impl Lifelines {
             res_arcsec: param_f64(p, "res_arcsec", 1.0),
             folder: param_str(p, "folder", "portland-cascadia").to_string(),
             storage_cut: param_f64(p, "storage_cut", 0.0),
+            inputs: param_str(p, "inputs", "ranges").to_string(), net: json!(null),
             retrofit: p.get("retrofit").and_then(|v| v.as_bool()).unwrap_or(false),
             retrofit_release: param_f64(p, "retrofit_release", 0.10),
             bridge_ready: ready, bridge_min_days: param_f64(p, "bridge_min_days", 21.0), bridge_max_days: param_f64(p, "bridge_max_days", 730.0), new_bridge_year: param_f64(p, "new_bridge_year", 2015.0) as i64,
@@ -101,6 +104,7 @@ impl Lifelines {
         let mut d = Describe::new("lifelines.recovery", name, "The months after the earthquake as a clock: the Willamette crossings, the hospitals, the power and the water, and the fuel hub, each a component with a declared fate drawn by the run's seed from published ranges (the county on its bridges, the Oregon Resilience Plan on restoration times, the county's 2022 study on the hub's tanks) and a fuel ledger in gallons that must close. Nothing here is engineered: it is the state's own estimates arranged in time, with the guesses named.")
             .priority(2).dt("1 day after the rupture")
             .param("folder", folder, "", "the event folder with bridges.toml, hospitals.toml, hub.toml and restoration.toml")
+            .param("inputs", param_str(p, "inputs", "ranges"), "", "ranges: the crossings' days, the routes' day and the power ramp drawn from published ranges; computed: the hub's release, the crossings, the routes and the power read from a hazard.components module's events")
             .param("storage_cut", param_f64(p, "storage_cut", 0.0), "", "fraction of the hub's contents removed before the day (0.2 is Ordinance 2026-312's cut by 2036, applied as if to the stock)")
             .param("retrofit", p.get("retrofit").and_then(|v| v.as_bool()).unwrap_or(false), "", "every tank behaves as one built after 2004: at most retrofit_release of its contents leaves (the study's post-2004 rule)")
             .param("retrofit_release", param_f64(p, "retrofit_release", 0.10), "", "the study's up-to-10-percent release for tanks designed for shaking and deformation")
@@ -117,6 +121,7 @@ impl Lifelines {
             .param("route_min_days", param_f64(p, "route_min_days", 7.0), "d", "earliest day trucks move on the emergency routes (debris and ground failure on 74 percent of segments; a guess)")
             .param("route_max_days", param_f64(p, "route_max_days", 30.0), "d", "latest (a guess)")
             .subscribe("quake.rupture", "the instant").subscribe("quake.toll", "the buildings' toll, for the total")
+            .subscribe("hub.release", "with inputs = computed: the tanks' summed release").subscribe("network.state", "with inputs = computed: the power share, the routes and each hospital's reachability and power, daily").subscribe("component.state", "with inputs = computed: the crossings' states")
             .read_on("quake.pga_g", "g", true, "quake.rupture", "at each hospital").read_on("quake.liq_p", "1", true, "quake.rupture", "at each hospital and the hub").read_on("quake.liq_pgd_cm", "cm", true, "quake.rupture", "")
             .publish("lifeline.marked", "{ kind: bridge | hospital | hub, name, lat, lon } at each component's cell at the start")
             .publish("lifeline.failed", "{ kind, name, reopen_day | status } at the cell: the crossings and the hub on the rupture, a hospital closed by damage or gone dark").publish("lifeline.restored", "{ kind, name, day, status } at the cell, when a crossing reopens or a hospital has power again")
@@ -159,7 +164,27 @@ impl Lifelines {
         self.said.push(id.to_string());
         ctx.publish("lifeline.crossing", json!({ "id": id, "title": id, "name": kind, "kind": kind, "day": self.day, "time": ctx.now().to_iso(), "sentence": sentence, "source": source, "confidence": confidence }));
     }
-    fn ramp_of(&self, name: &str) -> f64 { let t = self.service_days(name); if !self.fired || t <= 0 { 1.0 } else { (self.day as f64 / t as f64).clamp(0.0, 1.0) } }
+    fn spill(&mut self, ctx: &mut Ctx, released: f64, river: f64, lp: f32, how: &str) {
+        let frac = if self.hub_gal > 0.0 { released / self.hub_gal } else { 0.0 };
+        let released = released.min(self.hub_gal); let river = river.min(released); let ground = released - river;
+        ctx.transfer(FUEL, "hub", "river", river); ctx.transfer(FUEL, "hub", "ground", ground);
+        self.hub_gal -= released; self.river_gal += river; self.ground_gal += ground;
+        ctx.publish_at(self.hub_cell, "lifeline.failed", json!({ "kind": "hub", "name": "Critical Energy Infrastructure Hub", "released_gal": released, "river_gal": river }));
+        self.say(ctx, "spill", "hub", format!("Within minutes, about {:.0} million gallons leave the hub's tanks ({:.0} percent of the {:.0} million stored): {:.0} million onto the ground, {:.0} million toward the Willamette. DOGAMI maps a {:.0} percent chance of lateral spread under the hub.", released / 1e6, frac * 100.0, (self.hub_gal + released) / 1e6, ground / 1e6, river / 1e6, if lp.is_nan() { 0.0 } else { lp as f64 * 100.0 }), how, if self.inputs == "computed" { "computed tank by tank" } else { "a published range" });
+        // the hub's own toll: the county study's range for an explosion among the workers, drawn by the
+        // seed and scaled by the release against the study's maximum; zero when nothing leaves the tanks
+        let scale = if self.hub.release_max_gal > 0.0 { (released / self.hub.release_max_gal).clamp(0.0, 1.0) } else { 0.0 };
+        let (ud, ui) = (ctx.rng().f64(), ctx.rng().f64());
+        self.hub_deaths = (self.hub.toll_deaths.0 + (self.hub.toll_deaths.1 - self.hub.toll_deaths.0) * ud) * scale;
+        self.hub_injuries = (self.hub.toll_injuries.0 + (self.hub.toll_injuries.1 - self.hub.toll_injuries.0) * ui) * scale;
+        if released > 0.0 {
+            self.say(ctx, "hub-toll", "hub", format!("At the hub itself, about {:.0} dead and {:.0} hurt among some {:.0} workers, if the spill ignites.", self.hub_deaths, self.hub_injuries, self.hub.toll_workers), "CEI Hub Seismic Risk Analysis (2022) Table 11: 0 to 7 killed and 2 to 80 injured, the Texas City 2005 and Baton Rouge 2016 rates on 1,200 workers, assuming an explosion; drawn by the seed, scaled by the release against the study's maximum. DOGAMI's run models no fire following the earthquake", "a published range, scaled by a guess");
+        }
+        ctx.report("hub.deaths", "people", self.hub_deaths); ctx.report("hub.injuries", "people", self.hub_injuries);
+        // the stocks as they are now, so a close between this instant and the next tick sees the spill
+        self.report_all(ctx);
+    }
+    fn ramp_of(&self, name: &str) -> f64 { if name == "electricity" && self.inputs == "computed" { if let Some(v) = self.net.get("power_share").and_then(|v| v.as_f64()) { return v; } } let t = self.service_days(name); if !self.fired || t <= 0 { 1.0 } else { (self.day as f64 / t as f64).clamp(0.0, 1.0) } }
     fn service_days(&self, name: &str) -> i64 { self.services.iter().find(|s| s.name == name).map(|s| s.days).unwrap_or(0) }
     fn demand_gal_day(&self) -> f64 { self.emergency_gal_day + self.hospitals.iter().filter(|h| h.status == "generator").count() as f64 * self.hospital_gal_day }
     fn report_all(&self, ctx: &mut Ctx) {
@@ -173,8 +198,7 @@ impl Lifelines {
         ctx.report("lifeline.hospitals_open", "hospitals", self.hospitals.iter().filter(|h| h.status == "open" || h.status == "generator").count() as f64);
         ctx.report("lifeline.hospitals_dark", "hospitals", self.hospitals.iter().filter(|h| h.status == "dark").count() as f64);
         ctx.report("lifeline.hospitals_closed", "hospitals", self.hospitals.iter().filter(|h| h.status == "closed").count() as f64);
-        let ramp = |t: i64| -> f64 { if !self.fired { 1.0 } else if t <= 0 { 1.0 } else { (self.day as f64 / t as f64).clamp(0.0, 1.0) } };
-        let (pw, wa) = (ramp(self.service_days("electricity")), ramp(self.service_days("drinking water and sewer")));
+        let (pw, wa) = (self.ramp_of("electricity"), self.ramp_of("drinking water and sewer"));
         ctx.report("service.power_share", "1", pw); ctx.report("service.water_share", "1", wa);
         ctx.report("service.people_with_power", "people", pw * self.residents_total); ctx.report("service.people_with_water", "people", wa * self.residents_total);
         ctx.report("service.routes_open", "1", if !self.fired || self.day >= self.route_day { 1.0 } else { 0.0 });
@@ -188,7 +212,7 @@ impl Lifelines {
 impl Module for Lifelines {
     fn name(&self) -> &str { &self.name }
     fn init(&mut self, ctx: &mut Ctx) {
-        ctx.subscribe("quake.rupture"); ctx.subscribe("quake.toll");
+        ctx.subscribe("quake.rupture"); ctx.subscribe("quake.toll"); ctx.subscribe("hub.release"); ctx.subscribe("network.state"); ctx.subscribe("component.state");
         ctx.ledger(FUEL, "gal", 1.0);
         if !self.scheduled {
             self.hub_gal = self.hub.contents_gal * (1.0 - self.storage_cut);
@@ -220,6 +244,33 @@ impl Module for Lifelines {
     }
     fn handle(&mut self, ev: &Event, ctx: &mut Ctx) {
         match ev.topic.as_str() {
+            "hub.release" => {
+                if self.inputs != "computed" { return; }
+                let g = |k: &str| ev.data.get(k).and_then(|v| v.as_f64()).unwrap_or(0.0);
+                let lp = ctx.world_read("quake.liq_p").and_then(|f| f.data.get(self.hub_cell).copied()).unwrap_or(f32::NAN);
+                let n = ev.data.get("tanks_failed").and_then(|v| v.as_u64()).unwrap_or(0);
+                self.spill(ctx, g("gal"), g("river_gal"), lp, &format!("hazard.components: {} tanks failed on the ground at their cells, each releasing by the county study's age rule, to the river where the study's zone says so", n));
+            }
+            "network.state" => {
+                self.net = ev.data.clone();
+                if self.fired && self.day == 0 {
+                    let closed = self.bridges.iter().filter(|b| !b.open).count();
+                    self.say(ctx, "crossings-closed", "bridges", format!("{} of the {} Willamette crossings in the window are closed, each by its own fragility on the ground at its cell.", closed, self.bridges.len()), "hazard.components: recalled Hazus bridge fragilities and repair times, declared unchecked; the county says none of downtown's is expected to be usable at once", "computed on recalled curves");
+                }
+            }
+            "component.state" => {
+                if self.inputs != "computed" || ev.data.get("kind").and_then(|v| v.as_str()) != Some("bridge") { return; }
+                let name = ev.data.get("name").and_then(|v| v.as_str()).unwrap_or("").to_string();
+                let down = ev.data.get("down").and_then(|v| v.as_bool()).unwrap_or(false);
+                let rd = ev.data.get("repair_day").and_then(|v| v.as_i64()).unwrap_or(-1);
+                let d = self.day;
+                if let Some(i) = self.bridges.iter().position(|b| b.name == name) {
+                    let was = self.bridges[i].open; let cell = self.bridges[i].cell;
+                    self.bridges[i].open = !down; self.bridges[i].reopen_day = if down { rd } else { d };
+                    if was && down { ctx.publish_at(cell, "lifeline.failed", json!({ "kind": "bridge", "name": name, "reopen_day": rd })); }
+                    if !was && !down && self.fired { ctx.publish_at(cell, "lifeline.restored", json!({ "kind": "bridge", "name": name, "day": d })); if d > 0 { let s = format!("Day {}: the {} reopens.", d, name); self.say(ctx, "first-crossing", "bridges", s, "hazard.components: the crossing's own damage state and repair time", "computed on recalled curves"); } }
+                }
+            }
             "quake.toll" => {
                 self.quake_deaths = ev.data.get("deaths").and_then(|v| v.as_f64()).unwrap_or(0.0);
                 ctx.report("toll.deaths", "people", self.quake_deaths + self.hub_deaths);
@@ -230,34 +281,23 @@ impl Module for Lifelines {
                 let n = self.grid.as_ref().map(|g| g.nx * g.ny).unwrap_or(0);
                 let take = |name: &str| -> Vec<f32> { ctx.world_read(name).map(|f| f.data.clone()).unwrap_or_else(|| vec![0.0; n]) };
                 let (pga, liq_p, liq_pgd) = (take("quake.pga_g"), take("quake.liq_p"), take("quake.liq_pgd_cm"));
-                // the hub: the study's release range, drawn by the seed; the retrofit rule caps it
-                let u = ctx.rng().f64();
-                let mut frac = self.hub.release_min + (self.hub.release_max - self.hub.release_min) * u;
-                if self.retrofit { frac = frac.min(self.retrofit_release); }
-                let released = self.hub_gal * frac;
-                let river = released * self.hub.river_share; let ground = released - river;
-                ctx.transfer(FUEL, "hub", "river", river); ctx.transfer(FUEL, "hub", "ground", ground);
-                self.hub_gal -= released; self.river_gal += river; self.ground_gal += ground;
                 let lp = liq_p.get(self.hub_cell).copied().unwrap_or(f32::NAN);
-                ctx.publish_at(self.hub_cell, "lifeline.failed", json!({ "kind": "hub", "name": "Critical Energy Infrastructure Hub", "released_gal": released, "river_gal": river }));
-                self.say(ctx, "spill", "hub", format!("Within minutes, about {:.0} million gallons leave the hub's tanks ({:.0} percent of the {:.0} million stored): {:.0} million onto the ground, {:.0} million toward the Willamette. DOGAMI maps a {:.0} percent chance of lateral spread under the hub.", released / 1e6, frac * 100.0, (self.hub_gal + released) / 1e6, ground / 1e6, river / 1e6, if lp.is_nan() { 0.0 } else { lp as f64 * 100.0 }), "CEI Hub Seismic Risk Analysis (ECONorthwest, Salus Resilience, Enduring Econometrics, 2022): 94.6 to 193.7 million gallons released of 233.5 million held (the report's 67 percent fill of 332.7 million of active capacity), 43 percent to the river; the draw within the range is the seed's", "a published range");
-                // the hub's own toll: the county study's range for an explosion among the workers, drawn by the
-                // seed and scaled by the release against the study's maximum; zero when nothing leaves the tanks
-                let scale = if self.hub.release_max_gal > 0.0 { (released / self.hub.release_max_gal).clamp(0.0, 1.0) } else { 0.0 };
-                let (ud, ui) = (ctx.rng().f64(), ctx.rng().f64());
-                self.hub_deaths = (self.hub.toll_deaths.0 + (self.hub.toll_deaths.1 - self.hub.toll_deaths.0) * ud) * scale;
-                self.hub_injuries = (self.hub.toll_injuries.0 + (self.hub.toll_injuries.1 - self.hub.toll_injuries.0) * ui) * scale;
-                if released > 0.0 {
-                    self.say(ctx, "hub-toll", "hub", format!("At the hub itself, about {:.0} dead and {:.0} hurt among some {:.0} workers, if the spill ignites.", self.hub_deaths, self.hub_injuries, self.hub.toll_workers), "CEI Hub Seismic Risk Analysis (2022) Table 11: 0 to 7 killed and 2 to 80 injured, the Texas City 2005 and Baton Rouge 2016 rates on 1,200 workers, assuming an explosion; drawn by the seed, scaled by the release against the study's maximum. DOGAMI's run models no fire following the earthquake", "a published range, scaled by a guess");
+                if self.inputs != "computed" {
+                    // the hub: the study's release range, drawn by the seed; the retrofit rule caps it
+                    let u = ctx.rng().f64();
+                    let mut frac = self.hub.release_min + (self.hub.release_max - self.hub.release_min) * u;
+                    if self.retrofit { frac = frac.min(self.retrofit_release); }
+                    let released = self.hub_gal * frac;
+                    self.spill(ctx, released, released * self.hub.river_share, lp, "CEI Hub Seismic Risk Analysis (ECONorthwest, Salus Resilience, Enduring Econometrics, 2022): 94.6 to 193.7 million gallons released of 233.5 million held (the report's 67 percent fill of 332.7 million of active capacity), 43 percent to the river; the draw within the range is the seed's");
                 }
-                ctx.report("hub.deaths", "people", self.hub_deaths); ctx.report("hub.injuries", "people", self.hub_injuries);
-                // the crossings
+                // the crossings (computed mode: set by component.state events as they arrive)
+                if self.inputs == "computed" { for b in &mut self.bridges { b.reopen_day = i64::MAX; } }
                 for b in &mut self.bridges { b.open = b.reopen_day == 0; }
-                for b in self.bridges.clone() { if !b.open { ctx.publish_at(b.cell, "lifeline.failed", json!({ "kind": "bridge", "name": b.name, "reopen_day": b.reopen_day })); } }
+                if self.inputs != "computed" { for b in self.bridges.clone() { if !b.open { ctx.publish_at(b.cell, "lifeline.failed", json!({ "kind": "bridge", "name": b.name, "reopen_day": b.reopen_day })); } } }
                 let closed = self.bridges.iter().filter(|b| !b.open).count();
                 let soonest = self.bridges.iter().filter(|b| !b.open).map(|b| b.reopen_day).min().unwrap_or(0);
                 let latest = self.bridges.iter().map(|b| b.reopen_day).max().unwrap_or(0);
-                self.say(ctx, "crossings-closed", "bridges", format!("{} of the {} Willamette crossings in the window are closed; the first reopens on day {}, the last on day {}.", closed, self.bridges.len(), soonest, latest), "Multnomah County: no downtown bridge is expected to be usable at once; weeks to years before any is; the days are drawn log-uniformly in that range by the seed", "a published statement, the numbers guessed");
+                if self.inputs != "computed" { self.say(ctx, "crossings-closed", "bridges", format!("{} of the {} Willamette crossings in the window are closed; the first reopens on day {}, the last on day {}.", closed, self.bridges.len(), soonest, latest), "Multnomah County: no downtown bridge is expected to be usable at once; weeks to years before any is; the days are drawn log-uniformly in that range by the seed", "a published statement, the numbers guessed"); }
                 // the hospitals: damaged by the generic fragility with a code factor, at their cells
                 let mut closed_h = Vec::new();
                 for h in &mut self.hospitals {
@@ -283,11 +323,13 @@ impl Module for Lifelines {
                 // crossings
                 for b in self.bridges.clone().iter().enumerate().map(|(i, b)| (i, b.clone())).collect::<Vec<_>>() {
                     let (i, b) = b;
-                    if !b.open && d >= b.reopen_day { self.bridges[i].open = true; ctx.publish_at(b.cell, "lifeline.restored", json!({ "kind": "bridge", "name": b.name, "day": d })); let s = format!("Day {}: the {} reopens, the first crossing back.", d, b.name); self.say(ctx, "first-crossing", "bridges", s, "the seed's draw within the county's weeks-to-years", "guess"); }
+                    if self.inputs != "computed" && !b.open && d >= b.reopen_day { self.bridges[i].open = true; ctx.publish_at(b.cell, "lifeline.restored", json!({ "kind": "bridge", "name": b.name, "day": d })); let s = format!("Day {}: the {} reopens, the first crossing back.", d, b.name); self.say(ctx, "first-crossing", "bridges", s, "the seed's draw within the county's weeks-to-years", "guess"); }
                 }
                 if self.bridges.iter().all(|b| b.open) { self.say(ctx, "all-crossings", "bridges", format!("Day {}: every crossing in the window is open again.", d), "the seed's draws", "guess"); }
-                let routes = d >= self.route_day;
-                if routes { self.say(ctx, "routes", "routes", format!("Day {}: trucks move on the emergency routes.", d), "a guess within 7 to 30 days; DOGAMI: 74 percent of segments at risk of ground failure", "guess"); }
+                let computed = self.inputs == "computed";
+                let net_bool = |net: &serde_json::Value, key: &str, name: &str| net.get(key).and_then(|m| m.get(name)).and_then(|v| v.as_bool()).unwrap_or(false);
+                let routes = if computed { self.net.get("any_reachable").and_then(|v| v.as_bool()).unwrap_or(false) } else { d >= self.route_day };
+                if routes { self.say(ctx, "routes", "routes", format!("Day {}: trucks move on the emergency routes{}.", d, if computed { ", the first hospital reachable from the hub along open segments and crossings" } else { "" }), if computed { "hazard.components: DOGAMI's route segments closed by deformation class, the crossings by their own states" } else { "a guess within 7 to 30 days; DOGAMI: 74 percent of segments at risk of ground failure" }, "guess"); }
                 // fuel: resupply, then the response's draw, then the hospitals' generators
                 if d >= self.resupply_day {
                     // the tanks are topped back up toward what they held before the day, never past it; with no
@@ -307,10 +349,10 @@ impl Module for Lifelines {
                 for i in 0..self.hospitals.len() {
                     let h = self.hospitals[i].clone();
                     if h.damaged { continue; }
-                    let grid = d >= h.grid_day.max(1);
+                    let grid = if computed { net_bool(&self.net, "hospital_power", &h.name) } else { d >= h.grid_day.max(1) };
                     if grid { if self.hospitals[i].status != "open" { ctx.publish_at(h.cell, "lifeline.restored", json!({ "kind": "hospital", "name": h.name, "day": d, "status": "open" })); } self.hospitals[i].status = "open".into(); continue; }
                     let mut left = h.generator_h - 24.0;
-                    let reachable = routes && (!h.east || any_bridge);
+                    let reachable = if computed { net_bool(&self.net, "reachable", &h.name) } else { routes && (!h.east || any_bridge) };
                     if reachable && left < self.generator_h && self.hub_gal >= self.hospital_gal_day {
                         ctx.transfer(FUEL, "hub", "burned", self.hospital_gal_day); self.hub_gal -= self.hospital_gal_day; self.consumed_gal += self.hospital_gal_day;
                         left = self.generator_h;
@@ -319,8 +361,9 @@ impl Module for Lifelines {
                     if left <= 0.0 { if self.hospitals[i].status != "dark" { dark_now.push(h.name.clone()); ctx.publish_at(h.cell, "lifeline.failed", json!({ "kind": "hospital", "name": h.name, "status": "dark", "day": d })); } self.hospitals[i].status = "dark".into(); } else { if self.hospitals[i].status == "dark" { ctx.publish_at(h.cell, "lifeline.restored", json!({ "kind": "hospital", "name": h.name, "day": d, "status": "generator" })); } self.hospitals[i].status = "generator".into(); }
                 }
                 if !dark_now.is_empty() { self.say(ctx, "hospitals-dark", "hospitals", format!("Day {}: generators run dry with no fuel delivered: {} go dark.", d, dark_now.join(", ")), "72 hours of generator fuel (a guess), deliveries only once trucks move and, east of the river, a crossing is open", "guess"); }
-                if d == power_day / 2 { self.say(ctx, "power-half", "power", format!("Day {}: power is back for half the people.", d), "the Oregon Resilience Plan's 1 to 3 months for the valley, the day drawn by the seed, a straight ramp", "a published range"); }
-                if d == power_day { self.say(ctx, "power", "power", format!("Day {}: power is back for everyone.", d), "the Oregon Resilience Plan's 1 to 3 months for the valley", "a published range"); }
+                if computed { let pw = self.ramp_of("electricity"); if pw >= 0.5 { self.say(ctx, "power-half", "power", format!("Day {}: power is back for half the people, as the poles are repaired.", d), "hazard.components: DOGAMI's transmission structures failed by the state's chance at each, crews at a stated rate", "computed"); } if pw >= 0.999 { self.say(ctx, "power", "power", format!("Day {}: power is back for everyone.", d), "hazard.components", "computed"); } }
+                if !computed && d == power_day / 2 { self.say(ctx, "power-half", "power", format!("Day {}: power is back for half the people.", d), "the Oregon Resilience Plan's 1 to 3 months for the valley, the day drawn by the seed, a straight ramp", "a published range"); }
+                if !computed && d == power_day { self.say(ctx, "power", "power", format!("Day {}: power is back for everyone.", d), "the Oregon Resilience Plan's 1 to 3 months for the valley", "a published range"); }
                 let water_day = self.service_days("drinking water and sewer");
                 if d == water_day / 2 { self.say(ctx, "water-half", "water", format!("Day {}: water is back for half the people.", d), "the Oregon Resilience Plan's 1 month to 1 year for the valley, the day drawn by the seed", "a published range"); }
                 if d == water_day { self.say(ctx, "water", "water", format!("Day {}: water and sewer are back for everyone.", d), "the Oregon Resilience Plan", "a published range"); }

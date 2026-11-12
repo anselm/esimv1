@@ -230668,7 +230668,7 @@
       {
         "name": "quake.toll",
         "required": false,
-        "note": "{ deaths, injuries_hospital, injuries_minor, displaced } the window's toll as numbers, once the shaking ends, for whoever keeps a total"
+        "note": "{ deaths, injuries_hospital, injuries_life, injuries_minor, displaced } the window's toll as numbers, once the shaking ends, for whoever keeps a total"
       }
     ],
     "sends": [],
@@ -230774,6 +230774,11 @@
       },
       {
         "name": "quake.injuries_hospital",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "quake.injuries_life_threatening",
         "unit": "people",
         "required": false
       },
@@ -231094,6 +231099,11 @@
         "note": "the event folder with bridges.toml, hospitals.toml, hub.toml and restoration.toml"
       },
       {
+        "name": "inputs",
+        "default": "ranges",
+        "note": "ranges: the crossings' days, the routes' day and the power ramp drawn from published ranges; computed: the hub's release, the crossings, the routes and the power read from a hazard.components module's events"
+      },
+      {
         "name": "storage_cut",
         "default": 0.0,
         "note": "fraction of the hub's contents removed before the day (0.2 is Ordinance 2026-312's cut by 2036, applied as if to the stock)"
@@ -231196,6 +231206,11 @@
         "note": "{ kind, name, day, status } at the cell, when a crossing reopens or a hospital has power again"
       },
       {
+        "name": "lifeline.state",
+        "required": false,
+        "note": "{ day, hospitals_open, hospitals_dark, power_share, water_share, routes_open, hub_deaths } each day after the rupture, for the aftermath"
+      },
+      {
         "name": "lifeline.crossing",
         "required": false,
         "note": "{ kind, day, sentence, source, confidence } the city before, the spill, the hub's own toll, the closures, each restoration milestone, the fuel"
@@ -231213,6 +231228,21 @@
         "name": "quake.toll",
         "required": false,
         "note": "the buildings' toll, for the total"
+      },
+      {
+        "name": "hub.release",
+        "required": false,
+        "note": "with inputs = computed: the tanks' summed release"
+      },
+      {
+        "name": "network.state",
+        "required": false,
+        "note": "with inputs = computed: the power share, the routes and each hospital's reachability and power, daily"
+      },
+      {
+        "name": "component.state",
+        "required": false,
+        "note": "with inputs = computed: the crossings' states"
       }
     ],
     "fields_owned": [],
@@ -231356,9 +231386,9 @@
       {
         "kind": "counter",
         "title": "dead, all causes",
-        "source": "toll.deaths",
+        "source": "deaths.total",
         "obs": "",
-        "note": "the buildings' toll plus the hub's own (the county study's 0 to 7, scaled by the release)"
+        "note": "the buildings' toll, the hub's own, and the deaths after (the aftermath module's total)"
       },
       {
         "kind": "counter",
@@ -231573,6 +231603,582 @@
           "zone": "coast"
         }
       ]
+    }
+  },
+  {
+    "kind": "people.aftermath",
+    "name": "people.aftermath",
+    "summary": "What happens to people after the shaking stops, as claims with sources: the life-threatening injured who find no open hospital, the deaths that follow the loss of power at a rate from a disaster with a record (Puerto Rico 2017), the people on electricity-dependent medical devices without grid power (HHS emPOWER's counts), the person-days without power and water, and the people whose outage passed the Resilience Plan's one-month rule. Each channel is a row in the event folder's aftermath.toml with its rate, source, confidence and a switch, listed here whether on or off. Owns one total, deaths.total: the buildings' dead, the hub's, and these.",
+    "priority": 3,
+    "dt": "1 day, on the lifelines' state",
+    "params": [
+      {
+        "name": "folder",
+        "default": "portland-cascadia",
+        "note": "the event folder with aftermath.toml and the residents raster"
+      },
+      {
+        "name": "month_days",
+        "default": 30.0,
+        "unit": "d",
+        "note": "the Resilience Plan's one-month rule: a business without services this long tends to leave; here the people whose outage passed it are counted"
+      }
+    ],
+    "publishes": [
+      {
+        "name": "after.crossing",
+        "required": false,
+        "note": "{ kind, day, sentence, source, confidence } the first deaths after, the one-month rule, the year's count"
+      }
+    ],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [
+      {
+        "name": "quake.toll",
+        "required": false,
+        "note": "the buildings' dead and injured, once the shaking ends"
+      },
+      {
+        "name": "lifeline.state",
+        "required": false,
+        "note": "the lifelines module's daily state: hospitals open, power and water shares, the hub's own dead"
+      }
+    ],
+    "fields_owned": [],
+    "fields_read": [],
+    "ledgers": [],
+    "frames": [],
+    "reports": [
+      {
+        "name": "deaths.total",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "after.deaths",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "after.deaths_low",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "after.deaths_high",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "after.injuries_untreated",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "after.person_days_without_power",
+        "unit": "person-days",
+        "required": false
+      },
+      {
+        "name": "after.person_days_without_water",
+        "unit": "person-days",
+        "required": false
+      },
+      {
+        "name": "after.devices_without_power",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "after.people_over_month_without_power",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "after.people_over_month_without_water",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "after.deaths_interrupted_care",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "after.deaths_untreated_injuries",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "after.deaths_power_dependent_devices",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "after.deaths_cold",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "after.deaths_water",
+        "unit": "people",
+        "required": false
+      }
+    ],
+    "views": [
+      {
+        "kind": "counter",
+        "title": "dead after the shaking",
+        "source": "after.deaths",
+        "obs": "",
+        "note": "from the claims that are on; low and high in the charts"
+      },
+      {
+        "kind": "counter",
+        "title": "person-days without power",
+        "source": "after.person_days_without_power",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "counter",
+        "title": "on medical devices, without power",
+        "source": "after.devices_without_power",
+        "obs": "",
+        "note": "HHS emPOWER's share of the three counties' people, applied to the window"
+      },
+      {
+        "kind": "counter",
+        "title": "past a month without water",
+        "source": "after.people_over_month_without_water",
+        "obs": "",
+        "note": "the Resilience Plan's one-month rule"
+      },
+      {
+        "kind": "chart",
+        "title": "dead after the shaking",
+        "source": "after.deaths",
+        "obs": "",
+        "note": "the claims that are on"
+      },
+      {
+        "kind": "chart",
+        "title": "the low and high",
+        "source": "after.deaths_high",
+        "obs": "",
+        "note": "the sources' intervals as factors"
+      },
+      {
+        "kind": "chart",
+        "title": "person-days without water",
+        "source": "after.person_days_without_water",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "text",
+        "title": "what this does not measure",
+        "source": "The channels that are off (cold homes, waterborne illness) are listed in the claims table with no source and not applied. The Puerto Rico rate is a whole-population analogue from another kind of disaster and season; it stands for every death the loss of power causes, devices included, which is why the device count is an exposure and not a second rate. The untreated-injury channel treats everyone the first day any hospital is open and knows nothing of beds, staff or distance. Nothing here moves people: nobody leaves, nobody is in a shelter, nobody is cold.",
+        "obs": "",
+        "note": ""
+      }
+    ],
+    "assets": [
+      {
+        "key": "events/portland-cascadia",
+        "note": "aftermath.toml and the residents raster"
+      }
+    ],
+    "notes": [
+      "Claims, not a model: each row is a published rate or a declared guess, applied to a count the run already has. The table is the place to argue."
+    ],
+    "tables": {
+      "claims": [
+        {
+          "confidence": "an analogue: a Caribbean island in autumn after a hurricane, applied to a Pacific Northwest city in winter after an earthquake; the interval is wide and the authors call it an underestimate",
+          "high": 1.83,
+          "id": "interrupted-care",
+          "low": 0.17,
+          "on": "person_days_without_power",
+          "per": "deaths per person-day without power",
+          "rate": 4.55e-6,
+          "source": "Kishore et al. 2018, Mortality in Puerto Rico after Hurricane Maria, NEJM 379:162-170 (abstract and reporting read 2026-11-12): 4,645 excess deaths from 20 September to 31 December 2017, one third attributed to delayed or interrupted health care; the rate here is that third over Puerto Rico's 3.34 million people (recalled) and 102 days, applied to each person-day without grid power in the window",
+          "status": "on",
+          "title": "Deaths from care interrupted by the loss of power, at the Puerto Rico 2017 rate per person-day without power"
+        },
+        {
+          "confidence": "the definition is the manual's, the rate is a guess; the model treats everyone remaining on any day a hospital is open, with no capacity limit",
+          "high": 2.0,
+          "id": "untreated-injuries",
+          "low": 0.5,
+          "on": "untreated_life_threatening",
+          "per": "share of the untreated who die each day with no hospital open in the window",
+          "rate": 0.5,
+          "source": "Hazus defines severity 3 as injuries that pose an immediate life-threatening condition if not treated adequately and expeditiously (crush syndrome, internal injuries, uncontrolled bleeding; FEMA, Earthquake Model Technical Manual, as quoted in the Downtown Anchorage Seismic Risk Assessment, read 2026-11-12); the daily rate is a guess",
+          "status": "on",
+          "title": "Deaths among the life-threatening injured who find no open hospital"
+        },
+        {
+          "confidence": "the count is the record's; the exposure is reported, not turned into deaths",
+          "high": 0.0,
+          "id": "power-dependent-devices",
+          "low": 0.0,
+          "on": "power_dependent_without_power",
+          "per": "an exposure count, no death rate",
+          "rate": 0.0,
+          "source": "HHS emPOWER (above): 11,570 Medicare beneficiaries on power-dependent devices across the three counties, 0.63 percent of their people; applied to the window's residents; the Puerto Rico rate above already includes such deaths, so none are added here",
+          "status": "on",
+          "title": "People on electricity-dependent medical devices without grid power, counted and not killed"
+        },
+        {
+          "confidence": "no source",
+          "high": 0.0,
+          "id": "cold",
+          "low": 0.0,
+          "on": "person_days_without_power",
+          "per": "deaths per person-day without power",
+          "rate": 0.0,
+          "source": "none read; excess winter mortality is documented but no rate for an outage in a mild maritime winter was found on the day",
+          "status": "off",
+          "title": "Deaths from cold homes in late January without power"
+        },
+        {
+          "confidence": "no source",
+          "high": 0.0,
+          "id": "water",
+          "low": 0.0,
+          "on": "person_days_without_water",
+          "per": "deaths per person-day without water",
+          "rate": 0.0,
+          "source": "none read",
+          "status": "off",
+          "title": "Deaths from waterborne illness with water and sewer out"
+        }
+      ]
+    }
+  },
+  {
+    "kind": "hazard.components",
+    "name": "hazard.components",
+    "summary": "Every physical thing as a component with a place, a fragility, a state and a repair path: the fuel hub's tanks from the county study's own per-tank table (621 rows, placed on the study's coordinates where it gives them, else on OpenStreetMap tank footprints), the Willamette crossings, DOGAMI's transmission structures with the state's chance of failure at each (6,146 in the window), and DOGAMI's emergency route segments with the state's deformation class at each (137). On the rupture each reads the ground at its cell and draws its state; tanks release by the study's age rule (pre-1993: its per-tank 50 to 100 percent, later: up to 10 percent), to the river where the study says so; crews repair poles at a stated rate in order of the people served; segments reopen by class; crossings by damage state. Computed and published daily: the power service per coarse cell and the people-weighted share, each hospital's reachability from the hub along open segments and open crossings, the crossings' states. The fragilities are recalled from Hazus and declared so in fragility.toml; the study's release total (94.6 to 193.7 million gallons) and the county's statement on its bridges are the checks, reported.",
+    "priority": 1,
+    "dt": "1 day after the rupture",
+    "params": [
+      {
+        "name": "folder",
+        "default": "portland-cascadia",
+        "note": "the event folder with tanks.csv, poles.csv, routes.toml, bridges.toml, hospitals.toml, hub.toml and fragility.toml"
+      },
+      {
+        "name": "soils",
+        "default": "wet",
+        "note": "which of DOGAMI's columns the poles and routes read: wet or dry"
+      },
+      {
+        "name": "coarse_arcsec",
+        "default": 10.0,
+        "unit": "arcsec",
+        "note": "the power service grid"
+      },
+      {
+        "name": "storage_cut",
+        "default": 0.0,
+        "note": "fraction of every tank's contents removed before the day (Ordinance 2026-312's fifth, applied to the stock)"
+      },
+      {
+        "name": "retrofit",
+        "default": false,
+        "note": "every tank releases as one built after 1993: up to post_1993_release_max of its contents"
+      },
+      {
+        "name": "force",
+        "default": [],
+        "note": "preconditions: 'kind:id:state' sets a component's damage state regardless of the draw (tank:KMW128:4, bridge:Burnside Bridge:0)"
+      }
+    ],
+    "publishes": [
+      {
+        "name": "component.state",
+        "required": false,
+        "note": "{ kind, id, name, lat, lon, state, down, repair_day, day } at the cell: every tank, crossing and segment on the rupture, failed poles, and each repair"
+      },
+      {
+        "name": "tank.release",
+        "required": false,
+        "note": "{ id, name, gal, river } at the cell, per failed tank"
+      },
+      {
+        "name": "hub.release",
+        "required": false,
+        "note": "{ gal, river_gal, tanks_failed } once, the sum, for the fuel ledger's owner"
+      },
+      {
+        "name": "network.state",
+        "required": false,
+        "note": "{ day, power_share, routes_open_share, bridges_open, reachable: { hospital: bool }, hospital_power: { hospital: bool }, any_reachable } each day, computed from the components that stand"
+      }
+    ],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [
+      {
+        "name": "quake.rupture",
+        "required": false,
+        "note": "the instant"
+      }
+    ],
+    "fields_owned": [],
+    "fields_read": [
+      {
+        "name": "quake.pga_g",
+        "unit": "g",
+        "required": true,
+        "on": "quake.rupture",
+        "note": "at each component"
+      },
+      {
+        "name": "quake.liq_p",
+        "unit": "1",
+        "required": true,
+        "on": "quake.rupture"
+      },
+      {
+        "name": "quake.liq_pgd_cm",
+        "unit": "cm",
+        "required": true,
+        "on": "quake.rupture"
+      },
+      {
+        "name": "quake.ls_p",
+        "unit": "1",
+        "required": true,
+        "on": "quake.rupture"
+      },
+      {
+        "name": "quake.ls_pgd_cm",
+        "unit": "cm",
+        "required": true,
+        "on": "quake.rupture"
+      }
+    ],
+    "ledgers": [],
+    "frames": [
+      {
+        "name": "power_up",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "tank_release_gal",
+        "unit": "gal",
+        "required": false
+      }
+    ],
+    "reports": [
+      {
+        "name": "power.share",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "power.poles_failed",
+        "unit": "poles",
+        "required": false
+      },
+      {
+        "name": "power.poles_repaired",
+        "unit": "poles",
+        "required": false
+      },
+      {
+        "name": "routes.open_share",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "bridges.open",
+        "unit": "crossings",
+        "required": false
+      },
+      {
+        "name": "tanks.failed",
+        "unit": "tanks",
+        "required": false
+      },
+      {
+        "name": "tanks.release_gal",
+        "unit": "gal",
+        "required": false
+      },
+      {
+        "name": "tanks.release_river_gal",
+        "unit": "gal",
+        "required": false
+      },
+      {
+        "name": "fit.release_vs_study_min",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "fit.release_vs_study_max",
+        "unit": "1",
+        "required": false
+      }
+    ],
+    "views": [
+      {
+        "kind": "map",
+        "title": "power service",
+        "source": "power_up",
+        "obs": "",
+        "note": "1 where the nearest poles stand, by coarse cell; the people-weighted share is the counter"
+      },
+      {
+        "kind": "map",
+        "title": "fuel released, by tank",
+        "source": "tank_release_gal",
+        "obs": "",
+        "note": "gallons leaving each tank on the rupture, by coarse cell"
+      },
+      {
+        "kind": "counter",
+        "title": "share of people with power",
+        "source": "power.share",
+        "obs": "",
+        "note": "computed from the poles, not a ramp"
+      },
+      {
+        "kind": "counter",
+        "title": "poles failed",
+        "source": "power.poles_failed",
+        "obs": "",
+        "note": "of 6,146 in the window, by DOGAMI's chance at each"
+      },
+      {
+        "kind": "counter",
+        "title": "crossings open",
+        "source": "bridges.open",
+        "obs": "",
+        "note": "by each crossing's own fragility and repair time"
+      },
+      {
+        "kind": "counter",
+        "title": "emergency routes open",
+        "source": "routes.open_share",
+        "obs": "",
+        "note": "share of segment length"
+      },
+      {
+        "kind": "counter",
+        "title": "tanks failed",
+        "source": "tanks.failed",
+        "obs": "",
+        "note": "of the study's active tanks"
+      },
+      {
+        "kind": "counter",
+        "title": "fuel released",
+        "source": "tanks.release_gal",
+        "obs": "",
+        "note": "the sum over tanks; the study's range is 94.6 to 193.7 million"
+      },
+      {
+        "kind": "chart",
+        "title": "share of people with power",
+        "source": "power.share",
+        "obs": "",
+        "note": "the computed curve; the Resilience Plan's one to three months is the check"
+      },
+      {
+        "kind": "chart",
+        "title": "emergency routes open",
+        "source": "routes.open_share",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "chart",
+        "title": "crossings open",
+        "source": "bridges.open",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "text",
+        "title": "what this does not compute",
+        "source": "The poles carry no network: a cell has power when its nearest poles stand, which stands in for the lines, substations and the grid's own switching that DOGAMI's bundle does not carry. The route segments are DOGAMI's deformation classes turned into days by guessed ranges; debris from the buildings is not on them. The tanks' shaking fragility is recalled; their ground failure uses the buildings' fitted deformation median. The water system is not here at all.",
+        "obs": "",
+        "note": ""
+      }
+    ],
+    "assets": [
+      {
+        "key": "events/portland-cascadia",
+        "note": "the component tables"
+      }
+    ],
+    "notes": [],
+    "tables": {
+      "fragility": {
+        "bridge": {
+          "beta": 0.6,
+          "closed_state": 2,
+          "gf_beta": 0.7,
+          "gf_median_cm": 20.0,
+          "medians_g": [
+            0.35,
+            0.45,
+            0.55,
+            0.8
+          ],
+          "restore_days": [
+            1,
+            7,
+            75,
+            230
+          ]
+        },
+        "pole": {
+          "crews_per_day": 12,
+          "served_poles": 2
+        },
+        "route": {
+          "closure_days_by_class": [
+            [
+              0,
+              0
+            ],
+            [
+              7,
+              21
+            ],
+            [
+              21,
+              75
+            ],
+            [
+              60,
+              180
+            ]
+          ]
+        },
+        "tank": {
+          "beta": 0.6,
+          "fail_state": 3,
+          "gf_beta": 0.7,
+          "gf_median_cm": 25.0,
+          "medians_g": [
+            0.15,
+            0.35,
+            0.55,
+            0.8
+          ],
+          "post_1993_release_max": 0.1,
+          "pre_1993_release": "the study's per-tank range (50 to 100 percent of contents)"
+        }
+      }
     }
   }
 ]
