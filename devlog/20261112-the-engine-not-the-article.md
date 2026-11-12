@@ -121,3 +121,30 @@ sustainability."
 - **Docs.** The root README (forty-six kinds, the earthquake in the module list, the status), the
   modules and layers pages, the limits page's earthquake section rewritten as the status of record,
   the project README, the record folder's README, CLAUDE.md.
+
+## The collapses drawn (later)
+
+Anselm: "Let's start the sim before the fault. Indicate date of quake clearly. Deaths seem very very
+low? Include deaths at quake itself - can we model using collapsed buildings? Use super sized people
+now."
+
+- The run already starts a week before; the clock now says on every moment whether it is before,
+  during or after the earthquake and prints its date and time beside the relative label.
+- On the number: 765 in the window was DOGAMI's own figure for this ground, fitted (810 in
+  Portland's nine districts; 1,473 across the three counties by day; the Resilience Plan's 1,250 to
+  more than 10,000 is statewide with the coast). The runs are fitted to it, so the page does not make
+  it larger; what it now does is draw it.
+- `quake.buildings` draws at every cell how many of its buildings collapse (a binomial at the cell's
+  collapse share, by the seed; `binom` in quake.rs, exact under 64 buildings, normal above), writes
+  `buildings_collapsed` as a frame and the realised collapse share, the collapse death rate and the
+  standing-building death rate as world fields, and reports the collapsed count and the dead in
+  them. Base run: 1,047 collapses, 974 of 1,000 dead in them; seeds 2 and 3: 998 and 1,030
+  collapses, 564 and 602 dead. The expectation is unchanged; the variance is the finding.
+- `people.agents` puts each agent in a collapsed or a standing building by the cell's realised share
+  and kills it at that building's rate; it publishes `agents.toll`, and `people.aftermath` lets the
+  agents' dead carry `deaths.total` when an agents module is present. At ten people an agent the
+  agents' count is lumpier than the cells' (670 against 1,000 in the base run), which is the price
+  of the scale and goes away at `scale = 1`.
+- Noted for the fit: the collapse casualty rate is 0.05 recalled, tripled by the fitted scale to
+  0.15; the tripling was fitted on the expected model and should be refitted on the drawn one,
+  which is a sweep for another day.

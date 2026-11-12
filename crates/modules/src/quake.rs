@@ -56,6 +56,17 @@ pub(crate) fn window_grid(lat_s: f64, lat_n: f64, lon_w: f64, lon_e: f64, res_ar
     Ok((LatLonGrid { nx: w.nx, ny: w.ny, dlon: w.dlon, dlat: w.dlat, lon_w: w.lon_w, lat_n: w.lat_n }, w.elev))
 }
 
+/// A binomial draw: how many of n things fail at chance p, by the given uniforms (exact under 64, normal above).
+pub(crate) fn binom(n: f64, p: f64, u: &mut dyn FnMut() -> f64) -> f64 {
+    if n <= 0.0 || p <= 0.0 { return 0.0; }
+    if p >= 1.0 { return n.round(); }
+    let ni = n.round() as i64;
+    if ni <= 64 { let mut k = 0; for _ in 0..ni { if u() < p { k += 1; } } return k as f64; }
+    let (m, sd) = (n * p, (n * p * (1.0 - p)).sqrt());
+    let (a, b) = (u().max(1e-12), u());
+    let z = (-2.0 * a.ln()).sqrt() * (2.0 * std::f64::consts::PI * b).cos();
+    (m + sd * z).round().clamp(0.0, n.round())
+}
 pub(crate) fn cell_of(g: &LatLonGrid, lat: f64, lon: f64) -> usize {
     let c = (((lon - g.lon_w) / g.dlon).floor().max(0.0) as usize).min(g.nx - 1);
     let r = (((g.lat_n - lat) / g.dlat).floor().max(0.0) as usize).min(g.ny - 1);
@@ -321,18 +332,21 @@ impl Buildings {
             .subscribe("quake.rupture", "the instant")
             .read_on("quake.pga_g", "g", true, "quake.rupture", "").read_on("quake.liq_p", "1", true, "quake.rupture", "").read_on("quake.liq_pgd_cm", "cm", true, "quake.rupture", "").read_on("quake.ls_p", "1", true, "quake.rupture", "").read_on("quake.ls_pgd_cm", "cm", true, "quake.rupture", "")
             .publish("quake.crossing", "{ kind: toll, sentence } deaths, injuries and displaced on the rupture; the fit against DOGAMI in the sentence")
-            .own("quake.cell_death_rate", "1").own("quake.cell_displaced_rate", "1")
+            .own("quake.cell_death_rate", "1").own("quake.cell_displaced_rate", "1").own("quake.cell_collapse_frac", "1").own("quake.cell_death_rate_collapse", "1").own("quake.cell_death_rate_other", "1")
             .publish("quake.toll", "{ deaths, injuries_hospital, injuries_life, injuries_minor, displaced } the window's toll as numbers, once the shaking ends, for whoever keeps a total")
-            .frame("buildings_count", "buildings").frame("building_damage_frac", "1").frame("buildings_destroyed", "buildings").frame("deaths", "people").frame("displaced", "people").frame("occupants", "people")
+            .frame("buildings_count", "buildings").frame("building_damage_frac", "1").frame("buildings_destroyed", "buildings").frame("buildings_collapsed", "buildings").frame("deaths", "people").frame("displaced", "people").frame("occupants", "people")
             .report("quake.buildings", "buildings").report("quake.buildings_moderate", "buildings").report("quake.buildings_extensive", "buildings").report("quake.buildings_complete", "buildings")
-            .report("quake.deaths", "people").report("quake.injuries_hospital", "people").report("quake.injuries_life_threatening", "people").report("quake.injuries_minor", "people").report("quake.displaced", "people").report("quake.occupants", "people")
+            .report("quake.buildings_collapsed", "buildings").report("quake.deaths_in_collapses", "people").report("quake.deaths", "people").report("quake.injuries_hospital", "people").report("quake.injuries_life_threatening", "people").report("quake.injuries_minor", "people").report("quake.displaced", "people").report("quake.occupants", "people")
             .report("quake.portland_deaths", "people").report("quake.portland_displaced", "people").report("quake.portland_buildings_extensive_or_complete", "buildings")
             .report("fit.portland_deaths_ratio", "1").report("fit.portland_displaced_ratio", "1").report("fit.portland_damage_ratio", "1").report("fit.portland_extensive_ratio", "1").report("fit.portland_complete_ratio", "1").report("fit.portland_injuries_ratio", "1").report("fit.units_damage_r", "1").report("fit.units_deaths_r", "1")
             .asset(&format!("events/{folder}"), "DOGAMI's footprints, people per unit and Hazus loss tables")
             .view("map", "share of buildings extensively damaged or worse", "building_damage_frac", "expected, per cell")
-            .view("map", "deaths", "deaths", "expected, per cell, at the stated time of day")
+            .view("map", "buildings collapsed", "buildings_collapsed", "realised building by building, a binomial draw at each cell's collapse share by the seed")
+            .view("map", "deaths", "deaths", "expected, per cell, at the stated time of day; the collapse term is the realised one")
             .view("map", "people displaced", "displaced", "residents of buildings extensively or completely damaged")
-            .view("counter", "deaths", "quake.deaths", "expected, in the window")
+            .view("counter", "buildings collapsed", "quake.buildings_collapsed", "realised, by the seed")
+            .view("counter", "dead in collapsed buildings", "quake.deaths_in_collapses", "at the collapse casualty rate")
+            .view("counter", "deaths", "quake.deaths", "in the window; the collapses realised, the rest expected")
             .view("counter", "injuries needing a hospital", "quake.injuries_hospital", "Hazus levels 2 and 3")
             .view("counter", "people displaced", "quake.displaced", "")
             .view("counter", "buildings destroyed or extensively damaged", "quake.buildings_extensive", "extensive plus complete")
@@ -362,10 +376,10 @@ impl Module for Buildings {
         ctx.field("buildings_count", "buildings", &g, self.count.clone());
         ctx.field("occupants", "people", &g, self.occupants.clone());
         let n = g.nx * g.ny;
-        for f in [("building_damage_frac", "1"), ("buildings_destroyed", "buildings"), ("deaths", "people"), ("displaced", "people")] { ctx.field(f.0, f.1, &g, vec![0.0; n]); }
+        for f in [("building_damage_frac", "1"), ("buildings_destroyed", "buildings"), ("buildings_collapsed", "buildings"), ("deaths", "people"), ("displaced", "people")] { ctx.field(f.0, f.1, &g, vec![0.0; n]); }
         ctx.report("quake.buildings", "buildings", self.count.iter().map(|&v| v as f64).sum());
         ctx.report("quake.occupants", "people", self.occupants.iter().map(|&v| v as f64).sum());
-        for s in ["quake.buildings_moderate", "quake.buildings_extensive", "quake.buildings_complete", "quake.deaths", "quake.injuries_hospital", "quake.injuries_life_threatening", "quake.injuries_minor", "quake.displaced"] { ctx.report(s, "", 0.0); }
+        for s in ["quake.buildings_moderate", "quake.buildings_extensive", "quake.buildings_complete", "quake.buildings_collapsed", "quake.deaths_in_collapses", "quake.deaths", "quake.injuries_hospital", "quake.injuries_life_threatening", "quake.injuries_minor", "quake.displaced"] { ctx.report(s, "", 0.0); }
     }
     fn handle(&mut self, ev: &Event, ctx: &mut Ctx) {
         if ev.topic == "quake.rupture" && !self.done {
@@ -381,6 +395,10 @@ impl Module for Buildings {
         let take = |name: &str| -> Vec<f32> { ctx.world_read(name).map(|f| f.data.clone()).unwrap_or_else(|| vec![0.0; n]) };
         let (pga, liq_p, liq_pgd, ls_p, ls_pgd) = (take("quake.pga_g"), take("quake.liq_p"), take("quake.liq_pgd_cm"), take("quake.ls_p"), take("quake.ls_pgd_cm"));
         let mut frac = vec![f32::NAN; n]; let mut destroyed = vec![0.0f32; n]; let mut deaths = vec![0.0f32; n]; let mut displaced = vec![0.0f32; n];
+        // the collapses realised building by building, and the rates an agent in the cell needs
+        let mut collapsed = vec![0.0f32; n]; let mut cf_f = vec![0.0f32; n]; let mut rc_f = vec![0.0f32; n]; let mut ro_f = vec![0.0f32; n];
+        let (mut n_coll_tot, mut dead_in_coll) = (0.0f64, 0.0f64);
+        let rc = (self.rates[4][3] * self.casualty_scale).min(1.0);
         let mut tot = [0.0f64; 5]; let (mut d_tot, mut l1, mut l23, mut l3, mut disp) = (0.0, 0.0, 0.0, 0.0, 0.0);
         let mut by_unit: std::collections::HashMap<i32, UnitLoss> = std::collections::HashMap::new();
         let mut pdx = UnitLoss::default();
@@ -404,12 +422,22 @@ impl Module for Buildings {
                 for k in 0..3 { ps[k] *= 1.0 - pg; }
                 ps[4] += moved * self.gf_complete_share; ps[3] += moved * (1.0 - self.gf_complete_share);
             }
-            let pc = ps[4]; let coll = shake_complete * self.collapse_given_complete; let ps5 = [ps[1], ps[2], ps[3], pc - coll, coll];
+            let pc = ps[4]; let coll = shake_complete * self.collapse_given_complete;
+            // the collapses realised: a binomial draw of this cell's buildings at the collapse share, by the seed,
+            // so the dead come out of the buildings that fall and differ by seed; the expectation is unchanged
+            let n_coll = binom(c, coll, &mut || ctx.rng().f64());
+            let cf = if c > 0.0 { n_coll / c } else { 0.0 };
+            let (mut p3, mut pcx) = (ps[3], pc.max(cf));
+            if cf > pc { p3 = (p3 - (cf - pc)).max(0.0); }
+            let ps5 = [ps[1], ps[2], p3, pcx - cf, cf];
+            pcx = pcx.max(0.0); let _ = pcx;
             let occ = self.occupants[i] as f64; let res = self.residents[i] as f64;
             let mut dd = 0.0; let mut i1 = 0.0; let mut i23 = 0.0; let mut i3 = 0.0;
             for (k, p) in ps5.iter().enumerate() { let r = &self.rates[k]; i1 += occ * p * r[0]; i23 += occ * p * (r[1] + r[2]); i3 += occ * p * r[2]; dd += occ * p * r[3]; }
             dd *= self.casualty_scale; i1 *= self.casualty_scale; i23 *= self.casualty_scale; i3 *= self.casualty_scale;
             l3 += i3;
+            let dc = (occ * cf * rc).min(occ); let ro = if occ > 0.0 && cf < 1.0 { ((dd - dc).max(0.0) / (occ * (1.0 - cf))).min(1.0) } else { 0.0 };
+            collapsed[i] = n_coll as f32; cf_f[i] = cf as f32; rc_f[i] = rc as f32; ro_f[i] = ro as f32; n_coll_tot += n_coll; dead_in_coll += dc;
             let di = res * (self.displaced_share * (ps[3] + ps[4]) + self.displaced_moderate_share * ps[2]);
             frac[i] = (ps[3] + ps[4]) as f32; destroyed[i] = (c * (ps[3] + ps[4])) as f32; deaths[i] = dd as f32; displaced[i] = di as f32;
             for k in 0..5 { tot[k] += c * ps[k]; }
@@ -421,6 +449,9 @@ impl Module for Buildings {
         let mut death_rate = vec![0.0f32; n]; let mut disp_rate = vec![0.0f32; n];
         for i in 0..n { let o = self.occupants[i]; let r = self.residents[i]; if o > 0.0 { death_rate[i] = (deaths[i] / o).min(1.0); } if r > 0.0 { disp_rate[i] = (displaced[i] / r).min(1.0); } }
         ctx.world_write("quake.cell_death_rate", "1", &g, death_rate); ctx.world_write("quake.cell_displaced_rate", "1", &g, disp_rate);
+        ctx.world_write("quake.cell_collapse_frac", "1", &g, cf_f); ctx.world_write("quake.cell_death_rate_collapse", "1", &g, rc_f); ctx.world_write("quake.cell_death_rate_other", "1", &g, ro_f);
+        ctx.field("buildings_collapsed", "buildings", &g, collapsed);
+        ctx.report("quake.buildings_collapsed", "buildings", n_coll_tot); ctx.report("quake.deaths_in_collapses", "people", dead_in_coll);
         ctx.field("building_damage_frac", "1", &g, frac);
         ctx.field("buildings_destroyed", "buildings", &g, destroyed);
         ctx.field("deaths", "people", &g, deaths);
@@ -455,8 +486,8 @@ impl Module for Buildings {
         let r_dmg = corr(&|u| u.ext_comp); let r_d = corr(&|u| u.deaths);
         ctx.report("fit.units_damage_r", "1", r_dmg);
         ctx.report("fit.units_deaths_r", "1", r_d);
-        let sentence = format!("In the window, about {:.0} buildings extensively damaged or destroyed ({:.0} destroyed), {:.0} dead, {:.0} hurt badly enough for a hospital, {:.0} people displaced, {}time occupancy. In Portland's nine districts {:.0} dead against DOGAMI's {:.0} for the same scenario (ratio {:.2}); the damage pattern across the units correlates {:.2} with DOGAMI's.",
-            tot[3] + tot[4], tot[4], d_tot, l23, disp, self.time_of_day, pdx.deaths, rp.deaths, ratio(pdx.deaths, rp.deaths), r_dmg);
+        let sentence = format!("In the window, about {:.0} buildings extensively damaged or destroyed ({:.0} destroyed); {:.0} collapse outright and {:.0} of the {:.0} dead are in them; {:.0} hurt badly enough for a hospital, {:.0} people displaced, {}time occupancy. In Portland's nine districts {:.0} dead against DOGAMI's {:.0} for the same scenario (ratio {:.2}); the damage pattern across the units correlates {:.2} with DOGAMI's.",
+            tot[3] + tot[4], tot[4], n_coll_tot, dead_in_coll, d_tot, l23, disp, self.time_of_day, pdx.deaths, rp.deaths, ratio(pdx.deaths, rp.deaths), r_dmg);
         ctx.report("quake.injuries_life_threatening", "people", l3);
         ctx.publish("quake.toll", json!({ "deaths": d_tot, "injuries_hospital": l23, "injuries_life": l3, "injuries_minor": l1, "displaced": disp }));
         ctx.publish("quake.crossing", json!({ "id": "toll", "title": "The toll", "name": "the window", "kind": "toll", "time": ctx.now().to_iso(), "sentence": sentence, "source": "this run's fragility (recalled Hazus forms, two scales fitted) on DOGAMI's ground and inventory; the record is DOGAMI O-18-02's Hazus run", "confidence": "fitted" }));

@@ -355,7 +355,12 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   device-dependent share from emPOWER), dead or displaced at the buildings' per-cell rates (`quake.cell_death_rate`,
   `quake.cell_displaced_rate`, world fields the buildings now write on the toll), power from the components'
   `power.up` world field at the home cell, water by the ramp; decides nothing yet; reports agents per second.
-  The status of the whole is in `docs/system/limits.md`, The earthquake.
+  The status of the whole is in `docs/system/limits.md`, The earthquake. Then (Anselm: start before the fault,
+  the quake's date clearly, deaths seem low, model with collapsed buildings, use super-sized people now): the
+  buildings draw the collapses per cell (`binom`, frame `buildings_collapsed`, world fields `quake.cell_collapse_frac`,
+  `quake.cell_death_rate_collapse`, `quake.cell_death_rate_other`), the agents sit in collapsed or standing buildings
+  and publish `agents.toll`, the aftermath's `deaths.total` takes the agents' dead when present; the clock prints the
+  event's date and before/during/after. The dead in the window run 560 to 1,000 by seed around the fitted 765.
 - Wild cards (2026-11-05, Anselm: "i just want a placeholder ... like a video game with wild card factors
   optionally"): `events.shock` (`crates/modules/src/shock.rs`) draws `data/events/future-speculative.toml` by the
   run's seed each year from `from` (default 2025), or plays one named card (`mode = "named"`, `event`, `at`);

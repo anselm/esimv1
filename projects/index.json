@@ -1872,10 +1872,10 @@
     "runs": [
       {
         "all_ledgers_closed": true,
-        "digest": "a8ab1501cf573b0e",
+        "digest": "362e28a66822abbb",
         "end": 1832529600,
-        "events": 4341,
-        "id": "q1-portland-cascadia-09ae84a2-a8ab1501",
+        "events": 4345,
+        "id": "q1-portland-cascadia-09ae84a2-362e28a6",
         "name": "q1-portland-cascadia",
         "seed": 3,
         "set": {
@@ -1887,10 +1887,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "6b5975b2daf1368c",
+        "digest": "ef9f6adf4ec34e05",
         "end": 1832529600,
-        "events": 4307,
-        "id": "q1-portland-cascadia-1f63c4a3-6b5975b2",
+        "events": 4311,
+        "id": "q1-portland-cascadia-1f63c4a3-ef9f6adf",
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
@@ -1903,10 +1903,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "820ca23a58defdb4",
+        "digest": "efa9c415a4b8e703",
         "end": 1832529600,
-        "events": 4307,
-        "id": "q1-portland-cascadia-21ec2c15-820ca23a",
+        "events": 4311,
+        "id": "q1-portland-cascadia-21ec2c15-efa9c415",
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
@@ -1919,10 +1919,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "c84c6ff067a87fc9",
+        "digest": "dd388d0e1c531638",
         "end": 1832529600,
-        "events": 4331,
-        "id": "q1-portland-cascadia-679a3eea-c84c6ff0",
+        "events": 4335,
+        "id": "q1-portland-cascadia-679a3eea-dd388d0e",
         "name": "q1-portland-cascadia",
         "seed": 2,
         "set": {
@@ -1934,10 +1934,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "4c084b7d8c06dc4a",
+        "digest": "bf61d440fe4b7991",
         "end": 1832529600,
-        "events": 4307,
-        "id": "q1-portland-cascadia-980cda5e-4c084b7d",
+        "events": 4311,
+        "id": "q1-portland-cascadia-980cda5e-bf61d440",
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
@@ -1949,10 +1949,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "26b4de68ad99f6b7",
+        "digest": "e9d100060e76b6d3",
         "end": 1832529600,
-        "events": 4338,
-        "id": "q1-portland-cascadia-a37a427d-26b4de68",
+        "events": 4342,
+        "id": "q1-portland-cascadia-a37a427d-e9d10006",
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
@@ -1964,10 +1964,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "4c084b7d8c06dc4a",
+        "digest": "bf61d440fe4b7991",
         "end": 1832529600,
-        "events": 4307,
-        "id": "q1-portland-cascadia-a9f6e4d0-4c084b7d",
+        "events": 4311,
+        "id": "q1-portland-cascadia-a9f6e4d0-bf61d440",
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
@@ -1981,10 +1981,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "113bf53d0d73c087",
+        "digest": "71700530ddc0f9ee",
         "end": 1832529600,
-        "events": 4307,
-        "id": "q1-portland-cascadia-ab3887d9-113bf53d",
+        "events": 4311,
+        "id": "q1-portland-cascadia-ab3887d9-71700530",
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
@@ -1997,10 +1997,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "e36ac1fad9b9506d",
+        "digest": "f0d984555c27ea04",
         "end": 1832529600,
-        "events": 4085,
-        "id": "q1-portland-cascadia-f086393b-e36ac1fa",
+        "events": 4089,
+        "id": "q1-portland-cascadia-f086393b-f0d98455",
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
@@ -2015,10 +2015,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "2cb15ea79b3ad149",
+        "digest": "fe24d3ae3e6cbddf",
         "end": 1832529600,
-        "events": 4329,
-        "id": "q1-portland-cascadia-f74e5756-2cb15ea7",
+        "events": 4333,
+        "id": "q1-portland-cascadia-f74e5756-fe24d3ae",
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {

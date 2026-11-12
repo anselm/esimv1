@@ -26,6 +26,7 @@ pub struct Aftermath {
     power_dependent_share: f64,
     residents_total: f64,
     quake_deaths: f64, hub_deaths: f64, injuries_life: f64, injuries_hospital: f64,
+    #[serde(default)] agents_dead: Option<f64>,
     untreated: f64,
     deaths: Vec<(String, f64)>, deaths_low: f64, deaths_high: f64,
     person_days_power: f64, person_days_water: f64, devices_days: f64,
@@ -45,7 +46,7 @@ impl Aftermath {
             folder: param_str(p, "folder", "portland-cascadia").to_string(),
             month_days: param_f64(p, "month_days", 30.0) as i64,
             claims: Vec::new(), power_dependent_share: 0.0, residents_total: 0.0,
-            quake_deaths: 0.0, hub_deaths: 0.0, injuries_life: 0.0, injuries_hospital: 0.0, untreated: 0.0,
+            quake_deaths: 0.0, hub_deaths: 0.0, injuries_life: 0.0, injuries_hospital: 0.0, agents_dead: None, untreated: 0.0,
             deaths: Vec::new(), deaths_low: 0.0, deaths_high: 0.0,
             person_days_power: 0.0, person_days_water: 0.0, devices_days: 0.0, over_month_power: 0.0, over_month_water: 0.0,
             day: 0, said: Vec::new(),
@@ -81,7 +82,7 @@ impl Aftermath {
             .priority(3).dt("1 day, on the lifelines' state")
             .param("folder", folder, "", "the event folder with aftermath.toml and the residents raster")
             .param("month_days", param_f64(p, "month_days", 30.0), "d", "the Resilience Plan's one-month rule: a business without services this long tends to leave; here the people whose outage passed it are counted")
-            .subscribe("quake.toll", "the buildings' dead and injured, once the shaking ends").subscribe("lifeline.state", "the lifelines module's daily state: hospitals open, power and water shares, the hub's own dead")
+            .subscribe("quake.toll", "the buildings' dead and injured, once the shaking ends").subscribe("agents.toll", "the agents' dead, which carry the total when an agents module is present").subscribe("lifeline.state", "the lifelines module's daily state: hospitals open, power and water shares, the hub's own dead")
             .publish("after.crossing", "{ kind, day, sentence, source, confidence } the first deaths after, the one-month rule, the year's count")
             .report("deaths.total", "people").report("after.deaths", "people").report("after.deaths_low", "people").report("after.deaths_high", "people")
             .report("after.injuries_untreated", "people").report("after.person_days_without_power", "person-days").report("after.person_days_without_water", "person-days")
@@ -108,7 +109,7 @@ impl Aftermath {
     fn after_total(&self) -> f64 { self.deaths.iter().map(|d| d.1).sum() }
     fn report_all(&self, ctx: &mut Ctx) {
         let after = self.after_total();
-        ctx.report("deaths.total", "people", self.quake_deaths + self.hub_deaths + after);
+        ctx.report("deaths.total", "people", self.agents_dead.unwrap_or(self.quake_deaths) + self.hub_deaths + after);
         ctx.report("after.deaths", "people", after);
         ctx.report("after.deaths_low", "people", self.deaths_low); ctx.report("after.deaths_high", "people", self.deaths_high);
         for (id, v) in &self.deaths { ctx.report(&format!("after.deaths_{}", id.replace('-', "_")), "people", *v); }
@@ -123,7 +124,7 @@ impl Aftermath {
 impl Module for Aftermath {
     fn name(&self) -> &str { &self.name }
     fn init(&mut self, ctx: &mut Ctx) {
-        ctx.subscribe("quake.toll"); ctx.subscribe("lifeline.state");
+        ctx.subscribe("quake.toll"); ctx.subscribe("agents.toll"); ctx.subscribe("lifeline.state");
         for c in &self.claims { self.deaths.push((c.id.clone(), 0.0)); }
         self.deaths.dedup_by(|a, b| a.0 == b.0);
         ctx.report("after.devices_without_power", "people", 0.0);
@@ -137,6 +138,7 @@ impl Module for Aftermath {
                 self.untreated = self.injuries_life;
                 self.report_all(ctx);
             }
+            "agents.toll" => { self.agents_dead = Some(f("dead")); self.report_all(ctx); }
             "lifeline.state" => {
                 self.day = f("day") as i64; self.hub_deaths = f("hub_deaths");
                 let (hosp_open, power, water) = (f("hospitals_open"), f("power_share"), f("water_share"));
@@ -165,7 +167,7 @@ impl Module for Aftermath {
                 let after = self.after_total();
                 if after >= 1.0 { let (a, l, h) = (after, self.deaths_low, self.deaths_high); self.say(ctx, "first-after", format!("Day {}: the first deaths after the shaking: about {:.0} so far, from care interrupted by the loss of power (a range of {:.0} to {:.0}).", self.day, a, l, h), "Kishore et al. 2018 (Puerto Rico after Maria) for the rate per person-day without power; the claims table in the event folder", "an analogue"); }
                 if self.day == self.month_days { let (pw, ww) = (self.over_month_power, self.over_month_water); self.say(ctx, "one-month", format!("Day {}: a month on, about {} people are still without power and {} without water, past the Resilience Plan's one-month rule for a business to leave.", self.day, crate::lifelines::commas(pw), crate::lifelines::commas(ww)), "the Oregon Resilience Plan 2013 on the one-month rule; the lifelines' ramps", "a published rule on guessed ramps"); }
-                if self.day == 365 { let (a, l, h) = (after, self.deaths_low, self.deaths_high); self.say(ctx, "year", format!("A year on: about {:.0} dead in the shaking and {:.0} after it ({:.0} to {:.0}), from the claims that are on; {:.0} million person-days without power, {:.0} million without water.", self.quake_deaths + self.hub_deaths, a, l, h, self.person_days_power / 1e6, self.person_days_water / 1e6), "the claims table", "the sum of analogues and guesses"); }
+                if self.day == 365 { let (a, l, h) = (after, self.deaths_low, self.deaths_high); self.say(ctx, "year", format!("A year on: about {:.0} dead in the shaking and {:.0} after it ({:.0} to {:.0}), from the claims that are on; {:.0} million person-days without power, {:.0} million without water.", self.agents_dead.unwrap_or(self.quake_deaths) + self.hub_deaths, a, l, h, self.person_days_power / 1e6, self.person_days_water / 1e6), "the claims table", "the sum of analogues and guesses"); }
                 self.report_all(ctx);
             }
             _ => {}

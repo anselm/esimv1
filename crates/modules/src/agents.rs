@@ -14,7 +14,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 
 #[derive(Clone, Serialize, Deserialize, Default)]
-struct Agent { home: u32, work: u32, device: bool, dead: bool, displaced: bool, power: bool, water: bool }
+struct Agent { home: u32, work: u32, device: bool, dead: bool, in_collapse: bool, displaced: bool, power: bool, water: bool }
 
 #[derive(Serialize, Deserialize)]
 pub struct Agents {
@@ -63,12 +63,15 @@ impl Agents {
             .param("time_of_day", param_str(p, "time_of_day", "day"), "", "where each agent is at the instant: work by day, home by night")
             .param("coarse_arcsec", param_f64(p, "coarse_arcsec", 10.0), "arcsec", "the power service grid it reads")
             .subscribe("quake.toll", "the buildings' reckoning, once the shaking ends").subscribe("lifeline.state", "the day's water share")
-            .read_on("quake.cell_death_rate", "1", true, "quake.toll", "expected deaths per occupant at each cell, from the buildings").read_on("quake.cell_displaced_rate", "1", true, "quake.toll", "expected displaced per resident at each cell").read_on("power.up", "1", false, "lifeline.state", "the components' power service per coarse cell")
-            .report("agents.count", "agents").report("agents.people", "people").report("agents.dead", "people").report("agents.displaced", "people").report("agents.without_power", "people").report("agents.without_water", "people").report("agents.devices_without_power", "people").report("agents.per_second", "agents/s")
+            .read_on("quake.cell_collapse_frac", "1", true, "quake.toll", "the share of the cell's buildings that collapsed, realised by the buildings module").read_on("quake.cell_death_rate_collapse", "1", true, "quake.toll", "the chance an occupant of a collapsed building dies").read_on("quake.cell_death_rate_other", "1", true, "quake.toll", "the chance an occupant of a standing building dies").read_on("quake.cell_displaced_rate", "1", true, "quake.toll", "expected displaced per resident at each cell").read_on("power.up", "1", false, "lifeline.state", "the components' power service per coarse cell")
+            .publish("agents.toll", "{ dead, dead_in_collapses, displaced } once the agents have drawn, for whoever keeps the total")
+            .report("agents.count", "agents").report("agents.people", "people").report("agents.dead", "people").report("agents.dead_in_collapses", "people").report("agents.in_collapses", "people").report("agents.displaced", "people").report("agents.without_power", "people").report("agents.without_water", "people").report("agents.devices_without_power", "people").report("agents.per_second", "agents/s")
             .frame("agents_without_power", "people")
             .view("counter", "agents", "agents.count", "super-persons; the people they stand for is the next counter")
             .view("counter", "people followed", "agents.people", "")
-            .view("counter", "dead, by agent", "agents.dead", "should agree with the cell model's deaths")
+            .view("counter", "dead, by agent", "agents.dead", "each agent in a collapsed building or a standing one, at the buildings' rates; agrees with the cell model in expectation")
+            .view("counter", "in a building that collapsed", "agents.in_collapses", "people, by agent")
+            .view("counter", "dead in collapses, by agent", "agents.dead_in_collapses", "")
             .view("counter", "displaced, by agent", "agents.displaced", "")
             .view("counter", "without power, by agent", "agents.without_power", "from the components' power service at each home cell")
             .view("counter", "on devices without power", "agents.devices_without_power", "")
@@ -86,6 +89,8 @@ impl Agents {
         let s = self.scale;
         ctx.report("agents.count", "agents", n); ctx.report("agents.people", "people", n * s);
         ctx.report("agents.dead", "people", self.agents.iter().filter(|a| a.dead).count() as f64 * s);
+        ctx.report("agents.dead_in_collapses", "people", self.agents.iter().filter(|a| a.dead && a.in_collapse).count() as f64 * s);
+        ctx.report("agents.in_collapses", "people", self.agents.iter().filter(|a| a.in_collapse).count() as f64 * s);
         ctx.report("agents.displaced", "people", self.agents.iter().filter(|a| a.displaced && !a.dead).count() as f64 * s);
         ctx.report("agents.without_power", "people", self.agents.iter().filter(|a| !a.power && !a.dead).count() as f64 * s);
         ctx.report("agents.without_water", "people", self.agents.iter().filter(|a| !a.water && !a.dead).count() as f64 * s);
@@ -116,7 +121,7 @@ impl Module for Agents {
             let mut agents = Vec::with_capacity(n);
             for _ in 0..n {
                 let (u1, u2, u3) = (ctx.rng().f64(), ctx.rng().f64(), ctx.rng().f64());
-                agents.push(Agent { home: pick(&cr, tr, u1), work: if td > 0.0 { pick(&cd, td, u2) } else { pick(&cr, tr, u2) }, device: u3 < self.device_share, dead: false, displaced: false, power: true, water: true });
+                agents.push(Agent { home: pick(&cr, tr, u1), work: if td > 0.0 { pick(&cd, td, u2) } else { pick(&cr, tr, u2) }, device: u3 < self.device_share, dead: false, in_collapse: false, displaced: false, power: true, water: true });
             }
             self.agents = agents;
         }
@@ -131,18 +136,23 @@ impl Module for Agents {
                 let t = std::time::Instant::now();
                 let n = self.grid.as_ref().map(|g| g.nx * g.ny).unwrap_or(0);
                 let take = |name: &str| -> Vec<f32> { ctx.world_read(name).map(|f| f.data.clone()).unwrap_or_else(|| vec![0.0; n]) };
-                let (dr, pr) = (take("quake.cell_death_rate"), take("quake.cell_displaced_rate"));
+                let (cf, rc, ro, pr) = (take("quake.cell_collapse_frac"), take("quake.cell_death_rate_collapse"), take("quake.cell_death_rate_other"), take("quake.cell_displaced_rate"));
                 let at_work = self.time_of_day == "day";
                 for a in &mut self.agents {
                     let here = if at_work { a.work } else { a.home } as usize;
-                    let (u1, u2) = (ctx.rng().f64(), ctx.rng().f64());
-                    let d = dr.get(here).copied().unwrap_or(0.0) as f64; let p = pr.get(a.home as usize).copied().unwrap_or(0.0) as f64;
-                    if !d.is_nan() && u1 < d { a.dead = true; }
-                    if !p.is_nan() && u2 < p { a.displaced = true; }
+                    let (u1, u2, u3) = (ctx.rng().f64(), ctx.rng().f64(), ctx.rng().f64());
+                    let f = cf.get(here).copied().unwrap_or(0.0) as f64;
+                    a.in_collapse = !f.is_nan() && u1 < f;
+                    let d = if a.in_collapse { rc.get(here).copied().unwrap_or(0.0) } else { ro.get(here).copied().unwrap_or(0.0) } as f64;
+                    let p = pr.get(a.home as usize).copied().unwrap_or(0.0) as f64;
+                    if !d.is_nan() && u2 < d { a.dead = true; }
+                    if !p.is_nan() && u3 < p { a.displaced = true; }
                 }
                 let dt = t.elapsed().as_secs_f64().max(1e-6);
                 ctx.report("agents.per_second", "agents/s", self.agents.len() as f64 / dt);
                 self.count(ctx);
+                let s = self.scale;
+                ctx.publish("agents.toll", json!({ "dead": self.agents.iter().filter(|a| a.dead).count() as f64 * s, "dead_in_collapses": self.agents.iter().filter(|a| a.dead && a.in_collapse).count() as f64 * s, "displaced": self.agents.iter().filter(|a| a.displaced && !a.dead).count() as f64 * s }));
                 if !self.scheduled { self.scheduled = true; ctx.schedule_with_priority(Duration::days(1), 6, "day", json!(null)); }
             }
             "lifeline.state" => { self.water_share = ev.data.get("water_share").and_then(|v| v.as_f64()).unwrap_or(1.0); }

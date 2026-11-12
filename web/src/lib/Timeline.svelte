@@ -44,7 +44,7 @@
     <input type="range" min={t0} max={t1} step={1} bind:value={cursor} onkeydown={key} class="h-1 flex-1 accent-brand" aria-label="time" title="arrow keys step moment by moment" />
     <span class="w-36 text-right tabular-nums">{isoTime(cursor)}</span>
     {#if event !== null}
-      <span class="hidden w-28 text-right sm:inline">{relTime(cursor, event)}</span>
+      <span class="hidden w-28 text-right sm:inline" title="the event: {isoTime(event)}">{relTime(cursor, event)}</span>
     {:else}
       <span class="hidden w-10 text-right muted sm:inline">{pct.toFixed(0)}%</span>
     {/if}

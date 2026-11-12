@@ -101,7 +101,8 @@ so; the study's release total and the county's words on its bridges are the chec
 every run, and the first runs fail them in instructive ways, below. The arranged version, with
 the crossings' days, the routes' day and the power ramp drawn from the published ranges, runs
 beside as the `ranges` variant. The hospitals stand or fall by the fragility at their cells, run
-on seventy-two hours of generator fuel, and are refuelled once trucks reach them. The water is
+on seventy-two hours of generator fuel, and are refuelled once trucks reach them. The clock itself says on every moment whether it is before, during or after
+the earthquake and gives its date and time. The water is
 still a ramp; the pipes are not in the state's bundle. The hub is a ledger in gallons
 that must close at every daily close: what the tanks held, what left them in the first minutes by
 the county study's range, what the response and the generators burn, and what comes back up the
@@ -197,7 +198,7 @@ winter soils, which DOGAMI calls its highest-impact case. The table reads each r
 and at the end of the year.
 
 ```esim
-table 2027-01-27 toll.deaths=dead_all_causes hub.deaths=dead_at_the_hub quake.portland_deaths=deaths_in_Portland quake.injuries_hospital=injuries_needing_a_hospital quake.displaced=people_displaced quake.buildings_extensive=buildings_extensive_or_complete quake.buildings_complete=buildings_complete fuel.river_gal=gallons_toward_the_river
+table 2027-01-27 deaths.total=dead_all_causes quake.buildings_collapsed=buildings_collapsed quake.deaths_in_collapses=dead_in_them quake.portland_deaths=deaths_in_Portland quake.injuries_hospital=injuries_needing_a_hospital quake.displaced=people_displaced quake.buildings_extensive=buildings_extensive_or_complete quake.buildings_complete=buildings_complete fuel.river_gal=gallons_toward_the_river
 ```
 
 ```esim
@@ -233,12 +234,21 @@ What stands out:
   inside the ranges because it was drawn from them, and says nothing. The deaths after the shaking
   fall to a handful in the computed run because the power is back in two weeks, which is the same
   error seen from the people's side.
-- **The people as agents.** The run now carries 93,520 super-persons of ten people each, drawn by
-  the seed from DOGAMI's occupant rasters: a home cell by the residents, a work cell by the daytime
-  occupants, one in 160 on an electricity-dependent medical device. Each is dead or displaced at the
-  buildings' own rate at the cell where it was, so the agents' totals agree with the cell model
-  (750 dead against 765, 43,790 displaced against 42,925), and each day each reads the power
-  service at its home cell. They decide nothing yet; what they establish is the cost: the daily tick
+- **The collapses, building by building.** The buildings module no longer reports an expected
+  toll alone: at every cell it draws how many of the cell's buildings collapse outright, a binomial
+  draw at the cell's collapse share by the seed, and the dead in them follow at the collapse rate.
+  In the base run 1,047 buildings collapse and 974 of the 1,000 dead are in them; the second seed
+  has 998 collapses and 564 dead, the third 1,030 and 602. The expected toll is unchanged at 765,
+  and what the draw adds is the truth that one office tower falling or standing moves the count by
+  hundreds, which is why DOGAMI's own number carries the uncertainty it states. The map of collapsed
+  buildings is on the run page.
+- **The people as agents.** The run carries 93,520 super-persons of ten people each, drawn by the
+  seed from DOGAMI's occupant rasters: a home cell by the residents, a work cell by the daytime
+  occupants, one in 160 on an electricity-dependent medical device. At the instant each is in a
+  building that collapsed or one that stood, by the cell's realised share, and dies at that
+  building's rate; the agents' dead carry the total on the page (670 in the base run against the
+  cell model's 1,000, the difference being that each agent is ten people and a collapse of a few
+  buildings is a handful of agents). Each day each reads the power service at its home cell. They decide nothing yet; what they establish is the cost: the daily tick
   runs at about twenty million agent-days a second on one core, so every person in the window
   separately is a change of one parameter, and the work is the behaviour, not the compute.
 - **The deaths after the shaking.** The aftermath module adds about 66 dead over the year in the
@@ -298,7 +308,9 @@ What stands out:
 
 The fragility and casualty rates are recalled, not read, and two of the six fitted numbers (a 13 to
 25 percent collapse share, every casualty rate tripled) are large for what they stand in for, which
-is an inventory with no structure types. The night occupants sit in every building by floor area,
+is an inventory with no structure types; with the collapses now drawn building by building, the
+dead in the window run from 560 to 1,000 across three seeds around that fit, and the agents at ten
+people each are lumpier still. The night occupants sit in every building by floor area,
 which is why the night toll runs 1.7 times DOGAMI's. The displaced are a fitted share of residents
 in badly damaged buildings and come out double DOGAMI's on dry soils. The components' curves are
 recalled or judged too: the crossings' curves are anchored on the county's stated levels and not

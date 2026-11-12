@@ -135,7 +135,7 @@ impl Lifelines {
             .asset(&format!("events/{folder}"), "the component tables and the residents raster")
             .view_film("the clock", "occupants,quake_pga_g,building_damage_frac", "the people until the rupture, the ground motion while the shaking lasts, then the damage; the sentences and the counters at the moment")
             .view("story", "what happens", "crossing", "one sentence per event, newest first; the source beside each")
-            .view("counter", "dead, all causes", "deaths.total", "the buildings' toll, the hub's own, and the deaths after (the aftermath module's total)")
+            .view("counter", "dead, all causes", "deaths.total", "the agents' dead in the buildings that collapsed and stood, the hub's own, and the deaths after (the aftermath module's total)")
             .view("counter", "Willamette crossings open", "lifeline.crossings_open", "of the twelve in the window")
             .view("counter", "hospitals open", "lifeline.hospitals_open", "undamaged, with grid power or a running generator")
             .view("counter", "hospitals dark", "lifeline.hospitals_dark", "standing, no power")

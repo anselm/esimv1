@@ -230690,6 +230690,21 @@
         "name": "quake.cell_displaced_rate",
         "unit": "1",
         "required": false
+      },
+      {
+        "name": "quake.cell_collapse_frac",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "quake.cell_death_rate_collapse",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "quake.cell_death_rate_other",
+        "unit": "1",
+        "required": false
       }
     ],
     "fields_read": [
@@ -230742,6 +230757,11 @@
         "required": false
       },
       {
+        "name": "buildings_collapsed",
+        "unit": "buildings",
+        "required": false
+      },
+      {
         "name": "deaths",
         "unit": "people",
         "required": false
@@ -230776,6 +230796,16 @@
       {
         "name": "quake.buildings_complete",
         "unit": "buildings",
+        "required": false
+      },
+      {
+        "name": "quake.buildings_collapsed",
+        "unit": "buildings",
+        "required": false
+      },
+      {
+        "name": "quake.deaths_in_collapses",
+        "unit": "people",
         "required": false
       },
       {
@@ -230874,10 +230904,17 @@
       },
       {
         "kind": "map",
+        "title": "buildings collapsed",
+        "source": "buildings_collapsed",
+        "obs": "",
+        "note": "realised building by building, a binomial draw at each cell's collapse share by the seed"
+      },
+      {
+        "kind": "map",
         "title": "deaths",
         "source": "deaths",
         "obs": "",
-        "note": "expected, per cell, at the stated time of day"
+        "note": "expected, per cell, at the stated time of day; the collapse term is the realised one"
       },
       {
         "kind": "map",
@@ -230888,10 +230925,24 @@
       },
       {
         "kind": "counter",
+        "title": "buildings collapsed",
+        "source": "quake.buildings_collapsed",
+        "obs": "",
+        "note": "realised, by the seed"
+      },
+      {
+        "kind": "counter",
+        "title": "dead in collapsed buildings",
+        "source": "quake.deaths_in_collapses",
+        "obs": "",
+        "note": "at the collapse casualty rate"
+      },
+      {
+        "kind": "counter",
         "title": "deaths",
         "source": "quake.deaths",
         "obs": "",
-        "note": "expected, in the window"
+        "note": "in the window; the collapses realised, the rest expected"
       },
       {
         "kind": "counter",
@@ -231399,7 +231450,7 @@
         "title": "dead, all causes",
         "source": "deaths.total",
         "obs": "",
-        "note": "the buildings' toll, the hub's own, and the deaths after (the aftermath module's total)"
+        "note": "the agents' dead in the buildings that collapsed and stood, the hub's own, and the deaths after (the aftermath module's total)"
       },
       {
         "kind": "counter",
@@ -231649,6 +231700,11 @@
         "name": "quake.toll",
         "required": false,
         "note": "the buildings' dead and injured, once the shaking ends"
+      },
+      {
+        "name": "agents.toll",
+        "required": false,
+        "note": "the agents' dead, which carry the total when an agents module is present"
       },
       {
         "name": "lifeline.state",
@@ -232266,7 +232322,13 @@
         "note": "the power service grid it reads"
       }
     ],
-    "publishes": [],
+    "publishes": [
+      {
+        "name": "agents.toll",
+        "required": false,
+        "note": "{ dead, dead_in_collapses, displaced } once the agents have drawn, for whoever keeps the total"
+      }
+    ],
     "sends": [],
     "accepts": [],
     "subscribes": [
@@ -232284,11 +232346,25 @@
     "fields_owned": [],
     "fields_read": [
       {
-        "name": "quake.cell_death_rate",
+        "name": "quake.cell_collapse_frac",
         "unit": "1",
         "required": true,
         "on": "quake.toll",
-        "note": "expected deaths per occupant at each cell, from the buildings"
+        "note": "the share of the cell's buildings that collapsed, realised by the buildings module"
+      },
+      {
+        "name": "quake.cell_death_rate_collapse",
+        "unit": "1",
+        "required": true,
+        "on": "quake.toll",
+        "note": "the chance an occupant of a collapsed building dies"
+      },
+      {
+        "name": "quake.cell_death_rate_other",
+        "unit": "1",
+        "required": true,
+        "on": "quake.toll",
+        "note": "the chance an occupant of a standing building dies"
       },
       {
         "name": "quake.cell_displaced_rate",
@@ -232326,6 +232402,16 @@
       },
       {
         "name": "agents.dead",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "agents.dead_in_collapses",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "agents.in_collapses",
         "unit": "people",
         "required": false
       },
@@ -232375,7 +232461,21 @@
         "title": "dead, by agent",
         "source": "agents.dead",
         "obs": "",
-        "note": "should agree with the cell model's deaths"
+        "note": "each agent in a collapsed building or a standing one, at the buildings' rates; agrees with the cell model in expectation"
+      },
+      {
+        "kind": "counter",
+        "title": "in a building that collapsed",
+        "source": "agents.in_collapses",
+        "obs": "",
+        "note": "people, by agent"
+      },
+      {
+        "kind": "counter",
+        "title": "dead in collapses, by agent",
+        "source": "agents.dead_in_collapses",
+        "obs": "",
+        "note": ""
       },
       {
         "kind": "counter",

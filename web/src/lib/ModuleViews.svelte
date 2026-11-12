@@ -117,6 +117,7 @@
         <div class="min-w-0">
           <div class="mono text-xs muted">{isoTime(cursor)}</div>
           <div class="text-3xl font-medium leading-tight">{event !== null ? relTime(cursor, event) : v.title}</div>
+          {#if event !== null}<div class="mt-1 text-sm">{cursor < event ? 'before' : cursor - event < 3600 ? 'during' : 'after'} the earthquake of <span class="mono">{isoTime(event)}</span></div>{/if}
           {#if sentences.length === 0}
             <p class="mt-3 text-[17px] leading-relaxed muted">Nothing has happened yet.</p>
           {:else}
