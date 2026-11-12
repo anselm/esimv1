@@ -122,6 +122,7 @@ buildings: 615,852 footprints and the people in them
 hub: 233 million gallons on the west bank
 bridges: twelve crossings, built 1908 to 2016
 hospitals: thirteen, on generators
+people: 935,195 in the window; 5,900 on medical devices that need power
 power: the grid, back in one to three months
 water: pipes, back in a month to a year
 pipeline: the Olympic line from Puget Sound
@@ -138,7 +139,45 @@ council -> hub: a fifth less storage by 2036
 hub -> buildings: fire following the spill (not modelled)
 hub -> water: oil in the river at the intakes (not modelled)
 buildings -> power: debris and poles, the lumpy recovery (not modelled)
+buildings -> people: the dead and the injured in the shaking
+hospitals -> people: the life-threatening injured, treated or not
+power -> people: care interrupted, at the Puerto Rico rate; devices without power
+water -> people: a month without water, the Resilience Plan's rule; illness (not modelled)
+people -> people: leaving, shelters, cold (not modelled)
 ```
+
+## How the pieces hang together
+
+The way a person holds this in mind is a chain with waits in it. The fault slips and the ground
+moves; the ground breaks buildings and kills people at once; the same ground breaks the crossings,
+the poles and the pipes, and those decide whether the injured reach a hospital, whether the sick
+stay alive at home, whether the water is safe, and whether anyone can get across the river to fix
+any of it. The hub sits on the worst of that ground and holds the fuel the fixing runs on, so it
+is both the spill and the stock. Above the ground sit the council, which decides storage, the
+state, which calls the hub the buffer, the federal response, which decides when the trucks come,
+and the people, who decide whether to stay. Each layer waits on the one before, and the waits are
+measured in minutes, days, months and years. The figure above draws that model in the author's
+words, with the arrows the engine lacks dashed.
+
+The engine's own model is narrower and the run page draws it below each run as the wiring: who
+writes which field, who reads it, which events pass between them, which ledger they share. It is
+drawn from what each module declares, so a relationship the world has and the run lacks shows as a
+missing arrow, and the check that refuses a manifest whose wiring does not close is the same
+drawing. Here it is for this project's latest run:
+
+```esim
+wiring
+```
+
+What is computed from the ground, cell by cell, the way the Palisades fire is: the buildings'
+damage, deaths, injuries and displaced, from DOGAMI's motion through a fragility at every cell. What
+is arranged rather than computed: the lifelines, whose days are drawn from published ranges, and
+the aftermath, whose deaths are rates from other disasters applied to the counts the run has. The
+difference matters, and the next rungs are the ones that turn the arranged into the computed: the
+power as its 18,098 transmission poles with DOGAMI's own chance of failure at each, the routes as
+the 238 emergency segments with DOGAMI's risk class at each, fire following the earthquake on the
+cell engine that ran the Palisades, the spill as a flow on the slope and the river, and people as
+queues at hospitals and shelters rather than as rates.
 
 ## What the runs say
 
@@ -160,6 +199,17 @@ table 2028-01-26 lifeline.crossings_open=crossings_open_after_a_year fuel.consum
 
 What stands out:
 
+- **The deaths after the shaking.** The aftermath module adds about 66 dead over the year in the
+  base run, a range of 11 to 121, nearly all from care interrupted by the loss of power at the rate
+  Puerto Rico recorded after Maria, applied to 14.5 million person-days without power here; none
+  from untreated injuries, because every hospital here runs on generators through the first three
+  days and the grid returns to each on its own day, so the 468 life-threatening injured are treated
+  on the first day. The third seed, with a slower grid, has 145. That is the model's first honest
+  reading of the later dead: a tenth of the shaking's toll, from one analogue, with cold homes,
+  illness from the water and the people on medical devices counted but not killed. The 5,900
+  people on power-dependent devices in the window, from HHS emPOWER's county counts, are reported
+  as an exposure. A month on, 841,676 people are still without water and 58,450 without power, past
+  the Resilience Plan's one-month rule.
 - **With and without the hub.** The county's 2022 study puts the hub's own toll, assuming the
   spill ignites, at none to seven dead and two to eighty hurt among its twelve hundred workers,
   the rates of Texas City in 2005 and Baton Rouge in 2016 applied to the site; the run draws in
@@ -240,6 +290,13 @@ visible in time, which the thread was having without it.
   statements on the downtown bridges, the dates and the budget.
 - OPB, *Fuel spill in Portland after a major earthquake could be bigger than Deepwater Horizon,
   study finds*, Monica Samayoa, 7 February 2022. Read 2026-11-12. Taken: the county chair's words.
+- Kishore et al., *Mortality in Puerto Rico after Hurricane Maria*, New England Journal of Medicine
+  379:162-170, 2018. The abstract and the reporting on it read 2026-11-12, not the paper. Taken:
+  4,645 excess deaths over 102 days with a wide interval, one third attributed to interrupted care;
+  turned into a rate per person-day without power in the claims table.
+- HHS emPOWER, the county layer of its public REST service, read 2026-11-12. Taken: Medicare
+  beneficiaries on electricity-dependent equipment in Multnomah, Washington and Clackamas counties
+  (4,825, 3,593 and 3,152), and the beneficiaries counted.
 - Multnomah County, *DOGAMI: Study estimates Cascadia earthquake impacts for Portland region*,
   the county's page on the 2018 study (last reviewed 27 November 2024), sent by Anselm, read
   2026-11-12. Taken: the county's summary numbers (27,000 injuries, 85,000 needing shelter, 37

@@ -7,6 +7,7 @@
   //   table 2099 series... [=label]   each variant's value of the named series at the start of that year
   //   table 2025-01-08T21:24Z series...  or at a date and time
   //   actors                          a diagram of actors and relationships in the author's words (Actors.svelte)
+  //   wiring                          the run's own module wiring, from the latest run's describe (Wiring.svelte)
   //   ```
   //
   // Figures draw from the project's runs and from nothing else: the author writes the
@@ -15,6 +16,7 @@
   import { latestRuns, seriesAt, yearStart } from './runs.js'
   import Ladder from './Ladder.svelte'
   import Actors from './Actors.svelte'
+  import Wiring from './Wiring.svelte'
 
   let { path, md } = $props()
   const base = $derived(`/projects/${path}`)   // relative images and links in the README resolve here
@@ -80,6 +82,9 @@
       <p class="muted text-sm">loading the runs…</p>
     {:else if s.kind === 'ladder'}
       <Ladder {runs} {elements} />
+    {:else if s.kind === 'wiring'}
+      {@const d = runs.find((o) => o.describe?.modules?.length)?.describe}
+      {#if d}<Wiring modules={d.modules} info={d.info ?? []} />{:else}<p class="muted text-sm">no describe in the runs</p>{/if}
     {:else if s.kind === 'table'}
       {@const year = s.args[0]}
       {@const cols = columns(s.args)}

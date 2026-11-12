@@ -37,6 +37,18 @@
       }
     },
     {
+      "id": "aftermath",
+      "kind": "people.aftermath",
+      "params": {
+        "folder": "portland-cascadia",
+        "lat_n": 45.66,
+        "lat_s": 45.43,
+        "lon_e": -122.47,
+        "lon_w": -122.85,
+        "res_arcsec": 1
+      }
+    },
+    {
       "id": "ground",
       "kind": "quake.ground",
       "params": {
@@ -83,7 +95,7 @@
   ],
   "from": {
     "entry": "manifests/q1-portland-cascadia.toml",
-    "hash": "sha256:0f675fb51dee9a8bbca1d54493ba879f9aa6969e7f35354ee3dbad195a3b8ec1",
+    "hash": "sha256:7e982b55b73091dfec536da2a9914f99d509faf2611fd6ed374e709b9b97a0b8",
     "language": "toml"
   },
   "manifest": "manifest/1"

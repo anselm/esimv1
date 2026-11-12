@@ -87,3 +87,61 @@ Next for the core data, as he expects: fire following earthquake (Scawthorn's mo
 restored and DOGAMI could not run in time), which is the only route to a hub toll beyond the site; a
 hospital inventory with beds and generators; the water and power networks from DOGAMI's own gdb
 instead of ramps; the bridges' real fragilities from ODOT.
+
+## Deaths after, other impacts, the marks, the human model (night)
+
+Anselm: "Extend sim to model deaths better. Extend sim to model other impacts. Can map visualization
+more clearly indicate impact points such as bridges down? Paint human model into readme on that
+scenario. I believe we also do render computational model on each run?" And then, on the page's
+"a scenario, not a forecast": "I want to brute force simulate near term outcomes - I do not want
+just a report. I want something similar to the palisades example - the goal of this engine is to
+build out capability to simulate the future and playtest outcomes."
+
+Built:
+
+- **`people.aftermath`** (`crates/modules/src/aftermath.rs`), the deaths and harm after the shaking as
+  claims in `data/events/portland-cascadia/aftermath.toml`, each with a rate, a source, a confidence
+  and a switch, listed on the run page on or off. On: care interrupted by the loss of power at the
+  Puerto Rico 2017 rate (Kishore et al. 2018: 4,645 excess deaths over 102 days, a third from
+  interrupted care, over 3.34 million people, recalled, gives 4.55e-6 per person-day; the paper's
+  interval as low and high factors); the life-threatening injured with no open hospital, at a guessed
+  daily rate, treated the first day any hospital is open; the people on power-dependent medical
+  devices without grid power, from HHS emPOWER's county counts (Multnomah 4,825, Washington 3,593,
+  Clackamas 3,152 Medicare beneficiaries; 0.63 percent of the three counties' people on recalled 2020
+  populations), counted and not killed, since the Puerto Rico rate already covers them. Off, no source:
+  cold homes, waterborne illness. It reads `quake.toll` (the buildings now publish the severity-3
+  count separately) and `lifeline.state` (new, daily) and owns `deaths.total`. Base run: 66 after
+  (11 to 121) on 765 in the shaking; seed 3 with a slow grid, 145; untreated zero everywhere because
+  the generators cover the first days. Impacts reported: person-days without power (14.5 million)
+  and water (140 million), the people past the one-month rule (58,450 without power, 841,676 without
+  water), the devices without power at the cursor.
+- **The marks** are larger, crossed when down, named on hover, and listed by state under the key, so
+  "crossing closed: Sellwood, Ross Island, ..." reads without the map.
+- **The human model** is in the README as prose, "How the pieces hang together", above an extended
+  actors figure (the people, the aftermath edges), and the run's wiring is embedded in the README
+  (a new `wiring` embed, drawn from the latest run's describe), with a paragraph that says plainly
+  what is computed from the ground cell by cell and what is arranged from published ranges. Yes, the
+  computational model is drawn on every run page, as the wiring at the bottom.
+
+**The brute-force ladder.** Anselm's point stands: the buildings are computed the way the Palisades
+fire is, and the lifelines and the aftermath are not. DOGAMI's own impact bundle carries what the
+next rungs need, cut tonight into the record folder: `poles.csv`, the transmission structures in
+the window with DOGAMI's chance of failure and deformation at each, wet and dry; `routes.geojson`,
+the emergency transportation route segments with DOGAMI's risk class at each. The rungs, in order:
+
+1. `power.poles`: every pole fails or stands by its own probability and the seed; a cell's power is
+   its nearest poles'; crews repair a stated number a day in an order (hospitals first); the power
+   share per cell is computed and the map shows the dark parts of the city coming back. The lifelines
+   read it instead of ramping. The Resilience Plan's one to three months becomes a check, not an input.
+2. `roads.segments`: each segment closes by its class and reopens by crews; reachability of each
+   hospital and of the hub along open segments and open crossings, so the trucks' day is computed.
+3. `fire.following`: ignitions by the Hazus rate on the damage, on the `fire.cells` engine with
+   DOGAMI's footprints as fuel, roads as breaks, no water pressure, the hub's ground release as a fuel
+   bed; the first route to a hub toll beyond the site. Needs the manual's ignition rate, which is
+   still not downloadable from here (the file that came was 620 bytes), or Scawthorn's.
+4. The spill as a flow: the ground release down the slope on the DEM, the river's share carried by the
+   county study's seasonal currents.
+5. People as queues: hospitals with beds, shelters with places, the injured arriving by reachability,
+   the untreated dying by a rate per day waited.
+6. Ensembles as the playtest: `esim ensemble` over seeds for each variant, the compare page under one
+   cursor, so a cut, a retrofit, a bridge or a no-hub is read as a distribution and not a run.

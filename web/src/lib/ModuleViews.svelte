@@ -79,6 +79,7 @@
     if (unit === 'ppm') return `${Math.round(x)} ppm`
     if (unit === 'm') return Math.abs(x) < 2 ? `${(x * 100).toFixed(0)} cm` : `${num(Math.round(x))} m`
     if (unit === 'gal') return Math.abs(x) >= 1e6 ? `${(x / 1e6).toFixed(1)} M gal` : `${num(Math.round(x))} gal`
+    if (unit === 'person-days') return Math.abs(x) >= 1e6 ? `${(x / 1e6).toFixed(1)} M` : num(Math.round(x))
     if (unit === 'people' || unit === 'buildings' || unit === 'crossings' || unit === 'hospitals' || unit === 'cells' || unit === 'd') return num(Math.round(x))
     if (Number.isInteger(x)) return num(x)
     return num(+x.toPrecision(4)) + (unit ? ` ${unit}` : '')
@@ -106,8 +107,11 @@
           {#if legend.length}
             <div class="mono mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-xs">
               {#each legend as l (l.state)}<span><span style="color:{l.color}">{l.state === 'closed' ? '■' : l.state === 'spilled' ? '◆' : '●'}</span> {l.label} <span class="muted">{l.n}</span></span>{/each}
-              <span class="muted">squares are crossings, circles hospitals</span>
+              <span class="muted">squares are crossings, circles hospitals; hover a mark for its name</span>
             </div>
+            {#each legend.filter((l) => l.state !== 'open' && l.state !== 'spilled') as l (l.state)}
+              <div class="mt-0.5 text-xs"><span style="color:{l.color}">{l.label}:</span> <span class="muted">{marksAt.filter((x) => x.state === l.state).map((x) => x.name).join(', ')}</span></div>
+            {/each}
           {/if}
         </div>
         <div class="min-w-0">

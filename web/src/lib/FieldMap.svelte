@@ -193,7 +193,7 @@
       const dark = matchMedia('(prefers-color-scheme: dark)').matches
       const sx = (lon) => ((lon - grid.lon_w) / (grid.nx * grid.dlon)) * W
       const sy = (lat) => ((grid.lat_n - lat) / (grid.ny * grid.dlat)) * H
-      const r = 5 * dpr
+      const r = 7 * dpr
       for (const m of marks) {
         const x = sx(m.lon), y = sy(m.lat)
         if (x < 0 || y < 0 || x > W || y > H) continue
@@ -205,6 +205,11 @@
         ctx.lineWidth = 4 * dpr; ctx.strokeStyle = dark ? 'rgba(0,0,0,0.7)' : 'rgba(255,255,255,0.85)'; ctx.stroke()
         if (m.state === 'open') { ctx.lineWidth = 2 * dpr; ctx.strokeStyle = col; ctx.stroke(); ctx.fillStyle = dark ? 'rgba(0,0,0,0.35)' : 'rgba(255,255,255,0.5)'; ctx.fill() }
         else { ctx.fillStyle = col; ctx.fill(); ctx.lineWidth = 1 * dpr; ctx.strokeStyle = col; ctx.stroke() }
+        // a cross through what is closed or dark, so it reads as down and not only as a colour
+        if (m.state === 'closed' || m.state === 'dark' || m.state === 'damaged') {
+          ctx.beginPath(); ctx.moveTo(x - r * 0.6, y - r * 0.6); ctx.lineTo(x + r * 0.6, y + r * 0.6); ctx.moveTo(x + r * 0.6, y - r * 0.6); ctx.lineTo(x - r * 0.6, y + r * 0.6)
+          ctx.lineWidth = 1.6 * dpr; ctx.strokeStyle = dark ? '#000' : '#fff'; ctx.stroke()
+        }
       }
     }
     if (world && outlines) {
@@ -229,7 +234,11 @@
     const row = Math.floor((y / r.height) * grid.ny)
     if (col < 0 || row < 0 || col >= grid.nx || row >= grid.ny) return null
     const v = frame ? frame[row * grid.nx + col] : NaN
+    // the nearest mark within a few pixels, so its name and state show with the cell
+    let mark = null
+    for (const m of marks ?? []) { const mx = ((m.lon - grid.lon_w) / (grid.nx * grid.dlon)) * r.width, my = ((grid.lat_n - m.lat) / (grid.ny * grid.dlat)) * r.height; if (Math.abs(mx - x) < 9 && Math.abs(my - y) < 9) { mark = m; break } }
     return {
+      mark,
       x, y,
       lat: grid.lat_n - (row + 0.5) * grid.dlat,
       lon: grid.lon_w + (col + 0.5) * grid.dlon,
@@ -270,6 +279,7 @@
         class="mono pointer-events-none absolute z-10 whitespace-nowrap rounded-[3px] bg-white/90 px-1.5 py-1 text-[11px] shadow-sm ring-1 ring-neutral-200 dark:bg-neutral-900/90 dark:ring-neutral-700"
         style="left:{Math.min(hover.x + 10, width - 150)}px; top:{Math.max(hover.y - 40, 0)}px"
       >
+        {#if hover.mark}<div class="font-medium">{hover.mark.name} · {hover.mark.state}</div>{/if}
         <div>{hover.lat.toFixed(4)}, {hover.lon.toFixed(4)}</div>
         <div>{hover.v === null ? 'no data' : ramp === 'cover' ? (COVER_NAMES[Math.round(hover.v)] ?? hover.v) : `${num(+hover.v.toPrecision(6))} ${field.unit}`}</div>
       </div>

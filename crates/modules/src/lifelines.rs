@@ -25,7 +25,7 @@ struct Hub { lat: f64, lon: f64, contents_gal: f64, release_min: f64, release_ma
 #[derive(Clone, Serialize, Deserialize)]
 struct Service { name: String, min_days: i64, max_days: i64, text: String, days: i64 }
 
-fn commas(v: f64) -> String { let s = format!("{:.0}", v); let mut out = String::new(); for (i, c) in s.chars().enumerate() { if i > 0 && (s.len() - i) % 3 == 0 { out.push(','); } out.push(c); } out }
+pub(crate) fn commas(v: f64) -> String { let s = format!("{:.0}", v); let mut out = String::new(); for (i, c) in s.chars().enumerate() { if i > 0 && (s.len() - i) % 3 == 0 { out.push(','); } out.push(c); } out }
 fn tf(t: &toml::Value, k: &str) -> f64 { t.get(k).and_then(|v| v.as_float().or_else(|| v.as_integer().map(|i| i as f64))).unwrap_or(0.0) }
 fn ts(t: &toml::Value, k: &str) -> String { t.get(k).and_then(|v| v.as_str()).unwrap_or("").to_string() }
 
@@ -120,6 +120,7 @@ impl Lifelines {
             .read_on("quake.pga_g", "g", true, "quake.rupture", "at each hospital").read_on("quake.liq_p", "1", true, "quake.rupture", "at each hospital and the hub").read_on("quake.liq_pgd_cm", "cm", true, "quake.rupture", "")
             .publish("lifeline.marked", "{ kind: bridge | hospital | hub, name, lat, lon } at each component's cell at the start")
             .publish("lifeline.failed", "{ kind, name, reopen_day | status } at the cell: the crossings and the hub on the rupture, a hospital closed by damage or gone dark").publish("lifeline.restored", "{ kind, name, day, status } at the cell, when a crossing reopens or a hospital has power again")
+            .publish("lifeline.state", "{ day, hospitals_open, hospitals_dark, power_share, water_share, routes_open, hub_deaths } each day after the rupture, for the aftermath")
             .publish("lifeline.crossing", "{ kind, day, sentence, source, confidence } the city before, the spill, the hub's own toll, the closures, each restoration milestone, the fuel")
             .ledger(FUEL, "gal", 1.0)
             .report("toll.deaths", "people").report("hub.deaths", "people").report("hub.injuries", "people")
@@ -129,7 +130,7 @@ impl Lifelines {
             .asset(&format!("events/{folder}"), "the component tables and the residents raster")
             .view_film("the clock", "occupants,quake_pga_g,building_damage_frac", "the people until the rupture, the ground motion while the shaking lasts, then the damage; the sentences and the counters at the moment")
             .view("story", "what happens", "crossing", "one sentence per event, newest first; the source beside each")
-            .view("counter", "dead, all causes", "toll.deaths", "the buildings' toll plus the hub's own (the county study's 0 to 7, scaled by the release)")
+            .view("counter", "dead, all causes", "deaths.total", "the buildings' toll, the hub's own, and the deaths after (the aftermath module's total)")
             .view("counter", "Willamette crossings open", "lifeline.crossings_open", "of the twelve in the window")
             .view("counter", "hospitals open", "lifeline.hospitals_open", "undamaged, with grid power or a running generator")
             .view("counter", "hospitals dark", "lifeline.hospitals_dark", "standing, no power")
@@ -158,6 +159,7 @@ impl Lifelines {
         self.said.push(id.to_string());
         ctx.publish("lifeline.crossing", json!({ "id": id, "title": id, "name": kind, "kind": kind, "day": self.day, "time": ctx.now().to_iso(), "sentence": sentence, "source": source, "confidence": confidence }));
     }
+    fn ramp_of(&self, name: &str) -> f64 { let t = self.service_days(name); if !self.fired || t <= 0 { 1.0 } else { (self.day as f64 / t as f64).clamp(0.0, 1.0) } }
     fn service_days(&self, name: &str) -> i64 { self.services.iter().find(|s| s.name == name).map(|s| s.days).unwrap_or(0) }
     fn demand_gal_day(&self) -> f64 { self.emergency_gal_day + self.hospitals.iter().filter(|h| h.status == "generator").count() as f64 * self.hospital_gal_day }
     fn report_all(&self, ctx: &mut Ctx) {
@@ -324,6 +326,8 @@ impl Module for Lifelines {
                 if d == water_day { self.say(ctx, "water", "water", format!("Day {}: water and sewer are back for everyone.", d), "the Oregon Resilience Plan", "a published range"); }
                 if self.hub_gal <= 0.0 { self.say(ctx, "hub-empty", "hub", format!("Day {}: the hub's remaining stock is gone.", d), "the ledger", "arithmetic on guesses"); }
                 self.report_all(ctx);
+                let (pw, wa) = (self.ramp_of("electricity"), self.ramp_of("drinking water and sewer"));
+                ctx.publish("lifeline.state", json!({ "day": d, "hospitals_open": self.hospitals.iter().filter(|h| h.status == "open" || h.status == "generator").count(), "hospitals_dark": self.hospitals.iter().filter(|h| h.status == "dark").count(), "power_share": pw, "water_share": wa, "routes_open": routes, "hub_deaths": self.hub_deaths }));
                 ctx.schedule_with_priority(Duration::days(1), 5, "day", json!(null));
             }
             _ => {}

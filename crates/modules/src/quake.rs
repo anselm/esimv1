@@ -321,10 +321,10 @@ impl Buildings {
             .subscribe("quake.rupture", "the instant")
             .read_on("quake.pga_g", "g", true, "quake.rupture", "").read_on("quake.liq_p", "1", true, "quake.rupture", "").read_on("quake.liq_pgd_cm", "cm", true, "quake.rupture", "").read_on("quake.ls_p", "1", true, "quake.rupture", "").read_on("quake.ls_pgd_cm", "cm", true, "quake.rupture", "")
             .publish("quake.crossing", "{ kind: toll, sentence } deaths, injuries and displaced on the rupture; the fit against DOGAMI in the sentence")
-            .publish("quake.toll", "{ deaths, injuries_hospital, injuries_minor, displaced } the window's toll as numbers, once the shaking ends, for whoever keeps a total")
+            .publish("quake.toll", "{ deaths, injuries_hospital, injuries_life, injuries_minor, displaced } the window's toll as numbers, once the shaking ends, for whoever keeps a total")
             .frame("buildings_count", "buildings").frame("building_damage_frac", "1").frame("buildings_destroyed", "buildings").frame("deaths", "people").frame("displaced", "people").frame("occupants", "people")
             .report("quake.buildings", "buildings").report("quake.buildings_moderate", "buildings").report("quake.buildings_extensive", "buildings").report("quake.buildings_complete", "buildings")
-            .report("quake.deaths", "people").report("quake.injuries_hospital", "people").report("quake.injuries_minor", "people").report("quake.displaced", "people").report("quake.occupants", "people")
+            .report("quake.deaths", "people").report("quake.injuries_hospital", "people").report("quake.injuries_life_threatening", "people").report("quake.injuries_minor", "people").report("quake.displaced", "people").report("quake.occupants", "people")
             .report("quake.portland_deaths", "people").report("quake.portland_displaced", "people").report("quake.portland_buildings_extensive_or_complete", "buildings")
             .report("fit.portland_deaths_ratio", "1").report("fit.portland_displaced_ratio", "1").report("fit.portland_damage_ratio", "1").report("fit.portland_extensive_ratio", "1").report("fit.portland_complete_ratio", "1").report("fit.portland_injuries_ratio", "1").report("fit.units_damage_r", "1").report("fit.units_deaths_r", "1")
             .asset(&format!("events/{folder}"), "DOGAMI's footprints, people per unit and Hazus loss tables")
@@ -364,7 +364,7 @@ impl Module for Buildings {
         for f in [("building_damage_frac", "1"), ("buildings_destroyed", "buildings"), ("deaths", "people"), ("displaced", "people")] { ctx.field(f.0, f.1, &g, vec![0.0; n]); }
         ctx.report("quake.buildings", "buildings", self.count.iter().map(|&v| v as f64).sum());
         ctx.report("quake.occupants", "people", self.occupants.iter().map(|&v| v as f64).sum());
-        for s in ["quake.buildings_moderate", "quake.buildings_extensive", "quake.buildings_complete", "quake.deaths", "quake.injuries_hospital", "quake.injuries_minor", "quake.displaced"] { ctx.report(s, "", 0.0); }
+        for s in ["quake.buildings_moderate", "quake.buildings_extensive", "quake.buildings_complete", "quake.deaths", "quake.injuries_hospital", "quake.injuries_life_threatening", "quake.injuries_minor", "quake.displaced"] { ctx.report(s, "", 0.0); }
     }
     fn handle(&mut self, ev: &Event, ctx: &mut Ctx) {
         if ev.topic == "quake.rupture" && !self.done {
@@ -380,7 +380,7 @@ impl Module for Buildings {
         let take = |name: &str| -> Vec<f32> { ctx.world_read(name).map(|f| f.data.clone()).unwrap_or_else(|| vec![0.0; n]) };
         let (pga, liq_p, liq_pgd, ls_p, ls_pgd) = (take("quake.pga_g"), take("quake.liq_p"), take("quake.liq_pgd_cm"), take("quake.ls_p"), take("quake.ls_pgd_cm"));
         let mut frac = vec![f32::NAN; n]; let mut destroyed = vec![0.0f32; n]; let mut deaths = vec![0.0f32; n]; let mut displaced = vec![0.0f32; n];
-        let mut tot = [0.0f64; 5]; let (mut d_tot, mut l1, mut l23, mut disp) = (0.0, 0.0, 0.0, 0.0);
+        let mut tot = [0.0f64; 5]; let (mut d_tot, mut l1, mut l23, mut l3, mut disp) = (0.0, 0.0, 0.0, 0.0, 0.0);
         let mut by_unit: std::collections::HashMap<i32, UnitLoss> = std::collections::HashMap::new();
         let mut pdx = UnitLoss::default();
         for i in 0..n {
@@ -405,9 +405,10 @@ impl Module for Buildings {
             }
             let pc = ps[4]; let coll = shake_complete * self.collapse_given_complete; let ps5 = [ps[1], ps[2], ps[3], pc - coll, coll];
             let occ = self.occupants[i] as f64; let res = self.residents[i] as f64;
-            let mut dd = 0.0; let mut i1 = 0.0; let mut i23 = 0.0;
-            for (k, p) in ps5.iter().enumerate() { let r = &self.rates[k]; i1 += occ * p * r[0]; i23 += occ * p * (r[1] + r[2]); dd += occ * p * r[3]; }
-            dd *= self.casualty_scale; i1 *= self.casualty_scale; i23 *= self.casualty_scale;
+            let mut dd = 0.0; let mut i1 = 0.0; let mut i23 = 0.0; let mut i3 = 0.0;
+            for (k, p) in ps5.iter().enumerate() { let r = &self.rates[k]; i1 += occ * p * r[0]; i23 += occ * p * (r[1] + r[2]); i3 += occ * p * r[2]; dd += occ * p * r[3]; }
+            dd *= self.casualty_scale; i1 *= self.casualty_scale; i23 *= self.casualty_scale; i3 *= self.casualty_scale;
+            l3 += i3;
             let di = res * (self.displaced_share * (ps[3] + ps[4]) + self.displaced_moderate_share * ps[2]);
             frac[i] = (ps[3] + ps[4]) as f32; destroyed[i] = (c * (ps[3] + ps[4])) as f32; deaths[i] = dd as f32; displaced[i] = di as f32;
             for k in 0..5 { tot[k] += c * ps[k]; }
@@ -451,7 +452,8 @@ impl Module for Buildings {
         ctx.report("fit.units_deaths_r", "1", r_d);
         let sentence = format!("In the window, about {:.0} buildings extensively damaged or destroyed ({:.0} destroyed), {:.0} dead, {:.0} hurt badly enough for a hospital, {:.0} people displaced, {}time occupancy. In Portland's nine districts {:.0} dead against DOGAMI's {:.0} for the same scenario (ratio {:.2}); the damage pattern across the units correlates {:.2} with DOGAMI's.",
             tot[3] + tot[4], tot[4], d_tot, l23, disp, self.time_of_day, pdx.deaths, rp.deaths, ratio(pdx.deaths, rp.deaths), r_dmg);
-        ctx.publish("quake.toll", json!({ "deaths": d_tot, "injuries_hospital": l23, "injuries_minor": l1, "displaced": disp }));
+        ctx.report("quake.injuries_life_threatening", "people", l3);
+        ctx.publish("quake.toll", json!({ "deaths": d_tot, "injuries_hospital": l23, "injuries_life": l3, "injuries_minor": l1, "displaced": disp }));
         ctx.publish("quake.crossing", json!({ "id": "toll", "title": "The toll", "name": "the window", "kind": "toll", "time": ctx.now().to_iso(), "sentence": sentence, "source": "this run's fragility (recalled Hazus forms, two scales fitted) on DOGAMI's ground and inventory; the record is DOGAMI O-18-02's Hazus run", "confidence": "fitted" }));
     }
     fn snapshot(&self) -> serde_json::Value { serde_json::to_value(self).unwrap() }

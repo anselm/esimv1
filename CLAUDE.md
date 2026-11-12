@@ -317,7 +317,18 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   time plus 400 steps, dwelling on moments under an hour apart; arrow keys; `?t=` holds the cursor); the hub's
   own toll is the county study's 0 to 7 dead scaled by the release, `toll.deaths` is one total; variant
   `no-hub`. A pulsing shaking map was built and removed on his word. Share cards and page tags the same evening:
-  `web/lib/meta.mjs` writes each route's head, `deploy/cards.sh` composes `card.png` per project.
+  `web/lib/meta.mjs` writes each route's head, `deploy/cards.sh` composes `card.png` per project. Later that night
+  (Anselm: extend the sim to model deaths better and other impacts; mark bridges down; the human model in the README;
+  then: brute force the near-term outcomes like the Palisades, not a report): `people.aftermath`
+  (`crates/modules/src/aftermath.rs`) applies the claims in `data/events/portland-cascadia/aftermath.toml` (care
+  interrupted at the Puerto Rico 2017 rate per person-day without power, untreated life-threatening injuries at a
+  guessed daily rate, HHS emPOWER's device-dependent counts as an exposure; cold and water off, no source) to the
+  lifelines' daily `lifeline.state` and the buildings' `quake.toll` (now with `injuries_life`), owns `deaths.total`;
+  marks are crossed when down, named on hover, listed by state; the README has the human model as prose and an
+  extended actors figure, a `wiring` embed (the latest run's describe), and says what is computed cell by cell
+  (the buildings) against what is arranged (the lifelines, the aftermath). The brute-force ladder is in the devlog;
+  DOGAMI's poles (`poles.csv`, 18,098 with failure probabilities) and emergency route segments (`routes.geojson`,
+  238 with risk classes) are cut into the record folder for `power.poles` and `roads.segments`, the next rungs.
 - Wild cards (2026-11-05, Anselm: "i just want a placeholder ... like a video game with wild card factors
   optionally"): `events.shock` (`crates/modules/src/shock.rs`) draws `data/events/future-speculative.toml` by the
   run's seed each year from `from` (default 2025), or plays one named card (`mode = "named"`, `event`, `at`);

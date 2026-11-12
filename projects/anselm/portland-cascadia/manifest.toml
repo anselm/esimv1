@@ -34,6 +34,12 @@ storage_cut = 0.0
 retrofit = false
 
 [[module]]
+name = "aftermath"
+kind = "people.aftermath"
+[module.params]
+folder = "portland-cascadia"
+
+[[module]]
 name = "ground"
 kind = "quake.ground"
 [module.params]

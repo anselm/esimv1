@@ -1,0 +1,76 @@
+# Deaths and harm after the shaking stops, as claims: each row a channel the `people.aftermath`
+# module applies, with its rate, the source the rate came from, how sure it is, and a switch.
+# A row that is off is listed on the run page and not applied. Assembled 2026-11-12 (evening) by
+# the esim session at Anselm's ask ("extend sim to model deaths better ... other impacts").
+
+[inputs]
+power_dependent_dme_multnomah = 4825      # HHS emPOWER REST service, county layer, read 2026-11-12: Medicare beneficiaries with a claim for electricity-dependent durable medical equipment
+power_dependent_dme_washington = 3593
+power_dependent_dme_clackamas = 3152
+medicare_benes_multnomah = 137761         # same layer
+medicare_benes_washington = 105971
+medicare_benes_clackamas = 98351
+population_multnomah = 815428             # 2020 census, recalled, not checked
+population_washington = 600372            # 2020 census, recalled, not checked
+population_clackamas = 421401             # 2020 census, recalled, not checked
+power_dependent_note = "Medicare only: people under 65 on other insurance who depend on a device are not counted, so the share is a floor"
+
+[[claim]]
+id = "interrupted-care"
+title = "Deaths from care interrupted by the loss of power, at the Puerto Rico 2017 rate per person-day without power"
+on = "person_days_without_power"
+rate = 4.55e-6
+low = 0.17                                # the paper's 95 percent interval, 793 to 8,498 against 4,645, as factors
+high = 1.83
+per = "deaths per person-day without power"
+source = "Kishore et al. 2018, Mortality in Puerto Rico after Hurricane Maria, NEJM 379:162-170 (abstract and reporting read 2026-11-12): 4,645 excess deaths from 20 September to 31 December 2017, one third attributed to delayed or interrupted health care; the rate here is that third over Puerto Rico's 3.34 million people (recalled) and 102 days, applied to each person-day without grid power in the window"
+confidence = "an analogue: a Caribbean island in autumn after a hurricane, applied to a Pacific Northwest city in winter after an earthquake; the interval is wide and the authors call it an underestimate"
+status = "on"
+
+[[claim]]
+id = "untreated-injuries"
+title = "Deaths among the life-threatening injured who find no open hospital"
+on = "untreated_life_threatening"
+rate = 0.5
+low = 0.5
+high = 2.0
+per = "share of the untreated who die each day with no hospital open in the window"
+source = "Hazus defines severity 3 as injuries that pose an immediate life-threatening condition if not treated adequately and expeditiously (crush syndrome, internal injuries, uncontrolled bleeding; FEMA, Earthquake Model Technical Manual, as quoted in the Downtown Anchorage Seismic Risk Assessment, read 2026-11-12); the daily rate is a guess"
+confidence = "the definition is the manual's, the rate is a guess; the model treats everyone remaining on any day a hospital is open, with no capacity limit"
+status = "on"
+
+[[claim]]
+id = "power-dependent-devices"
+title = "People on electricity-dependent medical devices without grid power, counted and not killed"
+on = "power_dependent_without_power"
+rate = 0.0
+low = 0.0
+high = 0.0
+per = "an exposure count, no death rate"
+source = "HHS emPOWER (above): 11,570 Medicare beneficiaries on power-dependent devices across the three counties, 0.63 percent of their people; applied to the window's residents; the Puerto Rico rate above already includes such deaths, so none are added here"
+confidence = "the count is the record's; the exposure is reported, not turned into deaths"
+status = "on"
+
+[[claim]]
+id = "cold"
+title = "Deaths from cold homes in late January without power"
+on = "person_days_without_power"
+rate = 0.0
+low = 0.0
+high = 0.0
+per = "deaths per person-day without power"
+source = "none read; excess winter mortality is documented but no rate for an outage in a mild maritime winter was found on the day"
+confidence = "no source"
+status = "off"
+
+[[claim]]
+id = "water"
+title = "Deaths from waterborne illness with water and sewer out"
+on = "person_days_without_water"
+rate = 0.0
+low = 0.0
+high = 0.0
+per = "deaths per person-day without water"
+source = "none read"
+confidence = "no source"
+status = "off"

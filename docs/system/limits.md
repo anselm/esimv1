@@ -248,6 +248,7 @@ holds the history.
   or migration layer. The hospitals' fates come from the generic fragility at their cells with a
   guessed code factor; in the base run all thirteen stand.
 - The hub's own toll is the county study's range for an explosion among its workers, none to seven dead, drawn by the seed and scaled by the release; neither DOGAMI's run nor this one models fire following the earthquake, so the deaths the spill could cause beyond the site are not in any number here. The no-hub variant removes the stock, not the hub's role as the place where the pipeline, the river and the roads meet.
+- The deaths after the shaking (`people.aftermath`) are claims: one rate from Puerto Rico after Maria per person-day without power, a guessed daily rate for the life-threatening injured with no open hospital, and counts with no rate for the people on medical devices; cold and waterborne illness are rows that are off for want of a source. The lifelines are published ranges arranged in time, not computed from the ground; the poles and the route segments DOGAMI published are in the record folder and not yet in a module.
 
 ## The system
 

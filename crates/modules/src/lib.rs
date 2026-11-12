@@ -29,6 +29,7 @@ pub mod places;
 pub mod coast;
 pub mod quake;
 pub mod lifelines;
+pub mod aftermath;
 
 use esim_kernel::describe::Describe;
 use esim_kernel::Module;
@@ -89,6 +90,7 @@ pub static KINDS: &[Kind] = &[
     kind!("quake.ground", quake::Ground),
     kind!("quake.buildings", quake::Buildings),
     kind!("lifelines.recovery", lifelines::Lifelines),
+    kind!("people.aftermath", aftermath::Aftermath),
 ];
 
 fn find(kind: &str) -> Result<&'static Kind, String> {
