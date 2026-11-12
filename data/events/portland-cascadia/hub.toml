@@ -1,0 +1,35 @@
+# The Critical Energy Infrastructure Hub: the six-mile reach of the west bank of the Willamette
+# in Northwest Portland, from about the Fremont Bridge north past Linnton, where more than 90
+# percent of Oregon's liquid fuel is stored. Every number is from the CEI Hub Seismic Risk
+# Analysis (ECONorthwest, Salus Resilience and Enduring Econometrics for Multnomah County and
+# the City of Portland, released 8 February 2022; the full report PDF read 2026-11-12), unless
+# the row says otherwise. The point is ours: a cell mid-reach, since the report's four areas
+# are not placed in the public text we read.
+
+[hub]
+name = "Critical Energy Infrastructure Hub"
+lat = 45.575
+lon = -122.755
+position_note = "mid-reach of the hub, placed by hand on the west bank (a guess within the six miles)"
+terminals = 11                     # Portland ordinance 2026-312 (findings), read 2026-11-12
+active_tanks = 415                 # report section 1-3.3: active, excluding 72 tanks of unknown status
+active_capacity_gal = 350600000    # report: "storage tank capacity of at least 350.6 million gallons" in active tanks
+contents_gal = 298700000           # report section 1-3.8: contents of the 393 active tanks with known contents, "all have the potential to release"
+share_pre_1993 = 0.91              # report Table 4: 91 percent of active tanks built before 1993 or of unknown year
+utilization_today = 0.81           # ordinance 2026-312 findings: the Parametrix model's in-service utilization today, 96 percent in 2036
+release_min_gal = 94634005         # report Table 7: total potential release, minimum
+release_max_gal = 193687251        # report Table 7: maximum
+release_to_river_share = 0.43      # report: "approximately 57 percent ... onto ground and 43 percent ... into the Willamette River"
+release_ground_min_gal = 53882252  # Table 5
+release_ground_max_gal = 111183900
+release_water_min_gal = 40751753   # Table 6
+release_water_max_gal = 82503352
+rule_pre_1993 = "tanks will likely fail during the CSZ event and release 50 to 100 percent of contained materials"
+rule_1993_2004 = "designed for shaking but susceptible to liquefaction settlement and lateral spread; up to 10 percent released"
+rule_post_2004 = "designed to withstand shaking and deformation; not likely to fail; up to 10 percent released"
+average_tank_year = 1954           # the county's report page: average tank with year-built data
+share_of_oregon_fuel = 0.90        # the county: more than 90 percent of Oregon's liquid fuel
+supply_pipeline = "Olympic Pipeline from Puget Sound (report section 1-3.5); about 30 percent arrives by tanker barge (report)"
+ordinance = "Portland Ordinance 2026-312, Code Chapter 17.112: each bulk fuel terminal cuts in-service storage capacity by at least 20 percent by 1 December 2036; tanks holding only aviation fuel as of 1 January 2027 exempt; second reading 12 November 2026 (the council page, read that day; the vote's result not yet recorded when read)"
+ordinance_cut = 0.20
+retail_days_of_fuel = "three to five days of regular unleaded gasoline and diesel at retail stations on average (Oregon Resilience Plan 2013, energy chapter)"

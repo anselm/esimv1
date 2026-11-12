@@ -1,0 +1,48 @@
+idx,name,county,bldg_count,perm_residents,day_occupants,night_occupants
+1,Banks,Washington,646,1255,2317,1244
+2,Barlow,Clackamas,60,111,99,111
+3,Beaverton,Washington,24005,90089,93521,88254
+4,Canby,Clackamas,5559,16266,16466,15848
+5,Cornelius,Washington,3517,11026,8247,10602
+6,Durham,Washington,399,1400,1011,1343
+7,Estacada,Clackamas,1309,2455,4631,2476
+8,Fairview,Multnomah,2611,9592,9351,9255
+9,Forest Grove,Washington,7267,21335,24918,20968
+10,Gaston,Washington,312,511,902,507
+11,Gladstone,Clackamas,4022,10927,7622,10559
+12,Gresham,Multnomah,29043,103865,94763,101891
+13,Happy Valley,Clackamas,5856,15881,11726,15243
+14,Hillsboro,Washington,26846,91246,124643,94624
+15,Johnson City,Clackamas,275,382,127,363
+16,King City,Washington,1610,3180,1916,3141
+17,Lake Oswego,Clackamas,13770,36657,33649,35744
+18,Maywood Park,Multnomah,339,789,415,751
+19,Milwaukie,Clackamas,7891,20409,23407,20201
+20,Molalla,Clackamas,3176,7756,7027,7506
+21,Molalla Prairie Hamlet,Clackamas,4165,4417,3596,4254
+22,Mulino Hamlet,Clackamas,2021,2236,1660,2179
+23,North Plains,Washington,952,1869,2364,1866
+24,Oregon City,Clackamas,12641,31400,32813,30731
+25,Portland - Airport,Multnomah,284,41,11988,2670
+26,Portland - Central City,Multnomah,2809,33465,117290,52944
+27,Portland - Central Northeast Neighborhoods,Multnomah,19883,45722,44322,46288
+28,Portland - East Portland Neighborhood Office,Multnomah,46301,146105,119239,144639
+29,Portland - Neighbors West/Northwest,Multnomah,7663,25364,43857,26675
+30,Portland - North Portland Neighborhood Services,Multnomah,25468,62913,96207,65487
+31,Portland - Northeast Coalition,Multnomah,22178,56753,50269,55750
+32,Portland - Southeast Uplift Neighborhood Program,Multnomah,57291,149590,118210,146470
+33,Portland - Southwest Neighborhoods, Inc.,Multnomah,24288,62766,80699,68098
+34,Rivergrove,Clackamas,196,438,144,416
+35,Sandy,Clackamas,3734,8894,9690,8636
+36,Sherwood,Washington,5873,17062,17544,16545
+37,Stafford Hamlet,Clackamas,1206,1927,2491,1852
+38,The Villages at Mt Hood,Clackamas,3795,5392,2902,5497
+39,Tigard,Washington,16004,48310,53507,48288
+40,Troutdale,Multnomah,5161,15750,14963,15758
+41,Tualatin,Washington,7535,25320,44958,26757
+42,West Linn,Clackamas,9170,24753,16368,23760
+43,Wilsonville,Clackamas,5492,18471,35741,19278
+44,Wood Village,Multnomah,1194,3711,3723,3748
+45,Clackamas County - Unincorporated,Clackamas,94481,167411,142570,164958
+46,Multnomah County - Unincorporated,Multnomah,11053,18550,13431,17976
+47,Washington County - Unincorporated,Washington,86501,217273,142785,210676

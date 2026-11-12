@@ -16,6 +16,26 @@ Every record this simulator reads, from `data/catalog.toml`, with the publisher,
 - **url** `https://raw.githubusercontent.com/chrisroadmap/ar6/main/data_output/AR6_ERF_1750-2019.csv`
 - **notes** An assessment, not an observation: these are the IPCC's best-estimate forcings. Used for the components the model does not compute (everything but CO2, CH4, N2O), with the stated assumption after 2019.
 
+## document
+
+### CEI Hub Seismic Risk Analysis: the fuel released from Portland's Critical Energy Infrastructure Hub in a Cascadia earthquake, and what it costs
+
+- **id** `multco-cei-hub-2022`
+- **publisher** ECONorthwest, Salus Resilience and Enduring Econometrics for Multnomah County and the City of Portland, February 2022
+- **licence** Public report of a county; no licence stated
+- **verified** 2026-11-12 from canada1: read in full; the numbers in data/events/portland-cascadia/hub.toml
+- **url** `https://multco.us/file/critical_energy_infrastructure_hub_report_-_full_report/download`
+- **notes** Read by hand into hub.toml; no module fetches it.
+
+### The Oregon Resilience Plan: reducing risk and improving recovery for the next Cascadia earthquake and tsunami
+
+- **id** `oregon-resilience-plan-2013`
+- **publisher** Oregon Seismic Safety Policy Advisory Commission, report to the 77th Legislative Assembly, February 2013
+- **licence** Public report of a state commission; no licence stated
+- **verified** 2026-11-12 from canada1: the restoration table in data/events/portland-cascadia/restoration.toml
+- **url** `https://www.oregon.gov/oem/Documents/Oregon_Resilience_Plan_Final.pdf`
+- **notes** Read by hand; no module fetches it.
+
 ## forecast ensemble
 
 ### Open-Meteo ensemble API, NOAA GEFS members, hourly by point
@@ -233,6 +253,24 @@ Every record this simulator reads, from `data/catalog.toml`, with the publisher,
 - **url** `https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_{tile}_Map.tif`
 - **notes** The fire modules read the window they need through the registry's windowed reader and take the most common class in each cell as its fuel class.
 
+### DOGAMI Open-File Report O-18-02: site ground motion and ground failure for a simulated Cascadia M9.0 and a Portland Hills fault M6.8, Clackamas, Multnomah and Washington counties
+
+- **id** `dogami-o-18-02-ground-motion`
+- **publisher** Oregon Department of Geology and Mineral Industries (Bauer, Burns and Madin, March 2018)
+- **licence** Public report of a state agency; no licence stated on the page
+- **verified** 2026-11-12 from canada1: 3,230,407,277 bytes; the Portland window cut with GDAL to data/events/portland-cascadia/CSZ_M9p0_*.tif at one arc-second
+- **url** `https://pubs.oregon.gov/dogami/ofr/O-18-02/gis/O-18-02_GIS_GroundMotion_GroundFailure_Phase1_bundle.zip`
+- **notes** Not read by any module directly: the registry has no file-geodatabase reader. The event folder holds the cut window and its README says how it was made.
+
+### USGS ShakeMap scenario, M9.0 Cascadia (geometric mean): the median of thirty M9 rupture scenarios
+
+- **id** `usgs-cszm9-median-shakemap`
+- **publisher** U.S. Geological Survey, scenario cszm9ensemble_se (Wirth and others 2021, Seismological Research Letters)
+- **licence** Public domain (US government work)
+- **verified** 2026-11-12 from canada1: 25,103,440 bytes; Portland (-122.6883, 45.5101): MMI 7.2, PGA 24.2 %g, PGV 31.1 cm/s
+- **url** `https://earthquake.usgs.gov/product/shakemap-scenario/_median_se/us/1605643892799/download/grid.xml`
+- **notes** The catalog page says the median map supersedes the legacy M9.0 scenario. No module reads it yet; the Portland scenario uses DOGAMI's site motions, which are finer and carry ground failure.
+
 ## raster tiles
 
 ### Copernicus DEM GLO-30, global land surface elevation at one arc-second
@@ -394,6 +432,15 @@ Every record this simulator reads, from `data/catalog.toml`, with the publisher,
 - **verified** 2026-11-03 from canada1: Incident_Name LIKE '%Palisades%' answered 13,292 polygons; maximum damage Destroyed 6,352, No Damage 3,780, blank 2,250, Affected 687, Minor 159, Major 64; heights 0.75 to 96, mean 21
 - **url** `https://services.arcgis.com/RmCCgQtiZLDCtblq/arcgis/rest/services/2025_WildFire_LARIAC_BUILDINGS_100M_Plus_DINS_MaxMin_DAMAGE_NEW/FeatureServer/0/query?where={where}&outFields=HEIGHT,DINS_MaximumDamage&outSR=4326&f=geojson&resultOffset={offset}&resultRecordCount=2000`
 - **notes** The fire engine rasterises the footprints to a cell fraction and a mean height; the 3D view extrudes them.
+
+### DOGAMI Open-File Report O-18-02: building footprints, neighbourhood units, jurisdictions, emergency routes, transmission structures and the Hazus loss tables
+
+- **id** `dogami-o-18-02-impact`
+- **publisher** Oregon Department of Geology and Mineral Industries (Bauer, Burns and Madin, March 2018)
+- **licence** Public report of a state agency; no licence stated on the page
+- **verified** 2026-11-12 from canada1: 71,244,327 bytes; 691,912 footprints, 876 units, 47 jurisdictions, 238 route segments, 18,098 structures; exported with GDAL to the event folder
+- **url** `https://pubs.oregon.gov/dogami/ofr/O-18-02/gis/O-18-02_GIS_Earthquake_Impact_Analysis_Phase1_bundle.zip`
+- **notes** The loss tables are the record the Portland scenario is scored against.
 
 ## weather grid
 

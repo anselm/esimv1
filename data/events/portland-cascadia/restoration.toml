@@ -1,0 +1,48 @@
+# Estimated times to restore services after a Cascadia earthquake under present conditions,
+# for the valley zone (Portland is in it): the Oregon Resilience Plan, Oregon Seismic Safety
+# Policy Advisory Commission, report to the 77th Legislative Assembly, Salem, February 2013,
+# executive summary table (the PDF read 2026-11-12). The plan calls them estimates with "a lot
+# of uncertainty and little detail". No formal update was found (a 2023 search by others found
+# none either).
+
+[[service]]
+name = "electricity"
+zone = "valley"
+min_days = 30
+max_days = 90
+text = "1 to 3 months"
+
+[[service]]
+name = "police and fire stations"
+zone = "valley"
+min_days = 60
+max_days = 120
+text = "2 to 4 months"
+
+[[service]]
+name = "drinking water and sewer"
+zone = "valley"
+min_days = 30
+max_days = 365
+text = "1 month to 1 year"
+
+[[service]]
+name = "top-priority highways (partial restoration)"
+zone = "valley"
+min_days = 180
+max_days = 365
+text = "6 to 12 months"
+
+[[service]]
+name = "healthcare facilities"
+zone = "valley"
+min_days = 540
+max_days = 540
+text = "18 months"
+
+[[service]]
+name = "electricity"
+zone = "coast"
+min_days = 90
+max_days = 180
+text = "3 to 6 months"

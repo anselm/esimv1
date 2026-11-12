@@ -59,6 +59,11 @@
     if (unit === 'm3' || unit === 'm3/yr') return Math.round(v).toLocaleString('en-US')
     if (unit === 'm') return Math.abs(v) < 2 ? `${(v * 100).toFixed(0)} cm` : `${Math.round(v).toLocaleString('en-US')} m`
     if (unit === 'person-days/yr') return v >= 1e9 ? `${(v / 1e9).toFixed(1)} bn` : `${Math.round(v / 1e6)} M`
+    if (unit === 'gal') return Math.abs(v) >= 1e6 ? `${(v / 1e6).toFixed(1)} M gal` : `${Math.round(v).toLocaleString('en-US')} gal`
+    if (unit === 'people' || unit === 'buildings' || unit === 'crossings' || unit === 'hospitals' || unit === 'cells') return Math.round(v).toLocaleString('en-US')
+    if (unit === 'd') return `${Math.round(v)} d`
+    if (unit === '1' && Math.abs(v) < 100) return v.toFixed(2)
+    if (Math.abs(v) >= 1000) return Math.round(v).toLocaleString('en-US')
     return Number.isInteger(v) ? String(v) : v.toPrecision(3)
   }
 </script>

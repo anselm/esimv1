@@ -1,0 +1,86 @@
+# Hospitals inside the window, from OpenStreetMap through the Overpass API on 2026-11-12
+# (amenity=hospital, nodes, ways and relations; centres as Overpass gives them). Bed counts are
+# OSM's where tagged and otherwise unknown. Hospitals north of the Columbia (Vancouver) and
+# outside the window are not listed; the ground-motion rasters stop at the state line.
+
+[[hospital]]
+name = "Oregon Health & Science University Hospital"
+lat = 45.499
+lon = -122.6856
+emergency = false
+note = "Marquam Hill; the OSM tag says no emergency department on this element"
+
+[[hospital]]
+name = "Doernbecher Children's Hospital"
+lat = 45.4977
+lon = -122.686
+emergency = false
+
+[[hospital]]
+name = "Portland VA Medical Center"
+lat = 45.496
+lon = -122.6831
+emergency = true
+
+[[hospital]]
+name = "Shriners Hospitals for Children"
+lat = 45.5012
+lon = -122.6845
+emergency = false
+beds = 29
+
+[[hospital]]
+name = "Legacy Emanuel Medical Center"
+lat = 45.5439
+lon = -122.6693
+emergency = true
+
+[[hospital]]
+name = "Randall Children's Hospital at Legacy Emanuel"
+lat = 45.5445
+lon = -122.6702
+emergency = true
+
+[[hospital]]
+name = "Legacy Good Samaritan Medical Center"
+lat = 45.5302
+lon = -122.6966
+emergency = true
+
+[[hospital]]
+name = "Providence Portland Medical Center"
+lat = 45.5283
+lon = -122.6124
+emergency = true
+beds = 483
+
+[[hospital]]
+name = "Providence Saint Vincent Hospital"
+lat = 45.5104
+lon = -122.7721
+emergency = true
+
+[[hospital]]
+name = "Adventist Health Portland"
+lat = 45.5125
+lon = -122.5576
+emergency = true
+
+[[hospital]]
+name = "Cedar Hills Hospital"
+lat = 45.5058
+lon = -122.7831
+emergency = false
+
+[[hospital]]
+name = "Providence Milwaukie Hospital"
+lat = 45.4497
+lon = -122.6281
+emergency = true
+beds = 77
+
+[[hospital]]
+name = "Kaiser Sunnyside Medical Center"
+lat = 45.4316
+lon = -122.5598
+emergency = true

@@ -290,6 +290,24 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   to-2075-held, to-2075-slr-high, to-2075-dredged), record `data/events/halfmoonbay/record.toml` (USACE 2015 draft EA
   citing Lin et al. 2015; Griggs 2026 abstract; the Harbor District). `esim run --set` is not a thing: overrides go through
   `esim project run --set`. The viewer has a diverging ramp for fields named change/anomaly/delta.
+- Portland and Cascadia (2026-11-12, Anselm: "spin up a new scenario for this" with the r/Portland thread on the
+  Oregonian's story that a Big One nightmare scenario drives Portland to cut fuel storage along the Willamette;
+  "What's the best way to model this? What do we want to show to people?"; `devlog/20261112-portland-cascadia.md`):
+  three kinds. `quake.ground` (`crates/modules/src/quake.rs`) holds DOGAMI O-18-02's synthetic site PGA, PGV,
+  liquefaction and landslide layers cut to the window (`data/events/portland-cascadia/`, 16 MB, made with GDAL as the
+  folder's README says; the registry reads the cut GeoTIFFs) as world fields and publishes `quake.rupture` at the
+  instant; `quake.buildings` turns them into damage states, deaths, injuries and displaced on DOGAMI's own inventory
+  (footprints counted per cell, each unit's people spread by floor area) with recalled Hazus forms and six numbers
+  fitted to DOGAMI's Hazus run (`loss_unit_*.csv`, the record), reported as `fit.*` (Portland's extensive, complete
+  and displaced within a few percent, deaths 0.69 by day and 1.7 by night, pattern r 0.9); `lifelines.recovery`
+  (`lifelines.rs`) is the year after: twelve Willamette crossings closed for days drawn log-uniformly in the county's
+  "weeks to years", thirteen hospitals on 72 h of generator fuel, power and water as ramps to days drawn from the
+  Oregon Resilience Plan's valley ranges, and a `fuel` ledger in gallons: the hub's 298.7 million gallons, the 2022
+  county study's release range drawn by the seed (43 percent to the river), the response's draw, resupply from day
+  14, closing to zero. Project `anselm/portland-cascadia` (manifest `q1-portland-cascadia`; variants wet-day,
+  wet-night, dry-day, cut-20, retrofit, burnside-ready, seed-2, seed-3; six seconds a run). The story view on the
+  lifelines module carries every `*.crossing` sentence. Not yet: a 3D scene (no heights in the inventory), the
+  USGS grid as an alternative ground, a hospital-level inventory, the water network.
 - Wild cards (2026-11-05, Anselm: "i just want a placeholder ... like a video game with wild card factors
   optionally"): `events.shock` (`crates/modules/src/shock.rs`) draws `data/events/future-speculative.toml` by the
   run's seed each year from `from` (default 2025), or plays one named card (`mode = "named"`, `event`, `at`);

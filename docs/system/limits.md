@@ -227,6 +227,27 @@ holds the history.
   the breakwater's effect comes out a doubling where the record has seven times. Today's shoreline stands
   in for 1961's; the revetments are not placed; the southern end imports sand.
 
+## The earthquake
+
+- Portland (`anselm/portland-cascadia`, 2026-11-12): there is no record of this event, so every
+  number is read against another model's. The ground motion is DOGAMI's 2018 synthetic scenario
+  (USGS bedrock motions, the state's site response), not an observation; the USGS median ensemble
+  agrees within a tenth of a g at downtown. The fragility and casualty rates are recalled from
+  Hazus, not read (FEMA's manual could not be downloaded), and six numbers are fitted to DOGAMI's
+  own Hazus run on the same ground: with them the extensive and complete counts and the displaced
+  match within a few percent, deaths come to seven tenths of DOGAMI's by day and 1.7 times by
+  night, injuries 1.4 times; the dry case fits deaths and counts twice the displaced. Wet and dry
+  give nearly the same deaths here where DOGAMI's differ by half, because the extra complete
+  damage in the wet case is ground failure, which this model does not let collapse. The
+  neighbourhood pattern correlates 0.9 with DOGAMI's in the wet case and 0.6 in the dry. The
+  inventory has no building heights or structure types; night occupants sit in every building by
+  floor area. The year after is published ranges drawn by the seed and straight ramps: the
+  bridges' days are guesses inside the county's "weeks to years", the generator hours, the fuel
+  draws and the resupply day are guesses, the fuel is a stock with no pipes or trucks, the spill
+  is a number not a flow, and there is no tsunami, aftershock, fire, water-pipe, communications
+  or migration layer. The hospitals' fates come from the generic fragility at their cells with a
+  guessed code factor; in the base run all thirteen stand.
+
 ## The system
 
 - Modules are compiled in; the wire binding is specified and not built, so a kind from

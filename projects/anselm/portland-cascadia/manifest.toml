@@ -1,0 +1,69 @@
+# Q1: Portland and the Cascadia earthquake, the year after. A scenario, not a forecast: the
+# magnitude 9.0 rupture the State of Oregon plans for, on the afternoon of 26 January 2027 (the
+# anniversary of the 1700 event; 2 PM is DOGAMI's daytime case), on saturated winter soils. The
+# ground motion and ground failure are DOGAMI's (Open-File Report O-18-02, 2018), the buildings
+# and the people are DOGAMI's inventory, the toll is our fragility fitted to DOGAMI's Hazus run,
+# and the year after is the Oregon Resilience Plan's restoration ranges and the county's 2022
+# fuel-hub study arranged on one clock, with the guesses named. The stake is the city: its
+# twelve Willamette crossings, thirteen hospitals, the power, the water, and the fuel hub on the
+# liquefiable west bank where more than ninety percent of Oregon's fuel sits in tanks built on
+# average in 1954.
+
+[run]
+name = "q1-portland-cascadia"
+start = "2027-01-26T20:00:00Z"
+end = "2028-01-26T20:00:00Z"
+seed = 1
+close_every = "1d"
+snapshot_every = "30d"
+notes = "A scenario, not a forecast: a M9.0 Cascadia rupture at 14:00 PST on 26 January 2027 under Portland on DOGAMI's synthetic site motions, saturated soils, daytime occupancy; the toll on DOGAMI's inventory; the year after on the Resilience Plan's ranges and the county's fuel-hub study; every constant published or declared a guess."
+
+[place]
+lat_s = 45.43
+lat_n = 45.66
+lon_w = -122.85
+lon_e = -122.47
+res_arcsec = 1
+
+[[module]]
+name = "lifelines"
+kind = "lifelines.recovery"
+[module.params]
+folder = "portland-cascadia"
+storage_cut = 0.0
+retrofit = false
+
+[[module]]
+name = "ground"
+kind = "quake.ground"
+[module.params]
+folder = "portland-cascadia"
+at = "2027-01-26T22:00:00Z"
+soils = "wet"
+
+[[module]]
+name = "buildings"
+kind = "quake.buildings"
+[module.params]
+folder = "portland-cascadia"
+time_of_day = "day"
+record = "wet"
+# fitted to DOGAMI's Hazus run for the same ground, wet and daytime (the sweep is in
+# devlog/20261112-portland-cascadia.md): the shaking medians divided by 1.2, the complete
+# median at 1.1 g, ground failure counted as complete with a 25 cm median, a 13 percent collapse
+# share of complete shaking damage, every casualty rate tripled, and 65 percent of residents of
+# extensively or completely damaged buildings displaced. With these, Portland's extensive and
+# complete counts and displaced match DOGAMI's within a few percent; deaths come to about seven
+# tenths of DOGAMI's by day and 1.7 times by night (our night occupants sit in every building by
+# floor area, DOGAMI's in homes), and injuries run 1.4 times high. The dry case fits deaths and
+# over-counts the displaced.
+fragility_scale = 1.2
+median_complete_g = 1.1
+gf_median_cm = 25
+gf_complete_share = 1.0
+collapse_given_complete = 0.25
+casualty_scale = 3.0
+displaced_share = 0.65
+
+[audit]
+shock_topics = ["quake.rupture", "lifeline.failed"]

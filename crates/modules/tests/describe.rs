@@ -133,6 +133,13 @@ fn m10_surface_matches_the_log() {
     with_root(|| surface_matches_log(load("m10-rules-boone-season.toml")));
 }
 
+/// Q1 reads the Portland event folder and one DEM tile; about six seconds.
+#[test]
+fn q1_cascadia_surface_matches_the_log() {
+    if !have_dem() { eprintln!("skipped: no data cache"); return; }
+    with_root(|| surface_matches_log(load("q1-portland-cascadia.toml")));
+}
+
 #[test]
 fn m7_fire_surface_matches_the_log() {
     if !have_dem() { eprintln!("skipped: no data cache"); return; }

@@ -244,3 +244,4 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
 - Auditing ensembles.
 - The wire binding and a stdio module host. `docs/protocol-v0.md`
 - `scenarios/` as a curated ladder. `devlog/20261101-roots.md`
+- The 2100 scenario, effects as claims: a claims table with source, confidence and a switch, one module onto by-name ports, births and deaths on the people (the UN Low variant first), band multipliers, a capacity scale; air and longevity, falling fertility, heat and thinking as the first rows. `devlog/20261109-effects-as-claims.md`

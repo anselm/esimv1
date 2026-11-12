@@ -230383,5 +230383,1157 @@
         }
       ]
     }
+  },
+  {
+    "kind": "quake.ground",
+    "name": "quake.ground",
+    "summary": "A published earthquake scenario's ground motion and ground failure on the window: DOGAMI's site peak ground acceleration and velocity for a simulated Cascadia M9.0 (synthetic bedrock motions from the USGS, the state's site response), its liquefaction and landslide probability and deformation for saturated or dry soils, read from the event folder and written as world fields; at the stated instant it publishes the rupture. Nothing about the earthquake is computed here: there is no record of this event, and the state's estimate is the best anyone has.",
+    "priority": 0,
+    "dt": "once, at the rupture",
+    "params": [
+      {
+        "name": "folder",
+        "default": "portland-cascadia",
+        "note": "the event folder under data/events with the cut rasters and their README"
+      },
+      {
+        "name": "at",
+        "default": "2027-01-26T22:00:00Z",
+        "note": "the rupture instant (UTC); 26 January is the anniversary of the 1700 event, 14:00 Pacific is DOGAMI's daytime scenario"
+      },
+      {
+        "name": "magnitude",
+        "default": 9.0,
+        "unit": "Mw",
+        "note": "DOGAMI's and the USGS ensemble's scenario magnitude"
+      },
+      {
+        "name": "duration_s",
+        "default": 240.0,
+        "unit": "s",
+        "note": "strong shaking; DOGAMI: 3 to 5 minutes for a megathrust"
+      },
+      {
+        "name": "soils",
+        "default": "wet",
+        "note": "wet (saturated, DOGAMI's higher-loss case: liquefaction and landslides) or dry (landslides only, the dry layers)"
+      }
+    ],
+    "publishes": [
+      {
+        "name": "quake.rupture",
+        "required": false,
+        "note": "{ magnitude, duration_s, soils, at, source } once, at the instant"
+      },
+      {
+        "name": "quake.crossing",
+        "required": false,
+        "note": "{ kind: rupture, sentence, source, confidence } the rupture, for the story"
+      }
+    ],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [],
+    "fields_owned": [
+      {
+        "name": "quake.pga_g",
+        "unit": "g",
+        "required": false
+      },
+      {
+        "name": "quake.pgv_cms",
+        "unit": "cm/s",
+        "required": false
+      },
+      {
+        "name": "quake.liq_p",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "quake.liq_pgd_cm",
+        "unit": "cm",
+        "required": false
+      },
+      {
+        "name": "quake.ls_p",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "quake.ls_pgd_cm",
+        "unit": "cm",
+        "required": false
+      }
+    ],
+    "fields_read": [],
+    "ledgers": [],
+    "frames": [
+      {
+        "name": "terrain_elev_m",
+        "unit": "m",
+        "required": false
+      },
+      {
+        "name": "quake_pga_g",
+        "unit": "g",
+        "required": false
+      },
+      {
+        "name": "quake_mmi",
+        "unit": "intensity",
+        "required": false
+      },
+      {
+        "name": "quake_liquefaction_p",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "quake_ground_pgd_cm",
+        "unit": "cm",
+        "required": false
+      }
+    ],
+    "reports": [
+      {
+        "name": "quake.pga_mean_g",
+        "unit": "g",
+        "required": false
+      },
+      {
+        "name": "quake.pga_max_g",
+        "unit": "g",
+        "required": false
+      },
+      {
+        "name": "quake.pgv_mean_cms",
+        "unit": "cm/s",
+        "required": false
+      },
+      {
+        "name": "quake.liq_p_mean",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "quake.cells_over_liq_20",
+        "unit": "cells",
+        "required": false
+      }
+    ],
+    "views": [
+      {
+        "kind": "map",
+        "title": "peak ground acceleration",
+        "source": "quake_pga_g",
+        "obs": "",
+        "note": "DOGAMI's site estimate for the M9.0; a fraction of g"
+      },
+      {
+        "kind": "map",
+        "title": "intensity",
+        "source": "quake_mmi",
+        "obs": "",
+        "note": "Modified Mercalli from the peak velocity by Wald and others 1999 (recalled): 3.47 log PGV + 2.35"
+      },
+      {
+        "kind": "map",
+        "title": "chance of liquefaction",
+        "source": "quake_liquefaction_p",
+        "obs": "",
+        "note": "DOGAMI's probability of lateral spread, saturated soils; zero in the dry variant"
+      },
+      {
+        "kind": "map",
+        "title": "permanent ground deformation",
+        "source": "quake_ground_pgd_cm",
+        "obs": "",
+        "note": "the larger of the liquefaction and landslide deformation, cm"
+      }
+    ],
+    "assets": [
+      {
+        "key": "copernicus-dem-glo30",
+        "note": "the terrain under the city"
+      },
+      {
+        "key": "events/portland-cascadia",
+        "note": "DOGAMI O-18-02's site motions and ground failure, cut to the window"
+      }
+    ],
+    "notes": [
+      "The rasters are DOGAMI Open-File Report O-18-02 (2018), cut to the window with GDAL on 2026-11-12 as the event folder's README says; the run reads the cut files. The USGS median ensemble ShakeMap (cszm9ensemble_se) gives MMI 7.2 and PGA 0.24 g at downtown Portland against DOGAMI's 0.15 to 0.32 g over the window; the USGS ground-failure product is far coarser (500 m) and reads near zero at the fuel hub where DOGAMI maps a high liquefaction chance, so DOGAMI is used."
+    ]
+  },
+  {
+    "kind": "quake.buildings",
+    "name": "quake.buildings",
+    "summary": "Damage, deaths and displaced people on the cells from the ground module's motion: a lognormal fragility in peak ground acceleration for a generic building mix (four damage states), ground failure from the liquefaction and landslide layers, and casualty rates by damage state in the Hazus manner; occupants by time of day and residents per cell from DOGAMI's own inventory. The fragility medians and the casualty rates are recalled, not read, and two scales are fitted to DOGAMI's Hazus results for the same ground, which the module reports as the fit; what stands is the pattern across neighbourhoods and the day-night and wet-dry contrasts.",
+    "priority": 1,
+    "dt": "once, on the rupture",
+    "params": [
+      {
+        "name": "folder",
+        "default": "portland-cascadia",
+        "note": "the event folder with the inventory and the loss tables"
+      },
+      {
+        "name": "time_of_day",
+        "default": "day",
+        "note": "day (DOGAMI's 2 PM occupants) or night (2 AM)"
+      },
+      {
+        "name": "record",
+        "default": "wet",
+        "note": "which DOGAMI table to score against: wet or dry, matching the ground module's soils"
+      },
+      {
+        "name": "median_slight_g",
+        "default": 0.2,
+        "unit": "g",
+        "note": "fragility median for slight damage, generic mix (recalled from the Hazus equivalent-PGA tables for moderate-code wood and older masonry; a guess at the mix)"
+      },
+      {
+        "name": "median_moderate_g",
+        "default": 0.4,
+        "unit": "g",
+        "note": "moderate (recalled, as above)"
+      },
+      {
+        "name": "median_extensive_g",
+        "default": 0.8,
+        "unit": "g",
+        "note": "extensive (recalled, as above)"
+      },
+      {
+        "name": "median_complete_g",
+        "default": 1.5,
+        "unit": "g",
+        "note": "complete (recalled, as above)"
+      },
+      {
+        "name": "beta",
+        "default": 0.7,
+        "note": "lognormal dispersion (Hazus uses about 0.64 for most classes; recalled)"
+      },
+      {
+        "name": "fragility_scale",
+        "default": 1.0,
+        "note": "the medians are divided by this: fitted so the window's extensive-or-complete count matches DOGAMI's (the fit is reported)"
+      },
+      {
+        "name": "gf_median_cm",
+        "default": 152.0,
+        "unit": "cm",
+        "note": "ground-failure fragility median for extensive-or-complete damage from lateral spread (Hazus: 60 inches, recalled)"
+      },
+      {
+        "name": "gf_beta",
+        "default": 1.2,
+        "note": "its dispersion (Hazus 1.2, recalled)"
+      },
+      {
+        "name": "gf_complete_share",
+        "default": 0.2,
+        "note": "the share of ground-failure damage counted complete (Hazus 0.2 for lateral spread, recalled)"
+      },
+      {
+        "name": "collapse_given_complete",
+        "default": 0.08,
+        "note": "share of complete damage that is collapse, generic mix (Hazus: 3 percent wood, 15 percent unreinforced masonry; a guess at the mix)"
+      },
+      {
+        "name": "casualty_scale",
+        "default": 1.0,
+        "note": "multiplies every casualty rate: fitted so deaths in Portland match DOGAMI's (reported)"
+      },
+      {
+        "name": "displaced_moderate_share",
+        "default": 0.0,
+        "note": "share of residents in moderately damaged buildings counted displaced (Hazus counts a share; 0 here, a guess)"
+      },
+      {
+        "name": "displaced_share",
+        "default": 1.0,
+        "note": "share of residents in extensively or completely damaged buildings counted displaced long-term: fitted to DOGAMI's displaced population (reported)"
+      }
+    ],
+    "publishes": [
+      {
+        "name": "quake.crossing",
+        "required": false,
+        "note": "{ kind: toll, sentence } deaths, injuries and displaced on the rupture; the fit against DOGAMI in the sentence"
+      }
+    ],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [
+      {
+        "name": "quake.rupture",
+        "required": false,
+        "note": "the instant"
+      }
+    ],
+    "fields_owned": [],
+    "fields_read": [
+      {
+        "name": "quake.pga_g",
+        "unit": "g",
+        "required": true,
+        "on": "quake.rupture"
+      },
+      {
+        "name": "quake.liq_p",
+        "unit": "1",
+        "required": true,
+        "on": "quake.rupture"
+      },
+      {
+        "name": "quake.liq_pgd_cm",
+        "unit": "cm",
+        "required": true,
+        "on": "quake.rupture"
+      },
+      {
+        "name": "quake.ls_p",
+        "unit": "1",
+        "required": true,
+        "on": "quake.rupture"
+      },
+      {
+        "name": "quake.ls_pgd_cm",
+        "unit": "cm",
+        "required": true,
+        "on": "quake.rupture"
+      }
+    ],
+    "ledgers": [],
+    "frames": [
+      {
+        "name": "buildings_count",
+        "unit": "buildings",
+        "required": false
+      },
+      {
+        "name": "building_damage_frac",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "buildings_destroyed",
+        "unit": "buildings",
+        "required": false
+      },
+      {
+        "name": "deaths",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "displaced",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "occupants",
+        "unit": "people",
+        "required": false
+      }
+    ],
+    "reports": [
+      {
+        "name": "quake.buildings",
+        "unit": "buildings",
+        "required": false
+      },
+      {
+        "name": "quake.buildings_moderate",
+        "unit": "buildings",
+        "required": false
+      },
+      {
+        "name": "quake.buildings_extensive",
+        "unit": "buildings",
+        "required": false
+      },
+      {
+        "name": "quake.buildings_complete",
+        "unit": "buildings",
+        "required": false
+      },
+      {
+        "name": "quake.deaths",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "quake.injuries_hospital",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "quake.injuries_minor",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "quake.displaced",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "quake.occupants",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "quake.portland_deaths",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "quake.portland_displaced",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "quake.portland_buildings_extensive_or_complete",
+        "unit": "buildings",
+        "required": false
+      },
+      {
+        "name": "fit.portland_deaths_ratio",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "fit.portland_displaced_ratio",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "fit.portland_damage_ratio",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "fit.portland_extensive_ratio",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "fit.portland_complete_ratio",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "fit.portland_injuries_ratio",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "fit.units_damage_r",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "fit.units_deaths_r",
+        "unit": "1",
+        "required": false
+      }
+    ],
+    "views": [
+      {
+        "kind": "map",
+        "title": "share of buildings extensively damaged or worse",
+        "source": "building_damage_frac",
+        "obs": "",
+        "note": "expected, per cell"
+      },
+      {
+        "kind": "map",
+        "title": "deaths",
+        "source": "deaths",
+        "obs": "",
+        "note": "expected, per cell, at the stated time of day"
+      },
+      {
+        "kind": "map",
+        "title": "people displaced",
+        "source": "displaced",
+        "obs": "",
+        "note": "residents of buildings extensively or completely damaged"
+      },
+      {
+        "kind": "counter",
+        "title": "deaths",
+        "source": "quake.deaths",
+        "obs": "",
+        "note": "expected, in the window"
+      },
+      {
+        "kind": "counter",
+        "title": "injuries needing a hospital",
+        "source": "quake.injuries_hospital",
+        "obs": "",
+        "note": "Hazus levels 2 and 3"
+      },
+      {
+        "kind": "counter",
+        "title": "people displaced",
+        "source": "quake.displaced",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "counter",
+        "title": "buildings destroyed or extensively damaged",
+        "source": "quake.buildings_extensive",
+        "obs": "",
+        "note": "extensive plus complete"
+      },
+      {
+        "kind": "counter",
+        "title": "deaths, Portland, against DOGAMI",
+        "source": "fit.portland_deaths_ratio",
+        "obs": "",
+        "note": "this run's expected deaths in the nine Portland districts over DOGAMI's figure for the same scenario; 1 is the fit"
+      },
+      {
+        "kind": "counter",
+        "title": "damage pattern across 876 units",
+        "source": "fit.units_damage_r",
+        "obs": "",
+        "note": "correlation of extensive-or-complete counts per neighbourhood unit with DOGAMI's"
+      }
+    ],
+    "assets": [
+      {
+        "key": "events/portland-cascadia",
+        "note": "DOGAMI's footprints, people per unit and Hazus loss tables"
+      }
+    ],
+    "notes": [
+      "Hazus's own tables (FEMA, Earthquake Model Technical Manual) were not downloadable from this machine on 2026-11-12; the medians, dispersions, collapse share and casualty rates here are recalled from them and declared so, and the two scales are fitted to DOGAMI's run on the same ground, so the absolute toll is the record's by construction and the pattern is the finding. The inventory is DOGAMI's (footprints without heights or structure types; the people per building are each unit's totals spread by footprint area, which is ours)."
+    ],
+    "tables": {
+      "dogami_losses": [
+        {
+          "Bldg_LR": 0.14,
+          "CasDayL2": 254.46,
+          "CasDayL3": 32.52,
+          "CasDayL4": 62.65,
+          "CasNightL4": 21.67,
+          "DisplacedPop": 6267.29,
+          "Jurisdiction": "Beaverton",
+          "PDsComplete": 1637.0,
+          "PDsExtensive": 840.0
+        },
+        {
+          "Bldg_LR": 0.07,
+          "CasDayL2": 197.07,
+          "CasDayL3": 23.37,
+          "CasDayL4": 44.63,
+          "CasNightL4": 12.93,
+          "DisplacedPop": 4652.39,
+          "Jurisdiction": "Clackamas County - Unincorporated",
+          "PDsComplete": 3521.0,
+          "PDsExtensive": 3298.0
+        },
+        {
+          "Bldg_LR": 0.07,
+          "CasDayL2": 107.45,
+          "CasDayL3": 14.21,
+          "CasDayL4": 27.39,
+          "CasNightL4": 9.56,
+          "DisplacedPop": 4244.06,
+          "Jurisdiction": "Gresham",
+          "PDsComplete": 1384.0,
+          "PDsExtensive": 585.0
+        },
+        {
+          "Bldg_LR": 0.16,
+          "CasDayL2": 438.97,
+          "CasDayL3": 62.27,
+          "CasDayL4": 121.07,
+          "CasNightL4": 28.9,
+          "DisplacedPop": 7124.32,
+          "Jurisdiction": "Hillsboro",
+          "PDsComplete": 2143.0,
+          "PDsExtensive": 794.0
+        },
+        {
+          "Bldg_LR": 0.16,
+          "CasDayL2": 41.0,
+          "CasDayL3": 5.35,
+          "CasDayL4": 10.31,
+          "CasNightL4": 4.17,
+          "DisplacedPop": 1890.93,
+          "Jurisdiction": "Multnomah County - Unincorporated",
+          "PDsComplete": 1329.0,
+          "PDsExtensive": 563.0
+        },
+        {
+          "Bldg_LR": 0.52,
+          "CasDayL2": 151.25,
+          "CasDayL3": 24.51,
+          "CasDayL4": 48.11,
+          "CasNightL4": 7.51,
+          "DisplacedPop": 14.39,
+          "Jurisdiction": "Portland - Airport",
+          "PDsComplete": 137.0,
+          "PDsExtensive": 45.0
+        },
+        {
+          "Bldg_LR": 0.31,
+          "CasDayL2": 907.3,
+          "CasDayL3": 137.62,
+          "CasDayL4": 271.33,
+          "CasNightL4": 87.7,
+          "DisplacedPop": 7422.35,
+          "Jurisdiction": "Portland - Central City",
+          "PDsComplete": 743.0,
+          "PDsExtensive": 521.0
+        },
+        {
+          "Bldg_LR": 0.16,
+          "CasDayL2": 148.04,
+          "CasDayL3": 16.6,
+          "CasDayL4": 31.18,
+          "CasNightL4": 7.46,
+          "DisplacedPop": 1177.13,
+          "Jurisdiction": "Portland - Central Northeast Neighborhoods",
+          "PDsComplete": 580.0,
+          "PDsExtensive": 487.0
+        },
+        {
+          "Bldg_LR": 0.08,
+          "CasDayL2": 188.08,
+          "CasDayL3": 24.25,
+          "CasDayL4": 46.66,
+          "CasNightL4": 10.28,
+          "DisplacedPop": 1204.34,
+          "Jurisdiction": "Portland - East Portland Neighborhood Office",
+          "PDsComplete": 527.0,
+          "PDsExtensive": 940.0
+        },
+        {
+          "Bldg_LR": 0.33,
+          "CasDayL2": 427.91,
+          "CasDayL3": 61.63,
+          "CasDayL4": 119.62,
+          "CasNightL4": 27.67,
+          "DisplacedPop": 4072.82,
+          "Jurisdiction": "Portland - Neighbors West/Northwest",
+          "PDsComplete": 1385.0,
+          "PDsExtensive": 444.0
+        },
+        {
+          "Bldg_LR": 0.3,
+          "CasDayL2": 645.18,
+          "CasDayL3": 87.63,
+          "CasDayL4": 169.23,
+          "CasNightL4": 24.13,
+          "DisplacedPop": 3971.74,
+          "Jurisdiction": "Portland - North Portland Neighborhood Services",
+          "PDsComplete": 2010.0,
+          "PDsExtensive": 940.0
+        },
+        {
+          "Bldg_LR": 0.09,
+          "CasDayL2": 139.0,
+          "CasDayL3": 21.34,
+          "CasDayL4": 41.95,
+          "CasNightL4": 7.95,
+          "DisplacedPop": 1920.26,
+          "Jurisdiction": "Portland - Northeast Coalition",
+          "PDsComplete": 707.0,
+          "PDsExtensive": 419.0
+        },
+        {
+          "Bldg_LR": 0.1,
+          "CasDayL2": 283.6,
+          "CasDayL3": 41.85,
+          "CasDayL4": 81.91,
+          "CasNightL4": 23.02,
+          "DisplacedPop": 5492.13,
+          "Jurisdiction": "Portland - Southeast Uplift Neighborhood Program",
+          "PDsComplete": 1935.0,
+          "PDsExtensive": 1154.0
+        },
+        {
+          "Bldg_LR": 0.13,
+          "CasDayL2": 394.22,
+          "CasDayL3": 50.14,
+          "CasDayL4": 96.36,
+          "CasNightL4": 39.53,
+          "DisplacedPop": 16508.98,
+          "Jurisdiction": "Washington County - Unincorporated",
+          "PDsComplete": 7502.0,
+          "PDsExtensive": 2828.0
+        }
+      ]
+    }
+  },
+  {
+    "kind": "lifelines.recovery",
+    "name": "lifelines.recovery",
+    "summary": "The months after the earthquake as a clock: the Willamette crossings, the hospitals, the power and the water, and the fuel hub, each a component with a declared fate drawn by the run's seed from published ranges (the county on its bridges, the Oregon Resilience Plan on restoration times, the county's 2022 study on the hub's tanks) and a fuel ledger in gallons that must close. Nothing here is engineered: it is the state's own estimates arranged in time, with the guesses named.",
+    "priority": 2,
+    "dt": "1 day after the rupture",
+    "params": [
+      {
+        "name": "folder",
+        "default": "portland-cascadia",
+        "note": "the event folder with bridges.toml, hospitals.toml, hub.toml and restoration.toml"
+      },
+      {
+        "name": "storage_cut",
+        "default": 0.0,
+        "note": "fraction of the hub's contents removed before the day (0.2 is Ordinance 2026-312's cut by 2036, applied as if to the stock)"
+      },
+      {
+        "name": "retrofit",
+        "default": false,
+        "note": "every tank behaves as one built after 2004: at most retrofit_release of its contents leaves (the study's post-2004 rule)"
+      },
+      {
+        "name": "retrofit_release",
+        "default": 0.1,
+        "note": "the study's up-to-10-percent release for tanks designed for shaking and deformation"
+      },
+      {
+        "name": "bridge_ready",
+        "default": [],
+        "note": "crossings usable at once (none today; the Burnside replacement would be the first)"
+      },
+      {
+        "name": "bridge_min_days",
+        "default": 21.0,
+        "unit": "d",
+        "note": "the county's 'weeks' (a guess at the number)"
+      },
+      {
+        "name": "bridge_max_days",
+        "default": 730.0,
+        "unit": "d",
+        "note": "the county's 'years' (a guess at the number)"
+      },
+      {
+        "name": "new_bridge_year",
+        "default": 2015.0,
+        "unit": "yr",
+        "note": "crossings opened in or after this year draw from the lower half of the range (Sellwood 2016, Tilikum 2015; the county expects even these to be unusable at first, so they are closed too; a guess)"
+      },
+      {
+        "name": "hospital_median_scale",
+        "default": 1.5,
+        "note": "hospitals' fragility medians are the generic ones times this (newer code; a guess)"
+      },
+      {
+        "name": "generator_h",
+        "default": 72.0,
+        "unit": "h",
+        "note": "on-site generator fuel at each hospital (a common planning figure; a guess)"
+      },
+      {
+        "name": "hospital_gal_day",
+        "default": 2000.0,
+        "unit": "gal/d",
+        "note": "diesel a hospital on generators burns (a guess)"
+      },
+      {
+        "name": "emergency_gal_day",
+        "default": 300000.0,
+        "unit": "gal/d",
+        "note": "the response's draw on the hub once trucks can move: fire, police, utilities, shelters (a guess; the region's normal use is several million a day)"
+      },
+      {
+        "name": "resupply_day",
+        "default": 14.0,
+        "unit": "d",
+        "note": "when fuel first arrives again (the Olympic pipeline from Puget Sound and the river terminals, both damaged; a guess)"
+      },
+      {
+        "name": "resupply_gal_day",
+        "default": 1000000.0,
+        "unit": "gal/d",
+        "note": "what arrives after that (a guess)"
+      },
+      {
+        "name": "route_min_days",
+        "default": 7.0,
+        "unit": "d",
+        "note": "earliest day trucks move on the emergency routes (debris and ground failure on 74 percent of segments; a guess)"
+      },
+      {
+        "name": "route_max_days",
+        "default": 30.0,
+        "unit": "d",
+        "note": "latest (a guess)"
+      }
+    ],
+    "publishes": [
+      {
+        "name": "lifeline.marked",
+        "required": false,
+        "note": "{ kind: bridge | hospital | hub, name, lat, lon } at each component's cell at the start"
+      },
+      {
+        "name": "lifeline.failed",
+        "required": false,
+        "note": "{ kind, name, reopen_day } at the cell, on the rupture"
+      },
+      {
+        "name": "lifeline.restored",
+        "required": false,
+        "note": "{ kind, name, day } at the cell, when it comes back"
+      },
+      {
+        "name": "lifeline.crossing",
+        "required": false,
+        "note": "{ kind, day, sentence, source, confidence } the spill, the closures, each restoration milestone, the fuel"
+      }
+    ],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [
+      {
+        "name": "quake.rupture",
+        "required": false,
+        "note": "the instant"
+      }
+    ],
+    "fields_owned": [],
+    "fields_read": [
+      {
+        "name": "quake.pga_g",
+        "unit": "g",
+        "required": true,
+        "on": "quake.rupture",
+        "note": "at each hospital"
+      },
+      {
+        "name": "quake.liq_p",
+        "unit": "1",
+        "required": true,
+        "on": "quake.rupture",
+        "note": "at each hospital and the hub"
+      },
+      {
+        "name": "quake.liq_pgd_cm",
+        "unit": "cm",
+        "required": true,
+        "on": "quake.rupture"
+      }
+    ],
+    "ledgers": [
+      {
+        "name": "fuel",
+        "unit": "gal",
+        "tolerance": 1.0
+      }
+    ],
+    "frames": [],
+    "reports": [
+      {
+        "name": "lifeline.crossings_open",
+        "unit": "crossings",
+        "required": false
+      },
+      {
+        "name": "lifeline.hospitals_open",
+        "unit": "hospitals",
+        "required": false
+      },
+      {
+        "name": "lifeline.hospitals_dark",
+        "unit": "hospitals",
+        "required": false
+      },
+      {
+        "name": "lifeline.hospitals_closed",
+        "unit": "hospitals",
+        "required": false
+      },
+      {
+        "name": "service.power_share",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "service.water_share",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "service.people_with_power",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "service.people_with_water",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "service.routes_open",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "fuel.hub_gal",
+        "unit": "gal",
+        "required": false
+      },
+      {
+        "name": "fuel.river_gal",
+        "unit": "gal",
+        "required": false
+      },
+      {
+        "name": "fuel.ground_gal",
+        "unit": "gal",
+        "required": false
+      },
+      {
+        "name": "fuel.consumed_gal",
+        "unit": "gal",
+        "required": false
+      },
+      {
+        "name": "fuel.delivered_gal",
+        "unit": "gal",
+        "required": false
+      },
+      {
+        "name": "fuel.days_left",
+        "unit": "d",
+        "required": false
+      }
+    ],
+    "views": [
+      {
+        "kind": "story",
+        "title": "what happens",
+        "source": "crossing",
+        "obs": "",
+        "note": "one sentence per event, newest first; the source beside each"
+      },
+      {
+        "kind": "counter",
+        "title": "Willamette crossings open",
+        "source": "lifeline.crossings_open",
+        "obs": "",
+        "note": "of the twelve in the window"
+      },
+      {
+        "kind": "counter",
+        "title": "hospitals open",
+        "source": "lifeline.hospitals_open",
+        "obs": "",
+        "note": "undamaged, with grid power or a running generator"
+      },
+      {
+        "kind": "counter",
+        "title": "hospitals dark",
+        "source": "lifeline.hospitals_dark",
+        "obs": "",
+        "note": "standing, no power"
+      },
+      {
+        "kind": "counter",
+        "title": "people with power",
+        "source": "service.people_with_power",
+        "obs": "",
+        "note": "residents times the restored share"
+      },
+      {
+        "kind": "counter",
+        "title": "people with water",
+        "source": "service.people_with_water",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "counter",
+        "title": "fuel at the hub",
+        "source": "fuel.hub_gal",
+        "obs": "",
+        "note": "gallons still in the tanks"
+      },
+      {
+        "kind": "counter",
+        "title": "fuel in the river",
+        "source": "fuel.river_gal",
+        "obs": "",
+        "note": "gallons, by the county's 2022 study's rule"
+      },
+      {
+        "kind": "counter",
+        "title": "days of fuel left",
+        "source": "fuel.days_left",
+        "obs": "",
+        "note": "the hub's stock over the response's daily draw"
+      },
+      {
+        "kind": "chart",
+        "title": "share of people with power",
+        "source": "service.power_share",
+        "obs": "",
+        "note": "a ramp to the restoration day drawn from the Resilience Plan's valley range"
+      },
+      {
+        "kind": "chart",
+        "title": "share of people with water",
+        "source": "service.water_share",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "chart",
+        "title": "crossings open",
+        "source": "lifeline.crossings_open",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "chart",
+        "title": "hospitals open",
+        "source": "lifeline.hospitals_open",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "chart",
+        "title": "fuel at the hub",
+        "source": "fuel.hub_gal",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "text",
+        "title": "what this does not measure",
+        "source": "Not in this run: the tsunami (not Portland's), aftershocks, fire following the earthquake, the Columbia bridges and I-5 north, the water system's pipes (the bureau's 1,500 to 3,000 breaks are in the record's README, not here), sewage, telephones and data, food, the airport, the port, the people who leave. The restoration ramps are straight lines to a day drawn from a published range; a real recovery is lumpy and unequal. The hospitals' fates come from the generic fragility at their cells and a guessed code factor. The fuel is a stock, not a network: no pipes, no trucks, no priorities. The spill is a number from the county's study, not a flow on the river.",
+        "obs": "",
+        "note": ""
+      }
+    ],
+    "assets": [
+      {
+        "key": "events/portland-cascadia",
+        "note": "the component tables and the residents raster"
+      }
+    ],
+    "notes": [],
+    "tables": {
+      "bridges": [
+        {
+          "carries": "road",
+          "name": "Sellwood Bridge",
+          "opened": 2016.0,
+          "owner": "Multnomah County (recalled)"
+        },
+        {
+          "carries": "road (US 26)",
+          "name": "Ross Island Bridge",
+          "opened": 1926.0,
+          "owner": "ODOT (recalled)"
+        },
+        {
+          "carries": "transit, bicycles, walking",
+          "name": "Tilikum Crossing",
+          "opened": 2015.0,
+          "owner": "TriMet (recalled)"
+        },
+        {
+          "carries": "road (I-5)",
+          "name": "Marquam Bridge",
+          "opened": 1966.0,
+          "owner": "ODOT (recalled)"
+        },
+        {
+          "carries": "road",
+          "name": "Hawthorne Bridge",
+          "opened": 1910.0,
+          "owner": "Multnomah County (recalled)"
+        },
+        {
+          "carries": "road",
+          "name": "Morrison Bridge",
+          "opened": 1958.0,
+          "owner": "Multnomah County (recalled)"
+        },
+        {
+          "carries": "road; the only non-state Priority 1 emergency route across the river (the county)",
+          "name": "Burnside Bridge",
+          "opened": 1926.0,
+          "owner": "Multnomah County"
+        },
+        {
+          "carries": "rail, light rail, road",
+          "name": "Steel Bridge",
+          "opened": 1912.0,
+          "owner": "Union Pacific (recalled)"
+        },
+        {
+          "carries": "road, streetcar",
+          "name": "Broadway Bridge",
+          "opened": 1913.0,
+          "owner": "Multnomah County (recalled)"
+        },
+        {
+          "carries": "road (I-405, US 30)",
+          "name": "Fremont Bridge",
+          "opened": 1973.0,
+          "owner": "ODOT (recalled)"
+        },
+        {
+          "carries": "rail",
+          "name": "BNSF Railway Bridge 5.1",
+          "opened": 1908.0,
+          "owner": "BNSF Railway"
+        },
+        {
+          "carries": "road (US 30 Bypass)",
+          "name": "St. Johns Bridge",
+          "opened": 1931.0,
+          "owner": "ODOT (recalled)"
+        }
+      ],
+      "restoration": [
+        {
+          "estimate": "1 to 3 months",
+          "service": "electricity",
+          "zone": "valley"
+        },
+        {
+          "estimate": "2 to 4 months",
+          "service": "police and fire stations",
+          "zone": "valley"
+        },
+        {
+          "estimate": "1 month to 1 year",
+          "service": "drinking water and sewer",
+          "zone": "valley"
+        },
+        {
+          "estimate": "6 to 12 months",
+          "service": "top-priority highways (partial restoration)",
+          "zone": "valley"
+        },
+        {
+          "estimate": "18 months",
+          "service": "healthcare facilities",
+          "zone": "valley"
+        },
+        {
+          "estimate": "3 to 6 months",
+          "service": "electricity",
+          "zone": "coast"
+        }
+      ]
+    }
   }
 ]

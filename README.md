@@ -25,6 +25,11 @@ The planet pages to start with:
 - [Half Moon Bay: the breakwater and the beach](https://esimv1.exe.xyz/anselm/halfmoonbay-shoreline):
   a one-line shoreline model of the bay south of Pillar Point Harbor since the Corps built the
   breakwater, read against the Corps' and Griggs's erosion rates, with the dredge and sea level to 2075.
+- [Portland, the year after Cascadia](https://esimv1.exe.xyz/anselm/portland-cascadia): the
+  magnitude 9.0 the state plans for, under Portland on DOGAMI's synthetic ground, the toll fitted to
+  the state's own run, and then the year after as a clock: the fuel hub's spill in the first minutes,
+  twelve crossings closed, the generators, the power, the water, and what cutting the hub's storage
+  or retrofitting its tanks changes.
 - [Two futures, one clock](https://esimv1.exe.xyz/anselm/planet-2100/compare): emissions
   held at today's rate beside emissions to zero by 2050, under one time cursor.
 - [Documentation](https://esimv1.exe.xyz/docs) and [the module kinds](https://esimv1.exe.xyz/kinds).

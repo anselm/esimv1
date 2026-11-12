@@ -1,0 +1,107 @@
+# The Willamette River crossings in Portland, south to north, as the stakes of the lifelines
+# model. Positions and opening years from Wikipedia's "List of crossings of the Willamette
+# River" (read 2026-11-12, a tertiary source); owners as recalled and not checked; the
+# statement on what survives is Multnomah County's, on its Earthquake Ready Burnside Bridge
+# pages (read 2026-11-12): "Portland's aging downtown bridges are not expected to withstand a
+# major earthquake", "it could be anywhere from weeks to years before any downtown bridge is
+# usable after the earthquake", and a county spokesperson quoted by the Portland Mercury that
+# none of Portland's bridges, Tilikum Crossing included, are expected to survive a Cascadia
+# quake (that quote reached us through a web search summary, not read on the page).
+
+[[bridge]]
+name = "Sellwood Bridge"
+lat = 45.4644
+lon = -122.6656
+opened = 2016
+carries = "road"
+owner = "Multnomah County (recalled)"
+
+[[bridge]]
+name = "Ross Island Bridge"
+lat = 45.5011
+lon = -122.6644
+opened = 1926
+carries = "road (US 26)"
+owner = "ODOT (recalled)"
+
+[[bridge]]
+name = "Tilikum Crossing"
+lat = 45.5050
+lon = -122.6669
+opened = 2015
+carries = "transit, bicycles, walking"
+owner = "TriMet (recalled)"
+
+[[bridge]]
+name = "Marquam Bridge"
+lat = 45.5081
+lon = -122.6692
+opened = 1966
+carries = "road (I-5)"
+owner = "ODOT (recalled)"
+
+[[bridge]]
+name = "Hawthorne Bridge"
+lat = 45.5131
+lon = -122.6706
+opened = 1910
+carries = "road"
+owner = "Multnomah County (recalled)"
+
+[[bridge]]
+name = "Morrison Bridge"
+lat = 45.5178
+lon = -122.6697
+opened = 1958
+carries = "road"
+owner = "Multnomah County (recalled)"
+
+[[bridge]]
+name = "Burnside Bridge"
+lat = 45.5231
+lon = -122.6675
+opened = 1926
+carries = "road; the only non-state Priority 1 emergency route across the river (the county)"
+owner = "Multnomah County"
+note = "To be replaced by an earthquake-ready bridge: the design adopted 12 September 2025, budget 1.6 to 1.8 billion dollars, about 740 million in hand, construction date not set as of November 2025 (the county's FAQ page, read 2026-11-12)"
+
+[[bridge]]
+name = "Steel Bridge"
+lat = 45.5275
+lon = -122.6692
+opened = 1912
+carries = "rail, light rail, road"
+owner = "Union Pacific (recalled)"
+
+[[bridge]]
+name = "Broadway Bridge"
+lat = 45.5319
+lon = -122.6742
+opened = 1913
+carries = "road, streetcar"
+owner = "Multnomah County (recalled)"
+
+[[bridge]]
+name = "Fremont Bridge"
+lat = 45.5378
+lon = -122.6831
+opened = 1973
+carries = "road (I-405, US 30)"
+owner = "ODOT (recalled)"
+
+[[bridge]]
+name = "BNSF Railway Bridge 5.1"
+lat = 45.5767
+lon = -122.7475
+opened = 1908
+carries = "rail"
+owner = "BNSF Railway"
+note = "Rebuilt in 1989 per the Wikipedia list"
+
+[[bridge]]
+name = "St. Johns Bridge"
+lat = 45.5853
+lon = -122.7644
+opened = 1931
+carries = "road (US 30 Bypass)"
+owner = "ODOT (recalled)"

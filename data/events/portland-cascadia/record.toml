@@ -1,0 +1,147 @@
+# The published scenario a Portland Cascadia run is read against. Nothing here is a
+# measurement: there has been no such earthquake since 1700. These are the state's and the
+# county's own estimates, each with its source and the day we read it. Written 2026-11-12.
+
+[[fact]]
+id = "dogami-portland-wet-day-deaths"
+title = "Deaths in the City of Portland, M9.0 Cascadia, daytime, wet season (saturated soils)"
+value = 896
+unit = "people"
+source = "DOGAMI Open-File Report O-18-02 (Bauer, Burns and Madin, March 2018), Summary of Impact Estimates by community, Multnomah County table: Portland, population 583,776 (2010 census), 206,165 buildings, building value 95,906 million dollars, damages 18,947 million, 30,627 in need of shelter, 15,645 total injuries, 11,095 minor, 3,654 requiring hospitalization, 896 fatalities (PDF read 2026-11-12)"
+confidence = "checked"
+
+[[fact]]
+id = "dogami-portland-wet-day-shelter"
+title = "Portland residents in need of shelter, daytime wet"
+value = 30627
+unit = "people"
+source = "as above"
+confidence = "checked"
+
+[[fact]]
+id = "dogami-three-county-deaths"
+title = "Deaths in the three counties by scenario: dry day 942, wet day 1,473, dry night 169, wet night 380"
+value = 1473
+unit = "people (wet day)"
+source = "DOGAMI O-18-02 Table 5-4 (unchanged seismic design level columns; report PDF read 2026-11-12)"
+confidence = "checked"
+
+[[fact]]
+id = "dogami-three-county-displaced"
+title = "Long-term displaced population in the three counties: 16,852 dry, 85,211 wet"
+value = 85211
+unit = "people (wet)"
+source = "DOGAMI O-18-02 Table 5-4"
+confidence = "checked"
+
+[[fact]]
+id = "dogami-three-county-repair"
+title = "Building repair cost in the three counties: 23,558 million dollars dry (loss ratio 9 percent), 36,710 million wet (14 percent)"
+value = 36710
+unit = "million dollars (wet)"
+source = "DOGAMI O-18-02 Table 5-3 and 5-4"
+confidence = "checked"
+
+[[fact]]
+id = "dogami-shaking-duration"
+title = "Strong ground motion for 3 to 5 minutes in a megathrust earthquake; the M9.0 was modelled in Hazus as long duration"
+value = 4
+unit = "minutes (the range's middle)"
+source = "DOGAMI O-18-02 section 3.2"
+confidence = "checked"
+
+[[fact]]
+id = "dogami-ground-motion-source"
+title = "The bedrock ground motions are synthetic, from Arthur Frankel (USGS, written communication 2012 and 2016) at 0.01 degree; the site motions are DOGAMI's, with the MMI from PGV by the ShakeMap relationships (Wald and others 2006)"
+value = 0
+unit = ""
+source = "DOGAMI O-18-02 sections 3.1 and 3.2"
+confidence = "checked"
+
+[[fact]]
+id = "dogami-transmission"
+title = "Of 18,098 power poles and towers, 2,203 (12 percent) have a 20 to 30 percent chance of more than a metre of ground deformation in the wet scenario; 921 of 1 to 2 metres; in the dry scenario 6"
+value = 2203
+unit = "structures"
+source = "DOGAMI O-18-02 section 5.4"
+confidence = "checked"
+
+[[fact]]
+id = "dogami-routes"
+title = "177 of 238 emergency transportation route segments (74 percent) have a 20 to 30 percent chance of significant ground deformation somewhere along them in the wet scenario; 6 in the dry"
+value = 177
+unit = "segments"
+source = "DOGAMI O-18-02 section 5.5"
+confidence = "checked"
+
+[[fact]]
+id = "usgs-median-portland"
+title = "USGS median ensemble ShakeMap for M9.0 Cascadia at the grid point nearest downtown Portland: MMI 7.2, PGA 0.24 g, PGV 31 cm/s"
+value = 7.2
+unit = "MMI"
+source = "USGS scenario cszm9ensemble_se, M9.0 Cascadia (geometric mean), grid.xml processed 2020-11-17, read 2026-11-12 at -122.6883, 45.5101"
+confidence = "checked"
+
+[[fact]]
+id = "cei-release"
+title = "Fuel released from the hub's tanks in a Cascadia earthquake: 94.6 to 193.7 million gallons, 57 percent to the ground and 43 percent toward the river"
+value = 193687251
+unit = "gallons (maximum)"
+source = "CEI Hub Seismic Risk Analysis (ECONorthwest, Salus Resilience, Enduring Econometrics, February 2022), Table 7; PDF read 2026-11-12"
+confidence = "checked"
+
+[[fact]]
+id = "cei-cost"
+title = "Monetized costs of the release could reach 2.6 billion dollars; the total 'many multiples' of that"
+value = 2.6
+unit = "billion dollars"
+source = "Multnomah County's report page and OPB, 7 February 2022"
+confidence = "checked"
+
+[[fact]]
+id = "cei-chance"
+title = "An estimated 26 percent chance of a major seismic event in the next 50 years"
+value = 0.26
+unit = "probability in 50 years"
+source = "Multnomah County's CEI Hub Seismic Risk Analysis page (read 2026-11-12); the underlying estimate is not cited on the page"
+confidence = "checked (the page), source behind it unknown"
+
+[[fact]]
+id = "ordinance-2026-312"
+title = "Portland's bulk fuel terminal capacity reduction: at least 20 percent of in-service storage capacity by 1 December 2036, at 11 terminals, aviation-fuel-only tanks exempt; passed to second reading 5 November 2026, 11 to 0, second reading 12 November 2026"
+value = 0.20
+unit = "fraction of in-service capacity"
+source = "portland.gov council document for Ordinance 2026-312, read 2026-11-12; the Oregonian's story of 12 November 2026 that r/Portland discussed could not be read from here"
+confidence = "checked"
+
+[[fact]]
+id = "orp-fatalities"
+title = "Available studies estimate fatalities ranging from 1,250 to more than 10,000 statewide from the earthquake and tsunami; more than 30 billion dollars in direct and indirect losses"
+value = 10000
+unit = "people (upper)"
+source = "Oregon Resilience Plan, February 2013, executive summary"
+confidence = "checked"
+
+[[fact]]
+id = "orp-business"
+title = "Service disruptions of a month or longer can be enough to force a business to close, relocate or leave the state"
+value = 30
+unit = "days"
+source = "Oregon Resilience Plan, February 2013, executive summary"
+confidence = "checked"
+
+[[fact]]
+id = "last-event-1700"
+title = "The last Cascadia rupture: the evening of 26 January 1700, dated from the orphan tsunami in Japanese records"
+value = 1700
+unit = "year"
+source = "Satake and others 1996 (Nature), recalled, not read here; the USGS scenario's event timestamp is 1700-01-26"
+confidence = "recalled"
+
+[[fact]]
+id = "county-bridges"
+title = "None of downtown Portland's Willamette River bridges is expected to be usable immediately after a major earthquake; weeks to years before any is"
+value = 0
+unit = "bridges usable"
+source = "Multnomah County, Earthquake Ready Burnside Bridge FAQ, read 2026-11-12"
+confidence = "checked"

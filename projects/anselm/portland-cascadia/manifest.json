@@ -1,0 +1,90 @@
+{
+  "entities": [
+    {
+      "id": "run",
+      "run": {
+        "close_every": "1d",
+        "end": "2028-01-26T20:00:00Z",
+        "name": "q1-portland-cascadia",
+        "notes": "A scenario, not a forecast: a M9.0 Cascadia rupture at 14:00 PST on 26 January 2027 under Portland on DOGAMI's synthetic site motions, saturated soils, daytime occupancy; the toll on DOGAMI's inventory; the year after on the Resilience Plan's ranges and the county's fuel-hub study; every constant published or declared a guess.",
+        "seed": 1,
+        "snapshot_every": "30d",
+        "start": "2027-01-26T20:00:00Z"
+      }
+    },
+    {
+      "id": "place",
+      "place": {
+        "lat_n": 45.66,
+        "lat_s": 45.43,
+        "lon_e": -122.47,
+        "lon_w": -122.85,
+        "res_arcsec": 1
+      }
+    },
+    {
+      "id": "lifelines",
+      "kind": "lifelines.recovery",
+      "params": {
+        "folder": "portland-cascadia",
+        "lat_n": 45.66,
+        "lat_s": 45.43,
+        "lon_e": -122.47,
+        "lon_w": -122.85,
+        "res_arcsec": 1,
+        "retrofit": false,
+        "storage_cut": 0.0
+      }
+    },
+    {
+      "id": "ground",
+      "kind": "quake.ground",
+      "params": {
+        "at": "2027-01-26T22:00:00Z",
+        "folder": "portland-cascadia",
+        "lat_n": 45.66,
+        "lat_s": 45.43,
+        "lon_e": -122.47,
+        "lon_w": -122.85,
+        "res_arcsec": 1,
+        "soils": "wet"
+      }
+    },
+    {
+      "id": "buildings",
+      "kind": "quake.buildings",
+      "params": {
+        "casualty_scale": 3.0,
+        "collapse_given_complete": 0.25,
+        "displaced_share": 0.65,
+        "folder": "portland-cascadia",
+        "fragility_scale": 1.2,
+        "gf_complete_share": 1.0,
+        "gf_median_cm": 25,
+        "lat_n": 45.66,
+        "lat_s": 45.43,
+        "lon_e": -122.47,
+        "lon_w": -122.85,
+        "median_complete_g": 1.1,
+        "record": "wet",
+        "res_arcsec": 1,
+        "time_of_day": "day"
+      }
+    },
+    {
+      "audit": {
+        "shock_topics": [
+          "quake.rupture",
+          "lifeline.failed"
+        ]
+      },
+      "id": "audit"
+    }
+  ],
+  "from": {
+    "entry": "manifests/q1-portland-cascadia.toml",
+    "hash": "sha256:399e3810209986e9802f9ea6c8e44f5856bcac669553e2471bca58b232ef948b",
+    "language": "toml"
+  },
+  "manifest": "manifest/1"
+}

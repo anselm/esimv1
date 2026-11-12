@@ -84,6 +84,12 @@ sha256 = "fd13c2041ea3a133effeb9cdff3d02c8baf668d8e9dab24cb441840156fa190e"
 bytes = 39189738
 fetched = "2026-11-01"
 
+[files."copernicus-dem-glo30/N45_W123.tif"]
+url = "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N45_00_W123_00_DEM/Copernicus_DSM_COG_10_N45_00_W123_00_DEM.tif"
+sha256 = "f530349db5607583ec524dea2b76cbf61227f21ecbe816bbaf96c7d61e43cb80"
+bytes = 46391286
+fetched = "2026-11-12"
+
 [files."copernicus-dem-glo30/N56_W112.tif"]
 url = "https://copernicus-dem-30m.s3.amazonaws.com/Copernicus_DSM_COG_10_N56_00_W112_00_DEM/Copernicus_DSM_COG_10_N56_00_W112_00_DEM.tif"
 sha256 = "7ab2fa7d1c30b1ab46105944b267bfcb4b3aaccc053454e84c1f5cafab45643d"

@@ -1853,6 +1853,219 @@
   },
   {
     "area": "anselm",
+    "by": "cli",
+    "cover": "cover.png",
+    "cover_caption": "DOGAMI's chance of liquefaction and the ground deformation under Portland, from the base run; a still, the clock is on the run page",
+    "created": "2026-11-12",
+    "description": "A scenario, not a forecast: a M9.0 Cascadia rupture at 14:00 PST on 26 January 2027 under Portland on DOGAMI's synthetic site motions, saturated soils, daytime occupancy; the toll on DOGAMI's inventory; the year after on the Resilience Plan's ranges and the county's fuel-hub study; every constant published or declared a guess.",
+    "featured": true,
+    "kinds": [
+      "lifelines.recovery",
+      "quake.ground",
+      "quake.buildings"
+    ],
+    "name": "portland-cascadia",
+    "path": "anselm/portland-cascadia",
+    "runs": [
+      {
+        "all_ledgers_closed": true,
+        "digest": "794cf42034d54da2",
+        "end": 1832529600,
+        "events": 811,
+        "id": "q1-portland-cascadia-076d416f-794cf420",
+        "name": "q1-portland-cascadia",
+        "seed": 2,
+        "set": {
+          "run.seed": "2"
+        },
+        "start": 1800993600,
+        "variant": "seed-2",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "840f305c6a1624d4",
+        "end": 1832529600,
+        "events": 809,
+        "id": "q1-portland-cascadia-10d9f13b-840f305c",
+        "name": "q1-portland-cascadia",
+        "seed": 3,
+        "set": {
+          "run.seed": "3"
+        },
+        "start": 1800993600,
+        "variant": "seed-3",
+        "verdict": null
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "983734aff0a50d71",
+        "end": 1832529600,
+        "events": 809,
+        "id": "q1-portland-cascadia-19e37fca-983734af",
+        "name": "q1-portland-cascadia",
+        "seed": 1,
+        "set": {
+          "lifelines.retrofit": "true"
+        },
+        "start": 1800993600,
+        "variant": "retrofit",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "098ced95e007fba3",
+        "end": 1832529600,
+        "events": 809,
+        "id": "q1-portland-cascadia-2e95a1ff-098ced95",
+        "name": "q1-portland-cascadia",
+        "seed": 1,
+        "set": {
+          "buildings.record": "\"dry\"",
+          "buildings.time_of_day": "\"day\"",
+          "ground.soils": "\"dry\""
+        },
+        "start": 1800993600,
+        "variant": "dry-day",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "df8493ce8e3170a5",
+        "end": 1832529600,
+        "events": 810,
+        "id": "q1-portland-cascadia-8bd025c6-df8493ce",
+        "name": "q1-portland-cascadia",
+        "seed": 1,
+        "set": {
+          "buildings.record": "\"wet\"",
+          "buildings.time_of_day": "\"night\"",
+          "ground.at": "\"2027-01-26T10:00:00Z\"",
+          "ground.soils": "\"wet\""
+        },
+        "start": 1800993600,
+        "variant": "wet-night",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "7f45e3d465f14689",
+        "end": 1832529600,
+        "events": 807,
+        "id": "q1-portland-cascadia-b46d2a31-7f45e3d4",
+        "name": "q1-portland-cascadia",
+        "seed": 1,
+        "set": {
+          "lifelines.bridge_ready": "[\"Burnside Bridge\"]"
+        },
+        "start": 1800993600,
+        "variant": "burnside-ready",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "d6ee94af18d1ac23",
+        "end": 1832529600,
+        "events": 809,
+        "id": "q1-portland-cascadia-cea13272-d6ee94af",
+        "name": "q1-portland-cascadia",
+        "seed": 1,
+        "set": {
+          "buildings.record": "\"wet\"",
+          "buildings.time_of_day": "\"day\"",
+          "ground.soils": "\"wet\""
+        },
+        "start": 1800993600,
+        "variant": "wet-day",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "aff0c14873f8a2db",
+        "end": 1832529600,
+        "events": 809,
+        "id": "q1-portland-cascadia-effdc049-aff0c148",
+        "name": "q1-portland-cascadia",
+        "seed": 1,
+        "set": {
+          "lifelines.storage_cut": "0.2"
+        },
+        "start": 1800993600,
+        "variant": "cut-20",
+        "verdict": "holds"
+      }
+    ],
+    "title": "Portland, the year after Cascadia",
+    "variant": [
+      {
+        "name": "wet-day",
+        "set": {
+          "buildings.record": "wet",
+          "buildings.time_of_day": "day",
+          "ground.soils": "wet"
+        },
+        "title": "Saturated soils, 2 PM: DOGAMI's highest-impact case, and the base run"
+      },
+      {
+        "name": "wet-night",
+        "set": {
+          "buildings.record": "wet",
+          "buildings.time_of_day": "night",
+          "ground.at": "2027-01-26T10:00:00Z",
+          "ground.soils": "wet"
+        },
+        "title": "Saturated soils, 2 AM: people at home"
+      },
+      {
+        "name": "dry-day",
+        "set": {
+          "buildings.record": "dry",
+          "buildings.time_of_day": "day",
+          "ground.soils": "dry"
+        },
+        "title": "Dry soils, 2 PM: shaking and landslides, no liquefaction"
+      },
+      {
+        "name": "cut-20",
+        "set": {
+          "lifelines.storage_cut": 0.2
+        },
+        "title": "The hub's stock cut by a fifth before the day: Ordinance 2026-312's 2036 target, applied to the stock"
+      },
+      {
+        "name": "retrofit",
+        "set": {
+          "lifelines.retrofit": true
+        },
+        "title": "Every tank built to the post-2004 rule: at most a tenth of its contents leaves"
+      },
+      {
+        "name": "burnside-ready",
+        "set": {
+          "lifelines.bridge_ready": [
+            "Burnside Bridge"
+          ]
+        },
+        "title": "The earthquake-ready Burnside Bridge built: one crossing usable at once"
+      },
+      {
+        "name": "seed-2",
+        "set": {
+          "run.seed": 2
+        },
+        "title": "The same scenario, another seed: other restoration days, another spill within the range"
+      },
+      {
+        "name": "seed-3",
+        "set": {
+          "run.seed": 3
+        },
+        "title": "A third seed"
+      }
+    ]
+  },
+  {
+    "area": "anselm",
     "by": "anselm, via claude 2026-11-01",
     "cover": "cover.png",
     "cover_caption": "Two chart rows from the run page, dark mode, 2026-11-08: the lower bucket's volume filling toward its balance and the rain poured in.",
