@@ -160,3 +160,9 @@ crossing's data; the clock says "Before the earthquake of Friday 26 March 2027 a
 every moment, and a red line marks the instant on the timeline and on every chart. The 1700
 anniversary framing in the manifest's notes went with the date; the README's deep history keeps
 the 1700 event as what the fault did last time.
+
+Then Anselm: "Argh. I mean that I want the time to start on say April 15 - not to just move the
+entire bar over. I've been trying to communicate over and over that I as a user want to see a period
+prior to the event." Read as a start eleven months before; Anselm: "No. Start the timer 2 weeks
+prior." So: the run begins on 12 March 2027, two weeks before the earthquake, and ends a year
+after it. The misreadings are recorded here because they cost him three rounds.

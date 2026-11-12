@@ -112,13 +112,13 @@ two sides of the thread can be run.
 ## What to show people
 
 Not the shaking map; the state has drawn that. The clock, with a before and an after. A run
-starts a week before the afternoon, with the people on the map, every crossing open, every hospital
+starts two weeks before the afternoon, on 12 March 2027, with the people on the map, every crossing open, every hospital
 on the grid and the hub full, and says so in its first sentence. At the instant the map becomes
 the ground motion, four minutes later the damage, and from then on the crossings and the hospitals
 sit on it as marks that change state: a square for a crossing, a circle for a hospital, filled when
 closed or dark, with the key beside the map. Beside the map, the moment, the latest sentence and
 the counts: the dead, the crossings open, the hospitals open and dark, the people with power and
-water. Press play and the week before goes by in a second, the afternoon in a sentence, and then
+water. Press play and the two weeks before go by in a few seconds, the afternoon in a sentence, and then
 the days: the generators run dry on the third, trucks move in the third week, the first bridge
 comes back in the fourth, power in the second month, water in the tenth. The arrow keys step from
 moment to moment, and `?t=` with a time in the address holds the clock there, so a moment can be
@@ -193,7 +193,8 @@ queues at hospitals and shelters rather than as rates.
 
 ## What the runs say
 
-The scenario is Friday 26 March 2027 at two in the afternoon, Pacific daylight time, on saturated
+The scenario is Friday 26 March 2027 at two in the afternoon, Pacific daylight time, in a run that
+begins two weeks before and ends a year after the event, on saturated
 winter soils, which DOGAMI calls its highest-impact case. The table reads each run the day after
 and at the end of the year.
 

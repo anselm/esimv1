@@ -11,12 +11,12 @@
 
 [run]
 name = "q1-portland-cascadia"
-start = "2027-03-19T21:00:00Z"
-end = "2028-03-19T21:00:00Z"
+start = "2027-03-12T21:00:00Z"
+end = "2028-03-26T21:00:00Z"
 seed = 1
 close_every = "1d"
 snapshot_every = "30d"
-notes = "A scenario, not a forecast: a M9.0 Cascadia rupture at 2 PM PDT on Friday 26 March 2027 under Portland on DOGAMI's synthetic site motions, saturated soils, daytime occupancy; the toll on DOGAMI's inventory; the year after on the Resilience Plan's ranges and the county's fuel-hub study; every constant published or declared a guess."
+notes = "A scenario, not a forecast: a M9.0 Cascadia rupture at 2 PM PDT on Friday 26 March 2027 under Portland, in a run that begins two weeks before, on 12 March 2027, so the city is seen as it stands, and ends a year after on DOGAMI's synthetic site motions, saturated soils, daytime occupancy; the toll on DOGAMI's inventory; the year after on the Resilience Plan's ranges and the county's fuel-hub study; every constant published or declared a guess."
 
 [place]
 lat_s = 45.43

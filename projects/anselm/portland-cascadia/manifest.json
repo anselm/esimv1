@@ -4,12 +4,12 @@
       "id": "run",
       "run": {
         "close_every": "1d",
-        "end": "2028-03-19T21:00:00Z",
+        "end": "2028-03-26T21:00:00Z",
         "name": "q1-portland-cascadia",
-        "notes": "A scenario, not a forecast: a M9.0 Cascadia rupture at 2 PM PDT on Friday 26 March 2027 under Portland on DOGAMI's synthetic site motions, saturated soils, daytime occupancy; the toll on DOGAMI's inventory; the year after on the Resilience Plan's ranges and the county's fuel-hub study; every constant published or declared a guess.",
+        "notes": "A scenario, not a forecast: a M9.0 Cascadia rupture at 2 PM PDT on Friday 26 March 2027 under Portland, in a run that begins two weeks before, on 12 March 2027, so the city is seen as it stands, and ends a year after on DOGAMI's synthetic site motions, saturated soils, daytime occupancy; the toll on DOGAMI's inventory; the year after on the Resilience Plan's ranges and the county's fuel-hub study; every constant published or declared a guess.",
         "seed": 1,
         "snapshot_every": "30d",
-        "start": "2027-03-19T21:00:00Z"
+        "start": "2027-03-12T21:00:00Z"
       }
     },
     {
@@ -127,7 +127,7 @@
   ],
   "from": {
     "entry": "manifests/q1-portland-cascadia.toml",
-    "hash": "sha256:d48aae536508f6a880565124225a7993a29c71e47953c0a10e61fb5fa442ba8c",
+    "hash": "sha256:6691eea8b144840e9829205e440209b276d17e90accde089d37a0ae03d14fb7c",
     "language": "toml"
   },
   "manifest": "manifest/1"

@@ -362,7 +362,8 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   and publish `agents.toll`, the aftermath's `deaths.total` takes the agents' dead when present; the clock prints the
   event's date and before/during/after. The dead in the window run 560 to 1,000 by seed around the fitted 765. The event is
   Friday 26 March 2027, 2 PM PDT (`at = 2027-03-26T21:00:00Z`, `tz_offset_h = -7`, `tz_name = "PDT"`; the run
-  2027-03-19 to 2028-03-19; Anselm: move the event to March, show and say the date clearly, a red line on the
+  2027-03-12 to 2028-03-26, two weeks before the event to a year after (Anselm, after three rounds: "start the
+  timer 2 weeks prior"; a user wants to see a period prior to the event, not the bar moved over); Anselm: move the event to March, show and say the date clearly, a red line on the
   timeline): the rupture crossing carries `local`, the clock says the date in words, the timeline and every chart
   draw a red line at the event.
 - Wild cards (2026-11-05, Anselm: "i just want a placeholder ... like a video game with wild card factors
