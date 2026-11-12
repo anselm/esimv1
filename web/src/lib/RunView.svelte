@@ -30,6 +30,7 @@
     const r = await fetch(`${base}/run.json`, { cache: 'no-store' })
     if (!r.ok) throw new Error(`run.json ${r.status}`)
     const run = await r.json()
+    document.title = `${run.name} · esim`
     ;[run.scores, run.audit, run.describe] = await Promise.all([loadJson('scores.json'), loadJson('audit.json'), loadJson('describe.json')])
     // the cursor starts at the beginning and plays, so the tip-over is seen, not just the end state
     cursor = run.start

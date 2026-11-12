@@ -25,6 +25,7 @@
 // Start: node server.mjs   (port 5181; ANTHROPIC_API_KEY in the environment for drafts)
 
 import http from 'node:http'
+import { headTags, sitemap } from './lib/meta.mjs'
 import readline from 'node:readline'
 import fs from 'node:fs'
 import os from 'node:os'
@@ -245,6 +246,24 @@ async function draft(description, title, log) {
 
 // ---- static files: dist/ (the built viewer), ../runs, ../projects
 const DIST = path.join(here, 'dist')
+// The viewer's page with this route's own title, description and share tags written into
+// its head (web/lib/meta.mjs), so a link unfurls as what it is. The public origin for the
+// absolute URLs the tags need is ESIM_PUBLIC_URL, else the request's host.
+function originOf(req) {
+  if (process.env.ESIM_PUBLIC_URL) return process.env.ESIM_PUBLIC_URL.replace(/\/$/, '')
+  const host = req.headers['x-forwarded-host'] || req.headers.host || `localhost:${PORT}`
+  const proto = req.headers['x-forwarded-proto'] || (/^(localhost|127\.)/.test(host) ? 'http' : 'https')
+  return `${proto}://${host}`
+}
+function sendPage(req, res, url) {
+  fs.readFile(path.join(DIST, 'index.html'), 'utf8', (err, html) => {
+    if (err) { res.statusCode = 503; return res.end('viewer not built') }
+    let body = html
+    try { body = html.replace(/<title>[^<]*<\/title>/, headTags(ROOT, url, originOf(req))) } catch (e) { console.error('meta', e.message) }
+    res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.setHeader('Cache-Control', 'no-cache')
+    res.end(body)
+  })
+}
 const TYPES = {
   '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8',
   '.json': 'application/json', '.jsonl': 'application/x-ndjson', '.toml': 'application/toml; charset=utf-8',
@@ -292,7 +311,7 @@ function serveStatic(req, res) {
     // indexes, projects and docs change and are revalidated
     const immutable = /\/runs\/[^/]+\/(?!index\.json)/.test(url)
     // a path with no extension that names no file is a page of the viewer (/docs/system/limits)
-    if (!path.extname(file) && !fs.existsSync(file)) { sendFile(req, res, path.join(DIST, 'index.html'), 'no-cache'); return true }
+    if (!path.extname(file) && !fs.existsSync(file)) { sendPage(req, res, url); return true }
     sendFile(req, res, file, immutable ? 'public, max-age=31536000, immutable' : 'no-cache')
     return true
   }
@@ -300,12 +319,15 @@ function serveStatic(req, res) {
   if (url.startsWith('/projects/')) return under('/projects/', path.join(ROOT, 'projects'))
   if (url.startsWith('/docs/')) return under('/docs/', DOCS)
   if (!fs.existsSync(DIST)) { res.statusCode = 503; return res.end('viewer not built: run `npm run build` in web/, or use the Vite dev server') }
-  // the viewer: a file from dist/ when it exists, else index.html (the routes are paths: /anselm/palisades-2025)
-  const file = path.resolve(DIST, '.' + (url === '/' ? '/index.html' : url))
+  if (url === '/robots.txt') { res.setHeader('Content-Type', 'text/plain; charset=utf-8'); return res.end(`User-agent: *\nAllow: /\nSitemap: ${originOf(req)}/sitemap.xml\n`) }
+  if (url === '/sitemap.xml') { res.setHeader('Content-Type', 'application/xml; charset=utf-8'); return res.end(sitemap(ROOT, originOf(req))) }
+  // the viewer: a file from dist/ when it exists, else the page with the route's tags (the routes are paths: /anselm/palisades-2025)
+  if (url === '/') return sendPage(req, res, url)
+  const file = path.resolve(DIST, '.' + url)
   if (!file.startsWith(DIST + path.sep)) { res.statusCode = 403; return res.end('forbidden') }
   fs.stat(file, (err, st) => {
     if (!err && st.isFile()) return sendFile(req, res, file, url.startsWith('/assets/') ? 'public, max-age=31536000, immutable' : 'no-cache')
-    sendFile(req, res, path.join(DIST, 'index.html'), 'no-cache')
+    sendPage(req, res, url)
   })
 }
 

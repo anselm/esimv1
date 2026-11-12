@@ -1,5 +1,17 @@
 [
   {
+    "path": "events/known",
+    "title": "Known future events",
+    "order": 1,
+    "section": "The future"
+  },
+  {
+    "path": "events/wild-cards",
+    "title": "Wild cards",
+    "order": 2,
+    "section": "The future"
+  },
+  {
     "path": "rfc/0001-manifest",
     "title": "RFC 0001: a common transport for simulations",
     "order": 1,

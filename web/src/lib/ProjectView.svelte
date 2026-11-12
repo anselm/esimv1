@@ -11,6 +11,7 @@
   import Crumbs from './Crumbs.svelte'
 
   let { path } = $props()
+  $effect(() => { if (meta?.title) document.title = `${meta.title} · esim` })
   let meta = $state(null)
   let manifest = $state('')
   // the program a project was made from, when it was a JavaScript or JSON manifest: kept

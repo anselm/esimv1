@@ -10,6 +10,7 @@ HERE=$(cd "$(dirname "$0")/.." && pwd)
 HOST="exedev@$VM.exe.xyz"
 RS="rsync -az --delete -e 'ssh -o ServerAliveInterval=5 -o StrictHostKeyChecking=accept-new'"
 
+"$HERE/deploy/cards.sh" >/dev/null
 (cd "$HERE/web" && npm run build >/dev/null)
 # the static fallbacks the read-only server reads: kinds, projects index, outlines
 (cd "$HERE" && ./target/release/esim kinds --json > docs/kinds.json && ./target/release/esim projects --json > projects/index.json && ./target/release/esim sources --write >/dev/null && ./target/release/esim events --write >/dev/null)

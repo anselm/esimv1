@@ -11,6 +11,7 @@
   let { path } = $props()
   const isNew = $derived(path === 'new')
   let md = $state(null)
+  $effect(() => { if (md) { const t = titleOf(md); if (t) document.title = `${t} · esim` } })
   let error = $state(null)
   let editing = $state(false)
   let draft = $state('')

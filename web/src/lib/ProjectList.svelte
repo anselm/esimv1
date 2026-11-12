@@ -1,4 +1,5 @@
 <script>
+  $effect(() => { document.title = 'esim' })
   let { area = null } = $props()
   import Badge from './Badge.svelte'
   import Account from './Account.svelte'
