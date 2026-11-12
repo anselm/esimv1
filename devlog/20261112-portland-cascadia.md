@@ -30,7 +30,9 @@ What I found, in the order it mattered:
   months. Fatalities 1,250 to more than 10,000 statewide; more than 30 billion dollars. Retail
   stations hold three to five days of fuel.
 - **The CEI Hub Seismic Risk Analysis** (2022): 415 active tanks, 91 percent pre-1993 or unknown,
-  350.6 million gallons of capacity, 298.7 million of contents with the potential to release, a
+  350.6 million gallons of capacity (332.7 million in its Table 2), 233.5 million of contents at
+  the 67 percent fill it assumes (until the evening this entry said 298.7 million, which is the
+  report's capacity of the tanks holding flammable materials; see the end), a
   release of 94.6 to 193.7 million gallons, 57 percent to the ground and 43 percent toward the
   river, by three age-class rules (pre-1993: 50 to 100 percent; 1993 to 2004 and after: up to 10).
 - **Ordinance 2026-312**: at least 20 percent of in-service capacity by 1 December 2036 at eleven
@@ -94,7 +96,7 @@ transfer after). Resupply is capped at what the tanks held, so the hub cannot fi
 ## Results (seed 1, saturated soils, 2 PM)
 
 Within minutes 150 million gallons leave the tanks, 64 million toward the river (the three seeds:
-134 to 171). Twelve crossings closed; generators dry on day 3; fuel from the pipeline on day 14;
+134 to 171), and 84 million of the 233 stay. Twelve crossings closed; generators dry on day 3; fuel from the pipeline on day 14;
 power for half on day 16; trucks on day 20; the Hawthorne back on day 25; power for all on day 32;
 water for half on day 150 and for all on day 300; nine crossings open after a year. Cut-20 puts
 52 million in the river; retrofit 13 million; Burnside-ready changes the hospitals' refuelling and
@@ -114,3 +116,32 @@ districts), 5,933 to hospital, 42,925 displaced; 19,769 buildings extensively da
 - The USGS grid as a second ground (a reader for grid.xml), so a reader can see the two models'
   disagreement on the map.
 - Fire following earthquake, and oil on the river as a flow toward the Columbia.
+
+## The article, read (evening)
+
+Anselm pasted the Oregonian's text. Gosia Wozniacka, 12 November 2026, 7:00 am. What it adds to
+the council document: the cut is of each terminal's tank capacity, not of the fuel held, and the
+story quotes the county's 2022 report for the difference (333 million gallons of capacity, 234
+million held, two thirds full); utility storage (NW Natural's LNG tank) and sustainable aviation
+fuel are exempt, and jet-fuel storage may grow by 5 percent of a terminal's existing storage; the
+city has barred new fossil-fuel storage at the hub since 2016; the state's energy department
+modelled a 70 percent fall in fuel use by 2050 and says the transition may be slower than the city
+assumes; the hub handles more than 90 percent of Oregon's petroleum, biodiesel, LNG and other
+fuels along six miles of U.S. 30 from the Fremont Bridge to the south tip of Sauvie Island; the
+Olympic Pipeline leak of 2025 shut the hub's supply for more than a week and the governor declared
+a fuel emergency; DEQ's fuel tank seismic stability programme is the state's named tool; the city
+administrator must recommend an alternative by June 2027 and the ordinance starts collecting fuel
+inventories by type. Novick: "unless demand goes down, the state's not going to let us implement
+the drawdown." Mandell: "a stopgap ... an important marker."
+
+The 234 million caught a misread. `hub.toml` had `contents_gal = 298.7 million`, taken from the
+report's sentence "the total capacity of tanks with flammable materials is 298.7 million gallons";
+the report's contents figure is Table 3, 233.5 million, the 67 percent fill of the 332.7 million
+of active capacity in Table 2. Corrected; the release range is in gallons, so the spill is the
+same (150 million in the base run, 64 toward the river; 134 to 171 across the seeds; cut-20 52 to
+the river, retrofit 10) and the hub now ends the first afternoon with 84 million instead of 149.
+The release fractions the module derives are now 41 to 83 percent of the contents, which is
+closer to the report's own rule for pre-1993 tanks (50 to 100 percent) than the 32 to 65 it had.
+All eight runs remade. The README's *Why now* now carries the article's substance and the point
+that the model's cut-20 variant, which takes a fifth off the fuel held, is a stronger reading of
+the ordinance than the capacity cut that passed.

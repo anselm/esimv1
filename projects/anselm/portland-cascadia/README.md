@@ -43,14 +43,28 @@ county chair compared to the Deepwater Horizon. The study put the costs it could
 billion dollars and said the real figure would be many multiples of that.
 
 On 12 November 2026 the city council took its second reading of an ordinance that requires each of
-the hub's eleven terminals to cut its in-service storage by at least a fifth by December 2036,
-with tanks that hold only jet fuel exempt. The Oregonian's story on it is the one the r/Portland
-thread was about: a nightmare scenario driving the city to cut fuel storage along the Willamette.
-The thread itself is the argument the model below is for. One side: the tanks sit on the worst
-ground beside the river and should go. The other: the hub holds the region's jet fuel and most of
-its diesel, there is nowhere else to put a river terminal, and a fifth less storage is a fifth less
-of the fuel the recovery will run on. Both are right, and the question is what the numbers do in
-time.
+the hub's terminals to cut its tank capacity by at least a fifth by 2036. Gosia Wozniacka's story
+in the Oregonian that morning is the one the r/Portland thread was about, and it says what the cut
+is and is not. The fifth is of capacity, terminal by terminal, not of the fuel in the tanks; the
+county's 2022 study found the tanks about two thirds full, 234 million gallons held in 333 million
+of room, so a cut to capacity could leave the fuel where it is. Utility storage and sustainable
+aviation fuel are exempt, and the jet-fuel storage may grow by a twentieth. The city has refused
+new fossil-fuel storage at the hub since 2016; the drawdown is the first rule on what is already
+there. The activists who pushed for it call it a stopgap and wanted a drawdown tied to inventories
+and to Oregon's consumption, which the ordinance begins to collect; the city administrator owes
+an alternative by June 2027. The state's energy department answered with the other side of the
+argument: in an emergency the hub's storage is the buffer, as it was for a week in 2025 when a leak
+shut the Olympic Pipeline and the governor declared a fuel emergency, the hub cannot be moved
+because the pipeline, the rail, the river and the roads meet there, and the department's own
+seismic programme for the tanks is the tool that reduces the risk. Councilor Steve Novick, voting
+for it, said that unless demand falls the state will not let the city carry it out.
+
+The thread is the same argument. One side: the tanks sit on the worst ground beside the river and
+should go. The other: the hub holds the region's jet fuel and most of its diesel, there is nowhere
+else to put a river terminal, and a fifth less storage is a fifth less of the fuel the recovery
+will run on. Both are right, and the question is what the numbers do in time. The model's cut-20
+variant takes the fifth off the fuel held, which is the stronger reading of the ordinance than the
+one that passed.
 
 ## What this is, and is not
 
@@ -92,7 +106,7 @@ actors
 fault: the Cascadia subduction zone, 1700 and next
 ground: DOGAMI's synthetic motion and the soils that liquefy
 buildings: 615,852 footprints and the people in them
-hub: 299 million gallons on the west bank
+hub: 233 million gallons on the west bank
 bridges: twelve crossings, built 1908 to 2016
 hospitals: thirteen, on generators
 power: the grid, back in one to three months
@@ -135,10 +149,11 @@ What stands out:
   the day takes a fifth off: 52 million toward the river instead of 64. Retrofitting every tank to
   the post-2004 rule, so that at most a tenth of its contents leaves, takes it to 13 million. The
   ordinance is the smaller lever and the one the city can pass; the tanks' age is the larger one.
-- **The fuel that spills is the fuel the recovery wanted.** The hub starts with 299 million gallons
-  and ends the first afternoon with 149 million. The response in this run draws 300,000 gallons a
-  day once trucks move, and the pipeline is assumed back on day fourteen, so the stock never runs
-  out here; it would in a run where resupply takes longer, and the hub chart is the place to watch.
+- **The fuel that spills is the fuel the recovery wanted.** The hub starts with 233 million gallons,
+  the county study's two-thirds fill, and ends the first afternoon with 84 million. The response in
+  this run draws 300,000 gallons a day once trucks move, and the pipeline is assumed back on day
+  fourteen, so the stock never runs out here; it would in a run where resupply takes longer, and
+  the hub chart is the place to watch.
 - **Three days.** Every hospital stands in the base run, on the generic fragility, and every one
   goes dark on the third day when the generators run dry, because no truck moves before day ten
   to thirty. They come back on fuel from the hub when the routes open. That rule is a guess; the
@@ -197,9 +212,12 @@ visible in time, which the thread was having without it.
   statements on the downtown bridges, the dates and the budget.
 - OPB, *Fuel spill in Portland after a major earthquake could be bigger than Deepwater Horizon,
   study finds*, Monica Samayoa, 7 February 2022. Read 2026-11-12. Taken: the county chair's words.
-- r/Portland, *A Big One nightmare scenario drives Portland to cut fuel storage along the
-  Willamette*, 12 November 2026, the comments through Reddit's RSS feed. The Oregonian's story
-  itself could not be read from this machine.
+- Gosia Wozniacka, *A Big One nightmare scenario drives Portland to cut fuel storage along the
+  Willamette*, The Oregonian/OregonLive, 12 November 2026. Read 2026-11-12 from Anselm's paste of
+  the text, the site having refused this machine. Taken: what the ordinance cuts and exempts, the
+  state's and the activists' positions, the Olympic Pipeline shutdown, the June 2027 review, and
+  the correction to the hub's contents below.
+- r/Portland, the thread on that story, 12 November 2026, the comments through Reddit's RSS feed.
 - Satake, Shimazaki, Tsuji and Ueda 1996 (Nature) on the 1700 orphan tsunami, and Atwater's work
   on the coastal marshes: recalled, not read here.
 - FEMA's Hazus Earthquake Model Technical Manual: not read; every fragility and casualty number

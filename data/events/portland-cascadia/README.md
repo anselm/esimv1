@@ -4,8 +4,11 @@ What a run of the Portland Cascadia scenario reads, and where each piece came fr
 observation of this earthquake; everything here is a published estimate, and the files say whose.
 Assembled 2026-11-12 by the esim session (Claude Fable 5.1) at Anselm's ask, from the r/Portland
 thread of that morning on the Oregonian's story "A Big One nightmare scenario drives Portland to
-cut fuel storage along the Willamette" (the story itself could not be read from this machine; the
-thread's comments were, through Reddit's RSS feed).
+cut fuel storage along the Willamette" (Gosia Wozniacka; the site refused this machine, Anselm pasted
+the text that evening; the thread's comments came through Reddit's RSS feed). The story caught a
+misread in `hub.toml`: the report's 298.7 million gallons is the capacity of the tanks holding
+flammable materials, and its contents figure is 233.5 million, the 67 percent fill of 332.7 million of
+active capacity, which is what the story quotes. Corrected that evening and every run remade.
 
 ## The window
 

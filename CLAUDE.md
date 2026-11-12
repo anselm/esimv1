@@ -302,7 +302,7 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   and displaced within a few percent, deaths 0.69 by day and 1.7 by night, pattern r 0.9); `lifelines.recovery`
   (`lifelines.rs`) is the year after: twelve Willamette crossings closed for days drawn log-uniformly in the county's
   "weeks to years", thirteen hospitals on 72 h of generator fuel, power and water as ramps to days drawn from the
-  Oregon Resilience Plan's valley ranges, and a `fuel` ledger in gallons: the hub's 298.7 million gallons, the 2022
+  Oregon Resilience Plan's valley ranges, and a `fuel` ledger in gallons: the hub's 233.5 million gallons (the 2022 study's two-thirds fill; 298.7 million was a misread of its flammable capacity until the evening of 2026-11-12), the 2022
   county study's release range drawn by the seed (43 percent to the river), the response's draw, resupply from day
   14, closing to zero. Project `anselm/portland-cascadia` (manifest `q1-portland-cascadia`; variants wet-day,
   wet-night, dry-day, cut-20, retrofit, burnside-ready, seed-2, seed-3; six seconds a run). The story view on the

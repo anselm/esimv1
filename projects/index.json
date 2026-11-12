@@ -1869,10 +1869,10 @@
     "runs": [
       {
         "all_ledgers_closed": true,
-        "digest": "794cf42034d54da2",
+        "digest": "a3bf4dccaafc89d3",
         "end": 1832529600,
         "events": 811,
-        "id": "q1-portland-cascadia-076d416f-794cf420",
+        "id": "q1-portland-cascadia-076d416f-a3bf4dcc",
         "name": "q1-portland-cascadia",
         "seed": 2,
         "set": {
@@ -1884,10 +1884,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "840f305c6a1624d4",
+        "digest": "312f20df7a043008",
         "end": 1832529600,
         "events": 809,
-        "id": "q1-portland-cascadia-10d9f13b-840f305c",
+        "id": "q1-portland-cascadia-10d9f13b-312f20df",
         "name": "q1-portland-cascadia",
         "seed": 3,
         "set": {
@@ -1899,10 +1899,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "983734aff0a50d71",
+        "digest": "4970ea6e8333ffcd",
         "end": 1832529600,
         "events": 809,
-        "id": "q1-portland-cascadia-19e37fca-983734af",
+        "id": "q1-portland-cascadia-19e37fca-4970ea6e",
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
@@ -1914,10 +1914,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "098ced95e007fba3",
+        "digest": "0cf1343bad7b5066",
         "end": 1832529600,
         "events": 809,
-        "id": "q1-portland-cascadia-2e95a1ff-098ced95",
+        "id": "q1-portland-cascadia-2e95a1ff-0cf1343b",
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
@@ -1931,10 +1931,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "df8493ce8e3170a5",
+        "digest": "f870b272a167d442",
         "end": 1832529600,
         "events": 810,
-        "id": "q1-portland-cascadia-8bd025c6-df8493ce",
+        "id": "q1-portland-cascadia-8bd025c6-f870b272",
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
@@ -1949,10 +1949,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "7f45e3d465f14689",
+        "digest": "39377f74af5e7d22",
         "end": 1832529600,
         "events": 807,
-        "id": "q1-portland-cascadia-b46d2a31-7f45e3d4",
+        "id": "q1-portland-cascadia-b46d2a31-39377f74",
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
@@ -1964,10 +1964,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "d6ee94af18d1ac23",
+        "digest": "205e5fe233ad4672",
         "end": 1832529600,
         "events": 809,
-        "id": "q1-portland-cascadia-cea13272-d6ee94af",
+        "id": "q1-portland-cascadia-cea13272-205e5fe2",
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
@@ -1981,10 +1981,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "aff0c14873f8a2db",
+        "digest": "d000e67487dfc8d4",
         "end": 1832529600,
         "events": 809,
-        "id": "q1-portland-cascadia-effdc049-aff0c148",
+        "id": "q1-portland-cascadia-effdc049-d000e674",
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
