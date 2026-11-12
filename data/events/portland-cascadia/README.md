@@ -120,4 +120,14 @@ casualty rates are recalled and scaled to DOGAMI's totals, which the module says
   Hazus and unchecked; the file says so row by row.
 - `aftermath.toml`: the claims the aftermath module applies, with sources (Kishore et al. 2018; HHS
   emPOWER's county layer, read 2026-11-12; the 2020 county populations recalled).
+- `bridges.toml` (rev of 2026-11-12, night): `nbi_*` rows from the FHWA National Bridge Inventory,
+  Oregon 2024 delimited file (structure number, year built and reconstructed, kind, type, length,
+  condition ratings, traffic); `seismic_class` and `seismic_source` per crossing: vulnerable for
+  the four county bridges on the county's *Willamette River Bridges CIP Seismic Vulnerabilities and
+  Retrofit Report* (9 November 2014, https://multco.us/file/multco_willamette_river_bridges_cip_–_seismic_vulnerabilities_&_retrofit_report/download,
+  read that day) and for the older state and railway bridges by age, modern for Sellwood and
+  Tilikum. The curves per class are in `fragility.toml` and are judgements anchored on the
+  report's levels, not published curves.
+- `people_resident.tif`, `people_day.tif`, `people_night.tif` are also what `people.agents` draws
+  its super-persons from.
 

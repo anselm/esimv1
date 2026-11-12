@@ -91,3 +91,33 @@ individual-based forest models (gap models, cohorts) are the precedents; the Sky
 a fixed cap of citizens with home, work and leisure and path-finding on the road graph, which is a
 small version of the same thing. The goal stated tonight: make the point that sims are possible,
 for funding from the extended peer group; the compute later is significant.
+
+## One more rev (later still)
+
+Anselm: "Let's push hard on these features one more rev. Have the docs reflect status. Real bridges
+would be nice. Hmm - unsure if we should try use real people - hard to estimate computational cost -
+we don't have a super person generator yet. After this I will return to studying revenue funding and
+sustainability."
+
+- **Real bridges.** The FHWA National Bridge Inventory's Oregon file (delimited, 8,305 structures)
+  gives every Willamette crossing but the railway bridge its year, type, length, condition and
+  traffic; those are `nbi_*` rows in `bridges.toml`. The county's 2014 *Seismic Vulnerabilities and
+  Retrofit Report* on its four downtown bridges gives the levels (0.20 g for the 500-year Cascadia,
+  0.28 g for the 1,000-year) and says the un-retrofitted bridges' columns, footings and bearing
+  seats are vulnerable at both, with liquefaction under the approaches unmitigated. A `seismic_class`
+  per crossing picks a curve in `fragility.toml`: vulnerable (a judgement anchored on the report's
+  two levels; the state and railway bridges share it by age) or modern (Sellwood, Tilikum). Result:
+  eleven of twelve close on the first day, three back by day thirty, five by day 120. The county's
+  "weeks to years" is now computed from a class rather than drawn from the phrase. What is still
+  not read: ODOT's own assessments of the Fremont, Marquam, Ross Island and St. Johns bridges.
+- **The super-person generator.** `people.agents` draws `scale`-sized agents from the occupant
+  rasters by the seed (home by residents, work by daytime occupants, a device-dependent share from
+  emPOWER), reads the buildings' per-cell death and displaced rates (now world fields written on the
+  toll) and the components' power service at the home cell, and reports the cost. At ten people an
+  agent: 93,520 agents, totals within two percent of the cell model, twenty million agent-days a
+  second on one core, a run of 2.6 seconds. Every person separately is `scale = 1`, about ten times
+  the memory and the same order of time; the cost that is hard to estimate is the behaviour, not
+  the bookkeeping, and that is the next rung: a decision rule per agent and trips on the route graph.
+- **Docs.** The root README (forty-six kinds, the earthquake in the module list, the status), the
+  modules and layers pages, the limits page's earthquake section rewritten as the status of record,
+  the project README, the record folder's README, CLAUDE.md.

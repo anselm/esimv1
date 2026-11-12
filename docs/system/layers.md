@@ -11,11 +11,12 @@ not a structure in the code; the kernel sees only modules, topics and fields.
 | 0 solar | irradiance on terrain | `sun.irradiance` | elevation |
 | 1 composition | what is in the air | `carbon.emissions`, `carbon.pools`, `carbon.gases` | emissions, ice cores, Mauna Loa, NOAA gases |
 | 2 energy | where the heat goes | `energy.twolayer`, `heat.slab` | HadCRUT5, GISTEMP |
-| 3 abiotic systems | water, weather, ocean, ice, sea | `water.basin`, `weather.era5`, `sea.thermal` | gauges, stations, ERA5, GEFS |
+| 3 abiotic systems | water, weather, ocean, ice, sea, the ground | `water.basin`, `weather.era5`, `sea.thermal`, `coast.oneline`, `quake.ground` | gauges, stations, ERA5, GEFS, ERA5 waves, DOGAMI's scenario layers |
 | 4 biogeochemistry | the cycles and their feedbacks | `nitrogen.basin` | nitrate at the gauge |
 | 5 producers | plants | `veg.crop` | MODIS NDVI |
 | 6 consumers | animals and their food webs | `fauna.herbivore`, `fauna.predator`, `hazard.fire` | none yet |
-| 7 people | population, land use, rules, exposure | `agents.farms`, `rules.calendar`, `people.countries`, `climate.countries`, `people.heat`, `people.wetbulb` | UN population, WorldPop 1 km, CRU country temperatures, MERRA-2 daily heat and humidity (NASA POWER), NOAA GSOD stations |
+| 6b the built | buildings, lifelines, the things that break | `quake.buildings`, `hazard.components`, `lifelines.recovery`, `fire.cells`, `fire.rothermel` | DOGAMI's inventory and loss run, the county's tank table, the bridge inventory, the fire perimeters |
+| 7 people | population, land use, rules, exposure, the aftermath | `agents.farms`, `rules.calendar`, `people.countries`, `climate.countries`, `people.heat`, `people.wetbulb`, `people.aftermath`, `people.agents` | UN population, WorldPop 1 km, CRU country temperatures, MERRA-2 daily heat and humidity (NASA POWER), NOAA GSOD stations |
 | across | thresholds and their sources, and what crossing them moves | `tipping.elements`, `carbon.tipped` | the assessment table, checked row by row against the paper |
 
 ## How the layers couple

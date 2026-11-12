@@ -230680,7 +230680,18 @@
         "note": "the instant"
       }
     ],
-    "fields_owned": [],
+    "fields_owned": [
+      {
+        "name": "quake.cell_death_rate",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "quake.cell_displaced_rate",
+        "unit": "1",
+        "required": false
+      }
+    ],
     "fields_read": [
       {
         "name": "quake.pga_g",
@@ -231861,7 +231872,7 @@
   {
     "kind": "hazard.components",
     "name": "hazard.components",
-    "summary": "Every physical thing as a component with a place, a fragility, a state and a repair path: the fuel hub's tanks from the county study's own per-tank table (621 rows, placed on the study's coordinates where it gives them, else on OpenStreetMap tank footprints), the Willamette crossings, DOGAMI's transmission structures with the state's chance of failure at each (6,146 in the window), and DOGAMI's emergency route segments with the state's deformation class at each (137). On the rupture each reads the ground at its cell and draws its state; tanks release by the study's age rule (pre-1993: its per-tank 50 to 100 percent, later: up to 10 percent), to the river where the study says so; crews repair poles at a stated rate in order of the people served; segments reopen by class; crossings by damage state. Computed and published daily: the power service per coarse cell and the people-weighted share, each hospital's reachability from the hub along open segments and open crossings, the crossings' states. The fragilities are recalled from Hazus and declared so in fragility.toml; the study's release total (94.6 to 193.7 million gallons) and the county's statement on its bridges are the checks, reported.",
+    "summary": "Every physical thing as a component with a place, a fragility, a state and a repair path: the fuel hub's tanks from the county study's own per-tank table (621 rows, placed on the study's coordinates where it gives them, else on OpenStreetMap tank footprints), the Willamette crossings (each with a seismic class from the county's 2014 vulnerability report and the federal bridge inventory), DOGAMI's transmission structures with the state's chance of failure at each (6,146 in the window), and DOGAMI's emergency route segments with the state's deformation class at each (137). On the rupture each reads the ground at its cell and draws its state; tanks release by the study's age rule (pre-1993: its per-tank 50 to 100 percent, later: up to 10 percent), to the river where the study says so; crews repair poles at a stated rate in order of the people served; segments reopen by class; crossings by damage state. Computed and published daily: the power service per coarse cell and the people-weighted share, each hospital's reachability from the hub along open segments and open crossings, the crossings' states. The fragilities are recalled from Hazus and declared so in fragility.toml; the study's release total (94.6 to 193.7 million gallons) and the county's statement on its bridges are the checks, reported.",
     "priority": 1,
     "dt": "1 day after the rupture",
     "params": [
@@ -231928,7 +231939,13 @@
         "note": "the instant"
       }
     ],
-    "fields_owned": [],
+    "fields_owned": [
+      {
+        "name": "power.up",
+        "unit": "1",
+        "required": false
+      }
+    ],
     "fields_read": [
       {
         "name": "quake.pga_g",
@@ -232140,6 +232157,44 @@
             230
           ]
         },
+        "bridge_class": {
+          "modern": {
+            "beta": 0.6,
+            "closed_state": 2,
+            "gf_beta": 0.7,
+            "gf_median_cm": 40.0,
+            "medians_g": [
+              0.4,
+              0.6,
+              0.85,
+              1.2
+            ],
+            "restore_days": [
+              1,
+              7,
+              60,
+              200
+            ]
+          },
+          "vulnerable": {
+            "beta": 0.6,
+            "closed_state": 2,
+            "gf_beta": 0.7,
+            "gf_median_cm": 15.0,
+            "medians_g": [
+              0.08,
+              0.12,
+              0.18,
+              0.26
+            ],
+            "restore_days": [
+              3,
+              21,
+              120,
+              365
+            ]
+          }
+        },
         "pole": {
           "crews_per_day": 12,
           "served_poles": 2
@@ -232180,5 +232235,213 @@
         }
       }
     }
+  },
+  {
+    "kind": "people.agents",
+    "name": "people.agents",
+    "summary": "The people as super-persons, each standing for a stated number of people, generated at the start from DOGAMI's occupant rasters: a home cell drawn by the residents, a work cell by the daytime occupants, a share on electricity-dependent devices from HHS emPOWER's counts. On the rupture each agent reads the building damage where it was (home by night, work by day) and is dead or displaced at the buildings' own expected rates, so the totals agree with the cell model; each day it reads the power service at its home cell and the water ramp. What it adds is a population that can be followed agent by agent, the base for decisions (to leave, to shelter, to travel) in a later rung; what it costs is measured and reported.",
+    "priority": 6,
+    "dt": "1 day after the rupture",
+    "params": [
+      {
+        "name": "folder",
+        "default": "portland-cascadia",
+        "note": "the event folder with the occupant rasters"
+      },
+      {
+        "name": "scale",
+        "default": 10.0,
+        "unit": "people",
+        "note": "people per agent: 10 gives about 93,000 agents in the window"
+      },
+      {
+        "name": "time_of_day",
+        "default": "day",
+        "note": "where each agent is at the instant: work by day, home by night"
+      },
+      {
+        "name": "coarse_arcsec",
+        "default": 10.0,
+        "unit": "arcsec",
+        "note": "the power service grid it reads"
+      }
+    ],
+    "publishes": [],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [
+      {
+        "name": "quake.toll",
+        "required": false,
+        "note": "the buildings' reckoning, once the shaking ends"
+      },
+      {
+        "name": "lifeline.state",
+        "required": false,
+        "note": "the day's water share"
+      }
+    ],
+    "fields_owned": [],
+    "fields_read": [
+      {
+        "name": "quake.cell_death_rate",
+        "unit": "1",
+        "required": true,
+        "on": "quake.toll",
+        "note": "expected deaths per occupant at each cell, from the buildings"
+      },
+      {
+        "name": "quake.cell_displaced_rate",
+        "unit": "1",
+        "required": true,
+        "on": "quake.toll",
+        "note": "expected displaced per resident at each cell"
+      },
+      {
+        "name": "power.up",
+        "unit": "1",
+        "required": false,
+        "on": "lifeline.state",
+        "note": "the components' power service per coarse cell"
+      }
+    ],
+    "ledgers": [],
+    "frames": [
+      {
+        "name": "agents_without_power",
+        "unit": "people",
+        "required": false
+      }
+    ],
+    "reports": [
+      {
+        "name": "agents.count",
+        "unit": "agents",
+        "required": false
+      },
+      {
+        "name": "agents.people",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "agents.dead",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "agents.displaced",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "agents.without_power",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "agents.without_water",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "agents.devices_without_power",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "agents.per_second",
+        "unit": "agents/s",
+        "required": false
+      }
+    ],
+    "views": [
+      {
+        "kind": "counter",
+        "title": "agents",
+        "source": "agents.count",
+        "obs": "",
+        "note": "super-persons; the people they stand for is the next counter"
+      },
+      {
+        "kind": "counter",
+        "title": "people followed",
+        "source": "agents.people",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "counter",
+        "title": "dead, by agent",
+        "source": "agents.dead",
+        "obs": "",
+        "note": "should agree with the cell model's deaths"
+      },
+      {
+        "kind": "counter",
+        "title": "displaced, by agent",
+        "source": "agents.displaced",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "counter",
+        "title": "without power, by agent",
+        "source": "agents.without_power",
+        "obs": "",
+        "note": "from the components' power service at each home cell"
+      },
+      {
+        "kind": "counter",
+        "title": "on devices without power",
+        "source": "agents.devices_without_power",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "counter",
+        "title": "agent-days a second",
+        "source": "agents.per_second",
+        "obs": "",
+        "note": "the measured cost of the daily tick"
+      },
+      {
+        "kind": "map",
+        "title": "people without power, by agent",
+        "source": "agents_without_power",
+        "obs": "",
+        "note": "per coarse cell, each day"
+      },
+      {
+        "kind": "chart",
+        "title": "without power, by agent",
+        "source": "agents.without_power",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "chart",
+        "title": "displaced, by agent",
+        "source": "agents.displaced",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "text",
+        "title": "what the agents do not yet do",
+        "source": "Nothing of their own: no one leaves, shelters, travels or queues at a hospital; each agent is a bookkeeping unit that reads the world at two cells. The point of having them is that the next rung can give them a decision rule and a trip on the route graph, and the cost of a hundred thousand such agents on a daily tick is measured here.",
+        "obs": "",
+        "note": ""
+      }
+    ],
+    "assets": [
+      {
+        "key": "events/portland-cascadia",
+        "note": "people_resident.tif, people_day.tif, people_night.tif"
+      }
+    ],
+    "notes": [
+      "A super-individual stands for a fixed number of people (the method is from fish and plankton modelling in the 1990s, recalled). Agents are drawn by the seed from the occupant rasters, so the same seed gives the same people."
+    ]
   }
 ]

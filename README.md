@@ -57,7 +57,7 @@ what the run does not yet measure.
   gauges, stations, reanalyses, satellite vegetation, emissions, ice cores, temperature
   records, population, country outlines and the station network. Nothing synthetic,
   including in tests.
-- **Modules** (`crates/modules`): twenty-nine kinds today. For a basin: solar irradiance
+- **Modules** (`crates/modules`): forty-six kinds today. For a basin: solar irradiance
   on terrain, a surface heat slab, reanalysis weather, a water balance routed to the
   gauge, a crop, herbivore and predator cohorts, fire, farm agents, calendar rules, soil
   nitrogen to the river. For a wildfire: Rothermel's spread on 30 m terrain with fuel from
@@ -70,7 +70,13 @@ what the run does not yet measure.
   with the warming and counts heatwaves by a published definition, the tipping elements'
   thresholds (every row checked against the assessment's table), the first cascade
   (permafrost and Amazon carbon released into the carbon ledger once an element is past its
-  threshold), and a bottom-line module that tells the run as sentences with sources.
+  threshold), and a bottom-line module that tells the run as sentences with sources. For an
+  earthquake under a city: a published scenario's ground motion and ground failure as fields,
+  buildings as fragilities cell by cell fitted to the state's own loss run, every tank, crossing,
+  transmission structure and route segment as a component with its own fragility, state and
+  repair path on the ground at its cell, the networks computed from what stands, the people as
+  super-persons drawn from the occupant rasters, and the deaths after the shaking as claims with
+  sources.
 - **Auditor** (`crates/audit`): reads a finished run and never the live one: every stock
   spent or built, diversity, shocks and recovery against recurrence, crossings, tears,
   and a verdict of holds, stretching or tearing. It lists what it could not measure.
@@ -154,7 +160,13 @@ planet hindcast is within a few percent of Mauna Loa and about 0.15 °C warm in 
 against HadCRUT5; the cell layers count people living where stated limits are
 passed, with the warming still applied per country (the reanalysis's own trend was tried
 as a pattern and fails over South Asia); the first cascade moves the assessment's
-permafrost and Amazon carbon and comes to a tenth of a degree by 2100. The known faults
+permafrost and Amazon carbon and comes to a tenth of a degree by 2100. The Portland earthquake
+(2026-11-12) is the first scenario whose lifelines are computed from components rather than
+arranged from published ranges, and its first runs miss their checks in ways the page lists: the
+tanks under-release against the county study, the power returns too fast because a pole is the
+whole grid, the crossings now close as the county expects. The principle since that night is that
+a module computes and can be wrong in a way a record catches; arranged numbers are inputs or
+checks. The known faults
 are on the Limits page and in the devlog, which is the project's memory: start with
 `devlog/20261031-design-brief.md`, then the milestone entries, then the latest day.
 

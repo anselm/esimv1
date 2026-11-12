@@ -7,6 +7,9 @@
 # usable after the earthquake", and a county spokesperson quoted by the Portland Mercury that
 # none of Portland's bridges, Tilikum Crossing included, are expected to survive a Cascadia
 # quake (that quote reached us through a web search summary, not read on the page).
+# nbi_* rows are from the FHWA National Bridge Inventory, Oregon 2024 delimited file
+# (www.fhwa.dot.gov/bridge/nbi/2024/delimited/OR24.txt, read 2026-11-12); seismic_class picks
+# the curve in fragility.toml and seismic_source says why.
 
 [[bridge]]
 name = "Sellwood Bridge"
@@ -15,6 +18,16 @@ lon = -122.6656
 opened = 2016
 carries = "road"
 owner = "Multnomah County (recalled)"
+nbi_structure = "21493 000 00001"
+nbi_year_built = 2015
+nbi_year_reconstructed = 0
+nbi_kind = "steel"
+nbi_type = "arch, deck"
+nbi_length_m = 602.6
+nbi_condition = "deck 7, superstructure 7, substructure 7 (0 to 9)"
+nbi_adt = 34995
+seismic_class = "modern"
+seismic_source = "built 2015 to 2016 under current seismic design (the inventory's year; the design standard recalled, not read); the county's spokesperson is reported to have said even these are not expected to be usable at once"
 
 [[bridge]]
 name = "Ross Island Bridge"
@@ -23,6 +36,16 @@ lon = -122.6644
 opened = 1926
 carries = "road (US 26)"
 owner = "ODOT (recalled)"
+nbi_structure = "05054 026 00077"
+nbi_year_built = 1926
+nbi_year_reconstructed = 2000
+nbi_kind = "steel continuous"
+nbi_type = "truss, deck"
+nbi_length_m = 1113.4
+nbi_condition = "deck 6, superstructure 5, substructure 6 (0 to 9)"
+nbi_adt = 52368
+seismic_class = "vulnerable"
+seismic_source = "by age (the inventory's year built), ODOT's own seismic assessment not read"
 
 [[bridge]]
 name = "Tilikum Crossing"
@@ -31,6 +54,16 @@ lon = -122.6669
 opened = 2015
 carries = "transit, bicycles, walking"
 owner = "TriMet (recalled)"
+nbi_structure = "22258 000 00000"
+nbi_year_built = 2015
+nbi_year_reconstructed = 0
+nbi_kind = "prestressed concrete continuous"
+nbi_type = "stayed girder"
+nbi_length_m = 524.3
+nbi_condition = "deck 6, superstructure 6, substructure 6 (0 to 9)"
+nbi_adt = 630
+seismic_class = "modern"
+seismic_source = "built 2015 to 2016 under current seismic design (the inventory's year; the design standard recalled, not read); the county's spokesperson is reported to have said even these are not expected to be usable at once"
 
 [[bridge]]
 name = "Marquam Bridge"
@@ -39,6 +72,16 @@ lon = -122.6692
 opened = 1966
 carries = "road (I-5)"
 owner = "ODOT (recalled)"
+nbi_structure = "08328 001 30038"
+nbi_year_built = 1966
+nbi_year_reconstructed = 0
+nbi_kind = "steel"
+nbi_type = "truss, deck"
+nbi_length_m = 318.2
+nbi_condition = "deck 6, superstructure 6, substructure 6 (0 to 9)"
+nbi_adt = 123222
+seismic_class = "vulnerable"
+seismic_source = "by age (the inventory's year built), ODOT's own seismic assessment not read"
 
 [[bridge]]
 name = "Hawthorne Bridge"
@@ -47,6 +90,16 @@ lon = -122.6706
 opened = 1910
 carries = "road"
 owner = "Multnomah County (recalled)"
+nbi_structure = "02757 000000000"
+nbi_year_built = 1910
+nbi_year_reconstructed = 1997
+nbi_kind = "steel"
+nbi_type = "movable, lift"
+nbi_length_m = 421.5
+nbi_condition = "deck 7, superstructure 5, substructure 5 (0 to 9)"
+nbi_adt = 32243
+seismic_class = "vulnerable"
+seismic_source = "Multnomah County, Willamette River Bridges Capital Improvement Plan, Seismic Vulnerabilities and Retrofit Report (9 November 2014, read 2026-11-12): un-retrofitted, the bridge's columns, footings and bearing seats are vulnerable at the 500-year CSZ (0.20 g) and 1000-year (0.28 g) levels; the retrofit to no-collapse is costed, not built"
 
 [[bridge]]
 name = "Morrison Bridge"
@@ -55,6 +108,16 @@ lon = -122.6697
 opened = 1958
 carries = "road"
 owner = "Multnomah County (recalled)"
+nbi_structure = "02758 000000000"
+nbi_year_built = 1958
+nbi_year_reconstructed = 0
+nbi_kind = "steel"
+nbi_type = "movable, bascule"
+nbi_length_m = 231.6
+nbi_condition = "deck 6, superstructure 5, substructure 5 (0 to 9)"
+nbi_adt = 55335
+seismic_class = "vulnerable"
+seismic_source = "Multnomah County, Willamette River Bridges Capital Improvement Plan, Seismic Vulnerabilities and Retrofit Report (9 November 2014, read 2026-11-12): un-retrofitted, the bridge's columns, footings and bearing seats are vulnerable at the 500-year CSZ (0.20 g) and 1000-year (0.28 g) levels; the retrofit to no-collapse is costed, not built"
 
 [[bridge]]
 name = "Burnside Bridge"
@@ -64,6 +127,16 @@ opened = 1926
 carries = "road; the only non-state Priority 1 emergency route across the river (the county)"
 owner = "Multnomah County"
 note = "To be replaced by an earthquake-ready bridge: the design adopted 12 September 2025, budget 1.6 to 1.8 billion dollars, about 740 million in hand, construction date not set as of November 2025 (the county's FAQ page, read 2026-11-12)"
+nbi_structure = "00511 000000000"
+nbi_year_built = 1926
+nbi_year_reconstructed = 0
+nbi_kind = "steel"
+nbi_type = "movable, bascule"
+nbi_length_m = 260.9
+nbi_condition = "deck 6, superstructure 5, substructure 5 (0 to 9)"
+nbi_adt = 35000
+seismic_class = "vulnerable"
+seismic_source = "Multnomah County, Willamette River Bridges Capital Improvement Plan, Seismic Vulnerabilities and Retrofit Report (9 November 2014, read 2026-11-12): un-retrofitted, the bridge's columns, footings and bearing seats are vulnerable at the 500-year CSZ (0.20 g) and 1000-year (0.28 g) levels; the retrofit to no-collapse is costed, not built"
 
 [[bridge]]
 name = "Steel Bridge"
@@ -72,6 +145,16 @@ lon = -122.6692
 opened = 1912
 carries = "rail, light rail, road"
 owner = "Union Pacific (recalled)"
+nbi_structure = "06683 01WX00036"
+nbi_year_built = 1910
+nbi_year_reconstructed = 0
+nbi_kind = "steel"
+nbi_type = "truss, through"
+nbi_length_m = 239.3
+nbi_condition = "deck 5, superstructure 4, substructure 5 (0 to 9)"
+nbi_adt = 10362
+seismic_class = "vulnerable"
+seismic_source = "by age (the inventory's year built), ODOT's own seismic assessment not read"
 
 [[bridge]]
 name = "Broadway Bridge"
@@ -80,6 +163,16 @@ lon = -122.6742
 opened = 1913
 carries = "road, streetcar"
 owner = "Multnomah County (recalled)"
+nbi_structure = "06757 000000000"
+nbi_year_built = 1912
+nbi_year_reconstructed = 1927
+nbi_kind = "steel"
+nbi_type = "movable, bascule"
+nbi_length_m = 531
+nbi_condition = "deck 6, superstructure 6, substructure 6 (0 to 9)"
+nbi_adt = 30871
+seismic_class = "vulnerable"
+seismic_source = "Multnomah County, Willamette River Bridges Capital Improvement Plan, Seismic Vulnerabilities and Retrofit Report (9 November 2014, read 2026-11-12): un-retrofitted, the bridge's columns, footings and bearing seats are vulnerable at the 500-year CSZ (0.20 g) and 1000-year (0.28 g) levels; the retrofit to no-collapse is costed, not built"
 
 [[bridge]]
 name = "Fremont Bridge"
@@ -88,6 +181,16 @@ lon = -122.6831
 opened = 1973
 carries = "road (I-405, US 30)"
 owner = "ODOT (recalled)"
+nbi_structure = "02529 061 00332"
+nbi_year_built = 1973
+nbi_year_reconstructed = 0
+nbi_kind = "steel continuous"
+nbi_type = "arch, through"
+nbi_length_m = 656.5
+nbi_condition = "deck 6, superstructure 6, substructure 6 (0 to 9)"
+nbi_adt = 101643
+seismic_class = "vulnerable"
+seismic_source = "by age (the inventory's year built), ODOT's own seismic assessment not read"
 
 [[bridge]]
 name = "BNSF Railway Bridge 5.1"
@@ -97,6 +200,8 @@ opened = 1908
 carries = "rail"
 owner = "BNSF Railway"
 note = "Rebuilt in 1989 per the Wikipedia list"
+seismic_class = "vulnerable"
+seismic_source = "a 1908 railway swing bridge, not in the highway inventory; by age"
 
 [[bridge]]
 name = "St. Johns Bridge"
@@ -105,3 +210,14 @@ lon = -122.7644
 opened = 1931
 carries = "road (US 30 Bypass)"
 owner = "ODOT (recalled)"
+nbi_structure = "06497 123 00091"
+nbi_year_built = 1931
+nbi_year_reconstructed = 0
+nbi_kind = "steel"
+nbi_type = "suspension"
+nbi_length_m = 1099.3
+nbi_condition = "deck 6, superstructure 5, substructure 5 (0 to 9)"
+nbi_adt = 16231
+seismic_class = "vulnerable"
+seismic_source = "by age (the inventory's year built), ODOT's own seismic assessment not read"
+

@@ -344,7 +344,18 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   `force = ["kind:id:state"]` sets preconditions. `lifelines.recovery` has `inputs = "computed" | "ranges"`
   (the manifest says computed; the `ranges` variant is the arranged version). The first computed run fails its
   checks in instructive ways (devlog `20261112-the-engine-not-the-article.md`): the principle is that a module
-  computes and can be wrong in a way a record catches.
+  computes and can be wrong in a way a record catches. The rev after (Anselm: push hard one more rev, docs to
+  reflect status, real bridges): each crossing carries the federal bridge inventory's facts (`nbi_*` rows in
+  `bridges.toml`, from FHWA's 2024 Oregon delimited file) and a `seismic_class` (vulnerable: the county's 2014
+  Willamette River Bridges CIP seismic vulnerabilities report, un-retrofitted, not meeting no-collapse at the
+  500-year CSZ 0.20 g and 1000-year 0.28 g levels; modern: Sellwood and Tilikum) picking a curve in
+  `fragility.toml` (`[bridge_class.*]`, judgements anchored on those levels, declared); eleven of twelve now close
+  on the first day as the county expects. `people.agents` (`crates/modules/src/agents.rs`): super-persons of
+  `scale` people drawn by the seed from the occupant rasters (home by residents, work by daytime occupants, a
+  device-dependent share from emPOWER), dead or displaced at the buildings' per-cell rates (`quake.cell_death_rate`,
+  `quake.cell_displaced_rate`, world fields the buildings now write on the toll), power from the components'
+  `power.up` world field at the home cell, water by the ramp; decides nothing yet; reports agents per second.
+  The status of the whole is in `docs/system/limits.md`, The earthquake.
 - Wild cards (2026-11-05, Anselm: "i just want a placeholder ... like a video game with wild card factors
   optionally"): `events.shock` (`crates/modules/src/shock.rs`) draws `data/events/future-speculative.toml` by the
   run's seed each year from `from` (default 2025), or plays one named card (`mode = "named"`, `event`, `at`);

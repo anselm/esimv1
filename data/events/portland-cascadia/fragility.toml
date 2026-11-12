@@ -12,13 +12,29 @@ fail_state = 3                         # a tank at extensive damage or worse rel
 pre_1993_release = "the study's per-tank range (50 to 100 percent of contents)"
 post_1993_release_max = 0.10           # the study: designed for shaking; up to 10 percent
 
-[bridge]
+[bridge]                               # the default when a crossing names no class
 medians_g = [0.35, 0.45, 0.55, 0.80]   # conventional highway bridges without seismic design, recalled, unchecked
 beta = 0.6
 gf_median_cm = 20.0
 gf_beta = 0.7
 restore_days = [1, 7, 75, 230]         # days closed by damage state, slight to complete; recalled Hazus means, unchecked
 closed_state = 2                       # moderate damage or worse closes a crossing (a judgement)
+
+[bridge_class.vulnerable]              # the county's 2014 report: un-retrofitted, not expected to meet no-collapse at the 500-year CSZ (0.20 g) and 1000-year (0.28 g) levels
+medians_g = [0.08, 0.12, 0.18, 0.26]   # a judgement anchored on those two levels: extensive damage at about the CSZ level, complete near the 1000-year level; not a published curve
+beta = 0.6
+gf_median_cm = 15.0                    # the report names liquefaction and lateral spreading under the approaches as unmitigated hazards
+gf_beta = 0.7
+restore_days = [3, 21, 120, 365]       # a judgement: a movable bridge's repair is slower than a girder bridge's; the county says weeks to years
+closed_state = 2
+
+[bridge_class.modern]                  # Sellwood (2016) and Tilikum (2015), designed under current seismic code
+medians_g = [0.40, 0.60, 0.85, 1.20]   # recalled Hazus seismic-design class, unchecked
+beta = 0.6
+gf_median_cm = 40.0
+gf_beta = 0.7
+restore_days = [1, 7, 60, 200]
+closed_state = 2
 
 [pole]
 crews_per_day = 12                     # transmission structures repaired a day in the window (a guess; the Resilience Plan's one to three months is the check)

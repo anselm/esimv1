@@ -35,7 +35,7 @@ pub struct Components {
     lat_s: f64, lat_n: f64, lon_w: f64, lon_e: f64, res_arcsec: f64,
     folder: String, soils: String, coarse_arcsec: f64,
     force: Vec<String>, storage_cut: f64, retrofit: bool,
-    tank: Curve, bridge: Curve, crews_per_day: f64, served_poles: usize, route_days: Vec<(f64, f64)>, post_1993_max: f64,
+    tank: Curve, bridge: Curve, bridge_classes: HashMap<String, Curve>, crews_per_day: f64, served_poles: usize, route_days: Vec<(f64, f64)>, post_1993_max: f64,
     comps: Vec<Comp>,
     hospitals: Vec<(String, f64, f64)>, hub: (f64, f64), hub_seg: usize, hosp_seg: HashMap<String, usize>,
     coarse: Option<LatLonGrid>, coarse_people: Vec<f32>, coarse_poles: Vec<Vec<usize>>,
@@ -55,7 +55,7 @@ impl Components {
             soils: param_str(p, "soils", "wet").to_string(),
             coarse_arcsec: param_f64(p, "coarse_arcsec", 10.0),
             force, storage_cut: param_f64(p, "storage_cut", 0.0), retrofit: p.get("retrofit").and_then(|v| v.as_bool()).unwrap_or(false),
-            tank: Curve::default(), bridge: Curve::default(), crews_per_day: 12.0, served_poles: 2, route_days: Vec::new(), post_1993_max: 0.1,
+            tank: Curve::default(), bridge: Curve::default(), bridge_classes: HashMap::new(), crews_per_day: 12.0, served_poles: 2, route_days: Vec::new(), post_1993_max: 0.1,
             comps: Vec::new(), hospitals: Vec::new(), hub: (0.0, 0.0), hub_seg: 0, hosp_seg: HashMap::new(),
             coarse: None, coarse_people: Vec::new(), coarse_poles: Vec::new(),
             fired: false, scheduled: false, day: 0, release_gal: 0.0, release_river_gal: 0.0, poles_failed: 0, poles_repaired: 0,
@@ -81,6 +81,7 @@ impl Components {
         let curve = |t: &toml::Value| Curve { medians: tarr(t, "medians_g"), beta: tf(t, "beta"), gf_median: tf(t, "gf_median_cm"), gf_beta: tf(t, "gf_beta"), restore: tarr(t, "restore_days").iter().map(|&d| d as i64).collect(), fail_state: tf(t, "fail_state").max(tf(t, "closed_state")) as u8 };
         self.tank = curve(fr.get("tank").ok_or("fragility.toml: [tank]")?);
         self.bridge = curve(fr.get("bridge").ok_or("fragility.toml: [bridge]")?);
+        if let Some(t) = fr.get("bridge_class").and_then(|v| v.as_table()) { for (k, v) in t { self.bridge_classes.insert(k.clone(), curve(v)); } }
         self.post_1993_max = tf(fr.get("tank").unwrap(), "post_1993_release_max");
         let pole = fr.get("pole").ok_or("fragility.toml: [pole]")?;
         self.crews_per_day = tf(pole, "crews_per_day"); self.served_poles = tf(pole, "served_poles").max(1.0) as usize;
@@ -101,7 +102,7 @@ impl Components {
         let br = Self::table(&self.folder, "bridges.toml")?;
         for b in br.get("bridge").and_then(|v| v.as_array()).cloned().unwrap_or_default() {
             let (lat, lon) = (tf(&b, "lat"), tf(&b, "lon"));
-            comps.push(Comp { kind: "bridge".into(), id: ts(&b, "name"), name: ts(&b, "name"), lat, lon, cell: cell_of(&g, lat, lon), year: tf(&b, "opened") as i64, prob: f64::NAN, repair_day: -1, ..Default::default() });
+            comps.push(Comp { kind: "bridge".into(), id: ts(&b, "name"), name: ts(&b, "name"), lat, lon, cell: cell_of(&g, lat, lon), year: tf(&b, "opened") as i64, prob: f64::NAN, repair_day: -1, property: ts(&b, "seismic_class"), ..Default::default() });
         }
         // poles: DOGAMI's structures with the state's chance of failure at each
         let (h, rows) = Self::csv(&self.folder, "poles.csv")?;
@@ -156,7 +157,7 @@ impl Components {
     pub fn describe(name: &str, p: &toml::Value) -> Describe {
         let folder = param_str(p, "folder", "portland-cascadia");
         let fr = Self::table(folder, "fragility.toml").ok();
-        let mut d = Describe::new("hazard.components", name, "Every physical thing as a component with a place, a fragility, a state and a repair path: the fuel hub's tanks from the county study's own per-tank table (621 rows, placed on the study's coordinates where it gives them, else on OpenStreetMap tank footprints), the Willamette crossings, DOGAMI's transmission structures with the state's chance of failure at each (6,146 in the window), and DOGAMI's emergency route segments with the state's deformation class at each (137). On the rupture each reads the ground at its cell and draws its state; tanks release by the study's age rule (pre-1993: its per-tank 50 to 100 percent, later: up to 10 percent), to the river where the study says so; crews repair poles at a stated rate in order of the people served; segments reopen by class; crossings by damage state. Computed and published daily: the power service per coarse cell and the people-weighted share, each hospital's reachability from the hub along open segments and open crossings, the crossings' states. The fragilities are recalled from Hazus and declared so in fragility.toml; the study's release total (94.6 to 193.7 million gallons) and the county's statement on its bridges are the checks, reported.")
+        let mut d = Describe::new("hazard.components", name, "Every physical thing as a component with a place, a fragility, a state and a repair path: the fuel hub's tanks from the county study's own per-tank table (621 rows, placed on the study's coordinates where it gives them, else on OpenStreetMap tank footprints), the Willamette crossings (each with a seismic class from the county's 2014 vulnerability report and the federal bridge inventory), DOGAMI's transmission structures with the state's chance of failure at each (6,146 in the window), and DOGAMI's emergency route segments with the state's deformation class at each (137). On the rupture each reads the ground at its cell and draws its state; tanks release by the study's age rule (pre-1993: its per-tank 50 to 100 percent, later: up to 10 percent), to the river where the study says so; crews repair poles at a stated rate in order of the people served; segments reopen by class; crossings by damage state. Computed and published daily: the power service per coarse cell and the people-weighted share, each hospital's reachability from the hub along open segments and open crossings, the crossings' states. The fragilities are recalled from Hazus and declared so in fragility.toml; the study's release total (94.6 to 193.7 million gallons) and the county's statement on its bridges are the checks, reported.")
             .priority(1).dt("1 day after the rupture")
             .param("folder", folder, "", "the event folder with tanks.csv, poles.csv, routes.toml, bridges.toml, hospitals.toml, hub.toml and fragility.toml")
             .param("soils", param_str(p, "soils", "wet"), "", "which of DOGAMI's columns the poles and routes read: wet or dry")
@@ -169,6 +170,7 @@ impl Components {
             .publish("component.state", "{ kind, id, name, lat, lon, state, down, repair_day, day } at the cell: every tank, crossing and segment on the rupture, failed poles, and each repair")
             .publish("tank.release", "{ id, name, gal, river } at the cell, per failed tank").publish("hub.release", "{ gal, river_gal, tanks_failed } once, the sum, for the fuel ledger's owner")
             .publish("network.state", "{ day, power_share, routes_open_share, bridges_open, reachable: { hospital: bool }, hospital_power: { hospital: bool }, any_reachable } each day, computed from the components that stand")
+            .own("power.up", "1")
             .frame("power_up", "1").frame("tank_release_gal", "gal")
             .report("power.share", "1").report("power.poles_failed", "poles").report("power.poles_repaired", "poles").report("routes.open_share", "1").report("bridges.open", "crossings").report("tanks.failed", "tanks").report("tanks.release_gal", "gal").report("tanks.release_river_gal", "gal").report("fit.release_vs_study_min", "1").report("fit.release_vs_study_max", "1")
             .asset(&format!("events/{folder}"), "the component tables")
@@ -233,6 +235,7 @@ impl Components {
         let cg = self.coarse.clone().unwrap();
         let mut up = vec![0.0f32; cg.nx * cg.ny];
         for (ci, ps) in self.coarse_poles.iter().enumerate() { up[ci] = if ps.iter().all(|&pi| !self.comps[pi].down) { 1.0 } else { 0.0 }; }
+        ctx.world_write("power.up", "1", &cg, up.clone());
         ctx.field("power_up", "1", &cg, up);
     }
 }
@@ -258,7 +261,7 @@ impl Module for Components {
                 let forced: HashMap<(String, String), u8> = self.force.iter().filter_map(|s| { let p: Vec<&str> = s.splitn(3, ':').collect(); if p.len() == 3 { Some(((p[0].to_string(), p[1].to_string()), p[2].parse().unwrap_or(4))) } else { None } }).collect();
                 let cg = self.coarse.clone().unwrap();
                 let mut release_map = vec![0.0f32; cg.nx * cg.ny];
-                let (tank, bridge, route_days, post_max, cut, retrofit) = (self.tank.clone(), self.bridge.clone(), self.route_days.clone(), self.post_1993_max, self.storage_cut, self.retrofit);
+                let (tank, bridge, bridge_classes, route_days, post_max, cut, retrofit) = (self.tank.clone(), self.bridge.clone(), self.bridge_classes.clone(), self.route_days.clone(), self.post_1993_max, self.storage_cut, self.retrofit);
                 let mut events: Vec<(usize, serde_json::Value)> = Vec::new();
                 let mut releases: Vec<(usize, serde_json::Value)> = Vec::new();
                 let (mut rel, mut rel_river, mut failed_poles) = (0.0, 0.0, 0i64);
@@ -268,7 +271,7 @@ impl Module for Components {
                     let at = |v: &Vec<f32>| v.get(c.cell).copied().unwrap_or(f32::NAN);
                     let mut state = match c.kind.as_str() {
                         "tank" => self.draw_state(&tank, at(&pga), at(&liq_p), at(&liq_pgd), at(&ls_p), at(&ls_pgd), u),
-                        "bridge" => self.draw_state(&bridge, at(&pga), at(&liq_p), at(&liq_pgd), at(&ls_p), at(&ls_pgd), u),
+                        "bridge" => { let cv = self.bridge_classes.get(&c.property).unwrap_or(&bridge).clone(); self.draw_state(&cv, at(&pga), at(&liq_p), at(&liq_pgd), at(&ls_p), at(&ls_pgd), u) }
                         "pole" => if u < c.prob { 4 } else { 0 },
                         "route" => if c.class > 0 { 3 } else { 0 },
                         _ => 0,
@@ -288,7 +291,7 @@ impl Module for Components {
                                 releases.push((c.cell, json!({ "id": c.id, "name": c.name, "gal": gal, "river": c.river, "year": c.year })));
                             }
                         }
-                        "bridge" => { c.down = state >= bridge.fail_state; c.repair_day = if c.down { bridge.restore.get((state as usize).saturating_sub(1)).copied().unwrap_or(230) } else { -1 }; }
+                        "bridge" => { let cv = bridge_classes.get(&c.property).cloned().unwrap_or_else(|| bridge.clone()); c.down = state >= cv.fail_state; c.repair_day = if c.down { cv.restore.get((state as usize).saturating_sub(1)).copied().unwrap_or(230) } else { -1 }; }
                         "pole" => { c.down = state >= 4; if c.down { failed_poles += 1; } }
                         "route" => { let (lo, hi) = route_days.get(c.class as usize).copied().unwrap_or((0.0, 0.0)); let v = ctx.rng().f64(); let days = (lo + (hi - lo) * v).round() as i64; c.down = days > 0; c.repair_day = if c.down { days } else { -1 }; }
                         _ => {}

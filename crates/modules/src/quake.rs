@@ -321,6 +321,7 @@ impl Buildings {
             .subscribe("quake.rupture", "the instant")
             .read_on("quake.pga_g", "g", true, "quake.rupture", "").read_on("quake.liq_p", "1", true, "quake.rupture", "").read_on("quake.liq_pgd_cm", "cm", true, "quake.rupture", "").read_on("quake.ls_p", "1", true, "quake.rupture", "").read_on("quake.ls_pgd_cm", "cm", true, "quake.rupture", "")
             .publish("quake.crossing", "{ kind: toll, sentence } deaths, injuries and displaced on the rupture; the fit against DOGAMI in the sentence")
+            .own("quake.cell_death_rate", "1").own("quake.cell_displaced_rate", "1")
             .publish("quake.toll", "{ deaths, injuries_hospital, injuries_life, injuries_minor, displaced } the window's toll as numbers, once the shaking ends, for whoever keeps a total")
             .frame("buildings_count", "buildings").frame("building_damage_frac", "1").frame("buildings_destroyed", "buildings").frame("deaths", "people").frame("displaced", "people").frame("occupants", "people")
             .report("quake.buildings", "buildings").report("quake.buildings_moderate", "buildings").report("quake.buildings_extensive", "buildings").report("quake.buildings_complete", "buildings")
@@ -416,6 +417,10 @@ impl Module for Buildings {
             let u = self.nuid[i]; if !u.is_nan() && u > 0.0 { let e = by_unit.entry(u as i32).or_default(); e.ext_comp += c * (ps[3] + ps[4]); e.deaths += dd; e.displaced += di; e.injuries += i23; }
             let j = self.juris[i]; if !j.is_nan() && (25.0..=33.0).contains(&j) { pdx.ext_comp += c * (ps[3] + ps[4]); pdx.ext += c * ps[3]; pdx.comp += c * ps[4]; pdx.deaths += dd; pdx.displaced += di; pdx.injuries += i23; }
         }
+        // the per-cell rates as world fields, for agents that stand at a cell
+        let mut death_rate = vec![0.0f32; n]; let mut disp_rate = vec![0.0f32; n];
+        for i in 0..n { let o = self.occupants[i]; let r = self.residents[i]; if o > 0.0 { death_rate[i] = (deaths[i] / o).min(1.0); } if r > 0.0 { disp_rate[i] = (displaced[i] / r).min(1.0); } }
+        ctx.world_write("quake.cell_death_rate", "1", &g, death_rate); ctx.world_write("quake.cell_displaced_rate", "1", &g, disp_rate);
         ctx.field("building_damage_frac", "1", &g, frac);
         ctx.field("buildings_destroyed", "buildings", &g, destroyed);
         ctx.field("deaths", "people", &g, deaths);

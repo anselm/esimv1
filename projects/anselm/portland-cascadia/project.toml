@@ -23,6 +23,7 @@ title = "Saturated soils, 2 AM: people at home"
 [variant.set]
 "ground.soils" = "wet"
 "buildings.time_of_day" = "night"
+"agents.time_of_day" = "night"
 "buildings.record" = "wet"
 "ground.at" = "2027-01-26T10:00:00Z"
 

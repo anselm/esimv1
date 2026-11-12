@@ -50,6 +50,14 @@ kind = "people.aftermath"
 folder = "portland-cascadia"
 
 [[module]]
+name = "agents"
+kind = "people.agents"
+[module.params]
+folder = "portland-cascadia"
+scale = 10
+time_of_day = "day"
+
+[[module]]
 name = "ground"
 kind = "quake.ground"
 [module.params]

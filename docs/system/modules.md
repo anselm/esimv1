@@ -61,7 +61,7 @@ that. `devlog/20261102-why-it-reads-mild.md` has the reasoning.
 
 ## The pool
 
-There are twenty-three kinds today, all in one repository. There will be hundreds, then
+There are forty-six kinds today, all in one repository. There will be hundreds, then
 thousands, from many hands, and they will live at URLs: a release, an OCI image, a wasm
 file, locked by content hash in the manifest the way the catalog locks data. The kernel
 cannot tell an in-process module from one over a pipe, and the protocol document

@@ -1,0 +1,174 @@
+//! `people.agents`: the people as super-persons, each standing for `scale` people, generated from
+//! DOGAMI's own occupant rasters: a home cell drawn by the residents, a work cell drawn by the
+//! daytime occupants, a share on electricity-dependent medical devices from the aftermath table.
+//! Each day every agent reads the world at its cells: the building damage where it was at the
+//! instant decides whether it is dead or displaced (at the buildings' own expected rates, so the
+//! totals agree with the cell model), the power service at its home cell whether it has power,
+//! the water ramp whether it has water. What this adds to the cell counts is a population that
+//! can be followed: the same agent is counted on every day, and a later rung gives it decisions
+//! (to leave, to shelter, to travel). The cost is measured and reported: agents per second.
+use crate::quake::{root, sample, window_grid};
+use esim_kernel::manifest::{param_f64, param_str};
+use esim_kernel::{Ctx, Describe, Duration, Event, LatLonGrid, Module};
+use serde::{Deserialize, Serialize};
+use serde_json::json;
+
+#[derive(Clone, Serialize, Deserialize, Default)]
+struct Agent { home: u32, work: u32, device: bool, dead: bool, displaced: bool, power: bool, water: bool }
+
+#[derive(Serialize, Deserialize)]
+pub struct Agents {
+    name: String,
+    lat_s: f64, lat_n: f64, lon_w: f64, lon_e: f64, res_arcsec: f64,
+    folder: String, scale: f64, time_of_day: String, coarse_arcsec: f64,
+    agents: Vec<Agent>,
+    device_share: f64,
+    fired: bool, scheduled: bool, day: i64, water_share: f64,
+    #[serde(skip)] grid: Option<LatLonGrid>,
+}
+
+fn tf(t: &toml::Value, k: &str) -> f64 { t.get(k).and_then(|v| v.as_float().or_else(|| v.as_integer().map(|i| i as f64))).unwrap_or(0.0) }
+
+impl Agents {
+    pub fn new(name: &str, p: &toml::Value) -> Result<Agents, String> {
+        let mut o = Agents {
+            name: name.to_string(),
+            lat_s: param_f64(p, "lat_s", 45.43), lat_n: param_f64(p, "lat_n", 45.66), lon_w: param_f64(p, "lon_w", -122.85), lon_e: param_f64(p, "lon_e", -122.47),
+            res_arcsec: param_f64(p, "res_arcsec", 1.0),
+            folder: param_str(p, "folder", "portland-cascadia").to_string(),
+            scale: param_f64(p, "scale", 10.0), time_of_day: param_str(p, "time_of_day", "day").to_string(), coarse_arcsec: param_f64(p, "coarse_arcsec", 10.0),
+            agents: Vec::new(), device_share: 0.0, fired: false, scheduled: false, day: 0, water_share: 1.0, grid: None,
+        };
+        o.load()?;
+        Ok(o)
+    }
+    fn load(&mut self) -> Result<(), String> {
+        let (g, _) = window_grid(self.lat_s, self.lat_n, self.lon_w, self.lon_e, self.res_arcsec)?;
+        if let Ok(text) = std::fs::read_to_string(root().join("data/events").join(&self.folder).join("aftermath.toml")) {
+            if let Ok(t) = text.parse::<toml::Value>() { if let Some(i) = t.get("inputs") {
+                let dme = tf(i, "power_dependent_dme_multnomah") + tf(i, "power_dependent_dme_washington") + tf(i, "power_dependent_dme_clackamas");
+                let pop = tf(i, "population_multnomah") + tf(i, "population_washington") + tf(i, "population_clackamas");
+                self.device_share = if pop > 0.0 { dme / pop } else { 0.0 };
+            } }
+        }
+        self.grid = Some(g);
+        Ok(())
+    }
+    pub fn describe(name: &str, p: &toml::Value) -> Describe {
+        let folder = param_str(p, "folder", "portland-cascadia");
+        Describe::new("people.agents", name, "The people as super-persons, each standing for a stated number of people, generated at the start from DOGAMI's occupant rasters: a home cell drawn by the residents, a work cell by the daytime occupants, a share on electricity-dependent devices from HHS emPOWER's counts. On the rupture each agent reads the building damage where it was (home by night, work by day) and is dead or displaced at the buildings' own expected rates, so the totals agree with the cell model; each day it reads the power service at its home cell and the water ramp. What it adds is a population that can be followed agent by agent, the base for decisions (to leave, to shelter, to travel) in a later rung; what it costs is measured and reported.")
+            .priority(6).dt("1 day after the rupture")
+            .param("folder", folder, "", "the event folder with the occupant rasters")
+            .param("scale", param_f64(p, "scale", 10.0), "people", "people per agent: 10 gives about 93,000 agents in the window")
+            .param("time_of_day", param_str(p, "time_of_day", "day"), "", "where each agent is at the instant: work by day, home by night")
+            .param("coarse_arcsec", param_f64(p, "coarse_arcsec", 10.0), "arcsec", "the power service grid it reads")
+            .subscribe("quake.toll", "the buildings' reckoning, once the shaking ends").subscribe("lifeline.state", "the day's water share")
+            .read_on("quake.cell_death_rate", "1", true, "quake.toll", "expected deaths per occupant at each cell, from the buildings").read_on("quake.cell_displaced_rate", "1", true, "quake.toll", "expected displaced per resident at each cell").read_on("power.up", "1", false, "lifeline.state", "the components' power service per coarse cell")
+            .report("agents.count", "agents").report("agents.people", "people").report("agents.dead", "people").report("agents.displaced", "people").report("agents.without_power", "people").report("agents.without_water", "people").report("agents.devices_without_power", "people").report("agents.per_second", "agents/s")
+            .frame("agents_without_power", "people")
+            .view("counter", "agents", "agents.count", "super-persons; the people they stand for is the next counter")
+            .view("counter", "people followed", "agents.people", "")
+            .view("counter", "dead, by agent", "agents.dead", "should agree with the cell model's deaths")
+            .view("counter", "displaced, by agent", "agents.displaced", "")
+            .view("counter", "without power, by agent", "agents.without_power", "from the components' power service at each home cell")
+            .view("counter", "on devices without power", "agents.devices_without_power", "")
+            .view("counter", "agent-days a second", "agents.per_second", "the measured cost of the daily tick")
+            .view("map", "people without power, by agent", "agents_without_power", "per coarse cell, each day")
+            .view("chart", "without power, by agent", "agents.without_power", "")
+            .view("chart", "displaced, by agent", "agents.displaced", "")
+            .view("text", "what the agents do not yet do", "Nothing of their own: no one leaves, shelters, travels or queues at a hospital; each agent is a bookkeeping unit that reads the world at two cells. The point of having them is that the next rung can give them a decision rule and a trip on the route graph, and the cost of a hundred thousand such agents on a daily tick is measured here.", "")
+            .note("A super-individual stands for a fixed number of people (the method is from fish and plankton modelling in the 1990s, recalled). Agents are drawn by the seed from the occupant rasters, so the same seed gives the same people.")
+            .asset(&format!("events/{folder}"), "people_resident.tif, people_day.tif, people_night.tif")
+    }
+    fn coarse(&self) -> LatLonGrid { let g = self.grid.as_ref().unwrap(); let step = (self.coarse_arcsec / self.res_arcsec).round().max(1.0) as usize; LatLonGrid { nx: (g.nx + step - 1) / step, ny: (g.ny + step - 1) / step, dlon: g.dlon * step as f64, dlat: g.dlat * step as f64, lon_w: g.lon_w, lat_n: g.lat_n } }
+    fn count(&self, ctx: &mut Ctx) {
+        let n = self.agents.len() as f64;
+        let s = self.scale;
+        ctx.report("agents.count", "agents", n); ctx.report("agents.people", "people", n * s);
+        ctx.report("agents.dead", "people", self.agents.iter().filter(|a| a.dead).count() as f64 * s);
+        ctx.report("agents.displaced", "people", self.agents.iter().filter(|a| a.displaced && !a.dead).count() as f64 * s);
+        ctx.report("agents.without_power", "people", self.agents.iter().filter(|a| !a.power && !a.dead).count() as f64 * s);
+        ctx.report("agents.without_water", "people", self.agents.iter().filter(|a| !a.water && !a.dead).count() as f64 * s);
+        ctx.report("agents.devices_without_power", "people", self.agents.iter().filter(|a| a.device && !a.power && !a.dead).count() as f64 * s);
+        let cg = self.coarse(); let g = self.grid.as_ref().unwrap();
+        let step = (self.coarse_arcsec / self.res_arcsec).round().max(1.0) as usize;
+        let mut f = vec![0.0f32; cg.nx * cg.ny];
+        for a in &self.agents { if !a.power && !a.dead { let (r, c) = (a.home as usize / g.nx, a.home as usize % g.nx); f[(r / step) * cg.nx + c / step] += s as f32; } }
+        ctx.field("agents_without_power", "people", &cg, f);
+    }
+}
+
+impl Module for Agents {
+    fn name(&self) -> &str { &self.name }
+    fn init(&mut self, ctx: &mut Ctx) {
+        ctx.subscribe("quake.toll"); ctx.subscribe("lifeline.state");
+        if self.agents.is_empty() {
+            let g = self.grid.clone().unwrap();
+            let z = |v: Vec<f32>| -> Vec<f64> { v.into_iter().map(|x| if x.is_nan() || x < 0.0 { 0.0 } else { x as f64 }).collect() };
+            let res = z(sample(&self.folder, "people_resident.tif", &g).unwrap_or_default());
+            let day = z(sample(&self.folder, "people_day.tif", &g).unwrap_or_default());
+            // cumulative tables, so a draw lands on a cell in proportion to its people
+            let cum = |v: &[f64]| -> Vec<f64> { let mut c = Vec::with_capacity(v.len()); let mut s = 0.0; for x in v { s += x; c.push(s); } c };
+            let (cr, cd) = (cum(&res), cum(&day));
+            let (tr, td) = (*cr.last().unwrap_or(&0.0), *cd.last().unwrap_or(&0.0));
+            let pick = |c: &[f64], total: f64, u: f64| -> u32 { let t = u * total; match c.binary_search_by(|x| x.partial_cmp(&t).unwrap()) { Ok(i) => i as u32, Err(i) => i.min(c.len() - 1) as u32 } };
+            let n = (tr / self.scale).round() as usize;
+            let mut agents = Vec::with_capacity(n);
+            for _ in 0..n {
+                let (u1, u2, u3) = (ctx.rng().f64(), ctx.rng().f64(), ctx.rng().f64());
+                agents.push(Agent { home: pick(&cr, tr, u1), work: if td > 0.0 { pick(&cd, td, u2) } else { pick(&cr, tr, u2) }, device: u3 < self.device_share, dead: false, displaced: false, power: true, water: true });
+            }
+            self.agents = agents;
+        }
+        self.count(ctx);
+        ctx.report("agents.per_second", "agents/s", 0.0);
+    }
+    fn handle(&mut self, ev: &Event, ctx: &mut Ctx) {
+        match ev.topic.as_str() {
+            "quake.toll" => {
+                if self.fired { return; }
+                self.fired = true;
+                let t = std::time::Instant::now();
+                let n = self.grid.as_ref().map(|g| g.nx * g.ny).unwrap_or(0);
+                let take = |name: &str| -> Vec<f32> { ctx.world_read(name).map(|f| f.data.clone()).unwrap_or_else(|| vec![0.0; n]) };
+                let (dr, pr) = (take("quake.cell_death_rate"), take("quake.cell_displaced_rate"));
+                let at_work = self.time_of_day == "day";
+                for a in &mut self.agents {
+                    let here = if at_work { a.work } else { a.home } as usize;
+                    let (u1, u2) = (ctx.rng().f64(), ctx.rng().f64());
+                    let d = dr.get(here).copied().unwrap_or(0.0) as f64; let p = pr.get(a.home as usize).copied().unwrap_or(0.0) as f64;
+                    if !d.is_nan() && u1 < d { a.dead = true; }
+                    if !p.is_nan() && u2 < p { a.displaced = true; }
+                }
+                let dt = t.elapsed().as_secs_f64().max(1e-6);
+                ctx.report("agents.per_second", "agents/s", self.agents.len() as f64 / dt);
+                self.count(ctx);
+                if !self.scheduled { self.scheduled = true; ctx.schedule_with_priority(Duration::days(1), 6, "day", json!(null)); }
+            }
+            "lifeline.state" => { self.water_share = ev.data.get("water_share").and_then(|v| v.as_f64()).unwrap_or(1.0); }
+            "day" => {
+                self.day += 1;
+                let t = std::time::Instant::now();
+                let cg = self.coarse(); let g = self.grid.clone().unwrap();
+                let step = (self.coarse_arcsec / self.res_arcsec).round().max(1.0) as usize;
+                let up: Option<Vec<f32>> = ctx.world_read("power.up").map(|f| f.data.clone());
+                let ws = self.water_share;
+                for a in &mut self.agents {
+                    if a.dead { continue; }
+                    let (r, c) = (a.home as usize / g.nx, a.home as usize % g.nx);
+                    let ci = (r / step) * cg.nx + c / step;
+                    a.power = up.as_ref().map(|u| u.get(ci).copied().unwrap_or(1.0) >= 0.5).unwrap_or(true);
+                    // the water ramp is a share, not a map: the same share of agents, by a stable draw on the home cell
+                    a.water = ((a.home as f64 * 0.618_033_988_7) % 1.0) < ws;
+                }
+                let dt = t.elapsed().as_secs_f64().max(1e-6);
+                ctx.report("agents.per_second", "agents/s", self.agents.len() as f64 / dt);
+                self.count(ctx);
+                ctx.schedule_with_priority(Duration::days(1), 6, "day", json!(null));
+            }
+            _ => {}
+        }
+    }
+    fn snapshot(&self) -> serde_json::Value { serde_json::to_value(self).unwrap() }
+    fn restore(&mut self, v: serde_json::Value) { let mut o: Agents = serde_json::from_value(v).unwrap(); o.grid = window_grid(o.lat_s, o.lat_n, o.lon_w, o.lon_e, o.res_arcsec).ok().map(|x| x.0); *self = o; }
+}

@@ -140,7 +140,7 @@ council: Ordinance 2026-312
 fault -> ground: slips, four minutes of shaking
 ground -> buildings: shakes and liquefies them
 ground -> hub: each tank fails or stands on the ground at its cell
-ground -> bridges: each crossing by its own fragility
+ground -> bridges: each crossing by its class, the county's 2014 report and the bridge inventory
 ground -> power: each pole by the state's chance at it
 hub -> hospitals: diesel for the generators, once trucks move
 bridges -> hospitals: the east bank waits for a crossing
@@ -214,9 +214,17 @@ What stands out:
   beside it. On the tanks: 233 of the 587 fail on the ground at their cells and release 61 million
   gallons, 26 million to the river, against the study's 95 to 194 million, so the recalled tank
   fragility is too strong or the study's rule that every old tank on deforming ground fails is
-  stronger than a curve. On the crossings: eight of twelve stand on the first day and nine by day
-  thirty, where the county expects none usable at once, so the recalled highway-bridge curves do not
-  describe Portland's bridges, and ODOT's own assessments are the next input. On the power: 586
+  stronger than a curve. On the crossings: the first computed run had eight of twelve standing on
+  the first day, where the county expects none usable at once, because the curves were generic
+  highway bridges. Each crossing now carries the federal bridge inventory's facts (year, type,
+  length, condition) and a seismic class: the county's own 2014 vulnerability report says the four
+  downtown bridges it owns, un-retrofitted, do not meet no-collapse at the 500-year Cascadia level
+  of 0.20 g or the 1,000-year level of 0.28 g, and names the columns, footings, bearing seats and
+  the liquefiable approaches; the curve for that class is a judgement anchored on those two levels,
+  and the older state and railway bridges share it by age; Sellwood and Tilikum, built in 2015 and
+  2016 under current code, get a modern class. With that, eleven of twelve close on the first day,
+  three are back by day thirty and five by day 120, which is the county's "weeks to years" computed
+  rather than drawn. On the power: 586
   poles fail and twelve crews a day have the whole window back in thirteen days, against the Plan's
   one to three months, because a pole is all the grid this model has; the substations, the lines and
   the distribution are not in the state's bundle. On the routes: a fifth of the segment length is
@@ -225,6 +233,14 @@ What stands out:
   inside the ranges because it was drawn from them, and says nothing. The deaths after the shaking
   fall to a handful in the computed run because the power is back in two weeks, which is the same
   error seen from the people's side.
+- **The people as agents.** The run now carries 93,520 super-persons of ten people each, drawn by
+  the seed from DOGAMI's occupant rasters: a home cell by the residents, a work cell by the daytime
+  occupants, one in 160 on an electricity-dependent medical device. Each is dead or displaced at the
+  buildings' own rate at the cell where it was, so the agents' totals agree with the cell model
+  (750 dead against 765, 43,790 displaced against 42,925), and each day each reads the power
+  service at its home cell. They decide nothing yet; what they establish is the cost: the daily tick
+  runs at about twenty million agent-days a second on one core, so every person in the window
+  separately is a change of one parameter, and the work is the behaviour, not the compute.
 - **The deaths after the shaking.** The aftermath module adds about 66 dead over the year in the
   base run, a range of 11 to 121, nearly all from care interrupted by the loss of power at the rate
   Puerto Rico recorded after Maria, applied to 14.5 million person-days without power here; none
@@ -285,8 +301,10 @@ The fragility and casualty rates are recalled, not read, and two of the six fitt
 is an inventory with no structure types. The night occupants sit in every building by floor area,
 which is why the night toll runs 1.7 times DOGAMI's. The displaced are a fitted share of residents
 in badly damaged buildings and come out double DOGAMI's on dry soils. The components' curves are
-recalled too, and the first computed runs fail their checks: too few tanks fail, too many crossings
-stand, the power is back too soon because a pole is the whole grid here. The water is a ramp; the
+recalled or judged too: the crossings' curves are anchored on the county's stated levels and not
+published, and the first computed runs fail two of their three checks: too few tanks fail, and the
+power is back too soon because a pole is the whole grid here; the crossings now close as the county
+expects. The water is a ramp; the
 pipes are not in the bundle. No fire follows the earthquake, no debris lies on the routes, no
 tsunami because Portland has none, no Columbia bridges, no one leaves. The hospitals have no beds.
 The deaths after the shaking are rates from other disasters applied to the counts here. The ground
@@ -317,6 +335,16 @@ produces a year that can be argued with piece by piece, which the thread was hav
   statements on the downtown bridges, the dates and the budget.
 - OPB, *Fuel spill in Portland after a major earthquake could be bigger than Deepwater Horizon,
   study finds*, Monica Samayoa, 7 February 2022. Read 2026-11-12. Taken: the county chair's words.
+- Multnomah County, *Willamette River Bridges Capital Improvement Plan, Seismic Vulnerabilities
+  and Retrofit Report*, 9 November 2014. Read 2026-11-12, the introduction, the performance
+  criteria and the per-bridge vulnerability sections. Taken: the earthquake levels (100-year 0.07 g,
+  500-year Cascadia 0.20 g, 1,000-year 0.28 g), the performance targets, the statements that the
+  four county bridges' columns, footings and bearing seats are vulnerable at the Cascadia and
+  1,000-year levels and that liquefaction and lateral spreading under the approaches are
+  unmitigated, Burnside's designation as the regional lifeline route.
+- FHWA, the National Bridge Inventory, Oregon 2024 delimited file, read 2026-11-12. Taken: each
+  crossing's structure number, year built and reconstructed, kind, type, length, condition ratings
+  and traffic, in the record's bridge table.
 - The county study's Appendix B, the per-tank table (621 rows with capacity, year, type, the
   study's zone and its own release range for each), read 2026-11-12 from the report's PDF. Taken
   whole, as `tanks.csv` in the record folder; 228 tanks carry the study's coordinates.
