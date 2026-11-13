@@ -1,390 +1,454 @@
-# The year after
+# Portland in the year after a Cascadia earthquake
 
-On the evening of 26 January 1700 the sea floor off the Pacific Northwest slipped by twenty
-metres along a thousand kilometres of fault, and nobody in Portland wrote it down, because
-there was no Portland. The date comes from Japan: a tsunami with no earthquake behind it arrived
-on the coast of Honshu that night, and in 1996 Kenji Satake and his colleagues matched it to the
-drowned forests and the buried marshes that Brian Atwater had been reading along the Washington
-coast since the 1980s. The trees that died standing in salt water at the mouths of the rivers,
-the layers of sand on top of the marsh soils, the stories of the Makah and the Cowichan: all of it
-one night, now dated to the day. The fault does this every few hundred years. The last time was
-327 years before the afternoon this page is about.
+This project simulates a magnitude 9 earthquake on the Cascadia subduction zone as it affects
+Portland, Oregon, and follows the city through the next year. The earthquake is set at 2 p.m. on
+Friday 26 March 2027, and each run of the simulation begins two weeks earlier. The date is a
+scenario choice, not a prediction. Nobody knows when the fault will next rupture.
 
-What the State of Oregon plans for is a magnitude 9.0 on that fault, and since 2013 it has said in
-public what it expects. The Oregon Resilience Plan, written for the legislature by the Seismic
-Safety Policy Advisory Commission, put it in a table: in the Willamette Valley, electricity back
-in one to three months, police and fire stations in two to four, water and sewer in one month to a
-year, the main highways partly open in six to twelve, hospitals in eighteen months. On the coast
-every line is longer. The plan's own word for these is sobering, and it adds that a business that
-loses its services for a month tends to leave, so that a region with those numbers faces not a
-bad season but a lost generation.
+The simulation is assembled from published studies of this earthquake. The ground shaking and the
+inventory of buildings come from Oregon's state geology agency. The fuel tanks come from a 2022
+study for Multnomah County and the City of Portland. The bridges come from the federal bridge
+inventory and a county engineering report. From those inputs the model works out which buildings,
+fuel tanks, bridges, power structures and road segments are damaged. It then steps through the
+following year one day at a time and tracks electricity, hospitals, fuel and deaths.
 
-In 2018 the state's geologists ran the earthquake under the three counties around Portland,
-building by building. DOGAMI's Open-File Report O-18-02 took synthetic bedrock motions from the
-USGS, computed what the soils would do to them, mapped where the ground would liquefy and where
-the slopes would fail, and put 615,852 footprints with their occupants through FEMA's Hazus loss
-model, at two in the afternoon and two in the morning, on dry soils and on saturated ones. For the
-City of Portland on a wet afternoon it came to 896 dead, 3,654 hurt badly enough for a hospital,
-30,627 people needing shelter, and 18.9 billion dollars of building damage. For the three counties,
-1,473 dead and 85,211 displaced. The county's own summary of the study, the page it still keeps,
-puts it as up to 27,000 injuries from minor to fatal, about two percent of the three counties'
-people, 85,000 needing shelter and 37 billion dollars of building damage, and quotes the study's
-lead investigator: a Cascadia earthquake will happen, and how well we prepare will make all the
-difference in how well we bounce back. The report says what every scenario says, that these are
-planning figures with a lot of uncertainty and little detail, and it is the best anyone has.
+This is an early model. Several of its results disagree with the published estimates they can be
+checked against, and many of its parameters are values recalled from memory or plain guesses. The
+sections below say which. The text was drafted in November 2026 by Claude, an AI model, for Anselm
+Hook's esim project. The tables are drawn from the latest runs each time the page loads. The
+numbers in the prose were read from the runs of 12 November 2026.
 
-## Why now
+## Why this scenario
 
-The thing Portland decided this week is about a six-mile strip of the west bank of the Willamette
-in the north of the city, between the Fremont Bridge and Linnton, which the state calls the
-Critical Energy Infrastructure Hub. More than ninety percent of the liquid fuel Oregon uses comes
-through it, by pipeline from Puget Sound and by barge, into about four hundred tanks on fill and
-river silt that DOGAMI maps as among the likeliest ground in the region to liquefy. The average
-tank with a known date was built in 1954. In 2022 the county and the city published a study of
-what the tanks would do in the earthquake: between 95 and 194 million gallons would leave them in
-the first minutes, more than half onto the ground and the rest toward the river, a volume the
-county chair compared to the Deepwater Horizon. The study put the costs it could count at 2.6
-billion dollars and said the real figure would be many multiples of that.
+The Cascadia subduction zone is a fault off the coast of the Pacific Northwest. Its last great
+earthquake was in January 1700, and the date is known from Japan. A tsunami reached the Japanese
+coast that month with no earthquake felt beforehand, and villagers, merchants and samurai recorded
+the flooding. In the mid-1990s researchers linked that tsunami to an earthquake on the northwest
+coast of North America (US Geological Survey Professional Paper 1707). The Survey's catalogue
+lists the earthquake at magnitude 9.0 on the evening of 26 January 1700, Pacific time.
 
-On 12 November 2026 the city council took its second reading of an ordinance that requires each of
-the hub's terminals to cut its tank capacity by at least a fifth by 2036. Gosia Wozniacka's story
-in the Oregonian that morning is the one the r/Portland thread was about, and it says what the cut
-is and is not. The fifth is of capacity, terminal by terminal, not of the fuel in the tanks; the
-county's 2022 study found the tanks about two thirds full, 234 million gallons held in 333 million
-of room, so a cut to capacity could leave the fuel where it is. Utility storage and sustainable
-aviation fuel are exempt, and the jet-fuel storage may grow by a twentieth. The city has refused
-new fossil-fuel storage at the hub since 2016; the drawdown is the first rule on what is already
-there. The activists who pushed for it call it a stopgap and wanted a drawdown tied to inventories
-and to Oregon's consumption, which the ordinance begins to collect; the city administrator owes
-an alternative by June 2027. The state's energy department answered with the other side of the
-argument: in an emergency the hub's storage is the buffer, as it was for a week in 2025 when a leak
-shut the Olympic Pipeline and the governor declared a fuel emergency, the hub cannot be moved
-because the pipeline, the rail, the river and the roads meet there, and the department's own
-seismic programme for the tanks is the tool that reduces the risk. Councilor Steve Novick, voting
-for it, said that unless demand falls the state will not let the city carry it out.
+Layers of sediment on the sea floor record earlier ruptures. They show 19 or 20 ruptures of the
+whole fault, or nearly all of it, in the past 10,000 years, which is one every 500 to 530 years on
+average (Goldfinger and others, 2012). In March 2027 the last one will be 327 years in the past.
+Multnomah County's page on the fuel terminals gives a 26 percent chance of a major seismic event
+in the next 50 years. The page does not say where that estimate comes from.
 
-The thread is the same argument. One side: the tanks sit on the worst ground beside the river and
-should go. The other: the hub holds the region's jet fuel and most of its diesel, there is nowhere
-else to put a river terminal, and a fifth less storage is a fifth less of the fuel the recovery
-will run on. Both are right, and the question is what the numbers do in time. The model's cut-20
-variant takes the fifth off the fuel held, which is the stronger reading of the ordinance than the
-one that passed.
+Most of Portland was built before this was known. When Oregon adopted a statewide building code in
+1974, it placed Portland in seismic Zone 2. The code moved the city up to Zone 2B in 1990 and to
+Zone 3 in 1993, and a higher zone requires stronger construction. The city's own history of these
+changes says scientists did not fully understand the risk until the 1990s. Ten of the twelve
+bridges over the Willamette River in this model were built between 1908 and 1973. At the fuel
+terminals, 91 percent of the active tanks were built before 1993 or have no recorded year. The
+city counts more than 1,600 known or suspected unreinforced masonry buildings. The fault is the
+same one that ruptured in 1700. What has changed is what stands on the ground above it, and much
+of that was built before anyone knew what the fault could do.
 
-## What this is, and is not
+### What the state expects
 
-There is no record of this earthquake, so there is nothing to score a model against except other
-models. This page does not pretend otherwise. The ground motion is DOGAMI's, cut to the window at
-one arc-second: the peak acceleration and velocity at the soil surface, the chance and the amount
-of liquefaction and landslide. The buildings are DOGAMI's footprints and the people are DOGAMI's
-own occupant counts per neighbourhood unit, spread over the unit's buildings by floor area. On top
-of that, our own damage model: a lognormal fragility in peak acceleration for a generic building
-mix, ground failure that moves a building to complete damage, and casualty rates by damage state in
-the Hazus manner. FEMA's Hazus manual could not be downloaded on the day, so the rates are recalled
-and declared so, and six numbers were fitted so that Portland's extensive and complete damage, its
-displaced and its deaths come out near DOGAMI's for the same afternoon. The toll is therefore the
-state's by construction; what the model adds is the pattern on the map and the contrasts between
-the cases, and the fit is reported on every run so a reader can see how far it is off.
+The Oregon Resilience Plan is a 2013 report to the legislature by the Oregon Seismic Safety Policy
+Advisory Commission. It estimated how long services in the Willamette Valley, which includes
+Portland, would take to recover from this earthquake if it struck under the conditions of the
+time.
 
-Then the year after, which nobody has drawn for a reader, and which this page now computes
-rather than arranges. A components module holds every physical thing as an agent with a place, a
-fragility, a state and a repair path: the hub's 587 active tanks from the county study's own
-per-tank table, placed on the study's coordinates where it gives them and on OpenStreetMap tank
-footprints where it does not; the twelve Willamette crossings; the 6,146 transmission structures
-DOGAMI mapped in the window with the state's chance of failure at each; the 137 emergency route
-segments with the state's ground-deformation class at each. On the rupture each reads the ground
-at its own cell and draws its state. A failed tank releases by the study's age rule, to the river
-where the study's zone says so. Crews repair poles at a stated rate, most people first; segments
-reopen by class; crossings by damage state. From what stands, the run computes each day the power
-service cell by cell, the people-weighted share, and whether each hospital can be reached from the
-hub along open segments and open crossings. The fragilities are recalled from Hazus and declared
-so; the study's release total and the county's words on its bridges are the checks, reported on
-every run, and the first runs fail them in instructive ways, below. The arranged version, with
-the crossings' days, the routes' day and the power ramp drawn from the published ranges, runs
-beside as the `ranges` variant. The hospitals stand or fall by the fragility at their cells, run
-on seventy-two hours of generator fuel, and are refuelled once trucks reach them. The clock itself says on every moment whether it is before, during or after
-the earthquake and gives its date and time. The water is
-still a ramp; the pipes are not in the state's bundle. The hub is a ledger in gallons
-that must close at every daily close: what the tanks held, what left them in the first minutes by
-the county study's range, what the response and the generators burn, and what comes back up the
-pipeline. Cutting the hub's storage by a fifth and retrofitting its tanks are variants, so the
-two sides of the thread can be run.
+| Service | Estimated time to restore |
+|---|---|
+| Electricity | 1 to 3 months |
+| Police and fire stations | 2 to 4 months |
+| Drinking water and sewer | 1 month to 1 year |
+| Top-priority highways, partly restored | 6 to 12 months |
+| Healthcare facilities | 18 months |
 
-## What to show people
+The plan describes these as estimates with "a lot of uncertainty and little detail".
 
-Not the shaking map; the state has drawn that. The clock, with a before and an after. A run
-starts two weeks before the afternoon, on 12 March 2027, with the people on the map, every crossing open, every hospital
-on the grid and the hub full, and says so in its first sentence. At the instant the map becomes
-the ground motion, four minutes later the damage, and from then on the crossings and the hospitals
-sit on it as marks that change state: a square for a crossing, a circle for a hospital, filled when
-closed or dark, with the key beside the map. Beside the map, the moment, the latest sentence and
-the counts: the dead, the crossings open, the hospitals open and dark, the people with power and
-water. Press play and the two weeks before go by in a few seconds, the afternoon in a sentence, and then
-the days: the generators run dry on the third, trucks move in the third week, the first bridge
-comes back in the fourth, power in the second month, water in the tenth. The arrow keys step from
-moment to moment, and `?t=` with a time in the address holds the clock there, so a moment can be
-sent to someone. Then change one thing and run it again: the variants put the hub's storage cut by
-a fifth, every tank retrofitted, and no hub at all beside the base run.
+In 2018 the Oregon Department of Geology and Mineral Industries, known as DOGAMI, published a
+study of the earthquake's effect on the three counties around Portland (Open-File Report O-18-02).
+The study took simulated motion of the bedrock and worked out how the soils above would shake.
+It mapped where the ground would liquefy, which is what loose, saturated soil does when shaking
+makes it behave like a liquid, and where slopes would slide. It then ran the region's buildings
+through Hazus, the loss-estimation software of the Federal Emergency Management Agency. It did
+this for four cases: day or night, and dry or saturated soil.
+
+The worst of the four is a daytime earthquake on saturated soil. For that case the study estimates
+1,473 deaths in the three counties and 85,211 people displaced for the long term. Its summary for
+the City of Portland gives 896 deaths, 3,654 injuries needing a hospital and 30,627 people needing
+shelter. This project uses the same case as its base scenario.
+
+### The fuel terminals
+
+The Critical Energy Infrastructure Hub is a six-mile strip of fuel terminals on the west bank of
+the Willamette in northwest Portland. More than 90 percent of Oregon's liquid fuel passes through
+it, according to Multnomah County. It is supplied by the Olympic Pipeline from Puget Sound and,
+for about 30 percent of its fuel, by tanker barge.
+
+In 2022 the county and the city published a seismic risk analysis of the hub. Its tanks could hold
+about 333 million gallons and held about 234 million, so they were about two thirds full. The
+study estimated that this earthquake would release between 95 and 194 million gallons, 57 percent
+onto the ground and 43 percent toward the river. The county's summary of the study says the average
+tank with a recorded date was built in 1954. It puts the costs that could be given a dollar value
+at up to 2.6 billion dollars, and the full cost at many multiples of that.
+
+On 12 November 2026 the Portland City Council passed Ordinance 2026-312. It requires each bulk fuel
+terminal to cut its in-service storage capacity by at least 20 percent by 1 December 2036. Tanks
+that hold only aviation fuel are exempt. The vote was 10 to 0, with two councillors absent.
+
+The rule limits tank capacity, not the fuel held. A 20 percent cut to 333 million gallons of
+capacity leaves about 266 million, which is still more than the 234 million gallons the 2022 study
+found in the tanks. The Oregonian's report on the day of the vote made the same distinction. It
+also reported the objection from Oregon's energy department that the move away from liquid fuels
+may be slower than the city assumes. Stored fuel is the region's reserve as well as its spill risk.
+In 2025 a leak shut the Olympic Pipeline for more than a week, and the governor declared a fuel
+emergency.
+
+So the same tanks are a hazard in the first minutes after the earthquake and a reserve in the
+months that follow. This project began on the day of the vote, as an attempt to put numbers on both
+halves of that trade-off within one simulation. It does produce numbers for both. For the reasons
+given below, they are not yet reliable enough to settle the argument.
+
+## What the simulation does
+
+The model covers a rectangle about 30 kilometres wide and 26 kilometres tall. It contains the City
+of Portland and neighbouring parts of Multnomah, Washington and Clackamas counties. DOGAMI's
+inventory puts 935,195 residents and 297,803 buildings inside it. The rectangle is divided into
+cells about 30 metres across.
+
+**The ground.** The model does not simulate the fault or the shaking. It reads DOGAMI's maps for the
+saturated-soil case: the peak acceleration and velocity of the ground, and the probability and
+extent of liquefaction and landslides. Peak acceleration across the area runs from 0.15 to 0.32 g,
+where 1 g is the acceleration of gravity.
+
+**Buildings.** For each cell the model estimates what share of the buildings reach each level of
+damage. It uses a fragility curve, which gives the probability of damage at a given strength of
+shaking, and then adds the buildings lost to ground failure. It draws at random how many buildings
+in the cell collapse outright. Deaths and injuries follow from a casualty rate for each level of
+damage, applied to the people DOGAMI places in the cell at 2 p.m. or 2 a.m.
+
+The curve and the casualty rates have the form Hazus uses, but the project has not yet read the
+Hazus technical manual, so their values are recalled from memory and unverified. Several parameters
+were then adjusted until the model's totals for Portland matched DOGAMI's. The largest adjustment
+triples every casualty rate. The model's death toll from the shaking is therefore not an
+independent estimate. It is DOGAMI's estimate, spread across the map by this model, with a random
+draw deciding which buildings collapse.
+
+**People.** The model also represents the residents as 93,520 agents, each standing for ten people.
+An agent has a home cell and a work cell. At 2 p.m. it is at work, in a building that either
+collapses or stands, and it dies at that building's casualty rate. Afterwards it has electricity or
+not according to its home cell. The agents make no decisions. They do not leave the city, seek
+care or move around.
+
+**Tanks, bridges, power structures and roads.** Each of these is placed at its real location, reads
+the ground there and is assigned a damage state by a random draw against a fragility curve.
+
+- The 587 tanks come from the per-tank table in the 2022 study. A tank that fails releases the
+  share of its contents the study assigns to tanks of its age: 50 to 100 percent for tanks built
+  before 1993 or of unknown year, and up to 10 percent for newer ones.
+- The twelve bridges are put in two classes. The two newest, Tilikum Crossing and the Sellwood
+  Bridge, use a curve for modern bridges. The other ten use a curve for vulnerable bridges. That
+  curve is a judgement made for this project. It is anchored on a 2014 Multnomah County report on
+  four bridges the county owns, which found parts of them vulnerable at the shaking it expects from
+  a Cascadia earthquake, 0.20 g. A bridge with moderate damage or worse is closed, and reopens
+  after a repair time set by its damage.
+- The 6,146 power structures are the transmission towers and poles in DOGAMI's data. Each fails
+  with the probability DOGAMI gives for ground deformation at its location. An area has
+  electricity when its two nearest structures stand. Crews repair twelve structures a day, which is
+  a guess. The model has no substations, no power lines and no local distribution network.
+- The 137 road segments are the area's designated emergency routes. A segment closes where DOGAMI
+  expects the ground to deform, for a number of days that is a guess. Each day the model checks
+  which hospitals a truck could reach from the fuel terminals over open segments and open bridges.
+
+**Hospitals and fuel.** The area has thirteen hospitals. A hospital with electricity from the grid
+stays open. One without it runs on its generators for 72 hours, which is a guess, and then loses
+power unless a fuel truck can reach it. The model keeps an account of
+the hub's fuel in gallons that must balance every day. It starts with the 233.5 million gallons
+found by the 2022 study. The spill leaves it at once. The emergency response is assumed to use
+300,000 gallons a day, and resupply by pipeline and barge is assumed to resume on day 14 at up to
+1 million gallons a day. Both rates and the day are guesses.
+
+**Water.** The model does not compute water service. It restores water along a straight line that
+ends on a day drawn at random from the Resilience Plan's range of one month to one year.
+
+**Deaths after the shaking.** Two rules add deaths in the following year. The first applies a death
+rate to every day that a person spends without electricity, standing for medical care that is
+interrupted. The rate is derived from a study of Puerto Rico after Hurricane Maria (Kishore and others, 2018), which
+is an analogy and not a measurement of Portland. The second rule lets people with life-threatening
+injuries die at a guessed rate on any day when no hospital is open. The model counts the people who
+depend on electrically powered medical equipment at home, about 5,900 in this area, but applies no
+death rate to them. It has no deaths from cold, unsafe water or fire.
+
+The figure shows these relationships as a person might draw them. A solid line is a relationship
+the model represents. A dashed line is one that exists in the world and is missing from the model.
 
 ```esim
 actors
-fault: the Cascadia subduction zone, 1700 and next
-ground: DOGAMI's synthetic motion and the soils that liquefy
-buildings: 615,852 footprints and the people in them
-hub: 587 tanks, 233 million gallons, each on its own ground
-bridges: twelve crossings, built 1908 to 2016
-hospitals: thirteen, on generators
-people: 935,195 in the window; 5,900 on medical devices that need power
-power: 6,146 transmission structures, crews at twelve a day
-water: pipes, back in a month to a year
-pipeline: the Olympic line from Puget Sound
-council: Ordinance 2026-312
-fault -> ground: slips, four minutes of shaking
-ground -> buildings: shakes and liquefies them
-ground -> hub: each tank fails or stands on the ground at its cell
-ground -> bridges: each crossing by its class, the county's 2014 report and the bridge inventory
-ground -> power: each pole by the state's chance at it
-hub -> hospitals: diesel for the generators, once trucks move
-bridges -> hospitals: the east bank waits for a crossing
-power -> hospitals: the grid comes back, hospital by hospital
-pipeline -> hub: fuel again from day fourteen
-council -> hub: a fifth less storage by 2036
-hub -> buildings: fire following the spill (not modelled)
-hub -> water: oil in the river at the intakes (not modelled)
-buildings -> power: debris and poles, the lumpy recovery (not modelled)
-buildings -> people: the dead and the injured in the shaking
-hospitals -> people: the life-threatening injured, treated or not
-power -> people: care interrupted, at the Puerto Rico rate; devices without power
-water -> people: a month without water, the Resilience Plan's rule; illness (not modelled)
-people -> people: leaving, shelters, cold (not modelled)
+the ground: shaking, liquefaction and landslides
+buildings: 297,803 buildings
+people: 935,195 residents
+hospitals: thirteen, with generators
+electricity: 6,146 transmission structures
+roads: 137 emergency route segments
+bridges: twelve over the Willamette
+fuel terminals: 587 tanks
+water: an assumed schedule
+the ground -> buildings: damage and collapse
+the ground -> electricity: structures fall
+the ground -> roads: segments close
+the ground -> bridges: most close
+the ground -> fuel terminals: tanks fail and spill
+buildings -> people: deaths, injuries, displacement
+hospitals -> people: treat the badly injured
+electricity -> hospitals: grid power
+electricity -> people: interrupted care
+bridges -> roads: join the two banks
+fuel terminals -> roads: fuel trucks
+roads -> hospitals: generator fuel
+fuel terminals -> water: fuel in the river (not modelled)
+fuel terminals -> buildings: fire (not modelled)
+water -> people: illness (not modelled)
 ```
 
-## How the pieces hang together
+A run can also be watched. Open one from the list of runs above this text and press play. The map
+shows the bridges and hospitals as marks that change when they close or lose power, and a clock
+gives the date and whether the moment is before, during or after the earthquake. The arrow keys
+step from one event to the next.
 
-The way a person holds this in mind is a chain with waits in it. The fault slips and the ground
-moves; the ground breaks buildings and kills people at once; the same ground breaks the crossings,
-the poles and the pipes, and those decide whether the injured reach a hospital, whether the sick
-stay alive at home, whether the water is safe, and whether anyone can get across the river to fix
-any of it. The hub sits on the worst of that ground and holds the fuel the fixing runs on, so it
-is both the spill and the stock. Above the ground sit the council, which decides storage, the
-state, which calls the hub the buffer, the federal response, which decides when the trucks come,
-and the people, who decide whether to stay. Each layer waits on the one before, and the waits are
-measured in minutes, days, months and years. The figure above draws that model in the author's
-words, with the arrows the engine lacks dashed.
+## What the runs show
 
-The engine's own model is narrower and the run page draws it below each run as the wiring: who
-writes which field, who reads it, which events pass between them, which ledger they share. It is
-drawn from what each module declares, so a relationship the world has and the run lacks shows as a
-missing arrow, and the check that refuses a manifest whose wiring does not close is the same
-drawing. Here it is for this project's latest run:
+Each row in the tables below is one variant of the scenario. The model makes a random draw wherever
+a source gives a probability instead of an outcome, for example whether a particular tank fails. A
+run's seed is the number that fixes those draws.
+
+| Variant | What it changes |
+|---|---|
+| `wet-day` | The base run: saturated soil, 2 p.m., seed 1 |
+| `seed-2`, `seed-3` | The base run with different random draws |
+| `wet-night` | The earthquake at 2 a.m. |
+| `dry-day` | Dry soil, so almost no liquefaction |
+| `cut-20` | 20 percent less fuel held at the hub |
+| `retrofit` | Every tank meets the newer standard and releases at most 10 percent |
+| `no-hub` | No fuel held at the hub |
+| `ranges` | An earlier version of the model, described below |
+| `burnside-ready` | Meant to keep the Burnside Bridge open, but has no effect, as explained below |
+
+The `ranges` variant does not compute bridges, roads, electricity or the spill from individual
+components. It draws their outcomes from the published ranges: the Resilience Plan's restoration
+times, the county's statement on its bridges and the 2022 study's release range. It is kept so the
+computed results can be read beside the estimates they are checked against.
+
+### The day after
+
+```esim
+table 2027-03-27T21:00Z quake.buildings_collapsed=buildings_collapsed quake.deaths=deaths_counted_by_cell agents.dead=deaths_counted_by_agents quake.displaced=people_displaced fuel.ground_gal=fuel_spilled_on_the_ground fuel.river_gal=fuel_spilled_toward_the_river
+```
+
+**Buildings.** In the base run 1,047 of the 297,803 buildings collapse, and 19,769 are extensively
+damaged or destroyed. The shaking injures 7,120 people badly enough to need a hospital, 610 of them
+with life-threatening injuries, and displaces 42,925.
+
+**Deaths.** The model counts the dead from the shaking in two ways, and the two counts disagree.
+The buildings calculation, which works cell by cell, gives 1,000 deaths in the base run and 564
+and 602 with the other two seeds. The agents give 670, 460 and 550. At night the two methods agree,
+at 631 and 630. By day the agents' count is lower by between a tenth and a third. The cause has not
+been found. Until it is, neither figure should be quoted as this model's death toll. The total
+that a run reports as `deaths.total` uses the agents' count.
+
+For comparison, DOGAMI's loss table gives 810 deaths in Portland's nine districts for the same
+case, and its summary for the city gives 896. The cell-by-cell count for those districts is 748 in
+the base run, close to DOGAMI's because the model was adjusted to match it.
+
+The three seeds differ by almost a factor of two although the number of collapses barely changes,
+from 998 to 1,047. In the model 97 percent of the deaths happen in collapsed buildings, and a
+collapsed building kills a fixed share of the people in it. The toll therefore depends on which
+buildings collapse. A collapse in a cell full of daytime workers counts for far more than one on a
+residential street.
+
+The model handles night and dry soil poorly. In DOGAMI's study the night-time toll for the three
+counties is about a quarter of the daytime toll. In the model's area it is nearly two thirds, and
+the model's night-time deaths in Portland are twice DOGAMI's. DOGAMI's toll on dry soil is about
+two thirds of its toll on saturated soil, while the model's two figures are almost the same. In
+the model only shaking makes a building collapse. Ground failure destroys buildings without
+collapsing them, and a destroyed building that has not collapsed kills few of its occupants.
+
+**The spill.** In the base run 233 of the 587 tanks fail and release 60.6 million gallons: 34.4
+million onto the ground and 26.2 million toward the river. The 2022 study estimates 95 to 194
+million gallons, so the model's release is about two thirds of the study's minimum. The release
+from each failed tank follows the study's own rule, so the shortfall lies in how many tanks fail.
+That number comes from a tank fragility curve that is recalled from memory and unverified.
+
+Holding 20 percent less fuel cuts the release toward the river from 26.2 to 21.0 million gallons.
+Retrofitting every tank cuts it to 2.0 million. On dry soil 97 tanks fail and 3.7 million gallons
+go toward the river.
+
+### Three days after
+
+```esim
+table 2027-03-29T21:00Z lifeline.crossings_open=bridges_open service.power_share=share_of_people_with_electricity lifeline.hospitals_dark=hospitals_without_power fuel.hub_gal=fuel_left_at_the_hub
+```
+
+**Bridges.** Ten of the twelve bridges close in the base run. Tilikum Crossing and the Sellwood
+Bridge stay open. The Broadway Bridge reopens after 21 days and the Marquam and Burnside bridges after
+120 days. The other seven take the worst level of damage and stay closed for 365 days, the repair
+time this project assigned to that level for an older bridge. They reopen on the last day of the
+run, so a full year without them is as much as the model can say. Multnomah County says none of the downtown bridges is
+expected to be usable immediately after a major earthquake, and that it could be weeks to years
+before any is. The model's result resembles that statement, but it is not an independent check,
+because the curve for the older bridges was set by judgement from the county's own report.
+
+The `burnside-ready` variant was meant to show the effect of a Burnside Bridge built to survive.
+It changes a setting that only the earlier version of the model reads, so its results are
+identical to the base run's.
+
+**Electricity.** In the base run 90 percent of people keep their electricity at the moment of the
+earthquake. The share is 95 percent on day 3 and 97 percent on day 7, and everyone has power by
+day 22. The Resilience Plan expects one to three months. The model is this far from the plan
+because transmission structures are the only part of the power system it contains. Of the 6,146
+structures 586 fail, and crews repair twelve a day. Substations, lines and neighbourhood
+distribution, which the model lacks, are not there to fail. This is the model's least credible
+result, and two others depend on it: how many hospitals lose power, and how many people die in the
+months after.
+
+**Hospitals.** All thirteen hospital buildings stand in the base run. Three have no grid electricity
+and cannot be reached by a fuel truck, so they lose power on day 3 when their generators run out:
+Oregon Health & Science University Hospital, Doernbecher Children's Hospital and Providence
+Milwaukie Hospital. Two are still without power on day 7 and none by day 14. In the `ranges`
+variant, where electricity returns on the Resilience Plan's schedule, eleven of the thirteen lose
+power on day 3. The model does not represent hospital capacity. It has no beds, staff or supplies,
+and no damage inside a hospital building that still stands.
+
+### A year after
+
+```esim
+table 2028-03-26T21:00Z after.deaths=deaths_after_the_shaking fuel.consumed_gal=fuel_used_by_the_response fuel.hub_gal=fuel_at_the_hub
+```
+
+**Roads and fuel.** In the base run 22 percent of the emergency route length is open during the
+first week, 27 percent on day 30 and 61 percent on day 90. All of it is open by day 180. No
+hospital can be reached by road from the fuel terminals until day 111.
+
+That delay exposes a fault in the fuel accounting. The model starts counting the emergency
+response's fuel use only once a truck can reach a hospital. In the base run the response therefore
+uses no fuel for 110 days, which is not a result to rely on. Meanwhile resupply resumes on day 14,
+and the hub is back to its starting stock about two and a half months after the earthquake.
+
+The model does show the two sides of the storage argument as numbers. After the spill the hub
+holds 172.9 million gallons in the base run, 138.3 million with 20 percent less fuel held, 228.7
+million with every tank retrofitted, and nothing with no hub. In this model, holding less fuel
+gives a smaller spill and a smaller reserve, and retrofitting the tanks gives the smallest spill
+and the largest reserve. Two cautions apply. The `cut-20` variant removes a fifth of the fuel
+held, which is a stronger measure than the ordinance's cut to capacity. And the model cannot say
+how long any of these reserves would last, because the response's daily use and the date of
+resupply are guesses.
+
+**Water.** Water service is an assumption in every run, so it is an input and not a finding. In the
+base run 10 percent of people have water on day 30 and half on day 150, and everyone has it by
+day 300. That leaves 841,676 people without water for more than a month.
+
+**Deaths after the shaking.** The base run adds 2 deaths over the year, with a range of 0.3 to 3.7,
+all from interrupted care. The `ranges` variant adds 66, with a range of 11 to 121. The whole
+difference is the length of the power cut: 443,000 person-days without electricity in the base
+run against 14.5 million in the `ranges` variant. Nobody dies of untreated injuries in either run,
+because some hospitals stay open throughout. Since the base run restores electricity far faster
+than the Resilience Plan expects, its figure of 2 deaths is too low by the model's own logic.
+
+The 2022 study also estimates deaths at the fuel terminals themselves if the spill ignites: 0 to 7
+among about 1,200 workers. The model draws a number in that range and scales it by the size of the
+release, which adds about one death in the base run. It does not model the fire.
+
+## What cannot be trusted yet
+
+- **The death toll.** The toll from the shaking is fitted to DOGAMI's estimate, and the model's two
+  ways of counting it disagree by up to a third in daytime runs for a reason not yet found.
+- **Recalled values.** The fragility curves for buildings, tanks and the two modern bridges, and
+  every casualty rate, are recalled from memory of the Hazus manual and have not been checked
+  against it.
+- **The spill.** The base run releases about two thirds of the 2022 study's minimum.
+- **Electricity.** It returns in three weeks where the Resilience Plan expects one to three months,
+  because the model contains only transmission structures.
+- **Fuel use.** The response's daily use, the hospitals' generator fuel and the date and rate of
+  resupply are guesses, and the response uses no fuel for the first 110 days.
+- **Water.** The restoration schedule is assumed, not computed.
+- **Deaths after the shaking.** They rest on one rate borrowed from another disaster and on the
+  model's electricity result.
+- **Bridges and roads.** The curve for older bridges and the closure times for roads are judgements
+  made for this project.
+- **The building count.** The run reports 297,803 buildings in the area. The project's note on how
+  the source data was prepared gives 297,120 building outlines. The difference has not been
+  explained.
+
+The model leaves out several things entirely. It has no fire following the earthquake, including
+fire in the spilled fuel. It has no debris on the roads, no movement of spilled fuel down the
+river, no bridges over the Columbia River, no shelters, and no people leaving the city. It has no
+illness from unsafe water and no deaths from cold.
+
+There is no record of this earthquake to score the model against. Every check on this page is a
+comparison with another study, and the ground shaking itself is the output of DOGAMI's model.
+
+The faults of the simulator's other models are listed on [Limits today](/docs/system/limits).
+
+## How the modules are connected
+
+The figure below is generated from the latest run. It shows the model's modules, the fields each
+one writes and reads, and the events that pass between them.
 
 ```esim
 wiring
 ```
 
-What is computed from the ground, cell by cell, the way the Palisades fire is: the buildings'
-damage, deaths, injuries and displaced, from DOGAMI's motion through a fragility at every cell. What
-is arranged rather than computed: the lifelines, whose days are drawn from published ranges, and
-the aftermath, whose deaths are rates from other disasters applied to the counts the run has. The
-difference matters, and the next rungs are the ones that turn the arranged into the computed: the
-power as its 18,098 transmission poles with DOGAMI's own chance of failure at each, the routes as
-the 238 emergency segments with DOGAMI's risk class at each, fire following the earthquake on the
-cell engine that ran the Palisades, the spill as a flow on the slope and the river, and people as
-queues at hospitals and shelters rather than as rates.
-
-## What the runs say
-
-The scenario is Friday 26 March 2027 at two in the afternoon, Pacific daylight time, in a run that
-begins two weeks before and ends a year after the event, on saturated
-winter soils, which DOGAMI calls its highest-impact case. The table reads each run the day after
-and at the end of the year.
-
-```esim
-table 2027-03-27 deaths.total=dead_all_causes quake.buildings_collapsed=buildings_collapsed quake.deaths_in_collapses=dead_in_them quake.portland_deaths=deaths_in_Portland quake.injuries_hospital=injuries_needing_a_hospital quake.displaced=people_displaced quake.buildings_extensive=buildings_extensive_or_complete quake.buildings_complete=buildings_complete fuel.river_gal=gallons_toward_the_river
-```
-
-```esim
-table 2027-04-25 fuel.days_left=days_of_fuel_at_day_30 lifeline.hospitals_open=hospitals_open lifeline.crossings_open=crossings_open service.power_share=share_with_power
-```
-
-```esim
-table 2028-03-26 lifeline.crossings_open=crossings_open_after_a_year fuel.consumed_gal=gallons_burned_by_the_response fuel.delivered_gal=gallons_resupplied fuel.hub_gal=gallons_at_the_hub service.water_share=share_with_water
-```
-
-What stands out:
-
-- **Computed against arranged.** The base run is now the computed one, and the ranges run is
-  beside it. On the tanks: 233 of the 587 fail on the ground at their cells and release 61 million
-  gallons, 26 million to the river, against the study's 95 to 194 million, so the recalled tank
-  fragility is too strong or the study's rule that every old tank on deforming ground fails is
-  stronger than a curve. On the crossings: the first computed run had eight of twelve standing on
-  the first day, where the county expects none usable at once, because the curves were generic
-  highway bridges. Each crossing now carries the federal bridge inventory's facts (year, type,
-  length, condition) and a seismic class: the county's own 2014 vulnerability report says the four
-  downtown bridges it owns, un-retrofitted, do not meet no-collapse at the 500-year Cascadia level
-  of 0.20 g or the 1,000-year level of 0.28 g, and names the columns, footings, bearing seats and
-  the liquefiable approaches; the curve for that class is a judgement anchored on those two levels,
-  and the older state and railway bridges share it by age; Sellwood and Tilikum, built in 2015 and
-  2016 under current code, get a modern class. With that, eleven of twelve close on the first day,
-  three are back by day thirty and five by day 120, which is the county's "weeks to years" computed
-  rather than drawn. On the power: 586
-  poles fail and twelve crews a day have the whole window back in thirteen days, against the Plan's
-  one to three months, because a pole is all the grid this model has; the substations, the lines and
-  the distribution are not in the state's bundle. On the routes: a fifth of the segment length is
-  open on the first day and the hospitals on the hub's bank are reached at once. Each of these is
-  the engine being wrong in a way a record catches, which is what it is for; the arranged run lands
-  inside the ranges because it was drawn from them, and says nothing. The deaths after the shaking
-  fall to a handful in the computed run because the power is back in two weeks, which is the same
-  error seen from the people's side.
-- **The collapses, building by building.** The buildings module no longer reports an expected
-  toll alone: at every cell it draws how many of the cell's buildings collapse outright, a binomial
-  draw at the cell's collapse share by the seed, and the dead in them follow at the collapse rate.
-  In the base run 1,047 buildings collapse and 974 of the 1,000 dead are in them; the second seed
-  has 998 collapses and 564 dead, the third 1,030 and 602. The expected toll is unchanged at 765,
-  and what the draw adds is the truth that one office tower falling or standing moves the count by
-  hundreds, which is why DOGAMI's own number carries the uncertainty it states. The map of collapsed
-  buildings is on the run page.
-- **The people as agents.** The run carries 93,520 super-persons of ten people each, drawn by the
-  seed from DOGAMI's occupant rasters: a home cell by the residents, a work cell by the daytime
-  occupants, one in 160 on an electricity-dependent medical device. At the instant each is in a
-  building that collapsed or one that stood, by the cell's realised share, and dies at that
-  building's rate; the agents' dead carry the total on the page (670 in the base run against the
-  cell model's 1,000, the difference being that each agent is ten people and a collapse of a few
-  buildings is a handful of agents). Each day each reads the power service at its home cell. They decide nothing yet; what they establish is the cost: the daily tick
-  runs at about twenty million agent-days a second on one core, so every person in the window
-  separately is a change of one parameter, and the work is the behaviour, not the compute.
-- **The deaths after the shaking.** The aftermath module adds about 66 dead over the year in the
-  base run, a range of 11 to 121, nearly all from care interrupted by the loss of power at the rate
-  Puerto Rico recorded after Maria, applied to 14.5 million person-days without power here; none
-  from untreated injuries, because every hospital here runs on generators through the first three
-  days and the grid returns to each on its own day, so the 468 life-threatening injured are treated
-  on the first day. The third seed, with a slower grid, has 145. That is the model's first honest
-  reading of the later dead: a tenth of the shaking's toll, from one analogue, with cold homes,
-  illness from the water and the people on medical devices counted but not killed. The 5,900
-  people on power-dependent devices in the window, from HHS emPOWER's county counts, are reported
-  as an exposure. A month on, 841,676 people are still without water and 58,450 without power, past
-  the Resilience Plan's one-month rule.
-- **With and without the hub.** The county's 2022 study puts the hub's own toll, assuming the
-  spill ignites, at none to seven dead and two to eighty hurt among its twelve hundred workers,
-  the rates of Texas City in 2005 and Baton Rouge in 2016 applied to the site; the run draws in
-  that range and scales it by the release, so the base run adds about three dead to the 765 the
-  buildings kill, and the no-hub run adds none. On the record, then, the hub does not magnify the
-  earthquake's dead on the day; DOGAMI's run models no fire following the earthquake and says so,
-  and neither does this one, and that is the gap most worth closing. What the hub decides is the
-  year: at day thirty the base run has 317 days of the response's fuel in the tanks and the no-hub
-  run has 22, a week of deliveries, with the pipeline assumed back on day fourteen in both. The
-  state's argument and the activists' are both in the numbers; the spill is the activists' and the
-  stock is the state's.
-- **The spill is the fastest thing that happens.** In the base run about 150 million gallons leave
-  the tanks in the first minutes, 64 million of them toward the river, a draw at the middle of the
-  county study's range; the three seeds span 134 to 171 million. Cutting storage by a fifth before
-  the day takes a fifth off: 52 million toward the river instead of 64. Retrofitting every tank to
-  the post-2004 rule, so that at most a tenth of its contents leaves, takes it to 13 million. The
-  ordinance is the smaller lever and the one the city can pass; the tanks' age is the larger one.
-- **The fuel that spills is the fuel the recovery wanted.** The hub starts with 233 million gallons,
-  the county study's two-thirds fill, and ends the first afternoon with 84 million. The response in
-  this run draws 300,000 gallons a day once trucks move, and the pipeline is assumed back on day
-  fourteen, so the stock never runs out here; it would in a run where resupply takes longer, and
-  the hub chart is the place to watch.
-- **Three days.** Every hospital stands in the base run, on the generic fragility, and every one
-  goes dark on the third day when the generators run dry, because no truck moves before day ten
-  to thirty. They come back on fuel from the hub when the routes open. That rule is a guess; the
-  seventy-two hours is a common planning figure, and what the real deliveries would be is exactly
-  the question the fuel hub debate is about.
-- **The bridges set the shape of the year.** The first crossing is back in three to four weeks on
-  every seed, the last after one to two years. An earthquake-ready Burnside Bridge, built, means one
-  crossing from the first minute, and in this model it changes the hospitals' refuelling and nothing
-  else, because nothing else here knows the river has two sides.
-- **Day and night, wet and dry.** By night the run puts about 560 dead against 765 by day;
-  DOGAMI's own contrast is sharper. Dry soils give nearly the same deaths as wet here, where
-  DOGAMI's wet case has half again as many, because the extra buildings the wet ground destroys
-  are carried away rather than collapsed, and this model does not let the ground kill. Those two
-  gaps are the model's, and they are the first things to fix.
-- **The pattern holds.** Across DOGAMI's 876 neighbourhood units the run's damage correlates 0.9
-  with the state's in the wet case: the river flats, the industrial north, the fill along the
-  Columbia Slough. On dry soils the correlation falls to 0.6, which says the generic fragility is a
-  poor stand-in for the mix of wood, masonry and concrete that decides who dies when the ground
-  holds.
-
-## What is wrong with it
-
-The fragility and casualty rates are recalled, not read, and two of the six fitted numbers (a 13 to
-25 percent collapse share, every casualty rate tripled) are large for what they stand in for, which
-is an inventory with no structure types; with the collapses now drawn building by building, the
-dead in the window run from 560 to 1,000 across three seeds around that fit, and the agents at ten
-people each are lumpier still. The night occupants sit in every building by floor area,
-which is why the night toll runs 1.7 times DOGAMI's. The displaced are a fitted share of residents
-in badly damaged buildings and come out double DOGAMI's on dry soils. The components' curves are
-recalled or judged too: the crossings' curves are anchored on the county's stated levels and not
-published, and the first computed runs fail two of their three checks: too few tanks fail, and the
-power is back too soon because a pole is the whole grid here; the crossings now close as the county
-expects. The water is a ramp; the
-pipes are not in the bundle. No fire follows the earthquake, no debris lies on the routes, no
-tsunami because Portland has none, no Columbia bridges, no one leaves. The hospitals have no beds.
-The deaths after the shaking are rates from other disasters applied to the counts here. The ground
-is a model's and so is the record it is read against. What this page can honestly claim is that
-the state's own inventory, run as components on the state's own ground with the guesses named,
-produces a year that can be argued with piece by piece, which the thread was having without it.
-
 ## What this page has read
 
-- DOGAMI Open-File Report O-18-02, *Earthquake regional impact analysis for Clackamas, Multnomah,
-  and Washington counties, Oregon*, Bauer, Burns and Madin, March 2018. Read 2026-11-12: the
-  report, the community summary and both GIS bundles. Taken: the ground motion and ground failure
-  layers, the inventory, the loss tables, the scenario definitions and casualty levels.
-- *The Oregon Resilience Plan*, Oregon Seismic Safety Policy Advisory Commission, February 2013.
-  Read 2026-11-12 (the executive summary and the Cascadia chapter). Taken: the restoration table,
-  the fatality and loss ranges, the one-month business rule, the retail fuel days.
-- *CEI Hub Seismic Risk Analysis*, ECONorthwest, Salus Resilience and Enduring Econometrics for
-  Multnomah County and the City of Portland, February 2022. Read 2026-11-12 in full. Taken: the
-  tank counts and ages, the capacity and contents, the release rules by age class and the release
-  ranges, the ground and river split, the pipeline.
-- Portland Ordinance 2026-312, Bulk Fuel Terminal Capacity Reduction Regulations, the council's
-  document page, read 2026-11-12. Taken: the 20 percent by 1 December 2036, the eleven terminals,
-  the exemption, the utilization figures, the vote history.
-- USGS, *M9 Cascadia Earthquake Scenarios*, the median ensemble ShakeMap (cszm9ensemble_se) and its
-  ground-failure product, read 2026-11-12. Taken: the Portland grid point as a cross-check; not
-  used in the run.
-- Multnomah County, *Earthquake Ready Burnside Bridge*, the FAQ page, read 2026-11-12. Taken: the
-  statements on the downtown bridges, the dates and the budget.
-- OPB, *Fuel spill in Portland after a major earthquake could be bigger than Deepwater Horizon,
-  study finds*, Monica Samayoa, 7 February 2022. Read 2026-11-12. Taken: the county chair's words.
-- Multnomah County, *Willamette River Bridges Capital Improvement Plan, Seismic Vulnerabilities
-  and Retrofit Report*, 9 November 2014. Read 2026-11-12, the introduction, the performance
-  criteria and the per-bridge vulnerability sections. Taken: the earthquake levels (100-year 0.07 g,
-  500-year Cascadia 0.20 g, 1,000-year 0.28 g), the performance targets, the statements that the
-  four county bridges' columns, footings and bearing seats are vulnerable at the Cascadia and
-  1,000-year levels and that liquefaction and lateral spreading under the approaches are
-  unmitigated, Burnside's designation as the regional lifeline route.
-- FHWA, the National Bridge Inventory, Oregon 2024 delimited file, read 2026-11-12. Taken: each
-  crossing's structure number, year built and reconstructed, kind, type, length, condition ratings
-  and traffic, in the record's bridge table.
-- The county study's Appendix B, the per-tank table (621 rows with capacity, year, type, the
-  study's zone and its own release range for each), read 2026-11-12 from the report's PDF. Taken
-  whole, as `tanks.csv` in the record folder; 228 tanks carry the study's coordinates.
-- OpenStreetMap, the storage tanks and named terminals along the hub through the Overpass API,
-  read 2026-11-12. Taken: 352 tank footprints, on which the study's unlocated tanks are placed by
-  property, which is a guess within the property.
-- DOGAMI O-18-02's impact bundle, the transmission structures (18,098, 6,146 in the window, with the
-  state's deformation chance at each) and the emergency transportation routes (238 segments, 137 in
-  the window, with the deformation class at each), cut 2026-11-12 with GDAL.
-- Kishore et al., *Mortality in Puerto Rico after Hurricane Maria*, New England Journal of Medicine
-  379:162-170, 2018. The abstract and the reporting on it read 2026-11-12, not the paper. Taken:
-  4,645 excess deaths over 102 days with a wide interval, one third attributed to interrupted care;
-  turned into a rate per person-day without power in the claims table.
-- HHS emPOWER, the county layer of its public REST service, read 2026-11-12. Taken: Medicare
-  beneficiaries on electricity-dependent equipment in Multnomah, Washington and Clackamas counties
-  (4,825, 3,593 and 3,152), and the beneficiaries counted.
-- Multnomah County, *DOGAMI: Study estimates Cascadia earthquake impacts for Portland region*,
-  the county's page on the 2018 study (last reviewed 27 November 2024), sent by Anselm, read
-  2026-11-12. Taken: the county's summary numbers (27,000 injuries, 85,000 needing shelter, 37
-  billion dollars), the lead investigator's words. The page says nothing of the bridges or the hub.
+Every source was read on 12 November 2026 unless noted.
+
+- City of Portland, council document 2026-312, *Bulk Fuel Terminal Capacity Reduction Regulations*.
+  Taken: the 20 percent cut by 1 December 2036, the aviation fuel exemption and the vote history.
+  The ordinance passed as amended on 12 November 2026 by 10 votes to 0, with two councillors absent.
 - Gosia Wozniacka, *A Big One nightmare scenario drives Portland to cut fuel storage along the
-  Willamette*, The Oregonian/OregonLive, 12 November 2026. Read 2026-11-12 from Anselm's paste of
-  the text, the site having refused this machine. Taken: what the ordinance cuts and exempts, the
-  state's and the activists' positions, the Olympic Pipeline shutdown, the June 2027 review, and
-  the correction to the hub's contents below.
-- r/Portland, the thread on that story, 12 November 2026, the comments through Reddit's RSS feed.
-- Satake, Shimazaki, Tsuji and Ueda 1996 (Nature) on the 1700 orphan tsunami, and Atwater's work
-  on the coastal marshes: recalled, not read here.
-- FEMA's Hazus Earthquake Model Technical Manual: not read; every fragility and casualty number
-  here is recalled from it and marked so.
+  Willamette*, The Oregonian/OregonLive, 12 November 2026. Read from a pasted copy of the text.
+  Taken: that the rule cuts capacity and not fuel held, the energy department's position and the
+  2025 pipeline shutdown.
+- r/Portland, the discussion thread on that story, 12 November 2026.
+- *CEI Hub Seismic Risk Analysis*, ECONorthwest, Salus Resilience and Enduring Econometrics, for
+  Multnomah County and the City of Portland, February 2022. Read in full. Taken: the tank counts
+  and ages, capacity and contents, the release rules and release range, the split between ground
+  and river, and the estimate of deaths at the terminals. Its Appendix B, a table of 621 tanks, is
+  the source of the model's 587 tanks.
+- Multnomah County's web pages on the hub and on the 2022 study. Taken: the share of Oregon's fuel,
+  the average tank year, the 26 percent chance in 50 years and the cost figures.
+- Monica Samayoa, *Fuel spill in Portland after a major earthquake could be bigger than Deepwater
+  Horizon, study finds*, OPB, 7 February 2022. Taken: the cost figures, which it gives as the
+  county's page does.
+- DOGAMI Open-File Report O-18-02, *Earthquake regional impact analysis for Clackamas, Multnomah,
+  and Washington counties, Oregon*, Bauer, Burns and Madin, March 2018. Read: the report, its
+  community summary and its two data bundles. Taken: the ground maps, the building inventory and
+  occupants, the loss tables, the transmission structures and the emergency route segments.
+- Multnomah County, *DOGAMI: Study estimates Cascadia earthquake impacts for Portland region*, the
+  county's page on the 2018 study, last reviewed 27 November 2024. Read, but nothing on this page
+  is taken from it.
+- *The Oregon Resilience Plan*, Oregon Seismic Safety Policy Advisory Commission, February 2013.
+  Read: the executive summary and the Cascadia chapter. Taken: the restoration table.
+- Multnomah County, *Willamette River Bridges Capital Improvement Plan, Seismic Vulnerabilities and
+  Retrofit Report*, 9 November 2014. Read: the introduction, the performance criteria and the
+  sections on each bridge. Taken: the shaking levels and the finding that the four county bridges
+  are vulnerable at them.
+- Multnomah County, *Earthquake Ready Burnside Bridge*, the questions page. Taken: the statement
+  that no downtown bridge is expected to be usable immediately.
+- Federal Highway Administration, National Bridge Inventory, Oregon file for 2024. Taken: each
+  bridge's year built, type, length and condition.
+- OpenStreetMap, through the Overpass service. Taken: 352 tank outlines, used to place the tanks
+  for which the 2022 study gives no coordinates. The placement within a property is a guess.
+- Kishore and others, *Mortality in Puerto Rico after Hurricane Maria*, New England Journal of
+  Medicine 379:162-170, 2018. Read: the abstract and reporting on it, not the paper. Taken: the
+  excess deaths and the share attributed to interrupted care, turned into a rate per person-day
+  without electricity.
+- US Department of Health and Human Services, emPOWER, county data. Taken: the number of Medicare
+  beneficiaries who depend on electrically powered medical equipment in the three counties.
+- Atwater and others, *The orphan tsunami of 1700*, US Geological Survey Professional Paper 1707,
+  2005. Read: the abstract. Taken: the account of the tsunami and of how it was linked to Cascadia.
+- Goldfinger and others, *Turbidite event history*, US Geological Survey Professional Paper 1661-F,
+  2012. Read: the abstract. Taken: the count of ruptures and the average interval.
+- City of Portland, *Overview of unreinforced masonry (URM) buildings*. Taken: the seismic zone
+  history and the building count.
+- US Geological Survey, *M9 Cascadia Earthquake Scenarios*, the median scenario. Taken: shaking at
+  one point in downtown Portland as a cross-check. Not used in the runs.
+- US Geological Survey earthquake catalogue, the entry for the 1700 earthquake. Only the entry's
+  title, magnitude and time were retrieved.
+- Satake and others, 1996, in *Nature*, on the 1700 tsunami. Cited by the sources above. Not read.
+- FEMA, *Hazus Earthquake Model Technical Manual*. Not read. Every fragility curve and casualty
+  rate in the model is recalled from it and unverified.
