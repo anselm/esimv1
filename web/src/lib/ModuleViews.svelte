@@ -51,7 +51,7 @@
     }
     return [...m.values()]
   })
-  const STATES = [['open', 'open'], ['generator', 'on generator'], ['dark', 'dark, no fuel'], ['damaged', 'closed by damage'], ['closed', 'crossing closed'], ['spilled', 'hub, spilled']]
+  const STATES = [['open', 'open'], ['generator', 'hospital on generator'], ['dark', 'hospital without power'], ['damaged', 'hospital closed by damage'], ['closed', 'bridge closed'], ['spilled', 'fuel hub, tanks failed']]
   const legend = $derived(STATES.map(([state, label]) => ({ state, label, color: MARK_COLORS[state], n: marksAt.filter((x) => x.state === state).length })).filter((l) => l.n))
   function filmField(v) {
     const names = v.source.split(',').map((s) => s.trim()).filter((n) => run.fields?.[n])
@@ -107,7 +107,7 @@
           {#if legend.length}
             <div class="mono mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-xs">
               {#each legend as l (l.state)}<span><span style="color:{l.color}">{l.state === 'closed' ? '■' : l.state === 'spilled' ? '◆' : '●'}</span> {l.label} <span class="muted">{l.n}</span></span>{/each}
-              <span class="muted">squares are crossings, circles hospitals; hover a mark for its name</span>
+              <span class="muted">squares are bridges, circles are hospitals; hover over a mark for its name</span>
             </div>
             {#each legend.filter((l) => l.state !== 'open' && l.state !== 'spilled') as l (l.state)}
               <div class="mt-0.5 text-xs"><span style="color:{l.color}">{l.label}:</span> <span class="muted">{marksAt.filter((x) => x.state === l.state).map((x) => x.name).join(', ')}</span></div>

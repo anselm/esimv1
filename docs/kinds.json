@@ -230387,47 +230387,47 @@
   {
     "kind": "quake.ground",
     "name": "quake.ground",
-    "summary": "A published earthquake scenario's ground motion and ground failure on the window: DOGAMI's site peak ground acceleration and velocity for a simulated Cascadia M9.0 (synthetic bedrock motions from the USGS, the state's site response), its liquefaction and landslide probability and deformation for saturated or dry soils, read from the event folder and written as world fields; at the stated instant it publishes the rupture. Nothing about the earthquake is computed here. There is no record of this event to score against, so the ground is the output of the state's model.",
+    "summary": "This module supplies the ground motion. It does not simulate the fault or the shaking. It reads maps published by DOGAMI, the Oregon Department of Geology and Mineral Industries, for a simulated magnitude 9.0 earthquake on the Cascadia subduction zone (Open-File Report O-18-02, 2018). The maps give the peak acceleration and velocity of the ground at the surface, and the probability and extent of liquefaction and landslides, for saturated or dry soil. DOGAMI worked out the surface motion from simulated bedrock motion supplied by the US Geological Survey. At the moment set for the earthquake, this module makes the maps available to the other modules and announces the rupture. This earthquake has not happened, so there are no measurements to compare the maps with.",
     "priority": 0,
     "dt": "once, at the rupture",
     "params": [
       {
         "name": "folder",
         "default": "portland-cascadia",
-        "note": "the event folder under data/events with the cut rasters and their README"
+        "note": "the folder of input data for this event: DOGAMI's maps cut to the modelled area, and a README that says how they were made"
       },
       {
         "name": "tz_offset_h",
         "default": -8.0,
         "unit": "h",
-        "note": "the local clock's offset from UTC, for the words only (PST -8, PDT -7)"
+        "note": "local time's offset from UTC in hours (PST -8, PDT -7), used only to print local times"
       },
       {
         "name": "tz_name",
         "default": "PST",
-        "note": "the local clock's name, for the words only"
+        "note": "the name of the local time zone, used only in printed times"
       },
       {
         "name": "at",
         "default": "2027-01-26T22:00:00Z",
-        "note": "the rupture instant (UTC); 26 January is the anniversary of the 1700 event, 14:00 Pacific is DOGAMI's daytime scenario"
+        "note": "the moment of the earthquake in UTC, a scenario choice and not a prediction. 2 p.m. Pacific time is DOGAMI's daytime case"
       },
       {
         "name": "magnitude",
         "default": 9.0,
         "unit": "Mw",
-        "note": "DOGAMI's and the USGS ensemble's scenario magnitude"
+        "note": "the magnitude of the scenario in DOGAMI's study and in the US Geological Survey's set of simulations"
       },
       {
         "name": "duration_s",
         "default": 240.0,
         "unit": "s",
-        "note": "strong shaking; DOGAMI: 3 to 5 minutes for a megathrust"
+        "note": "seconds of strong shaking. DOGAMI gives 3 to 5 minutes for an earthquake of this kind"
       },
       {
         "name": "soils",
         "default": "wet",
-        "note": "wet (saturated, DOGAMI's higher-loss case: liquefaction and landslides) or dry (landslides only, the dry layers)"
+        "note": "wet: saturated soil, DOGAMI's higher-loss case, with liquefaction and landslides. dry: DOGAMI's dry-soil maps, with landslides only"
       }
     ],
     "publishes": [
@@ -230539,28 +230539,28 @@
         "title": "peak ground acceleration",
         "source": "quake_pga_g",
         "obs": "",
-        "note": "DOGAMI's site estimate for the M9.0; a fraction of g"
+        "note": "DOGAMI's estimate at the surface for the magnitude 9.0 scenario, as a fraction of g, the acceleration of gravity"
       },
       {
         "kind": "map",
         "title": "intensity",
         "source": "quake_mmi",
         "obs": "",
-        "note": "Modified Mercalli from the peak velocity by Wald and others 1999 (recalled): 3.47 log PGV + 2.35"
+        "note": "Modified Mercalli intensity, computed from peak ground velocity (PGV) with the relation of Wald and others 1999, recalled from memory: 3.47 log PGV + 2.35"
       },
       {
         "kind": "map",
         "title": "chance of liquefaction",
         "source": "quake_liquefaction_p",
         "obs": "",
-        "note": "DOGAMI's probability of lateral spread, saturated soils; zero in the dry variant"
+        "note": "DOGAMI's probability that the ground spreads sideways as saturated soil liquefies; zero in the dry-soil case"
       },
       {
         "kind": "map",
         "title": "permanent ground deformation",
         "source": "quake_ground_pgd_cm",
         "obs": "",
-        "note": "the larger of the liquefaction and landslide deformation, cm"
+        "note": "the larger of the permanent ground movement from liquefaction and from landslides, in centimetres"
       }
     ],
     "assets": [
@@ -230570,116 +230570,116 @@
       },
       {
         "key": "events/portland-cascadia",
-        "note": "DOGAMI O-18-02's site motions and ground failure, cut to the window"
+        "note": "DOGAMI's ground motion and ground failure maps from Open-File Report O-18-02, cut to the modelled area"
       }
     ],
     "notes": [
-      "The rasters are DOGAMI Open-File Report O-18-02 (2018), cut to the window with GDAL on 2026-11-12 as the event folder's README says; the run reads the cut files. The USGS median ensemble ShakeMap (cszm9ensemble_se) gives MMI 7.2 and PGA 0.24 g at downtown Portland against DOGAMI's 0.15 to 0.32 g over the window; the USGS ground-failure product is far coarser (500 m) and reads near zero at the fuel hub where DOGAMI maps a high liquefaction chance, so DOGAMI is used."
+      "The maps are from DOGAMI Open-File Report O-18-02 (2018). They were cut to the modelled area with GDAL on 12 November 2026, as the event folder's README describes, and the run reads the cut files. The US Geological Survey publishes a separate estimate for this scenario, the median of its own set of magnitude 9 simulations (ShakeMap cszm9ensemble_se). It gives Modified Mercalli intensity 7.2 and a peak ground acceleration of 0.24 g at downtown Portland, which is inside DOGAMI's range of 0.15 to 0.32 g across the modelled area. The Survey's ground-failure map is much coarser (500 metres) and shows almost no liquefaction at the fuel hub, where DOGAMI maps a high probability, so this project uses DOGAMI's maps."
     ]
   },
   {
     "kind": "quake.buildings",
     "name": "quake.buildings",
-    "summary": "Damage, deaths and displaced people on the cells from the ground module's motion: a lognormal fragility in peak ground acceleration for a generic building mix (four damage states), ground failure from the liquefaction and landslide layers, and casualty rates by damage state in the Hazus manner; occupants by time of day and residents per cell from DOGAMI's own inventory. The fragility medians and the casualty rates are recalled, not read. Six parameters are fitted to DOGAMI's Hazus results for the same ground on saturated soil by day, and the module reports the fit. The pattern of damage across neighbourhoods follows DOGAMI's. The night-time and dry-soil tolls do not: only shaking makes a building collapse here, so the toll changes much less between those cases than DOGAMI's does.",
+    "summary": "This module estimates building damage, deaths, injuries and displaced people in each cell of the map, from the ground module's shaking. For each cell it uses a fragility curve, which gives the probability that a building reaches each of four damage states at a given peak ground acceleration. One set of curves stands for a generic mix of building types. The module adds the buildings lost where the ground liquefies or slides, then applies a casualty rate to each damage state. This is the approach of Hazus, the loss-estimation software of the Federal Emergency Management Agency. The buildings, the residents and the occupants by time of day come from the inventory of DOGAMI, Oregon's geology agency. The values of the curves and of the casualty rates are recalled from memory and have not been checked against the Hazus manual. Six parameters were then fitted to DOGAMI's own Hazus results for a daytime earthquake on saturated soil, and the module reports how close the fit is. The pattern of damage across neighbourhoods follows DOGAMI's. The tolls for a night-time earthquake and for dry soil do not. In this model only shaking makes a building collapse, so the toll changes much less between those cases than it does in DOGAMI's study.",
     "priority": 1,
     "dt": "once, on the rupture",
     "params": [
       {
         "name": "folder",
         "default": "portland-cascadia",
-        "note": "the event folder with the inventory and the loss tables"
+        "note": "the folder of input data for this event: the building inventory and DOGAMI's loss tables"
       },
       {
         "name": "time_of_day",
         "default": "day",
-        "note": "day (DOGAMI's 2 PM occupants) or night (2 AM)"
+        "note": "day: people where DOGAMI places them at 2 p.m. night: where it places them at 2 a.m."
       },
       {
         "name": "record",
         "default": "wet",
-        "note": "which DOGAMI table to score against: wet or dry, matching the ground module's soils"
+        "note": "which of DOGAMI's result tables the run is compared with, wet or dry. It should match the ground module's soil setting"
       },
       {
         "name": "median_slight_g",
         "default": 0.2,
         "unit": "g",
-        "note": "fragility median for slight damage, generic mix (recalled from the Hazus equivalent-PGA tables for moderate-code wood and older masonry; a guess at the mix)"
+        "note": "the peak ground acceleration at which half the buildings reach slight damage, for the generic building mix. Recalled from the Hazus tables for moderate-code wood and older masonry; the mix is a guess"
       },
       {
         "name": "median_moderate_g",
         "default": 0.4,
         "unit": "g",
-        "note": "moderate (recalled, as above)"
+        "note": "the same for moderate damage (recalled)"
       },
       {
         "name": "median_extensive_g",
         "default": 0.8,
         "unit": "g",
-        "note": "extensive (recalled, as above)"
+        "note": "the same for extensive damage (recalled)"
       },
       {
         "name": "median_complete_g",
         "default": 1.5,
         "unit": "g",
-        "note": "complete (recalled, as above)"
+        "note": "the same for complete damage (recalled)"
       },
       {
         "name": "beta",
         "default": 0.7,
-        "note": "lognormal dispersion (Hazus uses about 0.64 for most classes; recalled)"
+        "note": "the spread of the fragility curves, a lognormal dispersion. Hazus uses about 0.64 for most building classes (recalled)"
       },
       {
         "name": "fragility_scale",
         "default": 1.0,
-        "note": "the medians are divided by this: fitted so the window's extensive-or-complete count matches DOGAMI's (the fit is reported)"
+        "note": "divides the four accelerations above. Fitted so that the count of buildings with extensive or complete damage matches DOGAMI's; the fit is reported"
       },
       {
         "name": "gf_median_cm",
         "default": 152.0,
         "unit": "cm",
-        "note": "ground-failure fragility median for extensive-or-complete damage from lateral spread (Hazus: 60 inches, recalled)"
+        "note": "the permanent ground movement at which half the buildings on failed ground take extensive or complete damage. Hazus gives 60 inches for lateral spreading (recalled)"
       },
       {
         "name": "gf_beta",
         "default": 1.2,
-        "note": "its dispersion (Hazus 1.2, recalled)"
+        "note": "the spread of that curve (Hazus 1.2, recalled)"
       },
       {
         "name": "gf_complete_share",
         "default": 0.2,
-        "note": "the share of ground-failure damage counted complete (Hazus 0.2 for lateral spread, recalled)"
+        "note": "the share of ground-failure damage counted as complete (Hazus 0.2 for lateral spreading, recalled)"
       },
       {
         "name": "collapse_given_complete",
         "default": 0.08,
-        "note": "share of complete damage that is collapse, generic mix (Hazus: 3 percent wood, 15 percent unreinforced masonry; a guess at the mix)"
+        "note": "the share of completely damaged buildings that collapse, for the generic mix. Hazus gives 3 percent for wood and 15 percent for unreinforced masonry; the mix is a guess"
       },
       {
         "name": "casualty_scale",
         "default": 1.0,
-        "note": "multiplies every casualty rate: fitted so deaths in Portland match DOGAMI's (reported)"
+        "note": "multiplies every casualty rate. Fitted so that deaths in Portland match DOGAMI's; the fit is reported"
       },
       {
         "name": "displaced_moderate_share",
         "default": 0.0,
-        "note": "share of residents in moderately damaged buildings counted displaced (Hazus counts a share; 0 here, a guess)"
+        "note": "the share of residents of moderately damaged buildings counted as displaced. Hazus counts some of them; 0 here is a guess"
       },
       {
         "name": "displaced_share",
         "default": 1.0,
-        "note": "share of residents in extensively or completely damaged buildings counted displaced long-term: fitted to DOGAMI's displaced population (reported)"
+        "note": "the share of residents of buildings with extensive or complete damage counted as displaced for the long term. Fitted to DOGAMI's displaced population; the fit is reported"
       }
     ],
     "publishes": [
       {
         "name": "quake.crossing",
         "required": false,
-        "note": "{ kind: toll, sentence } deaths, injuries and displaced on the rupture; the fit against DOGAMI in the sentence"
+        "note": "{ kind: toll, sentence } the sentence shown on the run page: deaths, injuries and displaced people from the shaking, with the comparison against DOGAMI"
       },
       {
         "name": "quake.toll",
         "required": false,
-        "note": "{ deaths, injuries_hospital, injuries_life, injuries_minor, displaced } the window's toll as numbers, once the shaking ends, for whoever keeps a total"
+        "note": "{ deaths, injuries_hospital, injuries_life, injuries_minor, displaced } the toll in the modelled area as numbers, once the shaking ends, for the module that keeps the total"
       }
     ],
     "sends": [],
@@ -230908,59 +230908,59 @@
     "views": [
       {
         "kind": "map",
-        "title": "share of buildings extensively damaged or worse",
+        "title": "share of buildings with extensive or complete damage",
         "source": "building_damage_frac",
         "obs": "",
-        "note": "expected, per cell"
+        "note": "the expected share in each cell"
       },
       {
         "kind": "map",
         "title": "buildings collapsed",
         "source": "buildings_collapsed",
         "obs": "",
-        "note": "realised building by building, a binomial draw at each cell's collapse share by the seed"
+        "note": "counted building by building: in each cell a random draw decides how many buildings collapse, given the cell's probability of collapse"
       },
       {
         "kind": "map",
         "title": "deaths",
         "source": "deaths",
         "obs": "",
-        "note": "expected, per cell, at the stated time of day; the collapse term is the realised one"
+        "note": "per cell, for people where they are at the time of the earthquake. Deaths in collapsed buildings follow the drawn collapses; the others are expected values"
       },
       {
         "kind": "map",
         "title": "people displaced",
         "source": "displaced",
         "obs": "",
-        "note": "residents of buildings extensively or completely damaged"
+        "note": "a fitted share of the residents of buildings with extensive or complete damage"
       },
       {
         "kind": "counter",
         "title": "buildings collapsed",
         "source": "quake.buildings_collapsed",
         "obs": "",
-        "note": "realised, by the seed"
+        "note": "from the random draw in each cell"
       },
       {
         "kind": "counter",
         "title": "dead in collapsed buildings",
         "source": "quake.deaths_in_collapses",
         "obs": "",
-        "note": "at the collapse casualty rate"
+        "note": "at the casualty rate for collapsed buildings"
       },
       {
         "kind": "counter",
         "title": "deaths",
         "source": "quake.deaths",
         "obs": "",
-        "note": "in the window; the collapses realised, the rest expected"
+        "note": "in the modelled area. Deaths in collapsed buildings follow the drawn collapses; the others are expected values"
       },
       {
         "kind": "counter",
         "title": "injuries needing a hospital",
         "source": "quake.injuries_hospital",
         "obs": "",
-        "note": "Hazus levels 2 and 3"
+        "note": "Hazus severity levels 2 and 3"
       },
       {
         "kind": "counter",
@@ -230971,34 +230971,34 @@
       },
       {
         "kind": "counter",
-        "title": "buildings destroyed or extensively damaged",
+        "title": "buildings with extensive or complete damage",
         "source": "quake.buildings_extensive",
         "obs": "",
-        "note": "extensive plus complete"
+        "note": "the two worst of the four damage states"
       },
       {
         "kind": "counter",
-        "title": "deaths, Portland, against DOGAMI",
+        "title": "deaths in Portland, relative to DOGAMI",
         "source": "fit.portland_deaths_ratio",
         "obs": "",
-        "note": "this run's expected deaths in the nine Portland districts over DOGAMI's figure for the same scenario; 1 is the fit"
+        "note": "this run's deaths in the nine districts of the City of Portland divided by DOGAMI's estimate for the same case; 1 would be an exact match"
       },
       {
         "kind": "counter",
-        "title": "damage pattern across 876 units",
+        "title": "damage pattern, correlation with DOGAMI",
         "source": "fit.units_damage_r",
         "obs": "",
-        "note": "correlation of extensive-or-complete counts per neighbourhood unit with DOGAMI's"
+        "note": "the correlation between this run's and DOGAMI's counts of buildings with extensive or complete damage, across the study's 876 neighbourhood units"
       }
     ],
     "assets": [
       {
         "key": "events/portland-cascadia",
-        "note": "DOGAMI's footprints, people per unit and Hazus loss tables"
+        "note": "DOGAMI's building outlines, people per neighbourhood unit and Hazus loss tables"
       }
     ],
     "notes": [
-      "Hazus's own tables (FEMA, Earthquake Model Technical Manual) were not downloadable from this machine on 2026-11-12; the medians, dispersions, collapse share and casualty rates here are recalled from them and declared so, and six parameters are fitted to DOGAMI's run on the same ground, so the daytime toll on saturated soil is close to the record's by construction. The inventory is DOGAMI's (footprints without heights or structure types; the people per building are each unit's totals spread by footprint area, which is ours)."
+      "The Hazus tables (FEMA, Earthquake Model Technical Manual) could not be downloaded to the development machine on 12 November 2026. The fragility accelerations, their spread, the collapse share and the casualty rates are therefore recalled from memory and not checked. Six parameters were then fitted to DOGAMI's Hazus run on the same ground, so the daytime toll on saturated soil is close to DOGAMI's because it was made to be. The building inventory is DOGAMI's. It gives building outlines without heights or structure types. DOGAMI gives the number of people in each neighbourhood unit; dividing them among the unit's buildings by footprint area is this project's assumption."
     ],
     "tables": {
       "dogami_losses": [
@@ -231162,104 +231162,104 @@
   {
     "kind": "lifelines.recovery",
     "name": "lifelines.recovery",
-    "summary": "The year after the earthquake, one day at a time: the Willamette bridges, the hospitals and their generators, electricity, water and the fuel hub, with a fuel ledger in gallons that must close. With inputs = computed it takes the hub's release, the bridges' states, the open routes and the electricity service from a hazard.components module. With inputs = ranges it draws them by the run's seed from published ranges instead: the county's statement on its bridges, the Oregon Resilience Plan's restoration times and the county's 2022 study of the hub's tanks. Water follows the Plan's range in both modes. The hospitals' generator fuel, the response's daily use and the resupply date are guesses.",
+    "summary": "This module follows the year after the earthquake one day at a time. It tracks the twelve bridges over the Willamette River, thirteen hospitals and their backup generators, electricity, water, and the fuel stored at the Critical Energy Infrastructure Hub, the strip of fuel terminals in northwest Portland. It keeps an account of the hub's fuel in gallons, which must balance every day. The module has two modes. In the computed mode a second module, hazard.components, works out the fuel spill, the state of each bridge, the open roads and the electricity service, and this module uses its results. In the ranges mode it draws those outcomes at random from published ranges: Multnomah County's statement on its bridges, the Oregon Resilience Plan's restoration times and the county's 2022 study of the hub's tanks. Water service follows the Resilience Plan's range in both modes. Three inputs are guesses in both modes: how much generator fuel a hospital holds, how much fuel the emergency response uses each day, and the day fuel deliveries resume. This run uses the ranges mode.",
     "priority": 2,
     "dt": "1 day after the rupture",
     "params": [
       {
         "name": "folder",
         "default": "portland-cascadia",
-        "note": "the event folder with bridges.toml, hospitals.toml, hub.toml and restoration.toml"
+        "note": "the folder of input tables for this event: bridges, hospitals, the fuel hub and restoration times"
       },
       {
         "name": "inputs",
         "default": "ranges",
-        "note": "ranges: the crossings' days, the routes' day and the power ramp drawn from published ranges; computed: the hub's release, the crossings, the routes and the power read from a hazard.components module's events"
+        "note": "computed: the fuel spill, the bridges, the roads and electricity come from the hazard.components module. ranges: they are drawn at random from published ranges"
       },
       {
         "name": "storage_cut",
         "default": 0.0,
-        "note": "fraction of the hub's contents removed before the day (0.2 is Ordinance 2026-312's cut by 2036, applied as if to the stock)"
+        "note": "the fraction of the hub's fuel removed before the earthquake. Ordinance 2026-312 cuts tank capacity by 0.2 by 2036; this setting cuts the fuel actually held, which is a stronger measure"
       },
       {
         "name": "retrofit",
         "default": false,
-        "note": "every tank behaves as one built after 2004: at most retrofit_release of its contents leaves (the study's post-2004 rule)"
+        "note": "if true, every tank is treated as one built after 2004 and releases at most retrofit_release of its contents, the 2022 study's rule for newer tanks"
       },
       {
         "name": "retrofit_release",
         "default": 0.1,
-        "note": "the study's up-to-10-percent release for tanks designed for shaking and deformation"
+        "note": "the largest share of its contents a retrofitted tank releases. The 2022 study gives up to 10 percent for tanks designed for shaking and ground deformation"
       },
       {
         "name": "bridge_ready",
         "default": [],
-        "note": "crossings usable at once (none today; the Burnside replacement would be the first)"
+        "note": "ranges mode only: bridges assumed usable immediately after the earthquake. None is today; the Burnside Bridge's replacement would be the first"
       },
       {
         "name": "bridge_min_days",
         "default": 21.0,
         "unit": "d",
-        "note": "the county's 'weeks' (a guess at the number)"
+        "note": "ranges mode: the shortest closure of a bridge. The county says 'weeks'; the number is a guess"
       },
       {
         "name": "bridge_max_days",
         "default": 730.0,
         "unit": "d",
-        "note": "the county's 'years' (a guess at the number)"
+        "note": "ranges mode: the longest closure of a bridge. The county says 'years'; the number is a guess"
       },
       {
         "name": "new_bridge_year",
         "default": 2015.0,
         "unit": "yr",
-        "note": "crossings opened in or after this year draw from the lower half of the range (Sellwood 2016, Tilikum 2015; the county expects even these to be unusable at first, so they are closed too; a guess)"
+        "note": "ranges mode: a bridge opened in or after this year (Tilikum Crossing 2015, Sellwood Bridge 2016) draws its closure from the shorter half of the range. The county expects even these to be unusable at first, so they close too. A guess"
       },
       {
         "name": "hospital_median_scale",
         "default": 1.5,
-        "note": "hospitals' fragility medians are the generic ones times this (newer code; a guess)"
+        "note": "hospitals are assumed to be stronger than the generic building: the shaking needed to damage one is multiplied by this. A guess, standing for newer building codes"
       },
       {
         "name": "generator_h",
         "default": 72.0,
         "unit": "h",
-        "note": "on-site generator fuel at each hospital (a common planning figure; a guess)"
+        "note": "hours of generator fuel stored at each hospital. 72 hours is a common planning figure, used here as a guess"
       },
       {
         "name": "hospital_gal_day",
         "default": 2000.0,
         "unit": "gal/d",
-        "note": "diesel a hospital on generators burns (a guess)"
+        "note": "gallons of diesel one hospital burns in a day on its generators (a guess)"
       },
       {
         "name": "emergency_gal_day",
         "default": 300000.0,
         "unit": "gal/d",
-        "note": "the response's draw on the hub once trucks can move: fire, police, utilities, shelters (a guess; the region's normal use is several million a day)"
+        "note": "gallons the emergency response (fire, police, utilities, shelters) takes from the hub each day once trucks can move. A guess; the region's normal use is several million gallons a day"
       },
       {
         "name": "resupply_day",
         "default": 14.0,
         "unit": "d",
-        "note": "when fuel first arrives again (the Olympic pipeline from Puget Sound and the river terminals, both damaged; a guess)"
+        "note": "the day fuel deliveries to the hub resume. A guess; the two supply paths, the Olympic Pipeline from Puget Sound and the river terminals, are both taken to be damaged"
       },
       {
         "name": "resupply_gal_day",
         "default": 1000000.0,
         "unit": "gal/d",
-        "note": "what arrives after that (a guess)"
+        "note": "gallons arriving each day after that (a guess)"
       },
       {
         "name": "route_min_days",
         "default": 7.0,
         "unit": "d",
-        "note": "earliest day trucks move on the emergency routes (debris and ground failure on 74 percent of segments; a guess)"
+        "note": "ranges mode: the earliest day trucks can use the emergency routes. A guess; DOGAMI puts 74 percent of the route segments at risk of ground failure"
       },
       {
         "name": "route_max_days",
         "default": 30.0,
         "unit": "d",
-        "note": "latest (a guess)"
+        "note": "ranges mode: the latest such day (a guess)"
       }
     ],
     "publishes": [
@@ -231286,7 +231286,7 @@
       {
         "name": "lifeline.crossing",
         "required": false,
-        "note": "{ kind, day, sentence, source, confidence } the city before, the spill, the hub's own toll, the closures, each restoration milestone, the fuel"
+        "note": "{ kind, day, sentence, source, confidence } the sentences shown on the run page: the city before the earthquake, the spill, deaths at the hub, bridge closures, each restoration milestone, the fuel"
       }
     ],
     "sends": [],
@@ -231447,56 +231447,56 @@
         "title": "the clock",
         "source": "occupants,quake_pga_g,building_damage_frac",
         "obs": "",
-        "note": "the people until the rupture, the ground motion while the shaking lasts, then the damage; the sentences and the counters at the moment"
+        "note": "The map shows where people are until the earthquake, then the ground motion while the shaking lasts, then building damage. Beside it are the most recent events and the counts at the moment shown."
       },
       {
         "kind": "story",
         "title": "what happens",
         "source": "crossing",
         "obs": "",
-        "note": "one sentence per event, newest first; the source beside each"
+        "note": "one sentence per event, newest first, each with its source"
       },
       {
         "kind": "counter",
         "title": "dead, all causes",
         "source": "deaths.total",
         "obs": "",
-        "note": "the agents' dead in the buildings that collapsed and stood, the hub's own, and the deaths after (the aftermath module's total)"
+        "note": "deaths in buildings, at the fuel hub and in the year after the shaking, as totalled by the aftermath module"
       },
       {
         "kind": "counter",
-        "title": "Willamette crossings open",
+        "title": "Willamette bridges open",
         "source": "lifeline.crossings_open",
         "obs": "",
-        "note": "of the twelve in the window"
+        "note": "of the twelve in the modelled area"
       },
       {
         "kind": "counter",
         "title": "hospitals open",
         "source": "lifeline.hospitals_open",
         "obs": "",
-        "note": "undamaged, with grid power or a running generator"
+        "note": "undamaged, with grid electricity or a generator that has fuel"
       },
       {
         "kind": "counter",
-        "title": "hospitals dark",
+        "title": "hospitals without power",
         "source": "lifeline.hospitals_dark",
         "obs": "",
-        "note": "standing, no power"
+        "note": "undamaged, but with no grid electricity and no generator fuel"
       },
       {
         "kind": "counter",
         "title": "people with power",
         "source": "service.people_with_power",
         "obs": "",
-        "note": "residents times the restored share"
+        "note": "residents multiplied by the share with electricity"
       },
       {
         "kind": "counter",
         "title": "people with water",
         "source": "service.people_with_water",
         "obs": "",
-        "note": ""
+        "note": "residents multiplied by the share with water"
       },
       {
         "kind": "counter",
@@ -231510,32 +231510,32 @@
         "title": "fuel in the river",
         "source": "fuel.river_gal",
         "obs": "",
-        "note": "gallons, by the county's 2022 study's rule"
+        "note": "gallons released toward the Willamette, using the 2022 study's share for the river"
       },
       {
         "kind": "counter",
         "title": "days of fuel left",
         "source": "fuel.days_left",
         "obs": "",
-        "note": "the hub's stock over the response's daily draw"
+        "note": "the fuel at the hub divided by the emergency response's daily use"
       },
       {
         "kind": "chart",
         "title": "share of people with power",
         "source": "service.power_share",
         "obs": "",
-        "note": "a ramp to the restoration day drawn from the Resilience Plan's valley range"
+        "note": "a straight line from no service to full service, ending on a day drawn at random from the Oregon Resilience Plan's range of one to three months"
       },
       {
         "kind": "chart",
         "title": "share of people with water",
         "source": "service.water_share",
         "obs": "",
-        "note": ""
+        "note": "a straight line from no service to full service, ending on a day drawn at random from the Oregon Resilience Plan's range of one month to one year"
       },
       {
         "kind": "chart",
-        "title": "crossings open",
+        "title": "Willamette bridges open",
         "source": "lifeline.crossings_open",
         "obs": "",
         "note": ""
@@ -231556,8 +231556,8 @@
       },
       {
         "kind": "text",
-        "title": "what this does not measure",
-        "source": "Not in this run: the tsunami (not Portland's), aftershocks, fire following the earthquake, the Columbia bridges and I-5 north, the water system's pipes (the bureau's 1,500 to 3,000 breaks are in the record's README, not here), sewage, telephones and data, food, the airport, the port, the people who leave. The restoration ramps are straight lines to a day drawn from a published range; a real recovery is lumpy and unequal. The hospitals' fates come from the generic fragility at their cells and a guessed code factor. The fuel is a stock, not a network: no pipes, no trucks, no priorities. The spill is a number from the county's study, not a flow on the river.",
+        "title": "what this module leaves out",
+        "source": "The model has no tsunami (none is expected to reach Portland), no aftershocks and no fire following the earthquake. It leaves out the Columbia River bridges and Interstate 5 to the north, sewage, telephone and data networks, food supply, the airport, the port, and people leaving the city. Water pipes are not modelled. The Portland Water Bureau's estimate of 1,500 to 3,000 pipe breaks reached this project only through a search summary and is not used. Water service returns along a straight line to a day drawn from a published range, and so does electricity in the ranges mode, whereas a real recovery is uneven from one neighbourhood to the next. Whether a hospital is damaged depends on a generic building fragility curve at its location and a guessed allowance for newer building codes. The fuel at the hub is a single stock, with no pipes, no individual trucks and no priorities among users. The spill is a quantity, either drawn from the range in the county's study or summed over the failed tanks. The model does not follow the fuel once it reaches the river.",
         "obs": "",
         "note": ""
       }
@@ -231565,7 +231565,7 @@
     "assets": [
       {
         "key": "events/portland-cascadia",
-        "note": "the component tables and the residents raster"
+        "note": "the input tables and the map of residents"
       }
     ],
     "notes": [],
@@ -231681,27 +231681,27 @@
   {
     "kind": "people.aftermath",
     "name": "people.aftermath",
-    "summary": "What happens to people after the shaking stops, as claims with sources: the life-threatening injured who find no open hospital, the deaths that follow the loss of power at a rate from a disaster with a record (Puerto Rico 2017), the people on electricity-dependent medical devices without grid power (HHS emPOWER's counts), the person-days without power and water, and the people whose outage passed the Resilience Plan's one-month rule. Each channel is a row in the event folder's aftermath.toml with its rate, source, confidence and a switch, listed here whether on or off. Owns one total, deaths.total: the buildings' dead, the hub's, and these.",
+    "summary": "This module counts harm to people after the shaking stops. It does not model how that harm comes about. It applies a short table of rates, each with a source, to counts the run already has. Two rates add deaths. One applies to people with life-threatening injuries on any day when no hospital is open. The other applies to each day a person spends without electricity; it is derived from the record of Puerto Rico after Hurricane Maria in 2017 and stands for interrupted medical care. The module also counts the people who depend on electrically powered medical devices and have no grid electricity (from the emPOWER data of the US Department of Health and Human Services), the person-days spent without electricity and without water, and the people still without a service after one month, which the Oregon Resilience Plan gives as the point past which a business tends to leave. Each rate is a row in the event folder's aftermath.toml, with its source, how far it can be trusted and whether it is switched on. The claims table lists every row, on or off. The module also keeps the run's single death total, deaths.total, which adds deaths in buildings, deaths at the fuel hub and the deaths counted here.",
     "priority": 3,
     "dt": "1 day, on the lifelines' state",
     "params": [
       {
         "name": "folder",
         "default": "portland-cascadia",
-        "note": "the event folder with aftermath.toml and the residents raster"
+        "note": "the folder of input data for this event, with the table of rates and the map of residents"
       },
       {
         "name": "month_days",
         "default": 30.0,
         "unit": "d",
-        "note": "the Resilience Plan's one-month rule: a business without services this long tends to leave; here the people whose outage passed it are counted"
+        "note": "the Oregon Resilience Plan's one-month rule: a business without services for this long tends to leave. The module counts the people whose electricity or water is still out on this day"
       }
     ],
     "publishes": [
       {
         "name": "after.crossing",
         "required": false,
-        "note": "{ kind, day, sentence, source, confidence } the first deaths after, the one-month rule, the year's count"
+        "note": "{ kind, day, sentence, source, confidence } the sentences shown on the run page: the first deaths after the shaking, the one-month count, the count after a year"
       }
     ],
     "sends": [],
@@ -231710,17 +231710,17 @@
       {
         "name": "quake.toll",
         "required": false,
-        "note": "the buildings' dead and injured, once the shaking ends"
+        "note": "the buildings module's dead and injured, once the shaking ends"
       },
       {
         "name": "agents.toll",
         "required": false,
-        "note": "the agents' dead, which carry the total when an agents module is present"
+        "note": "the agents' dead, which the total uses when a run has an agents module"
       },
       {
         "name": "lifeline.state",
         "required": false,
-        "note": "the lifelines module's daily state: hospitals open, power and water shares, the hub's own dead"
+        "note": "the lifelines module's daily state: hospitals open, the shares of people with electricity and water, deaths at the fuel hub"
       }
     ],
     "fields_owned": [],
@@ -231810,42 +231810,42 @@
         "title": "dead after the shaking",
         "source": "after.deaths",
         "obs": "",
-        "note": "from the claims that are on; low and high in the charts"
+        "note": "from the rates that are switched on; the charts show the low and high ends of the range"
       },
       {
         "kind": "counter",
         "title": "person-days without power",
         "source": "after.person_days_without_power",
         "obs": "",
-        "note": ""
+        "note": "one person without electricity for one day is one person-day"
       },
       {
         "kind": "counter",
         "title": "on medical devices, without power",
         "source": "after.devices_without_power",
         "obs": "",
-        "note": "HHS emPOWER's share of the three counties' people, applied to the window"
+        "note": "the emPOWER share of the three counties' population, applied to the residents of the modelled area who have no electricity"
       },
       {
         "kind": "counter",
         "title": "past a month without water",
         "source": "after.people_over_month_without_water",
         "obs": "",
-        "note": "the Resilience Plan's one-month rule"
+        "note": "people still without water on the day the one-month rule is checked"
       },
       {
         "kind": "chart",
         "title": "dead after the shaking",
         "source": "after.deaths",
         "obs": "",
-        "note": "the claims that are on"
+        "note": "from the rates that are switched on"
       },
       {
         "kind": "chart",
-        "title": "the low and high",
+        "title": "dead after the shaking, high end of the range",
         "source": "after.deaths_high",
         "obs": "",
-        "note": "the sources' intervals as factors"
+        "note": "the uncertainty intervals of the sources, applied as multipliers"
       },
       {
         "kind": "chart",
@@ -231856,8 +231856,8 @@
       },
       {
         "kind": "text",
-        "title": "what this does not measure",
-        "source": "The channels that are off (cold homes, waterborne illness) are listed in the claims table with no source and not applied. The Puerto Rico rate is a whole-population analogue from another kind of disaster and season; it stands for every death the loss of power causes, devices included, which is why the device count is an exposure and not a second rate. The untreated-injury channel treats everyone the first day any hospital is open and knows nothing of beds, staff or distance. Nothing here moves people: nobody leaves, nobody is in a shelter, nobody is cold.",
+        "title": "what this module leaves out",
+        "source": "Two possible causes of death, cold homes and waterborne illness, are listed in the claims table but switched off, because no rate with a source was found for either. The Puerto Rico rate comes from a different kind of disaster in a different climate and season, and it covers a whole population. It is taken to include every death that follows the loss of electricity, including the deaths of people on medical devices. For that reason the device count is reported as a number of people exposed, and no second death rate is applied to it. The untreated-injury rule treats every injured person on the first day any hospital is open; the model does not represent hospital beds, staff or the distance to a hospital. The module does not move people: no one leaves the area, goes to a shelter or is counted as cold.",
         "obs": "",
         "note": ""
       }
@@ -231865,49 +231865,49 @@
     "assets": [
       {
         "key": "events/portland-cascadia",
-        "note": "aftermath.toml and the residents raster"
+        "note": "the table of rates and the map of residents"
       }
     ],
     "notes": [
-      "Claims, not a model: each row is a published rate or a declared guess, applied to a count the run already has. The table is the place to argue."
+      "Each row of the claims table is a published rate or a declared guess, applied to a count the run already has. The module does not model how the harm comes about, so a reader who doubts a figure should look at the source of its row."
     ],
     "tables": {
       "claims": [
         {
-          "confidence": "an analogue: a Caribbean island in autumn after a hurricane, applied to a Pacific Northwest city in winter after an earthquake; the interval is wide and the authors call it an underestimate",
+          "confidence": "An analogy: a Caribbean island after an autumn hurricane, applied to a Pacific Northwest city after an earthquake in March. The paper's interval is wide, and its authors call their estimate an underestimate.",
           "high": 1.83,
           "id": "interrupted-care",
           "low": 0.17,
           "on": "person_days_without_power",
-          "per": "deaths per person-day without power",
+          "per": "deaths per person per day without electricity",
           "rate": 4.55e-6,
-          "source": "Kishore et al. 2018, Mortality in Puerto Rico after Hurricane Maria, NEJM 379:162-170 (abstract and reporting read 2026-11-12): 4,645 excess deaths from 20 September to 31 December 2017, one third attributed to delayed or interrupted health care; the rate here is that third over Puerto Rico's 3.34 million people (recalled) and 102 days, applied to each person-day without grid power in the window",
+          "source": "Kishore and others 2018, Mortality in Puerto Rico after Hurricane Maria, New England Journal of Medicine 379:162-170. The abstract and news reporting were read on 12 November 2026; the paper itself was not. It estimates 4,645 excess deaths from 20 September to 31 December 2017 and attributes one third of them to delayed or interrupted health care. The rate used here is that third, divided by Puerto Rico's population of 3.34 million (recalled from memory) and by 102 days. It is applied to each day each person in the modelled area spends without grid electricity.",
           "status": "on",
-          "title": "Deaths from care interrupted by the loss of power, at the Puerto Rico 2017 rate per person-day without power"
+          "title": "Deaths from medical care interrupted by the loss of electricity, at a rate derived from Puerto Rico after Hurricane Maria (2017)"
         },
         {
-          "confidence": "the definition is the manual's, the rate is a guess; the model treats everyone remaining on any day a hospital is open, with no capacity limit",
+          "confidence": "The definition is from the Hazus manual. The rate is a guess. On any day a hospital is open the model treats everyone still waiting, with no limit on capacity.",
           "high": 2.0,
           "id": "untreated-injuries",
           "low": 0.5,
           "on": "untreated_life_threatening",
-          "per": "share of the untreated who die each day with no hospital open in the window",
+          "per": "the share of the untreated who die on each day that no hospital in the modelled area is open",
           "rate": 0.5,
-          "source": "Hazus defines severity 3 as injuries that pose an immediate life-threatening condition if not treated adequately and expeditiously (crush syndrome, internal injuries, uncontrolled bleeding; FEMA, Earthquake Model Technical Manual, as quoted in the Downtown Anchorage Seismic Risk Assessment, read 2026-11-12); the daily rate is a guess",
+          "source": "Hazus defines severity 3 injuries as those that pose an immediate life-threatening condition if not treated adequately and expeditiously, such as crush syndrome, internal injuries and uncontrolled bleeding (FEMA, Earthquake Model Technical Manual, as quoted in the Downtown Anchorage Seismic Risk Assessment, read on 12 November 2026). The daily death rate is a guess.",
           "status": "on",
-          "title": "Deaths among the life-threatening injured who find no open hospital"
+          "title": "Deaths among people with life-threatening injuries on days when no hospital is open"
         },
         {
-          "confidence": "the count is the record's; the exposure is reported, not turned into deaths",
+          "confidence": "The count is from the published data. It covers Medicare beneficiaries only, so it is a minimum. It is reported as a number of people exposed and is not converted into deaths.",
           "high": 0.0,
           "id": "power-dependent-devices",
           "low": 0.0,
           "on": "power_dependent_without_power",
-          "per": "an exposure count, no death rate",
+          "per": "a count of people exposed, with no death rate",
           "rate": 0.0,
-          "source": "HHS emPOWER (above): 11,570 Medicare beneficiaries on power-dependent devices across the three counties, 0.63 percent of their people; applied to the window's residents; the Puerto Rico rate above already includes such deaths, so none are added here",
+          "source": "The emPOWER data of the US Department of Health and Human Services, read on 12 November 2026: 11,570 Medicare beneficiaries who use electricity-dependent medical devices in Multnomah, Washington and Clackamas counties, 0.63 percent of the counties' population. That share is applied to the residents of the modelled area. The Puerto Rico rate is taken to include deaths in this group already, so none are added here.",
           "status": "on",
-          "title": "People on electricity-dependent medical devices without grid power, counted and not killed"
+          "title": "People who depend on electrically powered medical devices and have no grid electricity (counted; no deaths added)"
         },
         {
           "confidence": "no source",
@@ -231915,11 +231915,11 @@
           "id": "cold",
           "low": 0.0,
           "on": "person_days_without_power",
-          "per": "deaths per person-day without power",
+          "per": "deaths per person per day without electricity",
           "rate": 0.0,
-          "source": "none read; excess winter mortality is documented but no rate for an outage in a mild maritime winter was found on the day",
+          "source": "No source was read. Excess deaths in winter are documented, but no rate for a power outage in a mild maritime climate was found on 12 November 2026.",
           "status": "off",
-          "title": "Deaths from cold homes in late January without power"
+          "title": "Deaths from cold in homes without electricity"
         },
         {
           "confidence": "no source",
@@ -231927,11 +231927,11 @@
           "id": "water",
           "low": 0.0,
           "on": "person_days_without_water",
-          "per": "deaths per person-day without water",
+          "per": "deaths per person per day without water",
           "rate": 0.0,
-          "source": "none read",
+          "source": "No source was read.",
           "status": "off",
-          "title": "Deaths from waterborne illness with water and sewer out"
+          "title": "Deaths from waterborne illness while water and sewer service are out"
         }
       ]
     }
@@ -231939,62 +231939,62 @@
   {
     "kind": "hazard.components",
     "name": "hazard.components",
-    "summary": "Every physical thing as a component with a place, a fragility, a state and a repair path: the fuel hub's tanks from the county study's own per-tank table (621 rows, placed on the study's coordinates where it gives them, else on OpenStreetMap tank footprints), the Willamette crossings (each with a seismic class from the county's 2014 vulnerability report and the federal bridge inventory), DOGAMI's transmission structures with the state's chance of failure at each (6,146 in the window), and DOGAMI's emergency route segments with the state's deformation class at each (137). On the rupture each reads the ground at its cell and draws its state; tanks release by the study's age rule (pre-1993: its per-tank 50 to 100 percent, later: up to 10 percent), to the river where the study says so; crews repair the failed structures at a stated rate in order of the people served; segments reopen by class; crossings by damage state. Computed and published daily: the power service per coarse cell and the people-weighted share, each hospital's reachability from the hub along open segments and open crossings, the crossings' states. The fragilities for the tanks and the modern bridges are recalled from Hazus, the older bridges' curve is a judgement, and each is declared in fragility.toml; the study's release total (94.6 to 193.7 million gallons) and the county's statement on its bridges are the checks, reported.",
+    "summary": "This module places four kinds of infrastructure at their real locations and damages each item individually. The fuel tanks come from the per-tank table in the 2022 seismic risk analysis of the Critical Energy Infrastructure Hub (621 rows), placed at the study's coordinates where it gives them and otherwise on tank outlines from OpenStreetMap. The twelve bridges over the Willamette River each carry a seismic class based on Multnomah County's 2014 vulnerability report and the federal bridge inventory. The 6,146 power transmission structures and the 137 emergency route segments come from DOGAMI, Oregon's geology agency, which gives a probability of failure for each structure and a class of ground deformation for each segment. At the earthquake, each item reads the ground motion at its location and is assigned a damage state by a random draw against a fragility curve. A failed tank releases a share of its contents that depends on its age, following the study: 50 to 100 percent for a tank built before 1993, and up to 10 percent for a later one. The fuel goes to the river where the study says it would. Afterwards, crews repair the failed transmission structures at an assumed rate, starting with those that serve the most people. A road segment reopens after a time set by its deformation class, and a bridge after a time set by its damage state. Each day the module publishes the share of people with electricity, the state of each bridge, and which hospitals can be reached from the fuel hub over open road segments and bridges. The fragility curves for the tanks and for modern bridges are recalled from Hazus, the Federal Emergency Management Agency's loss-estimation software, and have not been checked. The curve for older bridges is this project's judgement. All of them are listed in fragility.toml. Two published figures serve as checks: the study's total release of 94.6 to 193.7 million gallons, against which the module reports its own total, and the county's statement that no downtown bridge will be usable at first.",
     "priority": 1,
     "dt": "1 day after the rupture",
     "params": [
       {
         "name": "folder",
         "default": "portland-cascadia",
-        "note": "the event folder with tanks.csv, poles.csv, routes.toml, bridges.toml, hospitals.toml, hub.toml and fragility.toml"
+        "note": "the folder of input tables for this event: tanks, transmission structures, routes, bridges, hospitals, the fuel hub and the fragility curves"
       },
       {
         "name": "soils",
         "default": "wet",
-        "note": "which of DOGAMI's columns the poles and routes read: wet or dry"
+        "note": "which of DOGAMI's cases the transmission structures and route segments use: wet (saturated soil) or dry"
       },
       {
         "name": "coarse_arcsec",
         "default": 10.0,
         "unit": "arcsec",
-        "note": "the power service grid"
+        "note": "the cell size of the coarser grid on which electricity service is computed"
       },
       {
         "name": "storage_cut",
         "default": 0.0,
-        "note": "fraction of every tank's contents removed before the day (Ordinance 2026-312's fifth, applied to the stock)"
+        "note": "the fraction of every tank's contents removed before the earthquake. Ordinance 2026-312 cuts tank capacity by a fifth; this setting cuts the fuel actually held"
       },
       {
         "name": "retrofit",
         "default": false,
-        "note": "every tank releases as one built after 1993: up to post_1993_release_max of its contents"
+        "note": "if true, every tank releases as one built after 1993 does: at most post_1993_release_max of its contents"
       },
       {
         "name": "force",
         "default": [],
-        "note": "preconditions: 'kind:id:state' sets a component's damage state regardless of the draw (tank:KMW128:4, bridge:Burnside Bridge:0)"
+        "note": "items whose damage state is set in advance instead of drawn, written as kind:id:state (for example tank:KMW128:4 or bridge:Burnside Bridge:0)"
       }
     ],
     "publishes": [
       {
         "name": "component.state",
         "required": false,
-        "note": "{ kind, id, name, lat, lon, state, down, repair_day, day } at the cell: every tank, crossing and segment on the rupture, failed transmission structures, and each repair"
+        "note": "{ kind, id, name, lat, lon, state, down, repair_day, day } at the item's location: every tank, bridge and road segment at the earthquake, each failed transmission structure, and each repair"
       },
       {
         "name": "tank.release",
         "required": false,
-        "note": "{ id, name, gal, river } at the cell, per failed tank"
+        "note": "{ id, name, gal, river } at the tank's location, for each failed tank"
       },
       {
         "name": "hub.release",
         "required": false,
-        "note": "{ gal, river_gal, tanks_failed } once, the sum, for the fuel ledger's owner"
+        "note": "{ gal, river_gal, tanks_failed } once, the total over all tanks, for the module that keeps the fuel account"
       },
       {
         "name": "network.state",
         "required": false,
-        "note": "{ day, power_share, routes_open_share, bridges_open, reachable: { hospital: bool }, hospital_power: { hospital: bool }, any_reachable } each day, computed from the components that stand"
+        "note": "{ day, power_share, routes_open_share, bridges_open, reachable: { hospital: bool }, hospital_power: { hospital: bool }, any_reachable } each day, computed from the items still standing"
       }
     ],
     "sends": [],
@@ -232114,66 +232114,66 @@
     "views": [
       {
         "kind": "map",
-        "title": "power service",
+        "title": "electricity service",
         "source": "power_up",
         "obs": "",
-        "note": "1 where the nearest transmission structures stand, by coarse cell; the people-weighted share is the counter"
+        "note": "1 where the transmission structures nearest the cell are standing, on a coarser grid than the other maps. The counter gives the share of residents served"
       },
       {
         "kind": "map",
         "title": "fuel released, by tank",
         "source": "tank_release_gal",
         "obs": "",
-        "note": "gallons leaving each tank on the rupture, by coarse cell"
+        "note": "gallons escaping from each failed tank at the earthquake, shown on the coarser grid"
       },
       {
         "kind": "counter",
         "title": "share of people with power",
         "source": "power.share",
         "obs": "",
-        "note": "computed from the transmission structures that stand"
+        "note": "computed from the transmission structures that are standing"
       },
       {
         "kind": "counter",
         "title": "transmission structures failed",
         "source": "power.poles_failed",
         "obs": "",
-        "note": "of 6,146 in the window, by DOGAMI's chance at each"
+        "note": "of 6,146 in the modelled area, each failing with the probability DOGAMI gives for its location"
       },
       {
         "kind": "counter",
-        "title": "crossings open",
+        "title": "Willamette bridges open",
         "source": "bridges.open",
         "obs": "",
-        "note": "by each crossing's own fragility and repair time"
+        "note": "of twelve, each according to its own damage state and repair time"
       },
       {
         "kind": "counter",
         "title": "emergency routes open",
         "source": "routes.open_share",
         "obs": "",
-        "note": "share of segment length"
+        "note": "the share of the routes' total length that is open"
       },
       {
         "kind": "counter",
         "title": "tanks failed",
         "source": "tanks.failed",
         "obs": "",
-        "note": "of the study's active tanks"
+        "note": "of the tanks the 2022 study lists as active"
       },
       {
         "kind": "counter",
         "title": "fuel released",
         "source": "tanks.release_gal",
         "obs": "",
-        "note": "the sum over tanks; the study's range is 94.6 to 193.7 million"
+        "note": "the total over the failed tanks. The 2022 study's range is 94.6 to 193.7 million gallons"
       },
       {
         "kind": "chart",
         "title": "share of people with power",
         "source": "power.share",
         "obs": "",
-        "note": "the computed curve; the Resilience Plan's one to three months is the check"
+        "note": "computed each day. The Oregon Resilience Plan's estimate of one to three months to restore electricity is the published figure to compare it with"
       },
       {
         "kind": "chart",
@@ -232184,15 +232184,15 @@
       },
       {
         "kind": "chart",
-        "title": "crossings open",
+        "title": "Willamette bridges open",
         "source": "bridges.open",
         "obs": "",
         "note": ""
       },
       {
         "kind": "text",
-        "title": "what this does not compute",
-        "source": "The transmission structures carry no network: a cell has power when the structures nearest it stand, which stands in for the lines, substations and the grid's own switching that DOGAMI's bundle does not carry. The route segments are DOGAMI's deformation classes turned into days by guessed ranges; debris from the buildings is not on them. The tanks' shaking fragility is recalled; their ground failure uses the buildings' fitted deformation median. The water system is not here at all.",
+        "title": "what this module leaves out",
+        "source": "The transmission structures are not connected into a network. A cell has electricity when the structures nearest to it are standing. That rule stands in for power lines, substations and the switching a real grid does, none of which is in DOGAMI's data. A road segment closes for a number of days guessed from DOGAMI's deformation class, and debris from damaged buildings does not block it. The tanks' fragility to shaking is recalled from memory. Their fragility to ground failure reuses the deformation threshold that was fitted for buildings. The water system is not modelled.",
         "obs": "",
         "note": ""
       }
@@ -232200,7 +232200,7 @@
     "assets": [
       {
         "key": "events/portland-cascadia",
-        "note": "the component tables"
+        "note": "the input tables"
       }
     ],
     "notes": [],
@@ -232306,38 +232306,38 @@
   {
     "kind": "people.agents",
     "name": "people.agents",
-    "summary": "The people as super-persons, each standing for a stated number of people, generated at the start from DOGAMI's occupant rasters: a home cell drawn by the residents, a work cell by the daytime occupants, a share on electricity-dependent devices from HHS emPOWER's counts. On the rupture each agent reads the building damage where it was (home by night, work by day) and is dead or displaced at the buildings' rates for that cell. The agents' total should agree with the cell model's; in the daytime runs of 12 November 2026 it is lower, for a reason not yet found. Each day it reads the power service at its home cell and the water ramp. What it adds is a population that can be followed agent by agent, the base for decisions (to leave, to shelter, to travel) in a later rung; what it costs is measured and reported.",
+    "summary": "This module represents the residents as agents, each standing for a fixed number of people set by the scale parameter. It creates them at the start of the run from DOGAMI's maps of where people are. Each agent gets a home cell, drawn in proportion to residents, and a work cell, drawn in proportion to daytime occupants. A share of the agents depend on electrically powered medical devices; the share comes from the emPOWER data of the US Department of Health and Human Services. At the earthquake each agent is at work by day or at home by night. It is placed in a collapsed or a standing building according to the share of buildings that collapsed in that cell, and it dies or is displaced at the rates the buildings module gives for the cell. The agents' death count should agree with the buildings module's count by cell. In the daytime runs of 12 November 2026 it is lower, for a reason not yet found. On each day afterwards an agent has electricity or not according to its home cell, and water according to the schedule for the whole area. The agents make no decisions yet. They are here so that a later version can let them leave, seek shelter or travel, and the module reports how fast it runs so that the cost of that is known.",
     "priority": 6,
     "dt": "1 day after the rupture",
     "params": [
       {
         "name": "folder",
         "default": "portland-cascadia",
-        "note": "the event folder with the occupant rasters"
+        "note": "the folder of input data for this event, with DOGAMI's maps of residents and of occupants by day and night"
       },
       {
         "name": "scale",
         "default": 10.0,
         "unit": "people",
-        "note": "people per agent: 10 gives about 93,000 agents in the window"
+        "note": "people per agent. 10 gives about 93,000 agents in the modelled area"
       },
       {
         "name": "time_of_day",
         "default": "day",
-        "note": "where each agent is at the instant: work by day, home by night"
+        "note": "where each agent is at the moment of the earthquake: at work by day, at home by night"
       },
       {
         "name": "coarse_arcsec",
         "default": 10.0,
         "unit": "arcsec",
-        "note": "the power service grid it reads"
+        "note": "the cell size of the electricity service grid the agents read"
       }
     ],
     "publishes": [
       {
         "name": "agents.toll",
         "required": false,
-        "note": "{ dead, dead_in_collapses, displaced } once the agents have drawn, for whoever keeps the total"
+        "note": "{ dead, dead_in_collapses, displaced } once every agent's outcome is drawn, for the module that keeps the total"
       }
     ],
     "sends": [],
@@ -232346,7 +232346,7 @@
       {
         "name": "quake.toll",
         "required": false,
-        "note": "the buildings' reckoning, once the shaking ends"
+        "note": "the buildings module's damage and casualty rates, once the shaking ends"
       },
       {
         "name": "lifeline.state",
@@ -232361,7 +232361,7 @@
         "unit": "1",
         "required": true,
         "on": "quake.toll",
-        "note": "the share of the cell's buildings that collapsed, realised by the buildings module"
+        "note": "the share of the cell's buildings that collapsed, as drawn by the buildings module"
       },
       {
         "name": "quake.cell_death_rate_collapse",
@@ -232389,7 +232389,7 @@
         "unit": "1",
         "required": false,
         "on": "lifeline.state",
-        "note": "the components' power service per coarse cell"
+        "note": "the components module's electricity service on its coarser grid"
       }
     ],
     "ledgers": [],
@@ -232458,28 +232458,28 @@
         "title": "agents",
         "source": "agents.count",
         "obs": "",
-        "note": "super-persons; the people they stand for is the next counter"
+        "note": "each agent stands for several people; the next counter gives the people represented"
       },
       {
         "kind": "counter",
         "title": "people followed",
         "source": "agents.people",
         "obs": "",
-        "note": ""
+        "note": "agents multiplied by people per agent"
       },
       {
         "kind": "counter",
         "title": "dead, by agent",
         "source": "agents.dead",
         "obs": "",
-        "note": "each agent in a collapsed building or a standing one, at the buildings' rates. In the runs of 12 November 2026 this count is lower than the cell count by a tenth to a third by day, for a reason not yet found; the two agree at night"
+        "note": "Each agent is placed in a collapsed or a standing building and dies at the buildings module's rate for that case. In the daytime runs of 12 November 2026 this count is lower than the count by cell by a tenth to a third, for a reason not yet found. The two agree at night"
       },
       {
         "kind": "counter",
         "title": "in a building that collapsed",
         "source": "agents.in_collapses",
         "obs": "",
-        "note": "people, by agent"
+        "note": "people, counted by agent"
       },
       {
         "kind": "counter",
@@ -232500,28 +232500,28 @@
         "title": "without power, by agent",
         "source": "agents.without_power",
         "obs": "",
-        "note": "from the components' power service at each home cell"
+        "note": "according to the electricity service at each agent's home cell"
       },
       {
         "kind": "counter",
-        "title": "on devices without power",
+        "title": "on medical devices, without power",
         "source": "agents.devices_without_power",
         "obs": "",
-        "note": ""
+        "note": "people who depend on electrically powered medical devices and have no grid electricity, counted by agent"
       },
       {
         "kind": "counter",
         "title": "agent-days a second",
         "source": "agents.per_second",
         "obs": "",
-        "note": "the measured cost of the daily tick"
+        "note": "how fast the daily update of the agents runs"
       },
       {
         "kind": "map",
         "title": "people without power, by agent",
         "source": "agents_without_power",
         "obs": "",
-        "note": "per coarse cell, each day"
+        "note": "per cell of the coarser electricity grid, each day"
       },
       {
         "kind": "chart",
@@ -232540,7 +232540,7 @@
       {
         "kind": "text",
         "title": "what the agents do not yet do",
-        "source": "Nothing of their own: no one leaves, shelters, travels or queues at a hospital; each agent is a bookkeeping unit that reads the world at two cells. The point of having them is that the next rung can give them a decision rule and a trip on the route graph, and the cost of a hundred thousand such agents on a daily tick is measured here.",
+        "source": "The agents take no actions of their own. None leaves the city, goes to a shelter, travels or waits at a hospital. Each one only records what happens at its home cell and its work cell. They are included so that a later version can give them a rule for deciding and a route on the road network, and so that the cost of updating about a hundred thousand agents for every simulated day is measured now.",
         "obs": "",
         "note": ""
       }
@@ -232548,11 +232548,11 @@
     "assets": [
       {
         "key": "events/portland-cascadia",
-        "note": "people_resident.tif, people_day.tif, people_night.tif"
+        "note": "DOGAMI's maps of residents, daytime occupants and night-time occupants"
       }
     ],
     "notes": [
-      "A super-individual stands for a fixed number of people (the method is from fish and plankton modelling in the 1990s, recalled). Agents are drawn by the seed from the occupant rasters, so the same seed gives the same people."
+      "An agent that stands for many individuals is called a super-individual. The method comes from fish and plankton modelling in the 1990s (recalled from memory; no citation was checked). The agents are drawn using the run's seed, so the same seed gives the same agents."
     ]
   }
 ]

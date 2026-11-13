@@ -146,26 +146,26 @@ impl Ground {
     }
     pub fn describe(name: &str, p: &toml::Value) -> Describe {
         let soils = param_str(p, "soils", "wet");
-        Describe::new("quake.ground", name, "A published earthquake scenario's ground motion and ground failure on the window: DOGAMI's site peak ground acceleration and velocity for a simulated Cascadia M9.0 (synthetic bedrock motions from the USGS, the state's site response), its liquefaction and landslide probability and deformation for saturated or dry soils, read from the event folder and written as world fields; at the stated instant it publishes the rupture. Nothing about the earthquake is computed here. There is no record of this event to score against, so the ground is the output of the state's model.")
+        Describe::new("quake.ground", name, "This module supplies the ground motion. It does not simulate the fault or the shaking. It reads maps published by DOGAMI, the Oregon Department of Geology and Mineral Industries, for a simulated magnitude 9.0 earthquake on the Cascadia subduction zone (Open-File Report O-18-02, 2018). The maps give the peak acceleration and velocity of the ground at the surface, and the probability and extent of liquefaction and landslides, for saturated or dry soil. DOGAMI worked out the surface motion from simulated bedrock motion supplied by the US Geological Survey. At the moment set for the earthquake, this module makes the maps available to the other modules and announces the rupture. This earthquake has not happened, so there are no measurements to compare the maps with.")
             .priority(0).dt("once, at the rupture")
-            .param("folder", param_str(p, "folder", "portland-cascadia"), "", "the event folder under data/events with the cut rasters and their README")
-            .param("tz_offset_h", param_f64(p, "tz_offset_h", -8.0), "h", "the local clock's offset from UTC, for the words only (PST -8, PDT -7)")
-            .param("tz_name", param_str(p, "tz_name", "PST"), "", "the local clock's name, for the words only")
-            .param("at", param_str(p, "at", "2027-01-26T22:00:00Z"), "", "the rupture instant (UTC); 26 January is the anniversary of the 1700 event, 14:00 Pacific is DOGAMI's daytime scenario")
-            .param("magnitude", param_f64(p, "magnitude", 9.0), "Mw", "DOGAMI's and the USGS ensemble's scenario magnitude")
-            .param("duration_s", param_f64(p, "duration_s", 240.0), "s", "strong shaking; DOGAMI: 3 to 5 minutes for a megathrust")
-            .param("soils", soils, "", "wet (saturated, DOGAMI's higher-loss case: liquefaction and landslides) or dry (landslides only, the dry layers)")
+            .param("folder", param_str(p, "folder", "portland-cascadia"), "", "the folder of input data for this event: DOGAMI's maps cut to the modelled area, and a README that says how they were made")
+            .param("tz_offset_h", param_f64(p, "tz_offset_h", -8.0), "h", "local time's offset from UTC in hours (PST -8, PDT -7), used only to print local times")
+            .param("tz_name", param_str(p, "tz_name", "PST"), "", "the name of the local time zone, used only in printed times")
+            .param("at", param_str(p, "at", "2027-01-26T22:00:00Z"), "", "the moment of the earthquake in UTC, a scenario choice and not a prediction. 2 p.m. Pacific time is DOGAMI's daytime case")
+            .param("magnitude", param_f64(p, "magnitude", 9.0), "Mw", "the magnitude of the scenario in DOGAMI's study and in the US Geological Survey's set of simulations")
+            .param("duration_s", param_f64(p, "duration_s", 240.0), "s", "seconds of strong shaking. DOGAMI gives 3 to 5 minutes for an earthquake of this kind")
+            .param("soils", soils, "", "wet: saturated soil, DOGAMI's higher-loss case, with liquefaction and landslides. dry: DOGAMI's dry-soil maps, with landslides only")
             .own("quake.pga_g", "g").own("quake.pgv_cms", "cm/s").own("quake.liq_p", "1").own("quake.liq_pgd_cm", "cm").own("quake.ls_p", "1").own("quake.ls_pgd_cm", "cm")
             .publish("quake.rupture", "{ magnitude, duration_s, soils, at, source } once, at the instant")
             .publish("quake.crossing", "{ kind: rupture, sentence, source, confidence } the rupture, for the story")
             .frame("terrain_elev_m", "m").frame("quake_pga_g", "g").frame("quake_mmi", "intensity").frame("quake_liquefaction_p", "1").frame("quake_ground_pgd_cm", "cm")
             .report("quake.pga_mean_g", "g").report("quake.pga_max_g", "g").report("quake.pgv_mean_cms", "cm/s").report("quake.liq_p_mean", "1").report("quake.cells_over_liq_20", "cells")
-            .asset("copernicus-dem-glo30", "the terrain under the city").asset(&format!("events/{}", param_str(p, "folder", "portland-cascadia")), "DOGAMI O-18-02's site motions and ground failure, cut to the window")
-            .view("map", "peak ground acceleration", "quake_pga_g", "DOGAMI's site estimate for the M9.0; a fraction of g")
-            .view("map", "intensity", "quake_mmi", "Modified Mercalli from the peak velocity by Wald and others 1999 (recalled): 3.47 log PGV + 2.35")
-            .view("map", "chance of liquefaction", "quake_liquefaction_p", "DOGAMI's probability of lateral spread, saturated soils; zero in the dry variant")
-            .view("map", "permanent ground deformation", "quake_ground_pgd_cm", "the larger of the liquefaction and landslide deformation, cm")
-            .note("The rasters are DOGAMI Open-File Report O-18-02 (2018), cut to the window with GDAL on 2026-11-12 as the event folder's README says; the run reads the cut files. The USGS median ensemble ShakeMap (cszm9ensemble_se) gives MMI 7.2 and PGA 0.24 g at downtown Portland against DOGAMI's 0.15 to 0.32 g over the window; the USGS ground-failure product is far coarser (500 m) and reads near zero at the fuel hub where DOGAMI maps a high liquefaction chance, so DOGAMI is used.")
+            .asset("copernicus-dem-glo30", "the terrain under the city").asset(&format!("events/{}", param_str(p, "folder", "portland-cascadia")), "DOGAMI's ground motion and ground failure maps from Open-File Report O-18-02, cut to the modelled area")
+            .view("map", "peak ground acceleration", "quake_pga_g", "DOGAMI's estimate at the surface for the magnitude 9.0 scenario, as a fraction of g, the acceleration of gravity")
+            .view("map", "intensity", "quake_mmi", "Modified Mercalli intensity, computed from peak ground velocity (PGV) with the relation of Wald and others 1999, recalled from memory: 3.47 log PGV + 2.35")
+            .view("map", "chance of liquefaction", "quake_liquefaction_p", "DOGAMI's probability that the ground spreads sideways as saturated soil liquefies; zero in the dry-soil case")
+            .view("map", "permanent ground deformation", "quake_ground_pgd_cm", "the larger of the permanent ground movement from liquefaction and from landslides, in centimetres")
+            .note("The maps are from DOGAMI Open-File Report O-18-02 (2018). They were cut to the modelled area with GDAL on 12 November 2026, as the event folder's README describes, and the run reads the cut files. The US Geological Survey publishes a separate estimate for this scenario, the median of its own set of magnitude 9 simulations (ShakeMap cszm9ensemble_se). It gives Modified Mercalli intensity 7.2 and a peak ground acceleration of 0.24 g at downtown Portland, which is inside DOGAMI's range of 0.15 to 0.32 g across the modelled area. The Survey's ground-failure map is much coarser (500 metres) and shows almost no liquefaction at the fuel hub, where DOGAMI maps a high probability, so this project uses DOGAMI's maps.")
     }
     fn mmi(pgv: f32) -> f32 { if pgv.is_nan() || pgv <= 0.0 { f32::NAN } else { (3.47 * (pgv as f64).log10() + 2.35) as f32 } }
 }
@@ -211,9 +211,9 @@ impl Module for Ground {
         let (lo, hi) = (ok.iter().copied().fold(f32::INFINITY, f32::min), ok.iter().copied().fold(0.0f32, f32::max));
         let local = Time(now.0 + (self.tz_offset_h * 3600.0).round() as i64).to_iso();
         let local_words = format!("{} {}", &local[..16].replace('T', " "), self.tz_name);
-        let sentence = format!("{} {}: a magnitude {:.1} rupture of the Cascadia subduction zone. Strong shaking for about {:.0} minutes; peak ground acceleration across the window {:.2} to {:.2} g on DOGAMI's site estimate, soils {}.", &local[..16].replace('T', " "), self.tz_name, self.magnitude, self.duration_s / 60.0, lo, hi, self.soils);
+        let sentence = format!("{} {}: a magnitude {:.1} earthquake ruptures the Cascadia subduction zone. Strong shaking lasts about {:.0} minutes. Peak ground acceleration across the modelled area ranges from {:.2} to {:.2} g in DOGAMI's estimate for {} soil.", &local[..16].replace('T', " "), self.tz_name, self.magnitude, self.duration_s / 60.0, lo, hi, if self.soils == "dry" { "dry" } else { "saturated" });
         ctx.publish("quake.rupture", json!({ "magnitude": self.magnitude, "duration_s": self.duration_s, "soils": self.soils, "at": now.to_iso(), "source": "DOGAMI O-18-02 site ground motion; USGS synthetic bedrock motion" }));
-        ctx.publish("quake.crossing", json!({ "id": "rupture", "title": "The rupture", "name": "Cascadia", "kind": "rupture", "time": now.to_iso(), "local": local_words, "sentence": sentence, "source": "DOGAMI Open-File Report O-18-02 (2018)", "confidence": "a published scenario, not a forecast" }));
+        ctx.publish("quake.crossing", json!({ "id": "rupture", "title": "The rupture", "name": "Cascadia", "kind": "rupture", "time": now.to_iso(), "local": local_words, "sentence": sentence, "source": "DOGAMI (Oregon Department of Geology and Mineral Industries), Open-File Report O-18-02, 2018", "confidence": "a published scenario, not a forecast" }));
     }
     fn snapshot(&self) -> serde_json::Value { serde_json::to_value(self).unwrap() }
     fn restore(&mut self, v: serde_json::Value) { let mut o: Ground = serde_json::from_value(v).unwrap(); o.load().expect("ground reload"); *self = o; }
@@ -316,48 +316,48 @@ impl Buildings {
     }
     pub fn describe(name: &str, p: &toml::Value) -> Describe {
         let folder = param_str(p, "folder", "portland-cascadia");
-        let mut d = Describe::new("quake.buildings", name, "Damage, deaths and displaced people on the cells from the ground module's motion: a lognormal fragility in peak ground acceleration for a generic building mix (four damage states), ground failure from the liquefaction and landslide layers, and casualty rates by damage state in the Hazus manner; occupants by time of day and residents per cell from DOGAMI's own inventory. The fragility medians and the casualty rates are recalled, not read. Six parameters are fitted to DOGAMI's Hazus results for the same ground on saturated soil by day, and the module reports the fit. The pattern of damage across neighbourhoods follows DOGAMI's. The night-time and dry-soil tolls do not: only shaking makes a building collapse here, so the toll changes much less between those cases than DOGAMI's does.")
+        let mut d = Describe::new("quake.buildings", name, "This module estimates building damage, deaths, injuries and displaced people in each cell of the map, from the ground module's shaking. For each cell it uses a fragility curve, which gives the probability that a building reaches each of four damage states at a given peak ground acceleration. One set of curves stands for a generic mix of building types. The module adds the buildings lost where the ground liquefies or slides, then applies a casualty rate to each damage state. This is the approach of Hazus, the loss-estimation software of the Federal Emergency Management Agency. The buildings, the residents and the occupants by time of day come from the inventory of DOGAMI, Oregon's geology agency. The values of the curves and of the casualty rates are recalled from memory and have not been checked against the Hazus manual. Six parameters were then fitted to DOGAMI's own Hazus results for a daytime earthquake on saturated soil, and the module reports how close the fit is. The pattern of damage across neighbourhoods follows DOGAMI's. The tolls for a night-time earthquake and for dry soil do not. In this model only shaking makes a building collapse, so the toll changes much less between those cases than it does in DOGAMI's study.")
             .priority(1).dt("once, on the rupture")
-            .param("folder", folder, "", "the event folder with the inventory and the loss tables")
-            .param("time_of_day", param_str(p, "time_of_day", "day"), "", "day (DOGAMI's 2 PM occupants) or night (2 AM)")
-            .param("record", param_str(p, "record", "wet"), "", "which DOGAMI table to score against: wet or dry, matching the ground module's soils")
-            .param("median_slight_g", param_f64(p, "median_slight_g", 0.20), "g", "fragility median for slight damage, generic mix (recalled from the Hazus equivalent-PGA tables for moderate-code wood and older masonry; a guess at the mix)")
-            .param("median_moderate_g", param_f64(p, "median_moderate_g", 0.40), "g", "moderate (recalled, as above)")
-            .param("median_extensive_g", param_f64(p, "median_extensive_g", 0.80), "g", "extensive (recalled, as above)")
-            .param("median_complete_g", param_f64(p, "median_complete_g", 1.50), "g", "complete (recalled, as above)")
-            .param("beta", param_f64(p, "beta", 0.70), "", "lognormal dispersion (Hazus uses about 0.64 for most classes; recalled)")
-            .param("fragility_scale", param_f64(p, "fragility_scale", 1.0), "", "the medians are divided by this: fitted so the window's extensive-or-complete count matches DOGAMI's (the fit is reported)")
-            .param("gf_median_cm", param_f64(p, "gf_median_cm", 152.0), "cm", "ground-failure fragility median for extensive-or-complete damage from lateral spread (Hazus: 60 inches, recalled)")
-            .param("gf_beta", param_f64(p, "gf_beta", 1.2), "", "its dispersion (Hazus 1.2, recalled)")
-            .param("gf_complete_share", param_f64(p, "gf_complete_share", 0.2), "", "the share of ground-failure damage counted complete (Hazus 0.2 for lateral spread, recalled)")
-            .param("collapse_given_complete", param_f64(p, "collapse_given_complete", 0.08), "", "share of complete damage that is collapse, generic mix (Hazus: 3 percent wood, 15 percent unreinforced masonry; a guess at the mix)")
-            .param("casualty_scale", param_f64(p, "casualty_scale", 1.0), "", "multiplies every casualty rate: fitted so deaths in Portland match DOGAMI's (reported)")
-            .param("displaced_moderate_share", param_f64(p, "displaced_moderate_share", 0.0), "", "share of residents in moderately damaged buildings counted displaced (Hazus counts a share; 0 here, a guess)")
-            .param("displaced_share", param_f64(p, "displaced_share", 1.0), "", "share of residents in extensively or completely damaged buildings counted displaced long-term: fitted to DOGAMI's displaced population (reported)")
+            .param("folder", folder, "", "the folder of input data for this event: the building inventory and DOGAMI's loss tables")
+            .param("time_of_day", param_str(p, "time_of_day", "day"), "", "day: people where DOGAMI places them at 2 p.m. night: where it places them at 2 a.m.")
+            .param("record", param_str(p, "record", "wet"), "", "which of DOGAMI's result tables the run is compared with, wet or dry. It should match the ground module's soil setting")
+            .param("median_slight_g", param_f64(p, "median_slight_g", 0.20), "g", "the peak ground acceleration at which half the buildings reach slight damage, for the generic building mix. Recalled from the Hazus tables for moderate-code wood and older masonry; the mix is a guess")
+            .param("median_moderate_g", param_f64(p, "median_moderate_g", 0.40), "g", "the same for moderate damage (recalled)")
+            .param("median_extensive_g", param_f64(p, "median_extensive_g", 0.80), "g", "the same for extensive damage (recalled)")
+            .param("median_complete_g", param_f64(p, "median_complete_g", 1.50), "g", "the same for complete damage (recalled)")
+            .param("beta", param_f64(p, "beta", 0.70), "", "the spread of the fragility curves, a lognormal dispersion. Hazus uses about 0.64 for most building classes (recalled)")
+            .param("fragility_scale", param_f64(p, "fragility_scale", 1.0), "", "divides the four accelerations above. Fitted so that the count of buildings with extensive or complete damage matches DOGAMI's; the fit is reported")
+            .param("gf_median_cm", param_f64(p, "gf_median_cm", 152.0), "cm", "the permanent ground movement at which half the buildings on failed ground take extensive or complete damage. Hazus gives 60 inches for lateral spreading (recalled)")
+            .param("gf_beta", param_f64(p, "gf_beta", 1.2), "", "the spread of that curve (Hazus 1.2, recalled)")
+            .param("gf_complete_share", param_f64(p, "gf_complete_share", 0.2), "", "the share of ground-failure damage counted as complete (Hazus 0.2 for lateral spreading, recalled)")
+            .param("collapse_given_complete", param_f64(p, "collapse_given_complete", 0.08), "", "the share of completely damaged buildings that collapse, for the generic mix. Hazus gives 3 percent for wood and 15 percent for unreinforced masonry; the mix is a guess")
+            .param("casualty_scale", param_f64(p, "casualty_scale", 1.0), "", "multiplies every casualty rate. Fitted so that deaths in Portland match DOGAMI's; the fit is reported")
+            .param("displaced_moderate_share", param_f64(p, "displaced_moderate_share", 0.0), "", "the share of residents of moderately damaged buildings counted as displaced. Hazus counts some of them; 0 here is a guess")
+            .param("displaced_share", param_f64(p, "displaced_share", 1.0), "", "the share of residents of buildings with extensive or complete damage counted as displaced for the long term. Fitted to DOGAMI's displaced population; the fit is reported")
             .subscribe("quake.rupture", "the instant")
             .read_on("quake.pga_g", "g", true, "quake.rupture", "").read_on("quake.liq_p", "1", true, "quake.rupture", "").read_on("quake.liq_pgd_cm", "cm", true, "quake.rupture", "").read_on("quake.ls_p", "1", true, "quake.rupture", "").read_on("quake.ls_pgd_cm", "cm", true, "quake.rupture", "")
-            .publish("quake.crossing", "{ kind: toll, sentence } deaths, injuries and displaced on the rupture; the fit against DOGAMI in the sentence")
+            .publish("quake.crossing", "{ kind: toll, sentence } the sentence shown on the run page: deaths, injuries and displaced people from the shaking, with the comparison against DOGAMI")
             .own("quake.cell_death_rate", "1").own("quake.cell_displaced_rate", "1").own("quake.cell_collapse_frac", "1").own("quake.cell_death_rate_collapse", "1").own("quake.cell_death_rate_other", "1")
-            .publish("quake.toll", "{ deaths, injuries_hospital, injuries_life, injuries_minor, displaced } the window's toll as numbers, once the shaking ends, for whoever keeps a total")
+            .publish("quake.toll", "{ deaths, injuries_hospital, injuries_life, injuries_minor, displaced } the toll in the modelled area as numbers, once the shaking ends, for the module that keeps the total")
             .frame("buildings_count", "buildings").frame("building_damage_frac", "1").frame("buildings_destroyed", "buildings").frame("buildings_collapsed", "buildings").frame("deaths", "people").frame("displaced", "people").frame("occupants", "people")
             .report("quake.buildings", "buildings").report("quake.buildings_moderate", "buildings").report("quake.buildings_extensive", "buildings").report("quake.buildings_complete", "buildings")
             .report("quake.buildings_collapsed", "buildings").report("quake.deaths_in_collapses", "people").report("quake.deaths", "people").report("quake.injuries_hospital", "people").report("quake.injuries_life_threatening", "people").report("quake.injuries_minor", "people").report("quake.displaced", "people").report("quake.occupants", "people")
             .report("quake.portland_deaths", "people").report("quake.portland_displaced", "people").report("quake.portland_buildings_extensive_or_complete", "buildings")
             .report("fit.portland_deaths_ratio", "1").report("fit.portland_displaced_ratio", "1").report("fit.portland_damage_ratio", "1").report("fit.portland_extensive_ratio", "1").report("fit.portland_complete_ratio", "1").report("fit.portland_injuries_ratio", "1").report("fit.units_damage_r", "1").report("fit.units_deaths_r", "1")
-            .asset(&format!("events/{folder}"), "DOGAMI's footprints, people per unit and Hazus loss tables")
-            .view("map", "share of buildings extensively damaged or worse", "building_damage_frac", "expected, per cell")
-            .view("map", "buildings collapsed", "buildings_collapsed", "realised building by building, a binomial draw at each cell's collapse share by the seed")
-            .view("map", "deaths", "deaths", "expected, per cell, at the stated time of day; the collapse term is the realised one")
-            .view("map", "people displaced", "displaced", "residents of buildings extensively or completely damaged")
-            .view("counter", "buildings collapsed", "quake.buildings_collapsed", "realised, by the seed")
-            .view("counter", "dead in collapsed buildings", "quake.deaths_in_collapses", "at the collapse casualty rate")
-            .view("counter", "deaths", "quake.deaths", "in the window; the collapses realised, the rest expected")
-            .view("counter", "injuries needing a hospital", "quake.injuries_hospital", "Hazus levels 2 and 3")
+            .asset(&format!("events/{folder}"), "DOGAMI's building outlines, people per neighbourhood unit and Hazus loss tables")
+            .view("map", "share of buildings with extensive or complete damage", "building_damage_frac", "the expected share in each cell")
+            .view("map", "buildings collapsed", "buildings_collapsed", "counted building by building: in each cell a random draw decides how many buildings collapse, given the cell's probability of collapse")
+            .view("map", "deaths", "deaths", "per cell, for people where they are at the time of the earthquake. Deaths in collapsed buildings follow the drawn collapses; the others are expected values")
+            .view("map", "people displaced", "displaced", "a fitted share of the residents of buildings with extensive or complete damage")
+            .view("counter", "buildings collapsed", "quake.buildings_collapsed", "from the random draw in each cell")
+            .view("counter", "dead in collapsed buildings", "quake.deaths_in_collapses", "at the casualty rate for collapsed buildings")
+            .view("counter", "deaths", "quake.deaths", "in the modelled area. Deaths in collapsed buildings follow the drawn collapses; the others are expected values")
+            .view("counter", "injuries needing a hospital", "quake.injuries_hospital", "Hazus severity levels 2 and 3")
             .view("counter", "people displaced", "quake.displaced", "")
-            .view("counter", "buildings destroyed or extensively damaged", "quake.buildings_extensive", "extensive plus complete")
-            .view("counter", "deaths, Portland, against DOGAMI", "fit.portland_deaths_ratio", "this run's expected deaths in the nine Portland districts over DOGAMI's figure for the same scenario; 1 is the fit")
-            .view("counter", "damage pattern across 876 units", "fit.units_damage_r", "correlation of extensive-or-complete counts per neighbourhood unit with DOGAMI's")
-            .note("Hazus's own tables (FEMA, Earthquake Model Technical Manual) were not downloadable from this machine on 2026-11-12; the medians, dispersions, collapse share and casualty rates here are recalled from them and declared so, and six parameters are fitted to DOGAMI's run on the same ground, so the daytime toll on saturated soil is close to the record's by construction. The inventory is DOGAMI's (footprints without heights or structure types; the people per building are each unit's totals spread by footprint area, which is ours).");
+            .view("counter", "buildings with extensive or complete damage", "quake.buildings_extensive", "the two worst of the four damage states")
+            .view("counter", "deaths in Portland, relative to DOGAMI", "fit.portland_deaths_ratio", "this run's deaths in the nine districts of the City of Portland divided by DOGAMI's estimate for the same case; 1 would be an exact match")
+            .view("counter", "damage pattern, correlation with DOGAMI", "fit.units_damage_r", "the correlation between this run's and DOGAMI's counts of buildings with extensive or complete damage, across the study's 876 neighbourhood units")
+            .note("The Hazus tables (FEMA, Earthquake Model Technical Manual) could not be downloaded to the development machine on 12 November 2026. The fragility accelerations, their spread, the collapse share and the casualty rates are therefore recalled from memory and not checked. Six parameters were then fitted to DOGAMI's Hazus run on the same ground, so the daytime toll on saturated soil is close to DOGAMI's because it was made to be. The building inventory is DOGAMI's. It gives building outlines without heights or structure types. DOGAMI gives the number of people in each neighbourhood unit; dividing them among the unit's buildings by footprint area is this project's assumption.");
         // the record as a table on the run page
         if let Ok((head, rows)) = read_csv(&root().join("data/events").join(folder).join(format!("loss_jurisdiction_{}.csv", param_str(p, "record", "wet")))) {
             let keep = ["Jurisdiction", "Bldg_LR", "DisplacedPop", "CasDayL4", "CasNightL4", "CasDayL2", "CasDayL3", "PDsExtensive", "PDsComplete"];
@@ -491,11 +491,13 @@ impl Module for Buildings {
         let r_dmg = corr(&|u| u.ext_comp); let r_d = corr(&|u| u.deaths);
         ctx.report("fit.units_damage_r", "1", r_dmg);
         ctx.report("fit.units_deaths_r", "1", r_d);
-        let sentence = format!("In the window, about {:.0} buildings extensively damaged or destroyed ({:.0} destroyed); {:.0} collapse outright and {:.0} of the {:.0} dead are in them; {:.0} hurt badly enough for a hospital, {:.0} people displaced, {}time occupancy. In Portland's nine districts {:.0} dead against DOGAMI's {:.0} for the same scenario (ratio {:.2}); the damage pattern across the units correlates {:.2} with DOGAMI's.",
-            tot[3] + tot[4], tot[4], n_coll_tot, dead_in_coll, d_tot, l23, disp, self.time_of_day, pdx.deaths, rp.deaths, ratio(pdx.deaths, rp.deaths), r_dmg);
+        let when = if self.time_of_day == "night" { "at night (2 a.m.)" } else { "by day (2 p.m.)" };
+        let c = |v: f64| crate::lifelines::commas(v);
+        let sentence = format!("About {} buildings in the modelled area take extensive or complete damage, {} of them complete, and {} collapse. About {} people die, {} of them in collapsed buildings. Another {} are injured badly enough to need a hospital and {} are displaced. The casualties are for people where they are {}. This is the buildings module's count by map cell. Where a run also has agents, the page's death total uses the agents' count, which is lower in daytime runs for a reason not yet found. In the nine districts of the City of Portland the model counts {} dead where DOGAMI's study estimates {} for the same case, a ratio of {:.2}. Across the study's neighbourhood units, the model's counts of buildings with extensive or complete damage correlate {:.2} with DOGAMI's.",
+            c((tot[3] + tot[4]) as f64), c(tot[4] as f64), c(n_coll_tot as f64), c(d_tot as f64), c(dead_in_coll as f64), c(l23 as f64), c(disp as f64), when, c(pdx.deaths as f64), c(rp.deaths as f64), ratio(pdx.deaths, rp.deaths), r_dmg);
         ctx.report("quake.injuries_life_threatening", "people", l3);
         ctx.publish("quake.toll", json!({ "deaths": d_tot, "injuries_hospital": l23, "injuries_life": l3, "injuries_minor": l1, "displaced": disp }));
-        ctx.publish("quake.crossing", json!({ "id": "toll", "title": "The toll", "name": "the window", "kind": "toll", "time": ctx.now().to_iso(), "sentence": sentence, "source": "this run's fragility (recalled Hazus forms, six parameters fitted) on DOGAMI's ground and inventory; the record is DOGAMI O-18-02's Hazus run", "confidence": "fitted" }));
+        ctx.publish("quake.crossing", json!({ "id": "toll", "title": "The toll", "name": "the window", "kind": "toll", "time": ctx.now().to_iso(), "sentence": sentence, "source": "This model's fragility curves, which have the form Hazus uses, with values recalled from memory and six parameters fitted, applied to DOGAMI's ground motion and building inventory. The comparison is with DOGAMI's own Hazus run in Open-File Report O-18-02", "confidence": "fitted to the study it is compared with" }));
     }
     fn snapshot(&self) -> serde_json::Value { serde_json::to_value(self).unwrap() }
     fn restore(&mut self, v: serde_json::Value) { let mut o: Buildings = serde_json::from_value(v).unwrap(); o.load().expect("buildings reload"); *self = o; }
