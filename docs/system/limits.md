@@ -229,7 +229,7 @@ holds the history.
 
 ## The earthquake
 
-Portland in the year after a Cascadia earthquake (`anselm/portland-cascadia`). Status as of the runs
+Portland after a Cascadia earthquake (`anselm/portland-cascadia`). Status as of the runs
 of 12 November 2026; the [project page](/anselm/portland-cascadia) gives the figures in full.
 
 - **No record to score against.** The ground shaking is the output of DOGAMI's scenario model, and
@@ -256,8 +256,8 @@ of 12 November 2026; the [project page](/anselm/portland-cascadia) gives the fig
   has it by day 22, where the Oregon Resilience Plan expects one to three months. The number of
   hospitals that lose power and the deaths after the shaking both depend on this result.
 - **Bridges.** Ten of the twelve Willamette bridges close in the base run. The seven that take the
-  worst level of damage stay closed for 365 days, a judgement, and so reopen on the run's last
-  day. The `burnside-ready` variant has no effect on the computed runs, because the setting it
+  worst level of damage are given a 365-day repair, a judgement, and are still closed when the
+  run ends, eleven months after the earthquake. The `burnside-ready` variant has no effect on the computed runs, because the setting it
   changes is read only by the `ranges` version.
 - **Fuel use.** The response's daily use, the hospitals' generator fuel and the date and rate of
   resupply are guesses. The response's use is counted only once a fuel truck can reach a hospital
@@ -267,7 +267,7 @@ of 12 November 2026; the [project page](/anselm/portland-cascadia) gives the fig
 - **Deaths after the shaking.** These rest on one rate, deaths per person-day without electricity
   in Puerto Rico after Hurricane Maria, and on a guessed daily rate for the badly injured with no
   open hospital. Cold and unsafe water are in the table and switched off for want of a source.
-  The base run adds 2 deaths over the year and the `ranges` variant 66. The difference is the
+  The base run adds 2 deaths by the end of 2027 and the `ranges` variant 66. The difference is the
   length of the power cut.
 - **The agents** (`people.agents`, 93,520 agents of ten people each) are placed at a home and a
   workplace and decide nothing. Nobody leaves, shelters, travels or waits at a hospital.

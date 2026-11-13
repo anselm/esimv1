@@ -4,12 +4,12 @@
       "id": "run",
       "run": {
         "close_every": "1d",
-        "end": "2028-02-01T22:00:00Z",
+        "end": "2028-01-01T08:00:00Z",
         "name": "q1-portland-cascadia",
-        "notes": "A magnitude 9.0 rupture of the Cascadia subduction zone as it affects Portland, set at 2 PM PST on Monday 1 February 2027 as a scenario choice and not a prediction. The run begins a month before, on 1 January 2027, and ends a year after the earthquake. Ground motion, soils (saturated) and the building inventory with daytime occupants are DOGAMI's; tanks, bridges, transmission structures and route segments are damaged as components; water follows an assumed schedule. Every constant is published, recalled or declared a guess in its module's description.",
+        "notes": "A magnitude 9.0 rupture of the Cascadia subduction zone as it affects Portland, set at 2 PM PST on Monday 1 February 2027 as a scenario choice and not a prediction. The run covers the calendar year 2027 in Pacific time, so it begins a month before the earthquake and ends eleven months after it. Ground motion, soils (saturated) and the building inventory with daytime occupants are DOGAMI's; tanks, bridges, transmission structures and route segments are damaged as components; water follows an assumed schedule. Every constant is published, recalled or declared a guess in its module's description.",
         "seed": 1,
         "snapshot_every": "30d",
-        "start": "2027-01-01T22:00:00Z"
+        "start": "2027-01-01T08:00:00Z"
       }
     },
     {
@@ -61,7 +61,8 @@
         "lat_s": 45.43,
         "lon_e": -122.47,
         "lon_w": -122.85,
-        "res_arcsec": 1
+        "res_arcsec": 1,
+        "summary_day": 333
       }
     },
     {
@@ -127,7 +128,7 @@
   ],
   "from": {
     "entry": "manifests/q1-portland-cascadia.toml",
-    "hash": "sha256:b97cdc26a6000ab5a55d6439fad72170ca833fbd29e06794e1e0a7f75b843953",
+    "hash": "sha256:143662e732e623238e4bb0f3836f8ac44c118abd07e67eb6c533b15bfb3352f4",
     "language": "toml"
   },
   "manifest": "manifest/1"

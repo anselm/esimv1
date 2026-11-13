@@ -25,9 +25,9 @@ The planet pages to start with:
 - [Half Moon Bay: the breakwater and the beach](https://esimv1.exe.xyz/anselm/halfmoonbay-shoreline):
   a one-line shoreline model of the bay south of Pillar Point Harbor since the Corps built the
   breakwater, read against the Corps' and Griggs's erosion rates, with the dredge and sea level to 2075.
-- [Portland, the year after Cascadia](https://esimv1.exe.xyz/anselm/portland-cascadia): a
+- [Portland after Cascadia](https://esimv1.exe.xyz/anselm/portland-cascadia): a
   magnitude 9 earthquake on the Cascadia subduction zone as it affects Portland, set on 1 February
-  2027 and followed for a year. Buildings, fuel tanks, bridges, transmission structures and road
+  2027 and followed to the end of that year. Buildings, fuel tanks, bridges, transmission structures and road
   segments are damaged one by one on the state's published ground shaking. The runs then track
   electricity, hospitals, fuel and deaths, and compare holding less fuel at the riverside
   terminals with retrofitting the tanks. Several results disagree with the studies they are

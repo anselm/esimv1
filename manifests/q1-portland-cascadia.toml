@@ -1,4 +1,4 @@
-# Q1: Portland in the year after a Cascadia earthquake. The magnitude 9.0 rupture of the Cascadia
+# Q1: Portland through 2027, with a Cascadia earthquake on 1 February. The magnitude 9.0 rupture of the Cascadia
 # subduction zone that the State of Oregon plans for, set at two in the afternoon on Monday 1
 # February 2027 (2 PM is DOGAMI's daytime case) on soils still saturated from the winter rains. The
 # date is a scenario choice, not a prediction. The ground motion and ground failure are DOGAMI's
@@ -13,12 +13,12 @@
 
 [run]
 name = "q1-portland-cascadia"
-start = "2027-01-01T22:00:00Z"
-end = "2028-02-01T22:00:00Z"
+start = "2027-01-01T08:00:00Z"
+end = "2028-01-01T08:00:00Z"
 seed = 1
 close_every = "1d"
 snapshot_every = "30d"
-notes = "A magnitude 9.0 rupture of the Cascadia subduction zone as it affects Portland, set at 2 PM PST on Monday 1 February 2027 as a scenario choice and not a prediction. The run begins a month before, on 1 January 2027, and ends a year after the earthquake. Ground motion, soils (saturated) and the building inventory with daytime occupants are DOGAMI's; tanks, bridges, transmission structures and route segments are damaged as components; water follows an assumed schedule. Every constant is published, recalled or declared a guess in its module's description."
+notes = "A magnitude 9.0 rupture of the Cascadia subduction zone as it affects Portland, set at 2 PM PST on Monday 1 February 2027 as a scenario choice and not a prediction. The run covers the calendar year 2027 in Pacific time, so it begins a month before the earthquake and ends eleven months after it. Ground motion, soils (saturated) and the building inventory with daytime occupants are DOGAMI's; tanks, bridges, transmission structures and route segments are damaged as components; water follows an assumed schedule. Every constant is published, recalled or declared a guess in its module's description."
 
 [place]
 lat_s = 45.43
@@ -50,6 +50,7 @@ name = "aftermath"
 kind = "people.aftermath"
 [module.params]
 folder = "portland-cascadia"
+summary_day = 333
 
 [[module]]
 name = "agents"

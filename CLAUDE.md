@@ -367,7 +367,10 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   timeline): the rupture crossing carries `local`, the clock says the date in words, the timeline and every chart
   draw a red line at the event. Moved again on the night of 2026-11-12 (Anselm: "Make the sim start Jan 1. Move fault
   to Feb 1"): the event is Monday 1 February 2027, 2 PM PST (`at = 2027-02-01T22:00:00Z`, `tz_offset_h = -8`,
-  `tz_name = "PST"`), the run 2027-01-01T22:00Z to 2028-02-01T22:00Z; wet-night is `2027-02-01T10:00:00Z`.
+  `tz_name = "PST"`), the run is the calendar year 2027 in Pacific time, 2027-01-01T08:00Z to 2028-01-01T08:00Z (Anselm: "Run sim for the
+  calendar year of 2027 only"), so 333 daily steps after the event; `people.aftermath` has `summary_day` (333 in the
+  manifest) for its summing-up sentence; wet-night is `2027-02-01T10:00:00Z`. In computed mode a bridge now stays open
+  until its `component.state` says down, so `lifeline.failed` is published and the map marks the closure.
 - Portland, the page and the standing faults (2026-11-12 night, `devlog/20261112-portland-readme-rewritten.md` and
   `devlog/20261112-portland-stale-wording.md`; Anselm: "I want to try rewrite the portland cascadia fault scenario
   readme again", then "update stale portland wording overall everywhere"): the project README is a new text in the

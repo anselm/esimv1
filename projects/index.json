@@ -1857,7 +1857,7 @@
     "cover": "cover.png",
     "cover_caption": "The run page seven days after the earthquake in the base run: building damage by cell, with the bridges and hospitals marked by their state and the counts beside the map. A still from the runs of 12 November 2026; the run page can be played.",
     "created": "2026-11-12",
-    "description": "A magnitude 9 earthquake on the Cascadia subduction zone as it affects Portland, Oregon, set at 2 PM PST on Monday 1 February 2027 as a scenario choice and not a prediction. Each run begins on 1 January 2027 and ends a year after the earthquake. Buildings, fuel tanks, bridges, transmission structures and road segments are damaged on the state geology agency's published ground shaking, with saturated soil and daytime occupancy, and the run then tracks electricity, hospitals, fuel and deaths day by day. This is an early model: several results disagree with the studies they are checked against, and many parameters are recalled from memory or guessed.",
+    "description": "A magnitude 9 earthquake on the Cascadia subduction zone as it affects Portland, Oregon, set at 2 PM PST on Monday 1 February 2027 as a scenario choice and not a prediction. Each run covers the calendar year 2027, from a month before the earthquake to eleven months after it. Buildings, fuel tanks, bridges, transmission structures and road segments are damaged on the state geology agency's published ground shaking, with saturated soil and daytime occupancy, and the run then tracks electricity, hospitals, fuel and deaths day by day. This is an early model: several results disagree with the studies they are checked against, and many parameters are recalled from memory or guessed.",
     "featured": true,
     "kinds": [
       "lifelines.recovery",
@@ -1872,136 +1872,25 @@
     "runs": [
       {
         "all_ledgers_closed": true,
-        "digest": "65367dbf1101bdb3",
-        "end": 1833055200,
-        "events": 4357,
-        "id": "q1-portland-cascadia-0dafc525-65367dbf",
+        "digest": "d11efd3700de10a1",
+        "end": 1830326400,
+        "events": 4127,
+        "id": "q1-portland-cascadia-21641968-d11efd37",
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
           "lifelines.bridge_ready": "[\"Burnside Bridge\"]"
         },
-        "start": 1798840800,
+        "start": 1798790400,
         "variant": "burnside-ready",
         "verdict": "tearing"
       },
       {
         "all_ledgers_closed": true,
-        "digest": "6d830b484dfd4ae3",
-        "end": 1833055200,
-        "events": 4131,
-        "id": "q1-portland-cascadia-416c5899-6d830b48",
-        "name": "q1-portland-cascadia",
-        "seed": 1,
-        "set": {
-          "buildings.record": "\"dry\"",
-          "buildings.time_of_day": "\"day\"",
-          "components.soils": "\"dry\"",
-          "ground.soils": "\"dry\""
-        },
-        "start": 1798840800,
-        "variant": "dry-day",
-        "verdict": "tearing"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "8f46057852c60871",
-        "end": 1833055200,
-        "events": 4385,
-        "id": "q1-portland-cascadia-5073b8f0-8f460578",
-        "name": "q1-portland-cascadia",
-        "seed": 2,
-        "set": {
-          "run.seed": "2"
-        },
-        "start": 1798840800,
-        "variant": "seed-2",
-        "verdict": "tearing"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "5e57d01882af496e",
-        "end": 1833055200,
-        "events": 4357,
-        "id": "q1-portland-cascadia-8aaedf12-5e57d018",
-        "name": "q1-portland-cascadia",
-        "seed": 1,
-        "set": {
-          "components.storage_cut": "1.0",
-          "lifelines.storage_cut": "1.0"
-        },
-        "start": 1798840800,
-        "variant": "no-hub",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "c8dee66463a347de",
-        "end": 1833055200,
-        "events": 4380,
-        "id": "q1-portland-cascadia-9e182233-c8dee664",
-        "name": "q1-portland-cascadia",
-        "seed": 1,
-        "set": {
-          "lifelines.inputs": "\"ranges\""
-        },
-        "start": 1798840800,
-        "variant": "ranges",
-        "verdict": "tearing"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "350a1f880f590f82",
-        "end": 1833055200,
-        "events": 4357,
-        "id": "q1-portland-cascadia-abb6e689-350a1f88",
-        "name": "q1-portland-cascadia",
-        "seed": 1,
-        "set": {
-          "components.retrofit": "true",
-          "lifelines.retrofit": "true"
-        },
-        "start": 1798840800,
-        "variant": "retrofit",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "83a073145ae9d0af",
-        "end": 1833055200,
-        "events": 4393,
-        "id": "q1-portland-cascadia-ad5138eb-83a07314",
-        "name": "q1-portland-cascadia",
-        "seed": 3,
-        "set": {
-          "run.seed": "3"
-        },
-        "start": 1798840800,
-        "variant": "seed-3",
-        "verdict": null
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "15728325b378b42b",
-        "end": 1833055200,
-        "events": 4357,
-        "id": "q1-portland-cascadia-ae34cae2-15728325",
-        "name": "q1-portland-cascadia",
-        "seed": 1,
-        "set": {
-          "components.storage_cut": "0.2",
-          "lifelines.storage_cut": "0.2"
-        },
-        "start": 1798840800,
-        "variant": "cut-20",
-        "verdict": "tearing"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "e55771e48f944f6f",
-        "end": 1833055200,
-        "events": 4358,
-        "id": "q1-portland-cascadia-c1f2adbf-e55771e4",
+        "digest": "a6d1ce15381277ed",
+        "end": 1830326400,
+        "events": 4127,
+        "id": "q1-portland-cascadia-36bebe70-a6d1ce15",
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
@@ -2011,16 +1900,47 @@
           "ground.at": "\"2027-02-01T10:00:00Z\"",
           "ground.soils": "\"wet\""
         },
-        "start": 1798840800,
+        "start": 1798790400,
         "variant": "wet-night",
         "verdict": "tearing"
       },
       {
         "all_ledgers_closed": true,
-        "digest": "65367dbf1101bdb3",
-        "end": 1833055200,
-        "events": 4357,
-        "id": "q1-portland-cascadia-c9c6bbcc-65367dbf",
+        "digest": "9bb769abd36e9fdc",
+        "end": 1830326400,
+        "events": 4127,
+        "id": "q1-portland-cascadia-38358ba4-9bb769ab",
+        "name": "q1-portland-cascadia",
+        "seed": 1,
+        "set": {
+          "components.storage_cut": "1.0",
+          "lifelines.storage_cut": "1.0"
+        },
+        "start": 1798790400,
+        "variant": "no-hub",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "9f8360f2ac7d184a",
+        "end": 1830326400,
+        "events": 4151,
+        "id": "q1-portland-cascadia-5f1d36fe-9f8360f2",
+        "name": "q1-portland-cascadia",
+        "seed": 2,
+        "set": {
+          "run.seed": "2"
+        },
+        "start": 1798790400,
+        "variant": "seed-2",
+        "verdict": "stretching"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "d11efd3700de10a1",
+        "end": 1830326400,
+        "events": 4127,
+        "id": "q1-portland-cascadia-6a286824-d11efd37",
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
@@ -2028,12 +1948,92 @@
           "buildings.time_of_day": "\"day\"",
           "ground.soils": "\"wet\""
         },
-        "start": 1798840800,
+        "start": 1798790400,
         "variant": "wet-day",
         "verdict": "tearing"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "25f8b0791bd0d06a",
+        "end": 1830326400,
+        "events": 4163,
+        "id": "q1-portland-cascadia-6c24d684-25f8b079",
+        "name": "q1-portland-cascadia",
+        "seed": 3,
+        "set": {
+          "run.seed": "3"
+        },
+        "start": 1798790400,
+        "variant": "seed-3",
+        "verdict": null
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "671ffedbd295275d",
+        "end": 1830326400,
+        "events": 3905,
+        "id": "q1-portland-cascadia-6d42d2c0-671ffedb",
+        "name": "q1-portland-cascadia",
+        "seed": 1,
+        "set": {
+          "buildings.record": "\"dry\"",
+          "buildings.time_of_day": "\"day\"",
+          "components.soils": "\"dry\"",
+          "ground.soils": "\"dry\""
+        },
+        "start": 1798790400,
+        "variant": "dry-day",
+        "verdict": "stretching"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "0f94326869527ba9",
+        "end": 1830326400,
+        "events": 4150,
+        "id": "q1-portland-cascadia-918bce52-0f943268",
+        "name": "q1-portland-cascadia",
+        "seed": 1,
+        "set": {
+          "lifelines.inputs": "\"ranges\""
+        },
+        "start": 1798790400,
+        "variant": "ranges",
+        "verdict": "tearing"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "f00b822c81d4d5eb",
+        "end": 1830326400,
+        "events": 4127,
+        "id": "q1-portland-cascadia-aa51159b-f00b822c",
+        "name": "q1-portland-cascadia",
+        "seed": 1,
+        "set": {
+          "components.storage_cut": "0.2",
+          "lifelines.storage_cut": "0.2"
+        },
+        "start": 1798790400,
+        "variant": "cut-20",
+        "verdict": "tearing"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "04da4e133d2d0ab8",
+        "end": 1830326400,
+        "events": 4127,
+        "id": "q1-portland-cascadia-f8b07745-04da4e13",
+        "name": "q1-portland-cascadia",
+        "seed": 1,
+        "set": {
+          "components.retrofit": "true",
+          "lifelines.retrofit": "true"
+        },
+        "start": 1798790400,
+        "variant": "retrofit",
+        "verdict": "holds"
       }
     ],
-    "title": "Portland, the year after Cascadia",
+    "title": "Portland after Cascadia",
     "variant": [
       {
         "name": "wet-day",

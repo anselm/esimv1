@@ -1,8 +1,8 @@
 # A project: who asked for what, in their words, and the manifest beside it.
 area = "anselm"
 name = "portland-cascadia"
-title = "Portland, the year after Cascadia"
-description = "A magnitude 9 earthquake on the Cascadia subduction zone as it affects Portland, Oregon, set at 2 PM PST on Monday 1 February 2027 as a scenario choice and not a prediction. Each run begins on 1 January 2027 and ends a year after the earthquake. Buildings, fuel tanks, bridges, transmission structures and road segments are damaged on the state geology agency's published ground shaking, with saturated soil and daytime occupancy, and the run then tracks electricity, hospitals, fuel and deaths day by day. This is an early model: several results disagree with the studies they are checked against, and many parameters are recalled from memory or guessed."
+title = "Portland after Cascadia"
+description = "A magnitude 9 earthquake on the Cascadia subduction zone as it affects Portland, Oregon, set at 2 PM PST on Monday 1 February 2027 as a scenario choice and not a prediction. Each run covers the calendar year 2027, from a month before the earthquake to eleven months after it. Buildings, fuel tanks, bridges, transmission structures and road segments are damaged on the state geology agency's published ground shaking, with saturated soil and daytime occupancy, and the run then tracks electricity, hospitals, fuel and deaths day by day. This is an early model: several results disagree with the studies they are checked against, and many parameters are recalled from memory or guessed."
 created = "2026-11-12"
 by = "cli"
 featured = true

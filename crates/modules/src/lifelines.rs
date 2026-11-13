@@ -102,7 +102,7 @@ impl Lifelines {
     pub fn describe(name: &str, p: &toml::Value) -> Describe {
         let folder = param_str(p, "folder", "portland-cascadia");
         let computed = param_str(p, "inputs", "ranges") == "computed";
-        let summary = format!("{} {}", "This module follows the year after the earthquake one day at a time. It tracks the twelve bridges over the Willamette River, thirteen hospitals and their backup generators, electricity, water, and the fuel stored at the Critical Energy Infrastructure Hub, the strip of fuel terminals in northwest Portland. It keeps an account of the hub's fuel in gallons, which must balance every day. The module has two modes. In the computed mode a second module, hazard.components, works out the fuel spill, the state of each bridge, the open roads and the electricity service, and this module uses its results. In the ranges mode it draws those outcomes at random from published ranges: Multnomah County's statement on its bridges, the Oregon Resilience Plan's restoration times and the county's 2022 study of the hub's tanks. Water service follows the Resilience Plan's range in both modes. Three inputs are guesses in both modes: how much generator fuel a hospital holds, how much fuel the emergency response uses each day, and the day fuel deliveries resume.", if computed { "This run uses the computed mode." } else { "This run uses the ranges mode." });
+        let summary = format!("{} {}", "This module follows the city after the earthquake one day at a time. It tracks the twelve bridges over the Willamette River, thirteen hospitals and their backup generators, electricity, water, and the fuel stored at the Critical Energy Infrastructure Hub, the strip of fuel terminals in northwest Portland. It keeps an account of the hub's fuel in gallons, which must balance every day. The module has two modes. In the computed mode a second module, hazard.components, works out the fuel spill, the state of each bridge, the open roads and the electricity service, and this module uses its results. In the ranges mode it draws those outcomes at random from published ranges: Multnomah County's statement on its bridges, the Oregon Resilience Plan's restoration times and the county's 2022 study of the hub's tanks. Water service follows the Resilience Plan's range in both modes. Three inputs are guesses in both modes: how much generator fuel a hospital holds, how much fuel the emergency response uses each day, and the day fuel deliveries resume.", if computed { "This run uses the computed mode." } else { "This run uses the ranges mode." });
         let power_note = if computed { "computed each day by the hazard.components module from the transmission structures that are standing" } else { "a straight line from no service to full service, ending on a day drawn at random from the Oregon Resilience Plan's range of one to three months" };
         let mut d = Describe::new("lifelines.recovery", name, &summary)
             .priority(2).dt("1 day after the rupture")
@@ -138,7 +138,7 @@ impl Lifelines {
             .asset(&format!("events/{folder}"), "the input tables and the map of residents")
             .view_film("the clock", "occupants,quake_pga_g,building_damage_frac", "The map shows where people are until the earthquake, then the ground motion while the shaking lasts, then building damage. Beside it are the most recent events and the counts at the moment shown.")
             .view("story", "what happens", "crossing", "one sentence per event, newest first, each with its source")
-            .view("counter", "dead, all causes", "deaths.total", "deaths in buildings, at the fuel hub and in the year after the shaking, as totalled by the aftermath module")
+            .view("counter", "dead, all causes", "deaths.total", "deaths in buildings, at the fuel hub and in the days after the shaking, as totalled by the aftermath module")
             .view("counter", "Willamette bridges open", "lifeline.crossings_open", "of the twelve in the modelled area")
             .view("counter", "hospitals open", "lifeline.hospitals_open", "undamaged, with grid electricity or a generator that has fuel")
             .view("counter", "hospitals without power", "lifeline.hospitals_dark", "undamaged, but with no grid electricity and no generator fuel")
@@ -294,8 +294,10 @@ impl Module for Lifelines {
                     self.spill(ctx, released, released * self.hub.river_share, lp, "CEI Hub Seismic Risk Analysis (ECONorthwest, Salus Resilience and Enduring Econometrics, 2022). It estimates a release of 94.6 to 193.7 million gallons out of 233.5 million held, with 43 percent reaching the river. The 233.5 million is the report's 67 percent fill applied to 332.7 million gallons of active capacity. This run draws its release at random within the range");
                 }
                 // the crossings (computed mode: set by component.state events as they arrive)
-                if self.inputs == "computed" { for b in &mut self.bridges { b.reopen_day = i64::MAX; } }
-                for b in &mut self.bridges { b.open = b.reopen_day == 0; }
+                // In computed mode a bridge stays open until its component.state says it is down, so the
+                // closure is published as lifeline.failed and the map marks it (it was closed here first,
+                // silently, until 2026-11-12).
+                if self.inputs != "computed" { for b in &mut self.bridges { b.open = b.reopen_day == 0; } }
                 if self.inputs != "computed" { for b in self.bridges.clone() { if !b.open { ctx.publish_at(b.cell, "lifeline.failed", json!({ "kind": "bridge", "name": b.name, "reopen_day": b.reopen_day })); } } }
                 let closed = self.bridges.iter().filter(|b| !b.open).count();
                 let soonest = self.bridges.iter().filter(|b| !b.open).map(|b| b.reopen_day).min().unwrap_or(0);

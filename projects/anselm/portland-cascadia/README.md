@@ -1,4 +1,4 @@
-# Portland in the year after a Cascadia earthquake
+# Portland after a Cascadia earthquake
 
 On 12 November 2026 the Portland City Council voted to require the fuel terminals on the
 Willamette River to cut their storage capacity by at least a fifth. The terminals stand on ground that is
@@ -10,8 +10,9 @@ less fuel means a smaller spill and a smaller reserve.
 
 This project is a simulation built to look at both sides of that trade-off in one model. It takes
 a magnitude 9 earthquake on the Cascadia subduction zone, sets it at 2 p.m. on Monday 1 February
-2027, and follows Portland for a year after it. Each run begins a month earlier, on 1 January, so
-the city is seen working before the earthquake. The model tracks which buildings, fuel tanks,
+2027, and follows Portland to the end of that year. Each run covers the calendar year: it begins
+on 1 January, so the city is seen working for a month before the earthquake, and it ends eleven
+months after it. The model tracks which buildings, fuel tanks,
 bridges, power structures and roads are damaged and then, day by day, who has electricity, which
 hospitals have power, how much fuel is left and how many people die. The date is a scenario choice and not a prediction. Nobody
 knows when the fault will next rupture.
@@ -134,7 +135,7 @@ assigned a damage state by a random draw against a fragility curve of its own. A
 number that fixes those draws, so two runs with the same seed give the same result and runs with
 different seeds show how much depends on chance.
 
-The model then steps through the following year one day at a time, and here the parts depend on
+The model then steps through the rest of the year one day at a time, and here the parts depend on
 one another. Take a hospital whose building survives. If the grid still reaches it, it stays open.
 If the grid does not, it runs on its generators, and the model gives every hospital 72 hours of
 generator fuel, which is a guess. After that it needs a delivery. A fuel truck has to find a route
@@ -268,10 +269,10 @@ table 2027-02-04T22:00Z lifeline.crossings_open=bridges_open service.power_share
 ```
 
 **Bridges.** Ten of the twelve bridges close in the base run. Only Tilikum Crossing and the
-Sellwood Bridge, the two newest, still join the two banks of the river. The Broadway Bridge reopens after 21 days and the Marquam and Burnside bridges after 120
-days. The other seven take the worst level of damage and stay closed for 365 days, the repair time
-this project assigned to that level for an older bridge. They reopen on the last day of the run,
-so a full year without them is as much as the model can say.
+Sellwood Bridge, the two newest, still join the two banks of the river. The Broadway Bridge
+reopens after 21 days and the Marquam and Burnside bridges after 120 days. The other seven take the worst level of damage and are still closed when the run ends,
+eleven months after the earthquake. The repair time this project assigned to that level for an
+older bridge is 365 days, which is a judgement.
 
 Multnomah County says none of the downtown bridges is expected to be usable immediately after a
 major earthquake, and that it could be weeks to years before any is. The model's result resembles
@@ -302,10 +303,10 @@ day 3. The true figure for this scenario is unknown, and the model cannot narrow
 represents more of the power system. The model also does not represent hospital capacity. It has
 no beds, staff or supplies, and no damage inside a hospital building that still stands.
 
-### A year after
+### At the end of the year
 
 ```esim
-table 2028-02-01T22:00Z after.deaths=deaths_after_the_shaking fuel.consumed_gal=fuel_used_by_the_response fuel.hub_gal=fuel_at_the_hub
+table 2028-01-01T08:00Z after.deaths=deaths_after_the_shaking fuel.consumed_gal=fuel_used_by_the_response fuel.hub_gal=fuel_at_the_hub
 ```
 
 **Roads.** In the base run 22 percent of the emergency route length is open during the first week,
@@ -336,10 +337,10 @@ answer it.
 base run 10 percent of people have water on day 30 and half on day 150, and everyone has it by
 day 300. That leaves 841,676 people without water for more than a month.
 
-**Deaths after the shaking.** The model adds deaths in the following year by two rules. One applies
+**Deaths after the shaking.** The model adds deaths in the months that follow by two rules. One applies
 a death rate to every day a person spends without electricity, standing for medical care that is
 interrupted. The other lets people with life-threatening injuries die on any day when no hospital
-is open. The base run adds 2 deaths over the year, with a range of 0.3 to 3.7, all from
+is open. The base run adds 2 deaths by the end of the year, with a range of 0.3 to 3.7, all from
 interrupted care. The `ranges` variant adds 66, with a range of 11 to 121. The whole difference is
 the length of the power cut: 443,000 person-days without electricity in the base run against 14.5
 million in the `ranges` variant. Nobody dies of untreated injuries in either run, because some

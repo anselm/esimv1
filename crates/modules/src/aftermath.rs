@@ -22,6 +22,7 @@ pub struct Aftermath {
     lat_s: f64, lat_n: f64, lon_w: f64, lon_e: f64, res_arcsec: f64,
     folder: String,
     month_days: i64,
+    #[serde(default)] summary_day: i64,
     claims: Vec<Claim>,
     power_dependent_share: f64,
     residents_total: f64,
@@ -45,6 +46,7 @@ impl Aftermath {
             res_arcsec: param_f64(p, "res_arcsec", 1.0),
             folder: param_str(p, "folder", "portland-cascadia").to_string(),
             month_days: param_f64(p, "month_days", 30.0) as i64,
+            summary_day: param_f64(p, "summary_day", 365.0) as i64,
             claims: Vec::new(), power_dependent_share: 0.0, residents_total: 0.0,
             quake_deaths: 0.0, hub_deaths: 0.0, injuries_life: 0.0, injuries_hospital: 0.0, agents_dead: None, untreated: 0.0,
             deaths: Vec::new(), deaths_low: 0.0, deaths_high: 0.0,
@@ -82,6 +84,7 @@ impl Aftermath {
             .priority(3).dt("1 day, on the lifelines' state")
             .param("folder", folder, "", "the folder of input data for this event, with the table of rates and the map of residents")
             .param("month_days", param_f64(p, "month_days", 30.0), "d", "the Oregon Resilience Plan's one-month rule: a business without services for this long tends to leave. The module counts the people whose electricity or water is still out on this day")
+            .param("summary_day", param_f64(p, "summary_day", 365.0), "d", "the day after the earthquake on which the module sums up in a sentence; set it to the run's last day")
             .subscribe("quake.toll", "the buildings module's dead and injured, once the shaking ends").subscribe("agents.toll", "the agents' dead, which the total uses when a run has an agents module").subscribe("lifeline.state", "the lifelines module's daily state: hospitals open, the shares of people with electricity and water, deaths at the fuel hub")
             .publish("after.crossing", "{ kind, day, sentence, source, confidence } the sentences shown on the run page: the first deaths after the shaking, the one-month count, the count after a year")
             .report("deaths.total", "people").report("after.deaths", "people").report("after.deaths_low", "people").report("after.deaths_high", "people")
@@ -167,7 +170,7 @@ impl Module for Aftermath {
                 let after = self.after_total();
                 if after >= 1.0 { let (a, l, h) = (after, self.deaths_low, self.deaths_high); self.say(ctx, "first-after", format!("Day {}: deaths after the shaking reach about {:.0}, with a range of {:.0} to {:.0}. The model adds them for medical care interrupted by the loss of electricity, and for life-threatening injuries on days when no hospital is open.", self.day, a, l, h), "Kishore and others 2018, on Puerto Rico after Hurricane Maria, for the death rate per person per day without electricity. The rate for untreated injuries is a guess. Both are rows of the claims table", "an analogy and a guess"); }
                 if self.day == self.month_days { let (pw, ww) = (self.over_month_power, self.over_month_water); self.say(ctx, "one-month", format!("Day {}: a month after the earthquake, about {} people are still without electricity and {} without water. The Oregon Resilience Plan gives one month without services as the point past which a business tends to leave.", self.day, crate::lifelines::commas(pw), crate::lifelines::commas(ww)), "the Oregon Resilience Plan (2013) for the one-month rule; this run's electricity and water service for the counts", "a published rule applied to this run's restoration schedules"); }
-                if self.day == 365 { let (a, l, h) = (after, self.deaths_low, self.deaths_high); self.say(ctx, "year", format!("One year after the earthquake: about {:.0} people died in the shaking and at the fuel hub, and about {:.0} more in the year that followed (range {:.0} to {:.0}). Residents spent {:.1} million person-days without electricity and {:.0} million without water.", self.agents_dead.unwrap_or(self.quake_deaths) + self.hub_deaths, a, l, h, self.person_days_power / 1e6, self.person_days_water / 1e6), "the rates switched on in the claims table: one from an analogous disaster and one guess", "a sum of an analogy and guesses"); }
+                if self.day == self.summary_day { let (a, l, h) = (after, self.deaths_low, self.deaths_high); self.say(ctx, "year", format!("Day {}: by this day about {:.0} people have died in the shaking and at the fuel hub, and about {:.0} more in the days since (range {:.0} to {:.0}). Residents have spent {:.1} million person-days without electricity and {:.0} million without water.", self.day, self.agents_dead.unwrap_or(self.quake_deaths) + self.hub_deaths, a, l, h, self.person_days_power / 1e6, self.person_days_water / 1e6), "the rates switched on in the claims table: one from an analogous disaster and one guess", "a sum of an analogy and guesses"); }
                 self.report_all(ctx);
             }
             _ => {}
