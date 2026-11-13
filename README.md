@@ -25,11 +25,13 @@ The planet pages to start with:
 - [Half Moon Bay: the breakwater and the beach](https://esimv1.exe.xyz/anselm/halfmoonbay-shoreline):
   a one-line shoreline model of the bay south of Pillar Point Harbor since the Corps built the
   breakwater, read against the Corps' and Griggs's erosion rates, with the dredge and sea level to 2075.
-- [Portland, the year after Cascadia](https://esimv1.exe.xyz/anselm/portland-cascadia): the
-  magnitude 9.0 the state plans for, under Portland on DOGAMI's synthetic ground, the toll fitted to
-  the state's own run, and then the year after as a clock: the fuel hub's spill in the first minutes,
-  twelve crossings closed, the generators, the power, the water, and what cutting the hub's storage
-  or retrofitting its tanks changes.
+- [Portland, the year after Cascadia](https://esimv1.exe.xyz/anselm/portland-cascadia): a
+  magnitude 9 earthquake on the Cascadia subduction zone as it affects Portland, set on 26 March
+  2027 and followed for a year. Buildings, fuel tanks, bridges, transmission structures and road
+  segments are damaged one by one on the state's published ground shaking. The runs then track
+  electricity, hospitals, fuel and deaths, and compare holding less fuel at the riverside
+  terminals with retrofitting the tanks. Several results disagree with the studies they are
+  checked against, and the page says which.
 - [Two futures, one clock](https://esimv1.exe.xyz/anselm/planet-2100/compare): emissions
   held at today's rate beside emissions to zero by 2050, under one time cursor.
 - [Documentation](https://esimv1.exe.xyz/docs) and [the module kinds](https://esimv1.exe.xyz/kinds).
@@ -71,7 +73,7 @@ what the run does not yet measure.
   thresholds (every row checked against the assessment's table), the first cascade
   (permafrost and Amazon carbon released into the carbon ledger once an element is past its
   threshold), and a bottom-line module that tells the run as sentences with sources. For an
-  earthquake under a city: a published scenario's ground motion and ground failure as fields,
+  earthquake's effect on a city: a published scenario's ground motion and ground failure as fields,
   buildings as fragilities cell by cell fitted to the state's own loss run, every tank, crossing,
   transmission structure and route segment as a component with its own fragility, state and
   repair path on the ground at its cell, the networks computed from what stands, the people as
@@ -161,12 +163,15 @@ against HadCRUT5; the cell layers count people living where stated limits are
 passed, with the warming still applied per country (the reanalysis's own trend was tried
 as a pattern and fails over South Asia); the first cascade moves the assessment's
 permafrost and Amazon carbon and comes to a tenth of a degree by 2100. The Portland earthquake
-(2026-11-12) is the first scenario whose lifelines are computed from components rather than
-arranged from published ranges, and its first runs miss their checks in ways the page lists: the
-tanks under-release against the county study, the power returns too fast because a pole is the
-whole grid, the crossings now close as the county expects. The principle since that night is that
-a module computes and can be wrong in a way a record catches; arranged numbers are inputs or
-checks. The known faults
+(2026-11-12) is the first scenario in which bridges, roads, electricity and a fuel spill are
+computed from individual components instead of being drawn from published ranges. Its first runs
+disagree with the studies they are checked against, and the project page lists how. The tanks
+release about two thirds of the county study's minimum. Electricity returns in three weeks where
+the Oregon Resilience Plan expects one to three months, because transmission structures are the
+only part of the grid in the model. The model's two ways of counting the dead from the shaking
+disagree in daytime runs. The principle since that night is that a module computes and can be
+wrong in a way a record catches; numbers drawn from published ranges are inputs or checks. The
+known faults
 are on the Limits page and in the devlog, which is the project's memory: start with
 `devlog/20261031-design-brief.md`, then the milestone entries, then the latest day.
 

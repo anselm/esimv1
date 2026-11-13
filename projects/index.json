@@ -1855,9 +1855,9 @@
     "area": "anselm",
     "by": "cli",
     "cover": "cover.png",
-    "cover_caption": "The run page's clock on day 3 of the computed base run: the damage the ground does to the buildings, the crossings and hospitals as marks with their states, the counts beside; a still, the clock is on the run page",
+    "cover_caption": "The run page seven days after the earthquake in the base run: building damage by cell, with the bridges and hospitals marked by their state and the counts beside the map. A still from the runs of 12 November 2026; the run page can be played.",
     "created": "2026-11-12",
-    "description": "A scenario, not a forecast: a M9.0 Cascadia rupture at 2 PM PDT on Friday 26 March 2027 under Portland, in a run that begins two weeks before, on 12 March 2027, so the city is seen as it stands, and ends a year after on DOGAMI's synthetic site motions, saturated soils, daytime occupancy; the toll on DOGAMI's inventory; the year after on the Resilience Plan's ranges and the county's fuel-hub study; every constant published or declared a guess.",
+    "description": "A magnitude 9 earthquake on the Cascadia subduction zone as it affects Portland, Oregon, set at 2 PM PDT on Friday 26 March 2027 as a scenario choice and not a prediction. Each run begins two weeks earlier and ends a year after the earthquake. Buildings, fuel tanks, bridges, transmission structures and road segments are damaged on the state geology agency's published ground shaking, with saturated soil and daytime occupancy, and the run then tracks electricity, hospitals, fuel and deaths day by day. This is an early model: several results disagree with the studies they are checked against, and many parameters are recalled from memory or guessed.",
     "featured": true,
     "kinds": [
       "lifelines.recovery",
@@ -2042,7 +2042,7 @@
           "buildings.time_of_day": "day",
           "ground.soils": "wet"
         },
-        "title": "Saturated soils, 2 PM: DOGAMI's highest-impact case, and the base run"
+        "title": "The base run: saturated soil, 2 PM, seed 1"
       },
       {
         "name": "wet-night",
@@ -2053,7 +2053,7 @@
           "ground.at": "2027-03-26T09:00:00Z",
           "ground.soils": "wet"
         },
-        "title": "Saturated soils, 2 AM: people at home"
+        "title": "The earthquake at 2 AM, with people at home"
       },
       {
         "name": "dry-day",
@@ -2063,7 +2063,7 @@
           "components.soils": "dry",
           "ground.soils": "dry"
         },
-        "title": "Dry soils, 2 PM: shaking and landslides, no liquefaction"
+        "title": "Dry soil, 2 PM: almost no liquefaction"
       },
       {
         "name": "cut-20",
@@ -2071,7 +2071,7 @@
           "components.storage_cut": 0.2,
           "lifelines.storage_cut": 0.2
         },
-        "title": "The hub's stock cut by a fifth before the day: Ordinance 2026-312's 2036 target, applied to the stock"
+        "title": "20 percent less fuel held at the hub, a stronger measure than Ordinance 2026-312's 20 percent cut to tank capacity"
       },
       {
         "name": "no-hub",
@@ -2079,7 +2079,7 @@
           "components.storage_cut": 1.0,
           "lifelines.storage_cut": 1.0
         },
-        "title": "The hub elsewhere: no fuel stored on the bank before the day; fuel arrives from outside once the routes work"
+        "title": "No fuel held at the hub before the earthquake"
       },
       {
         "name": "retrofit",
@@ -2087,7 +2087,7 @@
           "components.retrofit": true,
           "lifelines.retrofit": true
         },
-        "title": "Every tank built to the post-2004 rule: at most a tenth of its contents leaves"
+        "title": "Every tank meets the newer standard and releases at most 10 percent of its contents"
       },
       {
         "name": "burnside-ready",
@@ -2096,28 +2096,28 @@
             "Burnside Bridge"
           ]
         },
-        "title": "The earthquake-ready Burnside Bridge built: one crossing usable at once"
+        "title": "Meant to keep the Burnside Bridge open. It has no effect: the setting is read only by the ranges version of the model"
       },
       {
         "name": "ranges",
         "set": {
           "lifelines.inputs": "ranges"
         },
-        "title": "The arranged version: the crossings' days, the routes' day, the power ramp and the spill drawn from published ranges instead of computed from the components"
+        "title": "An earlier version of the model: bridges, roads, electricity and the spill drawn from published ranges instead of computed from individual components"
       },
       {
         "name": "seed-2",
         "set": {
           "run.seed": 2
         },
-        "title": "The same scenario, another seed: other restoration days, another spill within the range"
+        "title": "The base run with different random draws (seed 2)"
       },
       {
         "name": "seed-3",
         "set": {
           "run.seed": 3
         },
-        "title": "A third seed"
+        "title": "The base run with different random draws (seed 3)"
       }
     ]
   },

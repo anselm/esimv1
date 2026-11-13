@@ -56,7 +56,7 @@ impl Agents {
     }
     pub fn describe(name: &str, p: &toml::Value) -> Describe {
         let folder = param_str(p, "folder", "portland-cascadia");
-        Describe::new("people.agents", name, "The people as super-persons, each standing for a stated number of people, generated at the start from DOGAMI's occupant rasters: a home cell drawn by the residents, a work cell by the daytime occupants, a share on electricity-dependent devices from HHS emPOWER's counts. On the rupture each agent reads the building damage where it was (home by night, work by day) and is dead or displaced at the buildings' own expected rates, so the totals agree with the cell model; each day it reads the power service at its home cell and the water ramp. What it adds is a population that can be followed agent by agent, the base for decisions (to leave, to shelter, to travel) in a later rung; what it costs is measured and reported.")
+        Describe::new("people.agents", name, "The people as super-persons, each standing for a stated number of people, generated at the start from DOGAMI's occupant rasters: a home cell drawn by the residents, a work cell by the daytime occupants, a share on electricity-dependent devices from HHS emPOWER's counts. On the rupture each agent reads the building damage where it was (home by night, work by day) and is dead or displaced at the buildings' rates for that cell. The agents' total should agree with the cell model's; in the daytime runs of 12 November 2026 it is lower, for a reason not yet found. Each day it reads the power service at its home cell and the water ramp. What it adds is a population that can be followed agent by agent, the base for decisions (to leave, to shelter, to travel) in a later rung; what it costs is measured and reported.")
             .priority(6).dt("1 day after the rupture")
             .param("folder", folder, "", "the event folder with the occupant rasters")
             .param("scale", param_f64(p, "scale", 10.0), "people", "people per agent: 10 gives about 93,000 agents in the window")
@@ -69,7 +69,7 @@ impl Agents {
             .frame("agents_without_power", "people")
             .view("counter", "agents", "agents.count", "super-persons; the people they stand for is the next counter")
             .view("counter", "people followed", "agents.people", "")
-            .view("counter", "dead, by agent", "agents.dead", "each agent in a collapsed building or a standing one, at the buildings' rates; agrees with the cell model in expectation")
+            .view("counter", "dead, by agent", "agents.dead", "each agent in a collapsed building or a standing one, at the buildings' rates. In the runs of 12 November 2026 this count is lower than the cell count by a tenth to a third by day, for a reason not yet found; the two agree at night")
             .view("counter", "in a building that collapsed", "agents.in_collapses", "people, by agent")
             .view("counter", "dead in collapses, by agent", "agents.dead_in_collapses", "")
             .view("counter", "displaced, by agent", "agents.displaced", "")

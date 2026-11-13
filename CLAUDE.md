@@ -366,6 +366,20 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   timer 2 weeks prior"; a user wants to see a period prior to the event, not the bar moved over); Anselm: move the event to March, show and say the date clearly, a red line on the
   timeline): the rupture crossing carries `local`, the clock says the date in words, the timeline and every chart
   draw a red line at the event.
+- Portland, the page and the standing faults (2026-11-12 night, `devlog/20261112-portland-readme-rewritten.md` and
+  `devlog/20261112-portland-stale-wording.md`; Anselm: "I want to try rewrite the portland cascadia fault scenario
+  readme again", then "update stale portland wording overall everywhere"): the project README is a new text in the
+  reader's order, every number read from the runs of that night. Where it and the entry above differ, it is current:
+  ten of the twelve bridges close in the base run (Tilikum and Sellwood stay open; seven take complete damage and
+  reopen on the run's last day, a 365-day judgement); the cell count of the dead is 1,000, 564 and 602 for seeds 1 to 3
+  and the agents' 670, 460 and 550, a daytime gap not yet explained (`deaths.total` uses the agents'); electricity is
+  back by day 22; the base spill is 60.6 million gallons from 233 of 587 tanks. Ordinance 2026-312 passed as amended on
+  12 November 2026, 10 to 0 with two absent. `burnside-ready` has no effect in computed mode (`bridge_ready` is read
+  only by the ranges draw); the response's fuel use starts only when a hospital is reachable from the hub (day 111).
+  The wording changed that night in the Rust strings (`lifelines.rs`, `quake.rs`, `agents.rs`) and in the manifest's
+  notes reaches the run folders and the project's frozen manifest only at the next `esim project update` and rerun,
+  which Anselm said not to do on canada1 that night. Writing guidance is the harness writing-style skill, the one
+  place for it; this project sets none of its own.
 - Wild cards (2026-11-05, Anselm: "i just want a placeholder ... like a video game with wild card factors
   optionally"): `events.shock` (`crates/modules/src/shock.rs`) draws `data/events/future-speculative.toml` by the
   run's seed each year from `from` (default 2025), or plays one named card (`mode = "named"`, `event`, `at`);

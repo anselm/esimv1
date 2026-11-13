@@ -229,14 +229,59 @@ holds the history.
 
 ## The earthquake
 
-Portland and Cascadia (`anselm/portland-cascadia`, 2026-11-12, status as of that night):
+Portland in the year after a Cascadia earthquake (`anselm/portland-cascadia`). Status as of the runs
+of 12 November 2026; the [project page](/anselm/portland-cascadia) gives the figures in full.
 
-- There is no record of this earthquake; the ground is DOGAMI's synthetic scenario and the toll is read against DOGAMI's own Hazus run, so the buildings' fit (Portland's extensive, complete and displaced within a few percent; deaths 0.69 by day and 1.7 by night; pattern r 0.9 wet, 0.6 dry) is a fit to a model. The fragility and casualty rates are recalled from Hazus, not read; the manual would not download. Night occupants sit in every building by floor area; ground failure does not collapse buildings here, which is why wet and dry give the same deaths where DOGAMI's differ by half. Since the night of 2026-11-12 the collapses are drawn building by building at each cell's share, so the dead in the window run from about 560 to 1,000 across seeds around the fitted expectation of 765; the agents at ten people each are lumpier still and carry the page's total.
-- The lifelines are computed from components (`hazard.components`): the hub's 587 tanks from the county study's own table, the twelve crossings with a seismic class from the county's 2014 vulnerability report and the federal bridge inventory, DOGAMI's 6,146 transmission structures with the state's chance of failure at each, its 137 emergency route segments with the deformation class at each. The curves are recalled from Hazus or are judgements anchored on the county's stated levels, declared row by row in `fragility.toml`. The checks, reported on every run: the tanks release 61 million gallons against the study's 95 to 194 (233 of 587 fail; the study's own rule fails every old tank on deforming ground); the crossings now close as the county expects (eleven of twelve on the first day, three back by day thirty); the power is back in two weeks against the Plan's one to three months, because a pole is the whole grid here, with no substation, line or distribution to fail. The water is still a ramp from the Plan's range; the pipes are not in the state's bundle. The arranged version is the `ranges` variant.
-- The hub's own toll is the county study's range for an explosion among its workers, none to seven dead, scaled by the release; no run here models fire following the earthquake, and neither did DOGAMI's.
-- The deaths after the shaking (`people.aftermath`) are claims: one rate from Puerto Rico after Maria per person-day without power, a guessed daily rate for the life-threatening injured with no open hospital, counts with no rate for the people on medical devices; cold and waterborne illness are rows that are off for want of a source. With the power back in two weeks the computed runs put the deaths after at a handful, which is the power model's error seen from the people's side.
-- The people as agents (`people.agents`, 93,520 super-persons of ten) read the world at two cells and decide nothing: no one leaves, shelters, travels or queues. The cost of the daily tick is measured and reported on the run page (about twenty million agent-days a second on one core, so every person separately is within reach); the behaviour is not.
-- Not here: aftershocks, the tsunami (not Portland's), the Columbia bridges and I-5 north, debris on the routes, sewage, telephones and data, food, the airport, the port, hospitals' beds and staff, the spill as a flow on the slope or the river.
+- **No record to score against.** The ground shaking is the output of DOGAMI's scenario model, and
+  the building damage is compared with DOGAMI's own loss estimate, to which six of the model's
+  numbers were fitted. Agreement with that estimate is agreement between two models.
+- **Recalled values.** The fragility curves for buildings, tanks and the two modern bridges, and
+  every casualty rate, are recalled from memory of the Hazus manual and have not been checked
+  against it. The curve for the older bridges and the closure times for road segments are
+  judgements made for this project. Each is declared in `fragility.toml`.
+- **The death toll.** The model counts the dead from the shaking twice, cell by cell and by agents,
+  and the two disagree in daytime runs: 1,000, 564 and 602 by cell for seeds 1 to 3 against 670,
+  460 and 550 by agents. At night they agree. The cause has not been found, and the run's total
+  uses the agents' count.
+- **Night and dry soil.** Only shaking makes a building collapse in the model, and nearly all of
+  its deaths happen in collapses. So the toll on dry soil is almost the same as on saturated soil,
+  where DOGAMI's falls by a third, and the night-time toll is nearly two thirds of the daytime
+  toll, where DOGAMI's is about a quarter.
+- **The spill.** In the base run 233 of the 587 tanks fail and release 60.6 million gallons, about
+  two thirds of the 2022 county study's minimum of 95 million. No run models fire in the spilled
+  fuel or the fuel's movement down the river. Deaths at the terminals are a number drawn in the
+  study's range of 0 to 7 and scaled by the release.
+- **Electricity.** Transmission structures are the only part of the power system in the model.
+  Ninety percent of people keep their electricity at the moment of the earthquake, and everyone
+  has it by day 22, where the Oregon Resilience Plan expects one to three months. The number of
+  hospitals that lose power and the deaths after the shaking both depend on this result.
+- **Bridges.** Ten of the twelve Willamette bridges close in the base run. The seven that take the
+  worst level of damage stay closed for 365 days, a judgement, and so reopen on the run's last
+  day. The `burnside-ready` variant has no effect on the computed runs, because the setting it
+  changes is read only by the `ranges` version.
+- **Fuel use.** The response's daily use, the hospitals' generator fuel and the date and rate of
+  resupply are guesses. The response's use is counted only once a fuel truck can reach a hospital
+  from the terminals, which is day 111 in the base run, so it uses no fuel for 110 days.
+- **Water.** Service follows a schedule drawn from the Resilience Plan's range. The pipes are not
+  in the model.
+- **Deaths after the shaking.** These rest on one rate, deaths per person-day without electricity
+  in Puerto Rico after Hurricane Maria, and on a guessed daily rate for the badly injured with no
+  open hospital. Cold and unsafe water are in the table and switched off for want of a source.
+  The base run adds 2 deaths over the year and the `ranges` variant 66. The difference is the
+  length of the power cut.
+- **The agents** (`people.agents`, 93,520 agents of ten people each) are placed at a home and a
+  workplace and decide nothing. Nobody leaves, shelters, travels or waits at a hospital.
+- **Stale sentences in the runs.** In the runs of 12 November the story says "The grid is down
+  everywhere" and "Day 1: power is back for half the people" in computed runs where 90 percent
+  kept their electricity, and it gives the Broadway Bridge's reopening as day 20 for a 21-day
+  repair. `service.routes_open` reads 1.000 in computed runs. The first two sentences are
+  corrected in the code and will change when the runs are next made.
+- **The building count.** A run reports 297,803 buildings. The data folder's note on how the
+  source was prepared gives 297,120 outlines. The difference has not been explained.
+- **Not in the model:** aftershocks, the tsunami (which does not reach Portland), the Columbia
+  River bridges and Interstate 5 to the north, debris on the roads, sewage, telephones and data,
+  food, the airport, the port, shelters, people leaving the city, and hospital beds, staff and
+  supplies.
 
 ## The system
 

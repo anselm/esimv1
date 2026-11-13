@@ -4,17 +4,17 @@
 //! (DOGAMI's site PGA and PGV, its liquefaction and landslide probability and deformation, cut
 //! to the window in `data/events/<folder>/`), writes them as world fields, and at the stated
 //! instant publishes `quake.rupture`. It computes nothing about the earthquake itself: there is
-//! no record of this event and the state's synthetic motions are the best anyone has.
+//! no record of this event, and the state's synthetic motions are the published estimate used.
 //!
 //! `quake.buildings` turns that motion into damage, deaths and displaced people on the cells:
 //! a lognormal fragility in PGA for a generic building mix, ground failure from the liquefaction
 //! and landslide layers, Hazus-style casualty rates by damage state. The fragility medians and
 //! the casualty rates are recalled from the Hazus earthquake technical manual (FEMA), which could
-//! not be downloaded on 2026-11-12, so each is declared `recalled`; a `fragility_scale` and a
-//! `casualty_scale` are fitted to DOGAMI's own Hazus run for the same ground (the record in
-//! `loss_unit_*.csv`), and the fit is reported. What stands is the pattern by neighbourhood and
-//! the day-night and wet-dry contrasts, which are DOGAMI's; the absolute toll is DOGAMI's too,
-//! by construction.
+//! not be downloaded on 2026-11-12, so each is declared `recalled`; six parameters are fitted to
+//! DOGAMI's own Hazus run for the same ground on saturated soil by day (the record in
+//! `loss_unit_*.csv`), and the fit is reported. The daytime toll on saturated soil is close to
+//! DOGAMI's by construction. The pattern of damage by neighbourhood follows DOGAMI's. The
+//! night-time and dry-soil tolls do not, because only shaking makes a building collapse here.
 
 use esim_kernel::manifest::{param_f64, param_str};
 use esim_kernel::{Ctx, Describe, Duration, Event, LatLonGrid, Module, Time};
@@ -146,7 +146,7 @@ impl Ground {
     }
     pub fn describe(name: &str, p: &toml::Value) -> Describe {
         let soils = param_str(p, "soils", "wet");
-        Describe::new("quake.ground", name, "A published earthquake scenario's ground motion and ground failure on the window: DOGAMI's site peak ground acceleration and velocity for a simulated Cascadia M9.0 (synthetic bedrock motions from the USGS, the state's site response), its liquefaction and landslide probability and deformation for saturated or dry soils, read from the event folder and written as world fields; at the stated instant it publishes the rupture. Nothing about the earthquake is computed here: there is no record of this event, and the state's estimate is the best anyone has.")
+        Describe::new("quake.ground", name, "A published earthquake scenario's ground motion and ground failure on the window: DOGAMI's site peak ground acceleration and velocity for a simulated Cascadia M9.0 (synthetic bedrock motions from the USGS, the state's site response), its liquefaction and landslide probability and deformation for saturated or dry soils, read from the event folder and written as world fields; at the stated instant it publishes the rupture. Nothing about the earthquake is computed here. There is no record of this event to score against, so the ground is the output of the state's model.")
             .priority(0).dt("once, at the rupture")
             .param("folder", param_str(p, "folder", "portland-cascadia"), "", "the event folder under data/events with the cut rasters and their README")
             .param("tz_offset_h", param_f64(p, "tz_offset_h", -8.0), "h", "the local clock's offset from UTC, for the words only (PST -8, PDT -7)")
@@ -316,7 +316,7 @@ impl Buildings {
     }
     pub fn describe(name: &str, p: &toml::Value) -> Describe {
         let folder = param_str(p, "folder", "portland-cascadia");
-        let mut d = Describe::new("quake.buildings", name, "Damage, deaths and displaced people on the cells from the ground module's motion: a lognormal fragility in peak ground acceleration for a generic building mix (four damage states), ground failure from the liquefaction and landslide layers, and casualty rates by damage state in the Hazus manner; occupants by time of day and residents per cell from DOGAMI's own inventory. The fragility medians and the casualty rates are recalled, not read, and two scales are fitted to DOGAMI's Hazus results for the same ground, which the module reports as the fit; what stands is the pattern across neighbourhoods and the day-night and wet-dry contrasts.")
+        let mut d = Describe::new("quake.buildings", name, "Damage, deaths and displaced people on the cells from the ground module's motion: a lognormal fragility in peak ground acceleration for a generic building mix (four damage states), ground failure from the liquefaction and landslide layers, and casualty rates by damage state in the Hazus manner; occupants by time of day and residents per cell from DOGAMI's own inventory. The fragility medians and the casualty rates are recalled, not read. Six parameters are fitted to DOGAMI's Hazus results for the same ground on saturated soil by day, and the module reports the fit. The pattern of damage across neighbourhoods follows DOGAMI's. The night-time and dry-soil tolls do not: only shaking makes a building collapse here, so the toll changes much less between those cases than DOGAMI's does.")
             .priority(1).dt("once, on the rupture")
             .param("folder", folder, "", "the event folder with the inventory and the loss tables")
             .param("time_of_day", param_str(p, "time_of_day", "day"), "", "day (DOGAMI's 2 PM occupants) or night (2 AM)")
@@ -357,7 +357,7 @@ impl Buildings {
             .view("counter", "buildings destroyed or extensively damaged", "quake.buildings_extensive", "extensive plus complete")
             .view("counter", "deaths, Portland, against DOGAMI", "fit.portland_deaths_ratio", "this run's expected deaths in the nine Portland districts over DOGAMI's figure for the same scenario; 1 is the fit")
             .view("counter", "damage pattern across 876 units", "fit.units_damage_r", "correlation of extensive-or-complete counts per neighbourhood unit with DOGAMI's")
-            .note("Hazus's own tables (FEMA, Earthquake Model Technical Manual) were not downloadable from this machine on 2026-11-12; the medians, dispersions, collapse share and casualty rates here are recalled from them and declared so, and the two scales are fitted to DOGAMI's run on the same ground, so the absolute toll is the record's by construction and the pattern is the finding. The inventory is DOGAMI's (footprints without heights or structure types; the people per building are each unit's totals spread by footprint area, which is ours).");
+            .note("Hazus's own tables (FEMA, Earthquake Model Technical Manual) were not downloadable from this machine on 2026-11-12; the medians, dispersions, collapse share and casualty rates here are recalled from them and declared so, and six parameters are fitted to DOGAMI's run on the same ground, so the daytime toll on saturated soil is close to the record's by construction. The inventory is DOGAMI's (footprints without heights or structure types; the people per building are each unit's totals spread by footprint area, which is ours).");
         // the record as a table on the run page
         if let Ok((head, rows)) = read_csv(&root().join("data/events").join(folder).join(format!("loss_jurisdiction_{}.csv", param_str(p, "record", "wet")))) {
             let keep = ["Jurisdiction", "Bldg_LR", "DisplacedPop", "CasDayL4", "CasNightL4", "CasDayL2", "CasDayL3", "PDsExtensive", "PDsComplete"];
@@ -495,7 +495,7 @@ impl Module for Buildings {
             tot[3] + tot[4], tot[4], n_coll_tot, dead_in_coll, d_tot, l23, disp, self.time_of_day, pdx.deaths, rp.deaths, ratio(pdx.deaths, rp.deaths), r_dmg);
         ctx.report("quake.injuries_life_threatening", "people", l3);
         ctx.publish("quake.toll", json!({ "deaths": d_tot, "injuries_hospital": l23, "injuries_life": l3, "injuries_minor": l1, "displaced": disp }));
-        ctx.publish("quake.crossing", json!({ "id": "toll", "title": "The toll", "name": "the window", "kind": "toll", "time": ctx.now().to_iso(), "sentence": sentence, "source": "this run's fragility (recalled Hazus forms, two scales fitted) on DOGAMI's ground and inventory; the record is DOGAMI O-18-02's Hazus run", "confidence": "fitted" }));
+        ctx.publish("quake.crossing", json!({ "id": "toll", "title": "The toll", "name": "the window", "kind": "toll", "time": ctx.now().to_iso(), "sentence": sentence, "source": "this run's fragility (recalled Hazus forms, six parameters fitted) on DOGAMI's ground and inventory; the record is DOGAMI O-18-02's Hazus run", "confidence": "fitted" }));
     }
     fn snapshot(&self) -> serde_json::Value { serde_json::to_value(self).unwrap() }
     fn restore(&mut self, v: serde_json::Value) { let mut o: Buildings = serde_json::from_value(v).unwrap(); o.load().expect("buildings reload"); *self = o; }

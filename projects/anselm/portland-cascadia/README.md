@@ -449,6 +449,10 @@ Every source was read on 12 November 2026 unless noted.
   one point in downtown Portland as a cross-check. Not used in the runs.
 - US Geological Survey earthquake catalogue, the entry for the 1700 earthquake. Only the entry's
   title, magnitude and time were retrieved.
+- Elizabeth Urban, *The M9 Project, part 1: a history of large earthquakes in Cascadia*, Pacific
+  Northwest Seismic Network blog, 13 December 2017. Read, but nothing on this page is taken from
+  it.
 - Satake and others, 1996, in *Nature*, on the 1700 tsunami. Cited by the sources above. Not read.
-- FEMA, *Hazus Earthquake Model Technical Manual*. Not read. Every fragility curve and casualty
-  rate in the model is recalled from it and unverified.
+- FEMA, *Hazus Earthquake Model Technical Manual*. Not read. The fragility curves for buildings,
+  tanks and the two modern bridges, and every casualty rate, are recalled from it and unverified.
+  The curve for the older bridges is this project's judgement and does not come from the manual.

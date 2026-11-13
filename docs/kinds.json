@@ -230387,7 +230387,7 @@
   {
     "kind": "quake.ground",
     "name": "quake.ground",
-    "summary": "A published earthquake scenario's ground motion and ground failure on the window: DOGAMI's site peak ground acceleration and velocity for a simulated Cascadia M9.0 (synthetic bedrock motions from the USGS, the state's site response), its liquefaction and landslide probability and deformation for saturated or dry soils, read from the event folder and written as world fields; at the stated instant it publishes the rupture. Nothing about the earthquake is computed here: there is no record of this event, and the state's estimate is the best anyone has.",
+    "summary": "A published earthquake scenario's ground motion and ground failure on the window: DOGAMI's site peak ground acceleration and velocity for a simulated Cascadia M9.0 (synthetic bedrock motions from the USGS, the state's site response), its liquefaction and landslide probability and deformation for saturated or dry soils, read from the event folder and written as world fields; at the stated instant it publishes the rupture. Nothing about the earthquake is computed here. There is no record of this event to score against, so the ground is the output of the state's model.",
     "priority": 0,
     "dt": "once, at the rupture",
     "params": [
@@ -230580,7 +230580,7 @@
   {
     "kind": "quake.buildings",
     "name": "quake.buildings",
-    "summary": "Damage, deaths and displaced people on the cells from the ground module's motion: a lognormal fragility in peak ground acceleration for a generic building mix (four damage states), ground failure from the liquefaction and landslide layers, and casualty rates by damage state in the Hazus manner; occupants by time of day and residents per cell from DOGAMI's own inventory. The fragility medians and the casualty rates are recalled, not read, and two scales are fitted to DOGAMI's Hazus results for the same ground, which the module reports as the fit; what stands is the pattern across neighbourhoods and the day-night and wet-dry contrasts.",
+    "summary": "Damage, deaths and displaced people on the cells from the ground module's motion: a lognormal fragility in peak ground acceleration for a generic building mix (four damage states), ground failure from the liquefaction and landslide layers, and casualty rates by damage state in the Hazus manner; occupants by time of day and residents per cell from DOGAMI's own inventory. The fragility medians and the casualty rates are recalled, not read. Six parameters are fitted to DOGAMI's Hazus results for the same ground on saturated soil by day, and the module reports the fit. The pattern of damage across neighbourhoods follows DOGAMI's. The night-time and dry-soil tolls do not: only shaking makes a building collapse here, so the toll changes much less between those cases than DOGAMI's does.",
     "priority": 1,
     "dt": "once, on the rupture",
     "params": [
@@ -230998,7 +230998,7 @@
       }
     ],
     "notes": [
-      "Hazus's own tables (FEMA, Earthquake Model Technical Manual) were not downloadable from this machine on 2026-11-12; the medians, dispersions, collapse share and casualty rates here are recalled from them and declared so, and the two scales are fitted to DOGAMI's run on the same ground, so the absolute toll is the record's by construction and the pattern is the finding. The inventory is DOGAMI's (footprints without heights or structure types; the people per building are each unit's totals spread by footprint area, which is ours)."
+      "Hazus's own tables (FEMA, Earthquake Model Technical Manual) were not downloadable from this machine on 2026-11-12; the medians, dispersions, collapse share and casualty rates here are recalled from them and declared so, and six parameters are fitted to DOGAMI's run on the same ground, so the daytime toll on saturated soil is close to the record's by construction. The inventory is DOGAMI's (footprints without heights or structure types; the people per building are each unit's totals spread by footprint area, which is ours)."
     ],
     "tables": {
       "dogami_losses": [
@@ -231162,7 +231162,7 @@
   {
     "kind": "lifelines.recovery",
     "name": "lifelines.recovery",
-    "summary": "The months after the earthquake as a clock: the Willamette crossings, the hospitals, the power and the water, and the fuel hub, each a component with a declared fate drawn by the run's seed from published ranges (the county on its bridges, the Oregon Resilience Plan on restoration times, the county's 2022 study on the hub's tanks) and a fuel ledger in gallons that must close. Nothing here is engineered: it is the state's own estimates arranged in time, with the guesses named.",
+    "summary": "The year after the earthquake, one day at a time: the Willamette bridges, the hospitals and their generators, electricity, water and the fuel hub, with a fuel ledger in gallons that must close. With inputs = computed it takes the hub's release, the bridges' states, the open routes and the electricity service from a hazard.components module. With inputs = ranges it draws them by the run's seed from published ranges instead: the county's statement on its bridges, the Oregon Resilience Plan's restoration times and the county's 2022 study of the hub's tanks. Water follows the Plan's range in both modes. The hospitals' generator fuel, the response's daily use and the resupply date are guesses.",
     "priority": 2,
     "dt": "1 day after the rupture",
     "params": [
@@ -231939,7 +231939,7 @@
   {
     "kind": "hazard.components",
     "name": "hazard.components",
-    "summary": "Every physical thing as a component with a place, a fragility, a state and a repair path: the fuel hub's tanks from the county study's own per-tank table (621 rows, placed on the study's coordinates where it gives them, else on OpenStreetMap tank footprints), the Willamette crossings (each with a seismic class from the county's 2014 vulnerability report and the federal bridge inventory), DOGAMI's transmission structures with the state's chance of failure at each (6,146 in the window), and DOGAMI's emergency route segments with the state's deformation class at each (137). On the rupture each reads the ground at its cell and draws its state; tanks release by the study's age rule (pre-1993: its per-tank 50 to 100 percent, later: up to 10 percent), to the river where the study says so; crews repair poles at a stated rate in order of the people served; segments reopen by class; crossings by damage state. Computed and published daily: the power service per coarse cell and the people-weighted share, each hospital's reachability from the hub along open segments and open crossings, the crossings' states. The fragilities are recalled from Hazus and declared so in fragility.toml; the study's release total (94.6 to 193.7 million gallons) and the county's statement on its bridges are the checks, reported.",
+    "summary": "Every physical thing as a component with a place, a fragility, a state and a repair path: the fuel hub's tanks from the county study's own per-tank table (621 rows, placed on the study's coordinates where it gives them, else on OpenStreetMap tank footprints), the Willamette crossings (each with a seismic class from the county's 2014 vulnerability report and the federal bridge inventory), DOGAMI's transmission structures with the state's chance of failure at each (6,146 in the window), and DOGAMI's emergency route segments with the state's deformation class at each (137). On the rupture each reads the ground at its cell and draws its state; tanks release by the study's age rule (pre-1993: its per-tank 50 to 100 percent, later: up to 10 percent), to the river where the study says so; crews repair the failed structures at a stated rate in order of the people served; segments reopen by class; crossings by damage state. Computed and published daily: the power service per coarse cell and the people-weighted share, each hospital's reachability from the hub along open segments and open crossings, the crossings' states. The fragilities for the tanks and the modern bridges are recalled from Hazus, the older bridges' curve is a judgement, and each is declared in fragility.toml; the study's release total (94.6 to 193.7 million gallons) and the county's statement on its bridges are the checks, reported.",
     "priority": 1,
     "dt": "1 day after the rupture",
     "params": [
@@ -231979,7 +231979,7 @@
       {
         "name": "component.state",
         "required": false,
-        "note": "{ kind, id, name, lat, lon, state, down, repair_day, day } at the cell: every tank, crossing and segment on the rupture, failed poles, and each repair"
+        "note": "{ kind, id, name, lat, lon, state, down, repair_day, day } at the cell: every tank, crossing and segment on the rupture, failed transmission structures, and each repair"
       },
       {
         "name": "tank.release",
@@ -232117,7 +232117,7 @@
         "title": "power service",
         "source": "power_up",
         "obs": "",
-        "note": "1 where the nearest poles stand, by coarse cell; the people-weighted share is the counter"
+        "note": "1 where the nearest transmission structures stand, by coarse cell; the people-weighted share is the counter"
       },
       {
         "kind": "map",
@@ -232131,11 +232131,11 @@
         "title": "share of people with power",
         "source": "power.share",
         "obs": "",
-        "note": "computed from the poles, not a ramp"
+        "note": "computed from the transmission structures that stand"
       },
       {
         "kind": "counter",
-        "title": "poles failed",
+        "title": "transmission structures failed",
         "source": "power.poles_failed",
         "obs": "",
         "note": "of 6,146 in the window, by DOGAMI's chance at each"
@@ -232192,7 +232192,7 @@
       {
         "kind": "text",
         "title": "what this does not compute",
-        "source": "The poles carry no network: a cell has power when its nearest poles stand, which stands in for the lines, substations and the grid's own switching that DOGAMI's bundle does not carry. The route segments are DOGAMI's deformation classes turned into days by guessed ranges; debris from the buildings is not on them. The tanks' shaking fragility is recalled; their ground failure uses the buildings' fitted deformation median. The water system is not here at all.",
+        "source": "The transmission structures carry no network: a cell has power when the structures nearest it stand, which stands in for the lines, substations and the grid's own switching that DOGAMI's bundle does not carry. The route segments are DOGAMI's deformation classes turned into days by guessed ranges; debris from the buildings is not on them. The tanks' shaking fragility is recalled; their ground failure uses the buildings' fitted deformation median. The water system is not here at all.",
         "obs": "",
         "note": ""
       }
@@ -232306,7 +232306,7 @@
   {
     "kind": "people.agents",
     "name": "people.agents",
-    "summary": "The people as super-persons, each standing for a stated number of people, generated at the start from DOGAMI's occupant rasters: a home cell drawn by the residents, a work cell by the daytime occupants, a share on electricity-dependent devices from HHS emPOWER's counts. On the rupture each agent reads the building damage where it was (home by night, work by day) and is dead or displaced at the buildings' own expected rates, so the totals agree with the cell model; each day it reads the power service at its home cell and the water ramp. What it adds is a population that can be followed agent by agent, the base for decisions (to leave, to shelter, to travel) in a later rung; what it costs is measured and reported.",
+    "summary": "The people as super-persons, each standing for a stated number of people, generated at the start from DOGAMI's occupant rasters: a home cell drawn by the residents, a work cell by the daytime occupants, a share on electricity-dependent devices from HHS emPOWER's counts. On the rupture each agent reads the building damage where it was (home by night, work by day) and is dead or displaced at the buildings' rates for that cell. The agents' total should agree with the cell model's; in the daytime runs of 12 November 2026 it is lower, for a reason not yet found. Each day it reads the power service at its home cell and the water ramp. What it adds is a population that can be followed agent by agent, the base for decisions (to leave, to shelter, to travel) in a later rung; what it costs is measured and reported.",
     "priority": 6,
     "dt": "1 day after the rupture",
     "params": [
@@ -232472,7 +232472,7 @@
         "title": "dead, by agent",
         "source": "agents.dead",
         "obs": "",
-        "note": "each agent in a collapsed building or a standing one, at the buildings' rates; agrees with the cell model in expectation"
+        "note": "each agent in a collapsed building or a standing one, at the buildings' rates. In the runs of 12 November 2026 this count is lower than the cell count by a tenth to a third by day, for a reason not yet found; the two agree at night"
       },
       {
         "kind": "counter",
