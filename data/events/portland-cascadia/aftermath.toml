@@ -24,7 +24,7 @@ low = 0.17                                # the paper's 95 percent interval, 793
 high = 1.83
 per = "deaths per person per day without electricity"
 source = "Kishore and others 2018, Mortality in Puerto Rico after Hurricane Maria, New England Journal of Medicine 379:162-170. The abstract and news reporting were read on 12 November 2026; the paper itself was not. It estimates 4,645 excess deaths from 20 September to 31 December 2017 and attributes one third of them to delayed or interrupted health care. The rate used here is that third, divided by Puerto Rico's population of 3.34 million (recalled from memory) and by 102 days. It is applied to each day each person in the modelled area spends without grid electricity."
-confidence = "An analogy: a Caribbean island after an autumn hurricane, applied to a Pacific Northwest city after an earthquake in March. The paper's interval is wide, and its authors call their estimate an underestimate."
+confidence = "An analogy: a Caribbean island after an autumn hurricane, applied to a Pacific Northwest city after an earthquake in February. The paper's interval is wide, and its authors call their estimate an underestimate."
 status = "on"
 
 [[claim]]

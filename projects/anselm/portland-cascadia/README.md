@@ -9,10 +9,11 @@ fuel that emergency crews and hospital generators would need in the months after
 less fuel means a smaller spill and a smaller reserve.
 
 This project is a simulation built to look at both sides of that trade-off in one model. It takes
-a magnitude 9 earthquake on the Cascadia subduction zone, sets it at 2 p.m. on Friday 26 March
-2027, and follows Portland for a year: which buildings, fuel tanks, bridges, power structures and
-roads are damaged, and then, day by day, who has electricity, which hospitals have power, how much
-fuel is left and how many people die. The date is a scenario choice and not a prediction. Nobody
+a magnitude 9 earthquake on the Cascadia subduction zone, sets it at 2 p.m. on Monday 1 February
+2027, and follows Portland for a year after it. Each run begins a month earlier, on 1 January, so
+the city is seen working before the earthquake. The model tracks which buildings, fuel tanks,
+bridges, power structures and roads are damaged and then, day by day, who has electricity, which
+hospitals have power, how much fuel is left and how many people die. The date is a scenario choice and not a prediction. Nobody
 knows when the fault will next rupture.
 
 The model is assembled from published studies of this earthquake, and it is early work. It does
@@ -36,7 +37,7 @@ lists the earthquake at magnitude 9.0 on the evening of 26 January 1700, Pacific
 
 Layers of sediment on the sea floor record earlier ruptures. They show 19 or 20 ruptures of the
 whole fault, or nearly all of it, in the past 10,000 years, which is one every 500 to 530 years on
-average (Goldfinger and others, 2012). In March 2027 the last one will be 327 years in the past.
+average (Goldfinger and others, 2012). In February 2027 the last one will be 327 years in the past.
 Multnomah County's page on the fuel terminals gives a 26 percent chance of a major seismic event
 in the next 50 years. The page does not say where that estimate comes from.
 
@@ -210,7 +211,7 @@ that the computed results can be read beside the estimates they are checked agai
 ### The day after
 
 ```esim
-table 2027-03-27T21:00Z quake.buildings_collapsed=buildings_collapsed quake.deaths=deaths_counted_by_cell agents.dead=deaths_counted_by_agents quake.displaced=people_displaced fuel.ground_gal=fuel_spilled_on_the_ground fuel.river_gal=fuel_spilled_toward_the_river
+table 2027-02-02T22:00Z quake.buildings_collapsed=buildings_collapsed quake.deaths=deaths_counted_by_cell agents.dead=deaths_counted_by_agents quake.displaced=people_displaced fuel.ground_gal=fuel_spilled_on_the_ground fuel.river_gal=fuel_spilled_toward_the_river
 ```
 
 **Buildings.** In the base run 1,047 of the 297,803 buildings collapse, and 19,769 take extensive
@@ -263,7 +264,7 @@ how much of the spill in this model comes from liquefaction under the tanks.
 ### Three days after
 
 ```esim
-table 2027-03-29T21:00Z lifeline.crossings_open=bridges_open service.power_share=share_of_people_with_electricity lifeline.hospitals_dark=hospitals_without_power fuel.hub_gal=fuel_left_at_the_hub
+table 2027-02-04T22:00Z lifeline.crossings_open=bridges_open service.power_share=share_of_people_with_electricity lifeline.hospitals_dark=hospitals_without_power fuel.hub_gal=fuel_left_at_the_hub
 ```
 
 **Bridges.** Ten of the twelve bridges close in the base run. Only Tilikum Crossing and the
@@ -304,7 +305,7 @@ no beds, staff or supplies, and no damage inside a hospital building that still 
 ### A year after
 
 ```esim
-table 2028-03-26T21:00Z after.deaths=deaths_after_the_shaking fuel.consumed_gal=fuel_used_by_the_response fuel.hub_gal=fuel_at_the_hub
+table 2028-02-01T22:00Z after.deaths=deaths_after_the_shaking fuel.consumed_gal=fuel_used_by_the_response fuel.hub_gal=fuel_at_the_hub
 ```
 
 **Roads.** In the base run 22 percent of the emergency route length is open during the first week,

@@ -231874,7 +231874,7 @@
     "tables": {
       "claims": [
         {
-          "confidence": "An analogy: a Caribbean island after an autumn hurricane, applied to a Pacific Northwest city after an earthquake in March. The paper's interval is wide, and its authors call their estimate an underestimate.",
+          "confidence": "An analogy: a Caribbean island after an autumn hurricane, applied to a Pacific Northwest city after an earthquake in February. The paper's interval is wide, and its authors call their estimate an underestimate.",
           "high": 1.83,
           "id": "interrupted-care",
           "low": 0.17,

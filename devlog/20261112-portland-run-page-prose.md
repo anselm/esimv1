@@ -83,3 +83,21 @@ What changed in `projects/anselm/portland-cascadia/README.md`:
 
 Every number is the old page's, which was read from the runs of 12 November; the reruns above are
 numerically identical. The reading list is unchanged. Not pushed, not deployed.
+
+## The dates moved again
+
+Anselm: "Make the sim start Jan 1. Move fault to Feb 1." The event is Monday 1 February 2027 at
+2 PM PST (`at = 2027-02-01T22:00:00Z`, `tz_offset_h = -8`, `tz_name = "PST"`); the run is
+2027-01-01T22:00Z to 2028-02-01T22:00Z; the wet-night variant is at `2027-02-01T10:00:00Z`.
+Changed in the manifest, `project.toml`, the project README (its opening, the 327 years, the
+three table dates), the root README, the Puerto Rico claim's note and CLAUDE.md. `esim project
+update` was run, the runs pruned and all ten variants rerun.
+
+Against the March runs every series ends on the same value except `fuel.consumed_gal` and
+`fuel.delivered_gal`, which are one day's worth lower (300,000 gallons each in the base run).
+The March year contained 29 February 2028 and ran 366 days after the event; this one runs 365.
+No figure in the README's prose depends on either.
+
+Seen while checking and not fixed: on a computed-mode run page the map's key counts the ten
+closed bridges as open and draws them as open marks; only the ranges mode marks a closed bridge.
+The counter beside the map is right (2 open).

@@ -365,7 +365,9 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   2027-03-12 to 2028-03-26, two weeks before the event to a year after (Anselm, after three rounds: "start the
   timer 2 weeks prior"; a user wants to see a period prior to the event, not the bar moved over); Anselm: move the event to March, show and say the date clearly, a red line on the
   timeline): the rupture crossing carries `local`, the clock says the date in words, the timeline and every chart
-  draw a red line at the event.
+  draw a red line at the event. Moved again on the night of 2026-11-12 (Anselm: "Make the sim start Jan 1. Move fault
+  to Feb 1"): the event is Monday 1 February 2027, 2 PM PST (`at = 2027-02-01T22:00:00Z`, `tz_offset_h = -8`,
+  `tz_name = "PST"`), the run 2027-01-01T22:00Z to 2028-02-01T22:00Z; wet-night is `2027-02-01T10:00:00Z`.
 - Portland, the page and the standing faults (2026-11-12 night, `devlog/20261112-portland-readme-rewritten.md` and
   `devlog/20261112-portland-stale-wording.md`; Anselm: "I want to try rewrite the portland cascadia fault scenario
   readme again", then "update stale portland wording overall everywhere"): the project README is a new text in the

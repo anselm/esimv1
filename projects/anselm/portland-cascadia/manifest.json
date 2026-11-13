@@ -4,12 +4,12 @@
       "id": "run",
       "run": {
         "close_every": "1d",
-        "end": "2028-03-26T21:00:00Z",
+        "end": "2028-02-01T22:00:00Z",
         "name": "q1-portland-cascadia",
-        "notes": "A scenario, not a forecast: a M9.0 Cascadia rupture at 2 PM PDT on Friday 26 March 2027 under Portland, in a run that begins two weeks before, on 12 March 2027, so the city is seen as it stands, and ends a year after on DOGAMI's synthetic site motions, saturated soils, daytime occupancy; the toll on DOGAMI's inventory; the year after on the Resilience Plan's ranges and the county's fuel-hub study; every constant published or declared a guess.",
+        "notes": "A magnitude 9.0 rupture of the Cascadia subduction zone as it affects Portland, set at 2 PM PST on Monday 1 February 2027 as a scenario choice and not a prediction. The run begins a month before, on 1 January 2027, and ends a year after the earthquake. Ground motion, soils (saturated) and the building inventory with daytime occupants are DOGAMI's; tanks, bridges, transmission structures and route segments are damaged as components; water follows an assumed schedule. Every constant is published, recalled or declared a guess in its module's description.",
         "seed": 1,
         "snapshot_every": "30d",
-        "start": "2027-03-12T21:00:00Z"
+        "start": "2027-01-01T22:00:00Z"
       }
     },
     {
@@ -82,7 +82,7 @@
       "id": "ground",
       "kind": "quake.ground",
       "params": {
-        "at": "2027-03-26T21:00:00Z",
+        "at": "2027-02-01T22:00:00Z",
         "folder": "portland-cascadia",
         "lat_n": 45.66,
         "lat_s": 45.43,
@@ -90,8 +90,8 @@
         "lon_w": -122.85,
         "res_arcsec": 1,
         "soils": "wet",
-        "tz_name": "PDT",
-        "tz_offset_h": -7
+        "tz_name": "PST",
+        "tz_offset_h": -8
       }
     },
     {
@@ -127,7 +127,7 @@
   ],
   "from": {
     "entry": "manifests/q1-portland-cascadia.toml",
-    "hash": "sha256:6691eea8b144840e9829205e440209b276d17e90accde089d37a0ae03d14fb7c",
+    "hash": "sha256:b97cdc26a6000ab5a55d6439fad72170ca833fbd29e06794e1e0a7f75b843953",
     "language": "toml"
   },
   "manifest": "manifest/1"
