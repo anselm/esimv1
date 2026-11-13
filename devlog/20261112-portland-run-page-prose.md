@@ -59,3 +59,27 @@ change without a run, so the ten variants were run (about three seconds each).
   describes and were not touched.
 - `retrofit` means "built after 2004" in `lifelines.recovery` and "built after 1993" in
   `hazard.components`. The notes now say what each module does; the disagreement stands.
+
+## Afterwards: he meant the project page
+
+Anselm: "I'm sorry I mostly actually meant https://esimv1.exe.xyz/anselm/portland-cascadia. It is
+ok to adjust the detailed prose." So the project README was rewritten as well, under the same
+revision of the guidance. The run-page work above stands.
+
+What changed in `projects/anselm/portland-cascadia/README.md`:
+
+- The opening starts from the council's vote and the trade-off it poses (the tanks are the spill
+  and the reserve), then says what the project is, then gives the headline numbers and the three
+  main reasons to doubt them. The old opening described the model's inputs.
+- "How the simulation works" is now a short account that reads straight through and is built
+  around one dependency chain (a hospital, its generator, a fuel truck, a bridge, the hub). The
+  rule and source for each part moved to a supporting section after the limits, "How each part is
+  modelled".
+- In the results, each finding now carries its reason or its consequence where the old text
+  listed figures: why the two death counts should agree, what the seeds show, why dry soil barely
+  changes the toll, what the `ranges` variant says about the hospitals, what the model cannot yet
+  say about the reserve.
+- The authorship note moved to the end.
+
+Every number is the old page's, which was read from the runs of 12 November; the reruns above are
+numerically identical. The reading list is unchanged. Not pushed, not deployed.
