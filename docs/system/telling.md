@@ -4,9 +4,9 @@
 
 A run is a folder of numbers. A project page is where a person who was not there finds out
 what the numbers are about, and most readers are novices to the topic in front of them, or
-to simulation, or to both. These are the practices the first projects settled on for that
-page. They are conventions, not code; the code enforces only that a figure's numbers come
-from the runs.
+to simulation, or to both. This page describes what the first projects put on that page. It
+is about content: which parts a page has and which figures it carries. It sets no rules for
+how the prose is written. The code enforces only that a figure's numbers come from the runs.
 
 ## Three parts, and the simulation is the middle one
 
@@ -20,11 +20,10 @@ three.
   is not. [The Palisades fire](/anselm/palisades-2025) has a section called *The ground before
   the fire*.
 - **The event.** What the record says and what the runs say, side by side, with the measures
-  that compare them, and what each run gets wrong said in the same breath as what it gets
-  right.
+  that compare them and the places where each run misses the record.
 - **What it changed.** The reviews, the law, the market, the rebuilding, the court. This is the
-  part most easily left out and the part a citizen most needs; it is also the part whose
-  numbers go stale fastest, so it carries its as-of date in the first sentence.
+  part most easily left out and the part a citizen most needs. Its numbers go stale fastest,
+  so it carries the date it was written.
 
 The reporting that goes into the first and third parts is sourced like anything else here:
 named, dated, and marked *recalled* where it was not read. Casual research is allowed and says
@@ -66,21 +65,19 @@ refused the fetch. Beyond it lies the whole field of information graphics and vi
 storytelling, which is older than simulation and better at readers; the pages here borrow
 from it and do not pretend to add to it.
 
-## The story carries the reader
+## A page a person can read straight through
 
-The tool is an appliance, and an appliance is not an explanation. The project page is a
-story in the plain sense: it begins with the place and the people, goes through what
-happened, and ends with what it changed and what the model cannot say. Figures sit in the
-story where their numbers are needed and nowhere else. The register is sober, the numbers
-are the runs', and the philosophy, where there is any, is at the top and the bottom and not
-threaded through the tables. The essay this draws on is Anselm Hook's *Computational
+The run pages show maps, charts and tables, and they do not explain themselves. The project
+page is the account that does: what the scenario is, what happened or is assumed to happen,
+what the runs show, and what the model cannot say. A figure sits in that account at the point
+where its numbers are needed. The essay this draws on is Anselm Hook's *Computational
 journalism* (2026): "we need stories AND models, we need a visceral emotional connection AND
 some grounding."
 
 ## What a project page has, as of November 2026
 
-- A title that is a sentence a reader would say, and a first paragraph that says what the
-  page is, who wrote it and when, and that nothing on it is a forecast.
+- A first paragraph that says what the page is, who wrote it and when, and which parts of
+  the scenario are assumed.
 - The priming, the event, the aftermath, each with its sources.
 - The actors figure, on named frameworks, with the gaps dashed.
 - The runs' own figures: the ladder or the tables, drawn as the page is read.

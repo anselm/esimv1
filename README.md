@@ -103,7 +103,7 @@ They are the point of the system and are enforced by code where code can:
 - Accounts balance: a ledger leak above tolerance fails the run.
 - Runs are reproducible: the same manifest and seed give the same digest; a run folder
   keeps its resolved manifest and the hashes of every file it read.
-- Lead with what is wrong. `docs/system/limits.md` is rewritten as it changes.
+- Known faults are published. `docs/system/limits.md` is rewritten as they change.
 
 ## Try it
 

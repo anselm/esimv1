@@ -31,14 +31,13 @@ records that it did. A result that looks right for the wrong reason is reported 
 
 A run past the end of a record rests on an assumption, and the manifest names it:
 emissions held at the last rate, a straight line to zero in a year. The project page
-says "an assumption, never a forecast", in those words, and the run's numbers are read
-with that in front of them.
+states the assumption where it shows the run's numbers.
 
-## Say what is wrong first
+## Known faults are published
 
-Every milestone entry and every project description leads with what the model gets
-wrong before what it gets right. Today the planet runs half a degree warm in 2024 and
-keeps too much carbon airborne; that sentence comes before any table of crossings.
+The faults each model is known to have are listed on [Limits today](/docs/system/limits),
+which is rewritten as they change. Each project page says where its runs miss the record
+and what it cannot tell the reader.
 
 ## Accounts must balance
 
