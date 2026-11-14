@@ -2,13 +2,10 @@
 <!-- section: Where this is going -->
 # Goals and milestones
 
-This page says what the project is for and the order in which it intends to get there. It was
-organised in November 2026 from the project lead's notes and will change as the work does.
-
 ## The goal
 
-The goal is a service that ordinary people can use, and that others can deploy to model the
-issues of their own region.
+The goal of this simulation engine is to build a software tool that ordinary people can use to
+model issues in their own communities and bioregions.
 
 Some uses will be didactic: a simulation on a city government's web page that shows what a
 policy would do. Some will be participatory: residents changing the assumptions and seeing what

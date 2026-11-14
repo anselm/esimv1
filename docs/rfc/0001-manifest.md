@@ -58,23 +58,37 @@ the whole system is at the start of that decade.
 
 ## 2. Two levels
 
-The grammar has two levels, and most of the confusion in this field comes from writing
-them as one.
+A simulation of this kind has two levels.
 
-The lower level is the **meta grammar**: how to express a collection of state succinctly
-at all. Entities, components, identity, order, imports, inheritance, variables, loops,
-the expressions a document may carry, how it is made canonical and hashed. Nothing at this
-level knows what a river is. It is the same question a scene description, a game level, a
-configuration system and a user interface layout all answer, and the answers are old.
+The lower level is the **modules**: the pieces of science. Each one models a single subject,
+a river, a carbon cycle, the bridges of a city, and is written as code by someone who knows
+that subject. Modules are the part that takes expertise to build, and the part engines will
+compete on.
 
-The upper level is the **world-modelling components**: the run window, the place, the
-module and its kind, the ledgers of conserved quantities, the shared fields, the topics,
-the records read, the variants of an assumption. This is the vocabulary of a simulation of
-the world, and it is the part that competing engines have reason to argue about.
+The upper level is the **arrangement**: which modules are in a run, with which parameters,
+over which window and place, and what they may tell each other. It is largely declarative,
+and the person who writes it is making a claim about the world and need not be able to
+write a module. The manifest is this level, and it is the level this document standardises.
 
-Part I of this document fixes the meta grammar. Part II names the components. An engine
-that adopts Part I and only some of Part II still interoperates at the lower level: it can
-read, draw, check and hash the document, and say which components it has no system for.
+The arrangement is less explicit today than that description suggests. A manifest names the
+modules and sets their parameters. It does not state how they are connected. Each kind
+declares the topics it publishes and listens for, the fields it writes and reads and the
+ledgers it opens, and two modules are coupled when those names agree. A checker derives the
+connections from the declarations (section 9). An author can therefore remove a module, or
+set a parameter that a module reads, but cannot redirect a connection without changing a
+module. Whether a manifest should be able to state connections is an open question
+(section 15).
+
+The notation has a division of its own, which is a different thing from the two levels and
+which the rest of this document follows. Part I is the **meta grammar**, the syntax: how to
+write any collection of things at all. Entities, components, identity, order, imports,
+inheritance, variables, loops, the expressions a document may carry, how it is made
+canonical and hashed. Nothing in it knows what a river is. A scene description, a game
+level, a configuration system and a user interface layout all answer the same question, and
+the answers are old. Part II is the **vocabulary**: the components a simulation of the world
+needs, such as the run window, the place, the module and its kind, and the variants of an
+assumption. An engine that adopts Part I and only some of Part II can still read, draw,
+check and hash the document, and say which components it has no system for.
 
 ## Part I: the meta grammar
 
@@ -491,6 +505,10 @@ levels one and two are safe on any input, level three is not.
 - The snapshot and the log as entities: the same grammar for arrangement, state and
   messages, which is orbital's bet and would make a run folder one kind of document.
 - Where the vocabulary lives and how a version of it is named.
+- Whether a manifest may state connections between modules. Today they follow from the names
+  each kind declares. An optional component that renames a topic or a field for one module
+  (as ROS remaps topic names at launch) would let an author point a hospital at a different
+  power source, or run two instances of one kind side by side, without touching a module.
 - Whether the audit belongs in the manifest or in a document that names one.
 
 ## References
@@ -509,6 +527,14 @@ levels one and two are safe on any input, level three is not.
   its Portland scenario is the first converted (`manifests/q1-portland-cascadia.js`, the same
   manifest id as the TOML it replaced). The examples in this document are still in the object
   form and TOML and are to be rewritten in the source form in the next draft.
+
+- 14 November 2026: section 2 rewritten. The two levels are now the modules (the science) and
+  the arrangement that wires them together, which is the manifest. The earlier text called
+  the syntax and the vocabulary "levels"; they are now described as the notation's two parts.
+  The section also says that a manifest does not yet state connections, and the question is
+  added to section 15 (Anselm: "the internal manifest grammar is a 'lower level' of 'science
+  pieces' or modules - that are wired together by a 'higher level' of largely declarative
+  relationships").
 
 - Draft 1, 2026-11-07: first text.
 - Draft 2, 2026-11-07: prior art (section 7); authoring, ranges and run-time expressions
