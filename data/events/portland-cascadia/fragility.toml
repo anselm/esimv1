@@ -1,5 +1,6 @@
-# Fragilities and repair rules for the components the `hazard.components` module runs: tanks,
-# crossings, poles, route segments. Every curve here is recalled from FEMA's Hazus earthquake
+# Fragilities and repair rules for the subject modules that break things: `fuel.tanks` reads
+# [tank], `roads.bridges` [bridge] and [bridge_class.*], `power.structures` [pole], `roads.routes`
+# [route] (until 2026-11-14 one module, `hazard.components`, ran all four). Every curve here is recalled from FEMA's Hazus earthquake
 # model and not checked against the manual, which could not be downloaded on 2026-11-12; the
 # county study's totals and DOGAMI's statements are the checks the runs report against.
 
@@ -11,6 +12,9 @@ gf_beta = 0.7
 fail_state = 3                         # a tank at extensive damage or worse releases
 pre_1993_release = "the study's per-tank range (50 to 100 percent of contents)"
 post_1993_release_max = 0.10           # the study: designed for shaking; up to 10 percent
+design_year = 1993                     # a tank built before this year, or with no recorded year, releases by its own row's range
+study_release_min_gal = 94634005       # the 2022 study's range for the total release, which the module reports its own total against
+study_release_max_gal = 193687251
 
 [bridge]                               # the default when a crossing names no class
 medians_g = [0.35, 0.45, 0.55, 0.80]   # conventional highway bridges without seismic design, recalled, unchecked
@@ -37,6 +41,11 @@ restore_days = [1, 7, 60, 200]
 closed_state = 2
 
 [pole]
+file = "poles.csv"                     # DOGAMI's transmission structures, cut to the window
+x = "X"
+y = "Y"
+prob_wet = "CSZ_wet_Prob"              # percent chance of failure from ground deformation, saturated soil
+prob_dry = "CSZ_dry_Prob"
 crews_per_day = 12                     # transmission structures repaired a day in the window (a guess; the Resilience Plan's one to three months is the check)
 served_poles = 2                       # a cell has power when its nearest poles this many all stand (topology stands in for the network we lack)
 

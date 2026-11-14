@@ -5,6 +5,9 @@
 # segment on each bank; a hospital and the hub are given their nearest segment. Made 2026-11-12
 # by the esim session with GDAL from routes.geojson; the geometry stays there.
 
+# the place in [nearest] that reachability is measured from
+origin = "hub"
+
 [[segment]]
 id = 1
 class = 3

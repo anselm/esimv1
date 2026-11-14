@@ -230,7 +230,7 @@ holds the history.
 ## The earthquake
 
 Portland after a Cascadia earthquake (`anselm/portland-cascadia`). Status as of the runs
-of 12 November 2026; the [project page](/anselm/portland-cascadia) gives the figures in full.
+of 14 November 2026; the [project page](/anselm/portland-cascadia) gives the figures in full.
 
 - **No record to score against.** The ground shaking is the output of DOGAMI's scenario model, and
   the building damage is compared with DOGAMI's own loss estimate, to which six of the model's
@@ -247,21 +247,23 @@ of 12 November 2026; the [project page](/anselm/portland-cascadia) gives the fig
   its deaths happen in collapses. So the toll on dry soil is almost the same as on saturated soil,
   where DOGAMI's falls by a third, and the night-time toll is nearly two thirds of the daytime
   toll, where DOGAMI's is about a quarter.
-- **The spill.** In the base run 233 of the 587 tanks fail and release 60.6 million gallons, about
-  two thirds of the 2022 county study's minimum of 95 million. No run models fire in the spilled
+- **The spill.** In the base run 270 of the 587 tanks fail and release 67.8 million gallons, about
+  seven tenths of the 2022 county study's minimum of 95 million; the other two seeds release 51.0
+  and 69.1 million. No run models fire in the spilled
   fuel or the fuel's movement down the river. Deaths at the terminals are a number drawn in the
   study's range of 0 to 7 and scaled by the release.
 - **Electricity.** Transmission structures are the only part of the power system in the model.
-  Ninety percent of people keep their electricity at the moment of the earthquake, and everyone
-  has it by day 22, where the Oregon Resilience Plan expects one to three months. The number of
+  Ninety percent of people keep their electricity at the moment of the earthquake, and 99.9
+  percent have it by day 22, where the Oregon Resilience Plan expects one to three months. The number of
   hospitals that lose power and the deaths after the shaking both depend on this result.
-- **Bridges.** Ten of the twelve Willamette bridges close in the base run. The seven that take the
-  worst level of damage are given a 365-day repair, a judgement, and are still closed when the
-  run ends, eleven months after the earthquake. The `burnside-ready` variant has no effect on the computed runs, because the setting it
-  changes is read only by the `ranges` version.
+- **Bridges.** Ten of the twelve Willamette bridges close in the base run, all at the worst level
+  of damage. That level is given a 365-day repair, a judgement, so they are still closed when the
+  run ends, eleven months after the earthquake. With other seeds a few take lighter damage and
+  reopen after 21 or 120 days. The `burnside-ready` variant has no effect on the computed runs,
+  because the setting it changes is read only by the `ranges` version.
 - **Fuel use.** The response's daily use, the hospitals' generator fuel and the date and rate of
   resupply are guesses. The response's use is counted only once a fuel truck can reach a hospital
-  from the terminals, which is day 111 in the base run, so it uses no fuel for 110 days.
+  from the terminals, which is day 119 in the base run, so it uses no fuel for 118 days.
 - **Water.** Service follows a schedule drawn from the Resilience Plan's range. The pipes are not
   in the model.
 - **Deaths after the shaking.** These rest on one rate, deaths per person-day without electricity
@@ -271,11 +273,9 @@ of 12 November 2026; the [project page](/anselm/portland-cascadia) gives the fig
   length of the power cut.
 - **The agents** (`people.agents`, 93,520 agents of ten people each) are placed at a home and a
   workplace and decide nothing. Nobody leaves, shelters, travels or waits at a hospital.
-- **Stale sentences in the runs.** In the runs of 12 November the story says "The grid is down
-  everywhere" and "Day 1: power is back for half the people" in computed runs where 90 percent
-  kept their electricity, and it gives the Broadway Bridge's reopening as day 20 for a 21-day
-  repair. `service.routes_open` reads 1.000 in computed runs. The first two sentences are
-  corrected in the code and will change when the runs are next made.
+- **Two small faults in the runs.** The story gives a bridge's reopening one day early (day 20 for
+  a 21-day repair). `service.routes_open` reads 1.000 in computed runs; `routes.open_share` is the
+  right series.
 - **The building count.** A run reports 297,803 buildings. The data folder's note on how the
   source was prepared gives 297,120 outlines. The difference has not been explained.
 - **Not in the model:** aftershocks, the tsunami (which does not reach Portland), the Columbia

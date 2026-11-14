@@ -30,7 +30,11 @@ pub mod coast;
 pub mod quake;
 pub mod lifelines;
 pub mod aftermath;
-pub mod components;
+pub mod fragility;
+pub mod tanks;
+pub mod bridges;
+pub mod power;
+pub mod routes;
 pub mod agents;
 pub mod losses;
 
@@ -94,7 +98,10 @@ pub static KINDS: &[Kind] = &[
     kind!("quake.buildings", quake::Buildings),
     kind!("portland.lifelines", lifelines::Lifelines),
     kind!("people.aftermath", aftermath::Aftermath),
-    kind!("hazard.components", components::Components),
+    kind!("fuel.tanks", tanks::Tanks),
+    kind!("roads.bridges", bridges::Bridges),
+    kind!("power.structures", power::Power),
+    kind!("roads.routes", routes::Routes),
     kind!("people.agents", agents::Agents),
     kind!("obs.losses", losses::Losses),
 ];

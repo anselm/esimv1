@@ -18,9 +18,9 @@ hospitals have power, how much fuel is left and how many people die. The date is
 knows when the fault will next rupture.
 
 The model is assembled from published studies of this earthquake, and it is early work. It does
-put numbers on both sides of the storage argument. In its base run the terminals spill 60.6
-million gallons and keep 172.9 million. With a fifth less fuel held they spill less and keep
-138.3 million. With every tank retrofitted they spill a small fraction as much and keep 228.7
+put numbers on both sides of the storage argument. In its base run the terminals spill 67.8
+million gallons and keep 165.7 million. With a fifth less fuel held they spill less and keep
+132.5 million. With every tank retrofitted they spill a small fraction as much and keep 228.7
 million. But several of the model's results disagree with the studies they can be checked
 against, and many of its parameters are recalled from memory or guessed. The spill is smaller than
 the 2022 study's minimum, electricity returns months sooner than the state expects, and the
@@ -251,15 +251,16 @@ buildings without collapsing them, and a destroyed building that has not collaps
 its occupants. Removing the liquefaction therefore removes many destroyed buildings and few
 deaths.
 
-**The spill.** In the base run 233 of the 587 tanks fail and release 60.6 million gallons: 34.4
-million onto the ground and 26.2 million toward the river. The 2022 study estimates 95 to 194
-million gallons, so the model's release is about two thirds of the study's minimum. The release
-from each failed tank follows the study's own rule, so the shortfall lies in how many tanks fail.
-That number comes from a tank fragility curve that is recalled from memory and unverified.
+**The spill.** In the base run 270 of the 587 tanks fail and release 67.8 million gallons: 43.5
+million onto the ground and 24.3 million toward the river. The other two seeds release 51.0 and
+69.1 million. The 2022 study estimates 95 to 194 million gallons, so the model's release is
+between a half and three quarters of the study's minimum. The release from each failed tank
+follows the study's own rule, so the shortfall lies in how many tanks fail. That number comes from
+a tank fragility curve that is recalled from memory and unverified.
 
 The variants move the spill in the direction one would expect. Holding 20 percent less fuel cuts
-the release toward the river from 26.2 to 21.0 million gallons. Retrofitting every tank cuts it to
-2.0 million. On dry soil 97 tanks fail and 3.7 million gallons go toward the river, which shows
+the release toward the river from 24.3 to 19.4 million gallons. Retrofitting every tank cuts it to
+1.6 million. On dry soil 113 tanks fail and 9.1 million gallons go toward the river, which shows
 how much of the spill in this model comes from liquefaction under the tanks.
 
 ### Three days after
@@ -269,10 +270,17 @@ table 2027-02-04T22:00Z lifeline.crossings_open=bridges_open service.power_share
 ```
 
 **Bridges.** Ten of the twelve bridges close in the base run. Only Tilikum Crossing and the
-Sellwood Bridge, the two newest, still join the two banks of the river. The Broadway Bridge
-reopens after 21 days and the Marquam and Burnside bridges after 120 days. The other seven take the worst level of damage and are still closed when the run ends,
-eleven months after the earthquake. The repair time this project assigned to that level for an
-older bridge is 365 days, which is a judgement.
+Sellwood Bridge, the two newest, still join the two banks of the river. All ten closed bridges
+take the worst level of damage and are still closed when the run ends, eleven months after the
+earthquake. The repair time this project assigned to that level for an older bridge is 365 days,
+which is a judgement.
+
+The other seeds show how much of this is the draw. With seed 3, seven bridges take the worst
+damage, and the Hawthorne, Morrison and Broadway bridges take moderate damage and reopen after 21
+days. With seed 2, eight older bridges take the worst damage, the Ross Island Bridge reopens after
+120 days and the Fremont Bridge stays open, but Tilikum Crossing, one of the two modern bridges,
+is closed for 200 days. On dry soil nine of the ten older bridges still take the worst damage, so
+in this model it is the shaking that closes them, and the liquefaction adds little.
 
 Multnomah County says none of the downtown bridges is expected to be usable immediately after a
 major earthquake, and that it could be weeks to years before any is. The model's result resembles
@@ -284,22 +292,25 @@ It changes a setting that only the earlier version of the model reads, so its re
 identical to the base run's.
 
 **Electricity.** In the base run 90 percent of people keep their electricity at the moment of the
-earthquake. The share is 95 percent on day 3 and 97 percent on day 7, and everyone has power by
-day 22. The Resilience Plan expects one to three months. The model is this far from the plan
-because transmission structures are the only part of the power system it contains. Of the 6,146
-structures 586 fail, and crews repair twelve a day. The model has no substations, power lines or
+earthquake. The share is 94 percent on day 3 and 97 percent on day 7. It passes 99.9 percent on
+day 22, and the last few people have power on day 33. The Resilience Plan expects one to three
+months. The model is this far from the plan because transmission structures are the only part of
+the power system it contains. Of the 6,146 structures 614 fail, and crews repair twelve a day. The model has no substations, power lines or
 neighbourhood distribution, so none of those can fail in it. This is the model's least credible
 result, and two others depend on it: how many hospitals lose power, and how many people die in the
 months after.
 
-**Hospitals.** All thirteen hospital buildings stand in the base run. Three have no grid
-electricity and cannot be reached by a fuel truck, so they lose power on day 3 when their
-generators run out: Oregon Health & Science University Hospital, Doernbecher Children's Hospital
-and Providence Milwaukie Hospital. Two are still without power on day 7 and none by day 14.
+**Hospitals.** All thirteen hospital buildings stand in every run. In the base run none of them
+loses power: the grid is back at each one before its generator fuel runs out. That is the draw,
+and not a finding. With seed 2 the Portland VA Medical Center has no grid electricity and cannot
+be reached by a fuel truck, so it loses power on day 3 when its generators run out, and it is
+still without power on day 7. With seed 3 Shriners Hospitals for Children and Providence
+Milwaukie Hospital lose power on day 3. No hospital is without power by day 14 in any of the
+three.
 
 The `ranges` variant shows how much this depends on the electricity result. There, electricity
 returns on the Resilience Plan's schedule, and eleven of the thirteen hospitals lose power on
-day 3. The true figure for this scenario is unknown, and the model cannot narrow it until it
+day 3 and are still without it on day 14. The true figure for this scenario is unknown, and the model cannot narrow it until it
 represents more of the power system. The model also does not represent hospital capacity. It has
 no beds, staff or supplies, and no damage inside a hospital building that still stands.
 
@@ -310,18 +321,18 @@ table 2028-01-01T08:00Z after.deaths=deaths_after_the_shaking fuel.consumed_gal=
 ```
 
 **Roads.** In the base run 22 percent of the emergency route length is open during the first week,
-27 percent on day 30 and 61 percent on day 90. All of it is open by day 180. No hospital can be
-reached by road from the hub until day 111. The three hospitals that lost power on day 3 got it
-back from the grid, long before a fuel truck could have reached them.
+29 percent on day 30 and 65 percent on day 90. All of it is open by day 178. No hospital can be
+reached by road from the hub until day 119, or day 113 and day 89 with the other two seeds. In the
+seeds where a hospital lost power on day 3, it got power back from the grid long before a fuel
+truck could have reached it.
 
 **Fuel.** That delay exposes a fault in the fuel accounting. The model starts counting the
 emergency response's fuel use only once a truck can reach a hospital. In the base run the response
-therefore uses no fuel for 110 days, which is not a result to rely on. Meanwhile resupply resumes
-on day 14, and the hub is back to its starting stock about two and a half months after the
-earthquake.
+therefore uses no fuel for 118 days, which is not a result to rely on. Meanwhile resupply resumes
+on day 14, and the hub is back to its starting stock 81 days after the earthquake.
 
 The model does show the two sides of the storage argument as numbers. After the spill the hub
-holds 172.9 million gallons in the base run, 138.3 million with 20 percent less fuel held, 228.7
+holds 165.7 million gallons in the base run, 132.5 million with 20 percent less fuel held, 228.7
 million with every tank retrofitted, and nothing with no hub. In this model, holding less fuel
 gives a smaller spill and a smaller reserve, and retrofitting the tanks gives the smallest spill
 and the largest reserve.
@@ -340,16 +351,16 @@ day 300. That leaves 841,676 people without water for more than a month.
 **Deaths after the shaking.** The model adds deaths in the months that follow by two rules. One applies
 a death rate to every day a person spends without electricity, standing for medical care that is
 interrupted. The other lets people with life-threatening injuries die on any day when no hospital
-is open. The base run adds 2 deaths by the end of the year, with a range of 0.3 to 3.7, all from
+is open. The base run adds 2 deaths by the end of the year, with a range of 0.4 to 3.9, all from
 interrupted care. The `ranges` variant adds 66, with a range of 11 to 121. The whole difference is
-the length of the power cut: 443,000 person-days without electricity in the base run against 14.5
+the length of the power cut: 465,000 person-days without electricity in the base run against 14.5
 million in the `ranges` variant. Nobody dies of untreated injuries in either run, because some
 hospitals stay open throughout. Since the base run restores electricity far faster than the
 Resilience Plan expects, its figure of 2 deaths is too low by the model's own logic.
 
 The 2022 study also estimates deaths at the hub itself if the spill ignites: 0 to 7 among about
 1,200 workers. The model draws a number in that range and scales it by the size of the release,
-which adds about one death in the base run. It does not model the fire.
+which adds between one and two deaths in the base run. It does not model the fire.
 
 ## What cannot be trusted yet
 
@@ -358,11 +369,11 @@ which adds about one death in the base run. It does not model the fire.
 - **Recalled values.** The fragility curves for buildings, tanks and the two modern bridges, and
   every casualty rate, are recalled from memory of the Hazus manual and have not been checked
   against it.
-- **The spill.** The base run releases about two thirds of the 2022 study's minimum.
+- **The spill.** The runs release between a half and three quarters of the 2022 study's minimum.
 - **Electricity.** It returns in three weeks where the Resilience Plan expects one to three months,
   because the model contains only transmission structures.
 - **Fuel use.** The response's daily use, the hospitals' generator fuel and the date and rate of
-  resupply are guesses, and the response uses no fuel for the first 110 days.
+  resupply are guesses, and the response uses no fuel for the first 118 days.
 - **Water.** The restoration schedule is assumed, not computed.
 - **Deaths after the shaking.** They rest on one rate borrowed from another disaster and on the
   model's electricity result.
@@ -451,7 +462,9 @@ wiring
 
 The text was drafted in November 2026 by Claude, an AI model, for Anselm Hook's esim project. The
 tables are drawn from the latest runs each time the page loads. The numbers in the prose were read
-from the runs of 12 November 2026.
+from the runs of 14 November 2026. They differ from the first version of this page because the
+model's parts were separated into independent modules that day, and each module now makes its own
+random draws.
 
 ## What this page has read
 
@@ -465,6 +478,13 @@ Every source was read on 12 November 2026 unless noted.
   Taken: that the rule cuts capacity and not fuel held, the energy department's position and the
   2025 pipeline shutdown.
 - r/Portland, the discussion thread on that story, 12 November 2026.
+- Michaela Bourgeois, *Portland City Council approves reduced fuel storage along Willamette River
+  amid Cascadia concerns*, KOIN, published 12 or 13 November 2026. Read on 14 November through an
+  automated summary of the page, not the article's own text. Nothing on this page is taken from it
+  yet. The summary reports that the ordinance requires a risk reduction plan for the hub by 30
+  September 2027, covering evacuation of Linnton and firefighting access that does not depend on
+  bridges likely to be damaged, and reports to the council in 2028, 2031 and 2036. Those points are
+  to be checked against the ordinance before they are used.
 - *CEI Hub Seismic Risk Analysis*, ECONorthwest, Salus Resilience and Enduring Econometrics, for
   Multnomah County and the City of Portland, February 2022. Read in full. Taken: the tank counts
   and ages, capacity and contents, the release rules and release range, the split between ground

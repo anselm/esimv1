@@ -230953,7 +230953,7 @@
   {
     "kind": "portland.lifelines",
     "name": "portland.lifelines",
-    "summary": "This module is specific to Portland. It follows the city after the earthquake one day at a time. It tracks the twelve bridges over the Willamette River, thirteen hospitals and their backup generators, electricity, water, and the fuel stored at the Critical Energy Infrastructure Hub, the strip of fuel terminals in northwest Portland. It keeps an account of the hub's fuel in gallons, which must balance every day. The module has two modes. In the computed mode a second module, hazard.components, works out the fuel spill, the state of each bridge, the open roads and the electricity service, and this module uses its results. In the ranges mode it draws those outcomes at random from published ranges: Multnomah County's statement on its bridges, the Oregon Resilience Plan's restoration times and the county's 2022 study of the hub's tanks. Water service follows the Resilience Plan's range in both modes. Three inputs are guesses in both modes: how much generator fuel a hospital holds, how much fuel the emergency response uses each day, and the day fuel deliveries resume. This run uses the ranges mode.",
+    "summary": "This module is specific to Portland. It follows the city after the earthquake one day at a time. It tracks the twelve bridges over the Willamette River, thirteen hospitals and their backup generators, electricity, water, and the fuel stored at the Critical Energy Infrastructure Hub, the strip of fuel terminals in northwest Portland. It keeps an account of the hub's fuel in gallons, which must balance every day. The module has two modes. In the computed mode four other modules work out the fuel spill (fuel.tanks), the state of each bridge (roads.bridges), the open roads (roads.routes) and the electricity service (power.structures), and this module uses their results. In the ranges mode it draws those outcomes at random from published ranges: Multnomah County's statement on its bridges, the Oregon Resilience Plan's restoration times and the county's 2022 study of the hub's tanks. Water service follows the Resilience Plan's range in both modes. Three inputs are guesses in both modes: how much generator fuel a hospital holds, how much fuel the emergency response uses each day, and the day fuel deliveries resume. This run uses the ranges mode.",
     "priority": 2,
     "dt": "1 day after the rupture",
     "params": [
@@ -230965,7 +230965,7 @@
       {
         "name": "inputs",
         "default": "ranges",
-        "note": "computed: the fuel spill, the bridges, the roads and electricity come from the hazard.components module. ranges: they are drawn at random from published ranges"
+        "note": "computed: the fuel spill, the bridges, the roads and electricity come from the fuel.tanks, roads.bridges, roads.routes and power.structures modules. ranges: they are drawn at random from published ranges"
       },
       {
         "name": "storage_cut",
@@ -231094,14 +231094,19 @@
         "note": "the buildings' toll, for the total"
       },
       {
-        "name": "hub.release",
+        "name": "tanks.released",
         "required": false,
-        "note": "with inputs = computed: the tanks' summed release"
+        "note": "with inputs = computed: the tanks' total release"
       },
       {
-        "name": "network.state",
+        "name": "power.state",
         "required": false,
-        "note": "with inputs = computed: the power share, the routes and each hospital's reachability and power, daily"
+        "note": "with inputs = computed: the share of people with electricity, daily"
+      },
+      {
+        "name": "routes.state",
+        "required": false,
+        "note": "with inputs = computed: which hospitals can be reached from the hub, daily"
       },
       {
         "name": "component.state",
@@ -231111,6 +231116,13 @@
     ],
     "fields_owned": [],
     "fields_read": [
+      {
+        "name": "power.up",
+        "unit": "1",
+        "required": false,
+        "on": "power.state",
+        "note": "with inputs = computed: whether the grid reaches each hospital"
+      },
       {
         "name": "quake.pga_g",
         "unit": "g",
@@ -231648,64 +231660,54 @@
     }
   },
   {
-    "kind": "hazard.components",
-    "name": "hazard.components",
-    "summary": "This module places four kinds of infrastructure at their real locations and damages each item individually. The fuel tanks come from the per-tank table in the 2022 seismic risk analysis of the Critical Energy Infrastructure Hub (621 rows), placed at the study's coordinates where it gives them and otherwise on tank outlines from OpenStreetMap. The twelve bridges over the Willamette River each carry a seismic class based on Multnomah County's 2014 vulnerability report and the federal bridge inventory. The 6,146 power transmission structures and the 137 emergency route segments come from DOGAMI, Oregon's geology agency, which gives a probability of failure for each structure and a class of ground deformation for each segment. At the earthquake, each item reads the ground motion at its location and is assigned a damage state by a random draw against a fragility curve. A failed tank releases a share of its contents that depends on its age, following the study: 50 to 100 percent for a tank built before 1993, and up to 10 percent for a later one. The fuel goes to the river where the study says it would. Afterwards, crews repair the failed transmission structures at an assumed rate, starting with those that serve the most people. A road segment reopens after a time set by its deformation class, and a bridge after a time set by its damage state. Each day the module publishes the share of people with electricity, the state of each bridge, and which hospitals can be reached from the fuel hub over open road segments and bridges. The fragility curves for the tanks and for modern bridges are recalled from Hazus, the Federal Emergency Management Agency's loss-estimation software, and have not been checked. The curve for older bridges is this project's judgement. All of them are listed in fragility.toml. Two published figures serve as checks: the study's total release of 94.6 to 193.7 million gallons, against which the module reports its own total, and the county's statement that no downtown bridge will be usable at first.",
+    "kind": "fuel.tanks",
+    "name": "fuel.tanks",
+    "summary": "This module damages storage tanks one at a time. Each tank sits at its own coordinates. At the earthquake it reads the ground motion there and is assigned a damage state by a random draw against a fragility curve, which gives the probability of each state at a given strength of shaking and of ground failure. A tank at or beyond the curve's failing state releases a share of its contents. The share depends on the tank's age: a tank built before the design year in the folder's rule, or with no recorded year, draws its share from the range in its own row of the table, and a newer tank releases at most the rule's smaller maximum. The release goes toward water where the tank's row says so. The tanks are the event folder's tanks.csv, and the curve and the age rule are its fragility.toml. The module does not follow the fuel after it leaves the tank, and it has no fire.",
     "priority": 1,
-    "dt": "1 day after the rupture",
+    "dt": "once, at the rupture",
     "params": [
       {
         "name": "folder",
-        "default": "portland-cascadia",
-        "note": "the folder of input tables for this event: tanks, transmission structures, routes, bridges, hospitals, the fuel hub and the fragility curves"
-      },
-      {
-        "name": "soils",
-        "default": "wet",
-        "note": "which of DOGAMI's cases the transmission structures and route segments use: wet (saturated soil) or dry"
+        "default": "",
+        "note": "the folder under data/events that holds this scenario's tanks.csv and fragility.toml"
       },
       {
         "name": "coarse_arcsec",
         "default": 10.0,
         "unit": "arcsec",
-        "note": "the cell size of the coarser grid on which electricity service is computed"
+        "note": "the cell size of the map of releases"
       },
       {
         "name": "storage_cut",
         "default": 0.0,
-        "note": "the fraction of every tank's contents removed before the earthquake. Ordinance 2026-312 cuts tank capacity by a fifth; this setting cuts the fuel actually held"
+        "note": "the fraction of every tank's contents removed before the earthquake"
       },
       {
         "name": "retrofit",
         "default": false,
-        "note": "if true, every tank releases as one built after 1993 does: at most post_1993_release_max of its contents"
+        "note": "if true, every tank releases as a newer tank does, whatever its year"
       },
       {
         "name": "force",
         "default": [],
-        "note": "items whose damage state is set in advance instead of drawn, written as kind:id:state (for example tank:KMW128:4 or bridge:Burnside Bridge:0)"
+        "note": "tanks whose damage state is set in advance instead of drawn, written as tank:id:state"
       }
     ],
     "publishes": [
       {
         "name": "component.state",
         "required": false,
-        "note": "{ kind, id, name, lat, lon, state, down, repair_day, day } at the item's location: every tank, bridge and road segment at the earthquake, each failed transmission structure, and each repair"
+        "note": "{ kind: tank, id, name, lat, lon, state, down } at the tank's location, at the start and at the earthquake"
       },
       {
         "name": "tank.release",
         "required": false,
-        "note": "{ id, name, gal, river } at the tank's location, for each failed tank"
+        "note": "{ id, name, gal, river, year } at the tank's location, for each failed tank"
       },
       {
-        "name": "hub.release",
+        "name": "tanks.released",
         "required": false,
-        "note": "{ gal, river_gal, tanks_failed } once, the total over all tanks, for the module that keeps the fuel account"
-      },
-      {
-        "name": "network.state",
-        "required": false,
-        "note": "{ day, power_share, routes_open_share, bridges_open, reachable: { hospital: bool }, hospital_power: { hospital: bool }, any_reachable } each day, computed from the items still standing"
+        "note": "{ gal, river_gal, tanks_failed } once, the total over all tanks, for a module that keeps a fuel account"
       }
     ],
     "sends": [],
@@ -231717,20 +231719,14 @@
         "note": "the instant"
       }
     ],
-    "fields_owned": [
-      {
-        "name": "power.up",
-        "unit": "1",
-        "required": false
-      }
-    ],
+    "fields_owned": [],
     "fields_read": [
       {
         "name": "quake.pga_g",
         "unit": "g",
         "required": true,
         "on": "quake.rupture",
-        "note": "at each component"
+        "note": "at each tank"
       },
       {
         "name": "quake.liq_p",
@@ -231760,13 +231756,234 @@
     "ledgers": [],
     "frames": [
       {
-        "name": "power_up",
-        "unit": "1",
+        "name": "tank_release_gal",
+        "unit": "gal",
+        "required": false
+      }
+    ],
+    "reports": [
+      {
+        "name": "tanks.failed",
+        "unit": "tanks",
         "required": false
       },
       {
-        "name": "tank_release_gal",
+        "name": "tanks.release_gal",
         "unit": "gal",
+        "required": false
+      },
+      {
+        "name": "tanks.release_river_gal",
+        "unit": "gal",
+        "required": false
+      }
+    ],
+    "views": [
+      {
+        "kind": "map",
+        "title": "fuel released, by tank",
+        "source": "tank_release_gal",
+        "obs": "",
+        "note": "gallons escaping from each failed tank at the earthquake, on a coarser grid than the other maps"
+      },
+      {
+        "kind": "counter",
+        "title": "tanks failed",
+        "source": "tanks.failed",
+        "obs": "",
+        "note": "of the tanks in the folder's table that can fail"
+      },
+      {
+        "kind": "counter",
+        "title": "fuel released",
+        "source": "tanks.release_gal",
+        "obs": "",
+        "note": "the total over the failed tanks"
+      },
+      {
+        "kind": "counter",
+        "title": "fuel released toward water",
+        "source": "tanks.release_river_gal",
+        "obs": "",
+        "note": "from the failed tanks whose row places them where a spill reaches water"
+      },
+      {
+        "kind": "text",
+        "title": "what this module leaves out",
+        "source": "The fragility curve is one curve for every tank, whatever its size, fill or anchorage. Its values are whatever the folder's fragility.toml says, and that file says where they came from. A tank is either failed or not: there is no partial leak, no fire, no containment berm and no account of where the fuel goes after it leaves the tank.",
+        "obs": "",
+        "note": ""
+      }
+    ],
+    "assets": [
+      {
+        "key": "events/",
+        "note": "tanks.csv and fragility.toml"
+      }
+    ],
+    "notes": []
+  },
+  {
+    "kind": "roads.bridges",
+    "name": "roads.bridges",
+    "summary": "This module damages bridges one at a time. Each bridge sits at its own coordinates and carries a seismic class. At the earthquake it reads the ground motion there and is assigned a damage state by a random draw against the fragility curve of its class. A bridge at or beyond the curve's closing state is closed, and it reopens after the repair time the curve gives for its damage state. Each change is published, so a module that routes traffic or draws a map can follow it. The bridges are the event folder's bridges.toml, and the curves and repair times are its fragility.toml, which says where each came from.",
+    "priority": 1,
+    "dt": "1 day after the rupture",
+    "params": [
+      {
+        "name": "folder",
+        "default": "",
+        "note": "the folder under data/events that holds this scenario's bridges.toml and fragility.toml"
+      },
+      {
+        "name": "force",
+        "default": [],
+        "note": "bridges whose damage state is set in advance instead of drawn, written as bridge:name:state"
+      }
+    ],
+    "publishes": [
+      {
+        "name": "component.state",
+        "required": false,
+        "note": "{ kind: bridge, id, name, lat, lon, state, down, repair_day, day } at the bridge's location: at the start, at the earthquake, and when it reopens"
+      }
+    ],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [
+      {
+        "name": "quake.rupture",
+        "required": false,
+        "note": "the instant"
+      }
+    ],
+    "fields_owned": [],
+    "fields_read": [
+      {
+        "name": "quake.pga_g",
+        "unit": "g",
+        "required": true,
+        "on": "quake.rupture",
+        "note": "at each bridge"
+      },
+      {
+        "name": "quake.liq_p",
+        "unit": "1",
+        "required": true,
+        "on": "quake.rupture"
+      },
+      {
+        "name": "quake.liq_pgd_cm",
+        "unit": "cm",
+        "required": true,
+        "on": "quake.rupture"
+      },
+      {
+        "name": "quake.ls_p",
+        "unit": "1",
+        "required": true,
+        "on": "quake.rupture"
+      },
+      {
+        "name": "quake.ls_pgd_cm",
+        "unit": "cm",
+        "required": true,
+        "on": "quake.rupture"
+      }
+    ],
+    "ledgers": [],
+    "frames": [],
+    "reports": [
+      {
+        "name": "bridges.open",
+        "unit": "crossings",
+        "required": false
+      }
+    ],
+    "views": [
+      {
+        "kind": "counter",
+        "title": "bridges open",
+        "source": "bridges.open",
+        "obs": "",
+        "note": "of 0, each according to its own damage state and repair time"
+      },
+      {
+        "kind": "chart",
+        "title": "bridges open",
+        "source": "bridges.open",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "text",
+        "title": "what this module leaves out",
+        "source": "A bridge is one point with one curve for its class. The module does not represent spans, approaches, piers or movable parts separately, and a bridge is either open or closed, with no reduced capacity. Repair times are fixed by damage state and do not depend on how many other bridges need repair at once.",
+        "obs": "",
+        "note": ""
+      }
+    ],
+    "assets": [
+      {
+        "key": "events/",
+        "note": "bridges.toml and fragility.toml"
+      }
+    ],
+    "notes": []
+  },
+  {
+    "kind": "power.structures",
+    "name": "power.structures",
+    "summary": "This module computes electricity service from the transmission structures that are standing. Each structure, a tower or a pole, is a row in a table in the event folder, with a location and a probability of failure for saturated and for dry soil. At the earthquake each structure fails or stands by a random draw against its probability. The modelled area is divided into coarse cells, and a cell has electricity when the structures nearest to it are all standing. Afterwards crews repair a fixed number of structures a day, starting with those that serve the most people. Each day the module writes a map of where electricity is on, which other modules read at the places they care about, and reports the share of residents served. The structures are not connected into a network: the module has no power lines, substations, generation or neighbourhood distribution, so none of those can fail in it and it restores service sooner than a real grid would.",
+    "priority": 1,
+    "dt": "1 day after the rupture",
+    "params": [
+      {
+        "name": "folder",
+        "default": "",
+        "note": "the folder under data/events that holds this scenario's table of structures, its fragility.toml and its map of residents"
+      },
+      {
+        "name": "soils",
+        "default": "wet",
+        "note": "which of the table's failure probabilities to use: wet (saturated soil) or dry"
+      },
+      {
+        "name": "coarse_arcsec",
+        "default": 10.0,
+        "unit": "arcsec",
+        "note": "the cell size of the grid on which service is computed"
+      }
+    ],
+    "publishes": [
+      {
+        "name": "power.state",
+        "required": false,
+        "note": "{ day, share } each day: the share of residents with electricity"
+      }
+    ],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [
+      {
+        "name": "quake.rupture",
+        "required": false,
+        "note": "the instant"
+      }
+    ],
+    "fields_owned": [
+      {
+        "name": "power.up",
+        "unit": "1",
+        "required": false
+      }
+    ],
+    "fields_read": [],
+    "ledgers": [],
+    "frames": [
+      {
+        "name": "power_up",
+        "unit": "1",
         "required": false
       }
     ],
@@ -231785,41 +232002,6 @@
         "name": "power.poles_repaired",
         "unit": "poles",
         "required": false
-      },
-      {
-        "name": "routes.open_share",
-        "unit": "1",
-        "required": false
-      },
-      {
-        "name": "bridges.open",
-        "unit": "crossings",
-        "required": false
-      },
-      {
-        "name": "tanks.failed",
-        "unit": "tanks",
-        "required": false
-      },
-      {
-        "name": "tanks.release_gal",
-        "unit": "gal",
-        "required": false
-      },
-      {
-        "name": "tanks.release_river_gal",
-        "unit": "gal",
-        "required": false
-      },
-      {
-        "name": "fit.release_vs_study_min",
-        "unit": "1",
-        "required": false
-      },
-      {
-        "name": "fit.release_vs_study_max",
-        "unit": "1",
-        "required": false
       }
     ],
     "views": [
@@ -231828,191 +232010,156 @@
         "title": "electricity service",
         "source": "power_up",
         "obs": "",
-        "note": "1 where the transmission structures nearest the cell are standing, on a coarser grid than the other maps. The counter gives the share of residents served"
-      },
-      {
-        "kind": "map",
-        "title": "fuel released, by tank",
-        "source": "tank_release_gal",
-        "obs": "",
-        "note": "gallons escaping from each failed tank at the earthquake, shown on the coarser grid"
+        "note": "1 where the structures nearest the cell are standing, on a coarser grid than the other maps"
       },
       {
         "kind": "counter",
         "title": "share of people with power",
         "source": "power.share",
         "obs": "",
-        "note": "computed from the transmission structures that are standing"
+        "note": "residents in cells with service, as a share of all residents"
       },
       {
         "kind": "counter",
         "title": "transmission structures failed",
         "source": "power.poles_failed",
         "obs": "",
-        "note": "of 6,146 in the modelled area, each failing with the probability DOGAMI gives for its location"
+        "note": "each failing with the probability its row gives"
       },
       {
         "kind": "counter",
-        "title": "Willamette bridges open",
-        "source": "bridges.open",
+        "title": "transmission structures repaired",
+        "source": "power.poles_repaired",
         "obs": "",
-        "note": "of twelve, each according to its own damage state and repair time"
-      },
-      {
-        "kind": "counter",
-        "title": "emergency routes open",
-        "source": "routes.open_share",
-        "obs": "",
-        "note": "the share of the routes' total length that is open"
-      },
-      {
-        "kind": "counter",
-        "title": "tanks failed",
-        "source": "tanks.failed",
-        "obs": "",
-        "note": "of the tanks the 2022 study lists as active"
-      },
-      {
-        "kind": "counter",
-        "title": "fuel released",
-        "source": "tanks.release_gal",
-        "obs": "",
-        "note": "the total over the failed tanks. The 2022 study's range is 94.6 to 193.7 million gallons"
+        "note": "so far, at the crews' daily rate"
       },
       {
         "kind": "chart",
         "title": "share of people with power",
         "source": "power.share",
         "obs": "",
-        "note": "computed each day. The Oregon Resilience Plan's estimate of one to three months to restore electricity is the published figure to compare it with"
-      },
-      {
-        "kind": "chart",
-        "title": "emergency routes open",
-        "source": "routes.open_share",
-        "obs": "",
-        "note": ""
-      },
-      {
-        "kind": "chart",
-        "title": "Willamette bridges open",
-        "source": "bridges.open",
-        "obs": "",
-        "note": ""
+        "note": "computed each day from the structures standing"
       },
       {
         "kind": "text",
         "title": "what this module leaves out",
-        "source": "The transmission structures are not connected into a network. A cell has electricity when the structures nearest to it are standing. That rule stands in for power lines, substations and the switching a real grid does, none of which is in DOGAMI's data. A road segment closes for a number of days guessed from DOGAMI's deformation class, and debris from damaged buildings does not block it. The tanks' fragility to shaking is recalled from memory. Their fragility to ground failure reuses the deformation threshold that was fitted for buildings. The water system is not modelled.",
+        "source": "Power lines, substations, generation, the switching a real grid does, and the distribution network inside neighbourhoods. A cell's service depends only on its nearest transmission structures. The repair rate is constant and does not depend on roads, fuel or crews' access.",
         "obs": "",
         "note": ""
       }
     ],
     "assets": [
       {
-        "key": "events/portland-cascadia",
-        "note": "the input tables"
+        "key": "events/",
+        "note": "the table of structures, fragility.toml and the map of residents"
       }
     ],
-    "notes": [],
-    "tables": {
-      "fragility": {
-        "bridge": {
-          "beta": 0.6,
-          "closed_state": 2,
-          "gf_beta": 0.7,
-          "gf_median_cm": 20.0,
-          "medians_g": [
-            0.35,
-            0.45,
-            0.55,
-            0.8
-          ],
-          "restore_days": [
-            1,
-            7,
-            75,
-            230
-          ]
-        },
-        "bridge_class": {
-          "modern": {
-            "beta": 0.6,
-            "closed_state": 2,
-            "gf_beta": 0.7,
-            "gf_median_cm": 40.0,
-            "medians_g": [
-              0.4,
-              0.6,
-              0.85,
-              1.2
-            ],
-            "restore_days": [
-              1,
-              7,
-              60,
-              200
-            ]
-          },
-          "vulnerable": {
-            "beta": 0.6,
-            "closed_state": 2,
-            "gf_beta": 0.7,
-            "gf_median_cm": 15.0,
-            "medians_g": [
-              0.08,
-              0.12,
-              0.18,
-              0.26
-            ],
-            "restore_days": [
-              3,
-              21,
-              120,
-              365
-            ]
-          }
-        },
-        "pole": {
-          "crews_per_day": 12,
-          "served_poles": 2
-        },
-        "route": {
-          "closure_days_by_class": [
-            [
-              0,
-              0
-            ],
-            [
-              7,
-              21
-            ],
-            [
-              21,
-              75
-            ],
-            [
-              60,
-              180
-            ]
-          ]
-        },
-        "tank": {
-          "beta": 0.6,
-          "fail_state": 3,
-          "gf_beta": 0.7,
-          "gf_median_cm": 25.0,
-          "medians_g": [
-            0.15,
-            0.35,
-            0.55,
-            0.8
-          ],
-          "post_1993_release_max": 0.1,
-          "pre_1993_release": "the study's per-tank range (50 to 100 percent of contents)"
-        }
+    "notes": []
+  },
+  {
+    "kind": "roads.routes",
+    "name": "roads.routes",
+    "summary": "This module holds a road network as segments joined in a graph and works out what can be reached over it. Each segment has a class of expected ground deformation. At the earthquake a segment with a class above zero closes for a number of days drawn at random from the range for its class, and it reopens when those days have passed. A bridge joins one segment on each bank; it is open or closed as the bridges module reports. Each day the module finds which named places can be reached from one origin over open segments and open bridges, and reports the share of the network's length that is open. The graph and the named places are the event folder's routes.toml, and the closure ranges are its fragility.toml. Debris from damaged buildings does not block a segment, and the module has no traffic, no detours off the listed segments and no vehicles.",
+    "priority": 1,
+    "dt": "1 day after the rupture",
+    "params": [
+      {
+        "name": "folder",
+        "default": "",
+        "note": "the folder under data/events that holds this scenario's routes.toml and fragility.toml"
+      },
+      {
+        "name": "soils",
+        "default": "wet",
+        "note": "which of each segment's deformation classes to use: wet (saturated soil) or dry"
       }
-    }
+    ],
+    "publishes": [
+      {
+        "name": "component.state",
+        "required": false,
+        "note": "{ kind: route, id, name, lat, lon, state, down, repair_day, day } at the segment's location: at the earthquake and when it reopens"
+      },
+      {
+        "name": "routes.state",
+        "required": false,
+        "note": "{ day, open_share, reachable: { place: bool }, any_reachable } each day"
+      }
+    ],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [
+      {
+        "name": "quake.rupture",
+        "required": false,
+        "note": "the instant"
+      },
+      {
+        "name": "component.state",
+        "required": false,
+        "note": "the bridges' states, which open and close the links between banks"
+      }
+    ],
+    "fields_owned": [],
+    "fields_read": [],
+    "ledgers": [],
+    "frames": [],
+    "reports": [
+      {
+        "name": "routes.open_share",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "routes.places_reachable",
+        "unit": "places",
+        "required": false
+      }
+    ],
+    "views": [
+      {
+        "kind": "counter",
+        "title": "routes open",
+        "source": "routes.open_share",
+        "obs": "",
+        "note": "the share of the network's total length that is open"
+      },
+      {
+        "kind": "counter",
+        "title": "places reachable from the origin",
+        "source": "routes.places_reachable",
+        "obs": "",
+        "note": "of the named places in the folder's routes.toml"
+      },
+      {
+        "kind": "chart",
+        "title": "routes open",
+        "source": "routes.open_share",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "chart",
+        "title": "places reachable from the origin",
+        "source": "routes.places_reachable",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "text",
+        "title": "what this module leaves out",
+        "source": "A segment is open or closed along its whole length. The days closed are a range per deformation class, and the folder's fragility.toml says whether those ranges are published or guessed. Debris, traffic, fuel for vehicles and roads outside the listed network are not represented, so a place that is unreachable here may have another way in.",
+        "obs": "",
+        "note": ""
+      }
+    ],
+    "assets": [
+      {
+        "key": "events/",
+        "note": "routes.toml and fragility.toml"
+      }
+    ],
+    "notes": []
   },
   {
     "kind": "people.agents",

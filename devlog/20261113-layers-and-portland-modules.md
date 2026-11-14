@@ -97,3 +97,73 @@ deployed.
 Left for the third batch: `hazard.components` split by subject; `portland.lifelines` shrinking as
 hospitals, the fuel account and water are pulled out. The manifest's comment on the fitted
 parameters and the README's account of the fit still stand as written.
+
+## The third batch: `hazard.components` split by subject (14 November, done)
+
+Anselm: "Go ahead and split more pieces."
+
+`hazard.components` is deleted. In its place, each on the event folder's tables and
+`fragility.toml`, with no place or agency named in the code:
+
+| Kind | File | What it owns | What it publishes |
+|---|---|---|---|
+| `fuel.tanks` | `tanks.rs` | the tanks, their damage and their releases | `component.state` (tank), `tank.release`, `tanks.released` |
+| `roads.bridges` | `bridges.rs` | the bridges, their damage states and repair clocks | `component.state` (bridge) |
+| `power.structures` | `power.rs` | the transmission structures, crews, the service map `power.up` | `power.state` |
+| `roads.routes` | `routes.rs` | the road graph, segment closures, reachability from an origin | `component.state` (route), `routes.state` |
+
+`fragility.rs` is the shared library: the curve, the draw of a damage state from the ground at a
+cell, the folder readers. It is not a module.
+
+What had to be said in the folder instead of the code: the tanks' design year and the study's
+release range (`[tank]` in `fragility.toml`), the structures' file and column names (`[pole]`),
+and which named place the roads are measured from (`origin` in `routes.toml`).
+
+`portland.lifelines` now listens to `tanks.released`, `power.state` and `routes.state` in place of
+`hub.release` and `network.state`, and learns whether the grid reaches a hospital by reading the
+`power.up` field at the hospital, as the agents already did. `roads.routes` hears the bridges'
+states from `roads.bridges` and publishes its day's state on a later tick than the bridges', so
+the order within a day is bridges, then routes, then lifelines.
+
+### The numbers moved, and why
+
+Each module draws from its own random stream, seeded by the run's seed and the module's name. One
+module became four, so the same seed now gives different tanks, bridges, structures and segments.
+This is the same kind of change as a new seed; no rule changed. One rule did change slightly:
+the nearest-structure search scales longitude by the cosine of the latitude where it used a
+constant for Portland's latitude (78.0 km per degree against 77.8).
+
+Base run, before and after: tanks failed 233 to 270; release 60.6 to 67.8 million gallons (river
+26.2 to 24.3); structures failed 586 to 614; bridges, ten closed in both, but all ten now at
+complete damage where three had lighter damage; hospitals without power on day 3, three to none;
+first hospital reachable from the hub, day 111 to 119; hub after the spill 172.9 to 165.7 million
+gallons. The buildings, the agents and the `ranges` variant's own draws are untouched, so the
+death counts from the shaking are as they were.
+
+The project README and the earthquake section of the limits page were reread against the ten new
+runs and every changed figure rewritten; the README says the numbers are of 14 November and why
+they differ. The cover is a new still of the base run and the card is regenerated.
+
+`cargo test` (describe) and `esim regress` pass. The run page was looked at: the tanks' map and
+counters, the bridges' panel. Committed, not pushed, not deployed.
+
+### What is still Portland's
+
+`portland.lifelines` holds the hospitals and their generators, the fuel account, water on the
+Plan's schedule, the hub's own toll, the story sentences and the `ranges` mode. The next subjects
+to pull out are hospitals and the fuel account. Two known disagreements stand: `retrofit` means
+built after 2004 in the lifelines' ranges mode and after the folder's design year (1993) in
+`fuel.tanks`; and the story gives a bridge's reopening one day early.
+
+## An article he sent
+
+Anselm, 14 November: "I saw an article this am that is interesting", KOIN, Michaela Bourgeois,
+"Portland City Council approves reduced fuel storage along Willamette River amid Cascadia
+concerns". The fetch tool returned a summary, not the text. Points in it that bear on the model
+and are not yet on the page: the ordinance requires a public health and natural hazards risk
+reduction plan for the hub by 30 September 2027, covering evacuation from Linnton and North
+Portland west of the railroad cut and firefighting access that does not rely on bridges likely to
+be damaged; the planning bureau reports to the council in 2028, 2031 and 2036; a 2012 DOGAMI study
+is quoted in the ordinance; a September report by McCullough Research prompted the mayor's
+ordinance; the hub has 11 terminals. Added to the README's reading list as read through a summary
+with nothing taken; to be checked against the ordinance's text before use.

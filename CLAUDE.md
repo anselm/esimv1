@@ -377,7 +377,13 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   `people.aftermath` and `people.agents` take everything place-specific from `aftermath.toml` and have no default
   folder. The comparison with DOGAMI's loss tables is `obs.losses` (`crates/modules/src/losses.rs`, the folder's
   `losses.toml`; reads five `quake.cell_*` world fields on `quake.toll`; variants set `losses.record`, not
-  `buildings.record`). Next: `hazard.components` split into subject modules (tanks, bridges, power structures, roads). The human layer order agreed in that conversation
+  `buildings.record`). `hazard.components` is gone (2026-11-14): `fuel.tanks`, `roads.bridges`, `power.structures`
+  and `roads.routes` (files `tanks.rs`, `bridges.rs`, `power.rs`, `routes.rs`, shared `fragility.rs`) each read the
+  event folder's tables and `fragility.toml`; topics `tanks.released`, `power.state`, `routes.state` replace
+  `hub.release` and `network.state`; a hospital's grid power is the `power.up` world field read at its place. Each
+  module has its own random stream, so the split changed the draws and the page's numbers were reread (base run: 270
+  tanks, 67.8 million gallons, all ten older bridges at complete damage, no hospital dark, routes reach a hospital on
+  day 119). Variants set `tanks.storage_cut`, `tanks.retrofit`, `power.soils`, `routes.soils`. The human layer order agreed in that conversation
   (abiotic clumped, built before life, law and money as abiotic artifacts, disturbances across) is in the devlog and
   not yet in `docs/system/layers.md`. Layers are a tag for the page, not kernel structure.
 - Portland, the page and the standing faults (2026-11-12 night, `devlog/20261112-portland-readme-rewritten.md` and

@@ -36,14 +36,36 @@ storage_cut = 0.0
 retrofit = false
 inputs = "computed"
 
+# The things that break, one module per subject, each on the event folder's tables and
+# fragility.toml: the hub's tanks, the Willamette bridges, the transmission structures, and the
+# emergency route segments with what can be reached over them from the hub.
 [[module]]
-name = "components"
-kind = "hazard.components"
+name = "tanks"
+kind = "fuel.tanks"
+[module.params]
+folder = "portland-cascadia"
+storage_cut = 0.0
+retrofit = false
+
+[[module]]
+name = "bridges"
+kind = "roads.bridges"
+[module.params]
+folder = "portland-cascadia"
+
+[[module]]
+name = "power"
+kind = "power.structures"
 [module.params]
 folder = "portland-cascadia"
 soils = "wet"
-storage_cut = 0.0
-retrofit = false
+
+[[module]]
+name = "routes"
+kind = "roads.routes"
+[module.params]
+folder = "portland-cascadia"
+soils = "wet"
 
 [[module]]
 name = "aftermath"
