@@ -505,6 +505,11 @@ levels one and two are safe on any input, level three is not.
 
 ## Changes
 
+- 14 November 2026: the project now writes new scenarios in the source form (JavaScript), and
+  its Portland scenario is the first converted (`manifests/q1-portland-cascadia.js`, the same
+  manifest id as the TOML it replaced). The examples in this document are still in the object
+  form and TOML and are to be rewritten in the source form in the next draft.
+
 - Draft 1, 2026-11-07: first text.
 - Draft 2, 2026-11-07: prior art (section 7); authoring, ranges and run-time expressions
   (section 8) after Anselm's note that a fully unrolled grammar cannot express variables and

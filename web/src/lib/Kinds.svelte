@@ -6,6 +6,7 @@
   // owns, publishes and subscribes, its ledgers, outputs and data.
   import { link } from './router.svelte.js'
   import { req } from './socket.js'
+  import { LAYERS } from './layers.js'
 
   let kinds = $state(null)
   let error = $state(null)
@@ -21,30 +22,28 @@
   }
   $effect(() => { load() })
 
-  // family = the prefix before the dot, which is a rough layer
-  const families = $derived.by(() => {
-    const m = new Map()
+  // by layer, in the layers' reading order; a kind with no layer comes last
+  const groups = $derived.by(() => {
     const needle = q.trim().toLowerCase()
-    for (const k of kinds ?? []) {
-      if (needle && !JSON.stringify(k).toLowerCase().includes(needle)) continue
-      const f = k.kind.split('.')[0]
-      if (!m.has(f)) m.set(f, [])
-      m.get(f).push(k)
-    }
-    return [...m.entries()]
+    const list = (kinds ?? []).filter((k) => !needle || JSON.stringify(k).toLowerCase().includes(needle))
+    const out = LAYERS.map((L) => ({ ...L, kinds: list.filter((k) => k.layer === L.id) }))
+    const rest = list.filter((k) => !LAYERS.some((L) => L.id === k.layer))
+    if (rest.length) out.push({ id: '', name: 'No layer', color: '#888', kinds: rest })
+    return out.filter((g) => g.kinds.length || !needle)
   })
+  const firstSentence = (t) => { const m = String(t ?? '').match(/^.*?[.!?](\s|$)/); return m ? m[0].trim() : String(t ?? '') }
   const fmt = (v) => (v === null || v === undefined ? '—' : typeof v === 'object' ? JSON.stringify(v) : String(v))
   const n = (a) => (a ?? []).length
 </script>
 
-<a use:link={{}} class="floating left-3 top-3 hover:text-brand">← projects</a>
+<a use:link={{ docs: true }} class="floating left-3 top-3 hover:text-brand">← docs</a>
 <div class="floating right-3 top-3 flex items-center gap-3 mono text-xs select-none">
   <a use:link={{ docs: true }} class="hover:text-brand">docs</a>
   <Account /><Badge />
 </div>
 
-<h1 class="text-xl font-medium">Kinds</h1>
-<p class="mt-1 max-w-2xl text-sm muted">The module kinds a manifest can instantiate, described by themselves. A kind says what it integrates and what it leaves out, where its numbers come from, what it reads and owns. <span class="mono">esim kinds --json</span> prints the same.</p>
+<h1 class="text-xl font-medium">Module kinds</h1>
+<p class="mt-1 max-w-2xl text-sm muted">Every kind of module a scenario can use, grouped by the layer of the world it belongs to and described by itself: what it does and leaves out, where its numbers come from, what it reads and writes. Open a card for the detail. A layer with no kind yet is listed, because the gap is part of the picture.</p>
 <input class="field mt-4 w-64" bind:value={q} placeholder="filter" aria-label="filter kinds" />
 
 {#if error}
@@ -52,21 +51,25 @@
 {:else if kinds === null}
   <p class="mt-6 muted text-sm">loading…</p>
 {:else}
-  {#each families as [family, list] (family)}
-    <section class="mt-8">
-      <div class="label mb-2">{family} · {list.length}</div>
-      <ul class="divide-y divide-neutral-200 dark:divide-neutral-800">
-        {#each list as k (k.kind)}
-          <li class="py-3">
-            <button class="w-full text-left" onclick={() => { open = open === k.kind ? null : k.kind }}>
-              <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                <span class="mono font-medium">{k.kind}</span>
-                <span class="mono text-xs muted">priority {k.priority} · {k.dt} · {n(k.params)} params · owns {n(k.fields_owned)} · reads {n(k.fields_read)} · {n(k.assets)} assets</span>
-              </div>
-              <p class="mt-1 text-sm leading-relaxed">{k.summary}</p>
+  {#each groups as G (G.id)}
+    <section class="mt-10">
+      <div class="flex items-baseline gap-3 border-b-2 pb-1.5" style="border-color:{G.color}">
+        <span class="inline-block h-3 w-3 rounded-full" style="background:{G.color}"></span>
+        <h2 class="text-2xl font-medium">{G.name}</h2>
+        {#if G.n}<span class="mono text-xs muted">{G.n}</span>{/if}
+        <span class="mono text-xs muted">{G.kinds.length} {G.kinds.length === 1 ? 'kind' : 'kinds'}</span>
+      </div>
+      {#if !G.kinds.length}<p class="mt-3 text-sm muted">No module kind yet.</p>{/if}
+      <ul class="mt-4 grid gap-4 md:grid-cols-2">
+        {#each G.kinds as k (k.kind)}
+          <li class="rounded-[3px] border border-neutral-200 dark:border-neutral-800 {open === k.kind ? 'md:col-span-2' : ''}" style="border-top:3px solid {G.color}">
+            <button class="block w-full p-4 text-left" onclick={() => { open = open === k.kind ? null : k.kind }} aria-expanded={open === k.kind}>
+              <div class="mono text-base font-medium">{k.kind}</div>
+              <p class="mt-1.5 text-sm leading-relaxed">{open === k.kind ? k.summary : firstSentence(k.summary)}</p>
+              <div class="mt-2 mono text-[11px] muted">{k.dt} · {n(k.params)} settings · writes {n(k.fields_owned)} · reads {n(k.fields_read)} · {n(k.assets)} data</div>
             </button>
             {#if open === k.kind}
-              <div class="mt-3 grid gap-x-8 gap-y-4 text-xs lg:grid-cols-2">
+              <div class="grid gap-x-8 gap-y-4 px-4 pb-4 text-xs lg:grid-cols-2">
                 <div>
                   <div class="label mb-1">parameters</div>
                   <table class="mono w-full">

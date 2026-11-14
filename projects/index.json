@@ -1901,7 +1901,7 @@
         "digest": "be14a2ced78d55d3",
         "end": 1830326400,
         "events": 5193,
-        "id": "q1-portland-cascadia-1214dc14-be14a2ce",
+        "id": "q1-portland-cascadia-002eae12-be14a2ce",
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
@@ -1918,7 +1918,7 @@
         "digest": "6702ed6f19c0dfea",
         "end": 1830326400,
         "events": 6829,
-        "id": "q1-portland-cascadia-25473933-6702ed6f",
+        "id": "q1-portland-cascadia-0933d22f-6702ed6f",
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
@@ -1932,17 +1932,34 @@
       },
       {
         "all_ledgers_closed": true,
+        "digest": "bcf07e135af79dc6",
+        "end": 1830326400,
+        "events": 6801,
+        "id": "q1-portland-cascadia-24610a98-bcf07e13",
+        "name": "q1-portland-cascadia",
+        "seed": 2,
+        "set": {
+          "run.seed": "2"
+        },
+        "start": 1798790400,
+        "variant": "seed-2",
+        "verdict": "tearing"
+      },
+      {
+        "all_ledgers_closed": true,
         "digest": "3cdfbe0d1c103a92",
         "end": 1830326400,
         "events": 6829,
-        "id": "q1-portland-cascadia-27b25c90-3cdfbe0d",
+        "id": "q1-portland-cascadia-751fad5f-3cdfbe0d",
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
-          "lifelines.bridge_ready": "[\"Burnside Bridge\"]"
+          "buildings.time_of_day": "\"day\"",
+          "ground.soils": "\"wet\"",
+          "losses.record": "\"wet\""
         },
         "start": 1798790400,
-        "variant": "burnside-ready",
+        "variant": "wet-day",
         "verdict": "stretching"
       },
       {
@@ -1950,7 +1967,7 @@
         "digest": "21c2758364d633a9",
         "end": 1830326400,
         "events": 6831,
-        "id": "q1-portland-cascadia-4c30ce29-21c27583",
+        "id": "q1-portland-cascadia-7e82151e-21c27583",
         "name": "q1-portland-cascadia",
         "seed": 3,
         "set": {
@@ -1958,33 +1975,14 @@
         },
         "start": 1798790400,
         "variant": "seed-3",
-        "verdict": "tearing"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "816d06c64c33c45e",
-        "end": 1830326400,
-        "events": 6589,
-        "id": "q1-portland-cascadia-599a2edd-816d06c6",
-        "name": "q1-portland-cascadia",
-        "seed": 1,
-        "set": {
-          "buildings.time_of_day": "\"day\"",
-          "ground.soils": "\"dry\"",
-          "losses.record": "\"dry\"",
-          "power.soils": "\"dry\"",
-          "routes.soils": "\"dry\""
-        },
-        "start": 1798790400,
-        "variant": "dry-day",
-        "verdict": "stretching"
+        "verdict": null
       },
       {
         "all_ledgers_closed": true,
         "digest": "54b24015cd533355",
         "end": 1830326400,
         "events": 6829,
-        "id": "q1-portland-cascadia-6022ec40-54b24015",
+        "id": "q1-portland-cascadia-b0f009cf-54b24015",
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
@@ -1998,10 +1996,41 @@
       },
       {
         "all_ledgers_closed": true,
+        "digest": "5a87a92cbae66f56",
+        "end": 1830326400,
+        "events": 6829,
+        "id": "q1-portland-cascadia-be7faeae-5a87a92c",
+        "name": "q1-portland-cascadia",
+        "seed": 1,
+        "set": {
+          "lifelines.retrofit": "true",
+          "tanks.retrofit": "true"
+        },
+        "start": 1798790400,
+        "variant": "retrofit",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "3cdfbe0d1c103a92",
+        "end": 1830326400,
+        "events": 6829,
+        "id": "q1-portland-cascadia-c172c26e-3cdfbe0d",
+        "name": "q1-portland-cascadia",
+        "seed": 1,
+        "set": {
+          "lifelines.bridge_ready": "[\"Burnside Bridge\"]"
+        },
+        "start": 1798790400,
+        "variant": "burnside-ready",
+        "verdict": "stretching"
+      },
+      {
+        "all_ledgers_closed": true,
         "digest": "18aa8d84486979ac",
         "end": 1830326400,
         "events": 6829,
-        "id": "q1-portland-cascadia-7c4609c6-18aa8d84",
+        "id": "q1-portland-cascadia-c4f59c3d-18aa8d84",
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
@@ -2018,51 +2047,22 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "3cdfbe0d1c103a92",
+        "digest": "816d06c64c33c45e",
         "end": 1830326400,
-        "events": 6829,
-        "id": "q1-portland-cascadia-7eb90cfa-3cdfbe0d",
+        "events": 6589,
+        "id": "q1-portland-cascadia-c57cd5c6-816d06c6",
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
           "buildings.time_of_day": "\"day\"",
-          "ground.soils": "\"wet\"",
-          "losses.record": "\"wet\""
+          "ground.soils": "\"dry\"",
+          "losses.record": "\"dry\"",
+          "power.soils": "\"dry\"",
+          "routes.soils": "\"dry\""
         },
         "start": 1798790400,
-        "variant": "wet-day",
+        "variant": "dry-day",
         "verdict": "stretching"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "5a87a92cbae66f56",
-        "end": 1830326400,
-        "events": 6829,
-        "id": "q1-portland-cascadia-94cea97a-5a87a92c",
-        "name": "q1-portland-cascadia",
-        "seed": 1,
-        "set": {
-          "lifelines.retrofit": "true",
-          "tanks.retrofit": "true"
-        },
-        "start": 1798790400,
-        "variant": "retrofit",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "bcf07e135af79dc6",
-        "end": 1830326400,
-        "events": 6801,
-        "id": "q1-portland-cascadia-e8b67407-bcf07e13",
-        "name": "q1-portland-cascadia",
-        "seed": 2,
-        "set": {
-          "run.seed": "2"
-        },
-        "start": 1798790400,
-        "variant": "seed-2",
-        "verdict": "tearing"
       }
     ],
     "title": "Portland after Cascadia",

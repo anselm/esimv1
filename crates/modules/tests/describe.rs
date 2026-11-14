@@ -137,7 +137,7 @@ fn m10_surface_matches_the_log() {
 #[test]
 fn q1_cascadia_surface_matches_the_log() {
     if !have_dem() { eprintln!("skipped: no data cache"); return; }
-    with_root(|| surface_matches_log(load("q1-portland-cascadia.toml")));
+    with_root(|| surface_matches_log(load("q1-portland-cascadia.js")));
 }
 
 #[test]

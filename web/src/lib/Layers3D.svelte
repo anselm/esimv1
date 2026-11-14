@@ -427,7 +427,7 @@
               <label class="flex items-center gap-2" style="cursor:{empty ? 'default' : 'pointer'}">
                 <input type="checkbox" disabled={empty} checked={!empty && isOn(G.id)} onchange={() => toggle(G.id)} style="accent-color:{G.color}" />
                 <span class="inline-block h-2 w-2 rounded-full" style="background:{G.color}"></span>
-                <span>{G.name}</span>{#if empty}<span style="opacity:0.8">· no module</span>{/if}
+                {#if G.n}<span class="mono" style="opacity:0.5; font-size:10px">{G.n}</span>{/if}<span>{G.name}</span>{#if empty}<span style="opacity:0.8">· no module</span>{/if}
               </label>
               {#if G.id === 'ground'}<p class="ml-6" style="opacity:0.6">the relief, from the run's elevation frame</p>{/if}
               {#if isOn(G.id)}

@@ -139,11 +139,13 @@ pub fn describe(kind: &str, name: &str, params: &toml::Value) -> Result<Describe
 /// that cuts through the layers; `record` is a module that scores a run against one. The order
 /// is who reads whom, not slow to fast (Anselm, 2026-11-13: built before life so the abiotic
 /// realm is clumped; law and money are artifacts). A tag for pages; the kernel is flat.
-pub const LAYERS: [(&str, &str); 12] = [
-    ("sun", "Sun"), ("ground", "Ground"), ("water", "Water"), ("air", "Air and weather"),
-    ("built", "Built structures"), ("flows", "Flows through the built"), ("rules", "Law and money"),
-    ("plants", "Plants"), ("animals", "Animals"), ("people", "People"),
-    ("across", "Disturbances"), ("record", "The record"),
+/// Each layer's number orders it and leaves room: a layer between water (3000) and air (4000)
+/// would be 3500. `across` and `record` are 0, because they are not places in the order.
+pub const LAYERS: [(u32, &str, &str); 12] = [
+    (1000, "sun", "Sun"), (2000, "ground", "Ground"), (3000, "water", "Water"), (4000, "air", "Air and weather"),
+    (5000, "built", "Built structures"), (6000, "flows", "Flows through the built"), (7000, "rules", "Law and money"),
+    (8000, "plants", "Plants"), (9000, "animals", "Animals"), (10000, "people", "People"),
+    (0, "across", "Disturbances"), (0, "record", "The record"),
 ];
 
 /// The layer a kind belongs to when its describe does not say: by the kind's family, with the

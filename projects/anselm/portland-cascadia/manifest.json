@@ -34,7 +34,7 @@
         "lon_w": -122.85,
         "res_arcsec": 1,
         "retrofit": false,
-        "storage_cut": 0.0
+        "storage_cut": 0
       }
     },
     {
@@ -48,7 +48,7 @@
         "lon_w": -122.85,
         "res_arcsec": 1,
         "retrofit": false,
-        "storage_cut": 0.0
+        "storage_cut": 0
       }
     },
     {
@@ -110,7 +110,7 @@
         "lon_e": -122.47,
         "lon_w": -122.85,
         "res_arcsec": 1,
-        "storage_cut": 0.0
+        "storage_cut": 0
       }
     },
     {
@@ -172,12 +172,12 @@
       "id": "buildings",
       "kind": "quake.buildings",
       "params": {
-        "casualty_scale": 3.0,
+        "casualty_scale": 3,
         "collapse_given_complete": 0.25,
         "displaced_share": 0.65,
         "folder": "portland-cascadia",
         "fragility_scale": 1.2,
-        "gf_complete_share": 1.0,
+        "gf_complete_share": 1,
         "gf_median_cm": 25,
         "lat_n": 45.66,
         "lat_s": 45.43,
@@ -213,9 +213,9 @@
     }
   ],
   "from": {
-    "entry": "manifests/q1-portland-cascadia.toml",
-    "hash": "sha256:b15c5c99f00ee4923665086234cccf16f3ac9f16f80afac04f81e934fff0df84",
-    "language": "toml"
+    "entry": "manifests/q1-portland-cascadia.js",
+    "hash": "sha256:d001423e01a814d6f961581415a3e782f271524e0f452206ba0bee3e41e5307b",
+    "language": "javascript"
   },
   "manifest": "manifest/1"
 }

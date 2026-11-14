@@ -6,9 +6,40 @@ A manifest is the whole arrangement of a simulation in one document. It is the
 higher-level grammar: the kinds are the vocabulary, the manifest is the sentence. In the
 way a game engine's blueprints wire prefabricated behaviours without writing the
 behaviours, a manifest wires modules without writing modules. It comes in three
-notations, TOML, JSON and JavaScript, which resolve to one thing (see [Three
-notations](#three-notations) below); the grammar is shown in TOML first because that is
-what the manifests in the repository are written in.
+notations, JavaScript, TOML and JSON, which resolve to one thing (see [Three
+notations](#three-notations) below).
+
+JavaScript is the notation new scenarios are written in, because it is the shortest: a value
+stated once can be used by every module that needs it. This is the Portland earthquake's
+manifest, with its comments shortened:
+
+```js
+const folder = "portland-cascadia";
+const soils = "wet";
+const m = (kind, params = {}) => ({ kind, params: { folder, ...params } });
+
+export const run = { name: "q1-portland-cascadia", start: "2027-01-01T08:00:00Z", end: "2028-01-01T08:00:00Z", seed: 1, close_every: "1d" };
+export const place = { lat_s: 45.43, lat_n: 45.66, lon_w: -122.85, lon_e: -122.47, res_arcsec: 1 };
+
+export const tanks = m("fuel.tanks");
+export const bridges = m("roads.bridges");
+export const power = m("power.structures", { soils });
+export const routes = m("roads.routes", { soils });
+export const water = { kind: "water.surface" };
+export const hospitals = m("health.hospitals");
+export const ground = m("quake.ground", { at: "2027-02-01T22:00:00Z", soils });
+```
+
+Each export is one part of the scenario, and the export's name is that part's name. The file is
+a description, not a running program. The engine evaluates it once, before the run, to get the
+list of parts, and the program is then finished: it takes no part in the simulation and holds no
+state during it. For the same reason it is sealed off from the outside: it cannot read the
+clock, draw a random number, open a file or reach the network, so the same file always
+describes the same scenario. Anything that changes during a run lives in the modules.
+
+Most manifests in the repository were written in TOML before this and are being converted as
+they are touched; `manifests/q1-portland-cascadia.js` is the first. The grammar below is shown
+in TOML, and every key means the same in JavaScript.
 
 ## The grammar
 

@@ -42,6 +42,12 @@
     "section": "Changing it"
   },
   {
+    "path": "system/goals",
+    "title": "Goals and milestones",
+    "order": 1,
+    "section": "Where this is going"
+  },
+  {
     "path": "system/honesty",
     "title": "Honesty",
     "order": 3,

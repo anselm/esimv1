@@ -418,6 +418,13 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   hash list before rewriting it, bounds every request and spaces requests per host. `data/osm/` sits beside the hash
   list whatever `ESIM_CACHE` says. A refetched OpenStreetMap answer has a new hash and the lock refuses it: delete
   the lock entry with the file to refresh one.
+- Shaping for funding, first pass (2026-11-14, `devlog/20261114-shaping-for-funding.md`): the front page lists
+  workspaces (areas), `/anselm` its projects, with `Pager.svelte` on project, run and workspace lists; the corner badge
+  links home; version 0.2.0; `/docs` shows areas, sections and pages as three visibly different levels with reference
+  cards (kinds, sources, limits); `/kinds` is cards by layer; layers are numbered 1000 to 10000 (`LAYERS` in lib.rs and
+  layers.js); `docs/system/goals.md` is the goals and milestones page; JavaScript is the lead manifest notation and
+  `manifests/q1-portland-cascadia.js` replaced the TOML (same id; hand-written, since `esim manifest --js` output is
+  longer than TOML). The local viewer server was restarted that day; its PID is in the session scratchpad.
 - Portland, the page and the standing faults (2026-11-12 night, `devlog/20261112-portland-readme-rewritten.md` and
   `devlog/20261112-portland-stale-wording.md`; Anselm: "I want to try rewrite the portland cascadia fault scenario
   readme again", then "update stale portland wording overall everywhere"): the project README is a new text in the

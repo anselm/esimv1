@@ -22,7 +22,9 @@
     }
   }
   // sections in reading order; any other section follows alphabetically, pages with none last
-  const SECTIONS = ['Start here', 'The machine', 'Projects and the record', 'Telling it', 'Changing it']
+  const SECTIONS = ['Start here', 'Where this is going', 'The machine', 'Projects and the record', 'Telling it', 'Changing it']
+  // what each area of the documentation is, said once above its sections
+  const AREAS = { system: ['The system', 'How the engine works, what it holds, and how to use and change it.'], events: ['The future', 'Lists of events ahead: the dated ones, and the wild cards a run may draw.'], rfc: ['Standards', 'Proposals for formats that other engines could share.'] }
   const byOrder = (a, b) => (a.order ?? 99) - (b.order ?? 99) || a.path.localeCompare(b.path)
   function sectioned(list) {
     const m = new Map()
@@ -43,7 +45,7 @@
   $effect(() => { load() })
 </script>
 
-<a use:link={{}} class="floating left-3 top-3 hover:text-brand">← projects</a>
+<a use:link={{}} class="floating left-3 top-3 hover:text-brand">← workspaces</a>
 <div class="floating right-3 top-3 flex items-center gap-3 mono text-xs select-none">
   {#if writable}<a use:link={{ doc: 'new' }} class="hover:text-brand" title="new page">+ page</a>{/if}
   <Account /><Badge />
@@ -57,21 +59,34 @@
 {:else if pages === null}
   <p class="mt-6 muted text-sm">loading…</p>
 {:else}
+  <!-- reference pages that are drawn from the engine itself -->
+  <section class="mt-8 grid gap-3 sm:grid-cols-3">
+    <a use:link={{ kinds: true }} class="rounded-[3px] border border-neutral-200 p-3 hover:border-brand dark:border-neutral-800"><div class="font-medium">Module kinds</div><p class="mt-0.5 text-xs muted">Every kind of module a scenario can use, by layer, described by itself.</p></a>
+    <a use:link={{ doc: 'system/sources' }} class="rounded-[3px] border border-neutral-200 p-3 hover:border-brand dark:border-neutral-800"><div class="font-medium">Data sources</div><p class="mt-0.5 text-xs muted">Every dataset the engine reads: where it comes from, its licence, who uses it.</p></a>
+    <a use:link={{ doc: 'system/limits' }} class="rounded-[3px] border border-neutral-200 p-3 hover:border-brand dark:border-neutral-800"><div class="font-medium">Limits today</div><p class="mt-0.5 text-xs muted">The known faults of each model, kept current.</p></a>
+  </section>
   {#each areas as [area, list] (area)}
-    <section class="mt-8">
-      <div class="label mb-2">{area} · {list.length} {list.length === 1 ? 'page' : 'pages'}</div>
+    <!-- an area: a large heading with a rule; its sections: small coloured capitals; its pages: plain rows, indented -->
+    <section class="mt-12">
+      <div class="flex items-baseline justify-between gap-4 border-b-2 border-neutral-900 pb-1.5 dark:border-neutral-100">
+        <h2 class="text-2xl font-medium">{AREAS[area]?.[0] ?? area}</h2>
+        <span class="mono text-xs muted">docs/{area} · {list.length} {list.length === 1 ? 'page' : 'pages'}</span>
+      </div>
+      {#if AREAS[area]}<p class="mt-2 max-w-2xl text-sm muted">{AREAS[area][1]}</p>{/if}
       {#each sectioned(list) as [section, pages] (section)}
-        {#if section}<h2 class="mt-5 mb-1 text-sm font-medium">{section}</h2>{/if}
-        <ul class="divide-y divide-neutral-200 dark:divide-neutral-800">
-          {#each pages as p (p.path)}
-            <li>
-              <a use:link={{ doc: p.path }} class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 py-2.5 -mx-2 px-2 rounded-[3px] hover:bg-brand-soft/40">
-                <span class="font-medium">{p.title ?? p.path}</span>
-                <span class="mono text-xs muted">{p.path}</span>
-              </a>
-            </li>
-          {/each}
-        </ul>
+        <div class="mt-7 grid gap-x-6 sm:grid-cols-[11rem_1fr]">
+          <h3 class="pt-2 text-xs font-semibold uppercase tracking-[0.14em] text-brand">{section || 'Other pages'}</h3>
+          <ul class="border-l border-neutral-200 dark:border-neutral-800">
+            {#each pages as p (p.path)}
+              <li>
+                <a use:link={{ doc: p.path }} class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-0.5 py-2 pl-4 pr-2 hover:bg-brand-soft/40">
+                  <span class="text-[15px]">{p.title ?? p.path}</span>
+                  <span class="mono text-[11px] muted">{p.path.split('/').slice(1).join('/')}</span>
+                </a>
+              </li>
+            {/each}
+          </ul>
+        </div>
       {/each}
     </section>
   {/each}

@@ -1,4 +1,6 @@
 <script>
+  import Pager from './Pager.svelte'
+  let page = $state(0)
   import Badge from './Badge.svelte'
   import { link } from './router.svelte.js'
   import { isoDate, num } from './fmt.js'
@@ -56,7 +58,7 @@
   {:else}
     <div class="label mb-2">{runs.length} loose {runs.length === 1 ? 'run' : 'runs'} · not in any project</div>
     <ul class="divide-y divide-neutral-200 dark:divide-neutral-800">
-      {#each runs as r (r.id)}
+      {#each runs.slice(page * 15, page * 15 + 15) as r (r.id)}
         <li>
           <a
             use:link={{ run: r.id }}
@@ -82,6 +84,7 @@
         </li>
       {/each}
     </ul>
+    <Pager total={runs.length} size={15} bind:page label="runs" />
   {/if}
 {:catch e}
   <p class="muted text-sm">no runs yet</p>

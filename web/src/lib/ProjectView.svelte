@@ -10,6 +10,8 @@
   import Readme from './Readme.svelte'
   import Crumbs from './Crumbs.svelte'
   import ProjectScene from './ProjectScene.svelte'
+  import Pager from './Pager.svelte'
+  let runPage = $state(0)
 
   let { path } = $props()
   $effect(() => { if (meta?.title) document.title = `${meta.title} · esim` })
@@ -164,7 +166,7 @@
       <p class="muted text-sm">not run yet</p>
     {:else}
       <ul class="divide-y divide-neutral-200 dark:divide-neutral-800">
-        {#each runs as r (r.id)}
+        {#each runs.slice(runPage * 10, runPage * 10 + 10) as r (r.id)}
           <li>
             <a use:link={{ project: path, run: r.id }} class="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 py-2.5 -mx-2 px-2 rounded-[3px] hover:bg-brand-soft/40 sm:grid-cols-[auto_auto_1fr_auto_auto] sm:items-center">
               <span class="text-sm font-medium">{r.variant ?? (r.set && Object.keys(r.set).length ? 'custom' : 'as written')}</span>
@@ -179,6 +181,7 @@
           </li>
         {/each}
       </ul>
+      <Pager total={runs.length} size={10} bind:page={runPage} label="runs" />
     {/if}
   </section>
 

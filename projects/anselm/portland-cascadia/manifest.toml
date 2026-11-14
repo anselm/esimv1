@@ -1,16 +1,3 @@
-# Q1: Portland through 2027, with a Cascadia earthquake on 1 February. The magnitude 9.0 rupture of the Cascadia
-# subduction zone that the State of Oregon plans for, set at two in the afternoon on Monday 1
-# February 2027 (2 PM is DOGAMI's daytime case) on soils still saturated from the winter rains. The
-# date is a scenario choice, not a prediction. The ground motion and ground failure are DOGAMI's
-# (Open-File Report O-18-02, 2018), the buildings and the people are DOGAMI's inventory, and the
-# toll is our fragility fitted to DOGAMI's Hazus run. The year after is computed from components
-# (the hub's tanks, the Willamette bridges, the transmission structures, the emergency route
-# segments) with water on an assumed schedule; the `ranges` variant of the project draws those
-# outcomes from the Oregon Resilience Plan's restoration ranges and the county's 2022 fuel-hub
-# study instead. Followed: twelve Willamette bridges, thirteen hospitals, electricity, water, and
-# the fuel hub on the liquefiable west bank, through which more than ninety percent of Oregon's
-# fuel passes and whose tanks were built on average in 1954.
-
 [run]
 name = "q1-portland-cascadia"
 start = "2027-01-01T08:00:00Z"
@@ -21,131 +8,194 @@ snapshot_every = "30d"
 notes = "A magnitude 9.0 rupture of the Cascadia subduction zone as it affects Portland, set at 2 PM PST on Monday 1 February 2027 as a scenario choice and not a prediction. The run covers the calendar year 2027 in Pacific time, so it begins a month before the earthquake and ends eleven months after it. Ground motion, soils (saturated) and the building inventory with daytime occupants are DOGAMI's; tanks, bridges, transmission structures and route segments are damaged as components; water follows an assumed schedule. Every constant is published, recalled or declared a guess in its module's description."
 
 [place]
-lat_s = 45.43
 lat_n = 45.66
-lon_w = -122.85
+lat_s = 45.43
 lon_e = -122.47
+lon_w = -122.85
 res_arcsec = 1
 
 [[module]]
 name = "lifelines"
 kind = "portland.lifelines"
+
 [module.params]
 folder = "portland-cascadia"
-storage_cut = 0.0
-retrofit = false
 inputs = "computed"
+lat_n = 45.66
+lat_s = 45.43
+lon_e = -122.47
+lon_w = -122.85
+res_arcsec = 1
+retrofit = false
+storage_cut = 0
 
-# The things that break, one module per subject, each on the event folder's tables and
-# fragility.toml: the hub's tanks, the Willamette bridges, the transmission structures, and the
-# emergency route segments with what can be reached over them from the hub.
 [[module]]
 name = "tanks"
 kind = "fuel.tanks"
+
 [module.params]
 folder = "portland-cascadia"
-storage_cut = 0.0
+lat_n = 45.66
+lat_s = 45.43
+lon_e = -122.47
+lon_w = -122.85
+res_arcsec = 1
 retrofit = false
+storage_cut = 0
 
 [[module]]
 name = "bridges"
 kind = "roads.bridges"
+
 [module.params]
 folder = "portland-cascadia"
+lat_n = 45.66
+lat_s = 45.43
+lon_e = -122.47
+lon_w = -122.85
+res_arcsec = 1
 
 [[module]]
 name = "power"
 kind = "power.structures"
+
 [module.params]
 folder = "portland-cascadia"
+lat_n = 45.66
+lat_s = 45.43
+lon_e = -122.47
+lon_w = -122.85
+res_arcsec = 1
 soils = "wet"
 
 [[module]]
 name = "routes"
 kind = "roads.routes"
+
 [module.params]
 folder = "portland-cascadia"
+lat_n = 45.66
+lat_s = 45.43
+lon_e = -122.47
+lon_w = -122.85
+res_arcsec = 1
 soils = "wet"
 
-# Where the water is (ESA WorldCover), and where the tanks' releases toward water arrive on it.
-# No flow: the water layer's first occupant, not yet a hydrology.
 [[module]]
 name = "water"
 kind = "water.surface"
 
-# The hospitals and the depot's fuel account, each a module of its own. The `ranges` variant
-# switches both off: there `portland.lifelines` runs its older version, which keeps them itself.
+[module.params]
+lat_n = 45.66
+lat_s = 45.43
+lon_e = -122.47
+lon_w = -122.85
+res_arcsec = 1
+
 [[module]]
 name = "depot"
 kind = "fuel.depot"
+
 [module.params]
 folder = "portland-cascadia"
-storage_cut = 0.0
+lat_n = 45.66
+lat_s = 45.43
+lon_e = -122.47
+lon_w = -122.85
+res_arcsec = 1
+storage_cut = 0
 
 [[module]]
 name = "hospitals"
 kind = "health.hospitals"
+
 [module.params]
 folder = "portland-cascadia"
+lat_n = 45.66
+lat_s = 45.43
+lon_e = -122.47
+lon_w = -122.85
+res_arcsec = 1
 
 [[module]]
 name = "aftermath"
 kind = "people.aftermath"
+
 [module.params]
 folder = "portland-cascadia"
+lat_n = 45.66
+lat_s = 45.43
+lon_e = -122.47
+lon_w = -122.85
+res_arcsec = 1
 summary_day = 333
 
 [[module]]
 name = "agents"
 kind = "people.agents"
+
 [module.params]
 folder = "portland-cascadia"
+lat_n = 45.66
+lat_s = 45.43
+lon_e = -122.47
+lon_w = -122.85
+res_arcsec = 1
 scale = 10
 time_of_day = "day"
 
 [[module]]
 name = "ground"
 kind = "quake.ground"
+
 [module.params]
-folder = "portland-cascadia"
 at = "2027-02-01T22:00:00Z"
-tz_offset_h = -8
-tz_name = "PST"
+folder = "portland-cascadia"
+lat_n = 45.66
+lat_s = 45.43
+lon_e = -122.47
+lon_w = -122.85
+res_arcsec = 1
 soils = "wet"
+tz_name = "PST"
+tz_offset_h = -8
 
 [[module]]
 name = "buildings"
 kind = "quake.buildings"
-[module.params]
-folder = "portland-cascadia"
-time_of_day = "day"
-# fitted to DOGAMI's Hazus run for the same ground, wet and daytime (the sweep is in
-# devlog/20261112-portland-cascadia.md): the shaking medians divided by 1.2, the complete
-# median at 1.1 g, ground failure counted as complete with a 25 cm median, a 25 percent collapse
-# share of complete shaking damage, every casualty rate tripled, and 65 percent of residents of
-# extensively or completely damaged buildings displaced. In the runs of 12 November 2026
-# Portland's extensive and complete counts and displaced match DOGAMI's within five percent.
-# Deaths in the nine Portland districts depend on which buildings the seed collapses: 0.92 of
-# DOGAMI's for seed 1 and 0.49 for seeds 2 and 3 by day, and 2.05 by night (our night occupants
-# sit in every building by floor area, DOGAMI's in homes). Injuries run 1.2 to 1.7 times high by
-# day. On dry soil deaths are 1.33 of DOGAMI's and the displaced 1.8.
-fragility_scale = 1.2
-median_complete_g = 1.1
-gf_median_cm = 25
-gf_complete_share = 1.0
-collapse_given_complete = 0.25
-casualty_scale = 3.0
-displaced_share = 0.65
 
-# The published study the buildings' result is held against: DOGAMI's Hazus run, by neighbourhood
-# unit and for the nine Portland districts (data/events/portland-cascadia/losses.toml).
+[module.params]
+casualty_scale = 3
+collapse_given_complete = 0.25
+displaced_share = 0.65
+folder = "portland-cascadia"
+fragility_scale = 1.2
+gf_complete_share = 1
+gf_median_cm = 25
+lat_n = 45.66
+lat_s = 45.43
+lon_e = -122.47
+lon_w = -122.85
+median_complete_g = 1.1
+res_arcsec = 1
+time_of_day = "day"
+
 [[module]]
 name = "losses"
 kind = "obs.losses"
+
 [module.params]
 folder = "portland-cascadia"
+lat_n = 45.66
+lat_s = 45.43
+lon_e = -122.47
+lon_w = -122.85
 record = "wet"
+res_arcsec = 1
 time_of_day = "day"
 
 [audit]
-shock_topics = ["quake.rupture", "lifeline.failed"]
+shock_topics = [
+    "quake.rupture",
+    "lifeline.failed",
+]

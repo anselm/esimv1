@@ -17,20 +17,25 @@ modules, topics and fields. Each kind's describe carries its layer (`layer_of` i
 `crates/modules/src/lib.rs`), and a run page with an elevation frame shows the modules by layer
 in three dimensions, each layer switched on and off.
 
-| layer | what it holds | kinds today |
-|---|---|---|
-| sun | irradiance on terrain | `sun.irradiance` |
-| ground | elevation, soil, geology | none; the relief is read from a frame |
-| water | water on and in the ground, the sea, the cycles it carries | `water.basin`, `water.bucket`, `water.source`, `water.surface`, `nitrogen.basin`, `sea.thermal`, `coast.oneline` |
-| air and weather | composition, energy, weather | `carbon.emissions`, `carbon.pools`, `carbon.gases`, `forcing.ar6`, `energy.twolayer`, `heat.slab`, `weather.era5`, `weather.heatwaves`, `climate.countries` |
-| built structures | buildings, tanks, bridges, roads, hospitals | `quake.buildings`, `fuel.tanks`, `roads.bridges`, `roads.routes`, `health.hospitals` |
-| flows through the built | electricity, fuel, piped water, vehicles | `power.structures`, `fuel.depot`, `portland.lifelines` |
-| law and money | designations and ledgers | `rules.calendar`, `policy.capacity` |
-| plants | producers | `veg.crop` |
-| animals | consumers and their food webs | `fauna.herbivore`, `fauna.predator` |
-| people | population, exposure, the aftermath | `people.countries`, `people.heat`, `people.wetbulb`, `people.agents`, `people.aftermath`, `agents.farms` |
-| disturbances (across) | events that cut through the layers and write to several | `quake.ground`, `fire.cells`, `fire.rothermel`, `fire.suppression`, `hazard.fire`, `events.shock`, `tipping.elements`, `carbon.tipped` |
-| the record | modules that score a run against what was observed or published | `obs.*`, `score.regions`, `story.bottomline` |
+| number | layer | what it holds | kinds today |
+|---|---|---|---|
+| 1000 | sun | irradiance on terrain | `sun.irradiance` |
+| 2000 | ground | elevation, soil, geology | none; the relief is read from a frame |
+| 3000 | water | water on and in the ground, the sea, the cycles it carries | `water.basin`, `water.bucket`, `water.source`, `water.surface`, `nitrogen.basin`, `sea.thermal`, `coast.oneline` |
+| 4000 | air and weather | composition, energy, weather | `carbon.emissions`, `carbon.pools`, `carbon.gases`, `forcing.ar6`, `energy.twolayer`, `heat.slab`, `weather.era5`, `weather.heatwaves`, `climate.countries` |
+| 5000 | built structures | buildings, tanks, bridges, roads, hospitals | `quake.buildings`, `fuel.tanks`, `roads.bridges`, `roads.routes`, `health.hospitals` |
+| 6000 | flows through the built | electricity, fuel, piped water, vehicles | `power.structures`, `fuel.depot`, `portland.lifelines` |
+| 7000 | law and money | designations and ledgers | `rules.calendar`, `policy.capacity` |
+| 8000 | plants | producers | `veg.crop` |
+| 9000 | animals | consumers and their food webs | `fauna.herbivore`, `fauna.predator` |
+| 10000 | people | population, exposure, the aftermath | `people.countries`, `people.heat`, `people.wetbulb`, `people.agents`, `people.aftermath`, `agents.farms` |
+| | disturbances (across) | events that cut through the layers and write to several | `quake.ground`, `fire.cells`, `fire.rothermel`, `fire.suppression`, `hazard.fire`, `events.shock`, `tipping.elements`, `carbon.tipped` |
+| | the record | modules that score a run against what was observed or published | `obs.*`, `score.regions`, `story.bottomline` |
+
+Each layer has a number, a thousand apart, so that a layer can be put between two others without
+renumbering: a layer between water and air would be 3500. Everything up to 7000 is not alive and
+everything from 8000 is. The numbers and the grouping are expected to keep changing; they exist
+for readers, and no code depends on their values.
 
 A disturbance is not a layer. An earthquake or a fire publishes what happened, and every subject
 module that cares subscribes; it never passes through the layers in order.
