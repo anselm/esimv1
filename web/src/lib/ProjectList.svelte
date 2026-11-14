@@ -15,6 +15,7 @@
   import { isoDate } from './fmt.js'
   import Verdict from './Verdict.svelte'
   import Pager from './Pager.svelte'
+  import HeroGlobe from './HeroGlobe.svelte'
   let page = $state(0)
   const SIZE = 10
 
@@ -50,6 +51,19 @@
   const latest = (p) => (p.runs ?? []).slice().sort((a, b) => (b.start ?? 0) - (a.start ?? 0))[0] ?? null
   // the few scenarios the front page leads with (featured = true in project.toml), newest first
   const featured = $derived((projects ?? []).filter((p) => p.featured === true).sort((a, b) => String(b.created ?? '').localeCompare(String(a.created ?? ''))))
+  // where each scenario is, for the dots on the globe: the middle of the place its manifest states
+  let places = $state([])
+  $effect(() => {
+    const list = projects ?? []
+    if (area || route.all || !list.length) return
+    Promise.all(list.map(async (p) => {
+      try {
+        const m = await (await fetch(`/projects/${p.path}/manifest.json`)).json()
+        for (const e of m.entities ?? []) { const q = e.place ?? (e.params?.lat_s !== undefined ? e.params : null); if (q && q.lat_s !== undefined) return { lat: (q.lat_s + q.lat_n) / 2, lon: (q.lon_w + q.lon_e) / 2 } }
+      } catch { /* no manifest, no dot */ }
+      return null
+    })).then((r) => { places = r.filter(Boolean) })
+  })
   let kindCount = $state(0)
   $effect(() => { fetch('/docs/kinds.json').then((r) => (r.ok ? r.json() : [])).then((k) => { kindCount = (Array.isArray(k) ? k : k.kinds ?? []).length }).catch(() => {}) })
   // one sentence of the description for a card
@@ -90,27 +104,22 @@
 {:else if !route.all && !area}
   <!-- what this is, in a few lines, over a picture from a real run -->
   {@const lead = featured.find((p) => p.cover) ?? null}
-  <section class="grid items-center gap-8 lg:grid-cols-[1fr_1.15fr]">
-    <div>
-      <h1 class="text-4xl font-medium leading-tight tracking-tight">A simulator for whole places</h1>
-      <p class="mt-4 text-lg leading-relaxed">esim models a place as one system: its ground and water, what is built on it, the services that run through it, and the people who live there, all on one clock.</p>
-      <p class="mt-3 leading-relaxed muted">Each scenario is assembled from published data and studies, runs in seconds to a minute, and can be played back, questioned and changed. Each one also says plainly what it gets wrong. The aim is a tool that a city or a community can use to see what a decision would do before it is made.</p>
-      <div class="mt-6 flex flex-wrap gap-3 text-sm">
-        <a use:link={{ doc: 'system/goals' }} class="rounded-[3px] bg-brand px-4 py-2 text-white hover:opacity-90">Where this is going</a>
-        <a use:link={{ doc: 'system/overview' }} class="rounded-[3px] border border-neutral-300 px-4 py-2 hover:border-brand dark:border-neutral-700">How it works</a>
-        <a use:link={{ kinds: true }} class="rounded-[3px] border border-neutral-300 px-4 py-2 hover:border-brand dark:border-neutral-700">The {kindCount || ''} module kinds</a>
-      </div>
+  <HeroGlobe {places} />
+  <section class="max-w-xl pt-6 sm:pt-10">
+    <div class="mono text-xs uppercase tracking-[0.2em] muted">esim · a simulator for whole places</div>
+    <h1 class="mt-5 text-4xl font-light leading-tight tracking-tight sm:text-5xl">Simulation<br />as argument.</h1>
+    <p class="mt-5 text-lg leading-relaxed">A model of a place is a claim about how that place works. esim builds such models from published data, with every assumption open to inspection, and lets anyone push on them and watch what follows.</p>
+    <p class="mt-3 leading-relaxed muted">It treats a place as one system: its ground and water, what is built on it, the services that run through it, and the people who live there, all on one clock. Each scenario runs in seconds to a minute, can be played back and changed, and says plainly what it gets wrong. The aim is a tool that a city or a community can use to see what a decision would do before it is made.</p>
+    <div class="mt-6 flex flex-wrap gap-3 text-sm">
+      <a use:link={{ doc: 'system/goals' }} class="rounded-[3px] bg-brand px-4 py-2 text-white hover:opacity-90">Where this is going</a>
+      <a use:link={{ doc: 'system/overview' }} class="rounded-[3px] border border-neutral-300 bg-white/70 px-4 py-2 hover:border-brand dark:border-neutral-700 dark:bg-neutral-950/70">How it works</a>
+      <a use:link={{ kinds: true }} class="rounded-[3px] border border-neutral-300 bg-white/70 px-4 py-2 hover:border-brand dark:border-neutral-700 dark:bg-neutral-950/70">The {kindCount || ''} module kinds</a>
     </div>
-    {#if lead}
-      <a use:link={{ project: lead.path }} class="group block">
-        <img src={`/projects/${lead.path}/${lead.cover}`} alt={lead.cover_caption ?? lead.title} class="w-full rounded-[3px]" />
-        <div class="mt-2 text-sm"><span class="font-medium group-hover:text-brand">{lead.title}</span> <span class="muted">· {firstSentence(lead.description)}</span></div>
-      </a>
-    {/if}
+    {#if places.length}<p class="mt-5 text-xs muted">The dots on the globe are the places these scenarios model.</p>{/if}
   </section>
 
   <!-- three facts about the engine, each drawn from what is in the repository -->
-  <section class="mt-12 grid gap-6 border-y border-neutral-200 py-6 sm:grid-cols-3 dark:border-neutral-800">
+  <section class="mt-12 grid max-w-3xl gap-6 border-y border-neutral-200 py-6 sm:grid-cols-3 dark:border-neutral-800">
     <div><div class="mono text-3xl">{projects.length}</div><div class="mt-1 text-sm muted">scenarios so far: fires, a river basin, a harbor, a city after an earthquake, the planet to 2100</div></div>
     <div><div class="mono text-3xl">{kindCount || '—'}</div><div class="mt-1 text-sm muted">kinds of module, each meant as a unit of science that more than one scenario can use</div></div>
     <div><div class="mono text-3xl">{projects.reduce((n, p) => n + (p.runs ?? []).length, 0)}</div><div class="mt-1 text-sm muted">runs on record, every one replayable from its manifest and its seed</div></div>

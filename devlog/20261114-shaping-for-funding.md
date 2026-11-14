@@ -104,3 +104,37 @@ its Fuel tab open. Not looked at: the notebook on a phone.
 Known rough edges: the 2D maps now show OpenStreetMap place names for Portland and there are
 too many of them; `run.html` is one template for all variants, so a variant cannot yet have
 words of its own; the kind pictures are made by hand-run script and go stale when runs change.
+
+## The globe from orbital-sim, and what else is there
+
+Anselm: "let's grab that half globe effect from orbital-sim.exe.xyz and throw in the front page.
+Also worth a browse to see if there is any text or other useful fodder."
+
+- **The globe.** `web/src/lib/HeroGlobe.svelte` is the orbital-sim home page's globe
+  (`~/projects/2027/orbital/orbital-sim/website/client/src/lib/Globe.svelte`): a textured sphere
+  with the Earth's tilt, one sun, an atmosphere rim, turning once in about six minutes, fixed
+  half off the right edge behind the page. One change: the original's dots were sixteen
+  placeholder cities; here they are the places this site's scenarios model, read from each
+  project's `manifest.json`. It is fainter on a phone, where it sits behind the text, and still
+  for readers who prefer less motion. The texture is orbital-sim's `public/assets/earth.jpg`
+  (2048 by 1024), copied to `web/public/assets/`. Its origin is not recorded in that repository;
+  it looks like NASA's Blue Marble, which would be public domain, but that is not confirmed.
+- **The front page's hero** now leads with the orbital-sim site's line, "Simulation as
+  argument.", over a paragraph that says what that means here. The Portland picture is no longer
+  in the hero; it is the first of the featured scenarios.
+- **Fodder found.**
+  - The orbital-sim home page's own copy: "Run mechanistic models against real geodata. Publish
+    the results as interactive documents. Replace speculation with evidence."
+  - *Simulate the World: A Primer*, Anselm Hook, version 0.4, June 2026, 256 pages
+    (`public/primer/simulate-the-world.pdf`, linked from that home page). Its thesis in two parts:
+    simulation is argument (a model is a structured claim with premises that should be
+    inspectable and pushable), and accessibility is the unsolved problem (the gap is in
+    publication, not computation: models should travel as living documents that run in the
+    reader's browser). Its preface asks that it not be circulated widely yet, so nothing was
+    quoted from it on the site; the hero's paragraph is written fresh on the same idea.
+  - The orbital-sim README's goals list, which matches this project's goals page closely
+    (server-side simulation, public data, regression against history, "multiplayer emphasis;
+    jupyter notebooks style").
+  - Six scenarios there that this engine does not have: world conflict events, a Strait of
+    Hormuz supply-chain cascade, AR6 warming scenarios, Tenerife futures, MENA warming to 2049,
+    a Tuvalu baseline.
