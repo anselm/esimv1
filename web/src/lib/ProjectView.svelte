@@ -16,6 +16,16 @@
   let pageSrc = $state(null)
   $effect(() => { const u = `/projects/${path}/page.html`; pageSrc = null; fetch(u, { method: 'HEAD', cache: 'no-store' }).then((r) => { if (r.ok && (r.headers.get('content-type') ?? '').includes('html')) pageSrc = u }).catch(() => {}) })
   let runPage = $state(0)
+  // the page's one list: each variant with its runs (newest first), then runs of no variant
+  const rows = $derived.by(() => {
+    const by = new Map()
+    for (const r of runs ?? []) { const k = r.variant ?? ''; if (!by.has(k)) by.set(k, []); by.get(k).push(r) }
+    const out = (meta?.variants ?? []).map((v) => ({ key: `v:${v.name}`, name: v.name, title: v.title ?? v.name, set: v.set ?? {}, runs: by.get(v.name) ?? [] }))
+    const named = new Set((meta?.variants ?? []).map((v) => v.name))
+    for (const [k, list] of by) if (!named.has(k)) out.push({ key: `r:${k}`, name: k, title: k ? k : list[0]?.set && Object.keys(list[0].set).length ? 'A custom run' : 'The scenario as written', set: k ? {} : list[0]?.set ?? {}, runs: list })
+    if (!out.length && meta) out.push({ key: 'r:', name: '', title: 'The scenario as written', set: {}, runs: [] })
+    return out
+  })
 
   let { path } = $props()
   $effect(() => { if (meta?.title) document.title = `${meta.title} · esim` })
@@ -135,58 +145,65 @@
   {/if}
 
   <section class="mb-8">
-    {#if meta.variants?.length}
-      <div class="mb-2 flex flex-wrap items-center justify-between gap-3">
-        <div class="label">variants</div>
-        <a use:link={{ compare: path }} class="text-sm text-brand">compare the futures →</a>
-      </div>
-      <ul class="mb-6 divide-y divide-neutral-200 dark:divide-neutral-800">
-        {#each meta.variants as v (v.name)}
-          <li class="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 py-2">
-            <div class="min-w-0">
-              <span class="font-medium">{v.title ?? v.name}</span>
-              <span class="mono ml-2 text-xs muted">{v.name}</span>
-              <div class="mono text-xs muted">{Object.entries(v.set).map(([k, x]) => `${k} = ${x}`).join(' · ')}</div>
-            </div>
-            <span class="flex items-center gap-3 text-xs">
-              <span class="mono muted">{runs.filter((r) => r.variant === v.name).length} runs</span>
-              {#if live}<button class="rounded-[3px] bg-brand px-2.5 py-1 text-white disabled:opacity-50" onclick={() => runNow(v.name)} disabled={running}>{running ? '…' : 'Run'}</button>{/if}
-            </span>
-          </li>
-        {/each}
-      </ul>
-    {/if}
-    <div class="mb-2 flex flex-wrap items-center justify-between gap-3">
-      <div class="label">{runs.length} {runs.length === 1 ? 'run' : 'runs'}</div>
-      {#if live}
-        <button class="rounded-[3px] px-3 py-1 text-sm ring-1 ring-neutral-300 disabled:opacity-50 dark:ring-neutral-700" onclick={() => runNow(null)} disabled={running}>{running ? 'running…' : meta.variants?.length ? 'Run as written' : 'Run'}</button>
-      {/if}
+    <!-- One list. A row is a version of the scenario (a variant, or the scenario as written) with its
+         newest run, and the thing to do with it is on the row: open the run. Earlier runs of the same
+         version fold under it. (Until 2026-11-14 this was two lists, variants and then runs.) -->
+    <div class="mb-1 flex flex-wrap items-baseline justify-between gap-3">
+      <h2 class="text-2xl font-medium">Runs</h2>
+      <span class="flex items-center gap-4 text-sm">
+        {#if rows.filter((r) => r.runs.length).length > 1}<a use:link={{ compare: path }} class="text-brand hover:underline">compare them side by side →</a>{/if}
+        {#if live}<button class="rounded-[3px] px-3 py-1 ring-1 ring-neutral-300 disabled:opacity-50 dark:ring-neutral-700" onclick={() => runNow(null)} disabled={running}>{running ? 'running…' : 'Run as written'}</button>{/if}
+      </span>
     </div>
+    <p class="mb-4 max-w-2xl text-sm muted">{rows.length > 1 ? `Each run is the scenario played through once. These are ${rows.length} versions of it, each with one thing changed. Open one to watch it and read its numbers.` : 'A run is the scenario played through once. Open it to watch it and read its numbers.'}</p>
     {#if log.length}
       <pre class="mono mb-3 max-h-48 overflow-auto rounded-[3px] bg-neutral-50 p-2 text-xs leading-relaxed dark:bg-neutral-900">{log.join('\n')}</pre>
     {/if}
     {#if error}<p class="mb-2 text-sm text-leak">{error}</p>{/if}
-    {#if runs.length === 0}
-      <p class="muted text-sm">not run yet</p>
-    {:else}
-      <ul class="divide-y divide-neutral-200 dark:divide-neutral-800">
-        {#each runs.slice(runPage * 10, runPage * 10 + 10) as r (r.id)}
-          <li>
-            <a use:link={{ project: path, run: r.id }} class="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 py-2.5 -mx-2 px-2 rounded-[3px] hover:bg-brand-soft/40 sm:grid-cols-[auto_auto_1fr_auto_auto] sm:items-center">
-              <span class="text-sm font-medium">{r.variant ?? (r.set && Object.keys(r.set).length ? 'custom' : 'as written')}</span>
-              <span class="mono text-xs">{isoDate(r.start)} → {isoDate(r.end)}</span>
-              <span class="mono text-xs muted truncate">{r.set && Object.keys(r.set).length ? Object.entries(r.set).map(([k, x]) => `${k}=${x}`).join(' ') : r.digest}</span>
-              <span class="mono text-xs muted">{num(r.events)} events</span>
-              <span class="flex items-center gap-3">
-                {#if r.audit}<Verdict verdict={r.audit.verdict} />{/if}
-                <Status closed={r.all_ledgers_closed} />
-              </span>
-            </a>
-          </li>
-        {/each}
-      </ul>
-      <Pager total={runs.length} size={10} bind:page={runPage} label="runs" />
-    {/if}
+    <ul class="grid gap-3 lg:grid-cols-2">
+      {#each rows.slice(runPage * 10, runPage * 10 + 10) as v (v.key)}
+        {@const r = v.runs[0] ?? null}
+        <li class="flex flex-col rounded-[3px] border border-neutral-200 p-4 dark:border-neutral-800">
+          <div class="flex items-start justify-between gap-4">
+            <div class="min-w-0">
+              <div class="font-medium leading-snug">{v.title}</div>
+              {#if v.name}<div class="mono mt-0.5 text-xs muted">{v.name}</div>{/if}
+            </div>
+            {#if r}
+              <a use:link={{ project: path, run: r.id }} class="shrink-0 rounded-[3px] bg-brand px-3.5 py-1.5 text-sm text-white hover:opacity-90">Open run →</a>
+            {:else if live}
+              <button class="shrink-0 rounded-[3px] bg-brand px-3.5 py-1.5 text-sm text-white disabled:opacity-50" onclick={() => runNow(v.name || null)} disabled={running}>{running ? '…' : 'Run it'}</button>
+            {:else}
+              <span class="shrink-0 text-xs muted">not run yet</span>
+            {/if}
+          </div>
+          {#if Object.keys(v.set ?? {}).length}
+            <div class="mono mt-2 text-[11px] leading-relaxed muted">changes: {Object.entries(v.set).map(([k, x]) => `${k} = ${x}`).join(' · ')}</div>
+          {/if}
+          {#if r}
+            <div class="mt-auto flex flex-wrap items-center gap-x-4 gap-y-1 pt-3 text-xs">
+              <span class="mono muted">{isoDate(r.start)} → {isoDate(r.end)}</span>
+              <span class="mono muted">{num(r.events)} events</span>
+              {#if r.audit}<Verdict verdict={r.audit.verdict} />{/if}
+              <Status closed={r.all_ledgers_closed} />
+              {#if live}<button class="hover:text-brand disabled:opacity-50" onclick={() => runNow(v.name || null)} disabled={running}>run again</button>{/if}
+            </div>
+            {#if v.runs.length > 1}
+              <details class="mt-2 text-xs">
+                <summary class="cursor-pointer muted">{v.runs.length - 1} earlier {v.runs.length === 2 ? 'run' : 'runs'}</summary>
+                <ul class="mt-1">
+                  {#each v.runs.slice(1) as e (e.id)}
+                    <li><a use:link={{ project: path, run: e.id }} class="mono hover:text-brand">{e.id}</a>{#if e.set && Object.keys(e.set).length}<span class="mono muted"> · {Object.entries(e.set).map(([k, x]) => `${k}=${x}`).join(' ')}</span>{/if}</li>
+                  {/each}
+                </ul>
+              </details>
+            {/if}
+          {/if}
+        </li>
+      {/each}
+    </ul>
+    {#if !rows.length}<p class="muted text-sm">not run yet</p>{/if}
+    <Pager total={rows.length} size={10} bind:page={runPage} label="versions" />
   </section>
 
   {#if readme && !pageSrc}
