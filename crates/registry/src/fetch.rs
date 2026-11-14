@@ -81,8 +81,9 @@ impl Fetcher {
     /// reader needs. Retries politely on 429 and 5xx.
     pub fn fetch_reduced(&mut self, key: &str, url: &str, reduce: &dyn Fn(&[u8]) -> Result<Vec<u8>, String>) -> Result<PathBuf, String> {
         let name = key.replace(['/', ' '], "_");
-        let path = self.cache_dir.join(&name);
+        let path = self.kept_path(&name);
         if path.exists() { return Ok(path); }
+        if let Some(dir) = path.parent() { std::fs::create_dir_all(dir).map_err(|e| e.to_string())?; }
         let mut raw = Vec::new();
         let mut wait = 2u64;
         for attempt in 0..6 {
@@ -105,10 +106,19 @@ impl Fetcher {
             None => { self.lock.files.insert(key.to_string(), Entry { url: url.to_string(), sha256: sha, bytes: raw.len() as u64, fetched: today() }); self.save_lock()?; }
         }
         let reduced = reduce(&raw)?;
-        let tmp = self.cache_dir.join(format!("{name}.part"));
+        let tmp = path.with_extension("part");
         std::fs::write(&tmp, &reduced).map_err(|e| e.to_string())?;
         std::fs::rename(&tmp, &path).map_err(|e| e.to_string())?;
         Ok(path)
+    }
+
+    /// Where a reduced answer lives. Most are in the cache, which is not in git and can be
+    /// fetched again. An OpenStreetMap answer through Overpass is small once reduced and slow and
+    /// unreliable to fetch (ten minutes for one city on 2026-11-14, one mirror hanging, the other
+    /// answering 502), so it is kept in `data/osm/`, which is committed: a box that has pulled the
+    /// repository never asks Overpass for a window that was fetched once.
+    pub fn kept_path(&self, name: &str) -> PathBuf {
+        if name.starts_with("osm-overpass_") { self.cache_dir.parent().unwrap_or(&self.cache_dir).join("osm").join(name) } else { self.cache_dir.join(name) }
     }
 
 

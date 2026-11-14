@@ -355,7 +355,7 @@ fn reduce_buildings(raw: &[u8]) -> Result<Vec<u8>, String> {
 /// The cached context for a window, never fetching (for a describe).
 pub fn cached_context(fetcher: &Fetcher, lat_s: f64, lat_n: f64, lon_w: f64, lon_e: f64) -> Option<serde_json::Value> {
     let name = context_key(lat_s, lat_n, lon_w, lon_e).replace(['/', ' '], "_");
-    let text = std::fs::read_to_string(fetcher.cache_dir.join(name)).ok()?;
+    let text = std::fs::read_to_string(fetcher.kept_path(&name)).ok()?;
     serde_json::from_str(&text).ok()
 }
 
@@ -396,7 +396,7 @@ pub fn osm_bridges(fetcher: &mut Fetcher, lat_s: f64, lat_n: f64, lon_w: f64, lo
 /// The cached bridge ways for a window, never fetching (for a describe).
 pub fn cached_osm_bridges(fetcher: &Fetcher, lat_s: f64, lat_n: f64, lon_w: f64, lon_e: f64) -> Option<serde_json::Value> {
     let name = bridges_key(lat_s, lat_n, lon_w, lon_e).replace(['/', ' '], "_");
-    let text = std::fs::read_to_string(fetcher.cache_dir.join(name)).ok()?;
+    let text = std::fs::read_to_string(fetcher.kept_path(&name)).ok()?;
     serde_json::from_str(&text).ok()
 }
 

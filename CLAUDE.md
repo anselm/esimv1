@@ -404,7 +404,8 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   manifest (`Manifest::parse`). Day order: bridges and power 3, routes 4, depot 5, hospitals 6 (settle 7), lifelines 8.
   Roads and bridges on the 3D view: `roads.routes` carries the segments' outlines (`geometry` table, from
   `routes.geojson`) and OpenStreetMap roads (`context`), `roads.bridges` carries bridge ways from OpenStreetMap
-  (`registry::wildfire::osm_bridges`); the fetcher now gives up on a request after 300 s.
+  (`registry::wildfire::osm_bridges`); the fetcher now gives up on a request after 300 s. Reduced Overpass answers are kept in
+  `data/osm/`, committed (`Fetcher::kept_path`), not in `data/cache/`: commit a new window's file after its first fetch.
 - Portland, the page and the standing faults (2026-11-12 night, `devlog/20261112-portland-readme-rewritten.md` and
   `devlog/20261112-portland-stale-wording.md`; Anselm: "I want to try rewrite the portland cascadia fault scenario
   readme again", then "update stale portland wording overall everywhere"): the project README is a new text in the

@@ -304,3 +304,18 @@ flight, routes turning red, relief flaring) and a week after; Palisades at thirt
 seen: the effects in motion over time, a real device, a phone. The other Palisades variants and
 the other projects still need rerunning to show the view. The cover is now a still of the 3D view.
 `cargo test` (describe) and `esim regress` pass. Committed, not pushed, not deployed.
+
+## OpenStreetMap answers are kept in git (14 November)
+
+Anselm: "that slow osm issue is a concern. we may need to cache."
+
+They were cached, but in `data/cache/`, which is not in git: another box, or this one with a
+cleared cache, would have waited on Overpass again. Reduced Overpass answers now live in
+`data/osm/` (`Fetcher::kept_path`), which is committed. The ten existing answers (Portland's roads
+and bridges, the Palisades, Nicasio, Fort McMurray and Half Moon Bay windows; 10 MB) were moved
+there. A run on any box that has pulled reads them and asks nothing; a new window is fetched once,
+bounded at 300 seconds, and its file is then committed. `data/osm/README.md` says so. Checked:
+Portland and Palisades run without a fetch, and `esim regress` shows no drift.
+
+Still true: the first run for a new window waits on Overpass, inside the run. Moving that fetch
+out of the run into a step of its own is the further change if it bites again.

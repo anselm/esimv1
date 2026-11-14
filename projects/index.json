@@ -812,7 +812,7 @@
         },
         "start": 1736272800,
         "variant": "vector-5",
-        "verdict": null
+        "verdict": "holds"
       },
       {
         "all_ledgers_closed": true,
@@ -1958,7 +1958,7 @@
         },
         "start": 1798790400,
         "variant": "seed-3",
-        "verdict": null
+        "verdict": "tearing"
       },
       {
         "all_ledgers_closed": true,
