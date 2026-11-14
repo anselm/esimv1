@@ -167,3 +167,11 @@ be damaged; the planning bureau reports to the council in 2028, 2031 and 2036; a
 is quoted in the ordinance; a September report by McCullough Research prompted the mayor's
 ordinance; the hub has 11 terminals. Added to the README's reading list as read through a summary
 with nothing taken; to be checked against the ordinance's text before use.
+
+Later the same day he pasted the article's text. The README now uses it: a paragraph in *The fuel
+terminals* on the plan due by 30 September 2027 (evacuation of Linnton and North Portland west of
+the railroad cut, firefighting capacity that does not depend on the Willamette bridges), the
+reports of 2028, 2031 and 2036, the 2012 DOGAMI study as the ordinance quotes it, and the
+McCullough Research report; and a sentence beside the bridges result that the city plans on the
+same assumption the model's result resembles. The reading list entry says what was taken and
+notes that the article's "holds 90 percent" differs from the county's "passes through".

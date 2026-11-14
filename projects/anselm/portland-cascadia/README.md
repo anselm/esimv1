@@ -101,6 +101,20 @@ Ordinance 2026-312, which the council passed on 12 November 2026, requires each 
 to cut its in-service storage capacity by at least 20 percent by 1 December 2036. Tanks that hold
 only aviation fuel are exempt. The vote was 10 to 0, with two councillors absent.
 
+The ordinance asks for more than the cut. According to KOIN's report of it, the City Administrator
+must deliver a public health and natural hazards risk reduction plan for the hub by 30 September
+2027. The plan has to include evacuation plans for Linnton and other parts of Northwest Portland,
+and for North Portland west of the railroad cut. It also has to propose industrial firefighting
+capacity that can reach the hub and Linnton without the bridges across the Willamette, which the
+ordinance does not expect to be usable after a major earthquake. The city's planning bureau must
+report to the council in 2028, 2031 and 2036 on fuel demand and on the reduction. The ordinance
+quotes a 2012 DOGAMI study of the hub, which found that at the time only three of its storage
+tanks were known to have addressed their vulnerability to liquefaction.
+
+The mayor, Keith Wilson, introduced the ordinance after a September report by McCullough Research
+argued that wildfire, flood and drought threaten the hub as well as the earthquake. This project
+models only the earthquake.
+
 The rule limits tank capacity and leaves the amount of fuel held to the operators. That matters
 because the tanks are not full. A 20 percent cut to 333 million gallons of capacity leaves about
 266 million, which is still more than the 234 million gallons the 2022 study found in the tanks.
@@ -285,7 +299,10 @@ in this model it is the shaking that closes them, and the liquefaction adds litt
 Multnomah County says none of the downtown bridges is expected to be usable immediately after a
 major earthquake, and that it could be weeks to years before any is. The model's result resembles
 that statement, but it is not an independent check, because the curve for the older bridges was
-set by judgement from the county's own report.
+set by judgement from the county's own report. The city plans on the same assumption: the
+ordinance asks for firefighting capacity that can reach the fuel terminals without the Willamette
+bridges. The model has no fire and no firefighting, so it cannot say what the closed bridges would
+cost there.
 
 The `burnside-ready` variant was meant to show the effect of a Burnside Bridge built to survive.
 It changes a setting that only the earlier version of the model reads, so its results are
@@ -479,12 +496,13 @@ Every source was read on 12 November 2026 unless noted.
   2025 pipeline shutdown.
 - r/Portland, the discussion thread on that story, 12 November 2026.
 - Michaela Bourgeois, *Portland City Council approves reduced fuel storage along Willamette River
-  amid Cascadia concerns*, KOIN, published 12 or 13 November 2026. Read on 14 November through an
-  automated summary of the page, not the article's own text. Nothing on this page is taken from it
-  yet. The summary reports that the ordinance requires a risk reduction plan for the hub by 30
-  September 2027, covering evacuation of Linnton and firefighting access that does not depend on
-  bridges likely to be damaged, and reports to the council in 2028, 2031 and 2036. Those points are
-  to be checked against the ordinance before they are used.
+  amid Cascadia concerns*, KOIN, 12 or 13 November 2026. Read on 14 November from a pasted copy of
+  the text. Taken: the risk reduction plan due by 30 September 2027 and what it must cover, the
+  reports due in 2028, 2031 and 2036, the ordinance's quotation of the 2012 DOGAMI study, and the
+  McCullough Research report that preceded the ordinance. The article says the hub holds 90
+  percent of the state's fuel supply, where Multnomah County says more than 90 percent of Oregon's
+  fuel passes through it; this page uses the county's wording. Neither the 2012 DOGAMI study nor
+  the McCullough report has been read.
 - *CEI Hub Seismic Risk Analysis*, ECONorthwest, Salus Resilience and Enduring Econometrics, for
   Multnomah County and the City of Portland, February 2022. Read in full. Taken: the tank counts
   and ages, capacity and contents, the release rules and release range, the split between ground
