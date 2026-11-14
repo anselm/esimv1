@@ -155,8 +155,11 @@ fn copy_sources(dir: &Path, m: &Manifest) -> Result<(), String> {
 fn kinds(json: bool) -> Result<(), String> {
     if !json { for k in esim_modules::kinds() { println!("{k}"); } return Ok(()); }
     let empty = toml::Value::Table(Default::default());
-    let all: Vec<_> = esim_modules::kinds().iter().map(|k| esim_modules::describe(k, k, &empty).unwrap()).collect();
-    println!("{}", serde_json::to_string_pretty(&all).unwrap());
+    // A kind's page is about the kind. The map lines a module carries for one place (roads, a
+    // bridge's span, a segment's outline) belong to a run of that place, not to the kind, and were
+    // three quarters of this file.
+    let all: Vec<_> = esim_modules::kinds().iter().map(|k| { let mut d = esim_modules::describe(k, k, &empty).unwrap(); d.tables.remove("context"); d.tables.remove("geometry"); d }).collect();
+    println!("{}", serde_json::to_string(&all).unwrap());
     Ok(())
 }
 
