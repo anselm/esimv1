@@ -239,16 +239,12 @@ impl Module for Ground {
 // ---------------------------------------------------------------------------------------
 // quake.buildings
 
-#[derive(Clone, Serialize, Deserialize, Default)]
-struct UnitLoss { nuid: i32, ext_comp: f64, ext: f64, comp: f64, deaths: f64, displaced: f64, injuries: f64 }
-
 #[derive(Serialize, Deserialize)]
 pub struct Buildings {
     name: String,
     lat_s: f64, lat_n: f64, lon_w: f64, lon_e: f64, res_arcsec: f64,
     folder: String,
     time_of_day: String,
-    record: String,                 // wet | dry: which DOGAMI loss table to score against
     medians_g: [f64; 4],            // slight, moderate, extensive, complete
     beta: f64,
     fragility_scale: f64,
@@ -262,12 +258,9 @@ pub struct Buildings {
     #[serde(skip)] grid: Option<LatLonGrid>,
     #[serde(skip)] count: Vec<f32>, #[serde(skip)] area: Vec<f32>,
     #[serde(skip)] residents: Vec<f32>, #[serde(skip)] occupants: Vec<f32>,
-    #[serde(skip)] nuid: Vec<f32>, #[serde(skip)] juris: Vec<f32>,
-    #[serde(skip)] record_units: Vec<UnitLoss>,
-    #[serde(skip)] record_portland: UnitLoss,
 }
 
-fn read_csv(path: &PathBuf) -> Result<(Vec<String>, Vec<Vec<String>>), String> {
+pub(crate) fn read_csv(path: &PathBuf) -> Result<(Vec<String>, Vec<Vec<String>>), String> {
     let text = std::fs::read_to_string(path).map_err(|e| format!("{}: {e}", path.display()))?;
     let mut lines = text.lines();
     let head: Vec<String> = lines.next().ok_or("empty csv")?.split(',').map(|s| s.trim().to_string()).collect();
@@ -283,9 +276,8 @@ impl Buildings {
             name: name.to_string(),
             lat_s: param_f64(p, "lat_s", 45.43), lat_n: param_f64(p, "lat_n", 45.66), lon_w: param_f64(p, "lon_w", -122.85), lon_e: param_f64(p, "lon_e", -122.47),
             res_arcsec: param_f64(p, "res_arcsec", 1.0),
-            folder: param_str(p, "folder", "portland-cascadia").to_string(),
+            folder: param_str(p, "folder", "").to_string(),
             time_of_day: tod,
-            record: param_str(p, "record", "wet").to_string(),
             medians_g: [param_f64(p, "median_slight_g", 0.20), param_f64(p, "median_moderate_g", 0.40), param_f64(p, "median_extensive_g", 0.80), param_f64(p, "median_complete_g", 1.50)],
             beta: param_f64(p, "beta", 0.70),
             fragility_scale: param_f64(p, "fragility_scale", 1.0),
@@ -296,8 +288,7 @@ impl Buildings {
             displaced_moderate_share: param_f64(p, "displaced_moderate_share", 0.0),
             displaced_share: param_f64(p, "displaced_share", 1.0),
             done: false,
-            grid: None, count: Vec::new(), area: Vec::new(), residents: Vec::new(), occupants: Vec::new(), nuid: Vec::new(), juris: Vec::new(),
-            record_units: Vec::new(), record_portland: UnitLoss::default(),
+            grid: None, count: Vec::new(), area: Vec::new(), residents: Vec::new(), occupants: Vec::new(),
         };
         o.load()?;
         Ok(o)
@@ -309,57 +300,38 @@ impl Buildings {
         self.area = z(sample(&self.folder, "building_area_m2.tif", &g)?);
         self.residents = z(sample(&self.folder, "people_resident.tif", &g)?);
         self.occupants = z(sample(&self.folder, if self.time_of_day == "day" { "people_day.tif" } else { "people_night.tif" }, &g)?);
-        self.nuid = sample(&self.folder, "nuid.tif", &g)?;
-        self.juris = sample(&self.folder, "jurisdiction.tif", &g)?;
-        // the record: DOGAMI's per-unit results for the matching soils and time of day
-        let (head, rows) = read_csv(&root().join("data/events").join(&self.folder).join(format!("loss_unit_{}.csv", self.record)))?;
-        let col = |n: &str| head.iter().position(|h| h == n).ok_or(format!("loss table lacks {n}"));
-        let (cn, ce, cc, cd, cl4, cl2, cl3) = (col("NUID")?, col("PDsExtensive")?, col("PDsComplete")?, col("DisplacedPop")?,
-            col(if self.time_of_day == "day" { "CasDayL4" } else { "CasNightL4" })?, col(if self.time_of_day == "day" { "CasDayL2" } else { "CasNightL2" })?, col(if self.time_of_day == "day" { "CasDayL3" } else { "CasNightL3" })?);
-        let f = |r: &Vec<String>, i: usize| r.get(i).and_then(|s| s.parse::<f64>().ok()).unwrap_or(0.0);
-        self.record_units = rows.iter().map(|r| UnitLoss { nuid: f(r, cn) as i32, ext_comp: f(r, ce) + f(r, cc), ext: f(r, ce), comp: f(r, cc), deaths: f(r, cl4), displaced: f(r, cd), injuries: f(r, cl2) + f(r, cl3) }).collect();
-        // Portland's own figure from the jurisdiction table (the nine district coalitions)
-        let (jh, jrows) = read_csv(&root().join("data/events").join(&self.folder).join(format!("loss_jurisdiction_{}.csv", self.record)))?;
-        let jcol = |n: &str| jh.iter().position(|h| h == n).ok_or(format!("jurisdiction table lacks {n}"));
-        let (jn, je, jc, jd, jl4, jl2, jl3) = (jcol("Jurisdiction")?, jcol("PDsExtensive")?, jcol("PDsComplete")?, jcol("DisplacedPop")?,
-            jcol(if self.time_of_day == "day" { "CasDayL4" } else { "CasNightL4" })?, jcol(if self.time_of_day == "day" { "CasDayL2" } else { "CasNightL2" })?, jcol(if self.time_of_day == "day" { "CasDayL3" } else { "CasNightL3" })?);
-        let mut pdx = UnitLoss::default();
-        for r in &jrows { if r.get(jn).map_or(false, |s| s.starts_with("Portland")) { pdx.ext_comp += f(r, je) + f(r, jc); pdx.ext += f(r, je); pdx.comp += f(r, jc); pdx.deaths += f(r, jl4); pdx.displaced += f(r, jd); pdx.injuries += f(r, jl2) + f(r, jl3); } }
-        self.record_portland = pdx;
         self.grid = Some(g);
         Ok(())
     }
     pub fn describe(name: &str, p: &toml::Value) -> Describe {
-        let folder = param_str(p, "folder", "portland-cascadia");
-        let mut d = Describe::new("quake.buildings", name, "This module estimates building damage, deaths, injuries and displaced people in each cell of the map, from the ground module's shaking. For each cell it uses a fragility curve, which gives the probability that a building reaches each of four damage states at a given peak ground acceleration. One set of curves stands for a generic mix of building types. The module adds the buildings lost where the ground liquefies or slides, then applies a casualty rate to each damage state. This is the approach of Hazus, the loss-estimation software of the Federal Emergency Management Agency. The buildings, the residents and the occupants by time of day come from the inventory of DOGAMI, Oregon's geology agency. The values of the curves and of the casualty rates are recalled from memory and have not been checked against the Hazus manual. Six parameters were then fitted to DOGAMI's own Hazus results for a daytime earthquake on saturated soil, and the module reports how close the fit is. The pattern of damage across neighbourhoods follows DOGAMI's. The tolls for a night-time earthquake and for dry soil do not. In this model only shaking makes a building collapse, so the toll changes much less between those cases than it does in DOGAMI's study.")
+        let folder = param_str(p, "folder", "");
+        let d = Describe::new("quake.buildings", name, "This module estimates building damage, deaths, injuries and displaced people in each cell of the map, from the ground module's shaking. For each cell it uses a fragility curve, which gives the probability that a building reaches each of four damage states at a given peak ground acceleration. One set of curves stands for a generic mix of building types. The module adds the buildings lost where the ground liquefies or slides, then applies a casualty rate to each damage state. This is the approach of Hazus, the loss-estimation software of the Federal Emergency Management Agency. The buildings, the residents and the occupants by time of day are maps in the event folder. The default values of the curves and of the casualty rates are recalled from memory and have not been checked against the Hazus manual. A scenario may adjust the scales below to fit a published loss study, and a run that carries an obs.losses module reports how close the result is to that study. In this model only shaking makes a building collapse, and nearly all deaths are in collapsed buildings. The toll therefore changes less between day and night, and between saturated and dry soil, than a Hazus run's does.")
             .priority(1).dt("once, on the rupture")
-            .param("folder", folder, "", "the folder of input data for this event: the building inventory and DOGAMI's loss tables")
-            .param("time_of_day", param_str(p, "time_of_day", "day"), "", "day: people where DOGAMI places them at 2 p.m. night: where it places them at 2 a.m.")
-            .param("record", param_str(p, "record", "wet"), "", "which of DOGAMI's result tables the run is compared with, wet or dry. It should match the ground module's soil setting")
+            .param("folder", folder, "", "the folder under data/events that holds this scenario's building inventory: buildings per cell, floor area, residents, and occupants by day and by night")
+            .param("time_of_day", param_str(p, "time_of_day", "day"), "", "day: people where the inventory places them by day. night: where it places them at night")
             .param("median_slight_g", param_f64(p, "median_slight_g", 0.20), "g", "the peak ground acceleration at which half the buildings reach slight damage, for the generic building mix. Recalled from the Hazus tables for moderate-code wood and older masonry; the mix is a guess")
             .param("median_moderate_g", param_f64(p, "median_moderate_g", 0.40), "g", "the same for moderate damage (recalled)")
             .param("median_extensive_g", param_f64(p, "median_extensive_g", 0.80), "g", "the same for extensive damage (recalled)")
             .param("median_complete_g", param_f64(p, "median_complete_g", 1.50), "g", "the same for complete damage (recalled)")
             .param("beta", param_f64(p, "beta", 0.70), "", "the spread of the fragility curves, a lognormal dispersion. Hazus uses about 0.64 for most building classes (recalled)")
-            .param("fragility_scale", param_f64(p, "fragility_scale", 1.0), "", "divides the four accelerations above. Fitted so that the count of buildings with extensive or complete damage matches DOGAMI's; the fit is reported")
+            .param("fragility_scale", param_f64(p, "fragility_scale", 1.0), "", "divides the four accelerations above. A scenario may fit it so that the count of buildings with extensive or complete damage matches a published study")
             .param("gf_median_cm", param_f64(p, "gf_median_cm", 152.0), "cm", "the permanent ground movement at which half the buildings on failed ground take extensive or complete damage. Hazus gives 60 inches for lateral spreading (recalled)")
             .param("gf_beta", param_f64(p, "gf_beta", 1.2), "", "the spread of that curve (Hazus 1.2, recalled)")
             .param("gf_complete_share", param_f64(p, "gf_complete_share", 0.2), "", "the share of ground-failure damage counted as complete (Hazus 0.2 for lateral spreading, recalled)")
             .param("collapse_given_complete", param_f64(p, "collapse_given_complete", 0.08), "", "the share of completely damaged buildings that collapse, for the generic mix. Hazus gives 3 percent for wood and 15 percent for unreinforced masonry; the mix is a guess")
-            .param("casualty_scale", param_f64(p, "casualty_scale", 1.0), "", "multiplies every casualty rate. Fitted so that deaths in Portland match DOGAMI's; the fit is reported")
+            .param("casualty_scale", param_f64(p, "casualty_scale", 1.0), "", "multiplies every casualty rate. A scenario may fit it so that deaths match a published study")
             .param("displaced_moderate_share", param_f64(p, "displaced_moderate_share", 0.0), "", "the share of residents of moderately damaged buildings counted as displaced. Hazus counts some of them; 0 here is a guess")
-            .param("displaced_share", param_f64(p, "displaced_share", 1.0), "", "the share of residents of buildings with extensive or complete damage counted as displaced for the long term. Fitted to DOGAMI's displaced population; the fit is reported")
+            .param("displaced_share", param_f64(p, "displaced_share", 1.0), "", "the share of residents of buildings with extensive or complete damage counted as displaced for the long term. A scenario may fit it to a published study")
             .subscribe("quake.rupture", "the instant")
             .read_on("quake.pga_g", "g", true, "quake.rupture", "").read_on("quake.liq_p", "1", true, "quake.rupture", "").read_on("quake.liq_pgd_cm", "cm", true, "quake.rupture", "").read_on("quake.ls_p", "1", true, "quake.rupture", "").read_on("quake.ls_pgd_cm", "cm", true, "quake.rupture", "")
-            .publish("quake.crossing", "{ kind: toll, sentence } the sentence shown on the run page: deaths, injuries and displaced people from the shaking, with the comparison against DOGAMI")
+            .publish("quake.crossing", "{ kind: toll, sentence } the sentence shown on the run page: deaths, injuries and displaced people from the shaking")
             .own("quake.cell_death_rate", "1").own("quake.cell_displaced_rate", "1").own("quake.cell_collapse_frac", "1").own("quake.cell_death_rate_collapse", "1").own("quake.cell_death_rate_other", "1")
+            .own("quake.cell_extensive", "buildings").own("quake.cell_complete", "buildings").own("quake.cell_deaths", "people").own("quake.cell_displaced", "people").own("quake.cell_injuries_hospital", "people")
             .publish("quake.toll", "{ deaths, injuries_hospital, injuries_life, injuries_minor, displaced } the toll in the modelled area as numbers, once the shaking ends, for the module that keeps the total")
             .frame("buildings_count", "buildings").frame("building_damage_frac", "1").frame("buildings_destroyed", "buildings").frame("buildings_collapsed", "buildings").frame("deaths", "people").frame("displaced", "people").frame("occupants", "people")
             .report("quake.buildings", "buildings").report("quake.buildings_moderate", "buildings").report("quake.buildings_extensive", "buildings").report("quake.buildings_complete", "buildings")
             .report("quake.buildings_collapsed", "buildings").report("quake.deaths_in_collapses", "people").report("quake.deaths", "people").report("quake.injuries_hospital", "people").report("quake.injuries_life_threatening", "people").report("quake.injuries_minor", "people").report("quake.displaced", "people").report("quake.occupants", "people")
-            .report("quake.portland_deaths", "people").report("quake.portland_displaced", "people").report("quake.portland_buildings_extensive_or_complete", "buildings")
-            .report("fit.portland_deaths_ratio", "1").report("fit.portland_displaced_ratio", "1").report("fit.portland_damage_ratio", "1").report("fit.portland_extensive_ratio", "1").report("fit.portland_complete_ratio", "1").report("fit.portland_injuries_ratio", "1").report("fit.units_damage_r", "1").report("fit.units_deaths_r", "1")
-            .asset(&format!("events/{folder}"), "DOGAMI's building outlines, people per neighbourhood unit and Hazus loss tables")
+            .asset(&format!("events/{folder}"), "the building inventory: buildings per cell, floor area, residents, occupants by day and by night")
             .view("map", "share of buildings with extensive or complete damage", "building_damage_frac", "the expected share in each cell")
             .view("map", "buildings collapsed", "buildings_collapsed", "counted building by building: in each cell a random draw decides how many buildings collapse, given the cell's probability of collapse")
             .view("map", "deaths", "deaths", "per cell, for people where they are at the time of the earthquake. Deaths in collapsed buildings follow the drawn collapses; the others are expected values")
@@ -370,20 +342,7 @@ impl Buildings {
             .view("counter", "injuries needing a hospital", "quake.injuries_hospital", "Hazus severity levels 2 and 3")
             .view("counter", "people displaced", "quake.displaced", "")
             .view("counter", "buildings with extensive or complete damage", "quake.buildings_extensive", "the two worst of the four damage states")
-            .view("counter", "deaths in Portland, relative to DOGAMI", "fit.portland_deaths_ratio", "this run's deaths in the nine districts of the City of Portland divided by DOGAMI's estimate for the same case; 1 would be an exact match")
-            .view("counter", "damage pattern, correlation with DOGAMI", "fit.units_damage_r", "the correlation between this run's and DOGAMI's counts of buildings with extensive or complete damage, across the study's 876 neighbourhood units")
-            .note("The Hazus tables (FEMA, Earthquake Model Technical Manual) could not be downloaded to the development machine on 12 November 2026. The fragility accelerations, their spread, the collapse share and the casualty rates are therefore recalled from memory and not checked. Six parameters were then fitted to DOGAMI's Hazus run on the same ground, so the daytime toll on saturated soil is close to DOGAMI's because it was made to be. The building inventory is DOGAMI's. It gives building outlines without heights or structure types. DOGAMI gives the number of people in each neighbourhood unit; dividing them among the unit's buildings by footprint area is this project's assumption.");
-        // the record as a table on the run page
-        if let Ok((head, rows)) = read_csv(&root().join("data/events").join(folder).join(format!("loss_jurisdiction_{}.csv", param_str(p, "record", "wet")))) {
-            let keep = ["Jurisdiction", "Bldg_LR", "DisplacedPop", "CasDayL4", "CasNightL4", "CasDayL2", "CasDayL3", "PDsExtensive", "PDsComplete"];
-            let idx: Vec<Option<usize>> = keep.iter().map(|k| head.iter().position(|h| h == k)).collect();
-            let table: Vec<serde_json::Value> = rows.iter().filter(|r| r.first().map_or(false, |s| s.starts_with("Portland") || s.ends_with("Unincorporated") || s == "Beaverton" || s == "Gresham" || s == "Hillsboro")).map(|r| {
-                let mut m = serde_json::Map::new();
-                for (k, i) in keep.iter().zip(&idx) { if let Some(i) = i { let s = &r[*i]; m.insert(k.to_string(), s.parse::<f64>().map(|v| json!((v * 100.0).round() / 100.0)).unwrap_or(json!(s))); } }
-                serde_json::Value::Object(m)
-            }).collect();
-            d = d.table("dogami_losses", json!(table));
-        }
+            .note("The Hazus tables (FEMA, Earthquake Model Technical Manual) could not be downloaded to the development machine on 12 November 2026. The default fragility accelerations, their spread, the collapse share and the casualty rates are therefore recalled from memory and not checked. Where a scenario has fitted the scales to a published loss study, its toll is close to that study because it was made to be. The inventory gives a count of buildings and a number of people per cell, with no heights or structure types.");
         d
     }
 }
@@ -420,8 +379,7 @@ impl Module for Buildings {
         let (mut n_coll_tot, mut dead_in_coll) = (0.0f64, 0.0f64);
         let rc = (self.rates[4][3] * self.casualty_scale).min(1.0);
         let mut tot = [0.0f64; 5]; let (mut d_tot, mut l1, mut l23, mut l3, mut disp) = (0.0, 0.0, 0.0, 0.0, 0.0);
-        let mut by_unit: std::collections::HashMap<i32, UnitLoss> = std::collections::HashMap::new();
-        let mut pdx = UnitLoss::default();
+        let mut ext_f = vec![0.0f32; n]; let mut comp_f = vec![0.0f32; n]; let mut inj_f = vec![0.0f32; n];
         for i in 0..n {
             let c = self.count[i] as f64;
             if c <= 0.0 { continue; }
@@ -462,14 +420,16 @@ impl Module for Buildings {
             frac[i] = (ps[3] + ps[4]) as f32; destroyed[i] = (c * (ps[3] + ps[4])) as f32; deaths[i] = dd as f32; displaced[i] = di as f32;
             for k in 0..5 { tot[k] += c * ps[k]; }
             d_tot += dd; l1 += i1; l23 += i23; disp += di;
-            let u = self.nuid[i]; if !u.is_nan() && u > 0.0 { let e = by_unit.entry(u as i32).or_default(); e.ext_comp += c * (ps[3] + ps[4]); e.deaths += dd; e.displaced += di; e.injuries += i23; }
-            let j = self.juris[i]; if !j.is_nan() && (25.0..=33.0).contains(&j) { pdx.ext_comp += c * (ps[3] + ps[4]); pdx.ext += c * ps[3]; pdx.comp += c * ps[4]; pdx.deaths += dd; pdx.displaced += di; pdx.injuries += i23; }
+            ext_f[i] = (c * ps[3]) as f32; comp_f[i] = (c * ps[4]) as f32; inj_f[i] = i23 as f32;
         }
         // the per-cell rates as world fields, for agents that stand at a cell
         let mut death_rate = vec![0.0f32; n]; let mut disp_rate = vec![0.0f32; n];
         for i in 0..n { let o = self.occupants[i]; let r = self.residents[i]; if o > 0.0 { death_rate[i] = (deaths[i] / o).min(1.0); } if r > 0.0 { disp_rate[i] = (displaced[i] / r).min(1.0); } }
         ctx.world_write("quake.cell_death_rate", "1", &g, death_rate); ctx.world_write("quake.cell_displaced_rate", "1", &g, disp_rate);
         ctx.world_write("quake.cell_collapse_frac", "1", &g, cf_f); ctx.world_write("quake.cell_death_rate_collapse", "1", &g, rc_f); ctx.world_write("quake.cell_death_rate_other", "1", &g, ro_f);
+        // the per-cell results a scoring module sums over a study's areas
+        ctx.world_write("quake.cell_extensive", "buildings", &g, ext_f); ctx.world_write("quake.cell_complete", "buildings", &g, comp_f);
+        ctx.world_write("quake.cell_deaths", "people", &g, deaths.clone()); ctx.world_write("quake.cell_displaced", "people", &g, displaced.clone()); ctx.world_write("quake.cell_injuries_hospital", "people", &g, inj_f);
         ctx.field("buildings_collapsed", "buildings", &g, collapsed);
         ctx.report("quake.buildings_collapsed", "buildings", n_coll_tot); ctx.report("quake.deaths_in_collapses", "people", dead_in_coll);
         ctx.field("building_damage_frac", "1", &g, frac);
@@ -483,36 +443,13 @@ impl Module for Buildings {
         ctx.report("quake.injuries_hospital", "people", l23);
         ctx.report("quake.injuries_minor", "people", l1);
         ctx.report("quake.displaced", "people", disp);
-        ctx.report("quake.portland_deaths", "people", pdx.deaths);
-        ctx.report("quake.portland_displaced", "people", pdx.displaced);
-        ctx.report("quake.portland_buildings_extensive_or_complete", "buildings", pdx.ext_comp);
-        let ratio = |a: f64, b: f64| if b > 0.0 { a / b } else { f64::NAN };
-        let rp = &self.record_portland;
-        ctx.report("fit.portland_deaths_ratio", "1", ratio(pdx.deaths, rp.deaths));
-        ctx.report("fit.portland_displaced_ratio", "1", ratio(pdx.displaced, rp.displaced));
-        ctx.report("fit.portland_damage_ratio", "1", ratio(pdx.ext_comp, rp.ext_comp));
-        ctx.report("fit.portland_extensive_ratio", "1", ratio(pdx.ext, rp.ext));
-        ctx.report("fit.portland_complete_ratio", "1", ratio(pdx.comp, rp.comp));
-        ctx.report("fit.portland_injuries_ratio", "1", ratio(pdx.injuries, rp.injuries));
-        // correlation across units present in both
-        let corr = |ours: &dyn Fn(&UnitLoss) -> f64| -> f64 {
-            let pairs: Vec<(f64, f64)> = self.record_units.iter().filter_map(|r| by_unit.get(&r.nuid).map(|o| (ours(o), ours(r)))).collect();
-            if pairs.len() < 3 { return f64::NAN; }
-            let n = pairs.len() as f64; let (mx, my) = (pairs.iter().map(|p| p.0).sum::<f64>() / n, pairs.iter().map(|p| p.1).sum::<f64>() / n);
-            let (mut sxy, mut sxx, mut syy) = (0.0, 0.0, 0.0);
-            for (x, y) in &pairs { sxy += (x - mx) * (y - my); sxx += (x - mx).powi(2); syy += (y - my).powi(2); }
-            if sxx > 0.0 && syy > 0.0 { sxy / (sxx * syy).sqrt() } else { f64::NAN }
-        };
-        let r_dmg = corr(&|u| u.ext_comp); let r_d = corr(&|u| u.deaths);
-        ctx.report("fit.units_damage_r", "1", r_dmg);
-        ctx.report("fit.units_deaths_r", "1", r_d);
-        let when = if self.time_of_day == "night" { "at night (2 a.m.)" } else { "by day (2 p.m.)" };
+        let when = if self.time_of_day == "night" { "at night" } else { "by day" };
         let c = |v: f64| crate::lifelines::commas(v);
-        let sentence = format!("About {} buildings in the modelled area take extensive or complete damage, {} of them complete, and {} collapse. About {} people die, {} of them in collapsed buildings. Another {} are injured badly enough to need a hospital and {} are displaced. The casualties are for people where they are {}. This is the buildings module's count by map cell. Where a run also has agents, the page's death total uses the agents' count, which is lower in daytime runs for a reason not yet found. In the nine districts of the City of Portland the model counts {} dead where DOGAMI's study estimates {} for the same case, a ratio of {:.2}. Across the study's neighbourhood units, the model's counts of buildings with extensive or complete damage correlate {:.2} with DOGAMI's.",
-            c((tot[3] + tot[4]) as f64), c(tot[4] as f64), c(n_coll_tot as f64), c(d_tot as f64), c(dead_in_coll as f64), c(l23 as f64), c(disp as f64), when, c(pdx.deaths as f64), c(rp.deaths as f64), ratio(pdx.deaths, rp.deaths), r_dmg);
+        let sentence = format!("About {} buildings in the modelled area take extensive or complete damage, {} of them complete, and {} collapse. About {} people die, {} of them in collapsed buildings. Another {} are injured badly enough to need a hospital and {} are displaced. The casualties are for people where they are {}. This is the buildings module's count by map cell. Where a run also has agents, the page's death total uses the agents' count.",
+            c((tot[3] + tot[4]) as f64), c(tot[4] as f64), c(n_coll_tot as f64), c(d_tot as f64), c(dead_in_coll as f64), c(l23 as f64), c(disp as f64), when);
         ctx.report("quake.injuries_life_threatening", "people", l3);
         ctx.publish("quake.toll", json!({ "deaths": d_tot, "injuries_hospital": l23, "injuries_life": l3, "injuries_minor": l1, "displaced": disp }));
-        ctx.publish("quake.crossing", json!({ "id": "toll", "title": "The toll", "name": "the window", "kind": "toll", "time": ctx.now().to_iso(), "sentence": sentence, "source": "This model's fragility curves, which have the form Hazus uses, with values recalled from memory and six parameters fitted, applied to DOGAMI's ground motion and building inventory. The comparison is with DOGAMI's own Hazus run in Open-File Report O-18-02", "confidence": "fitted to the study it is compared with" }));
+        ctx.publish("quake.crossing", json!({ "id": "toll", "title": "The toll", "name": "the modelled area", "kind": "toll", "time": ctx.now().to_iso(), "sentence": sentence, "source": "This model's fragility curves, which have the form Hazus uses, with default values recalled from memory and scales set in the manifest, applied to the ground module's motion and the event folder's building inventory", "confidence": "a model on unverified curves" }));
     }
     fn snapshot(&self) -> serde_json::Value { serde_json::to_value(self).unwrap() }
     fn restore(&mut self, v: serde_json::Value) { let mut o: Buildings = serde_json::from_value(v).unwrap(); o.load().expect("buildings reload"); *self = o; }

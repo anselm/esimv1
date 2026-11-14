@@ -375,8 +375,9 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   modules should be Portland prefixed Or generalized"): `lifelines.recovery` is now `portland.lifelines`;
   `quake.ground` reads `ground.toml` in its event folder (files, fault, agency, source) and names no place;
   `people.aftermath` and `people.agents` take everything place-specific from `aftermath.toml` and have no default
-  folder. Next: the DOGAMI comparison out of `quake.buildings` into a scoring module, then `hazard.components` split
-  into subject modules (tanks, bridges, power structures, roads). The human layer order agreed in that conversation
+  folder. The comparison with DOGAMI's loss tables is `obs.losses` (`crates/modules/src/losses.rs`, the folder's
+  `losses.toml`; reads five `quake.cell_*` world fields on `quake.toll`; variants set `losses.record`, not
+  `buildings.record`). Next: `hazard.components` split into subject modules (tanks, bridges, power structures, roads). The human layer order agreed in that conversation
   (abiotic clumped, built before life, law and money as abiotic artifacts, disturbances across) is in the devlog and
   not yet in `docs/system/layers.md`. Layers are a tag for the page, not kernel structure.
 - Portland, the page and the standing faults (2026-11-12 night, `devlog/20261112-portland-readme-rewritten.md` and

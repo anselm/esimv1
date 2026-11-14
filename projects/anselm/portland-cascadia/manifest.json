@@ -111,6 +111,19 @@
         "lon_e": -122.47,
         "lon_w": -122.85,
         "median_complete_g": 1.1,
+        "res_arcsec": 1,
+        "time_of_day": "day"
+      }
+    },
+    {
+      "id": "losses",
+      "kind": "obs.losses",
+      "params": {
+        "folder": "portland-cascadia",
+        "lat_n": 45.66,
+        "lat_s": 45.43,
+        "lon_e": -122.47,
+        "lon_w": -122.85,
         "record": "wet",
         "res_arcsec": 1,
         "time_of_day": "day"
@@ -128,7 +141,7 @@
   ],
   "from": {
     "entry": "manifests/q1-portland-cascadia.toml",
-    "hash": "sha256:ee5a7a66be1d35c9245f4293c50dc72a19cab4f9c8f2c850c300e840a52d3ef6",
+    "hash": "sha256:4eb0bc059998e9ddd90549cddf7e28e24ef705a5cc9534f82c960c0501da957a",
     "language": "toml"
   },
   "manifest": "manifest/1"

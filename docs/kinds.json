@@ -230578,24 +230578,19 @@
   {
     "kind": "quake.buildings",
     "name": "quake.buildings",
-    "summary": "This module estimates building damage, deaths, injuries and displaced people in each cell of the map, from the ground module's shaking. For each cell it uses a fragility curve, which gives the probability that a building reaches each of four damage states at a given peak ground acceleration. One set of curves stands for a generic mix of building types. The module adds the buildings lost where the ground liquefies or slides, then applies a casualty rate to each damage state. This is the approach of Hazus, the loss-estimation software of the Federal Emergency Management Agency. The buildings, the residents and the occupants by time of day come from the inventory of DOGAMI, Oregon's geology agency. The values of the curves and of the casualty rates are recalled from memory and have not been checked against the Hazus manual. Six parameters were then fitted to DOGAMI's own Hazus results for a daytime earthquake on saturated soil, and the module reports how close the fit is. The pattern of damage across neighbourhoods follows DOGAMI's. The tolls for a night-time earthquake and for dry soil do not. In this model only shaking makes a building collapse, so the toll changes much less between those cases than it does in DOGAMI's study.",
+    "summary": "This module estimates building damage, deaths, injuries and displaced people in each cell of the map, from the ground module's shaking. For each cell it uses a fragility curve, which gives the probability that a building reaches each of four damage states at a given peak ground acceleration. One set of curves stands for a generic mix of building types. The module adds the buildings lost where the ground liquefies or slides, then applies a casualty rate to each damage state. This is the approach of Hazus, the loss-estimation software of the Federal Emergency Management Agency. The buildings, the residents and the occupants by time of day are maps in the event folder. The default values of the curves and of the casualty rates are recalled from memory and have not been checked against the Hazus manual. A scenario may adjust the scales below to fit a published loss study, and a run that carries an obs.losses module reports how close the result is to that study. In this model only shaking makes a building collapse, and nearly all deaths are in collapsed buildings. The toll therefore changes less between day and night, and between saturated and dry soil, than a Hazus run's does.",
     "priority": 1,
     "dt": "once, on the rupture",
     "params": [
       {
         "name": "folder",
-        "default": "portland-cascadia",
-        "note": "the folder of input data for this event: the building inventory and DOGAMI's loss tables"
+        "default": "",
+        "note": "the folder under data/events that holds this scenario's building inventory: buildings per cell, floor area, residents, and occupants by day and by night"
       },
       {
         "name": "time_of_day",
         "default": "day",
-        "note": "day: people where DOGAMI places them at 2 p.m. night: where it places them at 2 a.m."
-      },
-      {
-        "name": "record",
-        "default": "wet",
-        "note": "which of DOGAMI's result tables the run is compared with, wet or dry. It should match the ground module's soil setting"
+        "note": "day: people where the inventory places them by day. night: where it places them at night"
       },
       {
         "name": "median_slight_g",
@@ -230629,7 +230624,7 @@
       {
         "name": "fragility_scale",
         "default": 1.0,
-        "note": "divides the four accelerations above. Fitted so that the count of buildings with extensive or complete damage matches DOGAMI's; the fit is reported"
+        "note": "divides the four accelerations above. A scenario may fit it so that the count of buildings with extensive or complete damage matches a published study"
       },
       {
         "name": "gf_median_cm",
@@ -230655,7 +230650,7 @@
       {
         "name": "casualty_scale",
         "default": 1.0,
-        "note": "multiplies every casualty rate. Fitted so that deaths in Portland match DOGAMI's; the fit is reported"
+        "note": "multiplies every casualty rate. A scenario may fit it so that deaths match a published study"
       },
       {
         "name": "displaced_moderate_share",
@@ -230665,14 +230660,14 @@
       {
         "name": "displaced_share",
         "default": 1.0,
-        "note": "the share of residents of buildings with extensive or complete damage counted as displaced for the long term. Fitted to DOGAMI's displaced population; the fit is reported"
+        "note": "the share of residents of buildings with extensive or complete damage counted as displaced for the long term. A scenario may fit it to a published study"
       }
     ],
     "publishes": [
       {
         "name": "quake.crossing",
         "required": false,
-        "note": "{ kind: toll, sentence } the sentence shown on the run page: deaths, injuries and displaced people from the shaking, with the comparison against DOGAMI"
+        "note": "{ kind: toll, sentence } the sentence shown on the run page: deaths, injuries and displaced people from the shaking"
       },
       {
         "name": "quake.toll",
@@ -230713,6 +230708,31 @@
       {
         "name": "quake.cell_death_rate_other",
         "unit": "1",
+        "required": false
+      },
+      {
+        "name": "quake.cell_extensive",
+        "unit": "buildings",
+        "required": false
+      },
+      {
+        "name": "quake.cell_complete",
+        "unit": "buildings",
+        "required": false
+      },
+      {
+        "name": "quake.cell_deaths",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "quake.cell_displaced",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "quake.cell_injuries_hospital",
+        "unit": "people",
         "required": false
       }
     ],
@@ -230846,61 +230866,6 @@
         "name": "quake.occupants",
         "unit": "people",
         "required": false
-      },
-      {
-        "name": "quake.portland_deaths",
-        "unit": "people",
-        "required": false
-      },
-      {
-        "name": "quake.portland_displaced",
-        "unit": "people",
-        "required": false
-      },
-      {
-        "name": "quake.portland_buildings_extensive_or_complete",
-        "unit": "buildings",
-        "required": false
-      },
-      {
-        "name": "fit.portland_deaths_ratio",
-        "unit": "1",
-        "required": false
-      },
-      {
-        "name": "fit.portland_displaced_ratio",
-        "unit": "1",
-        "required": false
-      },
-      {
-        "name": "fit.portland_damage_ratio",
-        "unit": "1",
-        "required": false
-      },
-      {
-        "name": "fit.portland_extensive_ratio",
-        "unit": "1",
-        "required": false
-      },
-      {
-        "name": "fit.portland_complete_ratio",
-        "unit": "1",
-        "required": false
-      },
-      {
-        "name": "fit.portland_injuries_ratio",
-        "unit": "1",
-        "required": false
-      },
-      {
-        "name": "fit.units_damage_r",
-        "unit": "1",
-        "required": false
-      },
-      {
-        "name": "fit.units_deaths_r",
-        "unit": "1",
-        "required": false
       }
     ],
     "views": [
@@ -230973,189 +230938,17 @@
         "source": "quake.buildings_extensive",
         "obs": "",
         "note": "the two worst of the four damage states"
-      },
-      {
-        "kind": "counter",
-        "title": "deaths in Portland, relative to DOGAMI",
-        "source": "fit.portland_deaths_ratio",
-        "obs": "",
-        "note": "this run's deaths in the nine districts of the City of Portland divided by DOGAMI's estimate for the same case; 1 would be an exact match"
-      },
-      {
-        "kind": "counter",
-        "title": "damage pattern, correlation with DOGAMI",
-        "source": "fit.units_damage_r",
-        "obs": "",
-        "note": "the correlation between this run's and DOGAMI's counts of buildings with extensive or complete damage, across the study's 876 neighbourhood units"
       }
     ],
     "assets": [
       {
-        "key": "events/portland-cascadia",
-        "note": "DOGAMI's building outlines, people per neighbourhood unit and Hazus loss tables"
+        "key": "events/",
+        "note": "the building inventory: buildings per cell, floor area, residents, occupants by day and by night"
       }
     ],
     "notes": [
-      "The Hazus tables (FEMA, Earthquake Model Technical Manual) could not be downloaded to the development machine on 12 November 2026. The fragility accelerations, their spread, the collapse share and the casualty rates are therefore recalled from memory and not checked. Six parameters were then fitted to DOGAMI's Hazus run on the same ground, so the daytime toll on saturated soil is close to DOGAMI's because it was made to be. The building inventory is DOGAMI's. It gives building outlines without heights or structure types. DOGAMI gives the number of people in each neighbourhood unit; dividing them among the unit's buildings by footprint area is this project's assumption."
-    ],
-    "tables": {
-      "dogami_losses": [
-        {
-          "Bldg_LR": 0.14,
-          "CasDayL2": 254.46,
-          "CasDayL3": 32.52,
-          "CasDayL4": 62.65,
-          "CasNightL4": 21.67,
-          "DisplacedPop": 6267.29,
-          "Jurisdiction": "Beaverton",
-          "PDsComplete": 1637.0,
-          "PDsExtensive": 840.0
-        },
-        {
-          "Bldg_LR": 0.07,
-          "CasDayL2": 197.07,
-          "CasDayL3": 23.37,
-          "CasDayL4": 44.63,
-          "CasNightL4": 12.93,
-          "DisplacedPop": 4652.39,
-          "Jurisdiction": "Clackamas County - Unincorporated",
-          "PDsComplete": 3521.0,
-          "PDsExtensive": 3298.0
-        },
-        {
-          "Bldg_LR": 0.07,
-          "CasDayL2": 107.45,
-          "CasDayL3": 14.21,
-          "CasDayL4": 27.39,
-          "CasNightL4": 9.56,
-          "DisplacedPop": 4244.06,
-          "Jurisdiction": "Gresham",
-          "PDsComplete": 1384.0,
-          "PDsExtensive": 585.0
-        },
-        {
-          "Bldg_LR": 0.16,
-          "CasDayL2": 438.97,
-          "CasDayL3": 62.27,
-          "CasDayL4": 121.07,
-          "CasNightL4": 28.9,
-          "DisplacedPop": 7124.32,
-          "Jurisdiction": "Hillsboro",
-          "PDsComplete": 2143.0,
-          "PDsExtensive": 794.0
-        },
-        {
-          "Bldg_LR": 0.16,
-          "CasDayL2": 41.0,
-          "CasDayL3": 5.35,
-          "CasDayL4": 10.31,
-          "CasNightL4": 4.17,
-          "DisplacedPop": 1890.93,
-          "Jurisdiction": "Multnomah County - Unincorporated",
-          "PDsComplete": 1329.0,
-          "PDsExtensive": 563.0
-        },
-        {
-          "Bldg_LR": 0.52,
-          "CasDayL2": 151.25,
-          "CasDayL3": 24.51,
-          "CasDayL4": 48.11,
-          "CasNightL4": 7.51,
-          "DisplacedPop": 14.39,
-          "Jurisdiction": "Portland - Airport",
-          "PDsComplete": 137.0,
-          "PDsExtensive": 45.0
-        },
-        {
-          "Bldg_LR": 0.31,
-          "CasDayL2": 907.3,
-          "CasDayL3": 137.62,
-          "CasDayL4": 271.33,
-          "CasNightL4": 87.7,
-          "DisplacedPop": 7422.35,
-          "Jurisdiction": "Portland - Central City",
-          "PDsComplete": 743.0,
-          "PDsExtensive": 521.0
-        },
-        {
-          "Bldg_LR": 0.16,
-          "CasDayL2": 148.04,
-          "CasDayL3": 16.6,
-          "CasDayL4": 31.18,
-          "CasNightL4": 7.46,
-          "DisplacedPop": 1177.13,
-          "Jurisdiction": "Portland - Central Northeast Neighborhoods",
-          "PDsComplete": 580.0,
-          "PDsExtensive": 487.0
-        },
-        {
-          "Bldg_LR": 0.08,
-          "CasDayL2": 188.08,
-          "CasDayL3": 24.25,
-          "CasDayL4": 46.66,
-          "CasNightL4": 10.28,
-          "DisplacedPop": 1204.34,
-          "Jurisdiction": "Portland - East Portland Neighborhood Office",
-          "PDsComplete": 527.0,
-          "PDsExtensive": 940.0
-        },
-        {
-          "Bldg_LR": 0.33,
-          "CasDayL2": 427.91,
-          "CasDayL3": 61.63,
-          "CasDayL4": 119.62,
-          "CasNightL4": 27.67,
-          "DisplacedPop": 4072.82,
-          "Jurisdiction": "Portland - Neighbors West/Northwest",
-          "PDsComplete": 1385.0,
-          "PDsExtensive": 444.0
-        },
-        {
-          "Bldg_LR": 0.3,
-          "CasDayL2": 645.18,
-          "CasDayL3": 87.63,
-          "CasDayL4": 169.23,
-          "CasNightL4": 24.13,
-          "DisplacedPop": 3971.74,
-          "Jurisdiction": "Portland - North Portland Neighborhood Services",
-          "PDsComplete": 2010.0,
-          "PDsExtensive": 940.0
-        },
-        {
-          "Bldg_LR": 0.09,
-          "CasDayL2": 139.0,
-          "CasDayL3": 21.34,
-          "CasDayL4": 41.95,
-          "CasNightL4": 7.95,
-          "DisplacedPop": 1920.26,
-          "Jurisdiction": "Portland - Northeast Coalition",
-          "PDsComplete": 707.0,
-          "PDsExtensive": 419.0
-        },
-        {
-          "Bldg_LR": 0.1,
-          "CasDayL2": 283.6,
-          "CasDayL3": 41.85,
-          "CasDayL4": 81.91,
-          "CasNightL4": 23.02,
-          "DisplacedPop": 5492.13,
-          "Jurisdiction": "Portland - Southeast Uplift Neighborhood Program",
-          "PDsComplete": 1935.0,
-          "PDsExtensive": 1154.0
-        },
-        {
-          "Bldg_LR": 0.13,
-          "CasDayL2": 394.22,
-          "CasDayL3": 50.14,
-          "CasDayL4": 96.36,
-          "CasNightL4": 39.53,
-          "DisplacedPop": 16508.98,
-          "Jurisdiction": "Washington County - Unincorporated",
-          "PDsComplete": 7502.0,
-          "PDsExtensive": 2828.0
-        }
-      ]
-    }
+      "The Hazus tables (FEMA, Earthquake Model Technical Manual) could not be downloaded to the development machine on 12 November 2026. The default fragility accelerations, their spread, the collapse share and the casualty rates are therefore recalled from memory and not checked. Where a scenario has fitted the scales to a published loss study, its toll is close to that study because it was made to be. The inventory gives a count of buildings and a number of people per cell, with no heights or structure types."
+    ]
   },
   {
     "kind": "portland.lifelines",
@@ -232472,5 +232265,162 @@
     "notes": [
       "An agent that stands for many individuals is called a super-individual. The method comes from fish and plankton modelling in the 1990s (recalled from memory; no citation was checked). The agents are drawn using the run's seed, so the same seed gives the same agents."
     ]
+  },
+  {
+    "kind": "obs.losses",
+    "name": "obs.losses",
+    "summary": "This module holds a run's building damage and casualties against a published loss study. It computes nothing about the earthquake. Once the buildings module has finished, it sums that module's results for each cell over the small areas the study reports by and over one named group of larger areas, and reports how the two sets of numbers compare: a ratio for the group's deaths, displaced people, injuries and damaged buildings, and a correlation across the small areas. A file in the event folder, losses.toml, names the study, its tables and its columns. A ratio near 1 does not make the run an independent estimate if the buildings module's parameters were fitted to the same study, and the buildings module says where they were.",
+    "priority": 7,
+    "dt": "once, after the buildings module's reckoning",
+    "params": [
+      {
+        "name": "folder",
+        "default": "",
+        "note": "the folder under data/events that holds the study's tables, the rasters of its areas and a losses.toml naming them"
+      },
+      {
+        "name": "record",
+        "default": "wet",
+        "note": "which of the study's cases the run is compared with; it fills {record} in the table names and should match the ground module's soil setting"
+      },
+      {
+        "name": "time_of_day",
+        "default": "day",
+        "note": "day or night: which of the study's casualty columns to use; it should match the buildings module's setting"
+      }
+    ],
+    "publishes": [
+      {
+        "name": "fit.crossing",
+        "required": false,
+        "note": "{ kind: fit, sentence, source, confidence } the comparison as a sentence on the run page"
+      }
+    ],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [
+      {
+        "name": "quake.toll",
+        "required": false,
+        "note": "the buildings module has finished"
+      }
+    ],
+    "fields_owned": [],
+    "fields_read": [
+      {
+        "name": "quake.cell_extensive",
+        "unit": "buildings",
+        "required": true,
+        "on": "quake.toll",
+        "note": "buildings with extensive damage, per cell"
+      },
+      {
+        "name": "quake.cell_complete",
+        "unit": "buildings",
+        "required": true,
+        "on": "quake.toll",
+        "note": "buildings with complete damage, per cell"
+      },
+      {
+        "name": "quake.cell_deaths",
+        "unit": "people",
+        "required": true,
+        "on": "quake.toll"
+      },
+      {
+        "name": "quake.cell_displaced",
+        "unit": "people",
+        "required": true,
+        "on": "quake.toll"
+      },
+      {
+        "name": "quake.cell_injuries_hospital",
+        "unit": "people",
+        "required": true,
+        "on": "quake.toll"
+      }
+    ],
+    "ledgers": [],
+    "frames": [],
+    "reports": [
+      {
+        "name": "quake.group_deaths",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "quake.group_displaced",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "quake.group_buildings_extensive_or_complete",
+        "unit": "buildings",
+        "required": false
+      },
+      {
+        "name": "fit.group_deaths_ratio",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "fit.group_displaced_ratio",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "fit.group_damage_ratio",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "fit.group_extensive_ratio",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "fit.group_complete_ratio",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "fit.group_injuries_ratio",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "fit.units_damage_r",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "fit.units_deaths_r",
+        "unit": "1",
+        "required": false
+      }
+    ],
+    "views": [
+      {
+        "kind": "counter",
+        "title": "deaths in the compared area, relative to the study",
+        "source": "fit.group_deaths_ratio",
+        "obs": "",
+        "note": "this run's deaths in the study's named group of areas divided by the estimate of the published study for the same case; 1 would be an exact match"
+      },
+      {
+        "kind": "counter",
+        "title": "damage pattern, correlation with the study",
+        "source": "fit.units_damage_r",
+        "obs": "",
+        "note": "the correlation between this run's counts of buildings with extensive or complete damage and those of the published study, across the study's small areas"
+      }
+    ],
+    "assets": [
+      {
+        "key": "events/",
+        "note": "the study's loss tables and the rasters of its areas"
+      }
+    ],
+    "notes": []
   }
 ]

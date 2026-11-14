@@ -54,7 +54,7 @@ His rule: "Portland modules should be Portland prefixed Or generalized."
 | `quake.ground` | generalize | done: the event folder's `ground.toml` names the maps, the fault, the agency and the source; the code names none of them |
 | `people.aftermath` | generalize | done: the device share sums any `power_dependent_dme_*` and `population_*` keys; each claim has a `short` the sentence uses; the month rule's text and the "leaves out" text come from `aftermath.toml` |
 | `people.agents` | generalize | done: same device-share rule; no Portland or DOGAMI in its text beyond one dated note on the unexplained daytime gap |
-| `quake.buildings` | generalize after one cut | next: move the comparison with DOGAMI's loss tables into a scoring module, as the fire engine keeps `obs.*` |
+| `quake.buildings` | generalize after one cut | done (second batch, below): the comparison is `obs.losses` |
 | `hazard.components` | generalize by splitting | after that: tanks, bridges, power structures, road segments as subject modules on one fragility library |
 
 None of the three generalized kinds has a default folder now; a manifest must name one. They still
@@ -65,3 +65,35 @@ All ten Portland variants were rerun. Every series is identical to the runs depl
 night of 12 November; the run ids changed because the manifest names a new kind. `cargo test`
 (describe) and `esim regress` pass. Committed, not pushed, not deployed: the live copy still
 serves the previous runs.
+
+## The second batch: the comparison out of the buildings (done)
+
+Anselm: "Carry on."
+
+- `obs.losses` (`crates/modules/src/losses.rs`) is new. On `quake.toll` it reads five per-cell
+  world fields the buildings module now writes (`quake.cell_extensive`, `quake.cell_complete`,
+  `quake.cell_deaths`, `quake.cell_displaced`, `quake.cell_injuries_hospital`), sums them over
+  the study's small areas and over one named group of larger areas, and reports the same series
+  as before (`fit.portland_*`, `fit.units_*`, `quake.portland_*`; the middle word is the group's
+  `key` in the folder's `losses.toml`). The comparison is its own sentence on the run page
+  (`fit.crossing`) and the study's table is `published_losses` (was `dogami_losses`).
+- `data/events/portland-cascadia/losses.toml` names the study, the rasters, the tables, the
+  columns, the group and the rows to show. The code names none of them.
+- `quake.buildings` no longer loads the unit raster, the jurisdiction raster or the loss tables,
+  has no `record` parameter and no default folder, and says nothing of Portland or DOGAMI. Its
+  toll sentence ends at the toll. Variants that set `buildings.record` now set `losses.record`,
+  and `wet-night` also sets `losses.time_of_day`.
+
+Against the runs of the first batch, every series is the same except the eleven the new module
+reports, which differ by at most 8 parts in a billion: the per-cell fields are stored in single
+precision before they are summed. A first version moved the unit correlation in the fourth
+decimal (0.8946 to 0.8944) because it admitted units with no buildings; a unit now enters only
+through a cell that has buildings, as before.
+
+`cargo test` (describe) and `esim regress` pass. The base run's page was looked at: the new
+module's panel, its two counters and its place in the wiring figure. Committed, not pushed, not
+deployed.
+
+Left for the third batch: `hazard.components` split by subject; `portland.lifelines` shrinking as
+hospitals, the fuel account and water are pulled out. The manifest's comment on the fitted
+parameters and the README's account of the fit still stand as written.

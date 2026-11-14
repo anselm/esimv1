@@ -15,7 +15,7 @@ title = "The base run: saturated soil, 2 PM, seed 1"
 [variant.set]
 "ground.soils" = "wet"
 "buildings.time_of_day" = "day"
-"buildings.record" = "wet"
+"losses.record" = "wet"
 
 [[variant]]
 name = "wet-night"
@@ -24,7 +24,8 @@ title = "The earthquake at 2 AM, with people at home"
 "ground.soils" = "wet"
 "buildings.time_of_day" = "night"
 "agents.time_of_day" = "night"
-"buildings.record" = "wet"
+"losses.time_of_day" = "night"
+"losses.record" = "wet"
 "ground.at" = "2027-02-01T10:00:00Z"
 
 [[variant]]
@@ -34,7 +35,7 @@ title = "Dry soil, 2 PM: almost no liquefaction"
 "ground.soils" = "dry"
 "components.soils" = "dry"
 "buildings.time_of_day" = "day"
-"buildings.record" = "dry"
+"losses.record" = "dry"
 
 [[variant]]
 name = "cut-20"
