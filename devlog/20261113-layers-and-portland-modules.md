@@ -213,3 +213,11 @@ Not done: the bridges are pins, not spans; roads are points at segment centres b
 does not carry their geometry; there is no water surface; the earthquake itself is not animated;
 frames belong to their module's layer, so the people in buildings sit in the built layer. The
 other projects' runs need rerunning before they show the view.
+
+Anselm, the same day: "This additional 3d view can be near the top of the display." On the run
+page it already sits directly under the timeline. The project page now opens with it too
+(`web/src/lib/ProjectScene.svelte`): the newest run of the project's first variant that the view
+can draw, opened a week after the event, with a timeline of its own and a link to the run. When a
+project has no such run the cover picture is shown as before; the cover file still makes the
+share card. Looked at on the Portland page at desktop width and at 420 pixels, where the layer
+list starts folded.

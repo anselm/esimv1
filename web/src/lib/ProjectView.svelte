@@ -9,9 +9,11 @@
   import Verdict from './Verdict.svelte'
   import Readme from './Readme.svelte'
   import Crumbs from './Crumbs.svelte'
+  import ProjectScene from './ProjectScene.svelte'
 
   let { path } = $props()
   $effect(() => { if (meta?.title) document.title = `${meta.title} · esim` })
+  let sceneShown = $state(false)
   let meta = $state(null)
   let manifest = $state('')
   // the program a project was made from, when it was a JavaScript or JSON manifest: kept
@@ -116,7 +118,9 @@
     </div>
   </section>
 
-  {#if meta.cover}
+  <!-- the place in 3D from the newest run, when a run can show it; otherwise the cover picture -->
+  <ProjectScene {path} bind:shown={sceneShown} />
+  {#if meta.cover && !sceneShown}
     <!-- a depiction of the scenario, a file beside the manifest named in project.toml -->
     <figure class="mb-10 max-w-3xl">
       <img src={`/projects/${path}/${meta.cover}`} alt={meta.cover_caption ?? meta.title ?? path} class="w-full rounded-[3px]" />
