@@ -25,6 +25,7 @@
         "end": 1758326400,
         "events": 44770,
         "id": "m7-fire-boone-sept-af5039cd-ed758cab",
+        "made": 1793576131,
         "name": "m7-fire-boone-sept",
         "seed": 1,
         "set": null,
@@ -60,12 +61,13 @@
         "end": 1767225600,
         "events": 94544,
         "id": "m6-eaters-boone-2025-a5b81cdd-1d66e0ac",
+        "made": 1794181382,
         "name": "m6-eaters-boone-2025",
         "seed": 1,
         "set": null,
         "start": 1735689600,
         "variant": null,
-        "verdict": null
+        "verdict": "holds"
       }
     ],
     "title": "Deer and predators in the Boone basin, 2025"
@@ -91,6 +93,7 @@
         "end": 1462579200,
         "events": 311,
         "id": "f4-fortmcmurray-cells-742b205e-62998eb1",
+        "made": 1793814920,
         "name": "f4-fortmcmurray-cells",
         "seed": 1,
         "set": {
@@ -106,6 +109,7 @@
         "end": 1462579200,
         "events": 504,
         "id": "f4-fortmcmurray-cells-8ae5c799-c1063e45",
+        "made": 1793814920,
         "name": "f4-fortmcmurray-cells",
         "seed": 1,
         "set": {
@@ -121,6 +125,7 @@
         "end": 1462579200,
         "events": 330,
         "id": "f4-fortmcmurray-cells-b355b723-d7800bbc",
+        "made": 1793814921,
         "name": "f4-fortmcmurray-cells",
         "seed": 1,
         "set": {
@@ -136,6 +141,7 @@
         "end": 1462579200,
         "events": 311,
         "id": "f4-fortmcmurray-cells-d50563e0-62998eb1",
+        "made": 1793814915,
         "name": "f4-fortmcmurray-cells",
         "seed": 1,
         "set": null,
@@ -189,6 +195,7 @@
         "end": 3313526400,
         "events": 43037,
         "id": "c1-halfmoonbay-oneline-0a96f481-28d09c8d",
+        "made": 1794181182,
         "name": "c1-halfmoonbay-oneline",
         "seed": 1,
         "set": {
@@ -204,6 +211,7 @@
         "end": 3313526400,
         "events": 43037,
         "id": "c1-halfmoonbay-oneline-11009c25-28d09c8d",
+        "made": 1794181268,
         "name": "c1-halfmoonbay-oneline",
         "seed": 1,
         "set": {
@@ -220,6 +228,7 @@
         "end": 3313526400,
         "events": 43048,
         "id": "c1-halfmoonbay-oneline-432a92f0-69e2e727",
+        "made": 1794181354,
         "name": "c1-halfmoonbay-oneline",
         "seed": 1,
         "set": {
@@ -228,7 +237,7 @@
         },
         "start": -283996800,
         "variant": "to-2075-dredged",
-        "verdict": null
+        "verdict": "holds"
       },
       {
         "all_ledgers_closed": true,
@@ -236,6 +245,7 @@
         "end": 1735689600,
         "events": 24162,
         "id": "c1-halfmoonbay-oneline-529d1cc8-b94f7f8d",
+        "made": 1794181030,
         "name": "c1-halfmoonbay-oneline",
         "seed": 1,
         "set": {
@@ -251,6 +261,7 @@
         "end": 1735689600,
         "events": 24162,
         "id": "c1-halfmoonbay-oneline-6a21268c-70bece76",
+        "made": 1794180970,
         "name": "c1-halfmoonbay-oneline",
         "seed": 1,
         "set": {
@@ -266,6 +277,7 @@
         "end": 1735689600,
         "events": 24162,
         "id": "c1-halfmoonbay-oneline-b188a5d7-70bece76",
+        "made": 1794181096,
         "name": "c1-halfmoonbay-oneline",
         "seed": 1,
         "set": {
@@ -346,6 +358,7 @@
         "end": 1885791600,
         "events": 226,
         "id": "f5-nicasio-2029-465516cd-fde33d37",
+        "made": 1794172380,
         "name": "f5-nicasio-2029",
         "seed": 1,
         "set": {
@@ -361,6 +374,7 @@
         "end": 1885791600,
         "events": 764,
         "id": "f5-nicasio-2029-73b9e5a6-4b761588",
+        "made": 1794172391,
         "name": "f5-nicasio-2029",
         "seed": 1,
         "set": {
@@ -369,7 +383,7 @@
         },
         "start": 1885532400,
         "variant": "gust",
-        "verdict": null
+        "verdict": "holds"
       },
       {
         "all_ledgers_closed": true,
@@ -377,6 +391,7 @@
         "end": 1885791600,
         "events": 378,
         "id": "f5-nicasio-2029-849874a2-5639d288",
+        "made": 1794172362,
         "name": "f5-nicasio-2029",
         "seed": 1,
         "set": {
@@ -392,6 +407,7 @@
         "end": 1885791600,
         "events": 463,
         "id": "f5-nicasio-2029-dc5f0eae-843cf62b",
+        "made": 1794172371,
         "name": "f5-nicasio-2029",
         "seed": 1,
         "set": {
@@ -457,6 +473,7 @@
         "end": 1885791600,
         "events": 227,
         "id": "f6-nicasio-2029-rothermel-9b7cedd0-56a0ba65",
+        "made": 1794173713,
         "name": "f6-nicasio-2029-rothermel",
         "seed": 1,
         "set": {
@@ -472,6 +489,7 @@
         "end": 1885791600,
         "events": 227,
         "id": "f6-nicasio-2029-rothermel-a0b61a59-33b1bab5",
+        "made": 1794173718,
         "name": "f6-nicasio-2029-rothermel",
         "seed": 1,
         "set": {
@@ -487,6 +505,7 @@
         "end": 1885791600,
         "events": 227,
         "id": "f6-nicasio-2029-rothermel-e4e3d40a-93e44429",
+        "made": 1794173727,
         "name": "f6-nicasio-2029-rothermel",
         "seed": 1,
         "set": {
@@ -494,7 +513,7 @@
         },
         "start": 1885532400,
         "variant": "sh7",
-        "verdict": null
+        "verdict": "holds"
       },
       {
         "all_ledgers_closed": true,
@@ -502,6 +521,7 @@
         "end": 1885791600,
         "events": 227,
         "id": "f6-nicasio-2029-rothermel-e8d3bf96-5b539d8c",
+        "made": 1794173722,
         "name": "f6-nicasio-2029-rothermel",
         "seed": 1,
         "set": {
@@ -568,6 +588,7 @@
         "end": 1736640000,
         "events": 1764,
         "id": "f2-palisades-2025-049fd575-f5303941",
+        "made": 1793810951,
         "name": "f2-palisades-2025",
         "seed": 1,
         "set": {
@@ -583,6 +604,7 @@
         "end": 1736640000,
         "events": 1764,
         "id": "f2-palisades-2025-4464aade-1ef44ed6",
+        "made": 1793810955,
         "name": "f2-palisades-2025",
         "seed": 1,
         "set": {
@@ -598,6 +620,7 @@
         "end": 1736640000,
         "events": 1764,
         "id": "f2-palisades-2025-89ae7246-4c5d9a23",
+        "made": 1793810953,
         "name": "f2-palisades-2025",
         "seed": 1,
         "set": {
@@ -613,6 +636,7 @@
         "end": 1736640000,
         "events": 1764,
         "id": "f2-palisades-2025-a679e5d7-eb728349",
+        "made": 1793810954,
         "name": "f2-palisades-2025",
         "seed": 1,
         "set": {
@@ -679,6 +703,7 @@
         "end": 1736640000,
         "events": 2456,
         "id": "f3-palisades-cells-0e261438-2d1db738",
+        "made": 1793811011,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -695,6 +720,7 @@
         "end": 1736640000,
         "events": 2354,
         "id": "f3-palisades-cells-14927292-cae1ba89",
+        "made": 1793811011,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -713,6 +739,7 @@
         "end": 1736640000,
         "events": 2441,
         "id": "f3-palisades-cells-1639a39f-5ec0f114",
+        "made": 1793811038,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -733,6 +760,7 @@
         "end": 1736640000,
         "events": 2129,
         "id": "f3-palisades-cells-38da48d9-3716add7",
+        "made": 1793810984,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -748,6 +776,7 @@
         "end": 1736640000,
         "events": 1763,
         "id": "f3-palisades-cells-42ffef19-f34599a5",
+        "made": 1793810981,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -763,6 +792,7 @@
         "end": 1736640000,
         "events": 2123,
         "id": "f3-palisades-cells-5f4cc560-624e3c31",
+        "made": 1793811066,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -782,6 +812,7 @@
         "end": 1736640000,
         "events": 2152,
         "id": "f3-palisades-cells-7131bd4a-2eb215df",
+        "made": 1793811066,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -801,6 +832,7 @@
         "end": 1736640000,
         "events": 2152,
         "id": "f3-palisades-cells-7131bd4a-9c487c37",
+        "made": 1794673154,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -820,6 +852,7 @@
         "end": 1736640000,
         "events": 1836,
         "id": "f3-palisades-cells-8bfc6e78-44a83d66",
+        "made": 1793811037,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -837,6 +870,7 @@
         "end": 1736640000,
         "events": 2404,
         "id": "f3-palisades-cells-aada6577-d3d91785",
+        "made": 1793811038,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -857,6 +891,7 @@
         "end": 1736640000,
         "events": 2585,
         "id": "f3-palisades-cells-b012c120-71365698",
+        "made": 1793811065,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -875,6 +910,7 @@
         "end": 1736640000,
         "events": 2319,
         "id": "f3-palisades-cells-b4a4af11-c8055395",
+        "made": 1793810984,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -890,6 +926,7 @@
         "end": 1736640000,
         "events": 2277,
         "id": "f3-palisades-cells-b9cd582e-265827d2",
+        "made": 1793811065,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -907,6 +944,7 @@
         "end": 1736640000,
         "events": 2419,
         "id": "f3-palisades-cells-d1407db5-9687dbdc",
+        "made": 1793811038,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -926,6 +964,7 @@
         "end": 1736640000,
         "events": 1956,
         "id": "f3-palisades-cells-d73b8fb3-eba8c6f7",
+        "made": 1793810984,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -941,6 +980,7 @@
         "end": 1736640000,
         "events": 2644,
         "id": "f3-palisades-cells-df3a701a-3d9036d4",
+        "made": 1793811011,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -957,6 +997,7 @@
         "end": 1736640000,
         "events": 2247,
         "id": "f3-palisades-cells-e05d601f-8915b835",
+        "made": 1793811093,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -977,6 +1018,7 @@
         "end": 1736640000,
         "events": 2354,
         "id": "f3-palisades-cells-f372497a-a23bcc6b",
+        "made": 1793811011,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -1188,6 +1230,7 @@
         "end": 4102444800,
         "events": 35390,
         "id": "p4-planet-people-025f2fd5-e0fe18a3",
+        "made": 1794117513,
         "name": "p4-planet-people",
         "seed": 1,
         "set": {
@@ -1204,6 +1247,7 @@
         "end": 4102444800,
         "events": 32980,
         "id": "p4-planet-people-0864ec21-8b301f0e",
+        "made": 1794117602,
         "name": "p4-planet-people",
         "seed": 1,
         "set": {
@@ -1220,6 +1264,7 @@
         "end": 1735689600,
         "events": 20680,
         "id": "p4-planet-people-1b2cf39b-b0c3bac2",
+        "made": 1794117448,
         "name": "p4-planet-people",
         "seed": 1,
         "set": {
@@ -1235,6 +1280,7 @@
         "end": 4102444800,
         "events": 33987,
         "id": "p4-planet-people-1f3349b1-90e094cc",
+        "made": 1794117628,
         "name": "p4-planet-people",
         "seed": 1,
         "set": {
@@ -1251,6 +1297,7 @@
         "end": 4102444800,
         "events": 36091,
         "id": "p4-planet-people-4f84fb6b-603b7b75",
+        "made": 1794117499,
         "name": "p4-planet-people",
         "seed": 1,
         "set": {
@@ -1266,6 +1313,7 @@
         "end": 4102444800,
         "events": 33727,
         "id": "p4-planet-people-4f9aa8e2-12e4e40f",
+        "made": 1794117653,
         "name": "p4-planet-people",
         "seed": 1,
         "set": {
@@ -1285,6 +1333,7 @@
         "end": 4102444800,
         "events": 33726,
         "id": "p4-planet-people-652a7bb4-7b29853a",
+        "made": 1794117615,
         "name": "p4-planet-people",
         "seed": 1,
         "set": {
@@ -1303,6 +1352,7 @@
         "end": 4102444800,
         "events": 35853,
         "id": "p4-planet-people-79ed7546-c64235fc",
+        "made": 1794117539,
         "name": "p4-planet-people",
         "seed": 1,
         "set": {
@@ -1320,6 +1370,7 @@
         "end": 4102444800,
         "events": 34863,
         "id": "p4-planet-people-81f2a5f5-4f657416",
+        "made": 1794117590,
         "name": "p4-planet-people",
         "seed": 1,
         "set": {
@@ -1338,6 +1389,7 @@
         "end": 4102444800,
         "events": 35201,
         "id": "p4-planet-people-afc2a651-852df161",
+        "made": 1794117461,
         "name": "p4-planet-people",
         "seed": 1,
         "set": {
@@ -1353,6 +1405,7 @@
         "end": 4102444800,
         "events": 35723,
         "id": "p4-planet-people-b0723d60-e2241eb3",
+        "made": 1794117486,
         "name": "p4-planet-people",
         "seed": 1,
         "set": {
@@ -1368,6 +1421,7 @@
         "end": 4102444800,
         "events": 36057,
         "id": "p4-planet-people-b18e37f3-f5d11a1d",
+        "made": 1794117564,
         "name": "p4-planet-people",
         "seed": 3,
         "set": {
@@ -1385,6 +1439,7 @@
         "end": 4102444800,
         "events": 35962,
         "id": "p4-planet-people-b440222b-00c6005d",
+        "made": 1794117551,
         "name": "p4-planet-people",
         "seed": 2,
         "set": {
@@ -1402,6 +1457,7 @@
         "end": 4102444800,
         "events": 32713,
         "id": "p4-planet-people-bd951aec-ade509b3",
+        "made": 1794117473,
         "name": "p4-planet-people",
         "seed": 1,
         "set": {
@@ -1417,6 +1473,7 @@
         "end": 4102444800,
         "events": 35217,
         "id": "p4-planet-people-d7efa189-608a9f65",
+        "made": 1794117641,
         "name": "p4-planet-people",
         "seed": 1,
         "set": {
@@ -1433,6 +1490,7 @@
         "end": 4102444800,
         "events": 33542,
         "id": "p4-planet-people-e482d639-9c843ad4",
+        "made": 1794117526,
         "name": "p4-planet-people",
         "seed": 1,
         "set": {
@@ -1448,6 +1506,7 @@
         "end": 4102444800,
         "events": 35634,
         "id": "p4-planet-people-f2e30f39-591ea060",
+        "made": 1794117577,
         "name": "p4-planet-people",
         "seed": 1,
         "set": {
@@ -1630,9 +1689,13 @@
         "end": 1735689600,
         "events": 12805,
         "id": "p1-planet-co2-1850-2025-8a0a0e63-8d8d2ffb",
+        "made": 1793576121,
         "name": "p1-planet-co2-1850-2025",
         "seed": 1,
-        "start": -3786825600
+        "set": null,
+        "start": -3786825600,
+        "variant": null,
+        "verdict": "holds"
       }
     ],
     "title": "CO2 and warming since 1850, one box"
@@ -1674,6 +1737,7 @@
         "end": 4102444800,
         "events": 35853,
         "id": "j3-planet-wild-members-14bfa83f-c64235fc",
+        "made": 1794117679,
         "name": "j3-planet-wild-members",
         "seed": 1,
         "set": {
@@ -1689,6 +1753,7 @@
         "end": 4102444800,
         "events": 35962,
         "id": "j3-planet-wild-members-37c96e40-00c6005d",
+        "made": 1794117692,
         "name": "j3-planet-wild-members",
         "seed": 2,
         "set": {
@@ -1704,6 +1769,7 @@
         "end": 4102444800,
         "events": 35286,
         "id": "j3-planet-wild-members-3f41b554-142b02af",
+        "made": 1794117729,
         "name": "j3-planet-wild-members",
         "seed": 5,
         "set": {
@@ -1719,6 +1785,7 @@
         "end": 4102444800,
         "events": 35929,
         "id": "j3-planet-wild-members-5ed5c445-28bfeb4d",
+        "made": 1794117742,
         "name": "j3-planet-wild-members",
         "seed": 6,
         "set": {
@@ -1734,6 +1801,7 @@
         "end": 4102444800,
         "events": 36057,
         "id": "j3-planet-wild-members-8fc9576f-f5d11a1d",
+        "made": 1794117704,
         "name": "j3-planet-wild-members",
         "seed": 3,
         "set": {
@@ -1749,6 +1817,7 @@
         "end": 4102444800,
         "events": 35641,
         "id": "j3-planet-wild-members-9110dcb8-9848021b",
+        "made": 1794117767,
         "name": "j3-planet-wild-members",
         "seed": 8,
         "set": {
@@ -1764,6 +1833,7 @@
         "end": 4102444800,
         "events": 35627,
         "id": "j3-planet-wild-members-915df65b-a3779ed5",
+        "made": 1794117755,
         "name": "j3-planet-wild-members",
         "seed": 7,
         "set": {
@@ -1779,6 +1849,7 @@
         "end": 4102444800,
         "events": 35344,
         "id": "j3-planet-wild-members-a95f5d01-3c33156d",
+        "made": 1794117717,
         "name": "j3-planet-wild-members",
         "seed": 4,
         "set": {
@@ -1794,6 +1865,7 @@
         "end": 4102444800,
         "events": 35853,
         "id": "j3-planet-wild-members-eacc23ef-c64235fc",
+        "made": 1794117666,
         "name": "j3-planet-wild-members",
         "seed": 1,
         "set": null,
@@ -1902,6 +1974,7 @@
         "end": 1830326400,
         "events": 5193,
         "id": "q1-portland-cascadia-002eae12-be14a2ce",
+        "made": 1794678466,
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
@@ -1919,6 +1992,7 @@
         "end": 1830326400,
         "events": 6829,
         "id": "q1-portland-cascadia-0933d22f-6702ed6f",
+        "made": 1794678433,
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
@@ -1936,6 +2010,7 @@
         "end": 1830326400,
         "events": 6801,
         "id": "q1-portland-cascadia-24610a98-bcf07e13",
+        "made": 1794678475,
         "name": "q1-portland-cascadia",
         "seed": 2,
         "set": {
@@ -1951,6 +2026,7 @@
         "end": 1830326400,
         "events": 6829,
         "id": "q1-portland-cascadia-751fad5f-3cdfbe0d",
+        "made": 1794678409,
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
@@ -1968,6 +2044,7 @@
         "end": 1830326400,
         "events": 6831,
         "id": "q1-portland-cascadia-7e82151e-21c27583",
+        "made": 1794678483,
         "name": "q1-portland-cascadia",
         "seed": 3,
         "set": {
@@ -1975,7 +2052,7 @@
         },
         "start": 1798790400,
         "variant": "seed-3",
-        "verdict": null
+        "verdict": "tearing"
       },
       {
         "all_ledgers_closed": true,
@@ -1983,6 +2060,7 @@
         "end": 1830326400,
         "events": 6829,
         "id": "q1-portland-cascadia-b0f009cf-54b24015",
+        "made": 1794678442,
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
@@ -2000,6 +2078,7 @@
         "end": 1830326400,
         "events": 6829,
         "id": "q1-portland-cascadia-be7faeae-5a87a92c",
+        "made": 1794678450,
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
@@ -2016,6 +2095,7 @@
         "end": 1830326400,
         "events": 6829,
         "id": "q1-portland-cascadia-c172c26e-3cdfbe0d",
+        "made": 1794678458,
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
@@ -2031,6 +2111,7 @@
         "end": 1830326400,
         "events": 6829,
         "id": "q1-portland-cascadia-c4f59c3d-18aa8d84",
+        "made": 1794678417,
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
@@ -2051,6 +2132,7 @@
         "end": 1830326400,
         "events": 6589,
         "id": "q1-portland-cascadia-c57cd5c6-816d06c6",
+        "made": 1794678425,
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
@@ -2181,9 +2263,13 @@
         "end": 1769817600,
         "events": 1743,
         "id": "m0-buckets-499f95ca-4d08eea6",
+        "made": 1793576121,
         "name": "m0-buckets",
         "seed": 42,
-        "start": 1767225600
+        "set": null,
+        "start": 1767225600,
+        "variant": null,
+        "verdict": "holds"
       }
     ],
     "title": "Two buckets and a tap"
@@ -2213,9 +2299,13 @@
         "end": 1761868800,
         "events": 74127,
         "id": "boone-dry-summer-2025-b1f31d34-8abbb6ae",
+        "made": 1793577074,
         "name": "boone-dry-summer-2025",
         "seed": 1,
-        "start": 1743465600
+        "set": null,
+        "start": 1743465600,
+        "variant": null,
+        "verdict": "holds"
       }
     ],
     "title": "Boone basin, a dry summer"

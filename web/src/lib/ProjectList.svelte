@@ -2,6 +2,7 @@
   $effect(() => { document.title = 'esim' })
   let { area = null } = $props()
   import Badge from './Badge.svelte'
+  import { newestFirst } from './runs.js'
   import Account from './Account.svelte'
   // The front page lists the areas: the top folders, one per person or group, each with how
   // much is in it and the pictures of its featured projects. An area's page (/<area>) lists its
@@ -48,7 +49,7 @@
     }))
     projects = projects
   }
-  const latest = (p) => (p.runs ?? []).slice().sort((a, b) => (b.start ?? 0) - (a.start ?? 0))[0] ?? null
+  const latest = (p) => (p.runs ?? []).slice().sort(newestFirst)[0] ?? null
   // the few scenarios the front page leads with (featured = true in project.toml), newest first
   const featured = $derived((projects ?? []).filter((p) => p.featured === true).sort((a, b) => String(b.created ?? '').localeCompare(String(a.created ?? ''))))
   // where each scenario is, for the dots on the globe: the middle of the place its manifest states

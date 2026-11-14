@@ -2,6 +2,7 @@
   import Pager from './Pager.svelte'
   let page = $state(0)
   import Badge from './Badge.svelte'
+  import { newestFirst } from './runs.js'
   import { link } from './router.svelte.js'
   import { isoDate, num } from './fmt.js'
   import Status from './Status.svelte'
@@ -11,7 +12,7 @@
     if (!r.ok) return []
     const list = await r.json()
     if (!Array.isArray(list)) return []
-    const runs = list.slice().sort((a, b) => (b.start ?? 0) - (a.start ?? 0))
+    const runs = list.slice().sort(newestFirst)
     // best NSE per run, from the optional scores.json (404 means none), and
     // the branch count of an ensemble run (its folder holds ensemble.json)
     await Promise.all(runs.map(async (run) => {

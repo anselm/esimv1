@@ -10,6 +10,12 @@ export function variantsOf(meta) {
   return [...meta.matchAll(/\[\[variant\]\][\s\S]*?name\s*=\s*"([^"]+)"(?:[\s\S]*?title\s*=\s*"([^"]+)")?/g)].map((m) => ({ name: m[1], title: m[2] ?? m[1] }))
 }
 
+/// The one ordering of runs, newest first: by when the run was made, then by its simulated
+/// start, then by id. Reruns of a scenario share a simulated start, so the page's lists and its
+/// "newest run" must all use this or they disagree.
+export const newestFirst = (a, b) =>
+  (b.made ?? 0) - (a.made ?? 0) || (b.start ?? 0) - (a.start ?? 0) || (b.id > a.id ? 1 : b.id < a.id ? -1 : 0)
+
 /// [{ variant, title, id, base, run, audit, describe }] for the newest run of each wanted
 /// variant (all of them, in project order, when `wanted` is null). `describe` is the
 /// run's describe.json: the modules as they described themselves for that run.
@@ -22,7 +28,7 @@ export async function latestRuns(path, wanted = null, { audit = true, describe =
   for (const v of pick) {
     const rows = idx.filter((r) => r.variant === v)
     if (!rows.length) continue
-    const row = rows.sort((a, b) => (b.start ?? 0) - (a.start ?? 0) || (b.id > a.id ? 1 : -1))[0]
+    const row = rows.sort(newestFirst)[0]
     const base = `/projects/${path}/runs/${encodeURIComponent(row.id)}`
     const [run, au, de] = await Promise.all([
       loadJson(`${base}/run.json`),

@@ -606,6 +606,7 @@ fn projects_index() -> Result<Vec<serde_json::Value>, String> {
             let d = proj.path();
             let Ok(meta) = fs::read_to_string(d.join("project.toml")) else { continue };
             let meta: toml::Value = toml::from_str(&meta).unwrap_or(toml::Value::Table(Default::default()));
+            if d.join("runs").is_dir() { let _ = update_index(&d.join("runs")); }
             let runs: serde_json::Value = fs::read_to_string(d.join("runs").join("index.json")).ok().and_then(|t| serde_json::from_str(&t).ok()).unwrap_or(serde_json::json!([]));
             let manifest = fs::read_to_string(d.join("manifest.toml")).unwrap_or_default();
             let kinds: Vec<String> = Manifest::parse(&manifest).map(|m| m.modules.iter().map(|e| e.kind.clone()).collect()).unwrap_or_default();
@@ -632,7 +633,9 @@ fn projects(json: bool) -> Result<(), String> {
     Ok(())
 }
 
-/// runs/index.json: one line per run folder, for the viewer.
+/// runs/index.json: one line per run folder, for the viewer. `made` is when the run's folder was
+/// last written (run.json's modification time, unix seconds): the simulated start is the same for
+/// every rerun of a scenario, so the viewer orders runs by this.
 fn update_index(root: &Path) -> Result<(), String> {
     let mut rows = Vec::new();
     for e in fs::read_dir(root).map_err(|e| e.to_string())? {
@@ -642,8 +645,10 @@ fn update_index(root: &Path) -> Result<(), String> {
             if let Ok(v) = serde_json::from_str::<serde_json::Value>(&text) {
                 let variant: serde_json::Value = fs::read_to_string(e.path().join("variant.json")).ok().and_then(|t| serde_json::from_str(&t).ok()).unwrap_or(serde_json::Value::Null);
                 let audit: serde_json::Value = fs::read_to_string(e.path().join("audit.json")).ok().and_then(|t| serde_json::from_str(&t).ok()).unwrap_or(serde_json::Value::Null);
+                let made = fs::metadata(&p).and_then(|m| m.modified()).ok()
+                    .and_then(|t| t.duration_since(std::time::UNIX_EPOCH).ok()).map(|d| d.as_secs());
                 rows.push(serde_json::json!({
-                    "id": e.file_name().to_string_lossy(),
+                    "id": e.file_name().to_string_lossy(), "made": made,
                     "name": v["name"], "start": v["start"], "end": v["end"], "seed": v["seed"],
                     "events": v["events"], "all_ledgers_closed": v["all_ledgers_closed"],
                     "digest": v["log_digest"],

@@ -1,5 +1,6 @@
 <script>
   import Badge from './Badge.svelte'
+  import { newestFirst } from './runs.js'
   // Two futures side by side: a project's variants, latest run each, under one cursor.
   // Big counters that move with the cursor, the maps, the crossings so far, and a country
   // picker that draws one country's path from the run logs. Built for the 2100 question.
@@ -28,7 +29,7 @@
     try {
       const meta = await loadText(`/projects/${path}/project.toml`)
       const names = [...meta.matchAll(/\[\[variant\]\][\s\S]*?name\s*=\s*"([^"]+)"(?:[\s\S]*?title\s*=\s*"([^"]+)")?/g)].map((m) => ({ name: m[1], title: m[2] ?? m[1] }))
-      const idx = (await loadJson(`/projects/${path}/runs/index.json`)).sort((a, b) => (b.start ?? 0) - (a.start ?? 0))
+      const idx = (await loadJson(`/projects/${path}/runs/index.json`)).sort(newestFirst)
       const pick = (wanted ?? names.map((n) => n.name).filter((n) => n !== 'hindcast')).slice(0, 3)
       const out = []
       for (const v of pick) {

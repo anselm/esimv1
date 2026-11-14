@@ -1,5 +1,6 @@
 <script>
   import Badge from './Badge.svelte'
+  import { newestFirst } from './runs.js'
   import Account from './Account.svelte'
   // One project: what was asked, the manifest, the runs, and a button to run it again.
   import { link, go } from './router.svelte.js'
@@ -77,7 +78,7 @@
         meta = parseMeta(m); manifest = t; runs = rr; live = false
       } catch (e2) { error = e2.message }
     }
-    runs = runs.slice().sort((a, b) => (b.start ?? 0) - (a.start ?? 0))
+    runs = runs.slice().sort(newestFirst)
     fetch(`/projects/${path}/manifest.json`, { cache: 'no-store' }).then((r) => (r.ok ? r.json() : null)).then(async (doc) => {
       const from = doc?.from
       if (!from || !['javascript', 'json'].includes(from.language)) return
