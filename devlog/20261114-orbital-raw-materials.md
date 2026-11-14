@@ -19,7 +19,7 @@ changed; another project's folder is read-only to this room.
 | The earlier scenarios | `orbital-sim/public/orbital/{hormuz,ipcc,planetary,world-events}`, `orbital-sim/public/anselm/{tuvalu,tenerife-futures,africa_middle_east_warming_2049,microeconomy}` | each a folder with a JavaScript manifest and its data |
 | The earlier engine's modules | `orbital-sim/packages/agents/` (atmosphere, elevation, insolation, spatial, ingestion, hormuz) | JavaScript, on the older core |
 | The site and its globe | `orbital-sim/website/`, `orbital-sim/viz/` | live at orbital-sim.exe.xyz |
-| The Earth texture | `orbital-sim/public/assets/earth.jpg` | its origin is recorded nowhere in these folders |
+| The Earth texture | `orbital-sim/public/assets/earth.jpg` | NASA's Blue Marble (Anselm, 14 November 2026: "Earth texture is def blue marble"); the folders do not record it |
 
 What looks most useful here, not yet acted on:
 

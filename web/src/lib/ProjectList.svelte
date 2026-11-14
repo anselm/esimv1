@@ -115,7 +115,7 @@
       <a use:link={{ doc: 'system/overview' }} class="rounded-[3px] border border-neutral-300 bg-white/70 px-4 py-2 hover:border-brand dark:border-neutral-700 dark:bg-neutral-950/70">How it works</a>
       <a use:link={{ kinds: true }} class="rounded-[3px] border border-neutral-300 bg-white/70 px-4 py-2 hover:border-brand dark:border-neutral-700 dark:bg-neutral-950/70">The {kindCount || ''} module kinds</a>
     </div>
-    {#if places.length}<p class="mt-5 text-xs muted">The dots on the globe are the places these scenarios model.</p>{/if}
+    {#if places.length}<p class="mt-5 text-xs muted">The dots on the globe are the places these scenarios model. Earth image: NASA Blue Marble.</p>{/if}
   </section>
 
   <!-- three facts about the engine, each drawn from what is in the repository -->

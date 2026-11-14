@@ -3,6 +3,7 @@
   // orbital-sim site's home page (orbital-sim.exe.xyz, website/client/src/lib/Globe.svelte), with
   // one change: the dots are the places this site's scenarios model, read from their manifests,
   // where the original had placeholder cities. Decoration behind the page; it takes no input.
+  // The texture, /assets/earth.jpg, is NASA's Blue Marble (Anselm, 2026-11-14), which is in the public domain.
   import * as THREE from 'three'
 
   let { places = [] } = $props()   // [{ lat, lon }]
