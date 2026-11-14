@@ -406,6 +406,18 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   `routes.geojson`) and OpenStreetMap roads (`context`), `roads.bridges` carries bridge ways from OpenStreetMap
   (`registry::wildfire::osm_bridges`); the fetcher now gives up on a request after 300 s. Reduced Overpass answers are kept in
   `data/osm/`, committed (`Fetcher::kept_path`), not in `data/cache/`: commit a new window's file after its first fetch.
+- **The kernel stays small** (Anselm, 2026-11-14: "I do want to avoid polluting the kernel with special case behavior
+  as a general principle ... generally we have to remember somehow that we want to keep the kernel small"): the
+  kernel is a clock, a bus and a few services (ledgers, world fields, reports, per-module random streams, snapshots);
+  it knows nothing of data, places or subjects. New behaviour goes in a module, in the registry, or in the command
+  line. `enabled = false` in the manifest reader is the one exception he accepted.
+- Preparing (2026-11-14, `devlog/20261114-preparing-a-scenario.md`): creating a module is when it fetches, so
+  everything before the clock is the preparation. `esim prepare <manifest>` and `esim project prepare <area/name>`
+  do it and stop; `--offline` on any command (or `ESIM_OFFLINE=1`) refuses to fetch. The fetcher
+  (`crates/registry/src/fetch.rs`) holds a lock per file under `.locks/`, writes to `<name>.<pid>.part`, re-reads the
+  hash list before rewriting it, bounds every request and spaces requests per host. `data/osm/` sits beside the hash
+  list whatever `ESIM_CACHE` says. A refetched OpenStreetMap answer has a new hash and the lock refuses it: delete
+  the lock entry with the file to refresh one.
 - Portland, the page and the standing faults (2026-11-12 night, `devlog/20261112-portland-readme-rewritten.md` and
   `devlog/20261112-portland-stale-wording.md`; Anselm: "I want to try rewrite the portland cascadia fault scenario
   readme again", then "update stale portland wording overall everywhere"): the project README is a new text in the

@@ -199,6 +199,36 @@ fn apply_overrides(text: &str, sets: &[Override]) -> Result<String, String> {
 
 fn run(path: &Path, out_root: &Path) -> Result<PathBuf, String> { run_with(path, out_root, &[], None) }
 
+/// esim prepare <manifest>: everything a run does before the clock starts, and then stop. The
+/// manifest is resolved and its wiring checked, and every module is created, which is when a
+/// module fetches and reduces the data it needs for this place and these settings. What was
+/// fetched is printed. After it, a run of the same manifest finds everything on disk, and
+/// `--offline` can hold it to that. Nothing is simulated and no run folder is written.
+fn prepare_with(path: &Path, sets: &[Override]) -> Result<(), String> {
+    let t0 = std::time::Instant::now();
+    let original = Manifest::resolve_text(path)?;
+    let mtext = apply_overrides(&original, sets)?;
+    let mut manifest = Manifest::parse(&mtext)?;
+    let r = check_report(&manifest);
+    for w in &r.warnings { eprintln!("warning: {w}"); }
+    if !r.errors.is_empty() { return Err(format!("manifest does not wire up:\n  {}", r.errors.join("\n  "))); }
+    fold_params(&mut manifest);
+    let n = manifest.modules.len();
+    // one module at a time, so their requests queue; a module that fails says which and why
+    for m in &manifest.modules {
+        let t = std::time::Instant::now();
+        esim_modules::build(&m.kind, &m.name, &m.params).map(|_| ())
+            .map_err(|e| format!("{} ({}): {e}", m.name, m.kind))?;
+        println!("module    {:<12} {:<20} ready in {:.1} s", m.name, m.kind, t.elapsed().as_secs_f64());
+    }
+    let got = esim_registry::fetch::fetched();
+    if got.is_empty() { println!("fetched   nothing: everything {} modules need was on disk", n); }
+    for f in &got { println!("fetched   {:<60} {:>8.1} MB in {:.0} s", f.key, f.bytes as f64 / 1e6, f.secs); }
+    if !got.is_empty() { println!("fetched   {} files, {:.1} MB", got.len(), got.iter().map(|f| f.bytes as f64).sum::<f64>() / 1e6); }
+    println!("prepared  {} in {:.1} s{}", path.display(), t0.elapsed().as_secs_f64(), if esim_registry::fetch::offline() { " (offline: nothing may be fetched)" } else { "" });
+    Ok(())
+}
+
 fn run_with(path: &Path, out_root: &Path, sets: &[Override], variant: Option<&str>) -> Result<PathBuf, String> {
     let original = Manifest::resolve_text(path)?;
     let mtext = apply_overrides(&original, sets)?;
@@ -322,6 +352,42 @@ by = {}
     projects_index()?;
     println!("project  {path} at {}", dir.display());
     Ok(())
+}
+
+/// Prepare a project: `esim prepare` on its manifest with a variant's overrides, or with every
+/// variant's in turn when none is named, so that any of its runs finds its data on disk.
+fn project_prepare(path: &str, variant: Option<&str>, extra: &[Override]) -> Result<(), String> {
+    let dir = project_dir(path)?;
+    if !dir.join("manifest.toml").exists() { return Err(format!("no project at {}", dir.display())); }
+    let names: Vec<Option<String>> = match variant {
+        Some(v) => vec![Some(v.to_string())],
+        None => {
+            let meta: toml::Value = toml::from_str(&fs::read_to_string(dir.join("project.toml")).map_err(|e| e.to_string())?).map_err(|e| e.to_string())?;
+            let v: Vec<Option<String>> = meta.get("variant").and_then(|a| a.as_array()).into_iter().flatten().filter_map(|e| e.get("name").and_then(|n| n.as_str()).map(|s| Some(s.to_string()))).collect();
+            if v.is_empty() { vec![None] } else { v }
+        }
+    };
+    for v in names {
+        if let Some(v) = &v { println!("variant   {v}"); }
+        let mut sets = project_sets(&dir, path, v.as_deref())?;
+        sets.extend(extra.iter().cloned());
+        prepare_with(&dir.join("manifest.toml"), &sets)?;
+    }
+    Ok(())
+}
+/// A variant's overrides from a project's project.toml, as `module.param = value` pairs.
+fn project_sets(dir: &Path, path: &str, variant: Option<&str>) -> Result<Vec<Override>, String> {
+    let mut sets: Vec<Override> = Vec::new();
+    if let Some(v) = variant {
+        let meta: toml::Value = toml::from_str(&fs::read_to_string(dir.join("project.toml")).map_err(|e| e.to_string())?).map_err(|e| e.to_string())?;
+        let found = meta.get("variant").and_then(|a| a.as_array()).into_iter().flatten()
+            .find(|e| e.get("name").and_then(|n| n.as_str()) == Some(v)).ok_or_else(|| format!("project {path} has no variant {v}"))?;
+        for (k, val) in found.get("set").and_then(|t| t.as_table()).into_iter().flatten() {
+            let text = match val { toml::Value::String(s) => format!("{s:?}"), other => other.to_string() };
+            sets.push((k.clone(), text));
+        }
+    }
+    Ok(sets)
 }
 
 /// Run a project: its manifest, with a named variant's overrides from project.toml
@@ -920,6 +986,8 @@ fn regress(accept: bool, only: Option<&str>) -> Result<(), String> {
 }
 
 fn main() {
+    // --offline on any command: nothing may be fetched; a missing file is an error that names it
+    if std::env::args().any(|a| a == "--offline") { std::env::set_var("ESIM_OFFLINE", "1"); }
     let args: Vec<String> = std::env::args().collect();
     let res = match args.get(1).map(String::as_str) {
         Some("--version") | Some("version") => { println!("esim {}", env!("CARGO_PKG_VERSION")); Ok(()) }
@@ -969,16 +1037,18 @@ fn main() {
             match (args.get(2).map(String::as_str), args.get(3)) {
                 (Some("new"), Some(p)) => project_new(p, get("--manifest").map(Path::new), get("--title"), get("--description"), get("--by").unwrap_or("cli")),
                 (Some("run"), Some(p)) => project_run(p, get("--variant"), &parse_overrides(&args)),
+                (Some("prepare"), Some(p)) => project_prepare(p, get("--variant"), &parse_overrides(&args)),
                 (Some("prune"), Some(p)) => project_prune(p, get("--keep").and_then(|k| k.parse().ok()).unwrap_or(1)),
                 (Some("update"), Some(p)) => match get("--manifest") { Some(m) => project_update(p, Path::new(m)), None => Err("usage: esim project update <area/name> --manifest <file>".into()) },
                 _ => Err("usage: esim project new <area/name> --manifest <file> [--title t] [--description d] [--by who] | esim project run <area/name>".into()),
             }
         }
+        Some("prepare") => match args.get(2) { Some(p) => prepare_with(Path::new(p), &parse_overrides(&args)), None => Err("usage: esim prepare <manifest> [--set module.param=value] [--offline]".into()) },
         Some("regress") => regress(args.iter().any(|a| a == "--accept"), args.iter().position(|a| a == "--only").and_then(|i| args.get(i + 1)).map(String::as_str)),
         Some("check") => match args.get(2) { Some(p) => check(Path::new(p)), None => Err("usage: esim check <manifest.toml>".into()) },
         Some("describe") => match args.get(2) { Some(p) => describe(Path::new(p)), None => Err("usage: esim describe <manifest.toml>".into()) },
         Some("manifest") => match args.get(2) { Some(p) => manifest_cmd(Path::new(p), args.iter().any(|a| a == "--toml"), args.iter().any(|a| a == "--js"), args.iter().any(|a| a == "--id")), None => Err("usage: esim manifest <file.toml|file.json|file.js> [--toml|--js|--id]".into()) },
-        _ => Err("usage: esim run|verify|ensemble|sweep|score|audit|check|describe|manifest|kinds|project|projects|sources|events|warm|regress".into()),
+        _ => Err("usage: esim run|prepare|verify|ensemble|sweep|score|audit|check|describe|manifest|kinds|project|projects|sources|events|warm|regress (any with --offline to refuse fetching)".into()),
     };
     if let Err(e) = res { eprintln!("error: {e}"); std::process::exit(1); }
 }

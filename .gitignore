@@ -4,3 +4,7 @@ node_modules/
 dist/
 .env
 data/cache/
+
+# the fetcher's holds: one empty file per fetched thing, so two runs do not fetch it at once
+.locks/
+*.part

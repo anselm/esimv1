@@ -105,6 +105,28 @@ of overrides. One project holds several assumptions this way (emissions held; em
 to zero) and its runs are labelled by variant. Running a project "as written" applies
 none.
 
+## Preparing a scenario
+
+A module is generic code. It learns where it is only when a run creates it and hands it the
+scenario's place and its own settings, and that is when it works out which data it needs and
+fetches what is missing. So everything a run does before its clock starts is a preparation: the
+manifest is resolved, its wiring is checked, and each module is created in turn. Data is on disk
+before the first simulated instant.
+
+`esim prepare <manifest>` does that much and stops. It prints each module as it becomes ready and
+every file that was fetched, and it writes no run. `esim project prepare <area/name>` does it for
+each of a project's variants. After it, a run of the same scenario fetches nothing.
+
+Any command takes `--offline`: nothing may be fetched, and a missing file is an error that names
+the file and where it would have come from. Use it where a run must not wait on a network, such
+as an ensemble or a server.
+
+Fetched data is shared. A file is kept by what it is, not by which scenario asked, so fifty
+scenarios of one place fetch each file once. Two preparations started at the same moment are
+safe: one fetches a file while the other waits and then finds it. Requests have time limits, and
+requests to one server are spaced. Answers from OpenStreetMap are slow and unreliable to fetch,
+so once reduced they are kept in the repository under `data/osm/`.
+
 ## A run is a folder
 
 ```

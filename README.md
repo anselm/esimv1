@@ -126,6 +126,7 @@ cargo test --release                                               # about 40 s 
 
 # projects: a folder with a manifest, a description and runs; variants are named overrides
 ./target/release/esim project new me/planet --manifest manifests/p4-planet-people.toml
+./target/release/esim project prepare me/planet                    # fetch what its modules need, and stop before the clock
 ./target/release/esim project run me/planet
 ./target/release/esim project run me/planet --set emissions.after_record=zero_by:2050
 

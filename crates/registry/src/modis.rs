@@ -18,7 +18,7 @@ pub struct NdviComposite {
 
 fn stac_search(collection: &str, bbox: [f64; 4], start: &str, end: &str) -> Result<Vec<NdviComposite>, String> {
     let body = serde_json::json!({ "collections": [collection], "bbox": bbox, "datetime": format!("{start}T00:00:00Z/{end}T23:59:59Z"), "limit": 200 });
-    let resp = ureq::post("https://planetarycomputer.microsoft.com/api/stac/v1/search").set("Content-Type", "application/json")
+    let resp = crate::fetch::agent(Some(300)).post("https://planetarycomputer.microsoft.com/api/stac/v1/search").set("Content-Type", "application/json")
         .send_string(&body.to_string()).map_err(|e| format!("stac search: {e}"))?;
     let v: serde_json::Value = serde_json::from_str(&resp.into_string().map_err(|e| e.to_string())?).map_err(|e| e.to_string())?;
     let mut out = Vec::new();
@@ -42,7 +42,7 @@ fn container_token() -> Result<String, String> {
     let url = "https://planetarycomputer.microsoft.com/api/sas/v1/token/modiseuwest/modis-061-cogs";
     let mut last = String::new();
     for attempt in 0..5 {
-        match ureq::get(url).call() {
+        match crate::fetch::agent(Some(120)).get(url).call() {
             Ok(r) => {
                 let text = r.into_string().map_err(|e| e.to_string())?;
                 let v: serde_json::Value = serde_json::from_str(&text).map_err(|e| e.to_string())?;
