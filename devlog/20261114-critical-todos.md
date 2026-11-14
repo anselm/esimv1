@@ -64,3 +64,12 @@ snapshot: a later list supersedes it with a new entry. Each item says where its 
   picture until its runs are redone.
 - The older `Scene3D` is still used inside the fire modules' panels.
 - A run's `describe.json` is 1.5 MB with road and bridge lines in it.
+
+## Added the same day, at the deploy
+
+- **A run's `snapshots.json` is very large**: 1.4 GB for one Portland run, 15 GB for the project's
+  ten. They filled the VM's 25 GB disk and stopped the deploy. The deploy now leaves the file
+  behind (the read-only copy never resumes a run and the viewer never reads it), which took the
+  VM's projects from 18 GB to 6 GB. The size itself is not fixed: some module's saved state is
+  about 120 MB per snapshot, twelve times a run. Find which, and mark what can be rebuilt on
+  restore as not saved. It also fills canada1 at 1.5 GB a run.

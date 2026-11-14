@@ -17,7 +17,10 @@ RS="rsync -az --delete -e 'ssh -o ServerAliveInterval=5 -o StrictHostKeyChecking
 
 ssh -o ServerAliveInterval=5 -o StrictHostKeyChecking=accept-new "$HOST" 'mkdir -p /srv/esim/web'
 eval $RS "$HERE/web/dist" "$HERE/web/lib" "$HERE/web/server.mjs" "$HERE/web/package.json" "$HOST:/srv/esim/web/"
-eval $RS --exclude='fields/*/*.f32.tmp' "$HERE/projects/" "$HOST:/srv/esim/projects/"
+# snapshots.json is the engine's saved states for resuming a run (1.4 GB for one Portland run); the
+# read-only copy never resumes anything and its viewer never reads the file, so it is left behind
+# and removed where an earlier deploy put it. Deleting first frees the room the new runs need.
+eval $RS --delete-before --delete-excluded --exclude='snapshots.json' --exclude='fields/*/*.f32.tmp' "$HERE/projects/" "$HOST:/srv/esim/projects/"
 eval $RS "$HERE/docs/" "$HOST:/srv/esim/docs/"
 # the server reads these for the country picker and outlines when the geojson cache is absent
 # dependencies from package.json on the VM (socket.io and the SDK), then restart
