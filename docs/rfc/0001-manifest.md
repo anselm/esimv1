@@ -80,7 +80,7 @@ module. Whether a manifest should be able to state connections is an open questi
 (section 15).
 
 The notation has a division of its own, which is a different thing from the two levels and
-which the rest of this document follows. Part I is the **meta grammar**, the syntax: how to
+which the rest of this document follows. Part I is the **syntax**: how to
 write any collection of things at all. Entities, components, identity, order, imports,
 inheritance, variables, loops, the expressions a document may carry, how it is made
 canonical and hashed. Nothing in it knows what a river is. A scene description, a game
@@ -90,7 +90,7 @@ needs, such as the run window, the place, the module and its kind, and the varia
 assumption. An engine that adopts Part I and only some of Part II can still read, draw,
 check and hash the document, and say which components it has no system for.
 
-## Part I: the meta grammar
+## Part I: the syntax
 
 ### 3. Entities and components
 
@@ -531,7 +531,10 @@ levels one and two are safe on any input, level three is not.
 - 14 November 2026: section 2 rewritten. The two levels are now the modules (the science) and
   the arrangement that wires them together, which is the manifest. The earlier text called
   the syntax and the vocabulary "levels"; they are now described as the notation's two parts.
-  The section also says that a manifest does not yet state connections, and the question is
+  The section also says that a manifest does not yet state connections.
+  Part I is renamed "the syntax": "meta grammar" was the project lead's term for the manifest
+  level as a whole, set against the units of computation a scientist puts in a module, and
+  draft 3 had narrowed it to the syntax alone. The question of stating connections is
   added to section 15 (Anselm: "the internal manifest grammar is a 'lower level' of 'science
   pieces' or modules - that are wired together by a 'higher level' of largely declarative
   relationships").
