@@ -35,6 +35,9 @@ pub mod tanks;
 pub mod bridges;
 pub mod power;
 pub mod routes;
+pub mod depot;
+pub mod surfacewater;
+pub mod hospitals;
 pub mod agents;
 pub mod losses;
 
@@ -102,6 +105,9 @@ pub static KINDS: &[Kind] = &[
     kind!("roads.bridges", bridges::Bridges),
     kind!("power.structures", power::Power),
     kind!("roads.routes", routes::Routes),
+    kind!("fuel.depot", depot::Depot),
+    kind!("water.surface", surfacewater::SurfaceWater),
+    kind!("health.hospitals", hospitals::Hospitals),
     kind!("people.agents", agents::Agents),
     kind!("obs.losses", losses::Losses),
 ];
@@ -146,7 +152,8 @@ pub fn layer_of(kind: &str) -> &'static str {
     match kind {
         "quake.ground" | "hazard.fire" | "carbon.tipped" => "across",
         "quake.buildings" => "built",
-        "portland.lifelines" => "flows",
+        "portland.lifelines" | "fuel.depot" => "flows",
+        "health.hospitals" => "built",
         "agents.farms" => "people",
         "nitrogen.basin" => "water",
         _ => match kind.split('.').next().unwrap_or("") {

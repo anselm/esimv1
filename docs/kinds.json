@@ -230995,7 +230995,7 @@
   {
     "kind": "portland.lifelines",
     "name": "portland.lifelines",
-    "summary": "This module is specific to Portland. It follows the city after the earthquake one day at a time. It tracks the twelve bridges over the Willamette River, thirteen hospitals and their backup generators, electricity, water, and the fuel stored at the Critical Energy Infrastructure Hub, the strip of fuel terminals in northwest Portland. It keeps an account of the hub's fuel in gallons, which must balance every day. The module has two modes. In the computed mode four other modules work out the fuel spill (fuel.tanks), the state of each bridge (roads.bridges), the open roads (roads.routes) and the electricity service (power.structures), and this module uses their results. In the ranges mode it draws those outcomes at random from published ranges: Multnomah County's statement on its bridges, the Oregon Resilience Plan's restoration times and the county's 2022 study of the hub's tanks. Water service follows the Resilience Plan's range in both modes. Three inputs are guesses in both modes: how much generator fuel a hospital holds, how much fuel the emergency response uses each day, and the day fuel deliveries resume. This run uses the ranges mode.",
+    "summary": "This module is specific to Portland. It follows the city after the earthquake one day at a time. It tracks the twelve bridges over the Willamette River, thirteen hospitals and their backup generators, electricity, water, and the fuel stored at the Critical Energy Infrastructure Hub, the strip of fuel terminals in northwest Portland. It keeps an account of the hub's fuel in gallons, which must balance every day. The module has two modes. In the computed mode other modules do the work: fuel.tanks the spill, roads.bridges each bridge, roads.routes the open roads, power.structures the electricity service, health.hospitals the hospitals and fuel.depot the fuel account. This module then only restores water on its schedule, tells the story of the bridges, roads and services, and gathers the day's state for the modules that count harm to people. In the ranges mode it draws those outcomes at random from published ranges: Multnomah County's statement on its bridges, the Oregon Resilience Plan's restoration times and the county's 2022 study of the hub's tanks. Water service follows the Resilience Plan's range in both modes. Three inputs are guesses in both modes: how much generator fuel a hospital holds, how much fuel the emergency response uses each day, and the day fuel deliveries resume. This run uses the ranges mode.",
     "layer": "flows",
     "priority": 2,
     "dt": "1 day after the rupture",
@@ -231137,11 +231137,6 @@
         "note": "the buildings' toll, for the total"
       },
       {
-        "name": "tanks.released",
-        "required": false,
-        "note": "with inputs = computed: the tanks' total release"
-      },
-      {
         "name": "power.state",
         "required": false,
         "note": "with inputs = computed: the share of people with electricity, daily"
@@ -231202,33 +231197,8 @@
         "required": false
       },
       {
-        "name": "hub.deaths",
-        "unit": "people",
-        "required": false
-      },
-      {
-        "name": "hub.injuries",
-        "unit": "people",
-        "required": false
-      },
-      {
         "name": "lifeline.crossings_open",
         "unit": "crossings",
-        "required": false
-      },
-      {
-        "name": "lifeline.hospitals_open",
-        "unit": "hospitals",
-        "required": false
-      },
-      {
-        "name": "lifeline.hospitals_dark",
-        "unit": "hospitals",
-        "required": false
-      },
-      {
-        "name": "lifeline.hospitals_closed",
-        "unit": "hospitals",
         "required": false
       },
       {
@@ -231254,6 +231224,31 @@
       {
         "name": "service.routes_open",
         "unit": "1",
+        "required": false
+      },
+      {
+        "name": "hub.deaths",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "hub.injuries",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "lifeline.hospitals_open",
+        "unit": "hospitals",
+        "required": false
+      },
+      {
+        "name": "lifeline.hospitals_dark",
+        "unit": "hospitals",
+        "required": false
+      },
+      {
+        "name": "lifeline.hospitals_closed",
+        "unit": "hospitals",
         "required": false
       },
       {
@@ -232205,6 +232200,518 @@
       {
         "key": "events/",
         "note": "routes.toml and fragility.toml"
+      }
+    ],
+    "notes": []
+  },
+  {
+    "kind": "fuel.depot",
+    "name": "fuel.depot",
+    "summary": "This module keeps the account of one fuel depot, in gallons, in a ledger that must balance at every close. The depot starts with the contents the event folder gives it, less any cut made before the earthquake. When the tanks module reports what the tanks released, that fuel leaves the stock for the ground and for the water. Each day afterwards the emergency response draws a fixed amount, but only once the roads module reports that a truck can get from the depot to at least one place. Any module may ask for a delivery, and the depot grants it while it has the fuel. From a stated day, resupply tops the stock back up toward what it held. The module also carries a published range for deaths and injuries at the depot itself, where the folder gives one: it draws a value in the range at random and scales it by the size of the release. It does not model fire, and it does not follow the spilled fuel.",
+    "layer": "flows",
+    "priority": 2,
+    "dt": "1 day after the rupture",
+    "params": [
+      {
+        "name": "folder",
+        "default": "",
+        "note": "the folder under data/events that holds this scenario's hub.toml: where the depot is, what it holds, and the published range of deaths there"
+      },
+      {
+        "name": "storage_cut",
+        "default": 0.0,
+        "note": "the fraction of the depot's fuel removed before the earthquake"
+      },
+      {
+        "name": "emergency_gal_day",
+        "default": 300000.0,
+        "unit": "gal/d",
+        "note": "gallons the emergency response (fire, police, utilities, shelters) takes each day once a truck can leave the depot. A guess"
+      },
+      {
+        "name": "resupply_day",
+        "default": 14.0,
+        "unit": "d",
+        "note": "the day fuel deliveries to the depot resume. A guess"
+      },
+      {
+        "name": "resupply_gal_day",
+        "default": 1000000.0,
+        "unit": "gal/d",
+        "note": "gallons arriving each day after that. A guess"
+      }
+    ],
+    "publishes": [
+      {
+        "name": "fuel.granted",
+        "required": false,
+        "note": "{ who, gal } when a request is met"
+      },
+      {
+        "name": "fuel.state",
+        "required": false,
+        "note": "{ day, stock_gal, trucks } each day"
+      },
+      {
+        "name": "depot.toll",
+        "required": false,
+        "note": "{ deaths, injuries } once, at the depot itself"
+      },
+      {
+        "name": "lifeline.marked",
+        "required": false,
+        "note": "{ kind: hub, name, lat, lon } where the depot is, at the start"
+      },
+      {
+        "name": "lifeline.failed",
+        "required": false,
+        "note": "{ kind: hub, name, released_gal, river_gal } when the tanks release"
+      },
+      {
+        "name": "depot.crossing",
+        "required": false,
+        "note": "{ kind, day, sentence, source, confidence } the sentences shown on the run page: the spill, deaths at the depot, resupply, the stock running out"
+      }
+    ],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [
+      {
+        "name": "quake.rupture",
+        "required": false,
+        "note": "the instant"
+      },
+      {
+        "name": "tanks.released",
+        "required": false,
+        "note": "what the tanks released"
+      },
+      {
+        "name": "routes.state",
+        "required": false,
+        "note": "whether a truck can get from the depot to any place"
+      },
+      {
+        "name": "fuel.request",
+        "required": false,
+        "note": "{ who, gal }: a module asking for a delivery"
+      }
+    ],
+    "fields_owned": [],
+    "fields_read": [],
+    "ledgers": [
+      {
+        "name": "fuel",
+        "unit": "gal",
+        "tolerance": 1.0
+      }
+    ],
+    "frames": [],
+    "reports": [
+      {
+        "name": "fuel.hub_gal",
+        "unit": "gal",
+        "required": false
+      },
+      {
+        "name": "fuel.river_gal",
+        "unit": "gal",
+        "required": false
+      },
+      {
+        "name": "fuel.ground_gal",
+        "unit": "gal",
+        "required": false
+      },
+      {
+        "name": "fuel.consumed_gal",
+        "unit": "gal",
+        "required": false
+      },
+      {
+        "name": "fuel.delivered_gal",
+        "unit": "gal",
+        "required": false
+      },
+      {
+        "name": "fuel.days_left",
+        "unit": "d",
+        "required": false
+      },
+      {
+        "name": "hub.deaths",
+        "unit": "people",
+        "required": false
+      },
+      {
+        "name": "hub.injuries",
+        "unit": "people",
+        "required": false
+      }
+    ],
+    "views": [
+      {
+        "kind": "counter",
+        "title": "fuel at the depot",
+        "source": "fuel.hub_gal",
+        "obs": "",
+        "note": "gallons still in the tanks"
+      },
+      {
+        "kind": "counter",
+        "title": "fuel spilled toward water",
+        "source": "fuel.river_gal",
+        "obs": "",
+        "note": "gallons the tanks released toward water"
+      },
+      {
+        "kind": "counter",
+        "title": "fuel spilled on the ground",
+        "source": "fuel.ground_gal",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "counter",
+        "title": "fuel used by the response",
+        "source": "fuel.consumed_gal",
+        "obs": "",
+        "note": "the emergency response's daily draw and the deliveries granted"
+      },
+      {
+        "kind": "counter",
+        "title": "days of fuel left",
+        "source": "fuel.days_left",
+        "obs": "",
+        "note": "the stock divided by the day's use"
+      },
+      {
+        "kind": "chart",
+        "title": "fuel at the depot",
+        "source": "fuel.hub_gal",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "chart",
+        "title": "fuel used by the response",
+        "source": "fuel.consumed_gal",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "text",
+        "title": "what this module leaves out",
+        "source": "The fuel is one stock. There are no pipes, no individual trucks, no grades of fuel and no priorities among users: a request is met if the gallons are there. The response's daily use and the day and rate of resupply are guesses, so the module can say how much is left but not how long it would really last. The response draws nothing until a truck can reach a place by road, which leaves it using no fuel for as long as the roads are shut. Fire in the spilled fuel is not modelled; the deaths at the depot are a published range, not a computed result.",
+        "obs": "",
+        "note": ""
+      }
+    ],
+    "assets": [
+      {
+        "key": "events/",
+        "note": "hub.toml"
+      }
+    ],
+    "notes": []
+  },
+  {
+    "kind": "water.surface",
+    "name": "water.surface",
+    "summary": "This module says where the water is. It reads ESA WorldCover 2021, a land-cover map made from satellite images at 10 metres, and marks each cell of the run's grid that is mostly permanent open water: rivers, lakes and harbours. Other modules can read that map. When the tanks module reports a release that goes toward water, this module sets the gallons down on the water cell nearest the tank, so the map shows where the spill meets the river. It does not model water: there is no flow, no river level, no tide and no movement of anything on the surface, so the fuel stays where it arrives. A release with no water within reach is counted as stranded.",
+    "layer": "water",
+    "priority": 1,
+    "dt": "on a tank's release",
+    "params": [
+      {
+        "name": "coarse_arcsec",
+        "default": 10.0,
+        "unit": "arcsec",
+        "note": "the cell size of the map of fuel on the water"
+      },
+      {
+        "name": "reach_cells",
+        "default": 60.0,
+        "unit": "cells",
+        "note": "how far from a tank, in grid cells, the nearest water is looked for"
+      }
+    ],
+    "publishes": [],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [
+      {
+        "name": "tank.release",
+        "required": false,
+        "note": "{ gal, river } at a tank's location: fuel leaving a failed tank"
+      }
+    ],
+    "fields_owned": [
+      {
+        "name": "water.open",
+        "unit": "1",
+        "required": false
+      }
+    ],
+    "fields_read": [],
+    "ledgers": [],
+    "frames": [
+      {
+        "name": "water_open",
+        "unit": "1",
+        "required": false
+      },
+      {
+        "name": "fuel_on_water_gal",
+        "unit": "gal",
+        "required": false
+      }
+    ],
+    "reports": [
+      {
+        "name": "water.area_km2",
+        "unit": "km2",
+        "required": false
+      },
+      {
+        "name": "water.fuel_arrived_gal",
+        "unit": "gal",
+        "required": false
+      },
+      {
+        "name": "water.fuel_stranded_gal",
+        "unit": "gal",
+        "required": false
+      }
+    ],
+    "views": [
+      {
+        "kind": "map",
+        "title": "open water",
+        "source": "water_open",
+        "obs": "",
+        "note": "1 where a cell is mostly permanent water in ESA WorldCover 2021"
+      },
+      {
+        "kind": "map",
+        "title": "fuel arriving on the water",
+        "source": "fuel_on_water_gal",
+        "obs": "",
+        "note": "gallons set down on the water cell nearest each failed tank that releases toward water, on a coarser grid; the fuel is not moved after that"
+      },
+      {
+        "kind": "counter",
+        "title": "open water",
+        "source": "water.area_km2",
+        "obs": "",
+        "note": "the area of the water cells, in square kilometres"
+      },
+      {
+        "kind": "counter",
+        "title": "fuel arriving on the water",
+        "source": "water.fuel_arrived_gal",
+        "obs": "",
+        "note": "the releases toward water that found a water cell within reach"
+      },
+      {
+        "kind": "text",
+        "title": "what this module leaves out",
+        "source": "Everything that makes water hydrology: discharge, river level, tides, currents, groundwater and rain. The water cells are a 2021 snapshot from satellite images and miss narrow streams. Fuel is set down at the nearest water and never moves, so the map shows where a spill would enter the river and nothing about where it would go.",
+        "obs": "",
+        "note": ""
+      }
+    ],
+    "assets": [
+      {
+        "key": "esa-worldcover-2021",
+        "note": "the land-cover tile the water cells are read from"
+      }
+    ],
+    "notes": []
+  },
+  {
+    "kind": "health.hospitals",
+    "name": "health.hospitals",
+    "summary": "This module follows hospitals and whether each one has power. At the earthquake each hospital building is damaged or not by a random draw against a generic building fragility curve at the ground motion at its location, with an allowance for hospitals being built to a newer code. An undamaged hospital is open while the grid reaches it, which the module learns by reading the power module's map of service at the hospital. When the grid does not reach it, the hospital runs on its generator and uses up its stored fuel. If the roads module reports that a truck can reach it, it asks the fuel depot for a day's delivery, and a granted delivery refills the generator. A hospital whose generator fuel runs out is without power until the grid or a delivery returns. The module does not represent beds, staff, supplies or damage inside a building that still stands, so an open hospital here is a building with power and nothing more.",
+    "layer": "built",
+    "priority": 2,
+    "dt": "1 day after the rupture",
+    "params": [
+      {
+        "name": "folder",
+        "default": "",
+        "note": "the folder under data/events that holds this scenario's hospitals.toml"
+      },
+      {
+        "name": "median_scale",
+        "default": 1.5,
+        "note": "hospitals are assumed to be stronger than the generic building: the shaking needed to damage one is multiplied by this. A guess, standing for newer building codes"
+      },
+      {
+        "name": "beta",
+        "default": 0.7,
+        "note": "the spread of the fragility curve (recalled)"
+      },
+      {
+        "name": "generator_h",
+        "default": 72.0,
+        "unit": "h",
+        "note": "hours of generator fuel stored at each hospital. 72 hours is a common planning figure, used here as a guess"
+      },
+      {
+        "name": "gal_day",
+        "default": 2000.0,
+        "unit": "gal/d",
+        "note": "gallons of diesel one hospital burns in a day on its generators, and so the size of a delivery it asks for (a guess)"
+      }
+    ],
+    "publishes": [
+      {
+        "name": "fuel.request",
+        "required": false,
+        "note": "{ who, gal } a day's generator fuel, asked of the depot when a truck can reach the hospital"
+      },
+      {
+        "name": "hospitals.state",
+        "required": false,
+        "note": "{ day, open, dark, closed } each day"
+      },
+      {
+        "name": "lifeline.marked",
+        "required": false,
+        "note": "{ kind: hospital, name, lat, lon } at the start"
+      },
+      {
+        "name": "lifeline.failed",
+        "required": false,
+        "note": "{ kind: hospital, name, status } closed by damage, or without power"
+      },
+      {
+        "name": "lifeline.restored",
+        "required": false,
+        "note": "{ kind: hospital, name, day, status } with power again"
+      },
+      {
+        "name": "hospital.crossing",
+        "required": false,
+        "note": "{ kind, day, sentence, source, confidence } the sentences shown on the run page"
+      }
+    ],
+    "sends": [],
+    "accepts": [],
+    "subscribes": [
+      {
+        "name": "quake.rupture",
+        "required": false,
+        "note": "the instant"
+      },
+      {
+        "name": "routes.state",
+        "required": false,
+        "note": "which hospitals a truck can reach from the depot"
+      },
+      {
+        "name": "fuel.granted",
+        "required": false,
+        "note": "a delivery the depot has met"
+      }
+    ],
+    "fields_owned": [],
+    "fields_read": [
+      {
+        "name": "quake.pga_g",
+        "unit": "g",
+        "required": true,
+        "on": "quake.rupture",
+        "note": "at each hospital"
+      },
+      {
+        "name": "quake.liq_p",
+        "unit": "1",
+        "required": true,
+        "on": "quake.rupture"
+      },
+      {
+        "name": "quake.liq_pgd_cm",
+        "unit": "cm",
+        "required": true,
+        "on": "quake.rupture"
+      },
+      {
+        "name": "power.up",
+        "unit": "1",
+        "required": false,
+        "on": "day",
+        "note": "whether the grid reaches each hospital"
+      }
+    ],
+    "ledgers": [],
+    "frames": [],
+    "reports": [
+      {
+        "name": "lifeline.hospitals_open",
+        "unit": "hospitals",
+        "required": false
+      },
+      {
+        "name": "lifeline.hospitals_dark",
+        "unit": "hospitals",
+        "required": false
+      },
+      {
+        "name": "lifeline.hospitals_closed",
+        "unit": "hospitals",
+        "required": false
+      }
+    ],
+    "views": [
+      {
+        "kind": "counter",
+        "title": "hospitals open",
+        "source": "lifeline.hospitals_open",
+        "obs": "",
+        "note": "undamaged, with grid electricity or a generator that has fuel"
+      },
+      {
+        "kind": "counter",
+        "title": "hospitals without power",
+        "source": "lifeline.hospitals_dark",
+        "obs": "",
+        "note": "undamaged, but with no grid electricity and no generator fuel"
+      },
+      {
+        "kind": "counter",
+        "title": "hospitals closed by damage",
+        "source": "lifeline.hospitals_closed",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "chart",
+        "title": "hospitals open",
+        "source": "lifeline.hospitals_open",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "chart",
+        "title": "hospitals without power",
+        "source": "lifeline.hospitals_dark",
+        "obs": "",
+        "note": ""
+      },
+      {
+        "kind": "text",
+        "title": "what this module leaves out",
+        "source": "Beds, staff, supplies, water, and damage to equipment inside a building that still stands. Every hospital uses the same generic curve, the same generator fuel and the same daily burn, all of them guesses. A delivery is all or nothing and arrives the day it is asked for. Patients do not travel: the module does not know which hospital anyone can reach.",
+        "obs": "",
+        "note": ""
+      }
+    ],
+    "assets": [
+      {
+        "key": "events/",
+        "note": "hospitals.toml"
       }
     ],
     "notes": []

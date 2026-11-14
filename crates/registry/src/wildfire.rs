@@ -359,6 +359,47 @@ pub fn cached_context(fetcher: &Fetcher, lat_s: f64, lat_n: f64, lon_w: f64, lon
     serde_json::from_str(&text).ok()
 }
 
+/// Reduce an Overpass answer to the bridges in a window: each way tagged as a bridge that carries
+/// a road or a railway, with its name when it has one.
+pub fn reduce_bridges(raw: &[u8]) -> Result<Vec<u8>, String> {
+    let v: serde_json::Value = serde_json::from_slice(raw).map_err(|e| format!("overpass json: {e}"))?;
+    if let Some(r) = v.get("remark") { if r.as_str().map(|s| s.contains("error")).unwrap_or(false) { return Err(format!("overpass: {r}")); } }
+    let mut ways = Vec::new();
+    for e in v["elements"].as_array().into_iter().flatten() {
+        if e["type"].as_str() != Some("way") { continue; }
+        let pts: Vec<(f64, f64)> = e["geometry"].as_array().into_iter().flatten().filter_map(|p| Some((r5(p["lon"].as_f64()?), r5(p["lat"].as_f64()?)))).collect();
+        if pts.len() < 2 { continue; }
+        let t = &e["tags"];
+        let name = t["bridge:name"].as_str().or(t["name"].as_str()).unwrap_or("");
+        ways.push(serde_json::json!({ "name": name, "carries": t["highway"].as_str().or(t["railway"].as_str()).unwrap_or(""), "pts": pts }));
+    }
+    serde_json::to_vec(&serde_json::json!({ "ways": ways, "source": "OpenStreetMap contributors, ODbL, through the Overpass API" })).map_err(|e| e.to_string())
+}
+fn bridges_key(lat_s: f64, lat_n: f64, lon_w: f64, lon_e: f64) -> String { format!("osm-overpass/bridges_{lat_s}_{lat_n}_{lon_w}_{lon_e}.json") }
+
+/// Fetch (once) every bridge way inside a window that carries a road of some weight or a railway:
+/// the lines a map draws a bridge with. `{ ways: [{ name, carries, pts: [[lon, lat]] }] }`.
+pub fn osm_bridges(fetcher: &mut Fetcher, lat_s: f64, lat_n: f64, lon_w: f64, lon_e: f64) -> Result<serde_json::Value, String> {
+    let b = format!("({lat_s},{lon_w},{lat_n},{lon_e})");
+    let q = format!("[out:json][timeout:180];(way[\"bridge\"][\"highway\"~\"^(motorway|trunk|primary|secondary|tertiary|busway|motorway_link|trunk_link|primary_link)$\"]{b};way[\"bridge\"][\"railway\"~\"^(rail|light_rail|tram)$\"]{b};);out geom;");
+    let key = bridges_key(lat_s, lat_n, lon_w, lon_e);
+    let mut last = String::new();
+    let mut path = None;
+    for host in ["https://overpass.kumi.systems/api/interpreter", "https://overpass-api.de/api/interpreter"] {
+        let url = format!("{host}?data={}", enc(&q));
+        match fetcher.fetch_reduced(&key, &url, &|raw| reduce_bridges(raw)) { Ok(p) => { path = Some(p); break; } Err(e) => { last = e; } }
+    }
+    let path = path.ok_or(last)?;
+    let text = std::fs::read_to_string(&path).map_err(|e| e.to_string())?;
+    serde_json::from_str(&text).map_err(|e| format!("bridges cache: {e}"))
+}
+/// The cached bridge ways for a window, never fetching (for a describe).
+pub fn cached_osm_bridges(fetcher: &Fetcher, lat_s: f64, lat_n: f64, lon_w: f64, lon_e: f64) -> Option<serde_json::Value> {
+    let name = bridges_key(lat_s, lat_n, lon_w, lon_e).replace(['/', ' '], "_");
+    let text = std::fs::read_to_string(fetcher.cache_dir.join(name)).ok()?;
+    serde_json::from_str(&text).ok()
+}
+
 // ---- structures and their fate: CAL FIRE's damage inspections -------------------------
 
 /// One inspected structure: where it stands, what it is, and the damage category the

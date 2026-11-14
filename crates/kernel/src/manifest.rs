@@ -76,6 +76,10 @@ fn empty_table() -> toml::Value { toml::Value::Table(Default::default()) }
 impl Manifest {
     pub fn parse(text: &str) -> Result<Manifest, String> {
         let mut m: Manifest = toml::from_str(text).map_err(|e| format!("manifest: {e}"))?;
+        // a module whose params say `enabled = false` is not part of the run: a variant can switch a
+        // whole module off this way (`"name.enabled" = false`), which is how an older all-in-one
+        // module and the modules that replaced it can share one manifest
+        m.modules.retain(|e| e.params.get("enabled").and_then(|v| v.as_bool()) != Some(false));
         m.fold_place();
         Ok(m)
     }

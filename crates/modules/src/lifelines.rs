@@ -104,7 +104,7 @@ impl Lifelines {
     pub fn describe(name: &str, p: &toml::Value) -> Describe {
         let folder = param_str(p, "folder", "portland-cascadia");
         let computed = param_str(p, "inputs", "ranges") == "computed";
-        let summary = format!("{} {}", "This module is specific to Portland. It follows the city after the earthquake one day at a time. It tracks the twelve bridges over the Willamette River, thirteen hospitals and their backup generators, electricity, water, and the fuel stored at the Critical Energy Infrastructure Hub, the strip of fuel terminals in northwest Portland. It keeps an account of the hub's fuel in gallons, which must balance every day. The module has two modes. In the computed mode four other modules work out the fuel spill (fuel.tanks), the state of each bridge (roads.bridges), the open roads (roads.routes) and the electricity service (power.structures), and this module uses their results. In the ranges mode it draws those outcomes at random from published ranges: Multnomah County's statement on its bridges, the Oregon Resilience Plan's restoration times and the county's 2022 study of the hub's tanks. Water service follows the Resilience Plan's range in both modes. Three inputs are guesses in both modes: how much generator fuel a hospital holds, how much fuel the emergency response uses each day, and the day fuel deliveries resume.", if computed { "This run uses the computed mode." } else { "This run uses the ranges mode." });
+        let summary = format!("{} {}", "This module is specific to Portland. It follows the city after the earthquake one day at a time. It tracks the twelve bridges over the Willamette River, thirteen hospitals and their backup generators, electricity, water, and the fuel stored at the Critical Energy Infrastructure Hub, the strip of fuel terminals in northwest Portland. It keeps an account of the hub's fuel in gallons, which must balance every day. The module has two modes. In the computed mode other modules do the work: fuel.tanks the spill, roads.bridges each bridge, roads.routes the open roads, power.structures the electricity service, health.hospitals the hospitals and fuel.depot the fuel account. This module then only restores water on its schedule, tells the story of the bridges, roads and services, and gathers the day's state for the modules that count harm to people. In the ranges mode it draws those outcomes at random from published ranges: Multnomah County's statement on its bridges, the Oregon Resilience Plan's restoration times and the county's 2022 study of the hub's tanks. Water service follows the Resilience Plan's range in both modes. Three inputs are guesses in both modes: how much generator fuel a hospital holds, how much fuel the emergency response uses each day, and the day fuel deliveries resume.", if computed { "This run uses the computed mode." } else { "This run uses the ranges mode." });
         let power_note = if computed { "computed each day by the power.structures module from the transmission structures that are standing" } else { "a straight line from no service to full service, ending on a day drawn at random from the Oregon Resilience Plan's range of one to three months" };
         let mut d = Describe::new("portland.lifelines", name, &summary)
             .priority(2).dt("1 day after the rupture")
@@ -126,17 +126,14 @@ impl Lifelines {
             .param("route_min_days", param_f64(p, "route_min_days", 7.0), "d", "ranges mode: the earliest day trucks can use the emergency routes. A guess; DOGAMI puts 74 percent of the route segments at risk of ground failure")
             .param("route_max_days", param_f64(p, "route_max_days", 30.0), "d", "ranges mode: the latest such day (a guess)")
             .subscribe("quake.rupture", "the instant").subscribe("quake.toll", "the buildings' toll, for the total")
-            .subscribe("tanks.released", "with inputs = computed: the tanks' total release").subscribe("power.state", "with inputs = computed: the share of people with electricity, daily").subscribe("routes.state", "with inputs = computed: which hospitals can be reached from the hub, daily").subscribe("component.state", "with inputs = computed: the crossings' states")
+            .subscribe("power.state", "with inputs = computed: the share of people with electricity, daily").subscribe("routes.state", "with inputs = computed: which hospitals can be reached from the hub, daily").subscribe("component.state", "with inputs = computed: the crossings' states")
             .read_on("power.up", "1", false, "power.state", "with inputs = computed: whether the grid reaches each hospital").read_on("quake.pga_g", "g", true, "quake.rupture", "at each hospital").read_on("quake.liq_p", "1", true, "quake.rupture", "at each hospital and the hub").read_on("quake.liq_pgd_cm", "cm", true, "quake.rupture", "")
             .publish("lifeline.marked", "{ kind: bridge | hospital | hub, name, lat, lon } at each component's cell at the start")
             .publish("lifeline.failed", "{ kind, name, reopen_day | status } at the cell: the crossings and the hub on the rupture, a hospital closed by damage or gone dark").publish("lifeline.restored", "{ kind, name, day, status } at the cell, when a crossing reopens or a hospital has power again")
             .publish("lifeline.state", "{ day, hospitals_open, hospitals_dark, power_share, water_share, routes_open, hub_deaths } each day after the rupture, for the aftermath")
             .publish("lifeline.crossing", "{ kind, day, sentence, source, confidence } the sentences shown on the run page: the city before the earthquake, the spill, deaths at the hub, bridge closures, each restoration milestone, the fuel")
-            .ledger(FUEL, "gal", 1.0)
-            .report("toll.deaths", "people").report("hub.deaths", "people").report("hub.injuries", "people")
-            .report("lifeline.crossings_open", "crossings").report("lifeline.hospitals_open", "hospitals").report("lifeline.hospitals_dark", "hospitals").report("lifeline.hospitals_closed", "hospitals")
+            .report("toll.deaths", "people").report("lifeline.crossings_open", "crossings")
             .report("service.power_share", "1").report("service.water_share", "1").report("service.people_with_power", "people").report("service.people_with_water", "people").report("service.routes_open", "1")
-            .report("fuel.hub_gal", "gal").report("fuel.river_gal", "gal").report("fuel.ground_gal", "gal").report("fuel.consumed_gal", "gal").report("fuel.delivered_gal", "gal").report("fuel.days_left", "d")
             .asset(&format!("events/{folder}"), "the input tables and the map of residents")
             .view_film("the clock", "occupants,quake_pga_g,building_damage_frac", "The map shows where people are until the earthquake, then the ground motion while the shaking lasts, then building damage. Beside it are the most recent events and the counts at the moment shown.")
             .view("story", "what happens", "crossing", "one sentence per event, newest first, each with its source")
@@ -155,6 +152,15 @@ impl Lifelines {
             .view("chart", "hospitals open", "lifeline.hospitals_open", "")
             .view("chart", "fuel at the hub", "fuel.hub_gal", "")
             .view("text", "what this module leaves out", "The model has no tsunami (none is expected to reach Portland), no aftershocks and no fire following the earthquake. It leaves out the Columbia River bridges and Interstate 5 to the north, sewage, telephone and data networks, food supply, the airport, the port, and people leaving the city. Water pipes are not modelled. The Portland Water Bureau's estimate of 1,500 to 3,000 pipe breaks reached this project only through a search summary and is not used. Water service returns along a straight line to a day drawn from a published range, and so does electricity in the ranges mode, whereas a real recovery is uneven from one neighbourhood to the next. Whether a hospital is damaged depends on a generic building fragility curve at its location and a guessed allowance for newer building codes. The fuel at the hub is a single stock, with no pipes, no individual trucks and no priorities among users. The spill is a quantity, either drawn from the range in the county's study or summed over the failed tanks. The model does not follow the fuel once it reaches the river.", "");
+        if computed {
+            d = d.subscribe("hospitals.state", "with inputs = computed: how many hospitals are open and without power, daily").subscribe("depot.toll", "with inputs = computed: deaths at the depot");
+        } else {
+            // the older, arranged version keeps its own hospitals and its own fuel account
+            d = d.ledger(FUEL, "gal", 1.0)
+                .report("hub.deaths", "people").report("hub.injuries", "people")
+                .report("lifeline.hospitals_open", "hospitals").report("lifeline.hospitals_dark", "hospitals").report("lifeline.hospitals_closed", "hospitals")
+                .report("fuel.hub_gal", "gal").report("fuel.river_gal", "gal").report("fuel.ground_gal", "gal").report("fuel.consumed_gal", "gal").report("fuel.delivered_gal", "gal").report("fuel.days_left", "d");
+        }
         let dir = root().join("data/events").join(folder);
         if let Ok(t) = std::fs::read_to_string(dir.join("bridges.toml")).map_err(|e| e.to_string()).and_then(|s| toml::from_str::<toml::Value>(&s).map_err(|e| e.to_string())) {
             if let Some(a) = t.get("bridge").and_then(|v| v.as_array()) { d = d.table("bridges", json!(a.iter().map(|b| json!({ "name": ts(b, "name"), "opened": tf(b, "opened"), "carries": ts(b, "carries"), "owner": ts(b, "owner") })).collect::<Vec<_>>())); }
@@ -194,36 +200,45 @@ impl Lifelines {
     fn demand_gal_day(&self) -> f64 { self.emergency_gal_day + self.hospitals.iter().filter(|h| h.status == "generator").count() as f64 * self.hospital_gal_day }
     fn report_all(&self, ctx: &mut Ctx) {
         // the stocks as held, for every close: the ledger compares them with what the flows imply
-        ctx.declare_stock(FUEL, "hub", self.hub_gal);
-        ctx.declare_stock(FUEL, "ground", self.ground_gal); ctx.declare_stock(FUEL, "river", self.river_gal);
-        ctx.declare_stock(FUEL, "burned", self.consumed_gal); ctx.declare_stock(FUEL, "pipeline", 1.0e9 - self.delivered_gal);
+        let own = self.inputs != "computed";
+        if own {
+            ctx.declare_stock(FUEL, "hub", self.hub_gal);
+            ctx.declare_stock(FUEL, "ground", self.ground_gal); ctx.declare_stock(FUEL, "river", self.river_gal);
+            ctx.declare_stock(FUEL, "burned", self.consumed_gal); ctx.declare_stock(FUEL, "pipeline", 1.0e9 - self.delivered_gal);
+            ctx.report("hub.deaths", "people", self.hub_deaths); ctx.report("hub.injuries", "people", self.hub_injuries);
+            ctx.report("lifeline.hospitals_open", "hospitals", self.hospitals.iter().filter(|h| h.status == "open" || h.status == "generator").count() as f64);
+            ctx.report("lifeline.hospitals_dark", "hospitals", self.hospitals.iter().filter(|h| h.status == "dark").count() as f64);
+            ctx.report("lifeline.hospitals_closed", "hospitals", self.hospitals.iter().filter(|h| h.status == "closed").count() as f64);
+        }
         let open = self.bridges.iter().filter(|b| b.open).count();
-        ctx.report("toll.deaths", "people", self.quake_deaths + self.hub_deaths); ctx.report("hub.deaths", "people", self.hub_deaths); ctx.report("hub.injuries", "people", self.hub_injuries);
+        ctx.report("toll.deaths", "people", self.quake_deaths + self.hub_deaths);
         ctx.report("lifeline.crossings_open", "crossings", open as f64);
-        ctx.report("lifeline.hospitals_open", "hospitals", self.hospitals.iter().filter(|h| h.status == "open" || h.status == "generator").count() as f64);
-        ctx.report("lifeline.hospitals_dark", "hospitals", self.hospitals.iter().filter(|h| h.status == "dark").count() as f64);
-        ctx.report("lifeline.hospitals_closed", "hospitals", self.hospitals.iter().filter(|h| h.status == "closed").count() as f64);
         let (pw, wa) = (self.ramp_of("electricity"), self.ramp_of("drinking water and sewer"));
         ctx.report("service.power_share", "1", pw); ctx.report("service.water_share", "1", wa);
         ctx.report("service.people_with_power", "people", pw * self.residents_total); ctx.report("service.people_with_water", "people", wa * self.residents_total);
         ctx.report("service.routes_open", "1", if !self.fired || self.day >= self.route_day { 1.0 } else { 0.0 });
-        ctx.report("fuel.hub_gal", "gal", self.hub_gal); ctx.report("fuel.river_gal", "gal", self.river_gal); ctx.report("fuel.ground_gal", "gal", self.ground_gal);
-        ctx.report("fuel.consumed_gal", "gal", self.consumed_gal); ctx.report("fuel.delivered_gal", "gal", self.delivered_gal);
-        let dem = self.demand_gal_day();
-        ctx.report("fuel.days_left", "d", if dem > 0.0 { self.hub_gal / dem } else { f64::NAN });
+        if own {
+            ctx.report("fuel.hub_gal", "gal", self.hub_gal); ctx.report("fuel.river_gal", "gal", self.river_gal); ctx.report("fuel.ground_gal", "gal", self.ground_gal);
+            ctx.report("fuel.consumed_gal", "gal", self.consumed_gal); ctx.report("fuel.delivered_gal", "gal", self.delivered_gal);
+            let dem = self.demand_gal_day();
+            ctx.report("fuel.days_left", "d", if dem > 0.0 { self.hub_gal / dem } else { f64::NAN });
+        }
     }
 }
 
 impl Module for Lifelines {
     fn name(&self) -> &str { &self.name }
     fn init(&mut self, ctx: &mut Ctx) {
-        ctx.subscribe("quake.rupture"); ctx.subscribe("quake.toll"); ctx.subscribe("tanks.released"); ctx.subscribe("power.state"); ctx.subscribe("routes.state"); ctx.subscribe("component.state");
-        ctx.ledger(FUEL, "gal", 1.0);
+        ctx.subscribe("quake.rupture"); ctx.subscribe("quake.toll"); ctx.subscribe("power.state"); ctx.subscribe("routes.state"); ctx.subscribe("hospitals.state"); ctx.subscribe("depot.toll"); ctx.subscribe("component.state");
+        let own = self.inputs != "computed";   // the arranged version keeps the hospitals and the fuel itself
+        if own { ctx.ledger(FUEL, "gal", 1.0); }
         if !self.scheduled {
             self.hub_gal = self.hub.contents_gal * (1.0 - self.storage_cut);
-            ctx.declare_stock(FUEL, "hub", self.hub_gal);
-            ctx.declare_stock(FUEL, "ground", 0.0); ctx.declare_stock(FUEL, "river", 0.0); ctx.declare_stock(FUEL, "burned", 0.0);
-            ctx.declare_stock(FUEL, "pipeline", 1.0e9);   // the world outside the window: the pipeline and the barges
+            if own {
+                ctx.declare_stock(FUEL, "hub", self.hub_gal);
+                ctx.declare_stock(FUEL, "ground", 0.0); ctx.declare_stock(FUEL, "river", 0.0); ctx.declare_stock(FUEL, "burned", 0.0);
+                ctx.declare_stock(FUEL, "pipeline", 1.0e9);   // the world outside the window: the pipeline and the barges
+            }
             // the fates, drawn once by the seed
             for s in &mut self.services { let u = ctx.rng().f64(); s.days = s.min_days + ((s.max_days - s.min_days) as f64 * u).round() as i64; }
             let (lo, hi) = (self.bridge_min_days, self.bridge_max_days);
@@ -243,18 +258,17 @@ impl Module for Lifelines {
             self.say(ctx, "before", "city", format!("{}: the run begins before the earthquake, with everything working. {} people live in the modelled area. All {} bridges over the Willamette River are open, the {} hospitals have grid electricity, and the tanks at the fuel hub hold about {:.0} million gallons. The Cascadia subduction zone last ruptured on the evening of 26 January 1700.", &local[..10], commas(self.residents_total), self.bridges.len(), self.hospitals.len(), self.hub_gal / 1e6), "DOGAMI's building inventory for the residents; Multnomah County's list of bridges; OpenStreetMap for the hospitals; the county's 2022 study of the hub, which found the tanks 67 percent full; Satake and others 1996 for the 1700 date, recalled from memory and not checked", "published inventories");
         }
         for b in &self.bridges { ctx.publish_at(b.cell, "lifeline.marked", json!({ "kind": "bridge", "name": b.name, "lat": b.lat, "lon": b.lon, "opened": b.opened })); }
-        for h in &self.hospitals { ctx.publish_at(h.cell, "lifeline.marked", json!({ "kind": "hospital", "name": h.name, "lat": h.lat, "lon": h.lon })); }
-        ctx.publish_at(self.hub_cell, "lifeline.marked", json!({ "kind": "hub", "name": "Critical Energy Infrastructure Hub", "lat": self.hub.lat, "lon": self.hub.lon, "contents_gal": self.hub_gal }));
+        if own { for h in &self.hospitals { ctx.publish_at(h.cell, "lifeline.marked", json!({ "kind": "hospital", "name": h.name, "lat": h.lat, "lon": h.lon })); } }
+        if own { ctx.publish_at(self.hub_cell, "lifeline.marked", json!({ "kind": "hub", "name": "Critical Energy Infrastructure Hub", "lat": self.hub.lat, "lon": self.hub.lon, "contents_gal": self.hub_gal })); }
         self.report_all(ctx);
     }
     fn handle(&mut self, ev: &Event, ctx: &mut Ctx) {
         match ev.topic.as_str() {
-            "tanks.released" => {
-                if self.inputs != "computed" { return; }
-                let g = |k: &str| ev.data.get(k).and_then(|v| v.as_f64()).unwrap_or(0.0);
-                let lp = ctx.world_read("quake.liq_p").and_then(|f| f.data.get(self.hub_cell).copied()).unwrap_or(f32::NAN);
-                let n = ev.data.get("tanks_failed").and_then(|v| v.as_u64()).unwrap_or(0);
-                self.spill(ctx, g("gal"), g("river_gal"), lp, &format!("the fuel.tanks module: {} tanks failed, each by a random draw against a fragility curve at the ground motion at its location. A failed tank releases the share of its contents that the 2022 study assigns to tanks of its age, and the fuel goes to the river where the study says it would for that tank", n));
+            // in computed mode the spill and the deaths at the depot are the depot's, and the hospitals the hospitals module's
+            "depot.toll" => { self.hub_deaths = ev.data.get("deaths").and_then(|v| v.as_f64()).unwrap_or(0.0); ctx.report("toll.deaths", "people", self.quake_deaths + self.hub_deaths); }
+            "hospitals.state" => {
+                if !self.net.is_object() { self.net = json!({}); }
+                self.net["hospitals_open"] = ev.data.get("open").cloned().unwrap_or(json!(0)); self.net["hospitals_dark"] = ev.data.get("dark").cloned().unwrap_or(json!(0));
             }
             "power.state" => {
                 if !self.net.is_object() { self.net = json!({}); }
@@ -310,6 +324,7 @@ impl Module for Lifelines {
                 let soonest = self.bridges.iter().filter(|b| !b.open).map(|b| b.reopen_day).min().unwrap_or(0);
                 let latest = self.bridges.iter().map(|b| b.reopen_day).max().unwrap_or(0);
                 if self.inputs != "computed" { self.say(ctx, "crossings-closed", "bridges", format!("{} of the {} bridges over the Willamette in the modelled area are closed. The first reopens on day {} and the last on day {}.", closed, self.bridges.len(), soonest, latest), "Multnomah County says no downtown bridge is expected to be usable immediately, and that it will be weeks to years before any is. The model turns that into a closure for each bridge, drawn at random between the shortest and longest closures in its settings, with short closures more likely than long ones", "a published statement; the numbers are guesses"); }
+                if self.inputs != "computed" {
                 // the hospitals: damaged by the generic fragility with a code factor, at their cells
                 let mut closed_h = Vec::new();
                 for h in &mut self.hospitals {
@@ -326,8 +341,9 @@ impl Module for Lifelines {
                 for h in self.hospitals.clone() { if h.damaged { ctx.publish_at(h.cell, "lifeline.failed", json!({ "kind": "hospital", "name": h.name, "p_damage": h.p_damage })); } }
                 let n_open = self.hospitals.len() - closed_h.len();
                 self.say(ctx, "hospitals", "hospitals", format!("{} of {} hospitals are undamaged{}{}. Each has a backup generator.{}", n_open, self.hospitals.len(), if closed_h.is_empty() { String::new() } else { format!(" and {} are closed by damage: ", closed_h.len()) }, closed_h.join(", "), if self.inputs == "computed" { "" } else { " Grid electricity is out across the whole area." }), "A generic building fragility curve at each hospital's location, with a guessed allowance for newer building codes, and a random draw. Each hospital is assumed to hold generator fuel for 72 hours, which is a guess", "a guess");
+                }
                 self.report_all(ctx);
-                ctx.schedule_with_priority(Duration::days(1), 5, "day", json!(null));
+                ctx.schedule_with_priority(Duration::days(1), 8, "day", json!(null));
             }
             "day" => {
                 self.day += 1;
@@ -345,6 +361,8 @@ impl Module for Lifelines {
                 let net_bool = |net: &serde_json::Value, key: &str, name: &str| net.get(key).and_then(|m| m.get(name)).and_then(|v| v.as_bool()).unwrap_or(false);
                 let routes = if computed { self.net.get("any_reachable").and_then(|v| v.as_bool()).unwrap_or(false) } else { d >= self.route_day };
                 if routes { self.say(ctx, "routes", "routes", format!("Day {}: trucks can use the emergency routes{}.", d, if computed { ", and the first hospital can be reached from the fuel hub over open road segments and bridges" } else { "" }), if computed { "the roads.routes and roads.bridges modules: DOGAMI's emergency route segments close according to the ground deformation DOGAMI expects at each, for a guessed number of days, and the bridges according to their own damage" } else { "a guess, drawn at random between the earliest and latest days in the settings; DOGAMI puts 74 percent of the route segments at risk of ground failure" }, "a guess"); }
+                let power_day = self.service_days("electricity");
+                if !computed {
                 // fuel: resupply, then the response's draw, then the hospitals' generators
                 if d >= self.resupply_day {
                     // the tanks are topped back up toward what they held before the day, never past it; with no
@@ -359,7 +377,7 @@ impl Module for Lifelines {
                     if draw > 0.0 { ctx.transfer(FUEL, "hub", "burned", draw); self.hub_gal -= draw; self.consumed_gal += draw; }
                 }
                 let any_bridge = self.bridges.iter().any(|b| b.open);
-                let power_day = self.service_days("electricity");
+
                 let mut dark_now = Vec::new();
                 for i in 0..self.hospitals.len() {
                     let h = self.hospitals[i].clone();
@@ -376,17 +394,19 @@ impl Module for Lifelines {
                     if left <= 0.0 { if self.hospitals[i].status != "dark" { dark_now.push(h.name.clone()); ctx.publish_at(h.cell, "lifeline.failed", json!({ "kind": "hospital", "name": h.name, "status": "dark", "day": d })); } self.hospitals[i].status = "dark".into(); } else { if self.hospitals[i].status == "dark" { ctx.publish_at(h.cell, "lifeline.restored", json!({ "kind": "hospital", "name": h.name, "day": d, "status": "generator" })); } self.hospitals[i].status = "generator".into(); }
                 }
                 if !dark_now.is_empty() { self.say(ctx, "hospitals-dark", "hospitals", format!("Day {}: these hospitals use up their generator fuel before any is delivered, and lose power: {}.", d, dark_now.join(", ")), if computed { "Each hospital is assumed to hold 72 hours of generator fuel, which is a guess. A delivery needs a route of open road segments and bridges from the fuel hub to the hospital, and fuel left at the hub" } else { "Each hospital is assumed to hold 72 hours of generator fuel, which is a guess. A delivery needs the emergency routes open to trucks, fuel left at the hub and, for a hospital east of the river, an open bridge" }, "a guess"); }
+                }
                 if computed { let pw = self.ramp_of("electricity"); if pw >= 0.5 { self.say(ctx, "power-half", "power", format!("Day {}: {:.0} percent of people have grid electricity.", d, pw * 100.0), "the power.structures module: each of DOGAMI's transmission structures fails with the probability DOGAMI gives for its location, and crews repair them at an assumed rate", "computed"); } if pw >= 0.999 { self.say(ctx, "power", "power", format!("Day {}: grid electricity is back for everyone.", d), "the power.structures module", "computed"); } }
                 if !computed && d == power_day / 2 { self.say(ctx, "power-half", "power", format!("Day {}: grid electricity is back for half the people.", d), "The Oregon Resilience Plan estimates 1 to 3 months to restore electricity in the Willamette Valley. The model draws the final day at random in that range and restores service along a straight line", "a published range"); }
                 if !computed && d == power_day { self.say(ctx, "power", "power", format!("Day {}: grid electricity is back for everyone.", d), "the Oregon Resilience Plan's estimate of 1 to 3 months for the Willamette Valley; the day is drawn at random in that range", "a published range"); }
                 let water_day = self.service_days("drinking water and sewer");
                 if d == water_day / 2 { self.say(ctx, "water-half", "water", format!("Day {}: water service is back for half the people.", d), "The Oregon Resilience Plan estimates 1 month to 1 year to restore water in the Willamette Valley. The model draws the final day at random in that range and restores service along a straight line", "a published range"); }
                 if d == water_day { self.say(ctx, "water", "water", format!("Day {}: water and sewer service are back for everyone.", d), "the Oregon Resilience Plan's estimate of 1 month to 1 year for the Willamette Valley; the day is drawn at random in that range", "a published range"); }
-                if self.hub_gal <= 0.0 { self.say(ctx, "hub-empty", "hub", format!("Day {}: the fuel left at the hub is used up.", d), "the module's fuel account", "arithmetic on guessed rates"); }
+                if !computed { if self.hub_gal <= 0.0 { self.say(ctx, "hub-empty", "hub", format!("Day {}: the fuel left at the hub is used up.", d), "the module's fuel account", "arithmetic on guessed rates"); } }
                 self.report_all(ctx);
                 let (pw, wa) = (self.ramp_of("electricity"), self.ramp_of("drinking water and sewer"));
-                ctx.publish("lifeline.state", json!({ "day": d, "hospitals_open": self.hospitals.iter().filter(|h| h.status == "open" || h.status == "generator").count(), "hospitals_dark": self.hospitals.iter().filter(|h| h.status == "dark").count(), "power_share": pw, "water_share": wa, "routes_open": routes, "hub_deaths": self.hub_deaths }));
-                ctx.schedule_with_priority(Duration::days(1), 5, "day", json!(null));
+                let (h_open, h_dark) = if computed { (self.net.get("hospitals_open").and_then(|v| v.as_u64()).unwrap_or(0) as usize, self.net.get("hospitals_dark").and_then(|v| v.as_u64()).unwrap_or(0) as usize) } else { (self.hospitals.iter().filter(|h| h.status == "open" || h.status == "generator").count(), self.hospitals.iter().filter(|h| h.status == "dark").count()) };
+                ctx.publish("lifeline.state", json!({ "day": d, "hospitals_open": h_open, "hospitals_dark": h_dark, "power_share": pw, "water_share": wa, "routes_open": routes, "hub_deaths": self.hub_deaths }));
+                ctx.schedule_with_priority(Duration::days(1), 8, "day", json!(null));
             }
             _ => {}
         }

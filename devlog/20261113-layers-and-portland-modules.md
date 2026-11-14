@@ -221,3 +221,86 @@ can draw, opened a week after the event, with a timeline of its own and a link t
 project has no such run the cover picture is shown as before; the cover file still makes the
 share card. Looked at on the Portland page at desktop width and at 420 pixels, where the layer
 list starts folded.
+
+## Roads and bridges drawn, the last pieces split out, water, effects, one 3D view for all (14 November)
+
+Anselm, in three messages: "Ok split the modules. Can you try render roads and bridges."; "Add
+hydrology. Animate earthquake slightly for 3d view. Can we show some kind of visual special effect
+when a bridge, oil tank or hospital fails ... a light weight effects engine that allows some
+customization ... I will leave efficiency issues up to you. I think we should also generalize this
+3d view because many of the scenarios such as the pallisades scenarios also will use 3d."
+
+### The split
+
+- `health.hospitals` (`hospitals.rs`) and `fuel.depot` (`depot.rs`) are out of
+  `portland.lifelines`. A hospital reads the grid at its place from `power.up`, runs its
+  generator down, asks the depot for a day's fuel (`fuel.request`) when `routes.state` says a
+  truck can reach it, and is settled on a later tick once the depot has answered
+  (`fuel.granted`). The depot owns the `fuel` ledger: the spill on `tanks.released`, the
+  response's draw, resupply, and the published deaths at the depot (`depot.toll`).
+- `portland.lifelines` in computed mode now restores water on its schedule, tells the story of
+  the bridges, roads and services, and gathers `lifeline.state`. Its `ranges` mode is the older
+  all-in-one version, kept whole.
+- **A module can be switched off in a manifest**: `enabled = false` in its params drops it
+  (`Manifest::parse`). The `ranges` variant sets `depot.enabled` and `hospitals.enabled` to false.
+- Order within a day: bridges and power 3, routes 4, depot 5, hospitals 6 and their settling 7,
+  lifelines 8.
+
+Against the runs of the third batch, every figure the page quotes is unchanged except the
+depot's own toll in the base run (1.5 to 1.4 deaths), because the new modules' draws decide
+little: no hospital is damaged in any run, and which hospitals lose power follows from power and
+roads, whose streams did not change. All ten ledgers close.
+
+### Water
+
+`water.surface` (`surfacewater.rs`): the cells that are permanent open water in ESA WorldCover
+2021 (51 km² of the window, the Willamette and the Columbia), as a world field and a frame, and
+the tanks' releases toward water set down on the water cell nearest each tank (24.3 million
+gallons in the base run, none stranded). It is not hydrology: no discharge, stage, tide or
+movement. He asked for hydrology; this gives the water layer an occupant and the spill a place to
+arrive, and says what is missing. A flow model on the Willamette (the USGS gauge at Portland, the
+tide at the Columbia) is the real next step.
+
+### Roads and bridges on the map
+
+- `roads.routes` carries the segments' outlines (from the folder's `routes.geojson`, each ring
+  thinned to a point every 30 m) and the area's main roads from OpenStreetMap (the existing
+  `context` fetch, slimmed to motorway through secondary, 34,000 points).
+- `roads.bridges` carries each bridge's lines: OpenStreetMap ways tagged as bridges
+  (`registry::wildfire::osm_bridges`, new), each way given to the bridge point it passes within
+  180 m of. All twelve bridges got lines.
+- Overpass was slow: one mirror held a connection open for twelve minutes without answering, and
+  the other answered 502. `fetch_reduced` now gives up on a request after 300 s. The first run took
+  about ten minutes to fetch both; they are cached and in the lock.
+- A run's `describe.json` is now 1.5 MB with the geometry.
+
+### The effects engine
+
+`web/src/lib/effects.js`: one pooled point cloud (6,000 particles, one draw call, a small shader),
+recipes by name (`fail`, `failSmall`, `collapse`, `dark`, `restore`, `mark`, `embers`, `dust`), each
+a list of specs (count, shape, speed, life, size, colours, gravity, drag, swirl, delay). Nothing
+is allocated per frame and the update returns at once when nothing is alive. The 3D view emits
+at a thing's place when the cursor steps forward across one of its changes: a tank fails, a
+bridge closes, a hospital loses power, something comes back. When hundreds change at one instant
+the bursts are thinned. At the event the scene trembles for about two and a half seconds, the
+relief flares and dust lifts. An "effects" switch turns it off.
+
+### One 3D view
+
+`Layers3D.svelte` no longer knows Portland. It draws any run with an elevation frame and layered
+modules: frames as light, frames of heights as standing lines, and placed things from
+`component.state`, `lifeline.*`, `fire.ignition`, `fire.spot`, `place.*` and `record.event`,
+located by their coordinates or by their cell. The record is a layer, off at first. A
+disturbance's standing map starts off and a moving one (a fire's front) starts on. Checked on
+`anselm/palisades-cells` (vector-5, rerun so its describe carries layers): the Santa Monica
+relief, the roads, the ignition and the fire's spread draw with no fire-specific code. The older
+`Scene3D` (buildings as boxes, the sun, the wind arrow) is still used inside the fire modules'
+own panels and was not removed.
+
+### Seen and not seen
+
+Looked at in a headless browser: Portland before, at the instant of the earthquake (effects in
+flight, routes turning red, relief flaring) and a week after; Palisades at thirty hours. Not
+seen: the effects in motion over time, a real device, a phone. The other Palisades variants and
+the other projects still need rerunning to show the view. The cover is now a still of the 3D view.
+`cargo test` (describe) and `esim regress` pass. Committed, not pushed, not deployed.

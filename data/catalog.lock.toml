@@ -108,6 +108,12 @@ sha256 = "cd255268fb81c7073bf10e5325e1d11c601dde5dc5ccd9c1f0b40a8bcb8a9b29"
 bytes = 87597650
 fetched = "2026-11-08"
 
+[files."esa-worldcover-2021/N45W123.tif"]
+url = "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N45W123_Map.tif"
+sha256 = "e1ecd731f19477ea9951c6d3ee18e31c4c381381ec05be84f2a4c3a30f3e56d4"
+bytes = 64998919
+fetched = "2026-11-14"
+
 [files."esa-worldcover-2021/N54W114.tif"]
 url = "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N54W114_Map.tif"
 sha256 = "b02113058cd9ef4cc2d18251f12f1771c70492c812b33c79f3ec2c5761acf893"
@@ -16626,6 +16632,12 @@ sha256 = "0201a5a1ccb4461ef213d914d24f05f66d0f5aff93145cd8b921f1d83e0dc83d"
 bytes = 4361540
 fetched = "2026-11-01"
 
+[files."osm-overpass/bridges_45.43_45.66_-122.85_-122.47.json"]
+url = "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A180%5D%3B%28way%5B%22bridge%22%5D%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%7Cbusway%7Cmotorway_link%7Ctrunk_link%7Cprimary_link%29%24%22%5D%2845.43%2C-122.85%2C45.66%2C-122.47%29%3Bway%5B%22bridge%22%5D%5B%22railway%22~%22%5E%28rail%7Clight_rail%7Ctram%29%24%22%5D%2845.43%2C-122.85%2C45.66%2C-122.47%29%3B%29%3Bout%20geom%3B"
+sha256 = "979dbc0278d34c560617008742b9264cebae11e11b74448577f60aefc6d6d908"
+bytes = 1010216
+fetched = "2026-11-14"
+
 [files."osm-overpass/buildings_37.97_38.08_-122.79_-122.61.json"]
 url = "https://overpass.kumi.systems/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A180%5D%3B%28way%5B%22building%22%5D%2837.97%2C-122.79%2C38.08%2C-122.61%29%3B%29%3Bout%20geom%3B"
 sha256 = "9fdd09bbc6480839ecd4a97617b0ad010e4def0fd5fe45b5b7b668cfc6c390c2"
@@ -16655,6 +16667,12 @@ url = "https://overpass.kumi.systems/api/interpreter?data=%5Bout%3Ajson%5D%5Btim
 sha256 = "fb601154b625c57700bbdaaa0a2868c0c9fa9322eba70bf2b095c59f1090f3a6"
 bytes = 272679
 fetched = "2026-11-08"
+
+[files."osm-overpass/context_45.43_45.66_-122.85_-122.47.json"]
+url = "https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A180%5D%3B%28way%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%29%24%22%5D%2845.43%2C-122.85%2C45.66%2C-122.47%29%3Bnode%5B%22place%22~%22%5E%28city%7Ctown%7Csuburb%7Cneighbourhood%7Cvillage%7Cquarter%29%24%22%5D%2845.43%2C-122.85%2C45.66%2C-122.47%29%3Brelation%5B%22boundary%22%3D%22administrative%22%5D%5B%22admin_level%22%3D%228%22%5D%2845.43%2C-122.85%2C45.66%2C-122.47%29%3B%29%3Bout%20geom%3B"
+sha256 = "2dc9c69dae90d984100f5b9ef6764eafa4762ffa122ad6e21dc9ee16fe7bf265"
+bytes = 17498349
+fetched = "2026-11-14"
 
 [files."osm-overpass/context_56.55_56.85_-111.75_-111.15.json"]
 url = "https://overpass.kumi.systems/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A180%5D%3B%28way%5B%22highway%22~%22%5E%28motorway%7Ctrunk%7Cprimary%7Csecondary%7Ctertiary%29%24%22%5D%2856.55%2C-111.75%2C56.85%2C-111.15%29%3Bnode%5B%22place%22~%22%5E%28city%7Ctown%7Csuburb%7Cneighbourhood%7Cvillage%7Cquarter%29%24%22%5D%2856.55%2C-111.75%2C56.85%2C-111.15%29%3B%29%3Bout%20geom%3B"

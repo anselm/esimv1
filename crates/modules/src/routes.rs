@@ -6,7 +6,9 @@
 //! its `fragility.toml`. The module knows no city. One of the four subject modules that replaced
 //! `hazard.components` on 2026-11-14.
 use crate::fragility::{or, table, tf, ts};
-use crate::quake::{cell_of, window_grid};
+use crate::quake::{cell_of, root, window_grid};
+use esim_registry::wildfire::{cached_context, context};
+use esim_registry::Fetcher;
 use esim_kernel::manifest::{param_f64, param_str};
 use esim_kernel::{Ctx, Describe, Duration, Event, Module};
 use serde::{Deserialize, Serialize};
@@ -57,7 +59,55 @@ impl Routes {
         // named places and the segment nearest each; one of them is the origin
         self.origin_name = or(ts(&rt, "origin"), "hub");
         if let Some(t) = rt.get("nearest").and_then(|n| n.as_table()) { for (k, v) in t { if let Some(i) = v.as_integer().and_then(|i| index.get(&i)) { if *k == self.origin_name { self.origin = Some(*i); } else { self.places.insert(k.clone(), *i); } } } }
+        // the area's roads and place names for a map, from OpenStreetMap; fetched once, carried by the describe from the cache
+        match Fetcher::default_for(&root()) { Ok(mut fe) => { if let Err(e) = context(&mut fe, self.lat_s, self.lat_n, self.lon_w, self.lon_e) { eprintln!("context: {e} (the map will have no roads or names)"); } } Err(e) => eprintln!("context: {e}") }
         Ok(())
+    }
+    /// A city's road context is megabytes; a run's describe carries the heavier roads only, each
+    /// thinned to a point every 40 m or so and without its name, and the place names.
+    fn slim(c: serde_json::Value) -> serde_json::Value {
+        let roads: Vec<serde_json::Value> = c["roads"].as_array().into_iter().flatten().filter(|r| matches!(r["class"].as_str(), Some("motorway" | "trunk" | "primary" | "secondary"))).filter_map(|r| {
+            let pts: Vec<(f64, f64)> = r["pts"].as_array()?.iter().filter_map(|q| Some((q[0].as_f64()?, q[1].as_f64()?))).collect();
+            if pts.len() < 2 { return None; }
+            let kx = 111_320.0 * pts[0].1.to_radians().cos();
+            let mut keep = vec![pts[0]];
+            for q in &pts[1..pts.len() - 1] { let l = keep[keep.len() - 1]; if (((q.0 - l.0) * kx).powi(2) + ((q.1 - l.1) * 110_570.0).powi(2)).sqrt() >= 40.0 { keep.push(*q); } }
+            keep.push(pts[pts.len() - 1]);
+            Some(json!({ "class": r["class"], "pts": keep.into_iter().map(|(x, y)| [x, y]).collect::<Vec<_>>() }))
+        }).collect();
+        json!({ "roads": roads, "places": c["places"], "boundaries": [], "source": c["source"] })
+    }
+    /// The segments' outlines for a map, from the folder's GeoJSON named in routes.toml
+    /// (`geometry`, with `geometry_id` the property that holds a segment's id): each polygon ring
+    /// thinned to one point every 30 m or so. A drawing aid; the model uses the graph.
+    fn geometry(folder: &str, rt: &toml::Value) -> Option<serde_json::Value> {
+        let file = or(ts(rt, "geometry"), "routes.geojson"); let idp = or(ts(rt, "geometry_id"), "SegmentID");
+        let text = std::fs::read_to_string(root().join("data/events").join(folder).join(&file)).ok()?;
+        let g: serde_json::Value = serde_json::from_str(&text).ok()?;
+        fn rings(geom: &serde_json::Value, out: &mut Vec<Vec<(f64, f64)>>) {
+            let ring = |r: &serde_json::Value| -> Vec<(f64, f64)> { r.as_array().into_iter().flatten().filter_map(|q| Some((q[0].as_f64()?, q[1].as_f64()?))).collect() };
+            match geom["type"].as_str() {
+                Some("Polygon") => for r in geom["coordinates"].as_array().into_iter().flatten() { out.push(ring(r)); },
+                Some("MultiPolygon") => for p in geom["coordinates"].as_array().into_iter().flatten() { for r in p.as_array().into_iter().flatten() { out.push(ring(r)); } },
+                Some("GeometryCollection") => for x in geom["geometries"].as_array().into_iter().flatten() { rings(x, out); },
+                _ => {}
+            }
+        }
+        let r5 = |x: f64| (x * 1e5).round() / 1e5;
+        let mut segs = Vec::new();
+        for f in g["features"].as_array()? {
+            let id = f["properties"][idp.as_str()].as_i64().or(f["properties"][idp.as_str()].as_f64().map(|x| x as i64))?;
+            let mut rs = Vec::new(); rings(&f["geometry"], &mut rs);
+            let lines: Vec<Vec<[f64; 2]>> = rs.into_iter().filter(|r| r.len() > 3).map(|r| {
+                let kx = 111_320.0 * r[0].1.to_radians().cos();
+                let mut keep: Vec<(f64, f64)> = vec![r[0]];
+                for q in &r[1..] { let l = keep[keep.len() - 1]; if (((q.0 - l.0) * kx).powi(2) + ((q.1 - l.1) * 110_570.0).powi(2)).sqrt() >= 30.0 { keep.push(*q); } }
+                keep.push(r[r.len() - 1]);
+                keep.into_iter().map(|(x, y)| [r5(x), r5(y)]).collect()
+            }).collect();
+            segs.push(json!({ "id": format!("{id}"), "lines": lines }));
+        }
+        Some(json!({ "segments": segs }))
     }
     pub fn describe(name: &str, p: &toml::Value) -> Describe {
         let folder = param_str(p, "folder", "");
@@ -81,6 +131,8 @@ impl Routes {
             .view("chart", "places reachable from the origin", "routes.places_reachable", "")
             .view("text", "what this module leaves out", "A segment is open or closed along its whole length. The days closed are a range per deformation class, and the folder's fragility.toml says whether those ranges are published or guessed. Debris, traffic, fuel for vehicles and roads outside the listed network are not represented, so a place that is unreachable here may have another way in.", "");
         if let Some(t) = rule { d = d.table("fragility", json!({ "route": t })); }
+        if let Some(g) = rt.as_ref().and_then(|t| Self::geometry(folder, t)) { d = d.table("geometry", g); }
+        if let Some(c) = Fetcher::default_for(&root()).ok().and_then(|f| cached_context(&f, param_f64(p, "lat_s", 0.0), param_f64(p, "lat_n", 0.0), param_f64(p, "lon_w", 0.0), param_f64(p, "lon_e", 0.0))) { d = d.table("context", Self::slim(c)).asset("osm-overpass", "the area's roads and place names for the map, from OpenStreetMap"); }
         d
     }
     fn say(&self, ctx: &mut Ctx, s: &Seg, day: i64) { ctx.publish_at(s.cell, "component.state", json!({ "kind": "route", "id": format!("{}", s.id), "name": format!("segment {}", s.id), "lat": s.lat, "lon": s.lon, "state": if s.class > 0 { 3 } else { 0 }, "down": s.down, "repair_day": s.repair_day, "day": day })); }

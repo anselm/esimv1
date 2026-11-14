@@ -197,10 +197,11 @@ matched DOGAMI's. Others, such as the 72 hours of generator fuel, are guesses. T
 [How each part is modelled](#how-each-part-is-modelled) gives the rule and the source for each
 part.
 
-A run can also be watched. Open one from the list of runs above this text and press play. The map
-shows the bridges and hospitals as marks that change when they close or lose power, and a clock
-gives the date and whether the moment is before, during or after the earthquake. The arrow keys
-step from one event to the next.
+A run can also be watched. The view at the top of this page shows the modelled area in three
+dimensions: the relief, the rivers, the roads and the bridges, with the model's parts grouped by
+layer and each switched on and off. Press play under it, or open a run from the list above this
+text. Bridges, tanks and hospitals change colour when they close, fail or lose power, and a brief
+burst of light marks the moment. The arrow keys step from one event to the next.
 
 ## What the runs show
 
@@ -276,6 +277,12 @@ The variants move the spill in the direction one would expect. Holding 20 percen
 the release toward the river from 24.3 to 19.4 million gallons. Retrofitting every tank cuts it to
 1.6 million. On dry soil 113 tanks fail and 9.1 million gallons go toward the river, which shows
 how much of the spill in this model comes from liquefaction under the tanks.
+
+The model knows where the river is but not how it moves. It marks the cells that are open water
+in a satellite land-cover map and sets each release toward the river down on the water nearest
+the tank. In the base run all 24.3 million gallons arrive along the west bank beside the
+terminals. The model has no current, tide or river level, so it cannot say where the fuel would
+go from there.
 
 ### Three days after
 
@@ -457,7 +464,12 @@ it at once. The emergency response is assumed to use 300,000 gallons a day, and 
 pipeline and barge is assumed to resume on day 14 at up to 1 million gallons a day. Both rates and
 the day are guesses.
 
-**Water.** The model does not compute water service. It restores water along a straight line that
+**Rivers.** The model marks open water from ESA WorldCover 2021, a land-cover map made from
+satellite images at 10 metres: 51 square kilometres of the area, most of it the Willamette and the
+Columbia. Fuel released toward water is set down on the water cell nearest the tank and is not
+moved after that.
+
+**Drinking water.** The model does not compute water service. It restores water along a straight line that
 ends on a day drawn at random from the Resilience Plan's range of one month to one year.
 
 **Deaths after the shaking.** The death rate per day without electricity is derived from a study of
@@ -532,6 +544,10 @@ Every source was read on 12 November 2026 unless noted.
   bridge's year built, type, length and condition.
 - OpenStreetMap, through the Overpass service. Taken: 352 tank outlines, used to place the tanks
   for which the 2022 study gives no coordinates. The placement within a property is a guess.
+  Also taken, on 14 November 2026: the area's main roads and the lines of its bridges, for the
+  three-dimensional view only. The model does not use them.
+- ESA WorldCover 2021 (Zanaga and others 2022), the 10-metre land-cover map, tile N45W123. Taken on
+  14 November 2026: which cells are permanent open water.
 - Kishore and others, *Mortality in Puerto Rico after Hurricane Maria*, New England Journal of
   Medicine 379:162-170, 2018. Read: the abstract and reporting on it, not the paper. Taken: the
   excess deaths and the share attributed to interrupted care, turned into a rate per person-day

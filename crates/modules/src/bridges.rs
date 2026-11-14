@@ -4,7 +4,9 @@
 //! event folder's `bridges.toml` and the curves its `fragility.toml`. The module knows no river and
 //! no city. One of the four subject modules that replaced `hazard.components` on 2026-11-14.
 use crate::fragility::{curve, force_param, forced, table, tf, ts, Curve, Shaking};
-use crate::quake::{cell_of, window_grid};
+use crate::quake::{cell_of, root, window_grid};
+use esim_registry::wildfire::{cached_osm_bridges, osm_bridges};
+use esim_registry::Fetcher;
 use esim_kernel::manifest::{param_f64, param_str};
 use esim_kernel::{Ctx, Describe, Duration, Event, LatLonGrid, Module};
 use serde::{Deserialize, Serialize};
@@ -42,8 +44,31 @@ impl Bridges {
         if let Some(t) = fr.get("bridge_class").and_then(|v| v.as_table()) { for (k, v) in t { self.classes.insert(k.clone(), curve(v)); } }
         let br = table(&self.folder, "bridges.toml")?;
         self.bridges = br.get("bridge").and_then(|v| v.as_array()).cloned().unwrap_or_default().iter().map(|b| { let (lat, lon) = (tf(b, "lat"), tf(b, "lon")); Bridge { name: ts(b, "name"), lat, lon, cell: cell_of(&g, lat, lon), class: ts(b, "seismic_class"), state: 0, down: false, repair_day: -1 } }).collect();
+        // the bridges' lines for a map, from OpenStreetMap; fetched once, carried by the describe from the cache
+        match Fetcher::default_for(&root()) { Ok(mut fe) => { if let Err(e) = osm_bridges(&mut fe, self.lat_s, self.lat_n, self.lon_w, self.lon_e) { eprintln!("bridge lines: {e} (the map will draw each bridge as a point)"); } } Err(e) => eprintln!("bridge lines: {e}") }
         self.grid = Some(g);
         Ok(())
+    }
+    /// Each bridge's lines for a map: the OpenStreetMap bridge ways that pass close to the bridge's
+    /// point, each way given to the bridge it is nearest. A drawing aid; the model uses the point.
+    fn geometry(folder: &str, p: &toml::Value) -> Option<serde_json::Value> {
+        let br = table(folder, "bridges.toml").ok()?;
+        let list: Vec<(String, f64, f64)> = br.get("bridge")?.as_array()?.iter().map(|b| (ts(b, "name"), tf(b, "lat"), tf(b, "lon"))).collect();
+        let fe = Fetcher::default_for(&root()).ok()?;
+        let osm = cached_osm_bridges(&fe, param_f64(p, "lat_s", 0.0), param_f64(p, "lat_n", 0.0), param_f64(p, "lon_w", 0.0), param_f64(p, "lon_e", 0.0))?;
+        let mut lines: Vec<Vec<serde_json::Value>> = vec![Vec::new(); list.len()];
+        for w in osm.get("ways")?.as_array()? {
+            let pts: Vec<(f64, f64)> = w["pts"].as_array().into_iter().flatten().filter_map(|q| Some((q[0].as_f64()?, q[1].as_f64()?))).collect();
+            // the nearest bridge point to any vertex of the way, in metres
+            let mut best = (f64::INFINITY, 0usize);
+            for (k, (_, lat, lon)) in list.iter().enumerate() {
+                let kx = 111_320.0 * lat.to_radians().cos();
+                let d = pts.iter().map(|(x, y)| (((x - lon) * kx).powi(2) + ((y - lat) * 110_570.0).powi(2)).sqrt()).fold(f64::INFINITY, f64::min);
+                if d < best.0 { best = (d, k); }
+            }
+            if best.0 <= 180.0 { lines[best.1].push(w["pts"].clone()); }
+        }
+        Some(json!({ "source": osm.get("source").cloned().unwrap_or(json!("")), "bridges": list.iter().zip(lines).map(|((name, lat, lon), l)| json!({ "name": name, "lat": lat, "lon": lon, "lines": l })).collect::<Vec<_>>() }))
     }
     fn curve_of(&self, class: &str) -> Curve { self.classes.get(class).cloned().unwrap_or_else(|| self.default.clone()) }
     pub fn describe(name: &str, p: &toml::Value) -> Describe {
@@ -62,6 +87,7 @@ impl Bridges {
             .view("counter", "bridges open", "bridges.open", &format!("of {n}, each according to its own damage state and repair time"))
             .view("chart", "bridges open", "bridges.open", "")
             .view("text", "what this module leaves out", "A bridge is one point with one curve for its class. The module does not represent spans, approaches, piers or movable parts separately, and a bridge is either open or closed, with no reduced capacity. Repair times are fixed by damage state and do not depend on how many other bridges need repair at once.", "");
+        if let Some(g) = Self::geometry(folder, p) { d = d.table("geometry", g).asset("osm-overpass", "the bridges' lines for the map, from OpenStreetMap"); }
         if let Some(fr) = fr { let mut t = serde_json::Map::new(); for k in ["bridge", "bridge_class"] { if let Some(v) = fr.get(k) { t.insert(k.to_string(), json!(v)); } } d = d.table("fragility", serde_json::Value::Object(t)); }
         d
     }

@@ -67,6 +67,27 @@ kind = "roads.routes"
 folder = "portland-cascadia"
 soils = "wet"
 
+# Where the water is (ESA WorldCover), and where the tanks' releases toward water arrive on it.
+# No flow: the water layer's first occupant, not yet a hydrology.
+[[module]]
+name = "water"
+kind = "water.surface"
+
+# The hospitals and the depot's fuel account, each a module of its own. The `ranges` variant
+# switches both off: there `portland.lifelines` runs its older version, which keeps them itself.
+[[module]]
+name = "depot"
+kind = "fuel.depot"
+[module.params]
+folder = "portland-cascadia"
+storage_cut = 0.0
+
+[[module]]
+name = "hospitals"
+kind = "health.hospitals"
+[module.params]
+folder = "portland-cascadia"
+
 [[module]]
 name = "aftermath"
 kind = "people.aftermath"

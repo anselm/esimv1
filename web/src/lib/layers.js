@@ -13,6 +13,7 @@ export const LAYERS = [
   { id: 'animals', name: 'Animals', color: '#b4e36a' },
   { id: 'people', name: 'People', color: '#ff8fb5' },
   { id: 'across', name: 'Disturbances', color: '#ff6a4d' },
+  { id: 'record', name: 'The record', color: '#d9e2e8' },
 ]
 // what a failed, closed or dark thing is drawn in, whatever its layer
 export const HARM = '#ff4d3d'

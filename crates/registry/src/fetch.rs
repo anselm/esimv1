@@ -86,8 +86,11 @@ impl Fetcher {
         let mut raw = Vec::new();
         let mut wait = 2u64;
         for attempt in 0..6 {
-            match ureq::get(url).call() {
-                Ok(resp) => { resp.into_reader().read_to_end(&mut raw).map_err(|e| e.to_string())?; break; }
+            // a bound on the whole exchange: an Overpass mirror held a connection open for twelve minutes
+            // without answering on 2026-11-14, and a run must not wait on a map's decoration for ever
+            let agent = ureq::AgentBuilder::new().timeout(std::time::Duration::from_secs(300)).build();
+            match agent.get(url).call() {
+                Ok(resp) => { raw.clear(); resp.into_reader().read_to_end(&mut raw).map_err(|e| e.to_string())?; break; }
                 Err(ureq::Error::Status(code, _)) if (code == 429 || code >= 500) && attempt < 5 => {
                     eprintln!("fetch: {url}: {code}; waiting {wait}s"); std::thread::sleep(std::time::Duration::from_secs(wait)); wait *= 2;
                 }

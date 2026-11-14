@@ -21,10 +21,10 @@ in three dimensions, each layer switched on and off.
 |---|---|---|
 | sun | irradiance on terrain | `sun.irradiance` |
 | ground | elevation, soil, geology | none; the relief is read from a frame |
-| water | water on and in the ground, the sea, the cycles it carries | `water.basin`, `water.bucket`, `water.source`, `nitrogen.basin`, `sea.thermal`, `coast.oneline` |
+| water | water on and in the ground, the sea, the cycles it carries | `water.basin`, `water.bucket`, `water.source`, `water.surface`, `nitrogen.basin`, `sea.thermal`, `coast.oneline` |
 | air and weather | composition, energy, weather | `carbon.emissions`, `carbon.pools`, `carbon.gases`, `forcing.ar6`, `energy.twolayer`, `heat.slab`, `weather.era5`, `weather.heatwaves`, `climate.countries` |
-| built structures | buildings, tanks, bridges, roads | `quake.buildings`, `fuel.tanks`, `roads.bridges`, `roads.routes` |
-| flows through the built | electricity, fuel, piped water, vehicles | `power.structures`, `portland.lifelines` |
+| built structures | buildings, tanks, bridges, roads, hospitals | `quake.buildings`, `fuel.tanks`, `roads.bridges`, `roads.routes`, `health.hospitals` |
+| flows through the built | electricity, fuel, piped water, vehicles | `power.structures`, `fuel.depot`, `portland.lifelines` |
 | law and money | designations and ledgers | `rules.calendar`, `policy.capacity` |
 | plants | producers | `veg.crop` |
 | animals | consumers and their food webs | `fauna.herbivore`, `fauna.predator` |

@@ -90,6 +90,42 @@
       }
     },
     {
+      "id": "water",
+      "kind": "water.surface",
+      "params": {
+        "lat_n": 45.66,
+        "lat_s": 45.43,
+        "lon_e": -122.47,
+        "lon_w": -122.85,
+        "res_arcsec": 1
+      }
+    },
+    {
+      "id": "depot",
+      "kind": "fuel.depot",
+      "params": {
+        "folder": "portland-cascadia",
+        "lat_n": 45.66,
+        "lat_s": 45.43,
+        "lon_e": -122.47,
+        "lon_w": -122.85,
+        "res_arcsec": 1,
+        "storage_cut": 0.0
+      }
+    },
+    {
+      "id": "hospitals",
+      "kind": "health.hospitals",
+      "params": {
+        "folder": "portland-cascadia",
+        "lat_n": 45.66,
+        "lat_s": 45.43,
+        "lon_e": -122.47,
+        "lon_w": -122.85,
+        "res_arcsec": 1
+      }
+    },
+    {
       "id": "aftermath",
       "kind": "people.aftermath",
       "params": {
@@ -178,7 +214,7 @@
   ],
   "from": {
     "entry": "manifests/q1-portland-cascadia.toml",
-    "hash": "sha256:55b832596861f7828fb39b815e41b53f7db68be7f5aee63e10058e1fc71f4097",
+    "hash": "sha256:b15c5c99f00ee4923665086234cccf16f3ac9f16f80afac04f81e934fff0df84",
     "language": "toml"
   },
   "manifest": "manifest/1"

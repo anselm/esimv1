@@ -2,13 +2,16 @@
   // The place in three dimensions, with the run's modules grouped by layer and switched on and
   // off. The relief is the run's own elevation frame, drawn as contour lines on a dark ground;
   // each module's map frames are draped over it as points of light in its layer's colour, and the
-  // things a module places (tanks, bridges, hospitals) stand on it as marks in the state they are
-  // in at the cursor. Layers can be lifted apart to see each alone. The look follows the Bay
+  // things a module places (tanks, bridges, hospitals, a fire's ignition) stand on it as marks in
+  // the state they are in at the cursor. It is one view for every scenario: it asks only for an
+  // elevation frame and modules that carry a layer, and draws whatever frames and placed things
+  // the run has. What changes between one moment and the next is marked by a small effect. Layers can be lifted apart to see each alone. The look follows the Bay
   // Layers study (github.com/anselm/bay-area-twin): luminous, wire-like, the scene carrying the
   // explanation. Nothing here is a picture of a map; every point comes from the run folder.
   import * as THREE from 'three'
   import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
   import { LAYERS, HARM } from './layers.js'
+  import { createEffects } from './effects.js'
   import { isoTime } from './fmt.js'
 
   let { run, base, cursor = null, event = null, terrain = 'terrain_elev_m' } = $props()
@@ -24,6 +27,7 @@
   let sep = $state(0)
   let spin = $state(true)
   let showLabels = $state(true)
+  let showFx = $state(true)
   let panel = $state(true)
   let off = $state({})          // keys switched off: a layer id, or module:field, or module:marks
   let seeded = false
@@ -38,18 +42,22 @@
     const names = [...titles.keys(), ...(m.frames ?? []).map((f) => f.name)]
     return [...new Set(names)].filter((n) => n !== terrain && run.fields?.[n]).map((n) => ({ name: n, title: titles.get(n) ?? pretty(n) }))
   }
-  const groups = $derived(LAYERS.map((L) => ({ ...L, modules: modules.filter((m) => m.layer === L.id).map((m) => ({ name: m.name, kind: m.kind, frames: framesOf(m) })) })))
+  const groups = $derived(LAYERS.map((L) => ({ ...L, modules: modules.filter((m) => m.layer === L.id).map((m) => ({ name: m.name, kind: m.kind, frames: framesOf(m), roads: (m.tables?.context?.roads ?? []).length })) })))
   const present = $derived(groups.filter((g) => g.modules.length || g.id === 'ground'))
   $effect(() => {
     if (seeded || !modules.length) return
     seeded = true
     const o = {}
-    for (const m of modules) if (m.layer === 'across') o[`${m.name}:field`] = true
+    // a disturbance's standing map (the shaking, everywhere at once) starts off so that what it did reads
+    // first; one that moves (a fire's front) starts on. The record starts off: it is there to compare with.
+    for (const m of modules) if (m.layer === 'across' && !framesOf(m).some((f) => (run.fields[f.name]?.times?.length ?? 0) > 1)) o[`${m.name}:field`] = true
+    o.record = true
     off = o
   })
   const isOn = (k) => !off[k]
   const toggle = (k) => { off = { ...off, [k]: !off[k] } }
-  const frameFor = (m) => chosen[m.name] ?? m.frames[0]?.name ?? null
+  // a module's first frame is the one drawn, except for a disturbance, where the frame that moves (a fire's front) comes first
+  const frameFor = (m) => chosen[m.name] ?? ((modules.find((x) => x.name === m.name)?.layer === 'across' ? m.frames.find((f) => (run.fields[f.name]?.times?.length ?? 0) > 1) : null) ?? m.frames[0])?.name ?? null
 
   // ---- data
   async function frame(name, i) {
@@ -60,8 +68,12 @@
   const frameIndex = (f, t) => { const ts = f.times ?? []; let k = 0; for (let i = 0; i < ts.length; i++) if (t === null || ts[i] <= t) k = i; return k }
 
   // the things modules place, from the log: where each is and the state it is in over time
-  const MARK_TOPICS = ['component.state', 'lifeline.marked', 'lifeline.failed', 'lifeline.restored']
-  let marks = $state([])        // { src, kind, name, lat, lon, changes: [[t, down, status]] }
+  // Any module may place things: a component with a state (component.state), a lifeline that is
+  // marked, fails and is restored, or an event that happens at a cell at a time (a fire's ignition
+  // and its spots, a place staked and reached, an entry in the record).
+  const MARK_TOPICS = ['component.state', 'lifeline.marked', 'lifeline.failed', 'lifeline.restored', 'fire.ignition', 'fire.spot', 'place.marked', 'place.reached', 'record.event']
+  const AT_KIND = { 'fire.ignition': 'ignition', 'fire.spot': 'spot', 'place.marked': 'place', 'place.reached': 'place', 'record.event': 'record' }
+  let marks = $state([])        // { src, kind, name, lat, lon, from, changes: [[t, down, status]] }
   $effect(() => {
     if (!base) return
     let live = true
@@ -71,11 +83,22 @@
       for (const line of text.split('\n')) {
         if (!line || !MARK_TOPICS.some((t) => line.includes(`"${t}"`))) continue
         let e; try { e = JSON.parse(line) } catch { continue }
-        const d = e.data ?? {}; if (!d.kind || !d.name) continue
+        const d = e.data ?? {}
+        if (AT_KIND[e.topic]) {
+          // an event at a cell of the run's grid: where it is comes from the cell
+          const g = tf?.grid; if (!g || e.at == null) continue
+          const lat = d.lat ?? g.lat_n - (Math.floor(e.at / g.nx) + 0.5) * g.dlat, lon = d.lon ?? g.lon_w + ((e.at % g.nx) + 0.5) * g.dlon
+          const kind = AT_KIND[e.topic], name = d.name ?? d.title ?? kind, key = `${e.src}|${kind}|${kind === 'place' ? name : e.seq}`
+          let m = by.get(key)
+          if (!m) { m = { src: e.src, kind, name, lat, lon, own: true, from: e.t, changes: [] }; by.set(key, m) }
+          if (e.topic === 'place.reached') m.changes.push([e.t, true, 'reached'])
+          continue
+        }
+        if (!d.kind || !d.name) continue
         if (e.topic === 'component.state' && d.kind === 'bridge') componentBridges = true
         const key = `${e.topic === 'component.state' ? e.src : 'L'}|${d.kind}|${d.name}`
         let m = by.get(key)
-        if (!m) { m = { src: e.src, kind: d.kind, name: d.name, lat: d.lat, lon: d.lon, own: e.topic === 'component.state', changes: [] }; by.set(key, m) }
+        if (!m) { m = { src: e.src, kind: d.kind, name: d.name, lat: d.lat, lon: d.lon, own: e.topic === 'component.state', from: -Infinity, changes: [] }; by.set(key, m) }
         if (d.lat != null && m.lat == null) { m.lat = d.lat; m.lon = d.lon }
         if (e.topic === 'component.state') m.changes.push([e.t, !!d.down, d.down ? 'closed' : 'open'])
         else if (e.topic === 'lifeline.failed') m.changes.push([e.t, true, d.status ?? 'failed'])
@@ -87,7 +110,8 @@
     return () => { live = false }
   })
   const stateAt = (m, t) => { let s = [0, false, 'open']; for (const c of m.changes) if (t === null || c[0] <= t) s = c; return s }
-  const PINNED = new Set(['bridge', 'hospital', 'hub'])
+  const PINNED = new Set(['bridge', 'hospital', 'hub', 'ignition', 'place'])
+  const shown = (m, t) => t === null || m.from <= t
 
   // ---- the scene
   let three = null   // { renderer, scene, camera, controls, layers: Map, km, elevAt, raf }
@@ -146,22 +170,46 @@
     const ex = spanX / 2, ez = spanZ / 2
     const rim = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-ex, 0, -ez), new THREE.Vector3(ex, 0, -ez), new THREE.Vector3(ex, 0, ez), new THREE.Vector3(-ex, 0, ez)]), new THREE.LineBasicMaterial({ color: '#35b3a4', transparent: true, opacity: 0.35 }))
     scene.add(rim)
-    three = { renderer, scene, camera, controls, layers, km, elevAt, fields: new Map(), markObjs: new Map(), spanX, spanZ, visible: true }
+    const fx = createEffects(scene, { capacity: 6000 })
+    three = { renderer, scene, camera, controls, layers, km, elevAt, fields: new Map(), markObjs: new Map(), spanX, spanZ, visible: true, fx, relief, shake: 0, last: performance.now() }
     const loop = () => {
       three.raf = requestAnimationFrame(loop)
       if (!three.visible) return
+      const now = performance.now(), dt = Math.min(0.1, (now - three.last) / 1000); three.last = now
       controls.autoRotate = spin; controls.update()
+      // the ground shaking: the whole scene trembles and the relief flares, both dying away in a few seconds
+      if (three.shake > 0) {
+        three.shake = Math.max(0, three.shake - dt / 2.6)
+        const a = three.shake * three.shake * 0.11
+        scene.position.set((Math.random() - 0.5) * a, (Math.random() - 0.5) * a * 0.6, (Math.random() - 0.5) * a)
+        relief.children[0].material.opacity = 0.28 + 0.6 * three.shake; relief.children[1].material.opacity = 0.6 + 0.4 * three.shake
+        if (three.shake === 0) scene.position.set(0, 0, 0)
+      }
+      fx.update(dt)
       renderer.render(scene, camera); placeLabels()
     }
     loop()
   }
 
   // a frame as points of light on the ground, in the layer's colour (or the colour of harm)
-  const HARMFUL = /damage|destroyed|collapsed|deaths|displaced|release|without|pgd|liquefaction/
+  const HARMFUL = /damage|destroyed|collapsed|deaths|displaced|release|without|pgd|liquefaction|fire|burn|arrival|flame|fuel_on/
+  const HEIGHTS = /height/
   function drawField(layerId, key, name, data) {
     const t3 = three; const f = run.fields[name]; const g = f.grid
     const old = t3.fields.get(key); if (old) { old.parent?.remove(old); old.geometry.dispose(); old.material.dispose(); t3.fields.delete(key) }
     if (!data) return
+    if (HEIGHTS.test(name)) {
+      // a frame of heights (buildings) stands up: one line per cell from the ground to its height
+      const k = (/^ft/.test(f.unit ?? '') ? 0.3048 : 1) / 1000 * ZS, base = new THREE.Color(LAYERS.find((l) => l.id === layerId)?.color ?? '#ffffff'), P = [], C = []
+      for (let r = 0; r < g.ny; r++) for (let c = 0; c < g.nx; c++) {
+        const v = data[r * g.nx + c]; if (!(v > 0)) continue
+        const lon = g.lon_w + (c + 0.5) * g.dlon, lat = g.lat_n - (r + 0.5) * g.dlat, [x, z] = t3.km(lon, lat), y0 = t3.elevAt(lon, lat)
+        P.push(x, y0, z, x, y0 + Math.max(v * k, 0.012), z); C.push(base.r * 0.25, base.g * 0.25, base.b * 0.25, base.r * 0.8, base.g * 0.8, base.b * 0.8)
+      }
+      const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(P), 3)); geo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(C), 3))
+      const obj = new THREE.LineSegments(geo, new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false }))
+      t3.layers.get(layerId).add(obj); t3.fields.set(key, obj); return
+    }
     const st = Math.max(1, Math.round(g.nx / 700))
     const max = Math.max(f.max ?? 1, 1e-9), useLog = max > 50
     // a frame that is positive everywhere (shaking, say) is drawn by where it stands in its own range
@@ -181,7 +229,7 @@
       const [x, z] = t3.km(lon, lat); P.push(x, t3.elevAt(lon, lat) + 0.03, z)
       // harm runs from the layer's own colour, where it is slight, to red, where it is worst
       if (harmful) col.copy(base).lerp(harm, service ? 1 : Math.min(1, t * 1.4)); else col.copy(base)
-      const b = service ? 0.5 : 0.07 + 0.6 * t * t; C.push(col.r * b, col.g * b, col.b * b)
+      const b = service ? 0.5 : harmful ? 0.16 + 0.5 * t : 0.07 + 0.6 * t * t; C.push(col.r * b, col.g * b, col.b * b)
     }
     const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(P), 3)); geo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(C), 3))
     const size = g.dlat * 110.57 * st * 0.85
@@ -218,7 +266,7 @@
   // the marks, rebuilt when the cursor crosses a change
   let labels = $state([])    // { text, x, y, color, show }
   let labelAnchors = []
-  const markSig = $derived(marks.map((m) => (stateAt(m, cursor)[1] ? 1 : 0)).join('') + '|' + JSON.stringify(off) + '|' + sep)
+  const markSig = $derived(marks.map((m) => (!shown(m, cursor) ? 2 : stateAt(m, cursor)[1] ? 1 : 0)).join('') + '|' + JSON.stringify(off) + '|' + sep)
   $effect(() => {
     void markSig
     if (!ready) return
@@ -232,11 +280,21 @@
       const layerId = layerOfModule.get(src); const grp = t3.layers.get(layerId); if (!grp) continue
       if (!isOn(layerId) || !isOn(`${src}:marks`)) continue
       const base = new THREE.Color(LAYERS.find((l) => l.id === layerId).color), harm = new THREE.Color(HARM)
-      const P = [], C = [], PP = [], PC = [], LP = [], LC = []
+      const P = [], C = [], PP = [], PC = [], LP = [], LC = [], GP = [], GC = []
+      // a module may carry lines for what it places (its describe's `geometry` table): a road
+      // segment's outline, a bridge's span. Then the thing is drawn as its lines, in its state.
+      const geom = modules.find((x) => x.name === src)?.tables?.geometry
+      const segLines = new Map((geom?.segments ?? []).map((g) => [`segment ${g.id}`, g.lines]))
+      const spanLines = new Map((geom?.bridges ?? []).map((g) => [g.name, g.lines]))
+      const white = new THREE.Color('#ffffff')
+      const draw = (lines, c, b, lift) => { for (const l of lines) for (let k = 0; k + 1 < l.length; k++) { for (const q of [l[k], l[k + 1]]) { const [x, z] = t3.km(q[0], q[1]); GP.push(x, t3.elevAt(q[0], q[1]) + lift, z); GC.push(c.r * b, c.g * b, c.b * b) } } }
       for (const m of list) {
+        if (!shown(m, cursor)) continue
         const [, down, status] = stateAt(m, cursor)
         const [x, z] = t3.km(m.lon, m.lat), y0 = t3.elevAt(m.lon, m.lat)
         const c = down ? harm : base, b = down ? 0.9 : 0.4
+        if (segLines.has(m.name)) { draw(segLines.get(m.name), c, down ? 0.75 : 0.5, 0.03); continue }
+        if (spanLines.get(m.name)?.length) draw(spanLines.get(m.name), down ? harm : white, down ? 1 : 0.95, 0.14)
         if (PINNED.has(m.kind)) {
           const top = y0 + (m.kind === 'hub' ? 1.5 : 0.9)
           LP.push(x, y0, z, x, top, z); LC.push(c.r * 0.5, c.g * 0.5, c.b * 0.5, c.r, c.g, c.b)
@@ -247,12 +305,64 @@
       const g3 = new THREE.Group()
       const mk = (arr, col, size) => { const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(arr), 3)); geo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(col), 3)); return new THREE.Points(geo, new THREE.PointsMaterial({ size, vertexColors: true, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false })) }
       if (P.length) g3.add(mk(P, C, 0.11))
+      if (GP.length) {
+        const gg = new THREE.BufferGeometry(); gg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(GP), 3)); gg.setAttribute('color', new THREE.BufferAttribute(new Float32Array(GC), 3))
+        g3.add(new THREE.LineSegments(gg, new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false })))
+      }
       if (PP.length) {
         g3.add(mk(PP, PC, 0.3))
         const lg = new THREE.BufferGeometry(); lg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(LP), 3)); lg.setAttribute('color', new THREE.BufferAttribute(new Float32Array(LC), 3))
         g3.add(new THREE.LineSegments(lg, new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false })))
       }
       grp.add(g3); t3.markObjs.set(src, g3)
+    }
+  })
+  // the area's roads from OpenStreetMap, when a module carries them: faint lines, the heavier the road the brighter
+  const ROAD_W = { motorway: 0.34, trunk: 0.28, primary: 0.2, secondary: 0.12, tertiary: 0.08 }
+  $effect(() => {
+    if (!ready) return
+    const t3 = three
+    for (const m of modules) {
+      const roads = m.tables?.context?.roads; if (!roads?.length) continue
+      const key = `${m.name}:roads`
+      let obj = t3.fields.get(key)
+      if (!obj) {
+        const col = new THREE.Color(LAYERS.find((l) => l.id === m.layer)?.color ?? '#ffffff'), P = [], C = []
+        for (const r of roads) { const b = ROAD_W[r.class] ?? 0.1; for (let k = 0; k + 1 < r.pts.length; k++) for (const q of [r.pts[k], r.pts[k + 1]]) { const [x, z] = t3.km(q[0], q[1]); P.push(x, t3.elevAt(q[0], q[1]) + 0.02, z); C.push(col.r * b, col.g * b, col.b * b) } }
+        const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(P), 3)); geo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(C), 3))
+        obj = new THREE.LineSegments(geo, new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false }))
+        t3.layers.get(m.layer)?.add(obj); t3.fields.set(key, obj)
+      }
+      obj.visible = isOn(key)
+    }
+  })
+  // What happened between the last moment shown and this one is marked where it happened: a
+  // burst for a failure, a gathering for a return, and the ground's own tremor at the event. Only
+  // when time moves forward by a step, so dragging the bar far does not set everything off at once.
+  let lastCursor = null
+  const FX_OF = { tank: 'failSmall', bridge: 'collapse', hospital: 'dark', hub: 'fail', route: null, spot: 'embers', ignition: 'embers', place: 'mark' }
+  $effect(() => {
+    const t = cursor
+    if (!ready || t === null) return
+    const prev = lastCursor; lastCursor = t
+    if (prev === null || t <= prev || !showFx || !three.visible) return
+    const t3 = three, layerOfModule = new Map(modules.map((m) => [m.name, m.layer]))
+    if (event !== null && prev < event && event <= t) {
+      t3.shake = 1
+      t3.fx.emit('dust', { x: 0, y: 0, z: 0 }, { extent: [t3.spanX, t3.spanZ], heightAt: (x, z) => 0.05 })
+    }
+    if (t - prev > 45 * 86400) return
+    const todo = []
+    for (const m of marks) {
+      const layerId = layerOfModule.get(m.src); if (!layerId || !isOn(layerId) || !isOn(`${m.src}:marks`)) continue
+      if (m.from > prev && m.from <= t && FX_OF[m.kind]) todo.push([m, FX_OF[m.kind]])
+      for (const c of m.changes) if (c[0] > prev && c[0] <= t) { const fx = c[1] ? FX_OF[m.kind] : m.kind === 'route' || m.kind === 'tank' ? null : 'restore'; if (fx) todo.push([m, fx]) }
+    }
+    // many at one instant (every tank at the rupture): each is thinned so the pool is not swamped
+    const density = todo.length > 160 ? 160 / todo.length : 1
+    for (const [m, fx] of todo) {
+      const [x, z] = t3.km(m.lon, m.lat)
+      t3.fx.emit(fx, { x, y: t3.elevAt(m.lon, m.lat) + (PINNED.has(m.kind) ? 0.5 : 0.08) + t3.layers.get(layerOfModule.get(m.src)).position.y, z }, { density: fx === 'failSmall' ? Math.max(0.35, density) : 1 })
     }
   })
   function placeLabels() {
@@ -282,14 +392,14 @@
     frame(terrain, 0).then((elev) => { if (!live) return; build(elev); status = ''; ready = true }).catch((e) => { status = `the ground could not be read: ${e.message}` })
     return () => { live = false }
   })
-  $effect(() => { if (ready && three && width) { three.renderer.setSize(width, height, false); three.camera.aspect = width / height; three.camera.updateProjectionMatrix() } })
+  $effect(() => { if (ready && three && width) { three.renderer.setSize(width, height, false); three.camera.aspect = width / height; three.camera.updateProjectionMatrix(); three.fx.setViewport(height * three.renderer.getPixelRatio(), three.camera.fov) } })
   $effect(() => {
     if (!wrap) return
     const ro = new ResizeObserver((es) => { width = Math.round(es[0].contentRect.width) }); ro.observe(wrap)
     const io = new IntersectionObserver((es) => { if (three) three.visible = es[0].isIntersecting }); io.observe(wrap)
     if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) spin = false
     if (wrap.clientWidth < 640) panel = false   // on a phone the list starts folded so the place is seen first
-    return () => { ro.disconnect(); io.disconnect(); if (three) { cancelAnimationFrame(three.raf); three.controls.dispose(); three.renderer.dispose(); three = null } }
+    return () => { ro.disconnect(); io.disconnect(); if (three) { cancelAnimationFrame(three.raf); three.fx.dispose(); three.controls.dispose(); three.renderer.dispose(); three = null } }
   })
 
   const when = $derived(cursor === null ? '' : isoTime(cursor))
@@ -333,6 +443,9 @@
                         {:else}<span>{m.frames[0].title}</span>{/if}
                       </label>
                     {/if}
+                    {#if m.roads}
+                      <label class="flex items-center gap-2"><input type="checkbox" checked={isOn(`${m.name}:roads`)} onchange={() => toggle(`${m.name}:roads`)} style="accent-color:{G.color}" /><span>the area's roads (OpenStreetMap)</span></label>
+                    {/if}
                     {#if marks.some((k) => k.src === m.name)}
                       <label class="flex items-center gap-2"><input type="checkbox" checked={isOn(`${m.name}:marks`)} onchange={() => toggle(`${m.name}:marks`)} style="accent-color:{G.color}" /><span>the things it places ({marks.filter((k) => k.src === m.name).length})</span></label>
                     {/if}
@@ -351,6 +464,7 @@
         <label class="flex items-center gap-2">layers apart <input type="range" min="0" max="1" step="0.01" bind:value={sep} style="accent-color:#35b3a4; width:7rem" /></label>
         <label class="flex items-center gap-1.5"><input type="checkbox" bind:checked={spin} style="accent-color:#35b3a4" />turn</label>
         <label class="flex items-center gap-1.5"><input type="checkbox" bind:checked={showLabels} style="accent-color:#35b3a4" />names</label>
+        <label class="flex items-center gap-1.5"><input type="checkbox" bind:checked={showFx} style="accent-color:#35b3a4" />effects</label>
       </div>
     </div>
   </div>

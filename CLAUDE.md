@@ -394,6 +394,17 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   layer's colour (harm runs to red; a `_up` service frame is drawn where it is missing), marks from `component.state`
   and `lifeline.*` events as pins with names, a "layers apart" slider that lifts the layers, empty layers listed.
   Runs made before that day have no layers in describe.json and do not show it.
+- Hospitals and the fuel account pulled out (2026-11-14, Anselm: "Ok split the modules"): `health.hospitals`
+  (`hospitals.rs`: damage draw, grid power read from `power.up`, generator hours, `fuel.request` to the depot when
+  `routes.state` says a truck can reach it) and `fuel.depot` (`depot.rs`: the `fuel` ledger, the spill on
+  `tanks.released`, the response's draw, resupply, `fuel.granted`, the published deaths at the depot as `depot.toll`).
+  `portland.lifelines` in computed mode only restores water, tells the bridges, roads and services story and gathers
+  `lifeline.state`; its `ranges` mode is the older all-in-one version and the `ranges` variant sets
+  `depot.enabled = false` and `hospitals.enabled = false`. `enabled = false` in a module's params drops it from a
+  manifest (`Manifest::parse`). Day order: bridges and power 3, routes 4, depot 5, hospitals 6 (settle 7), lifelines 8.
+  Roads and bridges on the 3D view: `roads.routes` carries the segments' outlines (`geometry` table, from
+  `routes.geojson`) and OpenStreetMap roads (`context`), `roads.bridges` carries bridge ways from OpenStreetMap
+  (`registry::wildfire::osm_bridges`); the fetcher now gives up on a request after 300 s.
 - Portland, the page and the standing faults (2026-11-12 night, `devlog/20261112-portland-readme-rewritten.md` and
   `devlog/20261112-portland-stale-wording.md`; Anselm: "I want to try rewrite the portland cascadia fault scenario
   readme again", then "update stale portland wording overall everywhere"): the project README is a new text in the

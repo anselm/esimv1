@@ -7,7 +7,7 @@ created = "2026-11-12"
 by = "cli"
 featured = true
 cover = "cover.png"
-cover_caption = "The run page seven days after the earthquake in the base run: building damage by cell, with the bridges and hospitals marked by their state and the counts beside the map. A still from the runs of 14 November 2026; the run page can be played."
+cover_caption = "The modelled area seven days after the earthquake in the base run, in the three-dimensional view: the relief, the Willamette and the Columbia, the main roads, and in red the damage, the closed bridges and the closed emergency routes. A still from the runs of 14 November 2026."
 
 [[variant]]
 name = "wet-day"
@@ -43,6 +43,7 @@ name = "cut-20"
 title = "20 percent less fuel held at the hub, a stronger measure than Ordinance 2026-312's 20 percent cut to tank capacity"
 [variant.set]
 "lifelines.storage_cut" = 0.2
+"depot.storage_cut" = 0.2
 "tanks.storage_cut" = 0.2
 
 [[variant]]
@@ -50,6 +51,7 @@ name = "no-hub"
 title = "No fuel held at the hub before the earthquake"
 [variant.set]
 "lifelines.storage_cut" = 1.0
+"depot.storage_cut" = 1.0
 "tanks.storage_cut" = 1.0
 
 [[variant]]
@@ -70,6 +72,8 @@ name = "ranges"
 title = "An earlier version of the model: bridges, roads, electricity and the spill drawn from published ranges instead of computed from individual components"
 [variant.set]
 "lifelines.inputs" = "ranges"
+"depot.enabled" = false
+"hospitals.enabled" = false
 
 [[variant]]
 name = "seed-2"
