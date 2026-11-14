@@ -244,7 +244,9 @@
     const out = []
     for (const G of groups) for (const m of G.modules) {
       const n = frameFor(m); if (!n) continue
-      const show = isOn(G.id) && isOn(`${m.name}:field`)
+      // a frame is drawn only once it has begun: the shaking map is not there before the earthquake
+      const begun = cursor === null || (run.fields[n].times?.[0] ?? -Infinity) <= cursor
+      const show = begun && isOn(G.id) && isOn(`${m.name}:field`)
       out.push({ layer: G.id, key: m.name, name: n, i: frameIndex(run.fields[n], cursor), show })
     }
     return out

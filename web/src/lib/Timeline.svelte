@@ -41,6 +41,7 @@
 
 <div class="sticky top-0 z-[5] -mx-4 mb-6 bg-white/90 px-4 py-2 backdrop-blur dark:bg-neutral-950/90 sm:-mx-6 sm:px-6">
   <div class="flex items-center gap-3 mono text-xs">
+    <button class="w-6 rounded-[3px] ring-1 ring-neutral-300 hover:text-brand dark:ring-neutral-700" onclick={() => { playing = false; cursor = t0 }} disabled={cursor <= t0 && !playing} aria-label="back to the start" title="back to the start">⏮</button>
     <button class="w-6 rounded-[3px] ring-1 ring-neutral-300 hover:text-brand dark:ring-neutral-700" onclick={() => { if (cursor >= t1 && !playing) cursor = t0; playing = !playing }} aria-label={playing ? 'pause' : 'play'}>{playing ? '❚❚' : '▶'}</button>
     <div class="relative flex-1">
       <input type="range" min={t0} max={t1} step={1} bind:value={cursor} onkeydown={key} class="h-1 w-full accent-brand" aria-label="time" title="arrow keys step moment by moment" />

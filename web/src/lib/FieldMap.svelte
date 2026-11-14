@@ -64,13 +64,17 @@
     (grid.ny * grid.dlat) / (grid.nx * grid.dlon * Math.cos((latMid * Math.PI) / 180)),
   )
 
-  let idx = $state(0)
-  // with a shared cursor, show the last frame at or before it
-  $effect(() => {
-    if (cursor === null || !times.length) return
+  // The frame shown: with a shared cursor, the last frame at or before it; otherwise the map's own
+  // slider. It is derived, never set from an effect: when the field itself changes (a film moving
+  // to another field as the cursor moves back) an index left over from the old field pointed past
+  // the new one's frames, the date under the map threw, and the page stopped following the cursor.
+  let own = $state(0)
+  const idx = $derived.by(() => {
+    if (!times.length) return 0
+    if (cursor === null) return Math.min(Math.max(0, own), times.length - 1)
     let i = 0
     while (i + 1 < times.length && times[i + 1] <= cursor) i++
-    idx = i
+    return i
   })
   let width = $state(320)
   const height = $derived(Math.round(width * aspect))
@@ -319,7 +323,7 @@
     <span class="muted">{times.length ? isoDate(times[idx]) : '—'}</span>
     {#if times.length > 1 && cursor === null}
       <input
-        type="range" min="0" max={times.length - 1} step="1" bind:value={idx}
+        type="range" min="0" max={times.length - 1} step="1" bind:value={own}
         class="h-1 flex-1 accent-brand"
         aria-label="frame"
       />
