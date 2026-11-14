@@ -425,6 +425,15 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   layers.js); `docs/system/goals.md` is the goals and milestones page; JavaScript is the lead manifest notation and
   `manifests/q1-portland-cascadia.js` replaced the TOML (same id; hand-written, since `esim manifest --js` output is
   longer than TOML). The local viewer server was restarted that day; its PID is in the session scratchpad.
+- HTML pages and pictures (2026-11-14, `devlog/20261114-shaping-for-funding.md`, second pass): a project may carry
+  `page.html` (replaces the scene and README on its page) and `run.html` (replaces the body of every run page of the
+  project; `?raw` shows the engine's own layout). `web/src/lib/Notebook.svelte` sets the HTML, mounts `NbView.svelte`
+  into every `esim-*` tag (scene, timeline, map, chart, counter, story, module(s), wiring, readme, run-link), turns
+  `<esim-tabs>` sections into tabs and runs the page's scripts; tags of one run share one `RunCtx` (run and cursor,
+  `notebook.svelte.js`). The tags are documented in `docs/system/pages.md`; Portland's `run.html` is the first.
+  Kind cards carry pictures from real runs: `node web/scripts/kind-pictures.mjs` writes `docs/kinds/<kind>.png` and
+  `index.json` (rerun after runs change). The front page has a statement, three counts, the featured scenarios
+  (`featured = true`, now six) and the workspaces.
 - Portland, the page and the standing faults (2026-11-12 night, `devlog/20261112-portland-readme-rewritten.md` and
   `devlog/20261112-portland-stale-wording.md`; Anselm: "I want to try rewrite the portland cascadia fault scenario
   readme again", then "update stale portland wording overall everywhere"): the project README is a new text in the

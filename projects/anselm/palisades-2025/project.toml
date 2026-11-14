@@ -2,7 +2,7 @@
 area = "anselm"
 name = "palisades-2025"
 title = "The Palisades fire, January 2025"
-featured = true
+featured = false
 cover = "cover.png"
 cover_caption = "Where the model's unsuppressed fire had reached 27 hours after ignition, coloured by the hour it arrived (yellow first, red last), on the reanalysis wind; in white the first infrared perimeter the incident mapped at that hour (15,824 acres), in blue the final perimeter (23,448 acres). Land cover beneath: trees, shrub, grass, built-up, the sea. Drawn from the run's own frames, 2026-11-03."
 description = "The Palisades fire of 7 January 2025 run again on its own ground: Rothermel's spread model on 30 m terrain, fuel from land cover, the hour's wind from the ERA5 reanalysis, ignited where and when the record says, with no one fighting it. NIFC's mapped perimeters score the burned area as each was current. Variants: the reanalysis wind as read; its gusts; built-up land as a barrier; the heavier shrub model. A hindcast of a known event, not a forecast."

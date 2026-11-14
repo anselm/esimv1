@@ -20,9 +20,15 @@
   import ModuleViews from './ModuleViews.svelte'
   import Layers3D from './Layers3D.svelte'
   import Wiring from './Wiring.svelte'
+  import Notebook from './Notebook.svelte'
 
   let { id, base, back = {}, backLabel = 'back' } = $props()
   let cursor = $state(null)
+  // A project may lay its run pages out itself: run.html beside its manifest, written in HTML with
+  // the site's views placed by tag. ?raw shows the page as the engine composes it, with everything.
+  let nbSrc = $state(null)
+  const raw = new URLSearchParams(location.search).has('raw')
+  $effect(() => { if (!back.project || raw) return; const u = `/projects/${back.project}/run.html`; fetch(u, { method: 'HEAD', cache: 'no-store' }).then((r) => { if (r.ok && (r.headers.get('content-type') ?? '').includes('html')) nbSrc = u }).catch(() => {}) })
   let held = $state(false)
   // roads, place names and city limits a module fetched for its window (its describe's `context` table)
   const contextOf = (run) => (run?.describe?.modules ?? []).map((m) => m.tables?.context).find(Boolean) ?? null
@@ -120,6 +126,10 @@
     </div>
   </section>
 
+  {#if nbSrc}
+    <Notebook src={nbSrc} path={back.project} fixed={{ id, base }} />
+    <p class="mt-10 text-xs muted"><a href="?raw" class="hover:text-brand">Everything this run recorded, as the engine lays it out →</a></p>
+  {:else}
   {#if cursor !== null}
     <Timeline t0={run.start} t1={run.end} bind:cursor autoplay={!held} moments={momentsOf(run, crossings)} event={eventOf(crossings)} />
   {/if}
@@ -213,6 +223,7 @@
       {/if}
     </div>
   </details>
+  {/if}
 {/if}
 
   <details class="mb-10">

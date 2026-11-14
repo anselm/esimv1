@@ -11,6 +11,10 @@
   import Crumbs from './Crumbs.svelte'
   import ProjectScene from './ProjectScene.svelte'
   import Pager from './Pager.svelte'
+  import Notebook from './Notebook.svelte'
+  // a project may lay its own page out: page.html beside its manifest
+  let pageSrc = $state(null)
+  $effect(() => { const u = `/projects/${path}/page.html`; pageSrc = null; fetch(u, { method: 'HEAD', cache: 'no-store' }).then((r) => { if (r.ok && (r.headers.get('content-type') ?? '').includes('html')) pageSrc = u }).catch(() => {}) })
   let runPage = $state(0)
 
   let { path } = $props()
@@ -121,8 +125,8 @@
   </section>
 
   <!-- the place in 3D from the newest run, when a run can show it; otherwise the cover picture -->
-  <ProjectScene {path} bind:shown={sceneShown} />
-  {#if meta.cover && !sceneShown}
+  {#if pageSrc}<section class="mb-10"><Notebook src={pageSrc} {path} /></section>{:else}<ProjectScene {path} bind:shown={sceneShown} />{/if}
+  {#if meta.cover && !sceneShown && !pageSrc}
     <!-- a depiction of the scenario, a file beside the manifest named in project.toml -->
     <figure class="mb-10 max-w-3xl">
       <img src={`/projects/${path}/${meta.cover}`} alt={meta.cover_caption ?? meta.title ?? path} class="w-full rounded-[3px]" />
@@ -185,7 +189,7 @@
     {/if}
   </section>
 
-  {#if readme}
+  {#if readme && !pageSrc}
     <!-- the story under the runs it is read from (Anselm, 2026-11-04: the variants and runs first) -->
     <section class="mb-10">
       {#key readme}<Readme {path} md={readme} />{/key}

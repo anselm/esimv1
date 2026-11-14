@@ -68,3 +68,39 @@ answered without building, and what is left.
 - The front page no longer shows featured projects first; a funder landing there sees two
   folders. A short statement of what the project is, above the workspaces, is the obvious next
   addition.
+
+## Second pass, the same day
+
+Anselm: "Ok make home page a bit richer ... Make pages as html notebooks please. Let's not worry
+about sandbox risks. Ok use real runs for card depiction. Make front page prettier yes." And a
+question: "Does JavaScript local state have the bounding region of that run in itself or is that
+elsewhere?"
+
+- **The answer on the bounding region.** It is in the JavaScript file itself: `export const
+  place = { lat_s, lat_n, lon_w, lon_e, res_arcsec }`. When the manifest is resolved, the place
+  is copied into every module's settings. Nothing about the region lives elsewhere, except that
+  the scenario's tables (tanks, bridges, hospitals) are in the folder the file names.
+- **HTML pages.** `page.html` and `run.html` beside a project's manifest, drawn by
+  `Notebook.svelte`: the HTML is set as written, each `esim-*` tag is filled by `NbView.svelte`
+  with the view it names, `<esim-tabs>` makes tabs of its sections, and the page's scripts run.
+  Tags of one run share one moment (`RunCtx` in `notebook.svelte.js`). Eleven tags; documented in
+  `docs/system/pages.md`. Portland's `run.html` is the first: the scene, a timeline, five live
+  counters and seven tabs (what happens, buildings and people, fuel, bridges and roads, power and
+  hospitals, how far to trust it, everything recorded), with commentary that holds for every
+  variant and says where each result is weak. The engine's own layout is at `?raw`.
+- **Kind pictures from real runs.** `web/scripts/kind-pictures.mjs` draws, for each kind, its
+  first map frame at the end of a run that uses it, or a series over the run when it has no map,
+  in its layer's colour: 43 of 53 kinds. The other ten have no output that varies in any run on
+  disk. `docs/kinds/index.json` says which project and which output each came from, and the card
+  says so too.
+- **The front page**: a statement of what this is over the Portland scene, three counts read
+  from the repository (scenarios, kinds, runs), six featured scenarios, then the workspaces.
+  `featured` was true on all fourteen projects; it is now true on six (Portland, the Palisades
+  cells, Earth 2100, Half Moon Bay, Fort McMurray, the Boone predators).
+
+Looked at locally: the front page at desktop width, the kinds page, the Portland run page with
+its Fuel tab open. Not looked at: the notebook on a phone.
+
+Known rough edges: the 2D maps now show OpenStreetMap place names for Portland and there are
+too many of them; `run.html` is one template for all variants, so a variant cannot yet have
+words of its own; the kind pictures are made by hand-run script and go stale when runs change.

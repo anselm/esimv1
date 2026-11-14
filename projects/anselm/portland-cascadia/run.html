@@ -1,0 +1,141 @@
+<!-- The page for one run of the Portland scenario: HTML, with the site's views placed by tag.
+     It serves every variant, so the words say what to look at and the numbers come from the run.
+     The tags are listed in docs/system/pages. -->
+<style>
+  .pc-lede { font-size: 1.1rem; line-height: 1.6; max-width: 46rem; }
+  .pc-counters { margin: 1.25rem 0 0.5rem; }
+  .pc-note { border-left: 3px solid var(--color-brand); padding: 0.1rem 0 0.1rem 1rem; margin: 1rem 0; max-width: 46rem; }
+</style>
+
+<p class="pc-lede">This is one run of the Portland scenario: a magnitude 9 earthquake on the Cascadia
+subduction zone at 2 p.m. on Monday 1 February 2027, followed to the end of the year. Drag the bar
+under the picture to move through the year, or press play. Everything on this page follows the
+moment the bar shows.</p>
+
+<esim-scene></esim-scene>
+<esim-timeline></esim-timeline>
+
+<div class="pc-counters">
+  <esim-counter series="deaths.total" label="dead, all causes"></esim-counter>
+  <esim-counter series="lifeline.crossings_open" label="of 12 Willamette bridges open"></esim-counter>
+  <esim-counter series="lifeline.hospitals_dark" label="hospitals without power"></esim-counter>
+  <esim-counter series="service.power_share" label="of people with electricity"></esim-counter>
+  <esim-counter series="fuel.hub_gal" label="gallons of fuel left at the terminals"></esim-counter>
+</div>
+
+<esim-tabs>
+
+<section title="What happens">
+  <p>The run tells its own story as it goes. Each sentence below is written by the part of the model
+  that worked the thing out, at the moment it happened, with its source underneath. The newest is
+  first.</p>
+  <esim-story count="8" sources></esim-story>
+  <p class="pc-note">This is an early model. Several of its results disagree with the studies they
+  can be checked against, and many of its numbers are recalled from memory or guessed. The last
+  tab says which.</p>
+</section>
+
+<section title="Buildings and people">
+  <p>The model estimates, for each 30-metre cell, what share of the buildings take extensive or
+  complete damage, and draws at random how many collapse. Nearly all of the deaths in the model
+  happen in collapsed buildings, so the toll depends on which buildings the draw brings down.</p>
+  <div class="pc-counters">
+    <esim-counter series="quake.buildings_collapsed" label="buildings collapsed"></esim-counter>
+    <esim-counter series="quake.deaths" label="deaths, counted cell by cell"></esim-counter>
+    <esim-counter series="agents.dead" label="deaths, counted agent by agent"></esim-counter>
+    <esim-counter series="quake.displaced" label="people displaced"></esim-counter>
+  </div>
+  <p class="pc-note">The two death counts should agree and in daytime runs they do not. The cause has
+  not been found, so neither should be quoted as this model's toll. The total at the top of the page
+  uses the count by agent.</p>
+  <div class="nb-cols">
+    <div><h3>Share of buildings badly damaged</h3><esim-map field="building_damage_frac"></esim-map></div>
+    <div><h3>Deaths</h3><esim-map field="deaths"></esim-map></div>
+  </div>
+  <h3>Against the state's own estimate</h3>
+  <p>The model's casualty rates were adjusted until its deaths in Portland matched the estimate of
+  Oregon's geology agency, so agreement here is by construction and not a check.</p>
+  <div class="pc-counters">
+    <esim-counter series="fit.portland_deaths_ratio" label="deaths in Portland, as a share of the state's estimate" at="end"></esim-counter>
+    <esim-counter series="fit.units_damage_r" label="correlation of damage across neighbourhoods" at="end"></esim-counter>
+  </div>
+</section>
+
+<section title="Fuel">
+  <p>The fuel terminals in northwest Portland are both the spill in the first minutes and the reserve
+  in the months after. Each tank fails or holds by a draw against a fragility curve, and a failed
+  tank releases a share of its contents that depends on its age.</p>
+  <div class="pc-counters">
+    <esim-counter series="tanks.failed" label="tanks failed, of 587"></esim-counter>
+    <esim-counter series="fuel.ground_gal" label="gallons spilled on the ground"></esim-counter>
+    <esim-counter series="fuel.river_gal" label="gallons spilled toward the river"></esim-counter>
+    <esim-counter series="fuel.consumed_gal" label="gallons used by the response"></esim-counter>
+  </div>
+  <div class="nb-cols">
+    <div><h3>Fuel released, by tank</h3><esim-map field="tank_release_gal"></esim-map></div>
+    <div><h3>Where it meets the river</h3><esim-map field="fuel_on_water_gal"></esim-map></div>
+  </div>
+  <esim-chart series="fuel.hub_gal" title="fuel left at the terminals"></esim-chart>
+  <p class="pc-note">The reserve cannot yet be read off this chart. The model starts the emergency
+  response's fuel use only when a truck can reach a hospital by road, which in most runs is months
+  away, and the daily use and the day resupply resumes are guesses. The model also does not move the
+  fuel once it reaches the river, and it has no fire.</p>
+</section>
+
+<section title="Bridges and roads">
+  <p>Each of the twelve bridges over the Willamette is damaged or spared by a draw against the curve
+  for its class, and reopens after a repair time set by its damage. The emergency routes close where
+  the ground is expected to deform. Each day the model asks which hospitals a truck could reach from
+  the fuel terminals over open roads and open bridges.</p>
+  <div class="nb-cols">
+    <esim-chart series="lifeline.crossings_open" title="Willamette bridges open"></esim-chart>
+    <esim-chart series="routes.open_share" title="share of emergency route length open"></esim-chart>
+    <esim-chart series="routes.places_reachable" title="hospitals reachable from the terminals"></esim-chart>
+  </div>
+  <p class="pc-note">The curve for the ten older bridges is this project's judgement, anchored on a
+  county report. The days a road stays closed are guesses.</p>
+</section>
+
+<section title="Power and hospitals">
+  <p>Electricity in the model depends only on transmission towers and poles. A neighbourhood has
+  power when its nearest structures stand, and crews repair twelve a day. A hospital without grid
+  power runs its generators for 72 hours and then needs a fuel delivery.</p>
+  <div class="nb-cols">
+    <esim-chart series="service.power_share" title="share of people with electricity"></esim-chart>
+    <esim-chart series="lifeline.hospitals_dark" title="hospitals without power"></esim-chart>
+  </div>
+  <h3>Where the power is out</h3>
+  <esim-map field="agents_without_power"></esim-map>
+  <p class="pc-note">This is the model's least credible result. It has no substations, lines or
+  neighbourhood distribution, so power returns in weeks where the state expects one to three months.
+  The number of hospitals that lose power, and the deaths in the months after, are too low for the
+  same reason.</p>
+  <div class="pc-counters">
+    <esim-counter series="after.deaths" label="deaths after the shaking, so far"></esim-counter>
+    <esim-counter series="after.person_days_without_power" label="person-days without electricity, so far"></esim-counter>
+  </div>
+</section>
+
+<section title="How far to trust it">
+  <ul>
+    <li>The ground shaking is read from the state geology agency's published maps. The model does not simulate the fault.</li>
+    <li>Every fragility curve and casualty rate is recalled from memory of FEMA's Hazus manual and has not been checked against it.</li>
+    <li>The death toll from the shaking is fitted to the state's estimate, and the model's two ways of counting it disagree by day.</li>
+    <li>The spill comes out below the minimum of the 2022 study of the terminals.</li>
+    <li>Electricity returns too fast, and what depends on it is too mild.</li>
+    <li>Drinking water follows an assumed schedule and is not computed.</li>
+    <li>There is no fire, no evacuation, no debris on the roads and nobody leaves the city.</li>
+  </ul>
+  <p>The <a href="/anselm/portland-cascadia">project page</a> gives the reasons and the sources, and
+  <a href="/docs/system/limits">Limits today</a> keeps the list current.</p>
+  <h3>How the parts are connected</h3>
+  <esim-wiring></esim-wiring>
+</section>
+
+<section title="Everything recorded">
+  <p>Every part of the model with the panel it describes for itself: its own account of what it does
+  and leaves out, its maps, its counters and its charts.</p>
+  <esim-modules></esim-modules>
+</section>
+
+</esim-tabs>

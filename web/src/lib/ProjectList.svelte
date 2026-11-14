@@ -48,7 +48,10 @@
     projects = projects
   }
   const latest = (p) => (p.runs ?? []).slice().sort((a, b) => (b.start ?? 0) - (a.start ?? 0))[0] ?? null
-  const featured = $derived((projects ?? []).filter((p) => p.featured === true))
+  // the few scenarios the front page leads with (featured = true in project.toml), newest first
+  const featured = $derived((projects ?? []).filter((p) => p.featured === true).sort((a, b) => String(b.created ?? '').localeCompare(String(a.created ?? ''))))
+  let kindCount = $state(0)
+  $effect(() => { fetch('/docs/kinds.json').then((r) => (r.ok ? r.json() : [])).then((k) => { kindCount = (Array.isArray(k) ? k : k.kinds ?? []).length }).catch(() => {}) })
   // one sentence of the description for a card
   const firstSentence = (s) => { const m = String(s ?? '').match(/^.*?[.!?](\s|$)/); return m ? m[0].trim() : String(s ?? '') }
   const areas = $derived.by(() => {
@@ -85,10 +88,52 @@
 {:else if projects.length === 0}
   <p class="muted text-sm">no projects yet. <a use:link={{ isNew: true }} class="text-brand">Start one.</a></p>
 {:else if !route.all && !area}
+  <!-- what this is, in a few lines, over a picture from a real run -->
+  {@const lead = featured.find((p) => p.cover) ?? null}
+  <section class="grid items-center gap-8 lg:grid-cols-[1fr_1.15fr]">
+    <div>
+      <h1 class="text-4xl font-medium leading-tight tracking-tight">A simulator for whole places</h1>
+      <p class="mt-4 text-lg leading-relaxed">esim models a place as one system: its ground and water, what is built on it, the services that run through it, and the people who live there, all on one clock.</p>
+      <p class="mt-3 leading-relaxed muted">Each scenario is assembled from published data and studies, runs in seconds to a minute, and can be played back, questioned and changed. Each one also says plainly what it gets wrong. The aim is a tool that a city or a community can use to see what a decision would do before it is made.</p>
+      <div class="mt-6 flex flex-wrap gap-3 text-sm">
+        <a use:link={{ doc: 'system/goals' }} class="rounded-[3px] bg-brand px-4 py-2 text-white hover:opacity-90">Where this is going</a>
+        <a use:link={{ doc: 'system/overview' }} class="rounded-[3px] border border-neutral-300 px-4 py-2 hover:border-brand dark:border-neutral-700">How it works</a>
+        <a use:link={{ kinds: true }} class="rounded-[3px] border border-neutral-300 px-4 py-2 hover:border-brand dark:border-neutral-700">The {kindCount || ''} module kinds</a>
+      </div>
+    </div>
+    {#if lead}
+      <a use:link={{ project: lead.path }} class="group block">
+        <img src={`/projects/${lead.path}/${lead.cover}`} alt={lead.cover_caption ?? lead.title} class="w-full rounded-[3px]" />
+        <div class="mt-2 text-sm"><span class="font-medium group-hover:text-brand">{lead.title}</span> <span class="muted">· {firstSentence(lead.description)}</span></div>
+      </a>
+    {/if}
+  </section>
+
+  <!-- three facts about the engine, each drawn from what is in the repository -->
+  <section class="mt-12 grid gap-6 border-y border-neutral-200 py-6 sm:grid-cols-3 dark:border-neutral-800">
+    <div><div class="mono text-3xl">{projects.length}</div><div class="mt-1 text-sm muted">scenarios so far: fires, a river basin, a harbor, a city after an earthquake, the planet to 2100</div></div>
+    <div><div class="mono text-3xl">{kindCount || '—'}</div><div class="mt-1 text-sm muted">kinds of module, each meant as a unit of science that more than one scenario can use</div></div>
+    <div><div class="mono text-3xl">{projects.reduce((n, p) => n + (p.runs ?? []).length, 0)}</div><div class="mt-1 text-sm muted">runs on record, every one replayable from its manifest and its seed</div></div>
+  </section>
+
+  {#if featured.length}
+    <h2 class="mt-12 text-2xl font-medium">Scenarios to start with</h2>
+    <section class="mt-5 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      {#each featured as p (p.path)}
+        <a use:link={{ project: p.path }} class="group block">
+          {#if p.cover}<img src={`/projects/${p.path}/${p.cover}`} alt={p.cover_caption ?? p.title ?? p.path} class="aspect-[16/10] w-full rounded-[3px] object-cover" loading="lazy" />{:else}<div class="aspect-[16/10] w-full rounded-[3px] bg-brand-soft/40"></div>{/if}
+          <h3 class="mt-3 text-lg font-medium group-hover:text-brand">{p.title ?? p.path}</h3>
+          <p class="mt-1 text-sm muted line-clamp-3">{firstSentence(p.description)}</p>
+          <div class="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 mono text-xs muted"><span>/{p.path}</span>{#if p.audit}<Verdict verdict={p.audit.verdict} />{/if}</div>
+        </a>
+      {/each}
+    </section>
+  {/if}
+
   <!-- the areas: each a folder of projects -->
-  <h1 class="text-xl font-medium">Workspaces</h1>
+  <h2 class="mt-14 text-2xl font-medium">Workspaces</h2>
   <p class="mt-1 max-w-2xl text-sm muted">Each workspace is a person's or a group's folder of scenarios. Open one to see its projects.</p>
-  <section class="mt-8 grid gap-8 sm:grid-cols-2">
+  <section class="mt-6 grid gap-8 sm:grid-cols-2">
     {#each areas.slice(page * SIZE, page * SIZE + SIZE) as [a, list] (a)}
       {@const covers = list.filter((p) => p.cover).sort((x, y) => (y.featured === true) - (x.featured === true)).slice(0, 3)}
       <a use:link={{ area: a }} class="group block rounded-[3px] border border-neutral-200 p-4 hover:border-brand dark:border-neutral-800">

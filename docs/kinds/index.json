@@ -1,0 +1,346 @@
+{
+ "sun.irradiance": {
+  "img": "/docs/kinds/sun.irradiance.png",
+  "what": "elevation",
+  "how": "a map at the end of the run",
+  "project": "anselm/boone-predators-and-prey",
+  "title": "Deer and predators in the Boone basin, 2025",
+  "variant": null
+ },
+ "water.basin": {
+  "img": "/docs/kinds/water.basin.png",
+  "what": "flow accum log10 km2",
+  "how": "a map at the end of the run",
+  "project": "anselm/boone-predators-and-prey",
+  "title": "Deer and predators in the Boone basin, 2025",
+  "variant": null
+ },
+ "weather.era5": {
+  "img": "/docs/kinds/weather.era5.png",
+  "what": "wx.sw_mean_w_m2",
+  "how": "a series over the run",
+  "project": "anselm/boone-predators-and-prey",
+  "title": "Deer and predators in the Boone basin, 2025",
+  "variant": null
+ },
+ "veg.crop": {
+  "img": "/docs/kinds/veg.crop.png",
+  "what": "ndvi modis",
+  "how": "a map at the end of the run",
+  "project": "anselm/boone-predators-and-prey",
+  "title": "Deer and predators in the Boone basin, 2025",
+  "variant": null
+ },
+ "fauna.herbivore": {
+  "img": "/docs/kinds/fauna.herbivore.png",
+  "what": "herbivore density km2",
+  "how": "a map at the end of the run",
+  "project": "anselm/boone-predators-and-prey",
+  "title": "Deer and predators in the Boone basin, 2025",
+  "variant": null
+ },
+ "fauna.predator": {
+  "img": "/docs/kinds/fauna.predator.png",
+  "what": "predator density km2",
+  "how": "a map at the end of the run",
+  "project": "anselm/boone-predators-and-prey",
+  "title": "Deer and predators in the Boone basin, 2025",
+  "variant": null
+ },
+ "carbon.emissions": {
+  "img": "/docs/kinds/carbon.emissions.png",
+  "what": "emissions: the plan, and what was achieved",
+  "how": "a series over the run",
+  "project": "anselm/planet-2100",
+  "title": "Earth 2100",
+  "variant": "eruption-2040"
+ },
+ "carbon.pools": {
+  "img": "/docs/kinds/carbon.pools.png",
+  "what": "CO₂, model against Mauna Loa and the ice core",
+  "how": "a series over the run",
+  "project": "anselm/planet-2100",
+  "title": "Earth 2100",
+  "variant": "eruption-2040"
+ },
+ "energy.twolayer": {
+  "img": "/docs/kinds/energy.twolayer.png",
+  "what": "surface warming, model against HadCRUT5",
+  "how": "a series over the run",
+  "project": "anselm/planet-2100",
+  "title": "Earth 2100",
+  "variant": "eruption-2040"
+ },
+ "obs.planet": {
+  "img": "/docs/kinds/obs.planet.png",
+  "what": "obs.co2_ppm",
+  "how": "a series over the run",
+  "project": "anselm/planet-2100",
+  "title": "Earth 2100",
+  "variant": "eruption-2040"
+ },
+ "carbon.gases": {
+  "img": "/docs/kinds/carbon.gases.png",
+  "what": "gases.ch4_ppb",
+  "how": "a series over the run",
+  "project": "anselm/planet-2100",
+  "title": "Earth 2100",
+  "variant": "eruption-2040"
+ },
+ "sea.thermal": {
+  "img": "/docs/kinds/sea.thermal.png",
+  "what": "sea level from expansion alone",
+  "how": "a series over the run",
+  "project": "anselm/planet-2100",
+  "title": "Earth 2100",
+  "variant": "eruption-2040"
+ },
+ "forcing.ar6": {
+  "img": "/docs/kinds/forcing.ar6.png",
+  "what": "aerosol forcing (assessed)",
+  "how": "a series over the run",
+  "project": "anselm/planet-2100",
+  "title": "Earth 2100",
+  "variant": "eruption-2040"
+ },
+ "people.countries": {
+  "img": "/docs/kinds/people.countries.png",
+  "what": "people per square kilometre",
+  "how": "a map at the end of the run",
+  "project": "anselm/planet-2100",
+  "title": "Earth 2100",
+  "variant": "eruption-2040"
+ },
+ "climate.countries": {
+  "img": "/docs/kinds/climate.countries.png",
+  "what": "annual mean temperature by country",
+  "how": "a map at the end of the run",
+  "project": "anselm/planet-2100",
+  "title": "Earth 2100",
+  "variant": "eruption-2040"
+ },
+ "people.heat": {
+  "img": "/docs/kinds/people.heat.png",
+  "what": "outside the niche",
+  "how": "a map at the end of the run",
+  "project": "anselm/planet-2100",
+  "title": "Earth 2100",
+  "variant": "eruption-2040"
+ },
+ "people.wetbulb": {
+  "img": "/docs/kinds/people.wetbulb.png",
+  "what": "days a year over 31 °C wet-bulb",
+  "how": "a map at the end of the run",
+  "project": "anselm/planet-2100",
+  "title": "Earth 2100",
+  "variant": "eruption-2040"
+ },
+ "tipping.elements": {
+  "img": "/docs/kinds/tipping.elements.png",
+  "what": "tipping elements past their central estimate",
+  "how": "a series over the run",
+  "project": "anselm/planet-2100",
+  "title": "Earth 2100",
+  "variant": "eruption-2040"
+ },
+ "carbon.tipped": {
+  "img": "/docs/kinds/carbon.tipped.png",
+  "what": "carbon released by tipped elements so far",
+  "how": "a series over the run",
+  "project": "anselm/planet-2100",
+  "title": "Earth 2100",
+  "variant": "eruption-2040"
+ },
+ "story.bottomline": {
+  "img": "/docs/kinds/story.bottomline.png",
+  "what": "people living outside the human climate niche",
+  "how": "a map at the end of the run",
+  "project": "anselm/planet-2100",
+  "title": "Earth 2100",
+  "variant": "eruption-2040"
+ },
+ "fire.rothermel": {
+  "img": "/docs/kinds/fire.rothermel.png",
+  "what": "Arrival time",
+  "how": "a map at the end of the run",
+  "project": "anselm/nicasio-2029-rothermel",
+  "title": "A fire at Devil's Gulch, October 2029: Rothermel's model",
+  "variant": "built-barrier"
+ },
+ "obs.perimeters": {
+  "img": "/docs/kinds/obs.perimeters.png",
+  "what": "Mapped perimeter",
+  "how": "a map at the end of the run",
+  "project": "anselm/palisades-cells",
+  "title": "The Palisades fire, cell by cell",
+  "variant": "near-4"
+ },
+ "obs.dins": {
+  "img": "/docs/kinds/obs.dins.png",
+  "what": "Structures destroyed",
+  "how": "a map at the end of the run",
+  "project": "anselm/palisades-cells",
+  "title": "The Palisades fire, cell by cell",
+  "variant": "near-4"
+ },
+ "fire.suppression": {
+  "img": "/docs/kinds/fire.suppression.png",
+  "what": "suppression.lines",
+  "how": "a series over the run",
+  "project": "anselm/palisades-cells",
+  "title": "The Palisades fire, cell by cell",
+  "variant": "vector-5-held"
+ },
+ "obs.hotspots": {
+  "img": "/docs/kinds/obs.hotspots.png",
+  "what": "obs hotspots",
+  "how": "a map at the end of the run",
+  "project": "anselm/fortmcmurray-2016",
+  "title": "The Fort McMurray fire, May 2016",
+  "variant": null
+ },
+ "fire.cells": {
+  "img": "/docs/kinds/fire.cells.png",
+  "what": "Arrival time",
+  "how": "a map at the end of the run",
+  "project": "anselm/fortmcmurray-2016",
+  "title": "The Fort McMurray fire, May 2016",
+  "variant": null
+ },
+ "events.shock": {
+  "img": "/docs/kinds/events.shock.png",
+  "what": "wild-card forcing",
+  "how": "a series over the run",
+  "project": "anselm/planet-2100",
+  "title": "Earth 2100",
+  "variant": "eruption-2040"
+ },
+ "score.regions": {
+  "img": "/docs/kinds/score.regions.png",
+  "what": "mean total score",
+  "how": "a series over the run",
+  "project": "anselm/planet-2100",
+  "title": "Earth 2100",
+  "variant": "eruption-2040"
+ },
+ "policy.capacity": {
+  "img": "/docs/kinds/policy.capacity.png",
+  "what": "capacity to cut emissions",
+  "how": "a series over the run",
+  "project": "anselm/planet-2100",
+  "title": "Earth 2100",
+  "variant": "eruption-2040"
+ },
+ "weather.heatwaves": {
+  "img": "/docs/kinds/weather.heatwaves.png",
+  "what": "heatwave days this year",
+  "how": "a map at the end of the run",
+  "project": "anselm/planet-2100",
+  "title": "Earth 2100",
+  "variant": "eruption-2040"
+ },
+ "obs.places": {
+  "img": "/docs/kinds/obs.places.png",
+  "what": "Distance of the fire from 550 Nicasio Valley Road",
+  "how": "a series over the run",
+  "project": "anselm/nicasio-2029",
+  "title": "A fire at Devil's Gulch, October 2029",
+  "variant": "scale-5"
+ },
+ "coast.oneline": {
+  "img": "/docs/kinds/coast.oneline.png",
+  "what": "The line",
+  "how": "a map at the end of the run",
+  "project": "anselm/halfmoonbay-shoreline",
+  "title": "Half Moon Bay: the breakwater and the beach",
+  "variant": "sealed"
+ },
+ "quake.ground": {
+  "img": "/docs/kinds/quake.ground.png",
+  "what": "peak ground acceleration",
+  "how": "a map at the end of the run",
+  "project": "anselm/portland-cascadia",
+  "title": "Portland after Cascadia",
+  "variant": "dry-day"
+ },
+ "quake.buildings": {
+  "img": "/docs/kinds/quake.buildings.png",
+  "what": "share of buildings with extensive or complete damage",
+  "how": "a map at the end of the run",
+  "project": "anselm/portland-cascadia",
+  "title": "Portland after Cascadia",
+  "variant": "dry-day"
+ },
+ "portland.lifelines": {
+  "img": "/docs/kinds/portland.lifelines.png",
+  "what": "dead, all causes",
+  "how": "a series over the run",
+  "project": "anselm/portland-cascadia",
+  "title": "Portland after Cascadia",
+  "variant": "dry-day"
+ },
+ "people.aftermath": {
+  "img": "/docs/kinds/people.aftermath.png",
+  "what": "dead after the shaking",
+  "how": "a series over the run",
+  "project": "anselm/portland-cascadia",
+  "title": "Portland after Cascadia",
+  "variant": "dry-day"
+ },
+ "fuel.tanks": {
+  "img": "/docs/kinds/fuel.tanks.png",
+  "what": "fuel released, by tank",
+  "how": "a map at the end of the run",
+  "project": "anselm/portland-cascadia",
+  "title": "Portland after Cascadia",
+  "variant": "dry-day"
+ },
+ "roads.bridges": {
+  "img": "/docs/kinds/roads.bridges.png",
+  "what": "bridges open",
+  "how": "a series over the run",
+  "project": "anselm/portland-cascadia",
+  "title": "Portland after Cascadia",
+  "variant": "dry-day"
+ },
+ "power.structures": {
+  "img": "/docs/kinds/power.structures.png",
+  "what": "share of people with power",
+  "how": "a series over the run",
+  "project": "anselm/portland-cascadia",
+  "title": "Portland after Cascadia",
+  "variant": "dry-day"
+ },
+ "roads.routes": {
+  "img": "/docs/kinds/roads.routes.png",
+  "what": "routes open",
+  "how": "a series over the run",
+  "project": "anselm/portland-cascadia",
+  "title": "Portland after Cascadia",
+  "variant": "dry-day"
+ },
+ "fuel.depot": {
+  "img": "/docs/kinds/fuel.depot.png",
+  "what": "fuel at the depot",
+  "how": "a series over the run",
+  "project": "anselm/portland-cascadia",
+  "title": "Portland after Cascadia",
+  "variant": "dry-day"
+ },
+ "water.surface": {
+  "img": "/docs/kinds/water.surface.png",
+  "what": "open water",
+  "how": "a map at the end of the run",
+  "project": "anselm/portland-cascadia",
+  "title": "Portland after Cascadia",
+  "variant": "dry-day"
+ },
+ "people.agents": {
+  "img": "/docs/kinds/people.agents.png",
+  "what": "dead, by agent",
+  "how": "a series over the run",
+  "project": "anselm/portland-cascadia",
+  "title": "Portland after Cascadia",
+  "variant": "dry-day"
+ }
+}
