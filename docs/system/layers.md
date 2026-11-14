@@ -15,7 +15,7 @@ not a structure in the code; the kernel sees only modules, topics and fields.
 | 4 biogeochemistry | the cycles and their feedbacks | `nitrogen.basin` | nitrate at the gauge |
 | 5 producers | plants | `veg.crop` | MODIS NDVI |
 | 6 consumers | animals and their food webs | `fauna.herbivore`, `fauna.predator`, `hazard.fire` | none yet |
-| 6b the built | buildings, lifelines, the things that break | `quake.buildings`, `hazard.components`, `lifelines.recovery`, `fire.cells`, `fire.rothermel` | DOGAMI's inventory and loss run, the county's tank table, the bridge inventory, the fire perimeters |
+| 6b the built | buildings, lifelines, the things that break | `quake.buildings`, `hazard.components`, `portland.lifelines`, `fire.cells`, `fire.rothermel` | DOGAMI's inventory and loss run, the county's tank table, the bridge inventory, the fire perimeters |
 | 7 people | population, land use, rules, exposure, the aftermath | `agents.farms`, `rules.calendar`, `people.countries`, `climate.countries`, `people.heat`, `people.wetbulb`, `people.aftermath`, `people.agents` | UN population, WorldPop 1 km, CRU country temperatures, MERRA-2 daily heat and humidity (NASA POWER), NOAA GSOD stations |
 | across | thresholds and their sources, and what crossing them moves | `tipping.elements`, `carbon.tipped` | the assessment table, checked row by row against the paper |
 

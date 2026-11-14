@@ -91,7 +91,7 @@ pub static KINDS: &[Kind] = &[
     kind!("coast.oneline", coast::OneLine),
     kind!("quake.ground", quake::Ground),
     kind!("quake.buildings", quake::Buildings),
-    kind!("lifelines.recovery", lifelines::Lifelines),
+    kind!("portland.lifelines", lifelines::Lifelines),
     kind!("people.aftermath", aftermath::Aftermath),
     kind!("hazard.components", components::Components),
     kind!("people.agents", agents::Agents),

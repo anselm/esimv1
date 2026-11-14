@@ -29,7 +29,7 @@ res_arcsec = 1
 
 [[module]]
 name = "lifelines"
-kind = "lifelines.recovery"
+kind = "portland.lifelines"
 [module.params]
 folder = "portland-cascadia"
 storage_cut = 0.0

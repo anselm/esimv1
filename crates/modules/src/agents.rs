@@ -1,5 +1,5 @@
 //! `people.agents`: the people as super-persons, each standing for `scale` people, generated from
-//! DOGAMI's own occupant rasters: a home cell drawn by the residents, a work cell drawn by the
+//! the event folder's occupant rasters: a home cell drawn by the residents, a work cell drawn by the
 //! daytime occupants, a share on electricity-dependent medical devices from the aftermath table.
 //! Each day every agent reads the world at its cells: the building damage where it was at the
 //! instant decides whether it is dead or displaced (at the buildings' own expected rates, so the
@@ -35,7 +35,7 @@ impl Agents {
             name: name.to_string(),
             lat_s: param_f64(p, "lat_s", 45.43), lat_n: param_f64(p, "lat_n", 45.66), lon_w: param_f64(p, "lon_w", -122.85), lon_e: param_f64(p, "lon_e", -122.47),
             res_arcsec: param_f64(p, "res_arcsec", 1.0),
-            folder: param_str(p, "folder", "portland-cascadia").to_string(),
+            folder: param_str(p, "folder", "").to_string(),
             scale: param_f64(p, "scale", 10.0), time_of_day: param_str(p, "time_of_day", "day").to_string(), coarse_arcsec: param_f64(p, "coarse_arcsec", 10.0),
             agents: Vec::new(), device_share: 0.0, fired: false, scheduled: false, day: 0, water_share: 1.0, grid: None,
         };
@@ -46,8 +46,10 @@ impl Agents {
         let (g, _) = window_grid(self.lat_s, self.lat_n, self.lon_w, self.lon_e, self.res_arcsec)?;
         if let Ok(text) = std::fs::read_to_string(root().join("data/events").join(&self.folder).join("aftermath.toml")) {
             if let Ok(t) = text.parse::<toml::Value>() { if let Some(i) = t.get("inputs") {
-                let dme = tf(i, "power_dependent_dme_multnomah") + tf(i, "power_dependent_dme_washington") + tf(i, "power_dependent_dme_clackamas");
-                let pop = tf(i, "population_multnomah") + tf(i, "population_washington") + tf(i, "population_clackamas");
+                // every key that begins power_dependent_dme_ is a count of people on devices, every key that
+                // begins population_ the people it was counted among; the folder may give any number of areas
+                let sum = |pre: &str| i.as_table().map(|t| t.iter().filter(|(k, _)| k.starts_with(pre)).map(|(k, _)| tf(i, k)).sum::<f64>()).unwrap_or(0.0);
+                let (dme, pop) = (sum("power_dependent_dme_"), sum("population_"));
                 self.device_share = if pop > 0.0 { dme / pop } else { 0.0 };
             } }
         }
@@ -55,11 +57,11 @@ impl Agents {
         Ok(())
     }
     pub fn describe(name: &str, p: &toml::Value) -> Describe {
-        let folder = param_str(p, "folder", "portland-cascadia");
-        Describe::new("people.agents", name, "This module represents the residents as agents, each standing for a fixed number of people set by the scale parameter. It creates them at the start of the run from DOGAMI's maps of where people are. Each agent gets a home cell, drawn in proportion to residents, and a work cell, drawn in proportion to daytime occupants. A share of the agents depend on electrically powered medical devices; the share comes from the emPOWER data of the US Department of Health and Human Services. At the earthquake each agent is at work by day or at home by night. It is placed in a collapsed or a standing building according to the share of buildings that collapsed in that cell, and it dies or is displaced at the rates the buildings module gives for the cell. The agents' death count should agree with the buildings module's count by cell. In the daytime runs of 12 November 2026 it is lower, for a reason not yet found. On each day afterwards an agent has electricity or not according to its home cell, and water according to the schedule for the whole area. The agents make no decisions yet. They are here so that a later version can let them leave, seek shelter or travel, and the module reports how fast it runs so that the cost of that is known.")
+        let folder = param_str(p, "folder", "");
+        Describe::new("people.agents", name, "This module represents the residents as agents, each standing for a fixed number of people set by the scale parameter. It creates them at the start of the run from the event folder's maps of where people are. Each agent gets a home cell, drawn in proportion to residents, and a work cell, drawn in proportion to daytime occupants. A share of the agents depend on electrically powered medical devices; the share comes from counts in the event folder's aftermath.toml. At the earthquake each agent is at work by day or at home by night. It is placed in a collapsed or a standing building according to the share of buildings that collapsed in that cell, and it dies or is displaced at the rates the buildings module gives for the cell. The agents' death count should agree with the buildings module's count by cell. In the daytime runs of the Portland scenario made on 12 November 2026 it is lower, for a reason not yet found. On each day afterwards an agent has electricity or not according to its home cell, and water according to the schedule for the whole area. The agents make no decisions yet. They are here so that a later version can let them leave, seek shelter or travel, and the module reports how fast it runs so that the cost of that is known.")
             .priority(6).dt("1 day after the rupture")
-            .param("folder", folder, "", "the folder of input data for this event, with DOGAMI's maps of residents and of occupants by day and night")
-            .param("scale", param_f64(p, "scale", 10.0), "people", "people per agent. 10 gives about 93,000 agents in the modelled area")
+            .param("folder", folder, "", "the folder under data/events that holds this scenario's maps of residents and of occupants by day and night")
+            .param("scale", param_f64(p, "scale", 10.0), "people", "people per agent")
             .param("time_of_day", param_str(p, "time_of_day", "day"), "", "where each agent is at the moment of the earthquake: at work by day, at home by night")
             .param("coarse_arcsec", param_f64(p, "coarse_arcsec", 10.0), "arcsec", "the cell size of the electricity service grid the agents read")
             .subscribe("quake.toll", "the buildings module's damage and casualty rates, once the shaking ends").subscribe("lifeline.state", "the day's water share")
@@ -69,7 +71,7 @@ impl Agents {
             .frame("agents_without_power", "people")
             .view("counter", "agents", "agents.count", "each agent stands for several people; the next counter gives the people represented")
             .view("counter", "people followed", "agents.people", "agents multiplied by people per agent")
-            .view("counter", "dead, by agent", "agents.dead", "Each agent is placed in a collapsed or a standing building and dies at the buildings module's rate for that case. In the daytime runs of 12 November 2026 this count is lower than the count by cell by a tenth to a third, for a reason not yet found. The two agree at night")
+            .view("counter", "dead, by agent", "agents.dead", "Each agent is placed in a collapsed or a standing building and dies at the buildings module's rate for that case. In the daytime runs of the Portland scenario made on 12 November 2026 this count is lower than the count by cell by a tenth to a third, for a reason not yet found. The two agree at night")
             .view("counter", "in a building that collapsed", "agents.in_collapses", "people, counted by agent")
             .view("counter", "dead in collapses, by agent", "agents.dead_in_collapses", "")
             .view("counter", "displaced, by agent", "agents.displaced", "")
@@ -81,7 +83,7 @@ impl Agents {
             .view("chart", "displaced, by agent", "agents.displaced", "")
             .view("text", "what the agents do not yet do", "The agents take no actions of their own. None leaves the city, goes to a shelter, travels or waits at a hospital. Each one only records what happens at its home cell and its work cell. They are included so that a later version can give them a rule for deciding and a route on the road network, and so that the cost of updating about a hundred thousand agents for every simulated day is measured now.", "")
             .note("An agent that stands for many individuals is called a super-individual. The method comes from fish and plankton modelling in the 1990s (recalled from memory; no citation was checked). The agents are drawn using the run's seed, so the same seed gives the same agents.")
-            .asset(&format!("events/{folder}"), "DOGAMI's maps of residents, daytime occupants and night-time occupants")
+            .asset(&format!("events/{folder}"), "the maps of residents, daytime occupants and night-time occupants (people_resident.tif, people_day.tif, people_night.tif)")
     }
     fn coarse(&self) -> LatLonGrid { let g = self.grid.as_ref().unwrap(); let step = (self.coarse_arcsec / self.res_arcsec).round().max(1.0) as usize; LatLonGrid { nx: (g.nx + step - 1) / step, ny: (g.ny + step - 1) / step, dlon: g.dlon * step as f64, dlat: g.dlat * step as f64, lon_w: g.lon_w, lat_n: g.lat_n } }
     fn count(&self, ctx: &mut Ctx) {

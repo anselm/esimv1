@@ -94,6 +94,7 @@ pub struct Ground {
     duration_s: f64,
     soils: String,
     tz_offset_h: f64, tz_name: String,
+    #[serde(default)] event: String, #[serde(default)] agency: String, #[serde(default)] source: String, #[serde(default)] motion_source: String,
     fired: bool,
     scheduled: bool,
     #[serde(skip)] grid: Option<LatLonGrid>,
@@ -109,8 +110,9 @@ impl Ground {
             name: name.to_string(),
             lat_s: param_f64(p, "lat_s", 45.43), lat_n: param_f64(p, "lat_n", 45.66), lon_w: param_f64(p, "lon_w", -122.85), lon_e: param_f64(p, "lon_e", -122.47),
             res_arcsec: param_f64(p, "res_arcsec", 1.0),
-            folder: param_str(p, "folder", "portland-cascadia").to_string(),
+            folder: param_str(p, "folder", "").to_string(),
             at: param_str(p, "at", "2027-01-26T22:00:00Z").to_string(),
+            event: String::new(), agency: String::new(), source: String::new(), motion_source: String::new(),
             magnitude: param_f64(p, "magnitude", 9.0),
             duration_s: param_f64(p, "duration_s", 240.0),
             soils: param_str(p, "soils", "wet").to_string(),
@@ -126,46 +128,59 @@ impl Ground {
     fn load(&mut self) -> Result<(), String> {
         let (g, elev) = window_grid(self.lat_s, self.lat_n, self.lon_w, self.lon_e, self.res_arcsec)?;
         let n = g.nx * g.ny;
-        self.pga = sample(&self.folder, "CSZ_M9p0_pga_site.tif", &g)?;
-        self.pgv = sample(&self.folder, "CSZ_M9p0_pgv_site.tif", &g)?;
+        // which file holds which map, and whose maps they are, is the event folder's to say
+        let meta = Self::meta(&self.folder)?;
+        let st = |k: &str| meta.get(k).and_then(|v| v.as_str()).unwrap_or("").to_string();
+        self.event = st("event"); self.agency = st("agency"); self.source = st("source"); self.motion_source = st("motion_source");
+        let files = meta.get("files").ok_or("ground.toml has no [files]")?;
+        let file = |t: &toml::Value, k: &str| t.get(k).and_then(|v| v.as_str()).map(String::from);
+        let need = |k: &str| file(files, k).ok_or(format!("ground.toml [files] has no {k}"));
+        self.pga = sample(&self.folder, &need("pga")?, &g)?;
+        self.pgv = sample(&self.folder, &need("pgv")?, &g)?;
         let pct = |v: Vec<f32>| -> Vec<f32> { v.into_iter().map(|x| if x.is_nan() { x } else { (x / 100.0).clamp(0.0, 1.0) }).collect() };
-        if self.soils == "wet" {
-            self.liq_p = pct(sample(&self.folder, "CSZ_M9p0_Prob_liquefaction_wet.tif", &g)?);
-            self.liq_pgd = sample(&self.folder, "CSZ_M9p0_PGD_liquefaction_wet.tif", &g)?;
-            self.ls_p = pct(sample(&self.folder, "CSZ_M9p0_Prob_landslide_wet.tif", &g)?);
-            self.ls_pgd = sample(&self.folder, "CSZ_M9p0_PGD_landslide_wet.tif", &g)?;
-        } else {
-            // DOGAMI published no dry-season liquefaction layer: "liquefaction is much less likely"
-            self.liq_p = vec![0.0; n]; self.liq_pgd = vec![0.0; n];
-            self.ls_p = pct(sample(&self.folder, "CSZ_M9p0_Prob_landslide_dry.tif", &g)?);
-            self.ls_pgd = sample(&self.folder, "CSZ_M9p0_PGD_landslide_dry.tif", &g)?;
-        }
+        // a map the folder does not name for these soils is zero (a study may publish no dry liquefaction layer)
+        let soil = files.get(self.soils.as_str()).cloned().unwrap_or(toml::Value::Table(Default::default()));
+        let map = |k: &str| -> Result<Vec<f32>, String> { match file(&soil, k) { Some(f) => sample(&self.folder, &f, &g), None => Ok(vec![0.0; n]) } };
+        let (lp, lpgd, sp, spgd) = (map("liq_p")?, map("liq_pgd")?, map("ls_p")?, map("ls_pgd")?);
+        self.liq_p = pct(lp); self.liq_pgd = lpgd; self.ls_p = pct(sp); self.ls_pgd = spgd;
         self.elev = elev;
         self.grid = Some(g);
         Ok(())
     }
+    fn meta(folder: &str) -> Result<toml::Value, String> {
+        let path = root().join("data/events").join(folder).join("ground.toml");
+        let text = std::fs::read_to_string(&path).map_err(|e| format!("{}: {e}", path.display()))?;
+        text.parse::<toml::Value>().map_err(|e| format!("ground.toml: {e}"))
+    }
     pub fn describe(name: &str, p: &toml::Value) -> Describe {
         let soils = param_str(p, "soils", "wet");
-        Describe::new("quake.ground", name, "This module supplies the ground motion. It does not simulate the fault or the shaking. It reads maps published by DOGAMI, the Oregon Department of Geology and Mineral Industries, for a simulated magnitude 9.0 earthquake on the Cascadia subduction zone (Open-File Report O-18-02, 2018). The maps give the peak acceleration and velocity of the ground at the surface, and the probability and extent of liquefaction and landslides, for saturated or dry soil. DOGAMI worked out the surface motion from simulated bedrock motion supplied by the US Geological Survey. At the moment set for the earthquake, this module makes the maps available to the other modules and announces the rupture. This earthquake has not happened, so there are no measurements to compare the maps with.")
+        let folder = param_str(p, "folder", "");
+        let meta = Self::meta(folder).ok();
+        let st = |k: &str| meta.as_ref().and_then(|m| m.get(k)).and_then(|v| v.as_str()).unwrap_or("").to_string();
+        let (source, method, about) = (st("source"), st("method"), st("note"));
+        let mut summary = String::from("This module supplies the ground motion for a scenario earthquake. It does not simulate the fault or the shaking. It reads published maps from an event folder: the peak acceleration and velocity of the ground at the surface, and the probability and extent of liquefaction and landslides, for saturated or dry soil. A file in the folder, ground.toml, names the maps and their source. At the moment set for the earthquake, the module makes the maps available to the other modules and announces the rupture. A scenario earthquake has not happened, so there are no measurements to compare the maps with.");
+        if !source.is_empty() { summary.push_str(&format!(" In this run the maps are from {source}.")); }
+        if !method.is_empty() { summary.push(' '); summary.push_str(&method); }
+        let d = Describe::new("quake.ground", name, &summary)
             .priority(0).dt("once, at the rupture")
-            .param("folder", param_str(p, "folder", "portland-cascadia"), "", "the folder of input data for this event: DOGAMI's maps cut to the modelled area, and a README that says how they were made")
+            .param("folder", folder, "", "the folder under data/events that holds this scenario's maps, a ground.toml naming them, and a README that says how they were made")
             .param("tz_offset_h", param_f64(p, "tz_offset_h", -8.0), "h", "local time's offset from UTC in hours (PST -8, PDT -7), used only to print local times")
             .param("tz_name", param_str(p, "tz_name", "PST"), "", "the name of the local time zone, used only in printed times")
-            .param("at", param_str(p, "at", "2027-01-26T22:00:00Z"), "", "the moment of the earthquake in UTC, a scenario choice and not a prediction. 2 p.m. Pacific time is DOGAMI's daytime case")
-            .param("magnitude", param_f64(p, "magnitude", 9.0), "Mw", "the magnitude of the scenario in DOGAMI's study and in the US Geological Survey's set of simulations")
-            .param("duration_s", param_f64(p, "duration_s", 240.0), "s", "seconds of strong shaking. DOGAMI gives 3 to 5 minutes for an earthquake of this kind")
-            .param("soils", soils, "", "wet: saturated soil, DOGAMI's higher-loss case, with liquefaction and landslides. dry: DOGAMI's dry-soil maps, with landslides only")
+            .param("at", param_str(p, "at", "2027-01-26T22:00:00Z"), "", "the moment of the earthquake in UTC, a scenario choice and not a prediction")
+            .param("magnitude", param_f64(p, "magnitude", 9.0), "Mw", "the magnitude of the scenario the maps were made for")
+            .param("duration_s", param_f64(p, "duration_s", 240.0), "s", "seconds of strong shaking, as the source study gives it")
+            .param("soils", soils, "", "wet: the maps for saturated soil, usually the higher-loss case, with liquefaction and landslides. dry: the maps for dry soil")
             .own("quake.pga_g", "g").own("quake.pgv_cms", "cm/s").own("quake.liq_p", "1").own("quake.liq_pgd_cm", "cm").own("quake.ls_p", "1").own("quake.ls_pgd_cm", "cm")
             .publish("quake.rupture", "{ magnitude, duration_s, soils, at, source } once, at the instant")
             .publish("quake.crossing", "{ kind: rupture, sentence, source, confidence } the rupture, for the story")
             .frame("terrain_elev_m", "m").frame("quake_pga_g", "g").frame("quake_mmi", "intensity").frame("quake_liquefaction_p", "1").frame("quake_ground_pgd_cm", "cm")
             .report("quake.pga_mean_g", "g").report("quake.pga_max_g", "g").report("quake.pgv_mean_cms", "cm/s").report("quake.liq_p_mean", "1").report("quake.cells_over_liq_20", "cells")
-            .asset("copernicus-dem-glo30", "the terrain under the city").asset(&format!("events/{}", param_str(p, "folder", "portland-cascadia")), "DOGAMI's ground motion and ground failure maps from Open-File Report O-18-02, cut to the modelled area")
-            .view("map", "peak ground acceleration", "quake_pga_g", "DOGAMI's estimate at the surface for the magnitude 9.0 scenario, as a fraction of g, the acceleration of gravity")
+            .asset("copernicus-dem-glo30", "the terrain under the city").asset(&format!("events/{folder}"), "the scenario's ground motion and ground failure maps, cut to the modelled area")
+            .view("map", "peak ground acceleration", "quake_pga_g", "the source study's estimate at the surface, as a fraction of g, the acceleration of gravity")
             .view("map", "intensity", "quake_mmi", "Modified Mercalli intensity, computed from peak ground velocity (PGV) with the relation of Wald and others 1999, recalled from memory: 3.47 log PGV + 2.35")
-            .view("map", "chance of liquefaction", "quake_liquefaction_p", "DOGAMI's probability that the ground spreads sideways as saturated soil liquefies; zero in the dry-soil case")
-            .view("map", "permanent ground deformation", "quake_ground_pgd_cm", "the larger of the permanent ground movement from liquefaction and from landslides, in centimetres")
-            .note("The maps are from DOGAMI Open-File Report O-18-02 (2018). They were cut to the modelled area with GDAL on 12 November 2026, as the event folder's README describes, and the run reads the cut files. The US Geological Survey publishes a separate estimate for this scenario, the median of its own set of magnitude 9 simulations (ShakeMap cszm9ensemble_se). It gives Modified Mercalli intensity 7.2 and a peak ground acceleration of 0.24 g at downtown Portland, which is inside DOGAMI's range of 0.15 to 0.32 g across the modelled area. The Survey's ground-failure map is much coarser (500 metres) and shows almost no liquefaction at the fuel hub, where DOGAMI maps a high probability, so this project uses DOGAMI's maps.")
+            .view("map", "chance of liquefaction", "quake_liquefaction_p", "the source study's probability that the ground spreads sideways as saturated soil liquefies; zero where the study gives no map for these soils")
+            .view("map", "permanent ground deformation", "quake_ground_pgd_cm", "the larger of the permanent ground movement from liquefaction and from landslides, in centimetres");
+        if about.is_empty() { d } else { d.note(&about) }
     }
     fn mmi(pgv: f32) -> f32 { if pgv.is_nan() || pgv <= 0.0 { f32::NAN } else { (3.47 * (pgv as f64).log10() + 2.35) as f32 } }
 }
@@ -211,9 +226,9 @@ impl Module for Ground {
         let (lo, hi) = (ok.iter().copied().fold(f32::INFINITY, f32::min), ok.iter().copied().fold(0.0f32, f32::max));
         let local = Time(now.0 + (self.tz_offset_h * 3600.0).round() as i64).to_iso();
         let local_words = format!("{} {}", &local[..16].replace('T', " "), self.tz_name);
-        let sentence = format!("{} {}: a magnitude {:.1} earthquake ruptures the Cascadia subduction zone. Strong shaking lasts about {:.0} minutes. Peak ground acceleration across the modelled area ranges from {:.2} to {:.2} g in DOGAMI's estimate for {} soil.", &local[..16].replace('T', " "), self.tz_name, self.magnitude, self.duration_s / 60.0, lo, hi, if self.soils == "dry" { "dry" } else { "saturated" });
-        ctx.publish("quake.rupture", json!({ "magnitude": self.magnitude, "duration_s": self.duration_s, "soils": self.soils, "at": now.to_iso(), "source": "DOGAMI O-18-02 site ground motion; USGS synthetic bedrock motion" }));
-        ctx.publish("quake.crossing", json!({ "id": "rupture", "title": "The rupture", "name": "Cascadia", "kind": "rupture", "time": now.to_iso(), "local": local_words, "sentence": sentence, "source": "DOGAMI (Oregon Department of Geology and Mineral Industries), Open-File Report O-18-02, 2018", "confidence": "a published scenario, not a forecast" }));
+        let sentence = format!("{} {}: a magnitude {:.1} earthquake ruptures {}. Strong shaking lasts about {:.0} minutes. Peak ground acceleration across the modelled area ranges from {:.2} to {:.2} g in {} estimate for {} soil.", &local[..16].replace('T', " "), self.tz_name, self.magnitude, if self.event.is_empty() { "the fault" } else { self.event.as_str() }, self.duration_s / 60.0, lo, hi, if self.agency.is_empty() { "the source study's".to_string() } else { format!("{}'s", self.agency) }, if self.soils == "dry" { "dry" } else { "saturated" });
+        ctx.publish("quake.rupture", json!({ "magnitude": self.magnitude, "duration_s": self.duration_s, "soils": self.soils, "at": now.to_iso(), "source": self.motion_source }));
+        ctx.publish("quake.crossing", json!({ "id": "rupture", "title": "The rupture", "name": "the earthquake", "kind": "rupture", "time": now.to_iso(), "local": local_words, "sentence": sentence, "source": self.source, "confidence": "a published scenario, not a forecast" }));
     }
     fn snapshot(&self) -> serde_json::Value { serde_json::to_value(self).unwrap() }
     fn restore(&mut self, v: serde_json::Value) { let mut o: Ground = serde_json::from_value(v).unwrap(); o.load().expect("ground reload"); *self = o; }

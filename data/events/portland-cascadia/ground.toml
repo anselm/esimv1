@@ -1,0 +1,26 @@
+# What `quake.ground` reads from this folder: which files hold which map, and where they came from.
+# The module itself knows nothing about Portland or Cascadia; another scenario supplies its own
+# folder with a file like this one. Probability maps are in percent; deformation in centimetres;
+# acceleration in g; velocity in cm/s.
+event = "the Cascadia subduction zone"
+agency = "DOGAMI"
+source = "DOGAMI (Oregon Department of Geology and Mineral Industries), Open-File Report O-18-02, 2018"
+motion_source = "DOGAMI O-18-02 site ground motion; USGS synthetic bedrock motion"
+method = "DOGAMI worked out the surface motion from simulated bedrock motion supplied by the US Geological Survey, for a simulated magnitude 9.0 earthquake."
+note = "The maps are from DOGAMI Open-File Report O-18-02 (2018). They were cut to the modelled area with GDAL on 12 November 2026, as the event folder's README describes, and the run reads the cut files. The US Geological Survey publishes a separate estimate for this scenario, the median of its own set of magnitude 9 simulations (ShakeMap cszm9ensemble_se). It gives Modified Mercalli intensity 7.2 and a peak ground acceleration of 0.24 g at downtown Portland, which is inside DOGAMI's range of 0.15 to 0.32 g across the modelled area. The Survey's ground-failure map is much coarser (500 metres) and shows almost no liquefaction at the fuel hub, where DOGAMI maps a high probability, so this project uses DOGAMI's maps."
+
+[files]
+pga = "CSZ_M9p0_pga_site.tif"
+pgv = "CSZ_M9p0_pgv_site.tif"
+
+[files.wet]
+liq_p = "CSZ_M9p0_Prob_liquefaction_wet.tif"
+liq_pgd = "CSZ_M9p0_PGD_liquefaction_wet.tif"
+ls_p = "CSZ_M9p0_Prob_landslide_wet.tif"
+ls_pgd = "CSZ_M9p0_PGD_landslide_wet.tif"
+
+# DOGAMI published no dry-season liquefaction layer ("liquefaction is much less likely"); a map
+# that is not named here is read as zero.
+[files.dry]
+ls_p = "CSZ_M9p0_Prob_landslide_dry.tif"
+ls_pgd = "CSZ_M9p0_PGD_landslide_dry.tif"

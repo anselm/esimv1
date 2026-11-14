@@ -371,6 +371,14 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   calendar year of 2027 only"), so 333 daily steps after the event; `people.aftermath` has `summary_day` (333 in the
   manifest) for its summing-up sentence; wet-night is `2027-02-01T10:00:00Z`. In computed mode a bridge now stays open
   until its `component.state` says down, so `lifeline.failed` is published and the map marks the closure.
+- Layers and the Portland modules (2026-11-13, `devlog/20261113-layers-and-portland-modules.md`; Anselm: "Portland
+  modules should be Portland prefixed Or generalized"): `lifelines.recovery` is now `portland.lifelines`;
+  `quake.ground` reads `ground.toml` in its event folder (files, fault, agency, source) and names no place;
+  `people.aftermath` and `people.agents` take everything place-specific from `aftermath.toml` and have no default
+  folder. Next: the DOGAMI comparison out of `quake.buildings` into a scoring module, then `hazard.components` split
+  into subject modules (tanks, bridges, power structures, roads). The human layer order agreed in that conversation
+  (abiotic clumped, built before life, law and money as abiotic artifacts, disturbances across) is in the devlog and
+  not yet in `docs/system/layers.md`. Layers are a tag for the page, not kernel structure.
 - Portland, the page and the standing faults (2026-11-12 night, `devlog/20261112-portland-readme-rewritten.md` and
   `devlog/20261112-portland-stale-wording.md`; Anselm: "I want to try rewrite the portland cascadia fault scenario
   readme again", then "update stale portland wording overall everywhere"): the project README is a new text in the

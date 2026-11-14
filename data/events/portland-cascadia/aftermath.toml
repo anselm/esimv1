@@ -3,6 +3,8 @@
 # A row that is off is listed on the run page and not applied. Assembled 2026-11-12 (evening) by
 # the esim session at Anselm's ask ("extend sim to model deaths better ... other impacts").
 
+leaves_out = "Two possible causes of death, cold homes and waterborne illness, are listed in the claims table but switched off, because no rate with a source was found for either. The Puerto Rico rate comes from a different kind of disaster in a different climate and season, and it covers a whole population. It is taken to include every death that follows the loss of electricity, including the deaths of people on medical devices. For that reason the device count is reported as a number of people exposed, and no second death rate is applied to it. The untreated-injury rule treats every injured person on the first day any hospital is open; the model does not represent hospital beds, staff or the distance to a hospital. The module does not move people: no one leaves the area, goes to a shelter or is counted as cold."
+
 [inputs]
 power_dependent_dme_multnomah = 4825      # HHS emPOWER REST service, county layer, read 2026-11-12: Medicare beneficiaries with a claim for electricity-dependent durable medical equipment
 power_dependent_dme_washington = 3593
@@ -15,8 +17,14 @@ population_washington = 600372            # 2020 census, recalled, not checked
 population_clackamas = 421401             # 2020 census, recalled, not checked
 power_dependent_note = "Medicare only: people under 65 on other insurance who depend on a device are not counted, so the share is a floor"
 
+# What `month_days` stands for in this scenario; the module says the text after its count.
+[month_rule]
+text = "The Oregon Resilience Plan gives one month without services as the point past which a business tends to leave."
+source = "the Oregon Resilience Plan (2013)"
+
 [[claim]]
 id = "interrupted-care"
+short = "medical care interrupted by the loss of electricity"
 title = "Deaths from medical care interrupted by the loss of electricity, at a rate derived from Puerto Rico after Hurricane Maria (2017)"
 on = "person_days_without_power"
 rate = 4.55e-6
@@ -29,6 +37,7 @@ status = "on"
 
 [[claim]]
 id = "untreated-injuries"
+short = "life-threatening injuries on days when no hospital is open"
 title = "Deaths among people with life-threatening injuries on days when no hospital is open"
 on = "untreated_life_threatening"
 rate = 0.5

@@ -24,7 +24,7 @@
     },
     {
       "id": "lifelines",
-      "kind": "lifelines.recovery",
+      "kind": "portland.lifelines",
       "params": {
         "folder": "portland-cascadia",
         "inputs": "computed",
@@ -128,7 +128,7 @@
   ],
   "from": {
     "entry": "manifests/q1-portland-cascadia.toml",
-    "hash": "sha256:143662e732e623238e4bb0f3836f8ac44c118abd07e67eb6c533b15bfb3352f4",
+    "hash": "sha256:ee5a7a66be1d35c9245f4293c50dc72a19cab4f9c8f2c850c300e840a52d3ef6",
     "language": "toml"
   },
   "manifest": "manifest/1"

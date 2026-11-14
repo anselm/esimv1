@@ -230387,14 +230387,14 @@
   {
     "kind": "quake.ground",
     "name": "quake.ground",
-    "summary": "This module supplies the ground motion. It does not simulate the fault or the shaking. It reads maps published by DOGAMI, the Oregon Department of Geology and Mineral Industries, for a simulated magnitude 9.0 earthquake on the Cascadia subduction zone (Open-File Report O-18-02, 2018). The maps give the peak acceleration and velocity of the ground at the surface, and the probability and extent of liquefaction and landslides, for saturated or dry soil. DOGAMI worked out the surface motion from simulated bedrock motion supplied by the US Geological Survey. At the moment set for the earthquake, this module makes the maps available to the other modules and announces the rupture. This earthquake has not happened, so there are no measurements to compare the maps with.",
+    "summary": "This module supplies the ground motion for a scenario earthquake. It does not simulate the fault or the shaking. It reads published maps from an event folder: the peak acceleration and velocity of the ground at the surface, and the probability and extent of liquefaction and landslides, for saturated or dry soil. A file in the folder, ground.toml, names the maps and their source. At the moment set for the earthquake, the module makes the maps available to the other modules and announces the rupture. A scenario earthquake has not happened, so there are no measurements to compare the maps with.",
     "priority": 0,
     "dt": "once, at the rupture",
     "params": [
       {
         "name": "folder",
-        "default": "portland-cascadia",
-        "note": "the folder of input data for this event: DOGAMI's maps cut to the modelled area, and a README that says how they were made"
+        "default": "",
+        "note": "the folder under data/events that holds this scenario's maps, a ground.toml naming them, and a README that says how they were made"
       },
       {
         "name": "tz_offset_h",
@@ -230410,24 +230410,24 @@
       {
         "name": "at",
         "default": "2027-01-26T22:00:00Z",
-        "note": "the moment of the earthquake in UTC, a scenario choice and not a prediction. 2 p.m. Pacific time is DOGAMI's daytime case"
+        "note": "the moment of the earthquake in UTC, a scenario choice and not a prediction"
       },
       {
         "name": "magnitude",
         "default": 9.0,
         "unit": "Mw",
-        "note": "the magnitude of the scenario in DOGAMI's study and in the US Geological Survey's set of simulations"
+        "note": "the magnitude of the scenario the maps were made for"
       },
       {
         "name": "duration_s",
         "default": 240.0,
         "unit": "s",
-        "note": "seconds of strong shaking. DOGAMI gives 3 to 5 minutes for an earthquake of this kind"
+        "note": "seconds of strong shaking, as the source study gives it"
       },
       {
         "name": "soils",
         "default": "wet",
-        "note": "wet: saturated soil, DOGAMI's higher-loss case, with liquefaction and landslides. dry: DOGAMI's dry-soil maps, with landslides only"
+        "note": "wet: the maps for saturated soil, usually the higher-loss case, with liquefaction and landslides. dry: the maps for dry soil"
       }
     ],
     "publishes": [
@@ -230539,7 +230539,7 @@
         "title": "peak ground acceleration",
         "source": "quake_pga_g",
         "obs": "",
-        "note": "DOGAMI's estimate at the surface for the magnitude 9.0 scenario, as a fraction of g, the acceleration of gravity"
+        "note": "the source study's estimate at the surface, as a fraction of g, the acceleration of gravity"
       },
       {
         "kind": "map",
@@ -230553,7 +230553,7 @@
         "title": "chance of liquefaction",
         "source": "quake_liquefaction_p",
         "obs": "",
-        "note": "DOGAMI's probability that the ground spreads sideways as saturated soil liquefies; zero in the dry-soil case"
+        "note": "the source study's probability that the ground spreads sideways as saturated soil liquefies; zero where the study gives no map for these soils"
       },
       {
         "kind": "map",
@@ -230569,13 +230569,11 @@
         "note": "the terrain under the city"
       },
       {
-        "key": "events/portland-cascadia",
-        "note": "DOGAMI's ground motion and ground failure maps from Open-File Report O-18-02, cut to the modelled area"
+        "key": "events/",
+        "note": "the scenario's ground motion and ground failure maps, cut to the modelled area"
       }
     ],
-    "notes": [
-      "The maps are from DOGAMI Open-File Report O-18-02 (2018). They were cut to the modelled area with GDAL on 12 November 2026, as the event folder's README describes, and the run reads the cut files. The US Geological Survey publishes a separate estimate for this scenario, the median of its own set of magnitude 9 simulations (ShakeMap cszm9ensemble_se). It gives Modified Mercalli intensity 7.2 and a peak ground acceleration of 0.24 g at downtown Portland, which is inside DOGAMI's range of 0.15 to 0.32 g across the modelled area. The Survey's ground-failure map is much coarser (500 metres) and shows almost no liquefaction at the fuel hub, where DOGAMI maps a high probability, so this project uses DOGAMI's maps."
-    ]
+    "notes": []
   },
   {
     "kind": "quake.buildings",
@@ -231160,9 +231158,9 @@
     }
   },
   {
-    "kind": "lifelines.recovery",
-    "name": "lifelines.recovery",
-    "summary": "This module follows the city after the earthquake one day at a time. It tracks the twelve bridges over the Willamette River, thirteen hospitals and their backup generators, electricity, water, and the fuel stored at the Critical Energy Infrastructure Hub, the strip of fuel terminals in northwest Portland. It keeps an account of the hub's fuel in gallons, which must balance every day. The module has two modes. In the computed mode a second module, hazard.components, works out the fuel spill, the state of each bridge, the open roads and the electricity service, and this module uses its results. In the ranges mode it draws those outcomes at random from published ranges: Multnomah County's statement on its bridges, the Oregon Resilience Plan's restoration times and the county's 2022 study of the hub's tanks. Water service follows the Resilience Plan's range in both modes. Three inputs are guesses in both modes: how much generator fuel a hospital holds, how much fuel the emergency response uses each day, and the day fuel deliveries resume. This run uses the ranges mode.",
+    "kind": "portland.lifelines",
+    "name": "portland.lifelines",
+    "summary": "This module is specific to Portland. It follows the city after the earthquake one day at a time. It tracks the twelve bridges over the Willamette River, thirteen hospitals and their backup generators, electricity, water, and the fuel stored at the Critical Energy Infrastructure Hub, the strip of fuel terminals in northwest Portland. It keeps an account of the hub's fuel in gallons, which must balance every day. The module has two modes. In the computed mode a second module, hazard.components, works out the fuel spill, the state of each bridge, the open roads and the electricity service, and this module uses its results. In the ranges mode it draws those outcomes at random from published ranges: Multnomah County's statement on its bridges, the Oregon Resilience Plan's restoration times and the county's 2022 study of the hub's tanks. Water service follows the Resilience Plan's range in both modes. Three inputs are guesses in both modes: how much generator fuel a hospital holds, how much fuel the emergency response uses each day, and the day fuel deliveries resume. This run uses the ranges mode.",
     "priority": 2,
     "dt": "1 day after the rupture",
     "params": [
@@ -231681,20 +231679,20 @@
   {
     "kind": "people.aftermath",
     "name": "people.aftermath",
-    "summary": "This module counts harm to people after the shaking stops. It does not model how that harm comes about. It applies a short table of rates, each with a source, to counts the run already has. Two rates add deaths. One applies to people with life-threatening injuries on any day when no hospital is open. The other applies to each day a person spends without electricity; it is derived from the record of Puerto Rico after Hurricane Maria in 2017 and stands for interrupted medical care. The module also counts the people who depend on electrically powered medical devices and have no grid electricity (from the emPOWER data of the US Department of Health and Human Services), the person-days spent without electricity and without water, and the people still without a service after one month, which the Oregon Resilience Plan gives as the point past which a business tends to leave. Each rate is a row in the event folder's aftermath.toml, with its source, how far it can be trusted and whether it is switched on. The claims table lists every row, on or off. The module also keeps the run's single death total, deaths.total, which adds deaths in buildings, deaths at the fuel hub and the deaths counted here.",
+    "summary": "This module counts harm to people in the days and months after an earthquake. It does not model how that harm comes about. It applies a short table of rates, each with a source, to counts the run already has: the life-threatening injuries from the shaking, the days people spend without electricity or water, and the people who depend on electrically powered medical devices. The table is the event folder's aftermath.toml. Each row gives a rate, its source, how far it can be trusted and whether it is switched on, and the claims table lists every row, on or off. The module also reports the person-days spent without electricity and without water, and the people still without a service on a chosen day. It keeps the run's single death total, deaths.total, which adds the deaths from the shaking, any deaths the lifelines module reports, and the deaths counted here.",
     "priority": 3,
     "dt": "1 day, on the lifelines' state",
     "params": [
       {
         "name": "folder",
-        "default": "portland-cascadia",
-        "note": "the folder of input data for this event, with the table of rates and the map of residents"
+        "default": "",
+        "note": "the folder under data/events that holds this scenario's table of rates (aftermath.toml) and its map of residents"
       },
       {
         "name": "month_days",
         "default": 30.0,
         "unit": "d",
-        "note": "the Oregon Resilience Plan's one-month rule: a business without services for this long tends to leave. The module counts the people whose electricity or water is still out on this day"
+        "note": "a day on which the module counts the people whose electricity or water is still out, and says so in a sentence. The event folder may give the rule this day stands for"
       },
       {
         "name": "summary_day",
@@ -231726,7 +231724,7 @@
       {
         "name": "lifeline.state",
         "required": false,
-        "note": "the lifelines module's daily state: hospitals open, the shares of people with electricity and water, deaths at the fuel hub"
+        "note": "the lifelines module's daily state: hospitals open, the shares of people with electricity and water, and any deaths it reports"
       }
     ],
     "fields_owned": [],
@@ -231783,31 +231781,6 @@
         "name": "after.people_over_month_without_water",
         "unit": "people",
         "required": false
-      },
-      {
-        "name": "after.deaths_interrupted_care",
-        "unit": "people",
-        "required": false
-      },
-      {
-        "name": "after.deaths_untreated_injuries",
-        "unit": "people",
-        "required": false
-      },
-      {
-        "name": "after.deaths_power_dependent_devices",
-        "unit": "people",
-        "required": false
-      },
-      {
-        "name": "after.deaths_cold",
-        "unit": "people",
-        "required": false
-      },
-      {
-        "name": "after.deaths_water",
-        "unit": "people",
-        "required": false
       }
     ],
     "views": [
@@ -231830,14 +231803,14 @@
         "title": "on medical devices, without power",
         "source": "after.devices_without_power",
         "obs": "",
-        "note": "the emPOWER share of the three counties' population, applied to the residents of the modelled area who have no electricity"
+        "note": "the share of people on such devices given in the event folder, applied to the residents of the modelled area who have no electricity"
       },
       {
         "kind": "counter",
         "title": "past a month without water",
         "source": "after.people_over_month_without_water",
         "obs": "",
-        "note": "people still without water on the day the one-month rule is checked"
+        "note": "people still without water on the day set by month_days"
       },
       {
         "kind": "chart",
@@ -231863,14 +231836,14 @@
       {
         "kind": "text",
         "title": "what this module leaves out",
-        "source": "Two possible causes of death, cold homes and waterborne illness, are listed in the claims table but switched off, because no rate with a source was found for either. The Puerto Rico rate comes from a different kind of disaster in a different climate and season, and it covers a whole population. It is taken to include every death that follows the loss of electricity, including the deaths of people on medical devices. For that reason the device count is reported as a number of people exposed, and no second death rate is applied to it. The untreated-injury rule treats every injured person on the first day any hospital is open; the model does not represent hospital beds, staff or the distance to a hospital. The module does not move people: no one leaves the area, goes to a shelter or is counted as cold.",
+        "source": "The module applies rates to counts. It does not represent hospital beds, staff or the distance to a hospital, and it does not move people: no one leaves the area or goes to a shelter. A cause of death with no row switched on in the claims table is not counted.",
         "obs": "",
         "note": ""
       }
     ],
     "assets": [
       {
-        "key": "events/portland-cascadia",
+        "key": "events/",
         "note": "the table of rates and the map of residents"
       }
     ],
@@ -231878,68 +231851,7 @@
       "Each row of the claims table is a published rate or a declared guess, applied to a count the run already has. The module does not model how the harm comes about, so a reader who doubts a figure should look at the source of its row."
     ],
     "tables": {
-      "claims": [
-        {
-          "confidence": "An analogy: a Caribbean island after an autumn hurricane, applied to a Pacific Northwest city after an earthquake in February. The paper's interval is wide, and its authors call their estimate an underestimate.",
-          "high": 1.83,
-          "id": "interrupted-care",
-          "low": 0.17,
-          "on": "person_days_without_power",
-          "per": "deaths per person per day without electricity",
-          "rate": 4.55e-6,
-          "source": "Kishore and others 2018, Mortality in Puerto Rico after Hurricane Maria, New England Journal of Medicine 379:162-170. The abstract and news reporting were read on 12 November 2026; the paper itself was not. It estimates 4,645 excess deaths from 20 September to 31 December 2017 and attributes one third of them to delayed or interrupted health care. The rate used here is that third, divided by Puerto Rico's population of 3.34 million (recalled from memory) and by 102 days. It is applied to each day each person in the modelled area spends without grid electricity.",
-          "status": "on",
-          "title": "Deaths from medical care interrupted by the loss of electricity, at a rate derived from Puerto Rico after Hurricane Maria (2017)"
-        },
-        {
-          "confidence": "The definition is from the Hazus manual. The rate is a guess. On any day a hospital is open the model treats everyone still waiting, with no limit on capacity.",
-          "high": 2.0,
-          "id": "untreated-injuries",
-          "low": 0.5,
-          "on": "untreated_life_threatening",
-          "per": "the share of the untreated who die on each day that no hospital in the modelled area is open",
-          "rate": 0.5,
-          "source": "Hazus defines severity 3 injuries as those that pose an immediate life-threatening condition if not treated adequately and expeditiously, such as crush syndrome, internal injuries and uncontrolled bleeding (FEMA, Earthquake Model Technical Manual, as quoted in the Downtown Anchorage Seismic Risk Assessment, read on 12 November 2026). The daily death rate is a guess.",
-          "status": "on",
-          "title": "Deaths among people with life-threatening injuries on days when no hospital is open"
-        },
-        {
-          "confidence": "The count is from the published data. It covers Medicare beneficiaries only, so it is a minimum. It is reported as a number of people exposed and is not converted into deaths.",
-          "high": 0.0,
-          "id": "power-dependent-devices",
-          "low": 0.0,
-          "on": "power_dependent_without_power",
-          "per": "a count of people exposed, with no death rate",
-          "rate": 0.0,
-          "source": "The emPOWER data of the US Department of Health and Human Services, read on 12 November 2026: 11,570 Medicare beneficiaries who use electricity-dependent medical devices in Multnomah, Washington and Clackamas counties, 0.63 percent of the counties' population. That share is applied to the residents of the modelled area. The Puerto Rico rate is taken to include deaths in this group already, so none are added here.",
-          "status": "on",
-          "title": "People who depend on electrically powered medical devices and have no grid electricity (counted; no deaths added)"
-        },
-        {
-          "confidence": "no source",
-          "high": 0.0,
-          "id": "cold",
-          "low": 0.0,
-          "on": "person_days_without_power",
-          "per": "deaths per person per day without electricity",
-          "rate": 0.0,
-          "source": "No source was read. Excess deaths in winter are documented, but no rate for a power outage in a mild maritime climate was found on 12 November 2026.",
-          "status": "off",
-          "title": "Deaths from cold in homes without electricity"
-        },
-        {
-          "confidence": "no source",
-          "high": 0.0,
-          "id": "water",
-          "low": 0.0,
-          "on": "person_days_without_water",
-          "per": "deaths per person per day without water",
-          "rate": 0.0,
-          "source": "No source was read.",
-          "status": "off",
-          "title": "Deaths from waterborne illness while water and sewer service are out"
-        }
-      ]
+      "claims": []
     }
   },
   {
@@ -232312,20 +232224,20 @@
   {
     "kind": "people.agents",
     "name": "people.agents",
-    "summary": "This module represents the residents as agents, each standing for a fixed number of people set by the scale parameter. It creates them at the start of the run from DOGAMI's maps of where people are. Each agent gets a home cell, drawn in proportion to residents, and a work cell, drawn in proportion to daytime occupants. A share of the agents depend on electrically powered medical devices; the share comes from the emPOWER data of the US Department of Health and Human Services. At the earthquake each agent is at work by day or at home by night. It is placed in a collapsed or a standing building according to the share of buildings that collapsed in that cell, and it dies or is displaced at the rates the buildings module gives for the cell. The agents' death count should agree with the buildings module's count by cell. In the daytime runs of 12 November 2026 it is lower, for a reason not yet found. On each day afterwards an agent has electricity or not according to its home cell, and water according to the schedule for the whole area. The agents make no decisions yet. They are here so that a later version can let them leave, seek shelter or travel, and the module reports how fast it runs so that the cost of that is known.",
+    "summary": "This module represents the residents as agents, each standing for a fixed number of people set by the scale parameter. It creates them at the start of the run from the event folder's maps of where people are. Each agent gets a home cell, drawn in proportion to residents, and a work cell, drawn in proportion to daytime occupants. A share of the agents depend on electrically powered medical devices; the share comes from counts in the event folder's aftermath.toml. At the earthquake each agent is at work by day or at home by night. It is placed in a collapsed or a standing building according to the share of buildings that collapsed in that cell, and it dies or is displaced at the rates the buildings module gives for the cell. The agents' death count should agree with the buildings module's count by cell. In the daytime runs of the Portland scenario made on 12 November 2026 it is lower, for a reason not yet found. On each day afterwards an agent has electricity or not according to its home cell, and water according to the schedule for the whole area. The agents make no decisions yet. They are here so that a later version can let them leave, seek shelter or travel, and the module reports how fast it runs so that the cost of that is known.",
     "priority": 6,
     "dt": "1 day after the rupture",
     "params": [
       {
         "name": "folder",
-        "default": "portland-cascadia",
-        "note": "the folder of input data for this event, with DOGAMI's maps of residents and of occupants by day and night"
+        "default": "",
+        "note": "the folder under data/events that holds this scenario's maps of residents and of occupants by day and night"
       },
       {
         "name": "scale",
         "default": 10.0,
         "unit": "people",
-        "note": "people per agent. 10 gives about 93,000 agents in the modelled area"
+        "note": "people per agent"
       },
       {
         "name": "time_of_day",
@@ -232478,7 +232390,7 @@
         "title": "dead, by agent",
         "source": "agents.dead",
         "obs": "",
-        "note": "Each agent is placed in a collapsed or a standing building and dies at the buildings module's rate for that case. In the daytime runs of 12 November 2026 this count is lower than the count by cell by a tenth to a third, for a reason not yet found. The two agree at night"
+        "note": "Each agent is placed in a collapsed or a standing building and dies at the buildings module's rate for that case. In the daytime runs of the Portland scenario made on 12 November 2026 this count is lower than the count by cell by a tenth to a third, for a reason not yet found. The two agree at night"
       },
       {
         "kind": "counter",
@@ -232553,8 +232465,8 @@
     ],
     "assets": [
       {
-        "key": "events/portland-cascadia",
-        "note": "DOGAMI's maps of residents, daytime occupants and night-time occupants"
+        "key": "events/",
+        "note": "the maps of residents, daytime occupants and night-time occupants (people_resident.tif, people_day.tif, people_night.tif)"
       }
     ],
     "notes": [

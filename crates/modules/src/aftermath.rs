@@ -14,7 +14,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 
 #[derive(Clone, Serialize, Deserialize)]
-struct Claim { id: String, title: String, on: String, rate: f64, low: f64, high: f64, per: String, source: String, confidence: String, status: String }
+struct Claim { id: String, #[serde(default)] short: String, title: String, on: String, rate: f64, low: f64, high: f64, per: String, source: String, confidence: String, status: String }
 
 #[derive(Serialize, Deserialize)]
 pub struct Aftermath {
@@ -22,6 +22,7 @@ pub struct Aftermath {
     lat_s: f64, lat_n: f64, lon_w: f64, lon_e: f64, res_arcsec: f64,
     folder: String,
     month_days: i64,
+    #[serde(default)] month_rule: String, #[serde(default)] month_source: String,
     #[serde(default)] summary_day: i64,
     claims: Vec<Claim>,
     power_dependent_share: f64,
@@ -44,9 +45,10 @@ impl Aftermath {
             name: name.to_string(),
             lat_s: param_f64(p, "lat_s", 45.43), lat_n: param_f64(p, "lat_n", 45.66), lon_w: param_f64(p, "lon_w", -122.85), lon_e: param_f64(p, "lon_e", -122.47),
             res_arcsec: param_f64(p, "res_arcsec", 1.0),
-            folder: param_str(p, "folder", "portland-cascadia").to_string(),
+            folder: param_str(p, "folder", "").to_string(),
             month_days: param_f64(p, "month_days", 30.0) as i64,
             summary_day: param_f64(p, "summary_day", 365.0) as i64,
+            month_rule: String::new(), month_source: String::new(),
             claims: Vec::new(), power_dependent_share: 0.0, residents_total: 0.0,
             quake_deaths: 0.0, hub_deaths: 0.0, injuries_life: 0.0, injuries_hospital: 0.0, agents_dead: None, untreated: 0.0,
             deaths: Vec::new(), deaths_low: 0.0, deaths_high: 0.0,
@@ -62,14 +64,17 @@ impl Aftermath {
         text.parse::<toml::Value>().map_err(|e| format!("aftermath.toml: {e}"))
     }
     fn claims_of(t: &toml::Value) -> Vec<Claim> {
-        t.get("claim").and_then(|v| v.as_array()).map(|a| a.iter().map(|c| Claim { id: ts(c, "id"), title: ts(c, "title"), on: ts(c, "on"), rate: tf(c, "rate"), low: tf(c, "low"), high: tf(c, "high"), per: ts(c, "per"), source: ts(c, "source"), confidence: ts(c, "confidence"), status: ts(c, "status") }).collect()).unwrap_or_default()
+        t.get("claim").and_then(|v| v.as_array()).map(|a| a.iter().map(|c| Claim { id: ts(c, "id"), short: ts(c, "short"), title: ts(c, "title"), on: ts(c, "on"), rate: tf(c, "rate"), low: tf(c, "low"), high: tf(c, "high"), per: ts(c, "per"), source: ts(c, "source"), confidence: ts(c, "confidence"), status: ts(c, "status") }).collect()).unwrap_or_default()
     }
     fn load(&mut self) -> Result<(), String> {
         let t = Self::table(&self.folder)?;
         self.claims = Self::claims_of(&t);
+        if let Some(m) = t.get("month_rule") { self.month_rule = ts(m, "text"); self.month_source = ts(m, "source"); }
         if let Some(i) = t.get("inputs") {
-            let dme = tf(i, "power_dependent_dme_multnomah") + tf(i, "power_dependent_dme_washington") + tf(i, "power_dependent_dme_clackamas");
-            let pop = tf(i, "population_multnomah") + tf(i, "population_washington") + tf(i, "population_clackamas");
+            // every key that begins power_dependent_dme_ is a count of people on devices, every key that
+            // begins population_ the people it was counted among; the folder may give any number of areas
+            let sum = |pre: &str| i.as_table().map(|t| t.iter().filter(|(k, _)| k.starts_with(pre)).map(|(k, _)| tf(i, k)).sum::<f64>()).unwrap_or(0.0);
+            let (dme, pop) = (sum("power_dependent_dme_"), sum("population_"));
             self.power_dependent_share = if pop > 0.0 { dme / pop } else { 0.0 };
         }
         let (g, _) = window_grid(self.lat_s, self.lat_n, self.lon_w, self.lon_e, self.res_arcsec)?;
@@ -78,14 +83,15 @@ impl Aftermath {
         Ok(())
     }
     pub fn describe(name: &str, p: &toml::Value) -> Describe {
-        let folder = param_str(p, "folder", "portland-cascadia");
+        let folder = param_str(p, "folder", "");
         let claims = Self::table(folder).map(|t| Self::claims_of(&t)).unwrap_or_default();
-        let mut d = Describe::new("people.aftermath", name, "This module counts harm to people after the shaking stops. It does not model how that harm comes about. It applies a short table of rates, each with a source, to counts the run already has. Two rates add deaths. One applies to people with life-threatening injuries on any day when no hospital is open. The other applies to each day a person spends without electricity; it is derived from the record of Puerto Rico after Hurricane Maria in 2017 and stands for interrupted medical care. The module also counts the people who depend on electrically powered medical devices and have no grid electricity (from the emPOWER data of the US Department of Health and Human Services), the person-days spent without electricity and without water, and the people still without a service after one month, which the Oregon Resilience Plan gives as the point past which a business tends to leave. Each rate is a row in the event folder's aftermath.toml, with its source, how far it can be trusted and whether it is switched on. The claims table lists every row, on or off. The module also keeps the run's single death total, deaths.total, which adds deaths in buildings, deaths at the fuel hub and the deaths counted here.")
+        let leaves_out = Self::table(folder).ok().and_then(|t| t.get("leaves_out").and_then(|v| v.as_str()).map(String::from)).unwrap_or_else(|| "The module applies rates to counts. It does not represent hospital beds, staff or the distance to a hospital, and it does not move people: no one leaves the area or goes to a shelter. A cause of death with no row switched on in the claims table is not counted.".to_string());
+        let mut d = Describe::new("people.aftermath", name, "This module counts harm to people in the days and months after an earthquake. It does not model how that harm comes about. It applies a short table of rates, each with a source, to counts the run already has: the life-threatening injuries from the shaking, the days people spend without electricity or water, and the people who depend on electrically powered medical devices. The table is the event folder's aftermath.toml. Each row gives a rate, its source, how far it can be trusted and whether it is switched on, and the claims table lists every row, on or off. The module also reports the person-days spent without electricity and without water, and the people still without a service on a chosen day. It keeps the run's single death total, deaths.total, which adds the deaths from the shaking, any deaths the lifelines module reports, and the deaths counted here.")
             .priority(3).dt("1 day, on the lifelines' state")
-            .param("folder", folder, "", "the folder of input data for this event, with the table of rates and the map of residents")
-            .param("month_days", param_f64(p, "month_days", 30.0), "d", "the Oregon Resilience Plan's one-month rule: a business without services for this long tends to leave. The module counts the people whose electricity or water is still out on this day")
+            .param("folder", folder, "", "the folder under data/events that holds this scenario's table of rates (aftermath.toml) and its map of residents")
+            .param("month_days", param_f64(p, "month_days", 30.0), "d", "a day on which the module counts the people whose electricity or water is still out, and says so in a sentence. The event folder may give the rule this day stands for")
             .param("summary_day", param_f64(p, "summary_day", 365.0), "d", "the day after the earthquake on which the module sums up in a sentence; set it to the run's last day")
-            .subscribe("quake.toll", "the buildings module's dead and injured, once the shaking ends").subscribe("agents.toll", "the agents' dead, which the total uses when a run has an agents module").subscribe("lifeline.state", "the lifelines module's daily state: hospitals open, the shares of people with electricity and water, deaths at the fuel hub")
+            .subscribe("quake.toll", "the buildings module's dead and injured, once the shaking ends").subscribe("agents.toll", "the agents' dead, which the total uses when a run has an agents module").subscribe("lifeline.state", "the lifelines module's daily state: hospitals open, the shares of people with electricity and water, and any deaths it reports")
             .publish("after.crossing", "{ kind, day, sentence, source, confidence } the sentences shown on the run page: the first deaths after the shaking, the one-month count, the count after a year")
             .report("deaths.total", "people").report("after.deaths", "people").report("after.deaths_low", "people").report("after.deaths_high", "people")
             .report("after.injuries_untreated", "people").report("after.person_days_without_power", "person-days").report("after.person_days_without_water", "person-days")
@@ -93,12 +99,12 @@ impl Aftermath {
             .asset(&format!("events/{folder}"), "the table of rates and the map of residents")
             .view("counter", "dead after the shaking", "after.deaths", "from the rates that are switched on; the charts show the low and high ends of the range")
             .view("counter", "person-days without power", "after.person_days_without_power", "one person without electricity for one day is one person-day")
-            .view("counter", "on medical devices, without power", "after.devices_without_power", "the emPOWER share of the three counties' population, applied to the residents of the modelled area who have no electricity")
-            .view("counter", "past a month without water", "after.people_over_month_without_water", "people still without water on the day the one-month rule is checked")
+            .view("counter", "on medical devices, without power", "after.devices_without_power", "the share of people on such devices given in the event folder, applied to the residents of the modelled area who have no electricity")
+            .view("counter", "past a month without water", "after.people_over_month_without_water", "people still without water on the day set by month_days")
             .view("chart", "dead after the shaking", "after.deaths", "from the rates that are switched on")
             .view("chart", "dead after the shaking, high end of the range", "after.deaths_high", "the uncertainty intervals of the sources, applied as multipliers")
             .view("chart", "person-days without water", "after.person_days_without_water", "")
-            .view("text", "what this module leaves out", "Two possible causes of death, cold homes and waterborne illness, are listed in the claims table but switched off, because no rate with a source was found for either. The Puerto Rico rate comes from a different kind of disaster in a different climate and season, and it covers a whole population. It is taken to include every death that follows the loss of electricity, including the deaths of people on medical devices. For that reason the device count is reported as a number of people exposed, and no second death rate is applied to it. The untreated-injury rule treats every injured person on the first day any hospital is open; the model does not represent hospital beds, staff or the distance to a hospital. The module does not move people: no one leaves the area, goes to a shelter or is counted as cold.", "")
+            .view("text", "what this module leaves out", &leaves_out, "")
             .note("Each row of the claims table is a published rate or a declared guess, applied to a count the run already has. The module does not model how the harm comes about, so a reader who doubts a figure should look at the source of its row.");
         for c in &claims { d = d.report(&format!("after.deaths_{}", c.id.replace('-', "_")), "people"); }
         d = d.table("claims", json!(claims.iter().map(|c| json!({ "id": c.id, "title": c.title, "on": c.on, "rate": c.rate, "low": c.low, "high": c.high, "per": c.per, "source": c.source, "confidence": c.confidence, "status": c.status })).collect::<Vec<_>>()));
@@ -168,9 +174,9 @@ impl Module for Aftermath {
                 }
                 self.deaths_low += lo; self.deaths_high += hi;
                 let after = self.after_total();
-                if after >= 1.0 { let (a, l, h) = (after, self.deaths_low, self.deaths_high); self.say(ctx, "first-after", format!("Day {}: deaths after the shaking reach about {:.0}, with a range of {:.0} to {:.0}. The model adds them for medical care interrupted by the loss of electricity, and for life-threatening injuries on days when no hospital is open.", self.day, a, l, h), "Kishore and others 2018, on Puerto Rico after Hurricane Maria, for the death rate per person per day without electricity. The rate for untreated injuries is a guess. Both are rows of the claims table", "an analogy and a guess"); }
-                if self.day == self.month_days { let (pw, ww) = (self.over_month_power, self.over_month_water); self.say(ctx, "one-month", format!("Day {}: a month after the earthquake, about {} people are still without electricity and {} without water. The Oregon Resilience Plan gives one month without services as the point past which a business tends to leave.", self.day, crate::lifelines::commas(pw), crate::lifelines::commas(ww)), "the Oregon Resilience Plan (2013) for the one-month rule; this run's electricity and water service for the counts", "a published rule applied to this run's restoration schedules"); }
-                if self.day == self.summary_day { let (a, l, h) = (after, self.deaths_low, self.deaths_high); self.say(ctx, "year", format!("Day {}: by this day about {:.0} people have died in the shaking and at the fuel hub, and about {:.0} more in the days since (range {:.0} to {:.0}). Residents have spent {:.1} million person-days without electricity and {:.0} million without water.", self.day, self.agents_dead.unwrap_or(self.quake_deaths) + self.hub_deaths, a, l, h, self.person_days_power / 1e6, self.person_days_water / 1e6), "the rates switched on in the claims table: one from an analogous disaster and one guess", "a sum of an analogy and guesses"); }
+                if after >= 1.0 { let (a, l, h) = (after, self.deaths_low, self.deaths_high); let shorts: Vec<String> = self.claims.iter().filter(|c| c.status == "on" && c.rate > 0.0 && !c.short.is_empty()).map(|c| c.short.clone()).collect(); let why = if shorts.is_empty() { String::new() } else { format!(" The model adds them for {}.", shorts.join(", and for ")) }; self.say(ctx, "first-after", format!("Day {}: deaths after the shaking reach about {:.0}, with a range of {:.0} to {:.0}.{}", self.day, a, l, h, why), "the rates switched on in the claims table, each with its own source", "as each row of the claims table says"); }
+                if self.day == self.month_days { let (pw, ww) = (self.over_month_power, self.over_month_water); self.say(ctx, "one-month", format!("Day {}: about {} people are still without electricity and {} without water.{}{}", self.day, crate::lifelines::commas(pw), crate::lifelines::commas(ww), if self.month_rule.is_empty() { "" } else { " " }, self.month_rule), &format!("{}this run's electricity and water service for the counts", if self.month_source.is_empty() { String::new() } else { format!("{} for the rule; ", self.month_source) }), "a count from this run's restoration schedules"); }
+                if self.day == self.summary_day { let (a, l, h) = (after, self.deaths_low, self.deaths_high); self.say(ctx, "year", format!("Day {}: by this day about {:.0} people have died in the shaking and its immediate effects, and about {:.0} more in the days since (range {:.0} to {:.0}). Residents have spent {:.1} million person-days without electricity and {:.0} million without water.", self.day, self.agents_dead.unwrap_or(self.quake_deaths) + self.hub_deaths, a, l, h, self.person_days_power / 1e6, self.person_days_water / 1e6), "the rates switched on in the claims table", "a sum over the rows of the claims table"); }
                 self.report_all(ctx);
             }
             _ => {}
