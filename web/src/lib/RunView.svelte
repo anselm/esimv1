@@ -18,6 +18,7 @@
   import Timeline from './Timeline.svelte'
   import Audit from './Audit.svelte'
   import ModuleViews from './ModuleViews.svelte'
+  import Layers3D from './Layers3D.svelte'
   import Wiring from './Wiring.svelte'
 
   let { id, base, back = {}, backLabel = 'back' } = $props()
@@ -124,6 +125,9 @@
   {/if}
 
   <!-- the modules, in the manifest's order, each with the views it declared -->
+  {#if run.fields?.terrain_elev_m && run.describe?.modules?.some((m) => m.layer)}
+    <Layers3D {run} {base} {cursor} event={eventOf(crossings)} />
+  {/if}
   {#each run.describe?.modules ?? [] as d (d.name)}
     <ModuleViews describe={d} {run} {base} {cursor} {crossings} context={contextOf(run)} event={eventOf(crossings)} />
   {/each}

@@ -3,6 +3,7 @@
     "kind": "water.source",
     "name": "water.source",
     "summary": "Pours water at a constant rate from a ledger account into a named module, every tick.",
+    "layer": "water",
     "priority": 0,
     "dt": "1h",
     "params": [
@@ -60,6 +61,7 @@
     "kind": "water.bucket",
     "name": "water.bucket",
     "summary": "A linear reservoir: accepts inflow, drains at a rate proportional to its volume to an account or another bucket.",
+    "layer": "water",
     "priority": 0,
     "dt": "6h",
     "params": [
@@ -135,6 +137,7 @@
     "kind": "sun.irradiance",
     "name": "sun.irradiance",
     "summary": "Clear-sky solar irradiance on real terrain every tick: sun position, air mass, slope incidence and horizon shadow; absorbed energy through the energy ledger.",
+    "layer": "sun",
     "priority": 0,
     "dt": "1h",
     "params": [
@@ -261,6 +264,7 @@
     "kind": "heat.slab",
     "name": "heat.slab",
     "summary": "A surface heat slab: absorbs the incident energy field, radiates to a sky temperature, keeps the energy ledger closed at a different rate from the sun.",
+    "layer": "air",
     "priority": 1,
     "dt": "15m",
     "params": [
@@ -344,6 +348,7 @@
     "kind": "water.basin",
     "name": "water.basin",
     "summary": "A gauged basin delineated from the DEM: rain or snow from a station or the weather fields, a soil bucket with sun-driven evapotranspiration, drainage routed down the D8 network to the gauge, a nitrate tracer riding the drainage; scored against the USGS record.",
+    "layer": "water",
     "priority": 2,
     "dt": "1h",
     "params": [
@@ -643,6 +648,7 @@
     "kind": "weather.era5",
     "name": "weather.era5",
     "summary": "Observed weather as fields: ERA5 reanalysis hourly on a point grid, bilinear to the cells; with source = chain, ERA5 up to the archive's edge then one GEFS ensemble member chosen by the seed.",
+    "layer": "air",
     "priority": -1,
     "dt": "1h",
     "params": [
@@ -792,6 +798,7 @@
     "kind": "veg.crop",
     "name": "veg.crop",
     "summary": "A crop canopy per basin cell: planting by date and warmth or by the farms' orders, phenology by growing degree days, light-use-efficiency growth under water stress, senescence, harvest and export, litter; answers grazing and burning; scored against MODIS NDVI.",
+    "layer": "plants",
     "priority": 3,
     "dt": "1h",
     "params": [
@@ -1178,6 +1185,7 @@
     "kind": "fauna.herbivore",
     "name": "fauna.herbivore",
     "summary": "Herbivore cohorts per basin cell: graze the crop by request, Holling type II intake, births, deaths, starvation, migration toward forage, flight and mortality in fire, predation by request; can zoom a window to individuals and back with residues so the count is conserved.",
+    "layer": "animals",
     "priority": 4,
     "dt": "1d",
     "params": [
@@ -1510,6 +1518,7 @@
     "kind": "fauna.predator",
     "name": "fauna.predator",
     "summary": "Predator cohorts per basin cell: Holling type II attack on the herbivore field, kills by request, births, deaths, starvation, movement toward prey.",
+    "layer": "animals",
     "priority": 5,
     "dt": "1d",
     "params": [
@@ -1695,6 +1704,7 @@
     "kind": "hazard.fire",
     "name": "hazard.fire",
     "summary": "Cropland fire as a cellular automaton over the basin: ignition by chance, or forced on a date from the hazards table, spread to neighbours by fuel, dryness, warmth and wind, a refractory period after burning; publishes burning cells for the crop and the animals.",
+    "layer": "across",
     "priority": 6,
     "dt": "1d",
     "params": [
@@ -1900,6 +1910,7 @@
     "kind": "agents.farms",
     "name": "agents.farms",
     "summary": "Farm agents on blocks of basin cells: choose corn or soy each spring by expected margin and rotation, plant when the soil is warm and workable and no rule forbids, pay costs, sell the harvest, keep a money ledger; write their orders as fields the crop and the nitrogen module read.",
+    "layer": "people",
     "priority": 2,
     "dt": "1d",
     "params": [
@@ -2163,6 +2174,7 @@
     "kind": "rules.calendar",
     "name": "rules.calendar",
     "summary": "A dated land-use rule from the calendar table: from its effective date, cells within a buffer of the channel network are closed to crops; the field it writes is obeyed by the farms, the crop and the water module.",
+    "layer": "rules",
     "priority": 1,
     "dt": "1d",
     "params": [
@@ -2289,6 +2301,7 @@
     "kind": "nitrogen.basin",
     "name": "nitrogen.basin",
     "summary": "Soil nitrogen per basin cell: mineral and organic pools, fertiliser at the farms' rate on planting, mineralisation, crop uptake from biomass growth, soybean fixation, denitrification, leaching with drainage into the water module's tracer; harvest export; one ledger closed across two modules.",
+    "layer": "water",
     "priority": 7,
     "dt": "1d",
     "params": [
@@ -2504,6 +2517,7 @@
     "kind": "carbon.emissions",
     "name": "carbon.emissions",
     "summary": "Observed global CO2 emissions (Global Carbon Project via Our World in Data) released into the atmosphere month by month, fossil and land-use change as separate ledger sources. Nothing is modelled; this is the forcing that the record says happened.",
+    "layer": "air",
     "priority": 0,
     "dt": "1 month (calendar)",
     "params": [
@@ -2594,6 +2608,7 @@
     "kind": "carbon.pools",
     "name": "carbon.pools",
     "summary": "Atmospheric CO2 as a mass ledger: emissions arrive as events, a fixed fraction stays for good and three fractions decay to the land-and-ocean sinks on three timescales (the Joos et al. 2013 multi-model impulse response). Reports the airborne concentration in ppm. Linear: sink saturation and climate-carbon feedback are not represented.",
+    "layer": "air",
     "priority": 1,
     "dt": "1 month (calendar)",
     "params": [
@@ -2751,6 +2766,7 @@
     "kind": "energy.twolayer",
     "name": "energy.twolayer",
     "summary": "Global energy balance in two layers (Held et al. 2010; Geoffroy et al. 2013): CO2 forcing 5.35 ln(C/C0) warms a surface layer that radiates in proportion to its anomaly and exchanges heat with a deep ocean. Energy ledger in joules: forcing in from space, response out to space, uptake into the deep. CO2 only; other greenhouse gases and aerosols enter only through extra_forcing_w_m2.",
+    "layer": "air",
     "priority": 2,
     "dt": "1 month (calendar)",
     "params": [
@@ -2908,6 +2924,7 @@
     "kind": "obs.planet",
     "name": "obs.planet",
     "summary": "The planetary scoreboards as series: CO2 from the Law Dome ice-core spline until Mauna Loa begins in 1959, then Mauna Loa annual means; global mean surface temperature from HadCRUT5 and GISTEMP, each shifted to a zero mean over the baseline years so they compare with a model that starts at zero. Reported on 1 July of each year.",
+    "layer": "record",
     "priority": 3,
     "dt": "1 year (1 July)",
     "params": [
@@ -2976,6 +2993,7 @@
     "kind": "carbon.gases",
     "name": "carbon.gases",
     "summary": "Methane and nitrous oxide concentrations from the records (Law Dome ice core until the NOAA global means begin in 1984 and 2001), turned into radiative forcing by the simplified expressions of Myhre et al. 1998 with the CH4-N2O overlap, and published to the energy module. Beyond the record the last value is held: an assumption. No emissions and no chemistry; concentrations are read, not modelled.",
+    "layer": "air",
     "priority": 1,
     "dt": "1 year (1 January)",
     "params": [
@@ -3051,6 +3069,7 @@
     "kind": "sea.thermal",
     "name": "sea.thermal",
     "summary": "Global mean sea level rise from thermal expansion alone: the energy module's stored heat times an expansion efficiency. Ice sheets and glaciers, which are the larger term this century, are not here yet; the number is a floor, and the describe says so.",
+    "layer": "water",
     "priority": 3,
     "dt": "follows energy.state",
     "params": [
@@ -3100,6 +3119,7 @@
     "kind": "forcing.ar6",
     "name": "forcing.ar6",
     "summary": "The IPCC AR6 assessed effective radiative forcing time series (1750 to 2019) for the components this model does not compute: aerosols (radiation and cloud interactions together), ozone, the other well-mixed greenhouse gases, stratospheric water vapour, contrails, black carbon on snow, land use, volcanoes and the sun, each published to the energy module by name. Read, not modelled. Beyond 2019 the stated assumption applies.",
+    "layer": "air",
     "priority": 1,
     "dt": "1 year (1 January)",
     "params": [
@@ -3173,6 +3193,7 @@
     "kind": "people.countries",
     "name": "people.countries",
     "summary": "Countries as a world raster (Natural Earth outlines) and people per country per year (UN World Population Prospects 2024: estimates to 2023, the UN medium projection after, which is the UN's assumption and labelled so), placed on the cells of each country either evenly by area or, in the worldpop distribution, in proportion to WorldPop's 1 km count of 2020. A data layer: nothing is modelled, people are read; WorldPop gives the pattern, the UN the count.",
+    "layer": "people",
     "priority": 0,
     "dt": "1 year (1 January)",
     "params": [
@@ -4008,6 +4029,7 @@
     "kind": "climate.countries",
     "name": "climate.countries",
     "summary": "Each country's mean temperature from its own record (CRU TS 4.07, 1901 to 2022, via the World Bank portal) regressed on the global anomaly (HadCRUT5, re-zeroed to 1850 to 1900): the slope is the country's observed share of global warming, the intercept its level. The run's global anomaly from the energy module times the slope gives the country's annual mean each year; the hottest month moves by the same slope from its 1991 to 2020 mean. Pattern scaling from the record; the stated assumption is that the pattern persists.",
+    "layer": "air",
     "priority": 3,
     "dt": "1 year (1 January), on the latest energy.state",
     "params": [
@@ -4197,6 +4219,7 @@
     "kind": "people.heat",
     "name": "people.heat",
     "summary": "People living in countries whose annual mean temperature has left the human climate niche, and in countries whose hottest month passes a second marker. Counts, not deaths: exposure from a population layer and a temperature layer. A country crosses whole, because the temperature is a country mean; the first year it crosses, a people.crossing event is published for the auditor.",
+    "layer": "people",
     "priority": 4,
     "dt": "follows climate.country_tas",
     "params": [
@@ -4381,6 +4404,7 @@
     "kind": "people.wetbulb",
     "name": "people.wetbulb",
     "summary": "Days per year of dangerous afternoon wet-bulb temperature at each country's capital, and the people in those countries. Ten observed years of daily maximum temperature and mean dew point at the weather station nearest the capital (NOAA GSOD) give a daily afternoon wet-bulb (Stull 2011); each is shifted by the country's warming at constant relative humidity and the days over two published limits counted. Exposure at one city per country, not a death toll; a crossing event the first year a capital passes a limit on more than days_to_cross days.",
+    "layer": "people",
     "priority": 4,
     "dt": "follows climate.country_tas",
     "params": [
@@ -4622,6 +4646,7 @@
     "kind": "tipping.elements",
     "name": "tipping.elements",
     "summary": "The climate tipping elements from data/events/tipping.toml, each with the global warming at which an assessment judged it likely to tip (a central estimate and a range) and its timescale, checked every year against the run's global anomaly. A tipping.crossing event the first year the run passes an element's low end and again its central estimate. The table is the claim; the module only compares. With coupling above zero the file's coupling rows act: once an element has passed its threshold, the elements it is coupled to have their thresholds lowered by the row's fraction times the strength, so one crossing can bring the next within reach in the same run (Wunderling et al. 2021: interacting elements lower each other's critical temperatures, the ice sheets start cascades, the Atlantic circulation carries them).",
+    "layer": "across",
     "priority": 5,
     "dt": "follows energy.state, once a year",
     "params": [
@@ -4950,6 +4975,7 @@
     "kind": "carbon.tipped",
     "name": "carbon.tipped",
     "summary": "The first cascade: a tipping element past its threshold releases the carbon its row of data/events/tipping.toml states, on the row's timescale, into the carbon ledger, where the pools module treats it as it treats fossil carbon, so the warming it adds comes back through the same energy balance. Three elements carry a carbon table from Armstrong McKay et al. 2022: boreal permafrost abrupt thaw (per degree, declining), Amazon partial dieback (30 GtC), boreal permafrost collapse (125 GtC). Each year the mass still owed is released as a first-order approach over the element's timescale. Nothing is modelled here; the amounts, thresholds and timescales are the assessment's and the module only moves the stated mass over the stated time.",
+    "layer": "across",
     "priority": 6,
     "dt": "1 year (1 January), after the tipping check",
     "params": [
@@ -5041,6 +5067,7 @@
     "kind": "story.bottomline",
     "name": "story.bottomline",
     "summary": "The bottom line of a planetary run, told as it happens: the headline numbers at the cursor and one plain sentence for every threshold crossed, each sentence written by the module that knows its source. It computes nothing new and it says, in the same place, what this run does not yet measure.",
+    "layer": "record",
     "priority": 9,
     "dt": "follows the crossing events",
     "params": [],
@@ -5208,6 +5235,7 @@
     "kind": "fire.rothermel",
     "name": "fire.rothermel",
     "summary": "A wildfire on real terrain: Rothermel's surface spread model on a one-arc-second DEM window, a fuel model per cell from WorldCover land cover, dead fuel moisture from the hour's humidity and temperature, wind speed and direction from the ERA5 archive at the window's centre; fire moves cell to cell down an ellipse headed along the wind-plus-slope vector. No suppression, no spotting, no crown fire; built-up land burns at a guessed rate the manifest can set to zero.",
+    "layer": "across",
     "priority": 6,
     "dt": "1h",
     "params": [
@@ -112113,6 +112141,7 @@
     "kind": "obs.perimeters",
     "name": "obs.perimeters",
     "summary": "The mapped perimeters of a wildfire incident from NIFC (the daily operational perimeters by IRWIN id and the WFIGS perimeter of record), each rasterised on the run's grid at the time it was current and scored against the fire module's burned area: acres, overlap (Sørensen), missed and overrun acres.",
+    "layer": "record",
     "priority": 9,
     "dt": "at each mapped perimeter's time",
     "params": [
@@ -112265,6 +112294,7 @@
     "kind": "obs.dins",
     "name": "obs.dins",
     "summary": "CAL FIRE's damage inspections for the incident: every structure as a point with the damage the inspectors recorded, binned to the run's cells. Each hour the fire's burned cells are read and the structures inside them counted against the record: the destroyed the fire reached (recall), the reached that were in fact destroyed (precision), and the undamaged it overran.",
+    "layer": "record",
     "priority": 9,
     "dt": "1h",
     "params": [
@@ -112435,6 +112465,7 @@
     "kind": "obs.record",
     "name": "obs.record",
     "summary": "The record of what people did during the event, placed and timed: GeoJSON points and lines copied into the repository's event folder (for the Palisades fire, NIFC's event points and lines: dozer pushes, drop points, helispots, division breaks, completed dozer and hand line), kept to the run's window and published into the run at the time each was made, at the cell it stands or starts in, so the views can show them against the model. Nothing in the model reacts to them yet.",
+    "layer": "record",
     "priority": 9,
     "dt": "at each feature's time",
     "params": [
@@ -112537,6 +112568,7 @@
     "kind": "fire.suppression",
     "name": "fire.suppression",
     "summary": "What people did to the fire, as a module of its own: each completed line in the record (obs.record's record.event of kind line) becomes a ground.break, the cells under it to a stated width, of a stated strength, from the line's recorded time on. Any fire engine that subscribes to ground.break refuses heat and embers there; the engine never reads the record itself, so the same engine runs another fire with another record, or none. The record's times are when the GIS feature was made, which lags the work; obs.record's time_shift_h is the declared way to move them. Resources as agents with a ledger are the next form.",
+    "layer": "across",
     "priority": 9,
     "dt": "at each line's recorded time",
     "params": [
@@ -112618,6 +112650,7 @@
     "kind": "obs.hotspots",
     "name": "obs.hotspots",
     "summary": "Satellite hotspots as the record of a fire's progress, for fires nobody mapped hour by hour: detections from a CSV (CWFIS's Fire M3 archive; NASA FIRMS has the same shape) inside the window and the run's days, each marking the ground within its sensor's half-pixel as seen burning by then; at a fixed cadence the fire module's burned cells are scored against the seen area (acres, Sørensen overlap, missed and overrun). A hotspot is a pixel that was hot when a satellite passed, not a perimeter: cloud, smoke and the gaps between passes make the seen area a floor, and a pixel marks ground it only partly covers.",
+    "layer": "record",
     "priority": 9,
     "dt": "every 6h",
     "params": [
@@ -112788,6 +112821,7 @@
     "kind": "fire.cells",
     "name": "fire.cells",
     "summary": "Our own fire engine: a heat budget on one-arc-second cells that know their elevation and slope, land cover, the share under buildings and their height, the major roads, and the hour's 3 km wind, gust, temperature and humidity. A burning cell radiates heat into the cells around it, further downwind and upslope; a cell ignites when the heat it has received outweighs what its fuel and moisture absorb, then burns with the intensity and for the time its contents set; strong winds loft embers that may start spot fires; roads and water carry nothing; nobody fights it. Every rate and threshold is a guess, declared so, to be fitted against the record.",
+    "layer": "across",
     "priority": 6,
     "dt": "1h",
     "params": [
@@ -219885,6 +219919,7 @@
     "kind": "events.shock",
     "name": "events.shock",
     "summary": "Wild cards: speculative events (eruptions, pandemics, wars, storms, crashes) drawn by a seeded coin each year from a list with rough annual chances, or one named event in a chosen year, applied through three levers the planet modules expose: a forcing pulse for some years, a scaling of emissions for some years, a fraction of the world's people. A placeholder by design: the list's chances are recalled orders of magnitude and say so, events may repeat, and nothing here is a forecast of anything. Off unless a manifest or variant turns it on.",
+    "layer": "across",
     "priority": 1,
     "dt": "1 year (1 January)",
     "params": [
@@ -220233,6 +220268,7 @@
     "kind": "score.regions",
     "name": "score.regions",
     "summary": "A score per country in nine bands (living, means, fairness, voice, air, forest, protected, water, footprint), each a World Bank indicator turned into a 0 to 1 percentile rank among the countries that report it, so a band says where a country stands among its peers and never what a good number is; the total is the mean of the bands it has. The starting state is read from the record. From the run's first year the bands move by declared placeholder rules: a country whose people pass the heat thresholds loses part of its living and water bands, and a wild card knocks a band for some years by its kind. Published as a table for the globe view: the glyph at each country's centroid is the bands stacked, the total its height.",
+    "layer": "record",
     "priority": 8,
     "dt": "1 year (1 January); the table published every every_years, and every every_years_after from from_year",
     "params": [
@@ -220453,6 +220489,7 @@
     "kind": "policy.capacity",
     "name": "policy.capacity",
     "summary": "Derailment: the world's capacity to cut emissions, 0 to 1, eroded by what the run's own warming does to people and recovering slowly, after Dyke (The Conversation, 2026-11-05): the consequences of climate change erode the capacity to address its causes, through debt, conflict and backlash, and collective action is easier to destroy than to build. Each January the capacity moves toward a target set by the share of people under heat stress (from the regions module), amplified where the people-weighted fairness band is low; it falls fast and recovers slowly, the recovery scaled by the voice band; a wild card knocks it by its kind for some years; and where a country's people are under stress a conflict may be drawn, which takes a fraction of that country's people and knocks the capacity by the country's share of the world. With mode = on the capacity goes to the emissions module, which slows every planned cut by it: a plan to zero by 2050 becomes zero by later or never. Beside it, the options: the carbon budget left to a stated warming level under a stated TCRE and the cut rate now needed to hold it, from the run's own series. Every number here is a placeholder and says so; the shape is the article's and the inputs are the run's.",
+    "layer": "rules",
     "priority": 9,
     "dt": "1 year (1 January), after the regions module",
     "params": [
@@ -220680,6 +220717,7 @@
     "kind": "weather.heatwaves",
     "name": "weather.heatwaves",
     "summary": "A weather generator for the planet: each year one observed year of daily maximum temperature per populated one-degree cell (MERRA-2 through NASA POWER, a baseline decade) is drawn by the run's seed and replayed, shifted by the cell's warming since that decade, and heatwaves are counted as Aglas-Leitner et al. 2026 count them: three or more days over the calendar-day 90th percentile, severity in units of the threshold's excess over the climatology, cumulative heat, duration, and the share of a country's people under extreme heat on the peak day. A country's heatwave is judged on its people-weighted mean. Counts and events, not deaths.",
+    "layer": "air",
     "priority": 5,
     "dt": "follows climate.country_tas",
     "params": [
@@ -220972,6 +221010,7 @@
     "kind": "obs.places",
     "name": "obs.places",
     "summary": "Named places in the window, the stakes of a scenario: each a point the manifest names with a note on what it is and where its position came from. Every place is published at the start so the views can draw and label it; each hour the module reads the fire module's burned cells, reports how far the nearest burned cell is from each place, and the hour a place's own cell burns, or a burned cell lies within reach_m of it, publishes that it was reached, once, with a sentence. Nothing in the model reacts to a place.",
+    "layer": "record",
     "priority": 9,
     "dt": "every hour",
     "params": [
@@ -221075,6 +221114,7 @@
     "kind": "coast.oneline",
     "name": "coast.oneline",
     "summary": "A one-line shoreline model for a bay behind a headland and a breakwater: today's coast as a line of transects; each hour the reanalysis cell's deep-water waves carried to each transect through the structures' shadows (diffracted, lower and from the tip inside a shadow), shoaled and refracted to breaking, and turned into longshore transport by the CERC formula; the transport's divergence moves the line, the line's own angle feeds back, the bluff retreats and yields sand where the beach is gone, a declared fraction of the sand moving past the breakwater's root is lost through its voids into the harbor, sea level rise moves the line by Bruun's rule, and a dredge every so many years puts harbor sand back on the first stretch of beach. Not a fluid dynamics model: no currents, no cross-shore profile, no setup, no reflection. Every coefficient is a published value recalled or a guess, declared so; the record it is read against is the Corps' and Griggs's numbers in the table below.",
+    "layer": "water",
     "priority": 5,
     "dt": "1d (the waves hour by hour within it)",
     "params": [
@@ -230388,6 +230428,7 @@
     "kind": "quake.ground",
     "name": "quake.ground",
     "summary": "This module supplies the ground motion for a scenario earthquake. It does not simulate the fault or the shaking. It reads published maps from an event folder: the peak acceleration and velocity of the ground at the surface, and the probability and extent of liquefaction and landslides, for saturated or dry soil. A file in the folder, ground.toml, names the maps and their source. At the moment set for the earthquake, the module makes the maps available to the other modules and announces the rupture. A scenario earthquake has not happened, so there are no measurements to compare the maps with.",
+    "layer": "across",
     "priority": 0,
     "dt": "once, at the rupture",
     "params": [
@@ -230579,6 +230620,7 @@
     "kind": "quake.buildings",
     "name": "quake.buildings",
     "summary": "This module estimates building damage, deaths, injuries and displaced people in each cell of the map, from the ground module's shaking. For each cell it uses a fragility curve, which gives the probability that a building reaches each of four damage states at a given peak ground acceleration. One set of curves stands for a generic mix of building types. The module adds the buildings lost where the ground liquefies or slides, then applies a casualty rate to each damage state. This is the approach of Hazus, the loss-estimation software of the Federal Emergency Management Agency. The buildings, the residents and the occupants by time of day are maps in the event folder. The default values of the curves and of the casualty rates are recalled from memory and have not been checked against the Hazus manual. A scenario may adjust the scales below to fit a published loss study, and a run that carries an obs.losses module reports how close the result is to that study. In this model only shaking makes a building collapse, and nearly all deaths are in collapsed buildings. The toll therefore changes less between day and night, and between saturated and dry soil, than a Hazus run's does.",
+    "layer": "built",
     "priority": 1,
     "dt": "once, on the rupture",
     "params": [
@@ -230954,6 +230996,7 @@
     "kind": "portland.lifelines",
     "name": "portland.lifelines",
     "summary": "This module is specific to Portland. It follows the city after the earthquake one day at a time. It tracks the twelve bridges over the Willamette River, thirteen hospitals and their backup generators, electricity, water, and the fuel stored at the Critical Energy Infrastructure Hub, the strip of fuel terminals in northwest Portland. It keeps an account of the hub's fuel in gallons, which must balance every day. The module has two modes. In the computed mode four other modules work out the fuel spill (fuel.tanks), the state of each bridge (roads.bridges), the open roads (roads.routes) and the electricity service (power.structures), and this module uses their results. In the ranges mode it draws those outcomes at random from published ranges: Multnomah County's statement on its bridges, the Oregon Resilience Plan's restoration times and the county's 2022 study of the hub's tanks. Water service follows the Resilience Plan's range in both modes. Three inputs are guesses in both modes: how much generator fuel a hospital holds, how much fuel the emergency response uses each day, and the day fuel deliveries resume. This run uses the ranges mode.",
+    "layer": "flows",
     "priority": 2,
     "dt": "1 day after the rupture",
     "params": [
@@ -231485,6 +231528,7 @@
     "kind": "people.aftermath",
     "name": "people.aftermath",
     "summary": "This module counts harm to people in the days and months after an earthquake. It does not model how that harm comes about. It applies a short table of rates, each with a source, to counts the run already has: the life-threatening injuries from the shaking, the days people spend without electricity or water, and the people who depend on electrically powered medical devices. The table is the event folder's aftermath.toml. Each row gives a rate, its source, how far it can be trusted and whether it is switched on, and the claims table lists every row, on or off. The module also reports the person-days spent without electricity and without water, and the people still without a service on a chosen day. It keeps the run's single death total, deaths.total, which adds the deaths from the shaking, any deaths the lifelines module reports, and the deaths counted here.",
+    "layer": "people",
     "priority": 3,
     "dt": "1 day, on the lifelines' state",
     "params": [
@@ -231663,6 +231707,7 @@
     "kind": "fuel.tanks",
     "name": "fuel.tanks",
     "summary": "This module damages storage tanks one at a time. Each tank sits at its own coordinates. At the earthquake it reads the ground motion there and is assigned a damage state by a random draw against a fragility curve, which gives the probability of each state at a given strength of shaking and of ground failure. A tank at or beyond the curve's failing state releases a share of its contents. The share depends on the tank's age: a tank built before the design year in the folder's rule, or with no recorded year, draws its share from the range in its own row of the table, and a newer tank releases at most the rule's smaller maximum. The release goes toward water where the tank's row says so. The tanks are the event folder's tanks.csv, and the curve and the age rule are its fragility.toml. The module does not follow the fuel after it leaves the tank, and it has no fire.",
+    "layer": "built",
     "priority": 1,
     "dt": "once, at the rupture",
     "params": [
@@ -231827,6 +231872,7 @@
     "kind": "roads.bridges",
     "name": "roads.bridges",
     "summary": "This module damages bridges one at a time. Each bridge sits at its own coordinates and carries a seismic class. At the earthquake it reads the ground motion there and is assigned a damage state by a random draw against the fragility curve of its class. A bridge at or beyond the curve's closing state is closed, and it reopens after the repair time the curve gives for its damage state. Each change is published, so a module that routes traffic or draws a map can follow it. The bridges are the event folder's bridges.toml, and the curves and repair times are its fragility.toml, which says where each came from.",
+    "layer": "built",
     "priority": 1,
     "dt": "1 day after the rupture",
     "params": [
@@ -231935,6 +231981,7 @@
     "kind": "power.structures",
     "name": "power.structures",
     "summary": "This module computes electricity service from the transmission structures that are standing. Each structure, a tower or a pole, is a row in a table in the event folder, with a location and a probability of failure for saturated and for dry soil. At the earthquake each structure fails or stands by a random draw against its probability. The modelled area is divided into coarse cells, and a cell has electricity when the structures nearest to it are all standing. Afterwards crews repair a fixed number of structures a day, starting with those that serve the most people. Each day the module writes a map of where electricity is on, which other modules read at the places they care about, and reports the share of residents served. The structures are not connected into a network: the module has no power lines, substations, generation or neighbourhood distribution, so none of those can fail in it and it restores service sooner than a real grid would.",
+    "layer": "flows",
     "priority": 1,
     "dt": "1 day after the rupture",
     "params": [
@@ -232060,6 +232107,7 @@
     "kind": "roads.routes",
     "name": "roads.routes",
     "summary": "This module holds a road network as segments joined in a graph and works out what can be reached over it. Each segment has a class of expected ground deformation. At the earthquake a segment with a class above zero closes for a number of days drawn at random from the range for its class, and it reopens when those days have passed. A bridge joins one segment on each bank; it is open or closed as the bridges module reports. Each day the module finds which named places can be reached from one origin over open segments and open bridges, and reports the share of the network's length that is open. The graph and the named places are the event folder's routes.toml, and the closure ranges are its fragility.toml. Debris from damaged buildings does not block a segment, and the module has no traffic, no detours off the listed segments and no vehicles.",
+    "layer": "built",
     "priority": 1,
     "dt": "1 day after the rupture",
     "params": [
@@ -232165,6 +232213,7 @@
     "kind": "people.agents",
     "name": "people.agents",
     "summary": "This module represents the residents as agents, each standing for a fixed number of people set by the scale parameter. It creates them at the start of the run from the event folder's maps of where people are. Each agent gets a home cell, drawn in proportion to residents, and a work cell, drawn in proportion to daytime occupants. A share of the agents depend on electrically powered medical devices; the share comes from counts in the event folder's aftermath.toml. At the earthquake each agent is at work by day or at home by night. It is placed in a collapsed or a standing building according to the share of buildings that collapsed in that cell, and it dies or is displaced at the rates the buildings module gives for the cell. The agents' death count should agree with the buildings module's count by cell. In the daytime runs of the Portland scenario made on 12 November 2026 it is lower, for a reason not yet found. On each day afterwards an agent has electricity or not according to its home cell, and water according to the schedule for the whole area. The agents make no decisions yet. They are here so that a later version can let them leave, seek shelter or travel, and the module reports how fast it runs so that the cost of that is known.",
+    "layer": "people",
     "priority": 6,
     "dt": "1 day after the rupture",
     "params": [
@@ -232417,6 +232466,7 @@
     "kind": "obs.losses",
     "name": "obs.losses",
     "summary": "This module holds a run's building damage and casualties against a published loss study. It computes nothing about the earthquake. Once the buildings module has finished, it sums that module's results for each cell over the small areas the study reports by and over one named group of larger areas, and reports how the two sets of numbers compare: a ratio for the group's deaths, displaced people, injuries and damaged buildings, and a correlation across the small areas. A file in the event folder, losses.toml, names the study, its tables and its columns. A ratio near 1 does not make the run an independent estimate if the buildings module's parameters were fitted to the same study, and the buildings module says where they were.",
+    "layer": "record",
     "priority": 7,
     "dt": "once, after the buildings module's reckoning",
     "params": [

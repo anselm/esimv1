@@ -13,6 +13,12 @@ pub struct Describe {
     pub kind: String,
     pub name: String,
     pub summary: String,
+    /// The layer of the world this kind belongs to, for grouping and ordering on a page (sun,
+    /// ground, water, air, built, flows, rules, plants, animals, people; across for a disturbance
+    /// that cuts through them; record for a module that scores against one). A label for readers;
+    /// the kernel does not read it.
+    #[serde(default, skip_serializing_if = "String::is_empty")]
+    pub layer: String,
     /// Ordering among events at the same instant; lower runs first.
     pub priority: i16,
     /// The module's own tick, as written in a manifest ("1h", "1d").

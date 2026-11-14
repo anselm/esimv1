@@ -122,7 +122,48 @@ pub fn build(kind: &str, name: &str, params: &toml::Value) -> Result<Box<dyn Mod
 
 /// Describe a kind under a name and parameters without building it. Nothing is fetched.
 pub fn describe(kind: &str, name: &str, params: &toml::Value) -> Result<Describe, String> {
-    Ok((find(kind)?.describe)(name, params))
+    let mut d = (find(kind)?.describe)(name, params);
+    if d.layer.is_empty() { d.layer = layer_of(kind).to_string(); }
+    Ok(d)
+}
+
+/// The layers of the world as a person would list them, in reading order: what is not alive
+/// (natural things, then physical artifacts, then symbolic ones), then what is alive, people
+/// last because they read everything and write back to all of it. `across` is a disturbance
+/// that cuts through the layers; `record` is a module that scores a run against one. The order
+/// is who reads whom, not slow to fast (Anselm, 2026-11-13: built before life so the abiotic
+/// realm is clumped; law and money are artifacts). A tag for pages; the kernel is flat.
+pub const LAYERS: [(&str, &str); 12] = [
+    ("sun", "Sun"), ("ground", "Ground"), ("water", "Water"), ("air", "Air and weather"),
+    ("built", "Built structures"), ("flows", "Flows through the built"), ("rules", "Law and money"),
+    ("plants", "Plants"), ("animals", "Animals"), ("people", "People"),
+    ("across", "Disturbances"), ("record", "The record"),
+];
+
+/// The layer a kind belongs to when its describe does not say: by the kind's family, with the
+/// exceptions named first.
+pub fn layer_of(kind: &str) -> &'static str {
+    match kind {
+        "quake.ground" | "hazard.fire" | "carbon.tipped" => "across",
+        "quake.buildings" => "built",
+        "portland.lifelines" => "flows",
+        "agents.farms" => "people",
+        "nitrogen.basin" => "water",
+        _ => match kind.split('.').next().unwrap_or("") {
+            "sun" => "sun",
+            "water" | "sea" | "coast" => "water",
+            "weather" | "carbon" | "energy" | "forcing" | "heat" | "climate" => "air",
+            "fuel" | "roads" => "built",
+            "power" => "flows",
+            "rules" | "policy" => "rules",
+            "veg" => "plants",
+            "fauna" => "animals",
+            "people" => "people",
+            "fire" | "events" | "tipping" => "across",
+            "obs" | "score" | "story" => "record",
+            _ => "",
+        },
+    }
 }
 
 pub fn kinds() -> Vec<&'static str> { KINDS.iter().map(|k| k.kind).collect() }

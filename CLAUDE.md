@@ -386,6 +386,14 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   day 119). Variants set `tanks.storage_cut`, `tanks.retrofit`, `power.soils`, `routes.soils`. The human layer order agreed in that conversation
   (abiotic clumped, built before life, law and money as abiotic artifacts, disturbances across) is in the devlog and
   not yet in `docs/system/layers.md`. Layers are a tag for the page, not kernel structure.
+- The 3D layers view (2026-11-14, Anselm: "a map in 3d using real elevation data for the region with an ability to
+  turn modules grouped by layer off and on", style reference github.com/anselm/bay-area-twin): `Describe.layer` is set
+  for every kind by `layer_of` in `crates/modules/src/lib.rs` (`LAYERS` there, `web/src/lib/layers.js` for the
+  colours); `web/src/lib/Layers3D.svelte` is mounted by `RunView` above the modules when a run has `terrain_elev_m`
+  and layered modules: contour relief from the elevation frame, each module's frames as additive points in its
+  layer's colour (harm runs to red; a `_up` service frame is drawn where it is missing), marks from `component.state`
+  and `lifeline.*` events as pins with names, a "layers apart" slider that lifts the layers, empty layers listed.
+  Runs made before that day have no layers in describe.json and do not show it.
 - Portland, the page and the standing faults (2026-11-12 night, `devlog/20261112-portland-readme-rewritten.md` and
   `devlog/20261112-portland-stale-wording.md`; Anselm: "I want to try rewrite the portland cascadia fault scenario
   readme again", then "update stale portland wording overall everywhere"): the project README is a new text in the

@@ -175,3 +175,41 @@ reports of 2028, 2031 and 2036, the 2012 DOGAMI study as the ordinance quotes it
 McCullough Research report; and a sentence beside the bridges result that the city plans on the
 same assumption the model's result resembles. The reading list entry says what was taken and
 notes that the article's "holds 90 percent" differs from the county's "passes through".
+
+## The place in three dimensions, by layer (14 November)
+
+Anselm: "I would like to have a map in 3d using real elevation data for the region with an
+ability to turn modules grouped by layer off and on. I had generated a visualization style
+reference here that may be useful - we worked hard at making this communicate visually:
+https://github.com/anselm/bay-area-twin".
+
+The reference is Bay Layers: a dark canvas, luminous wire-like relief, four layers on the same
+coordinates that separate vertically to be seen apart and come together to show they are one
+place, teal relief, amber built world, small tracked labels, constant slow motion.
+
+What was built:
+
+- **The layer tag.** `Describe` has a `layer`; `esim_modules::describe` fills it from `layer_of`
+  by the kind's family, so all 46 kinds have one without touching their describes. `LAYERS` in
+  `crates/modules/src/lib.rs` holds the order agreed on the 13th. `docs/system/layers.md` is
+  rewritten to that order.
+- **`web/src/lib/Layers3D.svelte`**, on the run page above the modules, for any run with an
+  elevation frame and layered modules. The relief is the run's own `terrain_elev_m` as contour
+  lines every 20 m over a dark surface, vertical times four. Each module's frames are points of
+  light in its layer's colour at the cursor's time; a frame of harm runs from the layer's colour
+  to red. The things modules place (tanks, bridges, road segments, hospitals, the hub) are marks
+  from the log, red when down, with pins and names for bridges, hospitals and the hub. A panel
+  lists every layer in order with its modules; a layer with no module is listed, greyed, as
+  empty. A slider lifts the layers apart. It turns slowly unless the reader prefers less motion.
+- Nothing is a map tile or a picture: every point is from the run folder.
+
+Looked at in a headless browser on the base run, together and apart. Three faults found by
+looking and fixed: the canvas was drawing at its default 300 by 150 pixels because the resize
+ran before the scene existed; the electricity frame lit the whole city as a dot grid, and is now
+drawn where service is missing; names piled up downtown and now give way to each other, failures
+first.
+
+Not done: the bridges are pins, not spans; roads are points at segment centres because the run
+does not carry their geometry; there is no water surface; the earthquake itself is not animated;
+frames belong to their module's layer, so the people in buildings sit in the built layer. The
+other projects' runs need rerunning before they show the view.

@@ -2,22 +2,38 @@
 <!-- section: The machine -->
 # Layers
 
-Modules sort themselves into layers by what they read and what they own, from the slow
-physical bottom to the fast human top. The layers are a way of thinking about the stack,
-not a structure in the code; the kernel sees only modules, topics and fields.
+Modules sort into layers the way a person would list what a place is made of. The order is who
+reads whom, not slow to fast. What is not alive comes first: natural things, then physical
+artifacts, then symbolic ones. What is alive follows, with people last, because people read
+everything below them and write back to all of it, the rules included. A building reads the
+ground and the weather and almost nothing living, while living things read the built world all
+the time (a road splits a habitat, a fence stops a deer), so the built comes before life. Law and
+money are artifacts too: a zoning line, a storage cap and a price are designations laid on the
+map, and an animal never meets the law, only the fence the law put there.
 
-| layer | what it integrates | kinds today | records |
-|---|---|---|---|
-| 0 solar | irradiance on terrain | `sun.irradiance` | elevation |
-| 1 composition | what is in the air | `carbon.emissions`, `carbon.pools`, `carbon.gases` | emissions, ice cores, Mauna Loa, NOAA gases |
-| 2 energy | where the heat goes | `energy.twolayer`, `heat.slab` | HadCRUT5, GISTEMP |
-| 3 abiotic systems | water, weather, ocean, ice, sea, the ground | `water.basin`, `weather.era5`, `sea.thermal`, `coast.oneline`, `quake.ground` | gauges, stations, ERA5, GEFS, ERA5 waves, DOGAMI's scenario layers |
-| 4 biogeochemistry | the cycles and their feedbacks | `nitrogen.basin` | nitrate at the gauge |
-| 5 producers | plants | `veg.crop` | MODIS NDVI |
-| 6 consumers | animals and their food webs | `fauna.herbivore`, `fauna.predator`, `hazard.fire` | none yet |
-| 6b the built | buildings, lifelines, the things that break | `quake.buildings` (scored by `obs.losses`), `fuel.tanks`, `roads.bridges`, `roads.routes`, `power.structures`, `portland.lifelines`, `fire.cells`, `fire.rothermel` | DOGAMI's inventory and loss run, the county's tank table, the bridge inventory, the fire perimeters |
-| 7 people | population, land use, rules, exposure, the aftermath | `agents.farms`, `rules.calendar`, `people.countries`, `climate.countries`, `people.heat`, `people.wetbulb`, `people.aftermath`, `people.agents` | UN population, WorldPop 1 km, CRU country temperatures, MERRA-2 daily heat and humidity (NASA POWER), NOAA GSOD stations |
-| across | thresholds and their sources, and what crossing them moves | `tipping.elements`, `carbon.tipped` | the assessment table, checked row by row against the paper |
+The layers are a label on each module kind, used to group and order modules on a page and to
+show which layers a run leaves empty. They are not a structure in the code; the kernel sees only
+modules, topics and fields. Each kind's describe carries its layer (`layer_of` in
+`crates/modules/src/lib.rs`), and a run page with an elevation frame shows the modules by layer
+in three dimensions, each layer switched on and off.
+
+| layer | what it holds | kinds today |
+|---|---|---|
+| sun | irradiance on terrain | `sun.irradiance` |
+| ground | elevation, soil, geology | none; the relief is read from a frame |
+| water | water on and in the ground, the sea, the cycles it carries | `water.basin`, `water.bucket`, `water.source`, `nitrogen.basin`, `sea.thermal`, `coast.oneline` |
+| air and weather | composition, energy, weather | `carbon.emissions`, `carbon.pools`, `carbon.gases`, `forcing.ar6`, `energy.twolayer`, `heat.slab`, `weather.era5`, `weather.heatwaves`, `climate.countries` |
+| built structures | buildings, tanks, bridges, roads | `quake.buildings`, `fuel.tanks`, `roads.bridges`, `roads.routes` |
+| flows through the built | electricity, fuel, piped water, vehicles | `power.structures`, `portland.lifelines` |
+| law and money | designations and ledgers | `rules.calendar`, `policy.capacity` |
+| plants | producers | `veg.crop` |
+| animals | consumers and their food webs | `fauna.herbivore`, `fauna.predator` |
+| people | population, exposure, the aftermath | `people.countries`, `people.heat`, `people.wetbulb`, `people.agents`, `people.aftermath`, `agents.farms` |
+| disturbances (across) | events that cut through the layers and write to several | `quake.ground`, `fire.cells`, `fire.rothermel`, `fire.suppression`, `hazard.fire`, `events.shock`, `tipping.elements`, `carbon.tipped` |
+| the record | modules that score a run against what was observed or published | `obs.*`, `score.regions`, `story.bottomline` |
+
+A disturbance is not a layer. An earthquake or a fire publishes what happened, and every subject
+module that cares subscribes; it never passes through the layers in order.
 
 ## How the layers couple
 
