@@ -115,6 +115,19 @@ modules come first unless the including manifest restates them; a module that ex
 summarise (the story) is listed first so it is read first. See the views table in
 [Modules](/docs/system/modules).
 
+Order also breaks ties when the run plays. Modules are created in manifest order, and when two
+of them listen for the same event at the same priority, the one listed first hears it first. A
+module that must act before another at the same instant should say so with its priority, not
+with its place in the file.
+
+In a JavaScript manifest the order is the order the exports appear in the source text. The
+language itself hands a module's exports back alphabetically, so the reader finds the order by
+scanning the text for `export`. Two cases escape the scan. Names that arrive through
+`export * from "./other.js"` are placed after everything else, alphabetically. And the word
+`export` followed by a declaration inside a comment or a string is taken as an export, so a
+commented-out `export const tanks` above the real one moves `tanks` up. To state the order
+outright, export one list: `export default [run, place, tanks, bridges]`.
+
 ## Checking
 
 `esim check manifest.toml` derives the wiring from the modules' describes and reports
