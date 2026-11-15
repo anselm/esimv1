@@ -7,6 +7,7 @@
   let writable = $state(false)
   hello().then((h) => { writable = !h.readonly })
   import { render, titleOf } from './markdown.js'
+  import { stampOf, handleOf, day } from './stamp.js'
 
   let { path } = $props()
   const isNew = $derived(path === 'new')
@@ -19,7 +20,7 @@
   let busy = $state(false)
 
   async function load() {
-    if (isNew) { md = ''; draft = '# Title\n\nWhat this page is for, in a sentence.\n'; editing = true; return }
+    if (isNew) { md = ''; const today = new Date().toISOString().slice(0, 10); draft = `<!-- author: your name -->\n<!-- written: ${today} -->\n<!-- revised: ${today} -->\n<!-- revision: 1 -->\n# Title\n\nWhat this page is for, in a sentence.\n`; editing = true; return }
     try {
       const r = await fetch(`/docs/${path}.md`, { cache: 'no-store' })
       if (!r.ok) throw new Error(`no page at docs/${path}.md`)
@@ -38,6 +39,7 @@
   }
   $effect(() => { load() })
   const html = $derived(md === null ? '' : render(md))
+  const stamp = $derived(md ? stampOf(md) : null)
   const pathOk = $derived(/^[a-z0-9][a-z0-9_-]*\/[a-z0-9][a-z0-9_-]*$/.test(newPath.trim()))
 </script>
 
@@ -74,7 +76,16 @@
   </section>
 {:else}
   <article class="doc max-w-3xl">
-    <div class="mono mb-4 text-xs muted">docs/{path}.md</div>
+    <div class="mono mb-4 text-xs muted">
+      <div>docs/{path}.md</div>
+      {#if stamp}
+        {#snippet who(name)}{#if handleOf(name)}<a use:link={{ area: handleOf(name) }} class="hover:text-brand">@{handleOf(name)}</a>{:else}{name}{/if}{/snippet}
+        <div class="mt-1" data-stamp>
+          {#if stamp.author}written by {@render who(stamp.author)}{/if}{#if stamp.written}{' '}on {day(stamp.written)}{/if}{#if stamp.orderedBy}, ordered by {@render who(stamp.orderedBy)}{/if}{#if stamp.revisedBy}, revised by {@render who(stamp.revisedBy)}{/if}
+          {#if stamp.revision} · revision {stamp.revision}{/if}{#if stamp.revised && stamp.revised !== stamp.written}, last changed {day(stamp.revised)}{/if}
+        </div>
+      {/if}
+    </div>
     {@html html}
   </article>
 {/if}

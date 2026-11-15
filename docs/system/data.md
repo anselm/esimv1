@@ -1,5 +1,10 @@
 <!-- order: 9 -->
 <!-- section: Projects and the record -->
+<!-- author: Claude -->
+<!-- ordered-by: Anselm -->
+<!-- written: 2026-11-01 -->
+<!-- revised: 2026-11-04 -->
+<!-- revision: 1 -->
 # Data
 
 ## The registry

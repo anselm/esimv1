@@ -1,5 +1,10 @@
 <!-- order: 1 -->
 <!-- section: Start here -->
+<!-- author: Claude -->
+<!-- ordered-by: Anselm -->
+<!-- written: 2026-11-01 -->
+<!-- revised: 2026-11-07 -->
+<!-- revision: 1 -->
 # What this is
 
 A whole-system simulator: many small pieces of science on one clock, each reading real

@@ -1,5 +1,11 @@
 <!-- order: 1 -->
 <!-- section: Where this is going -->
+<!-- author: Claude -->
+<!-- ordered-by: Anselm -->
+<!-- revised-by: Anselm -->
+<!-- written: 2026-11-14 -->
+<!-- revised: 2026-11-14 -->
+<!-- revision: 1 -->
 # Goals and milestones
 
 ## The goal

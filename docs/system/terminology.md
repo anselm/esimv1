@@ -1,5 +1,10 @@
 <!-- order: 2 -->
 <!-- section: Start here -->
+<!-- author: Claude -->
+<!-- ordered-by: Anselm -->
+<!-- written: 2026-11-01 -->
+<!-- revised: 2026-11-04 -->
+<!-- revision: 1 -->
 # Terminology
 
 The words, fixed. Where two words have been used for one thing, the first is the one to

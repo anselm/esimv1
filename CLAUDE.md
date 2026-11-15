@@ -441,6 +441,13 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   `manifests/f3-palisades-cells.js` and so on, wherever an older entry here says `.toml`. Their run ids changed (the
   manifest hash did) and every run was redone to the same log digest. The older Boone and fire modules still default
   their window to their first place when given none; only the earthquake family refuses.
+- Stamps on docs pages (2026-11-15, `devlog/20261115-stamps-on-docs.md`; Anselm: "each page should indicate who wrote
+  it (indicate claude as well) and if revised or ordered by anybody else ... and also the date and revision"): every
+  `docs/**/*.md` starts with comment lines `author`, `ordered-by`, `revised-by` (only if someone else changed its
+  words), `written`, `revised`, `revision`. When you change a docs page, set `revised` to the day in the same change;
+  raise `revision` only for a rewrite or a changed account. A new page gets all of them. The two event pages get
+  theirs from the generator in `crates/cli/src/main.rs`. The server puts the stamp in `docs/index.json`; `DocView` and
+  `DocsList` show it (`web/src/lib/stamp.js`). The home page carries `@anselm` and its file's first date by hand.
 - Exports last, in one list (2026-11-14, Anselm: "it may make sense to generally in all examples have all the exports
   at the end... because that is more clear"): a JavaScript manifest declares its parts as plain `const` values and ends
   with `export { run, place, ... };` in the order meant. Order is layout and breaks ties between listeners of equal

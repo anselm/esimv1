@@ -330,6 +330,8 @@ function serveStatic(req, res) {
 // ---- docs: Markdown pages under ../docs/<area>/<name>.md; the index is written for the
 // static fallback. A page's title is its first heading; `<!-- order: n -->` on the first
 // line orders pages within an area; `<!-- section: name -->` groups them under a heading.
+// A page states who wrote it and when in the same way: author, ordered-by, revised-by,
+// written, revised (dates as YYYY-MM-DD) and revision (docs/system/workspace.md, Stamps).
 const DOCS = path.join(ROOT, 'docs')
 function docsIndex() {
   const pages = []
@@ -342,7 +344,12 @@ function docsIndex() {
       const title = (text.match(/^#\s+(.+)$/m) || [])[1]?.trim() ?? null
       const order = Number((text.match(/<!--\s*order:\s*(\d+)\s*-->/) || [])[1]) || null
       const section = (text.match(/<!--\s*section:\s*(.+?)\s*-->/) || [])[1] ?? null
-      pages.push({ path: `${area.name}/${f.slice(0, -3)}`, title, order, section })
+      const stamp = {}
+      for (const k of ['author', 'ordered-by', 'revised-by', 'written', 'revised', 'revision']) {
+        const v = (text.match(new RegExp(`<!--\\s*${k}:\\s*(.+?)\\s*-->`)) || [])[1]
+        if (v) stamp[k.replace('-by', 'By')] = k === 'revision' ? Number(v) : v
+      }
+      pages.push({ path: `${area.name}/${f.slice(0, -3)}`, title, order, section, ...stamp })
     }
   }
   pages.sort((a, b) => a.path.localeCompare(b.path))

@@ -1,5 +1,10 @@
 <!-- order: 1 -->
 <!-- section: Standards -->
+<!-- author: Claude -->
+<!-- ordered-by: Anselm -->
+<!-- written: 2026-11-07 -->
+<!-- revised: 2026-11-14 -->
+<!-- revision: 4 -->
 # RFC 0001: a common transport for simulations
 
 Status: draft 4, 2026-11-07. Author: Anselm Hook, drafted with Claude in the esim session

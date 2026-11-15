@@ -1,5 +1,10 @@
 <!-- order: 10 -->
 <!-- section: Projects and the record -->
+<!-- author: Claude -->
+<!-- ordered-by: Anselm -->
+<!-- written: 2026-11-01 -->
+<!-- revised: 2026-11-04 -->
+<!-- revision: 1 -->
 # Scoring and tearing
 
 Two different questions. Scoring asks how well a model series matches a record. Tearing

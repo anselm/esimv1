@@ -109,6 +109,8 @@
   <section class="max-w-xl pt-6 sm:pt-10">
     <div class="mono text-xs uppercase tracking-[0.2em] muted">esim · a simulator for whole places</div>
     <h1 class="mt-5 text-4xl font-light leading-tight tracking-tight sm:text-5xl">Simulation<br />as argument.</h1>
+    <!-- this page's file was first committed on 2026-11-01 -->
+    <div class="mono mt-3 text-xs muted"><a use:link={{ area: 'anselm' }} class="hover:text-brand">@anselm</a> · 1 November 2026</div>
     <p class="mt-5 text-lg leading-relaxed">A model of a place is a claim about how that place works. esim builds such models from published data, with every assumption open to inspection, and lets anyone push on them and watch what follows.</p>
     <p class="mt-3 leading-relaxed muted">It treats a place as one system: its ground and water, what is built on it, the services that run through it, and the people who live there, all on one clock. Each scenario runs in seconds to a minute, can be played back and changed, and says plainly what it gets wrong. The aim is a tool that a city or a community can use to see what a decision would do before it is made.</p>
     <div class="mt-6 flex flex-wrap gap-3 text-sm">

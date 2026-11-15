@@ -1,5 +1,10 @@
 <!-- order: 15 -->
 <!-- section: Changing it -->
+<!-- author: Claude -->
+<!-- ordered-by: Anselm -->
+<!-- written: 2026-11-01 -->
+<!-- revised: 2026-11-04 -->
+<!-- revision: 1 -->
 # Adding a module
 
 The recipe, in the order that keeps the rules intact.

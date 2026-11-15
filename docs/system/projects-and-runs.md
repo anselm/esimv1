@@ -1,5 +1,10 @@
 <!-- order: 7 -->
 <!-- section: Projects and the record -->
+<!-- author: Claude -->
+<!-- ordered-by: Anselm -->
+<!-- written: 2026-11-01 -->
+<!-- revised: 2026-11-14 -->
+<!-- revision: 1 -->
 # Projects and runs
 
 ## A project is a folder

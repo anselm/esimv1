@@ -81,7 +81,7 @@
               <li>
                 <a use:link={{ doc: p.path }} class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-0.5 py-2 pl-4 pr-2 hover:bg-brand-soft/40">
                   <span class="text-[15px]">{p.title ?? p.path}</span>
-                  <span class="mono text-[11px] muted">{p.path.split('/').slice(1).join('/')}</span>
+                  <span class="mono text-[11px] muted">{p.path.split('/').slice(1).join('/')}{#if p.revised || p.written}{' · '}{p.revised ?? p.written}{/if}{#if p.revision}{' · '}r{p.revision}{/if}</span>
                 </a>
               </li>
             {/each}

@@ -1,5 +1,10 @@
 <!-- order: 4 -->
 <!-- section: The machine -->
+<!-- author: Claude -->
+<!-- ordered-by: Anselm -->
+<!-- written: 2026-11-01 -->
+<!-- revised: 2026-11-12 -->
+<!-- revision: 1 -->
 # Modules
 
 A module is one piece of science behind a small contract, and the contract is the only

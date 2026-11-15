@@ -1,5 +1,10 @@
 <!-- order: 5 -->
 <!-- section: The machine -->
+<!-- author: Claude -->
+<!-- ordered-by: Anselm -->
+<!-- written: 2026-11-01 -->
+<!-- revised: 2026-11-14 -->
+<!-- revision: 1 -->
 # Layers
 
 Modules sort into layers the way a person would list what a place is made of. The order is who

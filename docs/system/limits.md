@@ -1,5 +1,10 @@
 <!-- order: 16 -->
 <!-- section: Changing it -->
+<!-- author: Claude -->
+<!-- ordered-by: Anselm -->
+<!-- written: 2026-11-01 -->
+<!-- revised: 2026-11-14 -->
+<!-- revision: 1 -->
 # Limits today
 
 What the system and its models get wrong or do not do, as of 2026-11-01. This page is

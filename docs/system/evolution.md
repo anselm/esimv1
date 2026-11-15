@@ -1,5 +1,10 @@
 <!-- order: 11 -->
 <!-- section: Changing it -->
+<!-- author: Claude -->
+<!-- ordered-by: Anselm -->
+<!-- written: 2026-11-01 -->
+<!-- revised: 2026-11-04 -->
+<!-- revision: 1 -->
 # Evolution
 
 Modules will change, and should. The pool is a search over ways of describing parts of

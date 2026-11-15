@@ -1,5 +1,10 @@
 <!-- order: 18 -->
 <!-- section: Telling it -->
+<!-- author: Claude -->
+<!-- ordered-by: Anselm -->
+<!-- written: 2026-11-04 -->
+<!-- revised: 2026-11-12 -->
+<!-- revision: 1 -->
 # Telling a scenario
 
 A run is a folder of numbers. A project page is where a person who was not there finds out

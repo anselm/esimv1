@@ -1,5 +1,10 @@
 <!-- order: 3 -->
 <!-- section: Start here -->
+<!-- author: Claude -->
+<!-- ordered-by: Anselm -->
+<!-- written: 2026-11-01 -->
+<!-- revised: 2026-11-12 -->
+<!-- revision: 1 -->
 # Honesty
 
 The rules that make the rest worth doing. They are enforced by code where code can, and

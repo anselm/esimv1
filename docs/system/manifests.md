@@ -1,5 +1,10 @@
 <!-- order: 6 -->
 <!-- section: The machine -->
+<!-- author: Claude -->
+<!-- ordered-by: Anselm -->
+<!-- written: 2026-11-01 -->
+<!-- revised: 2026-11-14 -->
+<!-- revision: 1 -->
 # Manifests
 
 A manifest is the whole arrangement of a simulation in one document. It is the

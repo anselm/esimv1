@@ -1,5 +1,10 @@
 <!-- order: 12 -->
 <!-- section: The machine -->
+<!-- author: Claude -->
+<!-- ordered-by: Anselm -->
+<!-- written: 2026-11-01 -->
+<!-- revised: 2026-11-15 -->
+<!-- revision: 1 -->
 # Workspace
 
 ## Layout
@@ -23,6 +28,32 @@ topic. There are no accounts; an area belongs to whoever writes there first, and
 convention is that others do not write into it. `system` is the documentation of the
 simulator itself and `anselm` is its author's; a visitor picks a word and it is theirs.
 When accounts arrive, areas map to them without moving anything.
+
+## Stamps
+
+Every documentation page says who wrote it and when, in comment lines at the top of the
+file, so the answer travels with the file and does not depend on the repository's history:
+
+```
+<!-- author: Claude -->
+<!-- ordered-by: Anselm -->
+<!-- revised-by: Anselm -->
+<!-- written: 2026-11-01 -->
+<!-- revised: 2026-11-14 -->
+<!-- revision: 1 -->
+```
+
+`author` is who wrote the text, a person or a model. `ordered-by` is who asked for it,
+and `revised-by` names anyone else who changed its words. `written` is the day the page
+was first written and `revised` the day its text last changed. `revision` starts at 1 and
+goes up when a page is rewritten or changes what it says about something; an addition or
+a correction moves only the `revised` date. The page shows the stamp under its path, and
+the documentation index shows the date and revision beside each page.
+
+Whoever changes a page sets `revised` in the same change. Nothing checks this yet. The
+stamps were added on 15 November 2026 from the repository's history: each page's first
+and latest commit gave its two dates, and every page started at revision 1 whatever its
+earlier changes, except the RFC, whose stamp carries its draft number.
 
 ## Working in a shared workspace
 

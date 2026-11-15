@@ -1,3 +1,8 @@
+<!-- author: Claude -->
+<!-- ordered-by: Anselm -->
+<!-- written: 2026-11-01 -->
+<!-- revised: 2026-11-07 -->
+<!-- revision: 1 -->
 # The module protocol, version 0
 
 This is the contract between the kernel (the coupler: one clock, ledgers, the log, the

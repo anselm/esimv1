@@ -1,5 +1,10 @@
 <!-- order: 2 -->
 <!-- section: Telling it -->
+<!-- author: Claude -->
+<!-- ordered-by: Anselm -->
+<!-- written: 2026-11-14 -->
+<!-- revised: 2026-11-14 -->
+<!-- revision: 1 -->
 # Pages written in HTML
 
 A project can lay out its own pages. The page is ordinary HTML, written by hand or with a
