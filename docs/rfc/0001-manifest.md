@@ -230,10 +230,12 @@ const horizon = 2100;
 const farms = Array.from({ length: 10 }, (_, i) => ({
   id: `farm-${i}`, kind: "farm.agent", params: { acres: 160 + 40 * i, crop: i % 2 ? "corn" : "soy" },
 }));
+const run = { start: "1850-01-01", end: `${horizon}-01-01`, seed: 1, close_every: "30d" };
+const seeds = { title: "Thirty members", range: { "run.seed": { from: 1, to: 30, steps: 30 } } };
+// the exports, last and in order: a language hands a module's exports back alphabetically,
+// and one list states the order the author means
 export default planet;
-export const run = { start: "1850-01-01", end: `${horizon}-01-01`, seed: 1, close_every: "30d" };
-export { farms };
-export const seeds = { title: "Thirty members", range: { "run.seed": { from: 1, to: 30, steps: 30 } } };
+export { run, farms, seeds };
 ```
 
 What the engine receives is the array this evaluates to, every farm spelled out, with a

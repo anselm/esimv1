@@ -425,6 +425,11 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   layers.js); `docs/system/goals.md` is the goals and milestones page; JavaScript is the lead manifest notation and
   `manifests/q1-portland-cascadia.js` replaced the TOML (same id; hand-written, since `esim manifest --js` output is
   longer than TOML). The local viewer server was restarted that day; its PID is in the session scratchpad.
+- Exports last, in one list (2026-11-14, Anselm: "it may make sense to generally in all examples have all the exports
+  at the end... because that is more clear"): a JavaScript manifest declares its parts as plain `const` values and ends
+  with `export { run, place, ... };` in the order meant. Order is layout and breaks ties between listeners of equal
+  priority; the reader recovers it by scanning the text for `export`, which misses `export *` re-exports and is fooled
+  by a commented-out export (`docs/system/manifests.md`, Order is layout). Write new manifests this way.
 - HTML pages and pictures (2026-11-14, `devlog/20261114-shaping-for-funding.md`, second pass): a project may carry
   `page.html` (replaces the scene and README on its page) and `run.html` (replaces the body of every run page of the
   project; `?raw` shows the engine's own layout). `web/src/lib/Notebook.svelte` sets the HTML, mounts `NbView.svelte`

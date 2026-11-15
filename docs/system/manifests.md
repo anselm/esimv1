@@ -18,19 +18,23 @@ const folder = "portland-cascadia";
 const soils = "wet";
 const m = (kind, params = {}) => ({ kind, params: { folder, ...params } });
 
-export const run = { name: "q1-portland-cascadia", start: "2027-01-01T08:00:00Z", end: "2028-01-01T08:00:00Z", seed: 1, close_every: "1d" };
-export const place = { lat_s: 45.43, lat_n: 45.66, lon_w: -122.85, lon_e: -122.47, res_arcsec: 1 };
+const run = { name: "q1-portland-cascadia", start: "2027-01-01T08:00:00Z", end: "2028-01-01T08:00:00Z", seed: 1, close_every: "1d" };
+const place = { lat_s: 45.43, lat_n: 45.66, lon_w: -122.85, lon_e: -122.47, res_arcsec: 1 };
 
-export const tanks = m("fuel.tanks");
-export const bridges = m("roads.bridges");
-export const power = m("power.structures", { soils });
-export const routes = m("roads.routes", { soils });
-export const water = { kind: "water.surface" };
-export const hospitals = m("health.hospitals");
-export const ground = m("quake.ground", { at: "2027-02-01T22:00:00Z", soils });
+const tanks = m("fuel.tanks");
+const bridges = m("roads.bridges");
+const power = m("power.structures", { soils });
+const routes = m("roads.routes", { soils });
+const water = { kind: "water.surface" };
+const hospitals = m("health.hospitals");
+const ground = m("quake.ground", { at: "2027-02-01T22:00:00Z", soils });
+
+export { run, place, tanks, bridges, power, routes, water, hospitals, ground };
 ```
 
-Each export is one part of the scenario, and the export's name is that part's name. The file is
+Each name in the list at the end is one part of the scenario, and the name is that part's name.
+The house form is to export everything in that one list, last, so the order of the parts is
+stated in one place. The section "Order is layout" below says why that matters. The file is
 a description, not a running program. The engine evaluates it once, before the run, to get the
 list of parts, and the program is then finished: it takes no part in the simulation and holds no
 state during it. For the same reason it is sealed off from the outside: it cannot read the
@@ -125,8 +129,10 @@ language itself hands a module's exports back alphabetically, so the reader find
 scanning the text for `export`. Two cases escape the scan. Names that arrive through
 `export * from "./other.js"` are placed after everything else, alphabetically. And the word
 `export` followed by a declaration inside a comment or a string is taken as an export, so a
-commented-out `export const tanks` above the real one moves `tanks` up. To state the order
-outright, export one list: `export default [run, place, tanks, bridges]`.
+commented-out `export const tanks` above the real one moves `tanks` up. So the manifests
+in this repository declare their parts as plain values and export them in one list at the end,
+`export { run, place, tanks, bridges };`, which the scan reads in order. Write new manifests
+that way, by hand or by a language model.
 
 ## Checking
 
