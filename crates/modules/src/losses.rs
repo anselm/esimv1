@@ -38,7 +38,7 @@ impl Losses {
         if tod != "day" && tod != "night" { return Err("obs.losses: time_of_day must be day or night".into()); }
         let mut o = Losses {
             name: name.to_string(),
-            lat_s: param_f64(p, "lat_s", 0.0), lat_n: param_f64(p, "lat_n", 0.0), lon_w: param_f64(p, "lon_w", 0.0), lon_e: param_f64(p, "lon_e", 0.0),
+            lat_s: crate::fragility::need_f64(p, "lat_s", name)?, lat_n: crate::fragility::need_f64(p, "lat_n", name)?, lon_w: crate::fragility::need_f64(p, "lon_w", name)?, lon_e: crate::fragility::need_f64(p, "lon_e", name)?,
             res_arcsec: param_f64(p, "res_arcsec", 1.0),
             folder: param_str(p, "folder", "").to_string(), record: param_str(p, "record", "wet").to_string(), time_of_day: tod,
             key: String::new(), label: String::new(), units_label: String::new(), agency: String::new(), study: String::new(), source: String::new(),

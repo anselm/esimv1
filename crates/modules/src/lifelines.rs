@@ -59,7 +59,7 @@ impl Lifelines {
         let ready: Vec<String> = p.get("bridge_ready").and_then(|v| v.as_array()).map(|a| a.iter().filter_map(|x| x.as_str().map(String::from)).collect()).unwrap_or_default();
         let mut o = Lifelines {
             name: name.to_string(),
-            lat_s: param_f64(p, "lat_s", 45.43), lat_n: param_f64(p, "lat_n", 45.66), lon_w: param_f64(p, "lon_w", -122.85), lon_e: param_f64(p, "lon_e", -122.47),
+            lat_s: crate::fragility::need_f64(p, "lat_s", name)?, lat_n: crate::fragility::need_f64(p, "lat_n", name)?, lon_w: crate::fragility::need_f64(p, "lon_w", name)?, lon_e: crate::fragility::need_f64(p, "lon_e", name)?,
             res_arcsec: param_f64(p, "res_arcsec", 1.0),
             folder: param_str(p, "folder", "portland-cascadia").to_string(),
             storage_cut: param_f64(p, "storage_cut", 0.0),

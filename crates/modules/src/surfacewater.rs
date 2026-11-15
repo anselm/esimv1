@@ -29,7 +29,7 @@ impl SurfaceWater {
     pub fn new(name: &str, p: &toml::Value) -> Result<SurfaceWater, String> {
         let mut o = SurfaceWater {
             name: name.to_string(),
-            lat_s: param_f64(p, "lat_s", 0.0), lat_n: param_f64(p, "lat_n", 0.0), lon_w: param_f64(p, "lon_w", 0.0), lon_e: param_f64(p, "lon_e", 0.0), res_arcsec: param_f64(p, "res_arcsec", 1.0),
+            lat_s: crate::fragility::need_f64(p, "lat_s", name)?, lat_n: crate::fragility::need_f64(p, "lat_n", name)?, lon_w: crate::fragility::need_f64(p, "lon_w", name)?, lon_e: crate::fragility::need_f64(p, "lon_e", name)?, res_arcsec: param_f64(p, "res_arcsec", 1.0),
             coarse_arcsec: param_f64(p, "coarse_arcsec", 10.0), reach_cells: param_f64(p, "reach_cells", 60.0) as usize,
             arrived_gal: 0.0, stranded_gal: 0.0, grid: None, water: Vec::new(), on_water: Vec::new(), coarse: None,
         };

@@ -30,7 +30,7 @@ impl Depot {
     pub fn new(name: &str, p: &toml::Value) -> Result<Depot, String> {
         let mut o = Depot {
             name: name.to_string(),
-            lat_s: param_f64(p, "lat_s", 0.0), lat_n: param_f64(p, "lat_n", 0.0), lon_w: param_f64(p, "lon_w", 0.0), lon_e: param_f64(p, "lon_e", 0.0), res_arcsec: param_f64(p, "res_arcsec", 1.0),
+            lat_s: crate::fragility::need_f64(p, "lat_s", name)?, lat_n: crate::fragility::need_f64(p, "lat_n", name)?, lon_w: crate::fragility::need_f64(p, "lon_w", name)?, lon_e: crate::fragility::need_f64(p, "lon_e", name)?, res_arcsec: param_f64(p, "res_arcsec", 1.0),
             folder: param_str(p, "folder", "").to_string(), storage_cut: param_f64(p, "storage_cut", 0.0),
             emergency_gal_day: param_f64(p, "emergency_gal_day", 300000.0), resupply_day: param_f64(p, "resupply_day", 14.0) as i64, resupply_gal_day: param_f64(p, "resupply_gal_day", 1000000.0),
             place: String::new(), lat: 0.0, lon: 0.0, cell: 0, contents_gal: 0.0, release_max_gal: 0.0,

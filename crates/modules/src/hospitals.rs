@@ -27,7 +27,7 @@ impl Hospitals {
     pub fn new(name: &str, p: &toml::Value) -> Result<Hospitals, String> {
         let mut o = Hospitals {
             name: name.to_string(),
-            lat_s: param_f64(p, "lat_s", 0.0), lat_n: param_f64(p, "lat_n", 0.0), lon_w: param_f64(p, "lon_w", 0.0), lon_e: param_f64(p, "lon_e", 0.0), res_arcsec: param_f64(p, "res_arcsec", 1.0),
+            lat_s: crate::fragility::need_f64(p, "lat_s", name)?, lat_n: crate::fragility::need_f64(p, "lat_n", name)?, lon_w: crate::fragility::need_f64(p, "lon_w", name)?, lon_e: crate::fragility::need_f64(p, "lon_e", name)?, res_arcsec: param_f64(p, "res_arcsec", 1.0),
             folder: param_str(p, "folder", "").to_string(), median_scale: param_f64(p, "median_scale", 1.5), beta: param_f64(p, "beta", 0.70),
             generator_h: param_f64(p, "generator_h", 72.0), gal_day: param_f64(p, "gal_day", 2000.0),
             hospitals: Vec::new(), reachable: BTreeMap::new(), fired: false, scheduled: false, day: 0, said: Vec::new(),

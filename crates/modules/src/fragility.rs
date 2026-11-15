@@ -69,3 +69,14 @@ pub(crate) fn coarse_of(g: &LatLonGrid, coarse_arcsec: f64, res_arcsec: f64) -> 
     let step = (coarse_arcsec / res_arcsec).round().max(1.0) as usize;
     (LatLonGrid { nx: (g.nx + step - 1) / step, ny: (g.ny + step - 1) / step, dlon: g.dlon * step as f64, dlat: g.dlat * step as f64, lon_w: g.lon_w, lat_n: g.lat_n }, step)
 }
+
+/// A number a module cannot run without and has no honest default for: the window's edges above
+/// all. A module that fell back to one place's coordinates would run a scenario that forgot its
+/// `place` on that other place's ground without a word.
+pub(crate) fn need_f64(p: &toml::Value, key: &str, who: &str) -> Result<f64, String> {
+    match p.get(key) {
+        Some(toml::Value::Float(f)) => Ok(*f),
+        Some(toml::Value::Integer(i)) => Ok(*i as f64),
+        _ => Err(format!("{who}: `{key}` is not set; give the manifest a `place` (lat_s, lat_n, lon_w, lon_e) or set it on this module")),
+    }
+}

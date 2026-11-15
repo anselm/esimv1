@@ -34,7 +34,7 @@ impl Routes {
     pub fn new(name: &str, p: &toml::Value) -> Result<Routes, String> {
         let mut o = Routes {
             name: name.to_string(),
-            lat_s: param_f64(p, "lat_s", 0.0), lat_n: param_f64(p, "lat_n", 0.0), lon_w: param_f64(p, "lon_w", 0.0), lon_e: param_f64(p, "lon_e", 0.0), res_arcsec: param_f64(p, "res_arcsec", 1.0),
+            lat_s: crate::fragility::need_f64(p, "lat_s", name)?, lat_n: crate::fragility::need_f64(p, "lat_n", name)?, lon_w: crate::fragility::need_f64(p, "lon_w", name)?, lon_e: crate::fragility::need_f64(p, "lon_e", name)?, res_arcsec: param_f64(p, "res_arcsec", 1.0),
             folder: param_str(p, "folder", "").to_string(), soils: param_str(p, "soils", "wet").to_string(),
             closure_days: Vec::new(), segs: Vec::new(), links: Vec::new(), origin: None, origin_name: String::new(), places: BTreeMap::new(),
             fired: false, scheduled: false, day: 0,

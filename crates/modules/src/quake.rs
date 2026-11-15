@@ -108,7 +108,7 @@ impl Ground {
     pub fn new(name: &str, p: &toml::Value) -> Result<Ground, String> {
         let mut o = Ground {
             name: name.to_string(),
-            lat_s: param_f64(p, "lat_s", 45.43), lat_n: param_f64(p, "lat_n", 45.66), lon_w: param_f64(p, "lon_w", -122.85), lon_e: param_f64(p, "lon_e", -122.47),
+            lat_s: crate::fragility::need_f64(p, "lat_s", name)?, lat_n: crate::fragility::need_f64(p, "lat_n", name)?, lon_w: crate::fragility::need_f64(p, "lon_w", name)?, lon_e: crate::fragility::need_f64(p, "lon_e", name)?,
             res_arcsec: param_f64(p, "res_arcsec", 1.0),
             folder: param_str(p, "folder", "").to_string(),
             at: param_str(p, "at", "2027-01-26T22:00:00Z").to_string(),
@@ -274,7 +274,7 @@ impl Buildings {
         if tod != "day" && tod != "night" { return Err("quake.buildings: time_of_day must be day or night".into()); }
         let mut o = Buildings {
             name: name.to_string(),
-            lat_s: param_f64(p, "lat_s", 45.43), lat_n: param_f64(p, "lat_n", 45.66), lon_w: param_f64(p, "lon_w", -122.85), lon_e: param_f64(p, "lon_e", -122.47),
+            lat_s: crate::fragility::need_f64(p, "lat_s", name)?, lat_n: crate::fragility::need_f64(p, "lat_n", name)?, lon_w: crate::fragility::need_f64(p, "lon_w", name)?, lon_e: crate::fragility::need_f64(p, "lon_e", name)?,
             res_arcsec: param_f64(p, "res_arcsec", 1.0),
             folder: param_str(p, "folder", "").to_string(),
             time_of_day: tod,
