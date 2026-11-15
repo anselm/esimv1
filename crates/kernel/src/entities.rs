@@ -1,7 +1,7 @@
 //! The entity form of a manifest: the object form that RFC 0001 (`docs/rfc/0001-manifest.md`)
 //! proposes as the transport between engines. A manifest is a list of entities, each an id
 //! and a bag of components that are plain data. Presence is type: an entity with a `run`
-//! component is the run, with a `kind` a module instance, with a `place` the place, with an
+//! component is the run, with a `kind` a module instance, with an
 //! `audit` the scoreboards, with a `variant` a variant. A component nobody here reads is
 //! carried and reported, never rejected.
 //!
@@ -53,7 +53,6 @@ impl Manifest {
         }
         let entities = env.get("entities").and_then(|v| v.as_array()).ok_or("manifest: no entities array")?;
         let mut run: Option<Run> = None;
-        let mut place: Option<toml::Value> = None;
         let mut audit: Option<toml::Value> = None;
         let mut modules: Vec<ModuleEntry> = Vec::new();
         let mut variants: Vec<Variant> = Vec::new();
@@ -62,7 +61,7 @@ impl Manifest {
             let obj = e.as_object().ok_or_else(|| format!("entity {n}: not an object"))?;
             let id = obj.get("id").and_then(|v| v.as_str()).ok_or_else(|| format!("entity {n}: no id"))?.to_string();
             if !valid_id(&id) { return Err(format!("entity {id}: an id is lower-case letters, digits, _ and -, starting with a letter")); }
-            let known = |k: &str| matches!(k, "id" | "run" | "place" | "kind" | "params" | "ref" | "audit" | "variant" | "notes");
+            let known = |k: &str| matches!(k, "id" | "run" | "kind" | "params" | "ref" | "audit" | "variant" | "notes");
             for k in obj.keys() { if !known(k) { unknown.push((id.clone(), k.clone())); } }
             if let Some(r) = obj.get("run") {
                 let r = r.as_object().ok_or_else(|| format!("{id}: run is not an object"))?;
@@ -77,7 +76,6 @@ impl Manifest {
                     notes: s("notes").unwrap_or_default(),
                 });
             }
-            if let Some(p) = obj.get("place") { place = Some(json_to_toml(p).map_err(|e| format!("{id}: place: {e}"))?); }
             if let Some(a) = obj.get("audit") { audit = Some(json_to_toml(a).map_err(|e| format!("{id}: audit: {e}"))?); }
             if let Some(k) = obj.get("kind") {
                 let kind = k.as_str().ok_or_else(|| format!("{id}: kind is not a string"))?.to_string();
@@ -149,13 +147,12 @@ impl Manifest {
             }
         }
         let run = run.ok_or("manifest: no entity with a run component")?;
-        let mut m = Manifest { run, place, modules, audit, variants, vocabulary: env.get("vocabulary").and_then(|v| v.as_str()).map(String::from), from: None, unknown };
-        m.fold_place();
+        let m = Manifest { run, modules, audit, variants, vocabulary: env.get("vocabulary").and_then(|v| v.as_str()).map(String::from), from: None, unknown };
         Ok(m)
     }
 
     /// The entity form: the envelope with every entity, in page order. Includes are already
-    /// folded, place is already copied into params, so this is a resolved manifest.
+    /// folded, so this is a resolved manifest.
     pub fn to_entities(&self) -> Value {
         let mut entities: Vec<Value> = Vec::new();
         let mut run = Map::new();
@@ -167,7 +164,6 @@ impl Manifest {
         if let Some(s) = &self.run.snapshot_every { run.insert("snapshot_every".into(), json!(s)); }
         if !self.run.notes.is_empty() { run.insert("notes".into(), json!(self.run.notes)); }
         entities.push(json!({ "id": "run", "run": Value::Object(run) }));
-        if let Some(p) = &self.place { entities.push(json!({ "id": "place", "place": toml_to_json(p) })); }
         for m in &self.modules {
             let mut e = Map::new();
             e.insert("id".into(), json!(m.name));
@@ -364,13 +360,12 @@ name = "rt"
 start = "2026-01-01"
 end = "2026-01-02"
 seed = 3
-[place]
-lat_s = 42.3
 [[module]]
 name = "a"
 kind = "k.one"
 [module.params]
 x = 1
+place = { lat_s = 42.3 }
 [[module]]
 name = "b"
 kind = "k.two"
@@ -381,8 +376,9 @@ scores = [["s", "o"]]
         let back = Manifest::from_entities(&doc).unwrap();
         assert_eq!(back.to_entities(), doc);
         assert_eq!(back.id(), m.id());
-        assert_eq!(back.modules[1].params.get("lat_s").and_then(|v| v.as_float()), Some(42.3));
-        assert!(doc["entities"][2]["params"]["lat_s"].is_number(), "place folded into params in the resolved form");
+        // a module's parameters are carried as given: the reader copies nothing between entities
+        assert_eq!(back.modules[0].params["place"].get("lat_s").and_then(|v| v.as_float()), Some(42.3));
+        assert!(back.modules[1].params.get("lat_s").is_none() && back.modules[1].params.get("place").is_none());
     }
 
     #[test]

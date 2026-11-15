@@ -7,13 +7,6 @@ close_every = "1d"
 snapshot_every = "30d"
 notes = "A magnitude 9.0 rupture of the Cascadia subduction zone as it affects Portland, set at 2 PM PST on Monday 1 February 2027 as a scenario choice and not a prediction. The run covers the calendar year 2027 in Pacific time, so it begins a month before the earthquake and ends eleven months after it. Ground motion, soils (saturated) and the building inventory with daytime occupants are DOGAMI's; tanks, bridges, transmission structures and route segments are damaged as components; water follows an assumed schedule. Every constant is published, recalled or declared a guess in its module's description."
 
-[place]
-lat_n = 45.66
-lat_s = 45.43
-lon_e = -122.47
-lon_w = -122.85
-res_arcsec = 1
-
 [[module]]
 name = "lifelines"
 kind = "portland.lifelines"
@@ -21,13 +14,15 @@ kind = "portland.lifelines"
 [module.params]
 folder = "portland-cascadia"
 inputs = "computed"
+retrofit = false
+storage_cut = 0
+
+[module.params.place]
 lat_n = 45.66
 lat_s = 45.43
 lon_e = -122.47
 lon_w = -122.85
 res_arcsec = 1
-retrofit = false
-storage_cut = 0
 
 [[module]]
 name = "tanks"
@@ -35,13 +30,15 @@ kind = "fuel.tanks"
 
 [module.params]
 folder = "portland-cascadia"
+retrofit = false
+storage_cut = 0
+
+[module.params.place]
 lat_n = 45.66
 lat_s = 45.43
 lon_e = -122.47
 lon_w = -122.85
 res_arcsec = 1
-retrofit = false
-storage_cut = 0
 
 [[module]]
 name = "bridges"
@@ -49,6 +46,8 @@ kind = "roads.bridges"
 
 [module.params]
 folder = "portland-cascadia"
+
+[module.params.place]
 lat_n = 45.66
 lat_s = 45.43
 lon_e = -122.47
@@ -61,12 +60,14 @@ kind = "power.structures"
 
 [module.params]
 folder = "portland-cascadia"
+soils = "wet"
+
+[module.params.place]
 lat_n = 45.66
 lat_s = 45.43
 lon_e = -122.47
 lon_w = -122.85
 res_arcsec = 1
-soils = "wet"
 
 [[module]]
 name = "routes"
@@ -74,18 +75,20 @@ kind = "roads.routes"
 
 [module.params]
 folder = "portland-cascadia"
+soils = "wet"
+
+[module.params.place]
 lat_n = 45.66
 lat_s = 45.43
 lon_e = -122.47
 lon_w = -122.85
 res_arcsec = 1
-soils = "wet"
 
 [[module]]
 name = "water"
 kind = "water.surface"
 
-[module.params]
+[module.params.place]
 lat_n = 45.66
 lat_s = 45.43
 lon_e = -122.47
@@ -98,12 +101,14 @@ kind = "fuel.depot"
 
 [module.params]
 folder = "portland-cascadia"
+storage_cut = 0
+
+[module.params.place]
 lat_n = 45.66
 lat_s = 45.43
 lon_e = -122.47
 lon_w = -122.85
 res_arcsec = 1
-storage_cut = 0
 
 [[module]]
 name = "hospitals"
@@ -111,6 +116,8 @@ kind = "health.hospitals"
 
 [module.params]
 folder = "portland-cascadia"
+
+[module.params.place]
 lat_n = 45.66
 lat_s = 45.43
 lon_e = -122.47
@@ -123,12 +130,14 @@ kind = "people.aftermath"
 
 [module.params]
 folder = "portland-cascadia"
+summary_day = 333
+
+[module.params.place]
 lat_n = 45.66
 lat_s = 45.43
 lon_e = -122.47
 lon_w = -122.85
 res_arcsec = 1
-summary_day = 333
 
 [[module]]
 name = "agents"
@@ -136,13 +145,15 @@ kind = "people.agents"
 
 [module.params]
 folder = "portland-cascadia"
+scale = 10
+time_of_day = "day"
+
+[module.params.place]
 lat_n = 45.66
 lat_s = 45.43
 lon_e = -122.47
 lon_w = -122.85
 res_arcsec = 1
-scale = 10
-time_of_day = "day"
 
 [[module]]
 name = "ground"
@@ -151,14 +162,16 @@ kind = "quake.ground"
 [module.params]
 at = "2027-02-01T22:00:00Z"
 folder = "portland-cascadia"
+soils = "wet"
+tz_name = "PST"
+tz_offset_h = -8
+
+[module.params.place]
 lat_n = 45.66
 lat_s = 45.43
 lon_e = -122.47
 lon_w = -122.85
 res_arcsec = 1
-soils = "wet"
-tz_name = "PST"
-tz_offset_h = -8
 
 [[module]]
 name = "buildings"
@@ -172,13 +185,15 @@ folder = "portland-cascadia"
 fragility_scale = 1.2
 gf_complete_share = 1
 gf_median_cm = 25
+median_complete_g = 1.1
+time_of_day = "day"
+
+[module.params.place]
 lat_n = 45.66
 lat_s = 45.43
 lon_e = -122.47
 lon_w = -122.85
-median_complete_g = 1.1
 res_arcsec = 1
-time_of_day = "day"
 
 [[module]]
 name = "losses"
@@ -186,13 +201,15 @@ kind = "obs.losses"
 
 [module.params]
 folder = "portland-cascadia"
+record = "wet"
+time_of_day = "day"
+
+[module.params.place]
 lat_n = 45.66
 lat_s = 45.43
 lon_e = -122.47
 lon_w = -122.85
-record = "wet"
 res_arcsec = 1
-time_of_day = "day"
 
 [audit]
 shock_topics = [

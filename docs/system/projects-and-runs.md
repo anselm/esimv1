@@ -130,7 +130,7 @@ so once reduced they are kept in the repository under `data/osm/`.
 ## A run is a folder
 
 ```
-runs/<name>-<manifest hash>-<log digest>/
+runs/<run name>/
   manifest.toml     the resolved text this run used
   variant.json      the variant and overrides, when any
   describe.json     every module as it described itself for this run, with the small tables it read
@@ -142,8 +142,13 @@ runs/<name>-<manifest hash>-<log digest>/
   snapshots.json    kernel snapshots, when the manifest asked for them
 ```
 
-The folder name carries the manifest's hash and the log's digest, so two runs of the same
-manifest and seed land in the same folder and two different manifests never collide.
+A project's run has a plain name, and the name is its address: `/anselm/portland-cascadia/wet-day`.
+The name is the variant's, or `base` for the manifest as written, or whatever `--name` gives.
+Running a variant again replaces the run of that name, so the address stays the same while the
+scenario is revised. What exactly a run was is recorded inside the folder: `manifest.json`
+carries the manifest's id (a hash of its resolved form) and `run.json` the digest of the log.
+Runs made from a manifest file outside any project have no name to go by, and their folder is
+named for those two hashes: `<manifest name>-<manifest hash>-<log digest>`.
 Runs are large (a basin year is about 45 MB, mostly frames) and are not kept in git;
 projects and their descriptions are.
 

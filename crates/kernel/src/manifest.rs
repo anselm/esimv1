@@ -7,10 +7,6 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Manifest {
     pub run: Run,
-    /// Optional `[place]` table: a window, resolution and gauge stated once and inherited
-    /// by every module that does not set the same keys itself.
-    #[serde(default)]
-    pub place: Option<toml::Value>,
     #[serde(default, rename = "module")]
     pub modules: Vec<ModuleEntry>,
     /// Optional `[audit]` table: `scores = [[sim, obs], ...]` and `shock_topics`.
@@ -80,7 +76,6 @@ impl Manifest {
         // whole module off this way (`"name.enabled" = false`), which is how an older all-in-one
         // module and the modules that replaced it can share one manifest
         m.modules.retain(|e| e.params.get("enabled").and_then(|v| v.as_bool()) != Some(false));
-        m.fold_place();
         Ok(m)
     }
     /// Read a manifest file in any of the three notations, by extension: `.toml` (includes
@@ -126,16 +121,6 @@ impl Manifest {
             _ => Manifest::load(path)?.to_toml_text(),
         }
     }
-    /// Copy every key of `[place]` into each module's params where the module has not
-    /// set that key. Done at parse time so the check and the build see the same params.
-    pub fn fold_place(&mut self) {
-        let Some(toml::Value::Table(place)) = &self.place else { return };
-        for e in &mut self.modules {
-            if let toml::Value::Table(t) = &mut e.params {
-                for (k, v) in place { t.entry(k.clone()).or_insert_with(|| v.clone()); }
-            }
-        }
-    }
     pub fn start(&self) -> Result<Time, String> { Time::parse(&self.run.start) }
     pub fn end(&self) -> Result<Time, String> { Time::parse(&self.run.end) }
     pub fn close_every(&self) -> Result<Duration, String> { parse_duration(&self.run.close_every) }
@@ -145,13 +130,13 @@ impl Manifest {
 }
 
 /// Nested manifests. A document may name `include = ["a.toml", "b.toml"]`; each included
-/// file (itself expandable) contributes its `[place]`, `[audit]` and `[[module]]` entries
+/// file (itself expandable) contributes its `[audit]` and `[[module]]` entries
 /// first, in order, then the including document's own. A `[[module]]` entry that is only
 /// `include = "file"` splices that file's modules in at that position instead, which
 /// matters because module order is page order. The including document's `[run]`
 /// stands; an included `[run]` is used only when the includer has none. A module whose
 /// name repeats an included one replaces it, which is how a short manifest restates one
-/// module's parameters on top of a bundle. Keys of `[place]` and `[audit]` merge, the
+/// module's parameters on top of a bundle. Keys of `[audit]` merge, the
 /// includer's winning.
 pub fn expand_includes(doc: toml::Value, dir: &std::path::Path, depth: usize) -> Result<toml::Value, String> {
     expand(doc, dir, depth, &mut Default::default())
@@ -183,7 +168,6 @@ fn expand(doc: toml::Value, dir: &std::path::Path, depth: usize, sources: &mut s
         None => Vec::new(),
     };
     let mut modules: Vec<toml::Value> = Vec::new();
-    let mut place = toml::value::Table::new();
     let mut audit = toml::value::Table::new();
     let mut run: Option<toml::Value> = None;
     for inc in includes {
@@ -192,7 +176,6 @@ fn expand(doc: toml::Value, dir: &std::path::Path, depth: usize, sources: &mut s
         let d = expand(d, p.parent().unwrap_or(dir), depth + 1, sources)?;
         let t = d.as_table().unwrap();
         if let Some(toml::Value::Array(ms)) = t.get("module") { for m in ms { upsert_module(&mut modules, m.clone()); } }
-        if let Some(toml::Value::Table(pl)) = t.get("place") { for (k, v) in pl { place.insert(k.clone(), v.clone()); } }
         if let Some(toml::Value::Table(au)) = t.get("audit") { for (k, v) in au { audit.insert(k.clone(), v.clone()); } }
         if run.is_none() { run = t.get("run").cloned(); }
     }
@@ -206,7 +189,6 @@ fn expand(doc: toml::Value, dir: &std::path::Path, depth: usize, sources: &mut s
                 let d = expand(d, p.parent().unwrap_or(dir), depth + 1, sources)?;
                 let t = d.as_table().unwrap();
                 if let Some(toml::Value::Array(inner)) = t.get("module") { for im in inner { upsert_module(&mut modules, im.clone()); } }
-                if let Some(toml::Value::Table(pl)) = t.get("place") { for (k, v) in pl { place.entry(k.clone()).or_insert(v.clone()); } }
                 if let Some(toml::Value::Table(au)) = t.get("audit") { for (k, v) in au { audit.entry(k.clone()).or_insert(v.clone()); } }
                 if run.is_none() { run = t.get("run").cloned(); }
                 continue;
@@ -214,11 +196,9 @@ fn expand(doc: toml::Value, dir: &std::path::Path, depth: usize, sources: &mut s
             upsert_module(&mut modules, m);
         }
     }
-    if let Some(toml::Value::Table(pl)) = table.remove("place") { for (k, v) in pl { place.insert(k, v); } }
     if let Some(toml::Value::Table(au)) = table.remove("audit") { for (k, v) in au { audit.insert(k, v); } }
     if let Some(r) = table.remove("run") { run = Some(r); }
     if let Some(r) = run { table.insert("run".into(), r); }
-    if !place.is_empty() { table.insert("place".into(), toml::Value::Table(place)); }
     if !audit.is_empty() { table.insert("audit".into(), toml::Value::Table(audit)); }
     table.insert("module".into(), toml::Value::Array(modules));
     Ok(toml::Value::Table(table))

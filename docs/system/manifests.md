@@ -16,20 +16,20 @@ manifest, with its comments shortened:
 ```js
 const folder = "portland-cascadia";
 const soils = "wet";
-const m = (kind, params = {}) => ({ kind, params: { folder, ...params } });
+const place = { lat_s: 45.43, lat_n: 45.66, lon_w: -122.85, lon_e: -122.47, res_arcsec: 1 };
+const m = (kind, params = {}) => ({ kind, params: { place, folder, ...params } });
 
 const run = { name: "q1-portland-cascadia", start: "2027-01-01T08:00:00Z", end: "2028-01-01T08:00:00Z", seed: 1, close_every: "1d" };
-const place = { lat_s: 45.43, lat_n: 45.66, lon_w: -122.85, lon_e: -122.47, res_arcsec: 1 };
 
 const tanks = m("fuel.tanks");
 const bridges = m("roads.bridges");
 const power = m("power.structures", { soils });
 const routes = m("roads.routes", { soils });
-const water = { kind: "water.surface" };
+const water = { kind: "water.surface", params: { place } };
 const hospitals = m("health.hospitals");
 const ground = m("quake.ground", { at: "2027-02-01T22:00:00Z", soils });
 
-export { run, place, tanks, bridges, power, routes, water, hospitals, ground };
+export { run, tanks, bridges, power, routes, water, hospitals, ground };
 ```
 
 Each name in the list at the end is one part of the scenario, and the name is that part's name.
@@ -41,9 +41,14 @@ state during it. For the same reason it is sealed off from the outside: it canno
 clock, draw a random number, open a file or reach the network, so the same file always
 describes the same scenario. Anything that changes during a run lives in the modules.
 
-Most manifests in the repository were written in TOML before this and are being converted as
-they are touched; `manifests/q1-portland-cascadia.js` is the first. The grammar below is shown
-in TOML, and every key means the same in JavaScript.
+The engine gives each module the parameters the manifest gives it and nothing else. Nothing is
+shared between modules behind the author's back: a value several modules need, such as the
+window of the Earth they work on (`place` above) or the folder of tables they read, is a
+variable in the script, handed to each module that wants it.
+
+The scenarios of real places are written this way. The older ladder of Boone River and planet
+manifests is still TOML and is converted as each is touched. The grammar below is shown in
+TOML, and every key means the same in JavaScript.
 
 ## The grammar
 
@@ -59,18 +64,12 @@ close_every = "30d"                # ledger closing cadence
 snapshot_every = "60d"             # optional
 notes = "What this run is and what it leaves out, in a sentence."
 
-[place]                            # optional: stated once, inherited by every module
-lat_s = 42.3
-lat_n = 43.2
-lon_w = -94.2
-lon_e = -93.5
-res_arcsec = 30
-
 [[module]]
 name = "water"                     # the instance name other modules address
 kind = "water.basin"               # the kind, from `esim kinds`
 [module.params]
 soil_capacity_mm = 150             # only parameters the kind lists, in its units
+place = { lat_s = 42.3, lat_n = 43.2, lon_w = -94.2, lon_e = -93.5, res_arcsec = 30 }
 
 [audit]
 scores = [["hydro.q_sim_daily_m3_s", "hydro.q_obs_daily_m3_s"]]
@@ -89,19 +88,22 @@ kinds and are printed by their describes.
 ## Includes
 
 `include` names other manifests, relative to this file. Each included file contributes
-its `[place]`, `[audit]` and `[[module]]` entries first, in order; the including file's
+its `[audit]` and `[[module]]` entries first, in order; the including file's
 own come after. The including file's `[run]` stands. A module that restates an included
 module's name replaces it, which is how a short manifest changes one module's parameters
-on top of a bundle. Keys of `[place]` and `[audit]` merge, the includer winning. The
+on top of a bundle. Keys of `[audit]` merge, the includer winning. The
 kernel resolves includes before checking, and a project folder receives the resolved
 text, so a project never depends on a file outside itself.
 
-## Place
+## The window
 
-Spatial kinds share one window and one resolution or they cannot read each other's
-fields. `[place]` states them once; the parser copies each key into every module that
-does not set it itself. A manifest for a new place sets its gauge and station
-parameters in the modules that need them.
+A module that works on a part of the Earth takes its window and resolution as parameters:
+`lat_s`, `lat_n`, `lon_w`, `lon_e`, `res_arcsec`. They can be given one by one or together as a
+single parameter, `place`, a table of those keys; a key the module also sets itself wins. Modules
+that read each other's fields must be given the same window, or the run stops when one reads the
+other's field. Until November 2026 a manifest could carry a `[place]` table that the reader
+copied into every module. The reader no longer does that; a manifest written that way now gives
+its modules no window.
 
 ## Parameters and variants
 
@@ -149,14 +151,14 @@ and `esim run`, `check`, `describe` and `project` take any of them.
 - **TOML**, `.toml`: the form above, with `include`. Every manifest in `manifests/` is one.
 - **JSON**, `.json`: the entity form of [RFC 0001](/docs/rfc/0001-manifest). A manifest
   is a list of entities, each an `id` and a bag of components; an entity with a `run` is
-  the run, with a `kind` a module instance, with a `place`, an `audit` or a `variant` that
+  the run, with a `kind` a module instance, with an `audit` or a `variant` that
   thing. A later entity with an earlier id replaces it component by component. A component
   nothing here reads is carried and the check reports it. This is the *object form*: plain
   data, no variables, no loops but the `range` on a variant, which unrolls to one variant
   per member.
 - **JavaScript**, `.js`: the *source form*. A module whose exports are the entities: the
   export name is the id, an exported array is spliced in, `export default` may be the whole
-  list, and an export named `run`, `place` or `audit` that carries no component is that
+  list, and an export named `run` or `audit` that carries no component is that
   component. The program runs on QuickJS with nothing but the language: `Date` is gone,
   `Math.random` throws, there is no network, no process and no file system, and `import`
   reaches only files beside the entry, by relative path. Importing a `.toml` manifest gives

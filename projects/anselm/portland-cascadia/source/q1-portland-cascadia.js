@@ -15,8 +15,11 @@ const folder = "portland-cascadia";
 const soils = "wet";          // saturated soil: the higher-loss case, with liquefaction
 const time_of_day = "day";    // people where the inventory places them at 2 PM
 
-// a module of a kind, reading the scenario's folder
-const m = (kind, params = {}) => ({ kind, params: { folder, ...params } });
+// where: the window every module here works on, and its resolution
+const place = { lat_s: 45.43, lat_n: 45.66, lon_w: -122.85, lon_e: -122.47, res_arcsec: 1 };
+
+// a module of a kind, working on that window and reading the scenario's folder
+const m = (kind, params = {}) => ({ kind, params: { place, folder, ...params } });
 
 const run = {
   name: "q1-portland-cascadia",
@@ -28,8 +31,6 @@ const run = {
   notes: "A magnitude 9.0 rupture of the Cascadia subduction zone as it affects Portland, set at 2 PM PST on Monday 1 February 2027 as a scenario choice and not a prediction. The run covers the calendar year 2027 in Pacific time, so it begins a month before the earthquake and ends eleven months after it. Ground motion, soils (saturated) and the building inventory with daytime occupants are DOGAMI's; tanks, bridges, transmission structures and route segments are damaged as components; water follows an assumed schedule. Every constant is published, recalled or declared a guess in its module's description.",
 };
 
-const place = { lat_s: 45.43, lat_n: 45.66, lon_w: -122.85, lon_e: -122.47, res_arcsec: 1 };
-
 // what is left that is Portland's own: drinking water's schedule, the story, the day's state
 const lifelines = m("portland.lifelines", { storage_cut: 0.0, retrofit: false, inputs: "computed" });
 
@@ -40,7 +41,7 @@ const power = m("power.structures", { soils });
 const routes = m("roads.routes", { soils });
 
 // where the water is, and where the tanks' releases toward water arrive on it (no flow yet)
-const water = { kind: "water.surface" };
+const water = { kind: "water.surface", params: { place } };
 
 // the fuel account and the hospitals; the `ranges` variant switches both off and lets
 // portland.lifelines run its older version, which keeps them itself
@@ -77,4 +78,4 @@ const audit = { shock_topics: ["quake.rupture", "lifeline.failed"] };
 
 // What the scenario is made of, in order. The order is the order of sections on the run page,
 // and it settles which of two modules hears an event first when their priorities are equal.
-export { run, place, lifelines, tanks, bridges, power, routes, water, depot, hospitals, aftermath, agents, ground, buildings, losses, audit };
+export { run, lifelines, tanks, bridges, power, routes, water, depot, hospitals, aftermath, agents, ground, buildings, losses, audit };

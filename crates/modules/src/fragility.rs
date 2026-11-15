@@ -77,6 +77,6 @@ pub(crate) fn need_f64(p: &toml::Value, key: &str, who: &str) -> Result<f64, Str
     match p.get(key) {
         Some(toml::Value::Float(f)) => Ok(*f),
         Some(toml::Value::Integer(i)) => Ok(*i as f64),
-        _ => Err(format!("{who}: `{key}` is not set; give the manifest a `place` (lat_s, lat_n, lon_w, lon_e) or set it on this module")),
+        _ => Err(format!("{who}: `{key}` is not set; give this module a `place` (lat_s, lat_n, lon_w, lon_e, res_arcsec) in the manifest")),
     }
 }

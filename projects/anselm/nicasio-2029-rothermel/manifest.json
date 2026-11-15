@@ -13,27 +13,19 @@
       }
     },
     {
-      "id": "place",
-      "place": {
-        "lat_n": 38.08,
-        "lat_s": 37.97,
-        "lon_e": -122.61,
-        "lon_w": -122.79,
-        "res_arcsec": 1
-      }
-    },
-    {
       "id": "fire",
       "kind": "fire.rothermel",
       "params": {
         "ignition_lat": 38.0316,
         "ignition_lon": -122.7328,
         "ignition_time": "2029-10-01T10:00:00Z",
-        "lat_n": 38.08,
-        "lat_s": 37.97,
-        "lon_e": -122.61,
-        "lon_w": -122.79,
-        "res_arcsec": 1,
+        "place": {
+          "lat_n": 38.08,
+          "lat_s": 37.97,
+          "lon_e": -122.61,
+          "lon_w": -122.79,
+          "res_arcsec": 1
+        },
         "wind_at": "2029-10-01T00:00:00Z",
         "wind_end": "2019-10-31",
         "wind_start": "2019-10-27"
@@ -43,10 +35,13 @@
       "id": "places",
       "kind": "obs.places",
       "params": {
-        "lat_n": 38.08,
-        "lat_s": 37.97,
-        "lon_e": -122.61,
-        "lon_w": -122.79,
+        "place": {
+          "lat_n": 38.08,
+          "lat_s": 37.97,
+          "lon_e": -122.61,
+          "lon_w": -122.79,
+          "res_arcsec": 1
+        },
         "places": [
           {
             "lat": 38.0283,
@@ -60,28 +55,29 @@
             "name": "Devil's Gulch campsite",
             "note": "the ignition; OpenStreetMap relation 17685328, 2026-11-08"
           }
-        ],
-        "res_arcsec": 1
+        ]
       }
     },
     {
       "id": "suppression",
       "kind": "fire.suppression",
       "params": {
-        "lat_n": 38.08,
-        "lat_s": 37.97,
         "line_width_m": 30,
-        "lon_e": -122.61,
-        "lon_w": -122.79,
         "mode": "off",
-        "res_arcsec": 1
+        "place": {
+          "lat_n": 38.08,
+          "lat_s": 37.97,
+          "lon_e": -122.61,
+          "lon_w": -122.79,
+          "res_arcsec": 1
+        }
       }
     }
   ],
   "from": {
-    "entry": "manifests/f6-nicasio-2029-rothermel.toml",
-    "hash": "sha256:d98fc7a8ecf05030a8b059f229793d399b5544fb6d446dc2b85cbf0de0a6897d",
-    "language": "toml"
+    "entry": "manifests/f6-nicasio-2029-rothermel.js",
+    "hash": "sha256:6f363aee72a9df1076f826fbf6dcd3c814e4792c77c435e7f6db3f645a6803b5",
+    "language": "javascript"
   },
   "manifest": "manifest/1"
 }

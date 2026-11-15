@@ -52,7 +52,7 @@
   const latest = (p) => (p.runs ?? []).slice().sort(newestFirst)[0] ?? null
   // the few scenarios the front page leads with (featured = true in project.toml), newest first
   const featured = $derived((projects ?? []).filter((p) => p.featured === true).sort((a, b) => String(b.created ?? '').localeCompare(String(a.created ?? ''))))
-  // where each scenario is, for the dots on the globe: the middle of the place its manifest states
+  // where each scenario is, for the dots on the globe: the middle of the window its manifest gives a module
   let places = $state([])
   $effect(() => {
     const list = projects ?? []
@@ -60,7 +60,7 @@
     Promise.all(list.map(async (p) => {
       try {
         const m = await (await fetch(`/projects/${p.path}/manifest.json`)).json()
-        for (const e of m.entities ?? []) { const q = e.place ?? (e.params?.lat_s !== undefined ? e.params : null); if (q && q.lat_s !== undefined) return { lat: (q.lat_s + q.lat_n) / 2, lon: (q.lon_w + q.lon_e) / 2 } }
+        for (const e of m.entities ?? []) { const q = e.params?.place ?? e.place ?? (e.params?.lat_s !== undefined ? e.params : null); if (q && q.lat_s !== undefined) return { lat: (q.lat_s + q.lat_n) / 2, lon: (q.lon_w + q.lon_e) / 2 } }
       } catch { /* no manifest, no dot */ }
       return null
     })).then((r) => { places = r.filter(Boolean) })

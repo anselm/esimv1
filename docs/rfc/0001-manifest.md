@@ -66,7 +66,7 @@ that subject. Modules are the part that takes expertise to build, and the part e
 compete on.
 
 The upper level is the **arrangement**: which modules are in a run, with which parameters,
-over which window and place, and what they may tell each other. It is largely declarative,
+over which span of time, and what they may tell each other. It is largely declarative,
 and the person who writes it is making a claim about the world and need not be able to
 write a module. The manifest is this level, and it is the level this document standardises.
 
@@ -86,7 +86,7 @@ inheritance, variables, loops, the expressions a document may carry, how it is m
 canonical and hashed. Nothing in it knows what a river is. A scene description, a game
 level, a configuration system and a user interface layout all answer the same question, and
 the answers are old. Part II is the **vocabulary**: the components a simulation of the world
-needs, such as the run window, the place, the module and its kind, and the variants of an
+needs, such as the run window, the module and its kind, and the variants of an
 assumption. An engine that adopts Part I and only some of Part II can still read, draw,
 check and hash the document, and say which components it has no system for.
 
@@ -201,7 +201,7 @@ source, and the object form says where it is.
 **The source form.** The rules are the orbital loader's, which is the pattern the author
 used for years before this document. The export name is the entity's id. An exported array
 is spliced in, so a loop produces entities. `export default` may be the whole list or the
-envelope. An export named `run`, `place` or `audit` that carries no component of its own is
+envelope. An export named `run` or `audit` that carries no component of its own is
 that component, so `export const run = { start, end, seed: 1 }` reads as it should. Export
 order is layout order. Values are read as JSON, so a function is dropped and a component is
 data or it is nothing, as section 3 requires. The language is JavaScript as the engine's
@@ -337,8 +337,7 @@ A configuration file depends on the machine that reads it: its defaults, its lib
 copy of the data. A transport cannot.
 
 **Resolution.** Before a run the engine evaluates the source form if that is what it was
-handed, replaces entities by `id`, copies the place down into every module that does not
-set its keys, fills every parameter from the kind's default, applies the variant, and
+handed, replaces entities by `id`, fills every parameter from the kind's default, applies the variant, and
 writes the result as the run's own manifest. That document is complete: the engine must be able to run from it alone, and a
 reader must see every number the run used without knowing any engine's defaults.
 
@@ -373,7 +372,6 @@ shape; this is the list.
 | component | on an entity that is | what it says |
 |---|---|---|
 | `run` | the run, one per manifest | `start`, `end` as UTC dates or RFC 3339 with `Z`; `seed`, the only source of randomness, each module's stream derived from it and the module's `id`; `close_every`, the ledger closing cadence; `snapshot_every`; `notes` for a person |
-| `place` | the place, at most one | a window on the WGS 84 graticule, `lat_s`, `lat_n`, `lon_w`, `lon_e`, and `res_arcsec`; copied at resolution into every module that does not set the same keys, so spatial modules share one grid |
 | `kind` | a module instance | the kind, `family.kind`, in the shared vocabulary |
 | `params` | a module instance | only the parameters the kind's describe lists, in its units; numbers, strings, booleans, arrays, or expressions where the describe says so |
 | `ref` | a module instance whose kind the engine lacks | a URL and a content hash of an implementation, with a binding hint: `native`, `wasm` or `process` |
@@ -382,7 +380,7 @@ shape; this is the list.
 
 Three things in the engine model are not components because they are not stated in a
 manifest: **ledgers** (a module opens one by name and unit, and two modules that name one
-ledger share it), **fields** (one writer, any readers, on the place's grid) and **topics**
+ledger share it), **fields** (one writer, any readers, on one grid) and **topics**
 (events between modules). They are declared by kinds in their describes, derived by the
 checker as the wiring, and governed by the vocabulary, which is where the real
 interoperability argument between engines will happen. A manifest names kinds; kinds name
@@ -460,7 +458,7 @@ though section 3 says why it should be the same grammar.
 
 ### 13. From practice
 
-esim's TOML manifests map onto this form: `[run]` is the run entity, `[place]` the place,
+esim's TOML manifests map onto this form: `[run]` is the run entity,
 each `[[module]]` with its `[module.params]` an entity with `kind` and `params`, `[audit]`
 the audit; the instance name becomes the `id`. Since the evening of 2026-11-07 the engine
 reads and writes the object form (`.json`) and the source form (`.js`) beside its TOML, and
@@ -494,8 +492,9 @@ levels one and two are safe on any input, level three is not.
 
 ### 15. Open questions
 
-- Whether `place` should be a general grid declaration rather than a geographic window,
-  so that a tank or an abstract lattice is first class.
+- How two engines agree that modules share a grid. A window of the Earth is a parameter of
+  the modules that work on one, and the standard does not name it; a tank or an abstract
+  lattice is as much a grid as a geographic window.
 - Whether a variant may add an entity, which would make "with and without this coupling"
   one document at the cost of variants no longer being a table of differences.
 - The expression language's exact grammar and function list, and whether a parsed form
@@ -529,6 +528,13 @@ levels one and two are safe on any input, level three is not.
   its Portland scenario is the first converted (`manifests/q1-portland-cascadia.js`, the same
   manifest id as the TOML it replaced). The examples in this document are still in the object
   form and TOML and are to be rewritten in the source form in the next draft.
+
+- 14 November 2026: `place` removed. It was a component the reader copied into every module, a
+  holdover from a notation without variables, and it made the reader know a subject. A module
+  now gets the parameters the manifest gives it; a window of the Earth is a parameter of the
+  modules that work on one, and a script states it once as a variable. The schema no longer
+  names it (Anselm: "there should really be nothing special about place ... as far as the engine
+  is concerned each module gets some props... from the manifest").
 
 - 14 November 2026: section 2 rewritten. The two levels are now the modules (the science) and
   the arrangement that wires them together, which is the manifest. The earlier text called

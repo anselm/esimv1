@@ -1,0 +1,77 @@
+{
+  "entities": [
+    {
+      "id": "run",
+      "run": {
+        "close_every": "1d",
+        "end": "2016-05-07T00:00:00Z",
+        "name": "f4-fortmcmurray-cells",
+        "notes": "Our own engine on the Fort McMurray fire: heat budget on 30 m cells, OpenStreetMap buildings, ERA5 wind at one point; scored against CWFIS satellite hotspots; unsuppressed; constants carried over from the Palisades.",
+        "seed": 1,
+        "snapshot_every": "10d",
+        "start": "2016-05-01T22:00:00Z"
+      }
+    },
+    {
+      "id": "fire",
+      "kind": "fire.cells",
+      "params": {
+        "buildings": "osm",
+        "cooling": "idle",
+        "form": "vector",
+        "frame_res_arcsec": 4,
+        "ignite_scale": 5,
+        "ignition_lat": 56.66528,
+        "ignition_lon": -111.38333,
+        "ignition_time": "2016-05-01T22:00:00Z",
+        "place": {
+          "lat_n": 56.85,
+          "lat_s": 56.55,
+          "lon_e": -111.15,
+          "lon_w": -111.75,
+          "res_arcsec": 1
+        },
+        "reach_m": 45,
+        "slope_rate_gain": 20,
+        "wind": "era5",
+        "wind_end": "2016-05-07T00:00:00Z",
+        "wind_start": "2016-05-01T22:00:00Z"
+      }
+    },
+    {
+      "id": "obs",
+      "kind": "obs.hotspots",
+      "params": {
+        "end": "2016-05-07T00:00:00Z",
+        "every": "6h",
+        "file": "fortmcmurray-2016/cwfis/hotspots.csv",
+        "frame_res_arcsec": 4,
+        "place": {
+          "lat_n": 56.85,
+          "lat_s": 56.55,
+          "lon_e": -111.15,
+          "lon_w": -111.75,
+          "res_arcsec": 1
+        },
+        "start": "2016-05-01T00:00:00Z"
+      }
+    },
+    {
+      "audit": {
+        "scores": [
+          [
+            "sim.acres",
+            "obs.acres"
+          ]
+        ]
+      },
+      "id": "audit"
+    }
+  ],
+  "from": {
+    "entry": "manifests/f4-fortmcmurray-cells.js",
+    "hash": "sha256:1dbb8b2fa929304452dacd1dbd40e41f3943f44abc9900cf1b80c31e1e1a9e7c",
+    "language": "javascript"
+  },
+  "manifest": "manifest/1"
+}

@@ -24,7 +24,7 @@
         "digest": "ed758cab7490705b",
         "end": 1758326400,
         "events": 44770,
-        "id": "m7-fire-boone-sept-af5039cd-ed758cab",
+        "id": "base",
         "made": 1793576131,
         "name": "m7-fire-boone-sept",
         "seed": 1,
@@ -60,7 +60,7 @@
         "digest": "1d66e0ac34f8033c",
         "end": 1767225600,
         "events": 94544,
-        "id": "m6-eaters-boone-2025-a5b81cdd-1d66e0ac",
+        "id": "base",
         "made": 1794181382,
         "name": "m6-eaters-boone-2025",
         "seed": 1,
@@ -89,43 +89,25 @@
     "runs": [
       {
         "all_ledgers_closed": true,
-        "digest": "62998eb1ce06a832",
+        "digest": "1c322a3c99835fbb",
         "end": 1462579200,
         "events": 311,
-        "id": "f4-fortmcmurray-cells-742b205e-62998eb1",
-        "made": 1793814920,
+        "id": "base",
+        "made": 1794702054,
         "name": "f4-fortmcmurray-cells",
         "seed": 1,
-        "set": {
-          "fire.ignite_scale": "5"
-        },
+        "set": null,
         "start": 1462140000,
-        "variant": "vector-5",
+        "variant": null,
         "verdict": "holds"
       },
       {
         "all_ledgers_closed": true,
-        "digest": "c1063e452c66bd8e",
-        "end": 1462579200,
-        "events": 504,
-        "id": "f4-fortmcmurray-cells-8ae5c799-c1063e45",
-        "made": 1793814920,
-        "name": "f4-fortmcmurray-cells",
-        "seed": 1,
-        "set": {
-          "fire.ignite_scale": "8"
-        },
-        "start": 1462140000,
-        "variant": "vector-8",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "d7800bbc762c5734",
+        "digest": "72ea7749ae6c275d",
         "end": 1462579200,
         "events": 330,
-        "id": "f4-fortmcmurray-cells-b355b723-d7800bbc",
-        "made": 1793814921,
+        "id": "vector-3",
+        "made": 1794702071,
         "name": "f4-fortmcmurray-cells",
         "seed": 1,
         "set": {
@@ -137,16 +119,34 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "62998eb1ce06a832",
+        "digest": "1c322a3c99835fbb",
         "end": 1462579200,
         "events": 311,
-        "id": "f4-fortmcmurray-cells-d50563e0-62998eb1",
-        "made": 1793814915,
+        "id": "vector-5",
+        "made": 1794702060,
         "name": "f4-fortmcmurray-cells",
         "seed": 1,
-        "set": null,
+        "set": {
+          "fire.ignite_scale": "5"
+        },
         "start": 1462140000,
-        "variant": null,
+        "variant": "vector-5",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "843a3242cfe0b8b3",
+        "end": 1462579200,
+        "events": 504,
+        "id": "vector-8",
+        "made": 1794702065,
+        "name": "f4-fortmcmurray-cells",
+        "seed": 1,
+        "set": {
+          "fire.ignite_scale": "8"
+        },
+        "start": 1462140000,
+        "variant": "vector-8",
         "verdict": "holds"
       }
     ],
@@ -191,52 +191,18 @@
     "runs": [
       {
         "all_ledgers_closed": true,
-        "digest": "28d09c8ddcdb6247",
-        "end": 3313526400,
-        "events": 43037,
-        "id": "c1-halfmoonbay-oneline-0a96f481-28d09c8d",
-        "made": 1794181182,
+        "digest": "70bece767182b643",
+        "end": 1735689600,
+        "events": 24162,
+        "id": "as-built",
+        "made": 1794702290,
         "name": "c1-halfmoonbay-oneline",
         "seed": 1,
         "set": {
-          "run.end": "\"2075-01-01\""
+          "coast.breakwater": "\"on\""
         },
         "start": -283996800,
-        "variant": "to-2075-held",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "28d09c8ddcdb6247",
-        "end": 3313526400,
-        "events": 43037,
-        "id": "c1-halfmoonbay-oneline-11009c25-28d09c8d",
-        "made": 1794181268,
-        "name": "c1-halfmoonbay-oneline",
-        "seed": 1,
-        "set": {
-          "coast.slr_m_yr": "0.0126",
-          "run.end": "\"2075-01-01\""
-        },
-        "start": -283996800,
-        "variant": "to-2075-slr-high",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "69e2e727341bd2b6",
-        "end": 3313526400,
-        "events": 43048,
-        "id": "c1-halfmoonbay-oneline-432a92f0-69e2e727",
-        "made": 1794181354,
-        "name": "c1-halfmoonbay-oneline",
-        "seed": 1,
-        "set": {
-          "coast.dredge_every_years": "5",
-          "run.end": "\"2075-01-01\""
-        },
-        "start": -283996800,
-        "variant": "to-2075-dredged",
+        "variant": "as-built",
         "verdict": "holds"
       },
       {
@@ -244,8 +210,8 @@
         "digest": "b94f7f8d2fe98adf",
         "end": 1735689600,
         "events": 24162,
-        "id": "c1-halfmoonbay-oneline-529d1cc8-b94f7f8d",
-        "made": 1794181030,
+        "id": "before-1959",
+        "made": 1794702351,
         "name": "c1-halfmoonbay-oneline",
         "seed": 1,
         "set": {
@@ -260,24 +226,8 @@
         "digest": "70bece767182b643",
         "end": 1735689600,
         "events": 24162,
-        "id": "c1-halfmoonbay-oneline-6a21268c-70bece76",
-        "made": 1794180970,
-        "name": "c1-halfmoonbay-oneline",
-        "seed": 1,
-        "set": {
-          "coast.breakwater": "\"on\""
-        },
-        "start": -283996800,
-        "variant": "as-built",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "70bece767182b643",
-        "end": 1735689600,
-        "events": 24162,
-        "id": "c1-halfmoonbay-oneline-b188a5d7-70bece76",
-        "made": 1794181096,
+        "id": "sealed",
+        "made": 1794702423,
         "name": "c1-halfmoonbay-oneline",
         "seed": 1,
         "set": {
@@ -285,6 +235,56 @@
         },
         "start": -283996800,
         "variant": "sealed",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "69e2e727341bd2b6",
+        "end": 3313526400,
+        "events": 43048,
+        "id": "to-2075-dredged",
+        "made": 1794702704,
+        "name": "c1-halfmoonbay-oneline",
+        "seed": 1,
+        "set": {
+          "coast.dredge_every_years": "5",
+          "run.end": "\"2075-01-01\""
+        },
+        "start": -283996800,
+        "variant": "to-2075-dredged",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "28d09c8ddcdb6247",
+        "end": 3313526400,
+        "events": 43037,
+        "id": "to-2075-held",
+        "made": 1794702517,
+        "name": "c1-halfmoonbay-oneline",
+        "seed": 1,
+        "set": {
+          "run.end": "\"2075-01-01\""
+        },
+        "start": -283996800,
+        "variant": "to-2075-held",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "28d09c8ddcdb6247",
+        "end": 3313526400,
+        "events": 43037,
+        "id": "to-2075-slr-high",
+        "made": 1794702614,
+        "name": "c1-halfmoonbay-oneline",
+        "seed": 1,
+        "set": {
+          "coast.slr_m_yr": "0.0126",
+          "run.end": "\"2075-01-01\""
+        },
+        "start": -283996800,
+        "variant": "to-2075-slr-high",
         "verdict": "holds"
       }
     ],
@@ -354,27 +354,11 @@
     "runs": [
       {
         "all_ledgers_closed": true,
-        "digest": "fde33d3766a3d362",
-        "end": 1885791600,
-        "events": 226,
-        "id": "f5-nicasio-2029-465516cd-fde33d37",
-        "made": 1794172380,
-        "name": "f5-nicasio-2029",
-        "seed": 1,
-        "set": {
-          "fire.ignite_scale": "8"
-        },
-        "start": 1885532400,
-        "variant": "scale-8",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
         "digest": "4b7615887655606f",
         "end": 1885791600,
         "events": 764,
-        "id": "f5-nicasio-2029-73b9e5a6-4b761588",
-        "made": 1794172391,
+        "id": "gust",
+        "made": 1794702019,
         "name": "f5-nicasio-2029",
         "seed": 1,
         "set": {
@@ -390,8 +374,8 @@
         "digest": "5639d288ebddd9ad",
         "end": 1885791600,
         "events": 378,
-        "id": "f5-nicasio-2029-849874a2-5639d288",
-        "made": 1794172362,
+        "id": "scale-3",
+        "made": 1794703222,
         "name": "f5-nicasio-2029",
         "seed": 1,
         "set": {
@@ -406,8 +390,8 @@
         "digest": "843cf62ba3f070db",
         "end": 1885791600,
         "events": 463,
-        "id": "f5-nicasio-2029-dc5f0eae-843cf62b",
-        "made": 1794172371,
+        "id": "scale-5",
+        "made": 1794701998,
         "name": "f5-nicasio-2029",
         "seed": 1,
         "set": {
@@ -415,6 +399,22 @@
         },
         "start": 1885532400,
         "variant": "scale-5",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "fde33d3766a3d362",
+        "end": 1885791600,
+        "events": 226,
+        "id": "scale-8",
+        "made": 1794702008,
+        "name": "f5-nicasio-2029",
+        "seed": 1,
+        "set": {
+          "fire.ignite_scale": "8"
+        },
+        "start": 1885532400,
+        "variant": "scale-8",
         "verdict": "holds"
       }
     ],
@@ -469,18 +469,18 @@
     "runs": [
       {
         "all_ledgers_closed": true,
-        "digest": "56a0ba659c004975",
+        "digest": "5b539d8cbdab05dd",
         "end": 1885791600,
         "events": 227,
-        "id": "f6-nicasio-2029-rothermel-9b7cedd0-56a0ba65",
-        "made": 1794173713,
+        "id": "built-barrier",
+        "made": 1794702041,
         "name": "f6-nicasio-2029-rothermel",
         "seed": 1,
         "set": {
-          "fire.wind_source": "\"mean\""
+          "fire.built_ros_m_min": "0"
         },
         "start": 1885532400,
-        "variant": "reanalysis",
+        "variant": "built-barrier",
         "verdict": "holds"
       },
       {
@@ -488,8 +488,8 @@
         "digest": "33b1bab5a2202f97",
         "end": 1885791600,
         "events": 227,
-        "id": "f6-nicasio-2029-rothermel-a0b61a59-33b1bab5",
-        "made": 1794173718,
+        "id": "gusts",
+        "made": 1794702036,
         "name": "f6-nicasio-2029-rothermel",
         "seed": 1,
         "set": {
@@ -501,11 +501,27 @@
       },
       {
         "all_ledgers_closed": true,
+        "digest": "56a0ba659c004975",
+        "end": 1885791600,
+        "events": 227,
+        "id": "reanalysis",
+        "made": 1794702031,
+        "name": "f6-nicasio-2029-rothermel",
+        "seed": 1,
+        "set": {
+          "fire.wind_source": "\"mean\""
+        },
+        "start": 1885532400,
+        "variant": "reanalysis",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
         "digest": "93e4442900476cdd",
         "end": 1885791600,
         "events": 227,
-        "id": "f6-nicasio-2029-rothermel-e4e3d40a-93e44429",
-        "made": 1794173727,
+        "id": "sh7",
+        "made": 1794702046,
         "name": "f6-nicasio-2029-rothermel",
         "seed": 1,
         "set": {
@@ -513,22 +529,6 @@
         },
         "start": 1885532400,
         "variant": "sh7",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "5b539d8cbdab05dd",
-        "end": 1885791600,
-        "events": 227,
-        "id": "f6-nicasio-2029-rothermel-e8d3bf96-5b539d8c",
-        "made": 1794173722,
-        "name": "f6-nicasio-2029-rothermel",
-        "seed": 1,
-        "set": {
-          "fire.built_ros_m_min": "0"
-        },
-        "start": 1885532400,
-        "variant": "built-barrier",
         "verdict": "holds"
       }
     ],
@@ -584,43 +584,11 @@
     "runs": [
       {
         "all_ledgers_closed": true,
-        "digest": "f5303941b2b24fb9",
-        "end": 1736640000,
-        "events": 1764,
-        "id": "f2-palisades-2025-049fd575-f5303941",
-        "made": 1793810951,
-        "name": "f2-palisades-2025",
-        "seed": 1,
-        "set": {
-          "fire.shrub_fuel": "\"SH7\""
-        },
-        "start": 1736272800,
-        "variant": "sh7",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "1ef44ed6900682fd",
-        "end": 1736640000,
-        "events": 1764,
-        "id": "f2-palisades-2025-4464aade-1ef44ed6",
-        "made": 1793810955,
-        "name": "f2-palisades-2025",
-        "seed": 1,
-        "set": {
-          "fire.wind_source": "\"gust\""
-        },
-        "start": 1736272800,
-        "variant": "gusts",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
         "digest": "4c5d9a239751d634",
         "end": 1736640000,
         "events": 1764,
-        "id": "f2-palisades-2025-89ae7246-4c5d9a23",
-        "made": 1793810953,
+        "id": "built-barrier",
+        "made": 1794702089,
         "name": "f2-palisades-2025",
         "seed": 1,
         "set": {
@@ -632,11 +600,27 @@
       },
       {
         "all_ledgers_closed": true,
+        "digest": "1ef44ed6900682fd",
+        "end": 1736640000,
+        "events": 1764,
+        "id": "gusts",
+        "made": 1794702110,
+        "name": "f2-palisades-2025",
+        "seed": 1,
+        "set": {
+          "fire.wind_source": "\"gust\""
+        },
+        "start": 1736272800,
+        "variant": "gusts",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
         "digest": "eb728349588044e2",
         "end": 1736640000,
         "events": 1764,
-        "id": "f2-palisades-2025-a679e5d7-eb728349",
-        "made": 1793810954,
+        "id": "reanalysis",
+        "made": 1794702099,
         "name": "f2-palisades-2025",
         "seed": 1,
         "set": {
@@ -644,6 +628,22 @@
         },
         "start": 1736272800,
         "variant": "reanalysis",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "f5303941b2b24fb9",
+        "end": 1736640000,
+        "events": 1764,
+        "id": "sh7",
+        "made": 1794702080,
+        "name": "f2-palisades-2025",
+        "seed": 1,
+        "set": {
+          "fire.shrub_fuel": "\"SH7\""
+        },
+        "start": 1736272800,
+        "variant": "sh7",
         "verdict": "holds"
       }
     ],
@@ -699,178 +699,11 @@
     "runs": [
       {
         "all_ledgers_closed": true,
-        "digest": "2d1db73804dfb214",
-        "end": 1736640000,
-        "events": 2456,
-        "id": "f3-palisades-cells-0e261438-2d1db738",
-        "made": 1793811011,
-        "name": "f3-palisades-cells",
-        "seed": 1,
-        "set": {
-          "fire.ignite_scale": "3",
-          "fire.reach_m": "45"
-        },
-        "start": 1736272800,
-        "variant": "near-3",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "cae1ba894aa32381",
-        "end": 1736640000,
-        "events": 2354,
-        "id": "f3-palisades-cells-14927292-cae1ba89",
-        "made": 1793811011,
-        "name": "f3-palisades-cells",
-        "seed": 1,
-        "set": {
-          "fire.built_to_built_gain": "2.5",
-          "fire.ember_built_p": "0.5",
-          "fire.ignite_scale": "4",
-          "fire.reach_m": "45"
-        },
-        "start": 1736272800,
-        "variant": "houses",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "5ec0f114202c3f0d",
-        "end": 1736640000,
-        "events": 2441,
-        "id": "f3-palisades-cells-1639a39f-5ec0f114",
-        "made": 1793811038,
-        "name": "f3-palisades-cells",
-        "seed": 1,
-        "set": {
-          "fire.house_lambda_m": "6",
-          "fire.ignite_scale": "4",
-          "fire.reach_m": "45",
-          "fire.structure_ignite": "25",
-          "fire.structure_jitter": "0.6",
-          "fire.structures": "\"on\""
-        },
-        "start": 1736272800,
-        "variant": "bodies-hard",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "3716add79ea27174",
-        "end": 1736640000,
-        "events": 2129,
-        "id": "f3-palisades-cells-38da48d9-3716add7",
-        "made": 1793810984,
-        "name": "f3-palisades-cells",
-        "seed": 1,
-        "set": {
-          "fire.ignite_scale": "3"
-        },
-        "start": 1736272800,
-        "variant": "scale-3",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "f34599a500f07340",
-        "end": 1736640000,
-        "events": 1763,
-        "id": "f3-palisades-cells-42ffef19-f34599a5",
-        "made": 1793810981,
-        "name": "f3-palisades-cells",
-        "seed": 1,
-        "set": {
-          "fire.ignite_scale": "6"
-        },
-        "start": 1736272800,
-        "variant": "scale-6",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "624e3c315c0a69a2",
-        "end": 1736640000,
-        "events": 2123,
-        "id": "f3-palisades-cells-5f4cc560-624e3c31",
-        "made": 1793811066,
-        "name": "f3-palisades-cells",
-        "seed": 1,
-        "set": {
-          "fire.cooling": "\"idle\"",
-          "fire.form": "\"vector\"",
-          "fire.ignite_scale": "8",
-          "fire.reach_m": "45",
-          "fire.slope_rate_gain": "20"
-        },
-        "start": 1736272800,
-        "variant": "vector-8",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "2eb215dfd094ace8",
-        "end": 1736640000,
-        "events": 2152,
-        "id": "f3-palisades-cells-7131bd4a-2eb215df",
-        "made": 1793811066,
-        "name": "f3-palisades-cells",
-        "seed": 1,
-        "set": {
-          "fire.cooling": "\"idle\"",
-          "fire.form": "\"vector\"",
-          "fire.ignite_scale": "5",
-          "fire.reach_m": "45",
-          "fire.slope_rate_gain": "20"
-        },
-        "start": 1736272800,
-        "variant": "vector-5",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "9c487c373d0e1997",
-        "end": 1736640000,
-        "events": 2152,
-        "id": "f3-palisades-cells-7131bd4a-9c487c37",
-        "made": 1794673154,
-        "name": "f3-palisades-cells",
-        "seed": 1,
-        "set": {
-          "fire.cooling": "\"idle\"",
-          "fire.form": "\"vector\"",
-          "fire.ignite_scale": "5",
-          "fire.reach_m": "45",
-          "fire.slope_rate_gain": "20"
-        },
-        "start": 1736272800,
-        "variant": "vector-5",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "44a83d66791b9ce2",
-        "end": 1736640000,
-        "events": 1836,
-        "id": "f3-palisades-cells-8bfc6e78-44a83d66",
-        "made": 1793811037,
-        "name": "f3-palisades-cells",
-        "seed": 1,
-        "set": {
-          "fire.ignite_scale": "4",
-          "fire.reach_m": "45",
-          "fire.slope_rate_gain": "20"
-        },
-        "start": 1736272800,
-        "variant": "near-4-slope",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "d3d917851f843e56",
+        "digest": "4cb34e25c89bacd1",
         "end": 1736640000,
         "events": 2404,
-        "id": "f3-palisades-cells-aada6577-d3d91785",
-        "made": 1793811038,
+        "id": "bodies",
+        "made": 1794703006,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -887,64 +720,51 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "713656981ef79938",
+        "digest": "b6e35b0c006d33f0",
         "end": 1736640000,
-        "events": 2585,
-        "id": "f3-palisades-cells-b012c120-71365698",
-        "made": 1793811065,
+        "events": 2441,
+        "id": "bodies-hard",
+        "made": 1794702977,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
-          "fire.downslope_gain": "2",
+          "fire.house_lambda_m": "6",
           "fire.ignite_scale": "4",
           "fire.reach_m": "45",
-          "fire.slope_rate_gain": "20"
+          "fire.structure_ignite": "25",
+          "fire.structure_jitter": "0.6",
+          "fire.structures": "\"on\""
         },
         "start": 1736272800,
-        "variant": "near-4-slope-soft",
+        "variant": "bodies-hard",
         "verdict": "holds"
       },
       {
         "all_ledgers_closed": true,
-        "digest": "c805539532432e45",
+        "digest": "5f6cfe3798e1859e",
         "end": 1736640000,
-        "events": 2319,
-        "id": "f3-palisades-cells-b4a4af11-c8055395",
-        "made": 1793810984,
+        "events": 2354,
+        "id": "houses",
+        "made": 1794702870,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
-          "fire.ignite_scale": "4"
-        },
-        "start": 1736272800,
-        "variant": "scale-4",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "265827d2bd2c5f40",
-        "end": 1736640000,
-        "events": 2277,
-        "id": "f3-palisades-cells-b9cd582e-265827d2",
-        "made": 1793811065,
-        "name": "f3-palisades-cells",
-        "seed": 1,
-        "set": {
+          "fire.built_to_built_gain": "2.5",
+          "fire.ember_built_p": "0.5",
           "fire.ignite_scale": "4",
-          "fire.reach_m": "45",
-          "fire.slope_rate_gain": "6"
+          "fire.reach_m": "45"
         },
         "start": 1736272800,
-        "variant": "near-4-slope-6",
+        "variant": "houses",
         "verdict": "holds"
       },
       {
         "all_ledgers_closed": true,
-        "digest": "9687dbdcf41416c7",
+        "digest": "48489b2662948c14",
         "end": 1736640000,
         "events": 2419,
-        "id": "f3-palisades-cells-d1407db5-9687dbdc",
-        "made": 1793811038,
+        "id": "houses-jitter",
+        "made": 1794703035,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -960,27 +780,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "eba8c6f7a7e910cb",
-        "end": 1736640000,
-        "events": 1956,
-        "id": "f3-palisades-cells-d73b8fb3-eba8c6f7",
-        "made": 1793810984,
-        "name": "f3-palisades-cells",
-        "seed": 1,
-        "set": {
-          "fire.ignite_scale": "2"
-        },
-        "start": 1736272800,
-        "variant": "scale-2",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "3d9036d4492626c0",
+        "digest": "9a05c3192f6588a1",
         "end": 1736640000,
         "events": 2644,
-        "id": "f3-palisades-cells-df3a701a-3d9036d4",
-        "made": 1793811011,
+        "id": "near-2",
+        "made": 1794702897,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -993,11 +797,184 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "8915b8359e886563",
+        "digest": "343253c0b2d36f8f",
+        "end": 1736640000,
+        "events": 2456,
+        "id": "near-3",
+        "made": 1794702843,
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.ignite_scale": "3",
+          "fire.reach_m": "45"
+        },
+        "start": 1736272800,
+        "variant": "near-3",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "5f333d43efbabce9",
+        "end": 1736640000,
+        "events": 2354,
+        "id": "near-4",
+        "made": 1794702923,
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.ignite_scale": "4",
+          "fire.reach_m": "45"
+        },
+        "start": 1736272800,
+        "variant": "near-4",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "bf51da3c6184dbe1",
+        "end": 1736640000,
+        "events": 1836,
+        "id": "near-4-slope",
+        "made": 1794702949,
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.ignite_scale": "4",
+          "fire.reach_m": "45",
+          "fire.slope_rate_gain": "20"
+        },
+        "start": 1736272800,
+        "variant": "near-4-slope",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "9f09e1ded0812a97",
+        "end": 1736640000,
+        "events": 2277,
+        "id": "near-4-slope-6",
+        "made": 1794703092,
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.ignite_scale": "4",
+          "fire.reach_m": "45",
+          "fire.slope_rate_gain": "6"
+        },
+        "start": 1736272800,
+        "variant": "near-4-slope-6",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "f3dfeaca1b331067",
+        "end": 1736640000,
+        "events": 2585,
+        "id": "near-4-slope-soft",
+        "made": 1794703064,
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.downslope_gain": "2",
+          "fire.ignite_scale": "4",
+          "fire.reach_m": "45",
+          "fire.slope_rate_gain": "20"
+        },
+        "start": 1736272800,
+        "variant": "near-4-slope-soft",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "903b4fbf261d7f9e",
+        "end": 1736640000,
+        "events": 1956,
+        "id": "scale-2",
+        "made": 1794702817,
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.ignite_scale": "2"
+        },
+        "start": 1736272800,
+        "variant": "scale-2",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "0c9f23366ccdf445",
+        "end": 1736640000,
+        "events": 2129,
+        "id": "scale-3",
+        "made": 1794702760,
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.ignite_scale": "3"
+        },
+        "start": 1736272800,
+        "variant": "scale-3",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "57224e4b5a702754",
+        "end": 1736640000,
+        "events": 2319,
+        "id": "scale-4",
+        "made": 1794702789,
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.ignite_scale": "4"
+        },
+        "start": 1736272800,
+        "variant": "scale-4",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "87883280bcbd3d33",
+        "end": 1736640000,
+        "events": 1763,
+        "id": "scale-6",
+        "made": 1794702732,
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.ignite_scale": "6"
+        },
+        "start": 1736272800,
+        "variant": "scale-6",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "9c487c373d0e1997",
+        "end": 1736640000,
+        "events": 2152,
+        "id": "vector-5",
+        "made": 1794703151,
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.cooling": "\"idle\"",
+          "fire.form": "\"vector\"",
+          "fire.ignite_scale": "5",
+          "fire.reach_m": "45",
+          "fire.slope_rate_gain": "20"
+        },
+        "start": 1736272800,
+        "variant": "vector-5",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "aab0ae3d53fe4572",
         "end": 1736640000,
         "events": 2247,
-        "id": "f3-palisades-cells-e05d601f-8915b835",
-        "made": 1793811093,
+        "id": "vector-5-held",
+        "made": 1794703180,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -1014,19 +991,22 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "a23bcc6bb910feec",
+        "digest": "831f57c39fd9906b",
         "end": 1736640000,
-        "events": 2354,
-        "id": "f3-palisades-cells-f372497a-a23bcc6b",
-        "made": 1793811011,
+        "events": 2123,
+        "id": "vector-8",
+        "made": 1794703122,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
-          "fire.ignite_scale": "4",
-          "fire.reach_m": "45"
+          "fire.cooling": "\"idle\"",
+          "fire.form": "\"vector\"",
+          "fire.ignite_scale": "8",
+          "fire.reach_m": "45",
+          "fire.slope_rate_gain": "20"
         },
         "start": 1736272800,
-        "variant": "near-4",
+        "variant": "vector-8",
         "verdict": "holds"
       }
     ],
@@ -1226,52 +1206,37 @@
     "runs": [
       {
         "all_ledgers_closed": true,
-        "digest": "e0fe18a311d45c81",
+        "digest": "591ea060aa5180d6",
         "end": 4102444800,
-        "events": 35390,
-        "id": "p4-planet-people-025f2fd5-e0fe18a3",
-        "made": 1794117513,
+        "events": 35634,
+        "id": "eruption-2040",
+        "made": 1794117577,
         "name": "p4-planet-people",
         "seed": 1,
         "set": {
           "emissions.after_record": "\"hold\"",
-          "tipped.trigger": "\"low\""
+          "wildcards.at": "\"2040\"",
+          "wildcards.event": "\"vei7-eruption\"",
+          "wildcards.mode": "\"named\""
         },
         "start": -3786825600,
-        "variant": "held-low",
+        "variant": "eruption-2040",
         "verdict": "holds"
       },
       {
         "all_ledgers_closed": true,
-        "digest": "8b301f0e9a46b2d4",
+        "digest": "9c843ad4807a66ca",
         "end": 4102444800,
-        "events": 32980,
-        "id": "p4-planet-people-0864ec21-8b301f0e",
-        "made": 1794117602,
+        "events": 33542,
+        "id": "falling",
+        "made": 1794117526,
         "name": "p4-planet-people",
         "seed": 1,
         "set": {
-          "capacity.mode": "\"on\"",
-          "emissions.after_record": "\"zero_by:2050\""
+          "emissions.after_record": "\"grow:-3\""
         },
         "start": -3786825600,
-        "variant": "zero-by-2050-derailed",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "b0c3bac21b5d90d5",
-        "end": 1735689600,
-        "events": 20680,
-        "id": "p4-planet-people-1b2cf39b-b0c3bac2",
-        "made": 1794117448,
-        "name": "p4-planet-people",
-        "seed": 1,
-        "set": {
-          "run.end": "\"2025-01-01\""
-        },
-        "start": -3786825600,
-        "variant": "hindcast",
+        "variant": "falling",
         "verdict": "holds"
       },
       {
@@ -1279,7 +1244,7 @@
         "digest": "90e094cc56856c41",
         "end": 4102444800,
         "events": 33987,
-        "id": "p4-planet-people-1f3349b1-90e094cc",
+        "id": "falling-derailed",
         "made": 1794117628,
         "name": "p4-planet-people",
         "seed": 1,
@@ -1296,7 +1261,7 @@
         "digest": "603b7b75c65f85bc",
         "end": 4102444800,
         "events": 36091,
-        "id": "p4-planet-people-4f84fb6b-603b7b75",
+        "id": "growing",
         "made": 1794117499,
         "name": "p4-planet-people",
         "seed": 1,
@@ -1309,41 +1274,84 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "12e4e40f0c88d469",
+        "digest": "852df1612e860e00",
         "end": 4102444800,
-        "events": 33727,
-        "id": "p4-planet-people-4f9aa8e2-12e4e40f",
-        "made": 1794117653,
+        "events": 35201,
+        "id": "held",
+        "made": 1794117461,
         "name": "p4-planet-people",
         "seed": 1,
         "set": {
-          "capacity.mode": "\"on\"",
-          "emissions.after_record": "\"zero_by:2050\"",
-          "run.seed": "1",
-          "tipping.coupling": "1.0",
-          "wildcards.mode": "\"draw\""
+          "emissions.after_record": "\"hold\""
         },
         "start": -3786825600,
-        "variant": "zero-by-2050-everything",
+        "variant": "held",
         "verdict": "holds"
       },
       {
         "all_ledgers_closed": true,
-        "digest": "7b29853a15297a5c",
+        "digest": "608a9f652fa0fc8a",
         "end": 4102444800,
-        "events": 33726,
-        "id": "p4-planet-people-652a7bb4-7b29853a",
-        "made": 1794117615,
+        "events": 35217,
+        "id": "held-cascade",
+        "made": 1794117641,
         "name": "p4-planet-people",
         "seed": 1,
         "set": {
-          "capacity.mode": "\"on\"",
-          "emissions.after_record": "\"zero_by:2050\"",
-          "run.seed": "1",
-          "wildcards.mode": "\"draw\""
+          "emissions.after_record": "\"hold\"",
+          "tipping.coupling": "1.0"
         },
         "start": -3786825600,
-        "variant": "zero-by-2050-derailed-wild",
+        "variant": "held-cascade",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "e0fe18a311d45c81",
+        "end": 4102444800,
+        "events": 35390,
+        "id": "held-low",
+        "made": 1794117513,
+        "name": "p4-planet-people",
+        "seed": 1,
+        "set": {
+          "emissions.after_record": "\"hold\"",
+          "tipped.trigger": "\"low\""
+        },
+        "start": -3786825600,
+        "variant": "held-low",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "b0c3bac21b5d90d5",
+        "end": 1735689600,
+        "events": 20680,
+        "id": "hindcast",
+        "made": 1794117448,
+        "name": "p4-planet-people",
+        "seed": 1,
+        "set": {
+          "run.end": "\"2025-01-01\""
+        },
+        "start": -3786825600,
+        "variant": "hindcast",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "e2241eb3e9c1d0f7",
+        "end": 4102444800,
+        "events": 35723,
+        "id": "trend",
+        "made": 1794117486,
+        "name": "p4-planet-people",
+        "seed": 1,
+        "set": {
+          "emissions.after_record": "\"trend:10\""
+        },
+        "start": -3786825600,
+        "variant": "trend",
         "verdict": "holds"
       },
       {
@@ -1351,7 +1359,7 @@
         "digest": "c64235fcaba43238",
         "end": 4102444800,
         "events": 35853,
-        "id": "p4-planet-people-79ed7546-c64235fc",
+        "id": "wild-1",
         "made": 1794117539,
         "name": "p4-planet-people",
         "seed": 1,
@@ -1366,10 +1374,46 @@
       },
       {
         "all_ledgers_closed": true,
+        "digest": "00c6005d50296540",
+        "end": 4102444800,
+        "events": 35962,
+        "id": "wild-2",
+        "made": 1794117551,
+        "name": "p4-planet-people",
+        "seed": 2,
+        "set": {
+          "emissions.after_record": "\"hold\"",
+          "run.seed": "2",
+          "wildcards.mode": "\"draw\""
+        },
+        "start": -3786825600,
+        "variant": "wild-2",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "f5d11a1dc6f1a3da",
+        "end": 4102444800,
+        "events": 36057,
+        "id": "wild-3",
+        "made": 1794117564,
+        "name": "p4-planet-people",
+        "seed": 3,
+        "set": {
+          "emissions.after_record": "\"hold\"",
+          "run.seed": "3",
+          "wildcards.mode": "\"draw\""
+        },
+        "start": -3786825600,
+        "variant": "wild-3",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
         "digest": "4f6574164c6326c0",
         "end": 4102444800,
         "events": 34863,
-        "id": "p4-planet-people-81f2a5f5-4f657416",
+        "id": "wild-4x",
         "made": 1794117590,
         "name": "p4-planet-people",
         "seed": 1,
@@ -1385,78 +1429,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "852df1612e860e00",
-        "end": 4102444800,
-        "events": 35201,
-        "id": "p4-planet-people-afc2a651-852df161",
-        "made": 1794117461,
-        "name": "p4-planet-people",
-        "seed": 1,
-        "set": {
-          "emissions.after_record": "\"hold\""
-        },
-        "start": -3786825600,
-        "variant": "held",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "e2241eb3e9c1d0f7",
-        "end": 4102444800,
-        "events": 35723,
-        "id": "p4-planet-people-b0723d60-e2241eb3",
-        "made": 1794117486,
-        "name": "p4-planet-people",
-        "seed": 1,
-        "set": {
-          "emissions.after_record": "\"trend:10\""
-        },
-        "start": -3786825600,
-        "variant": "trend",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "f5d11a1dc6f1a3da",
-        "end": 4102444800,
-        "events": 36057,
-        "id": "p4-planet-people-b18e37f3-f5d11a1d",
-        "made": 1794117564,
-        "name": "p4-planet-people",
-        "seed": 3,
-        "set": {
-          "emissions.after_record": "\"hold\"",
-          "run.seed": "3",
-          "wildcards.mode": "\"draw\""
-        },
-        "start": -3786825600,
-        "variant": "wild-3",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "00c6005d50296540",
-        "end": 4102444800,
-        "events": 35962,
-        "id": "p4-planet-people-b440222b-00c6005d",
-        "made": 1794117551,
-        "name": "p4-planet-people",
-        "seed": 2,
-        "set": {
-          "emissions.after_record": "\"hold\"",
-          "run.seed": "2",
-          "wildcards.mode": "\"draw\""
-        },
-        "start": -3786825600,
-        "variant": "wild-2",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
         "digest": "ade509b300c0940f",
         "end": 4102444800,
         "events": 32713,
-        "id": "p4-planet-people-bd951aec-ade509b3",
+        "id": "zero-by-2050",
         "made": 1794117473,
         "name": "p4-planet-people",
         "seed": 1,
@@ -1469,54 +1445,58 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "608a9f652fa0fc8a",
+        "digest": "8b301f0e9a46b2d4",
         "end": 4102444800,
-        "events": 35217,
-        "id": "p4-planet-people-d7efa189-608a9f65",
-        "made": 1794117641,
+        "events": 32980,
+        "id": "zero-by-2050-derailed",
+        "made": 1794117602,
         "name": "p4-planet-people",
         "seed": 1,
         "set": {
-          "emissions.after_record": "\"hold\"",
-          "tipping.coupling": "1.0"
+          "capacity.mode": "\"on\"",
+          "emissions.after_record": "\"zero_by:2050\""
         },
         "start": -3786825600,
-        "variant": "held-cascade",
+        "variant": "zero-by-2050-derailed",
         "verdict": "holds"
       },
       {
         "all_ledgers_closed": true,
-        "digest": "9c843ad4807a66ca",
+        "digest": "7b29853a15297a5c",
         "end": 4102444800,
-        "events": 33542,
-        "id": "p4-planet-people-e482d639-9c843ad4",
-        "made": 1794117526,
+        "events": 33726,
+        "id": "zero-by-2050-derailed-wild",
+        "made": 1794117615,
         "name": "p4-planet-people",
         "seed": 1,
         "set": {
-          "emissions.after_record": "\"grow:-3\""
+          "capacity.mode": "\"on\"",
+          "emissions.after_record": "\"zero_by:2050\"",
+          "run.seed": "1",
+          "wildcards.mode": "\"draw\""
         },
         "start": -3786825600,
-        "variant": "falling",
+        "variant": "zero-by-2050-derailed-wild",
         "verdict": "holds"
       },
       {
         "all_ledgers_closed": true,
-        "digest": "591ea060aa5180d6",
+        "digest": "12e4e40f0c88d469",
         "end": 4102444800,
-        "events": 35634,
-        "id": "p4-planet-people-f2e30f39-591ea060",
-        "made": 1794117577,
+        "events": 33727,
+        "id": "zero-by-2050-everything",
+        "made": 1794117653,
         "name": "p4-planet-people",
         "seed": 1,
         "set": {
-          "emissions.after_record": "\"hold\"",
-          "wildcards.at": "\"2040\"",
-          "wildcards.event": "\"vei7-eruption\"",
-          "wildcards.mode": "\"named\""
+          "capacity.mode": "\"on\"",
+          "emissions.after_record": "\"zero_by:2050\"",
+          "run.seed": "1",
+          "tipping.coupling": "1.0",
+          "wildcards.mode": "\"draw\""
         },
         "start": -3786825600,
-        "variant": "eruption-2040",
+        "variant": "zero-by-2050-everything",
         "verdict": "holds"
       }
     ],
@@ -1688,7 +1668,7 @@
         "digest": "8d8d2ffbee4226b3",
         "end": 1735689600,
         "events": 12805,
-        "id": "p1-planet-co2-1850-2025-8a0a0e63-8d8d2ffb",
+        "id": "base",
         "made": 1793576121,
         "name": "p1-planet-co2-1850-2025",
         "seed": 1,
@@ -1736,7 +1716,21 @@
         "digest": "c64235fcaba43238",
         "end": 4102444800,
         "events": 35853,
-        "id": "j3-planet-wild-members-14bfa83f-c64235fc",
+        "id": "base",
+        "made": 1794117666,
+        "name": "j3-planet-wild-members",
+        "seed": 1,
+        "set": null,
+        "start": -3786825600,
+        "variant": null,
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "c64235fcaba43238",
+        "end": 4102444800,
+        "events": 35853,
+        "id": "seeds-1",
         "made": 1794117679,
         "name": "j3-planet-wild-members",
         "seed": 1,
@@ -1752,7 +1746,7 @@
         "digest": "00c6005d50296540",
         "end": 4102444800,
         "events": 35962,
-        "id": "j3-planet-wild-members-37c96e40-00c6005d",
+        "id": "seeds-2",
         "made": 1794117692,
         "name": "j3-planet-wild-members",
         "seed": 2,
@@ -1765,10 +1759,42 @@
       },
       {
         "all_ledgers_closed": true,
+        "digest": "f5d11a1dc6f1a3da",
+        "end": 4102444800,
+        "events": 36057,
+        "id": "seeds-3",
+        "made": 1794117704,
+        "name": "j3-planet-wild-members",
+        "seed": 3,
+        "set": {
+          "run.seed": "3"
+        },
+        "start": -3786825600,
+        "variant": "seeds-3",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "3c33156d9c092a57",
+        "end": 4102444800,
+        "events": 35344,
+        "id": "seeds-4",
+        "made": 1794117717,
+        "name": "j3-planet-wild-members",
+        "seed": 4,
+        "set": {
+          "run.seed": "4"
+        },
+        "start": -3786825600,
+        "variant": "seeds-4",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
         "digest": "142b02af519151ea",
         "end": 4102444800,
         "events": 35286,
-        "id": "j3-planet-wild-members-3f41b554-142b02af",
+        "id": "seeds-5",
         "made": 1794117729,
         "name": "j3-planet-wild-members",
         "seed": 5,
@@ -1784,7 +1810,7 @@
         "digest": "28bfeb4debef0636",
         "end": 4102444800,
         "events": 35929,
-        "id": "j3-planet-wild-members-5ed5c445-28bfeb4d",
+        "id": "seeds-6",
         "made": 1794117742,
         "name": "j3-planet-wild-members",
         "seed": 6,
@@ -1797,42 +1823,10 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "f5d11a1dc6f1a3da",
-        "end": 4102444800,
-        "events": 36057,
-        "id": "j3-planet-wild-members-8fc9576f-f5d11a1d",
-        "made": 1794117704,
-        "name": "j3-planet-wild-members",
-        "seed": 3,
-        "set": {
-          "run.seed": "3"
-        },
-        "start": -3786825600,
-        "variant": "seeds-3",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "9848021b9375ef33",
-        "end": 4102444800,
-        "events": 35641,
-        "id": "j3-planet-wild-members-9110dcb8-9848021b",
-        "made": 1794117767,
-        "name": "j3-planet-wild-members",
-        "seed": 8,
-        "set": {
-          "run.seed": "8"
-        },
-        "start": -3786825600,
-        "variant": "seeds-8",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
         "digest": "a3779ed5ee85c9f4",
         "end": 4102444800,
         "events": 35627,
-        "id": "j3-planet-wild-members-915df65b-a3779ed5",
+        "id": "seeds-7",
         "made": 1794117755,
         "name": "j3-planet-wild-members",
         "seed": 7,
@@ -1845,32 +1839,18 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "3c33156d9c092a57",
+        "digest": "9848021b9375ef33",
         "end": 4102444800,
-        "events": 35344,
-        "id": "j3-planet-wild-members-a95f5d01-3c33156d",
-        "made": 1794117717,
+        "events": 35641,
+        "id": "seeds-8",
+        "made": 1794117767,
         "name": "j3-planet-wild-members",
-        "seed": 4,
+        "seed": 8,
         "set": {
-          "run.seed": "4"
+          "run.seed": "8"
         },
         "start": -3786825600,
-        "variant": "seeds-4",
-        "verdict": "holds"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "c64235fcaba43238",
-        "end": 4102444800,
-        "events": 35853,
-        "id": "j3-planet-wild-members-eacc23ef-c64235fc",
-        "made": 1794117666,
-        "name": "j3-planet-wild-members",
-        "seed": 1,
-        "set": null,
-        "start": -3786825600,
-        "variant": null,
+        "variant": "seeds-8",
         "verdict": "holds"
       }
     ],
@@ -1970,29 +1950,27 @@
     "runs": [
       {
         "all_ledgers_closed": true,
-        "digest": "be14a2ced78d55d3",
+        "digest": "3cdfbe0d1c103a92",
         "end": 1830326400,
-        "events": 5193,
-        "id": "q1-portland-cascadia-002eae12-be14a2ce",
-        "made": 1794678466,
+        "events": 6829,
+        "id": "burnside-ready",
+        "made": 1794702182,
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
-          "depot.enabled": "false",
-          "hospitals.enabled": "false",
-          "lifelines.inputs": "\"ranges\""
+          "lifelines.bridge_ready": "[\"Burnside Bridge\"]"
         },
         "start": 1798790400,
-        "variant": "ranges",
-        "verdict": "tearing"
+        "variant": "burnside-ready",
+        "verdict": "stretching"
       },
       {
         "all_ledgers_closed": true,
         "digest": "6702ed6f19c0dfea",
         "end": 1830326400,
         "events": 6829,
-        "id": "q1-portland-cascadia-0933d22f-6702ed6f",
-        "made": 1794678433,
+        "id": "cut-20",
+        "made": 1794702152,
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
@@ -2006,61 +1984,31 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "bcf07e135af79dc6",
+        "digest": "816d06c64c33c45e",
         "end": 1830326400,
-        "events": 6801,
-        "id": "q1-portland-cascadia-24610a98-bcf07e13",
-        "made": 1794678475,
-        "name": "q1-portland-cascadia",
-        "seed": 2,
-        "set": {
-          "run.seed": "2"
-        },
-        "start": 1798790400,
-        "variant": "seed-2",
-        "verdict": "tearing"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "3cdfbe0d1c103a92",
-        "end": 1830326400,
-        "events": 6829,
-        "id": "q1-portland-cascadia-751fad5f-3cdfbe0d",
-        "made": 1794678409,
+        "events": 6589,
+        "id": "dry-day",
+        "made": 1794702142,
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
           "buildings.time_of_day": "\"day\"",
-          "ground.soils": "\"wet\"",
-          "losses.record": "\"wet\""
+          "ground.soils": "\"dry\"",
+          "losses.record": "\"dry\"",
+          "power.soils": "\"dry\"",
+          "routes.soils": "\"dry\""
         },
         "start": 1798790400,
-        "variant": "wet-day",
+        "variant": "dry-day",
         "verdict": "stretching"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "21c2758364d633a9",
-        "end": 1830326400,
-        "events": 6831,
-        "id": "q1-portland-cascadia-7e82151e-21c27583",
-        "made": 1794678483,
-        "name": "q1-portland-cascadia",
-        "seed": 3,
-        "set": {
-          "run.seed": "3"
-        },
-        "start": 1798790400,
-        "variant": "seed-3",
-        "verdict": "tearing"
       },
       {
         "all_ledgers_closed": true,
         "digest": "54b24015cd533355",
         "end": 1830326400,
         "events": 6829,
-        "id": "q1-portland-cascadia-b0f009cf-54b24015",
-        "made": 1794678442,
+        "id": "no-hub",
+        "made": 1794702162,
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
@@ -2074,11 +2022,29 @@
       },
       {
         "all_ledgers_closed": true,
+        "digest": "be14a2ced78d55d3",
+        "end": 1830326400,
+        "events": 5193,
+        "id": "ranges",
+        "made": 1794702191,
+        "name": "q1-portland-cascadia",
+        "seed": 1,
+        "set": {
+          "depot.enabled": "false",
+          "hospitals.enabled": "false",
+          "lifelines.inputs": "\"ranges\""
+        },
+        "start": 1798790400,
+        "variant": "ranges",
+        "verdict": "tearing"
+      },
+      {
+        "all_ledgers_closed": true,
         "digest": "5a87a92cbae66f56",
         "end": 1830326400,
         "events": 6829,
-        "id": "q1-portland-cascadia-be7faeae-5a87a92c",
-        "made": 1794678450,
+        "id": "retrofit",
+        "made": 1794702172,
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
@@ -2091,18 +2057,52 @@
       },
       {
         "all_ledgers_closed": true,
+        "digest": "bcf07e135af79dc6",
+        "end": 1830326400,
+        "events": 6801,
+        "id": "seed-2",
+        "made": 1794702203,
+        "name": "q1-portland-cascadia",
+        "seed": 2,
+        "set": {
+          "run.seed": "2"
+        },
+        "start": 1798790400,
+        "variant": "seed-2",
+        "verdict": "tearing"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "21c2758364d633a9",
+        "end": 1830326400,
+        "events": 6831,
+        "id": "seed-3",
+        "made": 1794702212,
+        "name": "q1-portland-cascadia",
+        "seed": 3,
+        "set": {
+          "run.seed": "3"
+        },
+        "start": 1798790400,
+        "variant": "seed-3",
+        "verdict": "tearing"
+      },
+      {
+        "all_ledgers_closed": true,
         "digest": "3cdfbe0d1c103a92",
         "end": 1830326400,
         "events": 6829,
-        "id": "q1-portland-cascadia-c172c26e-3cdfbe0d",
-        "made": 1794678458,
+        "id": "wet-day",
+        "made": 1794702117,
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
-          "lifelines.bridge_ready": "[\"Burnside Bridge\"]"
+          "buildings.time_of_day": "\"day\"",
+          "ground.soils": "\"wet\"",
+          "losses.record": "\"wet\""
         },
         "start": 1798790400,
-        "variant": "burnside-ready",
+        "variant": "wet-day",
         "verdict": "stretching"
       },
       {
@@ -2110,8 +2110,8 @@
         "digest": "18aa8d84486979ac",
         "end": 1830326400,
         "events": 6829,
-        "id": "q1-portland-cascadia-c4f59c3d-18aa8d84",
-        "made": 1794678417,
+        "id": "wet-night",
+        "made": 1794702127,
         "name": "q1-portland-cascadia",
         "seed": 1,
         "set": {
@@ -2124,26 +2124,6 @@
         },
         "start": 1798790400,
         "variant": "wet-night",
-        "verdict": "stretching"
-      },
-      {
-        "all_ledgers_closed": true,
-        "digest": "816d06c64c33c45e",
-        "end": 1830326400,
-        "events": 6589,
-        "id": "q1-portland-cascadia-c57cd5c6-816d06c6",
-        "made": 1794678425,
-        "name": "q1-portland-cascadia",
-        "seed": 1,
-        "set": {
-          "buildings.time_of_day": "\"day\"",
-          "ground.soils": "\"dry\"",
-          "losses.record": "\"dry\"",
-          "power.soils": "\"dry\"",
-          "routes.soils": "\"dry\""
-        },
-        "start": 1798790400,
-        "variant": "dry-day",
         "verdict": "stretching"
       }
     ],
@@ -2262,7 +2242,7 @@
         "digest": "4d08eea639976b96",
         "end": 1769817600,
         "events": 1743,
-        "id": "m0-buckets-499f95ca-4d08eea6",
+        "id": "base",
         "made": 1793576121,
         "name": "m0-buckets",
         "seed": 42,
@@ -2298,7 +2278,7 @@
         "digest": "8abbb6aedab6a74c",
         "end": 1761868800,
         "events": 74127,
-        "id": "boone-dry-summer-2025-b1f31d34-8abbb6ae",
+        "id": "base",
         "made": 1793577074,
         "name": "boone-dry-summer-2025",
         "seed": 1,

@@ -6,7 +6,7 @@
 //! esim kinds [--json]                     list module kinds, or describe each under default parameters
 //! esim audit <run_dir>                    the independent auditor: spend-down, diversity, shocks, tears
 //! esim project new <area/name> [--manifest f] [--title t] [--description d]   a project folder under projects/
-//! esim project run <area/name> [--variant v] [--set module.param=value ...]   run a project's manifest into its runs/
+//! esim project run <area/name> [--variant v] [--set module.param=value ...] [--name n]   run a project's manifest into its runs/<name>
 //! esim project update <area/name> --manifest f   replace a project's manifest with a re-resolved one
 //! esim project prune <area/name> [--keep 1]    keep the newest run per variant, remove the rest
 //! esim projects [--json]                  list projects (and refresh projects/index.json)
@@ -108,7 +108,7 @@ fn manifest_cmd(path: &Path, as_toml: bool, as_js: bool, id: bool) -> Result<(),
             let ident = !id.is_empty() && !id.contains('-') && !["default", "import", "export", "class", "function", "var", "let", "const", "new", "delete", "in", "if", "for"].contains(&id);
             if !ident { rest.push(e); continue; }
             // the short form for the singletons
-            let body = if ["run", "place", "audit"].contains(&id) && body.len() == 1 && body.contains_key(id) { body[id].clone() } else { serde_json::Value::Object(body) };
+            let body = if ["run", "audit"].contains(&id) && body.len() == 1 && body.contains_key(id) { body[id].clone() } else { serde_json::Value::Object(body) };
             println!("export const {id} = {};\n", serde_json::to_string_pretty(&body).unwrap());
         }
         if !rest.is_empty() { println!("export default {};", serde_json::to_string_pretty(&rest).unwrap()); }
@@ -200,7 +200,7 @@ fn apply_overrides(text: &str, sets: &[Override]) -> Result<String, String> {
     toml::to_string_pretty(&doc).map_err(|e| e.to_string())
 }
 
-fn run(path: &Path, out_root: &Path) -> Result<PathBuf, String> { run_with(path, out_root, &[], None) }
+fn run(path: &Path, out_root: &Path) -> Result<PathBuf, String> { run_with(path, out_root, &[], None, None) }
 
 /// esim prepare <manifest>: everything a run does before the clock starts, and then stop. The
 /// manifest is resolved and its wiring checked, and every module is created, which is when a
@@ -232,7 +232,11 @@ fn prepare_with(path: &Path, sets: &[Override]) -> Result<(), String> {
     Ok(())
 }
 
-fn run_with(path: &Path, out_root: &Path, sets: &[Override], variant: Option<&str>) -> Result<PathBuf, String> {
+/// `name`, when given, is the run folder's name and so its address: a project's runs are named
+/// (the variant's name, or `base`), and a rerun replaces the folder of that name. Without one the
+/// folder is named for what it holds, the manifest's hash and the log's, which is right for the
+/// loose runs under `runs/` where nothing gives a run a name.
+fn run_with(path: &Path, out_root: &Path, sets: &[Override], variant: Option<&str>, name: Option<&str>) -> Result<PathBuf, String> {
     let original = Manifest::resolve_text(path)?;
     let mtext = apply_overrides(&original, sets)?;
     let mut manifest = Manifest::parse(&mtext)?;
@@ -247,8 +251,10 @@ fn run_with(path: &Path, out_root: &Path, sets: &[Override], variant: Option<&st
     // The log digest alone does not see parameters that change only ledger and series
     // values, so the run id also hashes the resolved manifest text.
     let mhash = esim_kernel::hash::fnv1a(mtext.as_bytes());
-    let id = format!("{}-{:08x}-{}", out.name, (mhash >> 32) as u32, &out.log_digest[..8]);
+    let id = match name { Some(n) => n.to_string(), None => format!("{}-{:08x}-{}", out.name, (mhash >> 32) as u32, &out.log_digest[..8]) };
     let dir = out_root.join(&id);
+    // a named run is replaced whole, so nothing of the run it replaces is left in the folder
+    if name.is_some() && dir.join("run.json").exists() { fs::remove_dir_all(&dir).map_err(|e| e.to_string())?; }
     fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
     fs::write(dir.join("manifest.toml"), &mtext).map_err(|e| e.to_string())?;
     write_entities(&dir, &manifest, path)?;
@@ -395,7 +401,7 @@ fn project_sets(dir: &Path, path: &str, variant: Option<&str>) -> Result<Vec<Ove
 
 /// Run a project: its manifest, with a named variant's overrides from project.toml
 /// (`[[variant]] name = ..., [variant.set] "module.param" = value`) and any --set on top.
-fn project_run(path: &str, variant: Option<&str>, extra: &[Override]) -> Result<(), String> {
+fn project_run(path: &str, variant: Option<&str>, extra: &[Override], name: Option<&str>) -> Result<(), String> {
     let dir = project_dir(path)?;
     if !dir.join("manifest.toml").exists() { return Err(format!("no project at {}", dir.display())); }
     let mut sets: Vec<Override> = Vec::new();
@@ -409,7 +415,17 @@ fn project_run(path: &str, variant: Option<&str>, extra: &[Override]) -> Result<
         }
     }
     sets.extend(extra.iter().cloned());
-    run_with(&dir.join("manifest.toml"), &dir.join("runs"), &sets, variant)?;
+    // The run's name within the project, which is its address: the variant's name, `base` for the
+    // manifest as written, or `--name`. Settings given by hand with no name get one from the settings.
+    let name = match (name, variant) {
+        (Some(n), _) => n.to_string(),
+        (None, Some(v)) if extra.is_empty() => v.to_string(),
+        (None, None) if extra.is_empty() => "base".to_string(),
+        _ => format!("custom-{:08x}", (esim_kernel::hash::fnv1a(format!("{variant:?}{extra:?}").as_bytes()) >> 32) as u32),
+    };
+    let ok = !name.is_empty() && name.len() <= 64 && name.chars().all(|c| c.is_ascii_lowercase() || c.is_ascii_digit() || c == '-' || c == '_' || c == '.') && !name.starts_with('.');
+    if !ok || name == "compare" { return Err(format!("run name {name:?}: lower-case letters, digits, - _ and . only, and not `compare`")); }
+    run_with(&dir.join("manifest.toml"), &dir.join("runs"), &sets, variant, Some(&name))?;
     projects_index()?;
     Ok(())
 }
@@ -940,7 +956,7 @@ fn regress(accept: bool, only: Option<&str>) -> Result<(), String> {
         let watch: Vec<&str> = rung.get("watch").and_then(|v| v.as_array()).into_iter().flatten().filter_map(|v| v.as_str()).collect();
         let extra: Vec<(&str, &str)> = rung.get("scores").and_then(|v| v.as_array()).into_iter().flatten().filter_map(|p| Some((p.get(0)?.as_str()?, p.get(1)?.as_str()?))).collect();
         println!("rung     {name}: {manifest}{}", if sets.is_empty() { String::new() } else { format!(" with {}", sets.iter().map(|(k, v)| format!("{k}={v}")).collect::<Vec<_>>().join(" ")) });
-        let dir = run_with(Path::new(manifest), &out_root, &sets, None)?;
+        let dir = run_with(Path::new(manifest), &out_root, &sets, None, None)?;
         for (sim, obs) in &extra { score(&dir, sim, obs)?; }
         let scores: Vec<serde_json::Value> = fs::read_to_string(dir.join("scores.json")).ok().and_then(|t| serde_json::from_str(&t).ok()).unwrap_or_default();
         let run: serde_json::Value = serde_json::from_str(&fs::read_to_string(dir.join("run.json")).map_err(|e| e.to_string())?).map_err(|e| e.to_string())?;
@@ -1044,7 +1060,7 @@ fn main() {
             let get = |flag: &str| args.iter().position(|a| a == flag).and_then(|i| args.get(i + 1)).map(String::as_str);
             match (args.get(2).map(String::as_str), args.get(3)) {
                 (Some("new"), Some(p)) => project_new(p, get("--manifest").map(Path::new), get("--title"), get("--description"), get("--by").unwrap_or("cli")),
-                (Some("run"), Some(p)) => project_run(p, get("--variant"), &parse_overrides(&args)),
+                (Some("run"), Some(p)) => project_run(p, get("--variant"), &parse_overrides(&args), get("--name")),
                 (Some("prepare"), Some(p)) => project_prepare(p, get("--variant"), &parse_overrides(&args)),
                 (Some("prune"), Some(p)) => project_prune(p, get("--keep").and_then(|k| k.parse().ok()).unwrap_or(1)),
                 (Some("update"), Some(p)) => match get("--manifest") { Some(m) => project_update(p, Path::new(m)), None => Err("usage: esim project update <area/name> --manifest <file>".into()) },

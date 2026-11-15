@@ -13,26 +13,18 @@
       }
     },
     {
-      "id": "place",
-      "place": {
-        "lat_n": 45.66,
-        "lat_s": 45.43,
-        "lon_e": -122.47,
-        "lon_w": -122.85,
-        "res_arcsec": 1
-      }
-    },
-    {
       "id": "lifelines",
       "kind": "portland.lifelines",
       "params": {
         "folder": "portland-cascadia",
         "inputs": "computed",
-        "lat_n": 45.66,
-        "lat_s": 45.43,
-        "lon_e": -122.47,
-        "lon_w": -122.85,
-        "res_arcsec": 1,
+        "place": {
+          "lat_n": 45.66,
+          "lat_s": 45.43,
+          "lon_e": -122.47,
+          "lon_w": -122.85,
+          "res_arcsec": 1
+        },
         "retrofit": false,
         "storage_cut": 0
       }
@@ -42,11 +34,13 @@
       "kind": "fuel.tanks",
       "params": {
         "folder": "portland-cascadia",
-        "lat_n": 45.66,
-        "lat_s": 45.43,
-        "lon_e": -122.47,
-        "lon_w": -122.85,
-        "res_arcsec": 1,
+        "place": {
+          "lat_n": 45.66,
+          "lat_s": 45.43,
+          "lon_e": -122.47,
+          "lon_w": -122.85,
+          "res_arcsec": 1
+        },
         "retrofit": false,
         "storage_cut": 0
       }
@@ -56,11 +50,13 @@
       "kind": "roads.bridges",
       "params": {
         "folder": "portland-cascadia",
-        "lat_n": 45.66,
-        "lat_s": 45.43,
-        "lon_e": -122.47,
-        "lon_w": -122.85,
-        "res_arcsec": 1
+        "place": {
+          "lat_n": 45.66,
+          "lat_s": 45.43,
+          "lon_e": -122.47,
+          "lon_w": -122.85,
+          "res_arcsec": 1
+        }
       }
     },
     {
@@ -68,11 +64,13 @@
       "kind": "power.structures",
       "params": {
         "folder": "portland-cascadia",
-        "lat_n": 45.66,
-        "lat_s": 45.43,
-        "lon_e": -122.47,
-        "lon_w": -122.85,
-        "res_arcsec": 1,
+        "place": {
+          "lat_n": 45.66,
+          "lat_s": 45.43,
+          "lon_e": -122.47,
+          "lon_w": -122.85,
+          "res_arcsec": 1
+        },
         "soils": "wet"
       }
     },
@@ -81,11 +79,13 @@
       "kind": "roads.routes",
       "params": {
         "folder": "portland-cascadia",
-        "lat_n": 45.66,
-        "lat_s": 45.43,
-        "lon_e": -122.47,
-        "lon_w": -122.85,
-        "res_arcsec": 1,
+        "place": {
+          "lat_n": 45.66,
+          "lat_s": 45.43,
+          "lon_e": -122.47,
+          "lon_w": -122.85,
+          "res_arcsec": 1
+        },
         "soils": "wet"
       }
     },
@@ -93,11 +93,13 @@
       "id": "water",
       "kind": "water.surface",
       "params": {
-        "lat_n": 45.66,
-        "lat_s": 45.43,
-        "lon_e": -122.47,
-        "lon_w": -122.85,
-        "res_arcsec": 1
+        "place": {
+          "lat_n": 45.66,
+          "lat_s": 45.43,
+          "lon_e": -122.47,
+          "lon_w": -122.85,
+          "res_arcsec": 1
+        }
       }
     },
     {
@@ -105,11 +107,13 @@
       "kind": "fuel.depot",
       "params": {
         "folder": "portland-cascadia",
-        "lat_n": 45.66,
-        "lat_s": 45.43,
-        "lon_e": -122.47,
-        "lon_w": -122.85,
-        "res_arcsec": 1,
+        "place": {
+          "lat_n": 45.66,
+          "lat_s": 45.43,
+          "lon_e": -122.47,
+          "lon_w": -122.85,
+          "res_arcsec": 1
+        },
         "storage_cut": 0
       }
     },
@@ -118,11 +122,13 @@
       "kind": "health.hospitals",
       "params": {
         "folder": "portland-cascadia",
-        "lat_n": 45.66,
-        "lat_s": 45.43,
-        "lon_e": -122.47,
-        "lon_w": -122.85,
-        "res_arcsec": 1
+        "place": {
+          "lat_n": 45.66,
+          "lat_s": 45.43,
+          "lon_e": -122.47,
+          "lon_w": -122.85,
+          "res_arcsec": 1
+        }
       }
     },
     {
@@ -130,11 +136,13 @@
       "kind": "people.aftermath",
       "params": {
         "folder": "portland-cascadia",
-        "lat_n": 45.66,
-        "lat_s": 45.43,
-        "lon_e": -122.47,
-        "lon_w": -122.85,
-        "res_arcsec": 1,
+        "place": {
+          "lat_n": 45.66,
+          "lat_s": 45.43,
+          "lon_e": -122.47,
+          "lon_w": -122.85,
+          "res_arcsec": 1
+        },
         "summary_day": 333
       }
     },
@@ -143,11 +151,13 @@
       "kind": "people.agents",
       "params": {
         "folder": "portland-cascadia",
-        "lat_n": 45.66,
-        "lat_s": 45.43,
-        "lon_e": -122.47,
-        "lon_w": -122.85,
-        "res_arcsec": 1,
+        "place": {
+          "lat_n": 45.66,
+          "lat_s": 45.43,
+          "lon_e": -122.47,
+          "lon_w": -122.85,
+          "res_arcsec": 1
+        },
         "scale": 10,
         "time_of_day": "day"
       }
@@ -158,11 +168,13 @@
       "params": {
         "at": "2027-02-01T22:00:00Z",
         "folder": "portland-cascadia",
-        "lat_n": 45.66,
-        "lat_s": 45.43,
-        "lon_e": -122.47,
-        "lon_w": -122.85,
-        "res_arcsec": 1,
+        "place": {
+          "lat_n": 45.66,
+          "lat_s": 45.43,
+          "lon_e": -122.47,
+          "lon_w": -122.85,
+          "res_arcsec": 1
+        },
         "soils": "wet",
         "tz_name": "PST",
         "tz_offset_h": -8
@@ -179,12 +191,14 @@
         "fragility_scale": 1.2,
         "gf_complete_share": 1,
         "gf_median_cm": 25,
-        "lat_n": 45.66,
-        "lat_s": 45.43,
-        "lon_e": -122.47,
-        "lon_w": -122.85,
         "median_complete_g": 1.1,
-        "res_arcsec": 1,
+        "place": {
+          "lat_n": 45.66,
+          "lat_s": 45.43,
+          "lon_e": -122.47,
+          "lon_w": -122.85,
+          "res_arcsec": 1
+        },
         "time_of_day": "day"
       }
     },
@@ -193,12 +207,14 @@
       "kind": "obs.losses",
       "params": {
         "folder": "portland-cascadia",
-        "lat_n": 45.66,
-        "lat_s": 45.43,
-        "lon_e": -122.47,
-        "lon_w": -122.85,
+        "place": {
+          "lat_n": 45.66,
+          "lat_s": 45.43,
+          "lon_e": -122.47,
+          "lon_w": -122.85,
+          "res_arcsec": 1
+        },
         "record": "wet",
-        "res_arcsec": 1,
         "time_of_day": "day"
       }
     },
@@ -214,7 +230,7 @@
   ],
   "from": {
     "entry": "manifests/q1-portland-cascadia.js",
-    "hash": "sha256:7b8309aa033b651e987515d04c397354fc8ac294aaab8404f68e536b30419f01",
+    "hash": "sha256:d7559978995dd267324ac266b2aed71703ea257ad22d3e739510c436412061ba",
     "language": "javascript"
   },
   "manifest": "manifest/1"

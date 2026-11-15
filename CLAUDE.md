@@ -425,6 +425,22 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   layers.js); `docs/system/goals.md` is the goals and milestones page; JavaScript is the lead manifest notation and
   `manifests/q1-portland-cascadia.js` replaced the TOML (same id; hand-written, since `esim manifest --js` output is
   longer than TOML). The local viewer server was restarted that day; its PID is in the session scratchpad.
+- Runs have names (2026-11-14, Anselm: "we don't need backwards compatability - i think each run should just have a
+  unique name"): a project's run folder is `runs/<name>`, where the name is the variant's, `base` for the manifest as
+  written, or `--name`; its address is `/<area>/<project>/<name>` (`/anselm/portland-cascadia/wet-day`). Running a
+  variant again replaces the folder. The manifest id and log digest are inside (`manifest.json`, `run.json`), no longer
+  in the name. Loose runs under `runs/` keep `<manifest name>-<manifest hash>-<log digest>`. Every run id written
+  earlier in this file or the devlog is of the old form and no longer resolves.
+- No `place` in the reader (2026-11-14, `devlog/20261114-no-place-in-the-reader.md`; Anselm: "there should really be
+  nothing special about place ... as far as the engine is concerned each module gets some props... from the manifest
+  ... it is nice to be able to pass the entire place structure as a single property"): the manifest reader no longer
+  knows `[place]` and copies nothing between entities. A module that works on a window takes `place` as one parameter
+  (a table of `lat_s`, `lat_n`, `lon_w`, `lon_e`, `res_arcsec`); `with_place` in `crates/modules/src/lib.rs` reads its
+  keys as the module's own, the module's own key winning. A script states the window once as a variable. The six
+  scenario manifests that had `[place]` are now JavaScript (c1, f2 to f6), so `esim project update` takes
+  `manifests/f3-palisades-cells.js` and so on, wherever an older entry here says `.toml`. Their run ids changed (the
+  manifest hash did) and every run was redone to the same log digest. The older Boone and fire modules still default
+  their window to their first place when given none; only the earthquake family refuses.
 - Exports last, in one list (2026-11-14, Anselm: "it may make sense to generally in all examples have all the exports
   at the end... because that is more clear"): a JavaScript manifest declares its parts as plain `const` values and ends
   with `export { run, place, ... };` in the order meant. Order is layout and breaks ties between listeners of equal

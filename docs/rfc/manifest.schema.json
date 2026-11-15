@@ -105,9 +105,6 @@
         "run": {
           "$ref": "#/$defs/components/run"
         },
-        "place": {
-          "$ref": "#/$defs/components/place"
-        },
         "kind": {
           "$ref": "#/$defs/kindName"
         },
@@ -181,37 +178,6 @@
           }
         },
         "description": "The run window, seed and cadences; one per manifest."
-      },
-      "place": {
-        "type": "object",
-        "additionalProperties": true,
-        "properties": {
-          "lat_s": {
-            "type": "number",
-            "minimum": -90,
-            "maximum": 90
-          },
-          "lat_n": {
-            "type": "number",
-            "minimum": -90,
-            "maximum": 90
-          },
-          "lon_w": {
-            "type": "number",
-            "minimum": -180,
-            "maximum": 180
-          },
-          "lon_e": {
-            "type": "number",
-            "minimum": -180,
-            "maximum": 180
-          },
-          "res_arcsec": {
-            "type": "number",
-            "exclusiveMinimum": 0
-          }
-        },
-        "description": "A window on the WGS 84 graticule and a resolution, stated once and copied at resolution into the params of every module entity that does not set the same key. Any further key is copied the same way. At most one."
       },
       "params": {
         "type": "object",

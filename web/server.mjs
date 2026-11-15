@@ -163,13 +163,9 @@ name = "an instance name"   # unique in the manifest; other modules address it b
 kind = "a kind from the list"
 [module.params]
 # only parameters the kind lists, with its units
-
-[place]                     # stated once, inherited by every module that does not set the key itself
-lat_s = 42.3
-lat_n = 43.2
-lon_w = -94.2
-lon_e = -93.5
-res_arcsec = 30             # 30 is a basin in seconds per simulated year; 15 is four times the cost
+# a module that works on a window of the Earth takes it as one parameter; give every such module the same one.
+# res_arcsec 30 is a basin in seconds per simulated year; 15 is four times the cost
+place = { lat_s = 42.3, lat_n = 43.2, lon_w = -94.2, lon_e = -93.5, res_arcsec = 30 }
 
 [audit]
 scores = [["sim.series", "obs.series"]]   # pairs of a model series and an observation series to score, when an obs module is present

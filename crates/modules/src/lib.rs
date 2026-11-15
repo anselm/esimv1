@@ -123,12 +123,24 @@ pub fn factory(name: &str, params: &toml::Value) -> Result<Box<dyn Module>, Stri
 
 /// Build by kind. The kernel passes params only, so the CLI folds `kind` into them.
 pub fn build(kind: &str, name: &str, params: &toml::Value) -> Result<Box<dyn Module>, String> {
-    (find(kind)?.build)(name, params)
+    (find(kind)?.build)(name, &with_place(params))
+}
+
+/// A convention of this library's modules, not of the engine: a module that works on a window of
+/// the Earth takes it as one parameter, `place`, a table of `lat_s`, `lat_n`, `lon_w`, `lon_e` and
+/// `res_arcsec` (and whatever else belongs to the place). Its keys are read as the module's own,
+/// and a key the module sets itself wins. The manifest reader knows nothing of this: it hands each
+/// module the parameters the manifest gave it.
+fn with_place(params: &toml::Value) -> std::borrow::Cow<'_, toml::Value> {
+    let Some(toml::Value::Table(place)) = params.get("place") else { return std::borrow::Cow::Borrowed(params) };
+    let mut p = params.clone();
+    if let toml::Value::Table(t) = &mut p { for (k, v) in place { t.entry(k.clone()).or_insert_with(|| v.clone()); } }
+    std::borrow::Cow::Owned(p)
 }
 
 /// Describe a kind under a name and parameters without building it. Nothing is fetched.
 pub fn describe(kind: &str, name: &str, params: &toml::Value) -> Result<Describe, String> {
-    let mut d = (find(kind)?.describe)(name, params);
+    let mut d = (find(kind)?.describe)(name, &with_place(params));
     if d.layer.is_empty() { d.layer = layer_of(kind).to_string(); }
     Ok(d)
 }

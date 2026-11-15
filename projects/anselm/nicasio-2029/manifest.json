@@ -13,16 +13,6 @@
       }
     },
     {
-      "id": "place",
-      "place": {
-        "lat_n": 38.08,
-        "lat_s": 37.97,
-        "lon_e": -122.61,
-        "lon_w": -122.79,
-        "res_arcsec": 1
-      }
-    },
-    {
       "id": "fire",
       "kind": "fire.cells",
       "params": {
@@ -34,12 +24,14 @@
         "ignition_lat": 38.0316,
         "ignition_lon": -122.7328,
         "ignition_time": "2029-10-01T10:00:00Z",
-        "lat_n": 38.08,
-        "lat_s": 37.97,
-        "lon_e": -122.61,
-        "lon_w": -122.79,
+        "place": {
+          "lat_n": 38.08,
+          "lat_s": 37.97,
+          "lon_e": -122.61,
+          "lon_w": -122.79,
+          "res_arcsec": 1
+        },
         "reach_m": 45,
-        "res_arcsec": 1,
         "slope_rate_gain": 20,
         "wind": "hrrr",
         "wind_at": "2029-10-01T07:00:00Z",
@@ -51,10 +43,13 @@
       "id": "places",
       "kind": "obs.places",
       "params": {
-        "lat_n": 38.08,
-        "lat_s": 37.97,
-        "lon_e": -122.61,
-        "lon_w": -122.79,
+        "place": {
+          "lat_n": 38.08,
+          "lat_s": 37.97,
+          "lon_e": -122.61,
+          "lon_w": -122.79,
+          "res_arcsec": 1
+        },
         "places": [
           {
             "lat": 38.0283,
@@ -68,28 +63,29 @@
             "name": "Devil's Gulch campsite",
             "note": "the ignition; OpenStreetMap relation 17685328, 2026-11-08"
           }
-        ],
-        "res_arcsec": 1
+        ]
       }
     },
     {
       "id": "suppression",
       "kind": "fire.suppression",
       "params": {
-        "lat_n": 38.08,
-        "lat_s": 37.97,
         "line_width_m": 30,
-        "lon_e": -122.61,
-        "lon_w": -122.79,
         "mode": "off",
-        "res_arcsec": 1
+        "place": {
+          "lat_n": 38.08,
+          "lat_s": 37.97,
+          "lon_e": -122.61,
+          "lon_w": -122.79,
+          "res_arcsec": 1
+        }
       }
     }
   ],
   "from": {
-    "entry": "manifests/f5-nicasio-2029.toml",
-    "hash": "sha256:98d2724c86e7f7025290a56fee7c5a99c879321ba81fc2f3eb66fec6090ef085",
-    "language": "toml"
+    "entry": "manifests/f5-nicasio-2029.js",
+    "hash": "sha256:a3eb2ecf8e1f6d370f1a5a9c325a6bb68e32f5faf8235eb98069e3a735c93374",
+    "language": "javascript"
   },
   "manifest": "manifest/1"
 }

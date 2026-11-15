@@ -145,9 +145,9 @@ fn entities_from_exports(exports: Vec<(String, serde_json::Value)>) -> Result<(s
             (_, Value::Object(o)) => {
                 // the short form: an export named for a singleton component whose value has no
                 // component of its own is that component (`export const run = { start, end }`)
-                let components = ["run", "place", "audit", "variant", "kind", "params", "ref"];
+                let components = ["run", "audit", "variant", "kind", "params", "ref"];
                 let has_component = o.keys().any(|k| components.contains(&k.as_str()));
-                let mut o = if !has_component && ["run", "place", "audit"].contains(&name.as_str()) {
+                let mut o = if !has_component && ["run", "audit"].contains(&name.as_str()) {
                     let mut wrapped = serde_json::Map::new();
                     wrapped.insert(name.clone(), Value::Object(o));
                     wrapped

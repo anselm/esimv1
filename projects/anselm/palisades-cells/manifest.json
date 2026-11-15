@@ -1,0 +1,113 @@
+{
+  "entities": [
+    {
+      "id": "run",
+      "run": {
+        "close_every": "1d",
+        "end": "2025-01-12T00:00:00Z",
+        "name": "f3-palisades-cells",
+        "notes": "Our own engine on the Palisades fire: heat budget on 30 m cells, buildings and roads from the county and OpenStreetMap, HRRR 3 km wind; unsuppressed; constants guessed.",
+        "seed": 1,
+        "snapshot_every": "10d",
+        "start": "2025-01-07T18:00:00Z"
+      }
+    },
+    {
+      "id": "fire",
+      "kind": "fire.cells",
+      "params": {
+        "ignition_lat": 34.0723,
+        "ignition_lon": -118.5451,
+        "ignition_time": "2025-01-07T18:30:00Z",
+        "place": {
+          "lat_n": 34.16,
+          "lat_s": 34,
+          "lon_e": -118.46,
+          "lon_w": -118.72,
+          "res_arcsec": 1
+        }
+      }
+    },
+    {
+      "id": "obs",
+      "kind": "obs.perimeters",
+      "params": {
+        "incident": "Palisades",
+        "irwin": "{A7EA5D21-F882-44B8-BF64-44AB11059DC1}",
+        "place": {
+          "lat_n": 34.16,
+          "lat_s": 34,
+          "lon_e": -118.46,
+          "lon_w": -118.72,
+          "res_arcsec": 1
+        },
+        "year": 2025
+      }
+    },
+    {
+      "id": "structures",
+      "kind": "obs.dins",
+      "params": {
+        "key": "cal-fire-dins/2025-palisades",
+        "place": {
+          "lat_n": 34.16,
+          "lat_s": 34,
+          "lon_e": -118.46,
+          "lon_w": -118.72,
+          "res_arcsec": 1
+        },
+        "service": "https://services1.arcgis.com/jUJYIo9tSA7EHvfZ/arcgis/rest/services/DINS_2025_Palisades_Public_View/FeatureServer/0"
+      }
+    },
+    {
+      "id": "record",
+      "kind": "obs.record",
+      "params": {
+        "files": [
+          "palisades-2025/nifc/palisades-event-points.geojson",
+          "palisades-2025/nifc/palisades-event-lines.geojson"
+        ],
+        "place": {
+          "lat_n": 34.16,
+          "lat_s": 34,
+          "lon_e": -118.46,
+          "lon_w": -118.72,
+          "res_arcsec": 1
+        },
+        "time_field": "CreateDate"
+      }
+    },
+    {
+      "id": "suppression",
+      "kind": "fire.suppression",
+      "params": {
+        "line_width_m": 30,
+        "mode": "off",
+        "place": {
+          "lat_n": 34.16,
+          "lat_s": 34,
+          "lon_e": -118.46,
+          "lon_w": -118.72,
+          "res_arcsec": 1
+        }
+      }
+    },
+    {
+      "audit": {
+        "scores": [
+          [
+            "sim.acres",
+            "obs.acres"
+          ]
+        ]
+      },
+      "id": "audit"
+    }
+  ],
+  "from": {
+    "entry": "manifests/f3-palisades-cells.js",
+    "hash": "sha256:fb839b0d6f7fba44cdf38a6f0b7bfb1cc9916d3ac1fc512b3f61a16055376e5d",
+    "language": "javascript"
+  },
+  "manifest": "manifest/1"
+}
