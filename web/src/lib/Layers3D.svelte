@@ -55,6 +55,7 @@
     off = o
   })
   const isOn = (k) => !off[k]
+  const hasArrival = $derived(wanted.some((w) => w.show && ARRIVAL.test(w.name)))
   const toggle = (k) => { off = { ...off, [k]: !off[k] } }
   // a module's first frame is the one drawn, except for a disturbance, where the frame that moves (a fire's front) comes first
   const frameFor = (m) => chosen[m.name] ?? ((modules.find((x) => x.name === m.name)?.layer === 'across' ? m.frames.find((f) => (run.fields[f.name]?.times?.length ?? 0) > 1) : null) ?? m.frames[0])?.name ?? null
@@ -194,6 +195,8 @@
   // a frame as points of light on the ground, in the layer's colour (or the colour of harm)
   const HARMFUL = /damage|destroyed|collapsed|deaths|displaced|release|without|pgd|liquefaction|fire|burn|arrival|flame|fuel_on/
   const HEIGHTS = /height/
+  const ARRIVAL = /arrival/
+  const FRONT_H = 2      // ground reached within this many hours of the frame's latest hour is drawn as the front
   function drawField(layerId, key, name, data) {
     const t3 = three; const f = run.fields[name]; const g = f.grid
     const old = t3.fields.get(key); if (old) { old.parent?.remove(old); old.geometry.dispose(); old.material.dispose(); t3.fields.delete(key) }
@@ -209,6 +212,28 @@
       const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(P), 3)); geo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(C), 3))
       const obj = new THREE.LineSegments(geo, new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false }))
       t3.layers.get(layerId).add(obj); t3.fields.set(key, obj); return
+    }
+    if (ARRIVAL.test(name) && /^h/.test(f.unit ?? '')) {
+      // a frame of arrival hours (a fire's): what matters is which ground has burned and where the
+      // front is now, so the cells are drawn by how long ago the thing arrived. The latest hour in
+      // the frame is the present: cells reached in the last hour or two are the front, bright and
+      // yellow-white; behind it the ground cools through orange to a steady dark red. Ground not
+      // reached has no point at all, so burned and unburned cannot be confused.
+      let now = 0; for (let k = 0; k < data.length; k++) if (data[k] > now) now = data[k]
+      const P = [], C = [], PF = [], CF = []
+      for (let r = 0; r < g.ny; r++) for (let c = 0; c < g.nx; c++) {
+        const v = data[r * g.nx + c]; if (!(v > 0)) continue
+        const age = now - v, lon = g.lon_w + (c + 0.5) * g.dlon, lat = g.lat_n - (r + 0.5) * g.dlat
+        const [x, z] = t3.km(lon, lat), y = t3.elevAt(lon, lat) + 0.03
+        if (age <= FRONT_H) { PF.push(x, y + 0.01, z); const k = 1 - 0.4 * (age / FRONT_H); CF.push(1.0 * k, 0.72 * k, 0.22 * k) }
+        else { const k = Math.exp(-(age - FRONT_H) / 5); P.push(x, y, z); C.push(0.34 + 0.5 * k, 0.05 + 0.2 * k, 0.04) }
+      }
+      const cell = g.dlat * 110.57, grp = new THREE.Group()
+      const mk = (P, C, size, blending) => { const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(P), 3)); geo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(C), 3)); return new THREE.Points(geo, new THREE.PointsMaterial({ size, vertexColors: true, transparent: true, opacity: 0.85, blending, depthWrite: false, sizeAttenuation: true })) }
+      // the burned ground is laid opaque enough to cover the contours under it; the front glows over it
+      grp.add(mk(P, C, cell * 4.2, THREE.NormalBlending)); grp.add(mk(PF, CF, cell * 2.6, THREE.AdditiveBlending))
+      grp.geometry = { dispose() { for (const o of grp.children) o.geometry.dispose() } }; grp.material = { dispose() { for (const o of grp.children) o.material.dispose() } }
+      t3.layers.get(layerId).add(grp); t3.fields.set(key, grp); return
     }
     const st = Math.max(1, Math.round(g.nx / 700))
     const max = Math.max(f.max ?? 1, 1e-9), useLog = max > 50
@@ -329,7 +354,8 @@
       const key = `${m.name}:roads`
       let obj = t3.fields.get(key)
       if (!obj) {
-        const col = new THREE.Color(LAYERS.find((l) => l.id === m.layer)?.color ?? '#ffffff'), P = [], C = []
+        // roads a disturbance carries (a fire's) are drawn in the colour of the flows layer, so they do not read as fire
+        const col = new THREE.Color(LAYERS.find((l) => l.id === (m.layer === 'across' ? 'flows' : m.layer))?.color ?? '#ffffff'), P = [], C = []
         for (const r of roads) { const b = ROAD_W[r.class] ?? 0.1; for (let k = 0; k + 1 < r.pts.length; k++) for (const q of [r.pts[k], r.pts[k + 1]]) { const [x, z] = t3.km(q[0], q[1]); P.push(x, t3.elevAt(q[0], q[1]) + 0.02, z); C.push(col.r * b, col.g * b, col.b * b) } }
         const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(P), 3)); geo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(C), 3))
         obj = new THREE.LineSegments(geo, new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false }))
@@ -470,5 +496,5 @@
       </div>
     </div>
   </div>
-  <p class="mt-2 max-w-3xl text-xs muted">The modelled area with the vertical stretched {ZS} times. Contour lines are the run's elevation frame, every 20 metres. Each module's map is drawn as points of light in its layer's colour, and red marks what has failed, closed or lost power at the moment shown. Drag to turn, scroll to zoom. A layer with no module in this run is listed and empty.</p>
+  <p class="mt-2 max-w-3xl text-xs muted">The modelled area with the vertical stretched {ZS} times. Contour lines are the run's elevation frame, every 20 metres. Each module's map is drawn as points of light in its layer's colour, and red marks what has failed, closed or lost power at the moment shown.{#if hasArrival} Ground a fire has reached is filled dark red, cooling from orange; the bright yellow edge is ground reached in the last two hours of the model's clock, and ground with no fill has not burned.{/if} Drag to turn, scroll to zoom. A layer with no module in this run is listed and empty.</p>
 </section>
