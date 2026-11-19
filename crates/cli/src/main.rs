@@ -916,6 +916,169 @@ fn sweep(path: &Path, sim: &str, obs: &str, samples: usize, threads: usize, seed
     Ok(())
 }
 
+/// One term of a fit's loss: how far a series of the run is from the record, at the record's own times.
+struct FitTerm { area: bool, series: String, obs: String, from: i64, to: i64, label: String }
+
+/// `--area sim:obs[@from/to]` and `--overlap series:obs[@from/to]`, times as ISO instants.
+fn parse_terms(args: &[String]) -> Result<Vec<FitTerm>, String> {
+    let mut terms = Vec::new();
+    for (i, a) in args.iter().enumerate() {
+        if a != "--area" && a != "--overlap" { continue; }
+        let spec = args.get(i + 1).ok_or(format!("{a} needs <series>:<record series>[@from/to]"))?;
+        let (pair, window) = match spec.split_once('@') { Some((p, w)) => (p, Some(w)), None => (spec.as_str(), None) };
+        let (series, obs) = pair.split_once(':').ok_or(format!("{a} needs <series>:<record series>"))?;
+        let (from, to) = match window {
+            Some(w) => { let (f, t) = w.split_once('/').ok_or("a window is from/to")?; (if f.is_empty() { i64::MIN } else { esim_kernel::Time::parse(f)?.0 }, if t.is_empty() { i64::MAX } else { esim_kernel::Time::parse(t)?.0 }) }
+            None => (i64::MIN, i64::MAX),
+        };
+        terms.push(FitTerm { area: a == "--area", series: series.to_string(), obs: obs.to_string(), from, to, label: spec.clone() });
+    }
+    Ok(terms)
+}
+
+/// A run's errors against the record, term by term. A term is read only at the instants its record
+/// series takes a new value (a new mapping, a new satellite pass): between them the record is stale
+/// and says nothing. An area term's error is |ln(sim / record)|, capped at 3, so that twice too big
+/// and half too small weigh the same; an overlap term's is one minus the overlap. Each term's mean is
+/// taken apart for the instants up to `train_until` and those after; a loss is the mean of the terms' means.
+fn fit_errors(series: &std::collections::BTreeMap<String, Vec<(i64, f64)>>, terms: &[FitTerm], train_until: i64) -> (f64, f64, Vec<serde_json::Value>) {
+    let empty = Vec::new();
+    let (mut train, mut test, mut detail) = (Vec::new(), Vec::new(), Vec::new());
+    for term in terms {
+        let obs = series.get(&term.obs).unwrap_or(&empty); let sim = series.get(&term.series).unwrap_or(&empty);
+        let at = |t: i64| -> Option<f64> { sim.iter().rev().find(|p| p.0 <= t).map(|p| p.1) };
+        let (mut a, mut b, mut last) = (Vec::new(), Vec::new(), f64::NAN);
+        for &(t, y) in obs {
+            if y == last || !(y > 0.0) { last = y; continue; }
+            last = y;
+            if t < term.from || t > term.to { continue; }
+            let Some(x) = at(t) else { continue };
+            let e = if term.area { (x.max(1e-9) / y).ln().abs().min(3.0) } else { 1.0 - x };
+            if t <= train_until { a.push(e) } else { b.push(e) }
+        }
+        let mean = |v: &Vec<f64>| if v.is_empty() { None } else { Some(v.iter().sum::<f64>() / v.len() as f64) };
+        if let Some(m) = mean(&a) { train.push(m) }
+        if let Some(m) = mean(&b) { test.push(m) }
+        detail.push(serde_json::json!({ "term": term.label, "kind": if term.area { "area" } else { "overlap" }, "train": mean(&a), "train_n": a.len(), "test": mean(&b), "test_n": b.len() }));
+    }
+    let mean = |v: &Vec<f64>| if v.is_empty() { f64::NAN } else { v.iter().sum::<f64>() / v.len() as f64 };
+    (mean(&train), mean(&test), detail)
+}
+
+/// esim fit <manifest> --set <module>.<param>=<lo>:<hi> [--set ...] [--with <module>.<param>=<value> ...]
+///          --area <sim>:<record>[@from/to] --overlap <series>:<record>[@from/to] [...]
+///          [--train-until <instant>] [--rounds R] [--samples N] [--threads T] [--seed S] [--out runs]
+/// Calibration by method, second form: a search. Each round draws N Latin-hypercube samples of the
+/// named parameters and runs them in parallel; the first round covers the stated ranges, each later
+/// one a box half as wide around the best run so far. A run is scored by `fit_errors` on the instants
+/// up to `--train-until`; the instants after it are scored the same way and reported beside it, and
+/// take no part in the choice. That second number is the test: a fit that is good before the line and
+/// bad after it has learned the days it was shown and not the fire. Everything is written to
+/// runs/<id>/fit.json; nothing is changed in any manifest.
+#[allow(clippy::too_many_arguments)]
+fn fit(path: &Path, sets: &[(String, String, f64, f64)], with: &[(String, String, toml::Value)], terms: &[FitTerm], train_until: i64, rounds: usize, samples: usize, threads: usize, seed: u64, out_root: &Path) -> Result<(), String> {
+    let mut base = load(path)?;
+    for (module, param, value) in with {
+        let e = base.modules.iter_mut().find(|e| &e.name == module).ok_or(format!("--with: no module named {module}"))?;
+        if let toml::Value::Table(t) = &mut e.params { t.insert(param.clone(), value.clone()); }
+    }
+    for (module, _, _, _) in sets { if !base.modules.iter().any(|e| &e.name == module) { return Err(format!("--set: no module named {module}")); } }
+    let _ = Kernel::new(base.clone(), factory)?; // warm the cache
+    let mut rng = esim_kernel::rng::Rng::from_seed(seed);
+    let k = sets.len();
+    let t0 = std::time::Instant::now();
+    let mut rows: Vec<serde_json::Value> = Vec::new();
+    let mut best: Option<(f64, Vec<f64>)> = None;
+    for round in 0..rounds {
+        // the box for this round: the stated ranges, or a box half as wide each round around the best so far
+        let shrink = 0.5f64.powi(round as i32);
+        let boxes: Vec<(f64, f64)> = sets.iter().enumerate().map(|(j, (_, _, lo, hi))| match &best {
+            Some((_, b)) if round > 0 => { let half = (hi - lo) * shrink / 2.0; ((b[j] - half).max(*lo), (b[j] + half).min(*hi)) }
+            _ => (*lo, *hi),
+        }).collect();
+        let mut design = vec![vec![0.0f64; k]; samples];
+        for (j, (lo, hi)) in boxes.iter().enumerate() {
+            let mut strata: Vec<usize> = (0..samples).collect();
+            for i in (1..samples).rev() { let r = (rng.next_u64() % (i as u64 + 1)) as usize; strata.swap(i, r); }
+            for i in 0..samples { let u = (strata[i] as f64 + rng.f64()) / samples as f64; design[i][j] = lo + u * (hi - lo); }
+        }
+        let queue = std::sync::Mutex::new((0..samples).collect::<Vec<usize>>());
+        let got: Vec<serde_json::Value> = std::thread::scope(|sc| {
+            let (tx, rx) = std::sync::mpsc::channel();
+            for _ in 0..threads.max(1) {
+                let tx = tx.clone(); let queue = &queue; let base = &base; let design = &design;
+                sc.spawn(move || loop {
+                    let i = { let mut q = queue.lock().unwrap(); if q.is_empty() { break; } q.remove(0) };
+                    let mut m = base.clone();
+                    for (j, (module, param, _, _)) in sets.iter().enumerate() {
+                        if let Some(e) = m.modules.iter_mut().find(|e| &e.name == module) {
+                            if let toml::Value::Table(t) = &mut e.params { t.insert(param.clone(), toml::Value::Float(design[i][j])); }
+                        }
+                    }
+                    fold_params(&mut m);
+                    let mut pm = serde_json::Map::new();
+                    for (j, (m_, p_, _, _)) in sets.iter().enumerate() { pm.insert(format!("{m_}.{p_}"), serde_json::Value::from(design[i][j])); }
+                    let row = match Kernel::new(m, factory).map(|mut k| k.run()) {
+                        Ok(o) => {
+                            let series: std::collections::BTreeMap<String, Vec<(i64, f64)>> = o.series.iter().map(|(n, s)| (n.clone(), s.points.iter().map(|p| (p.0 .0, p.1)).collect())).collect();
+                            let (train, test, detail) = fit_errors(&series, terms, train_until);
+                            serde_json::json!({ "round": round, "i": i, "params": pm, "x": design[i], "train": train, "test": if test.is_nan() { serde_json::Value::Null } else { serde_json::Value::from(test) }, "terms": detail, "digest": o.log_digest })
+                        }
+                        Err(e) => serde_json::json!({ "round": round, "i": i, "params": pm, "error": e }),
+                    };
+                    eprintln!("round {round} sample {i}: train {} test {}", row["train"], row["test"]);
+                    tx.send(row).unwrap();
+                });
+            }
+            drop(tx);
+            rx.into_iter().collect()
+        });
+        for row in got {
+            if let (Some(l), Some(x)) = (row["train"].as_f64(), row["x"].as_array()) {
+                if l.is_finite() && best.as_ref().map(|b| l < b.0).unwrap_or(true) { best = Some((l, x.iter().map(|v| v.as_f64().unwrap()).collect())); }
+            }
+            rows.push(row);
+        }
+        if let Some((l, _)) = &best { eprintln!("round {round} done: best train loss {l:.4}"); }
+    }
+    rows.sort_by(|a, b| a["train"].as_f64().unwrap_or(f64::MAX).partial_cmp(&b["train"].as_f64().unwrap_or(f64::MAX)).unwrap());
+    let mtext = fs::read_to_string(path).map_err(|e| e.to_string())?;
+    let spec: String = std::env::args().skip(2).collect::<Vec<_>>().join(" ");
+    let id = format!("{}-fit-{:08x}", base.run.name, (esim_kernel::hash::fnv1a(format!("{mtext}{spec}").as_bytes()) >> 32) as u32);
+    let dir = out_root.join(&id);
+    fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
+    let out = serde_json::json!({ "name": base.run.name, "kind": "fit", "manifest": path.display().to_string(), "command": format!("esim fit {spec}"),
+        "ranges": sets.iter().map(|(m, p, lo, hi)| serde_json::json!({ "param": format!("{m}.{p}"), "lo": lo, "hi": hi })).collect::<Vec<_>>(),
+        "with": with.iter().map(|(m, p, v)| serde_json::json!({ "param": format!("{m}.{p}"), "value": v.to_string() })).collect::<Vec<_>>(),
+        "terms": terms.iter().map(|t| t.label.clone()).collect::<Vec<_>>(),
+        "train_until": if train_until == i64::MAX { serde_json::Value::Null } else { serde_json::Value::from(esim_kernel::Time(train_until).to_iso()) },
+        "rounds": rounds, "samples": samples, "seed": seed, "elapsed_ms": t0.elapsed().as_millis(), "rows": rows });
+    fs::write(dir.join("fit.json"), serde_json::to_string_pretty(&out).unwrap()).map_err(|e| e.to_string())?;
+    println!("fit      {id}: {} runs in {} s", rounds * samples, t0.elapsed().as_secs());
+    println!("rank  train   test    round  params");
+    for (rank, row) in out["rows"].as_array().unwrap().iter().take(10).enumerate() {
+        if row.get("error").is_some() { println!("{rank:>4}  error {}", row["error"]); continue; }
+        let ps: Vec<String> = row["params"].as_object().unwrap().iter().map(|(k, v)| format!("{}={:.4}", k.rsplit('.').next().unwrap(), v.as_f64().unwrap())).collect();
+        println!("{rank:>4}  {:6.3}  {}  {:>5}  {}", row["train"].as_f64().unwrap(), row["test"].as_f64().map(|v| format!("{v:6.3}")).unwrap_or("     -".into()), row["round"], ps.join(" "));
+    }
+    println!("out      {}", dir.display());
+    Ok(())
+}
+
+/// `--with module.param=value`: a fixed setting for every run of a fit; a number, true or false, else text.
+fn parse_with(args: &[String]) -> Result<Vec<(String, String, toml::Value)>, String> {
+    let mut out = Vec::new();
+    for (i, a) in args.iter().enumerate() {
+        if a != "--with" { continue; }
+        let spec = args.get(i + 1).ok_or("--with needs module.param=value")?;
+        let (name, v) = spec.split_once('=').ok_or("--with module.param=value")?;
+        let (module, param) = name.split_once('.').ok_or("--with module.param=value")?;
+        let value = if let Ok(n) = v.parse::<i64>() { toml::Value::Integer(n) } else if let Ok(x) = v.parse::<f64>() { toml::Value::Float(x) } else if v == "true" || v == "false" { toml::Value::Boolean(v == "true") } else { toml::Value::String(v.to_string()) };
+        out.push((module.to_string(), param.to_string(), value));
+    }
+    Ok(out)
+}
+
 fn parse_sets(args: &[String]) -> Result<Vec<(String, String, f64, f64)>, String> {
     let mut sets = Vec::new();
     for (i, a) in args.iter().enumerate() {
@@ -1039,6 +1202,19 @@ fn main() {
             let seed: u64 = get("--seed").and_then(|s| s.parse().ok()).unwrap_or(1);
             let out = get("--out").map(PathBuf::from).unwrap_or_else(|| PathBuf::from("runs"));
             match (path, sim, obs, parse_sets(&args)) { (Some(p), Some(s), Some(o), Ok(sets)) if !sets.is_empty() => sweep(&p, &s, &o, samples, threads, seed, &sets, &out), (_, _, _, Err(e)) => Err(e), _ => Err("usage: esim sweep <manifest> --score <sim> <obs> --samples N --set module.param=lo:hi ...".into()) }
+        }
+        Some("fit") => {
+            let get = |flag: &str| args.iter().position(|a| a == flag).and_then(|i| args.get(i + 1));
+            let usage = "usage: esim fit <manifest> --set module.param=lo:hi ... [--with module.param=value ...] --area sim:record[@from/to] --overlap series:record[@from/to] [--train-until instant] [--rounds 3] [--samples 16] [--threads 16] [--seed 1] [--out runs]";
+            (|| -> Result<(), String> {
+                let path = args.get(2).map(PathBuf::from).ok_or(usage)?;
+                let (sets, with, terms) = (parse_sets(&args)?, parse_with(&args)?, parse_terms(&args)?);
+                if sets.is_empty() || terms.is_empty() { return Err(usage.into()); }
+                let train_until = match get("--train-until") { Some(s) => esim_kernel::Time::parse(s)?.0, None => i64::MAX };
+                let num = |flag: &str, d: usize| get(flag).and_then(|s| s.parse().ok()).unwrap_or(d);
+                let out = get("--out").map(PathBuf::from).unwrap_or_else(|| PathBuf::from("runs"));
+                fit(&path, &sets, &with, &terms, train_until, num("--rounds", 3), num("--samples", 16), num("--threads", 16), get("--seed").and_then(|s| s.parse().ok()).unwrap_or(1), &out)
+            })()
         }
         Some("score") => match (args.get(2), args.get(3), args.get(4)) {
             (Some(d), Some(a), Some(b)) => score(Path::new(d), a, b),

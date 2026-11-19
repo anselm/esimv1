@@ -408,6 +408,18 @@ verified = "2026-11-04 from canada1: 2016_hotspots.zip is 26 MB, 457,428 rows fo
 notes = "Not fetched by a module: the window's rows are copied into data/events/<event>/cwfis/hotspots.csv and read by obs.hotspots. rep_date carries no zone in the metadata and is taken as UTC."
 
 [[asset]]
+id = "noaa-jpss-viirs-active-fire"
+title = "NOAA JPSS VIIRS I-band active fire detections (Enterprise Fire, 375 m), Suomi NPP, NOAA-20 and NOAA-21"
+kind = "table"
+crs = "EPSG:4326"
+format = "NetCDF4, one file per 85 seconds of swath; the fire pixels as lists (FP_Latitude, FP_Longitude, FP_FireRadiativePower, FP_FireMask, FP_PixelArea, ...)"
+url_template = "https://noaa-nesdis-{satellite}-pds.s3.amazonaws.com/VIIRS_EFIRE_VIIRSI_EDR/{yyyy}/{mm}/{dd}/{file}"
+source = "NOAA National Environmental Satellite, Data, and Information Service, Joint Polar Satellite System"
+licence = "NOAA open data, a work of the United States government; the bucket's licence text not yet read"
+verified = "2026-11-19 from canada1: about 1,000 files a day per satellite, anonymous listing and download; 6,075 files read for 7 to 12 January 2025, 3,751 detections inside the Palisades window in 43 passes, the first at 19:46 UTC on 7 January"
+notes = "Not fetched by a module: data/events/palisades-2025/viirs/fetch.py cuts a window and a span of days to hotspots.csv (needs h5py), which obs.hotspots reads. A file's name does not say where it looked, so the script reads every file near the overpass hours."
+
+[[asset]]
 id = "osm-overpass"
 title = "OpenStreetMap through the Overpass API: roads, place names and city limits inside a window; since 2026-11-04 also every building (way[building]) with its height tag or storeys, for fires without a county footprint service"
 kind = "vector"

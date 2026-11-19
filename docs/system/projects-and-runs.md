@@ -3,7 +3,7 @@
 <!-- author: Claude -->
 <!-- ordered-by: Anselm -->
 <!-- written: 2026-11-01 -->
-<!-- revised: 2026-11-14 -->
+<!-- revised: 2026-11-19 -->
 <!-- revision: 1 -->
 # Projects and runs
 
@@ -164,12 +164,31 @@ the same ledgers. Modules draw randomness only from a seeded stream the kernel g
 them, keyed by the run seed and the module's name, so a change of seed changes exactly
 the stochastic parts.
 
-## Ensembles and sweeps
+## Ensembles, sweeps and fits
 
 `esim ensemble` runs branches with consecutive seeds in parallel and keeps quantile
 bands per series; it warms the data cache once before spawning, so branches never
 download. `esim sweep` samples parameter ranges and scores each sample against a
 scoreboard. Both write under a project's `runs/` when run for a project.
+
+`esim fit` searches instead of sampling. It is given parameter ranges (`--set
+fire.ignite_scale=3:8`), fixed settings (`--with fire.form=vector`) and one or more terms
+that say how a run is compared with the record: `--area sim.acres:obs.acres` for a size
+and `--overlap fit.sorensen:obs.acres` for a shape, each optionally limited to a window of
+time (`@from/to`). Each round runs a set of samples in parallel; the first round covers
+the stated ranges and each later round a box half as wide around the best run so far.
+
+A term is read only at the instants its record takes a new value, a new mapping or a new
+satellite pass, because between them the record is stale. An area term's error is the
+absolute logarithm of the ratio, so twice too big and half too small weigh the same; an
+overlap term's error is one minus the overlap. A run's loss is the mean of its terms' means.
+
+`--train-until` splits the record in time. The search sees only the instants up to it.
+The instants after it are scored the same way and printed beside the training loss, and
+take no part in the choice. That second number is the test of whether the fit learned the
+fire or only the hours it was shown. A fit writes `runs/<name>-fit-<hash>/fit.json`, with
+every run's parameters and both losses, and changes no manifest: adopting a fitted set is
+a decision, made by writing it into a variant.
 
 ## Loose runs
 

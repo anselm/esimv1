@@ -3,7 +3,7 @@
 <!-- author: Claude -->
 <!-- ordered-by: Anselm -->
 <!-- written: 2026-11-01 -->
-<!-- revised: 2026-11-14 -->
+<!-- revised: 2026-11-19 -->
 <!-- revision: 1 -->
 # Limits today
 
@@ -164,6 +164,13 @@ holds the history.
   still loses rate between them, and the arrival map shows striping along lattice
   directions. The first mapped perimeter (06:00Z on 8 January) is a hand-drawn triangle
   with a typed acreage, not a map; the first infrared perimeter is 27 hours in.
+- A search over the engine's constants does not repair it (2026-11-19). `esim fit` on the
+  Palisades, shown the first 27 hours, finds nothing better than the hand-set `vector-5`
+  (error 0.29 against 0.30) and fails the later days as badly (0.76 against 0.78); shown all
+  four days, its best is a slow fire with error 0.52. No setting grows as fast as the first
+  night and then stops, because nothing in the engine puts a fire out. Against NOAA's VIIRS
+  detections the engine is also slow in the first sixteen hours (about 5,500 acres against
+  17,800 seen, the seen figure overstating by roughly a third). Both fits are on one fire.
 - Our own engine (`fire.cells`, 2026-11-03) is a heat budget with guessed constants. One
   multiplier on the ignition thresholds is swept across the runs; with heat felt three cells
   away there is a cliff (the window burns in hours, or the next cell never lights), with heat

@@ -441,6 +441,17 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   `manifests/f3-palisades-cells.js` and so on, wherever an older entry here says `.toml`. Their run ids changed (the
   manifest hash did) and every run was redone to the same log digest. The older Boone and fire modules still default
   their window to their first place when given none; only the earthquake family refuses.
+- The record as curtains, the satellites, and `esim fit` (2026-11-19, `devlog/20261119-the-record-and-a-fit.md`;
+  Anselm: "we should visually show the curtain edge of the real fire", "build a regression to tune our model against
+  real data"): `Layers3D` draws a moving record frame's outer edge as a wall (white the mapped perimeter, blue a second
+  record) and an arrival-hour frame as a bright front over a dark burned fill. Both Palisades manifests carry module
+  `seen` (`obs.hotspots` on `data/events/palisades-2025/viirs/hotspots.csv`, NOAA's open VIIRS detections cut by the
+  folder's `fetch.py`, which needs h5py; `series = "seen"` prefixes its series, `land_only` keeps footprints off the sea).
+  `esim fit <manifest> --set m.p=lo:hi --with m.p=v --area sim:record[@from/to] --overlap series:record --train-until t`
+  searches by shrinking Latin-hypercube boxes and reports a held-out test loss; about 2 s a Palisades run at 24 threads.
+  Result: no setting of `fire.cells` matches the first night and then stops (variants `fit-day-one`,
+  `fit-whole-record`); the engine needs a way for a fire to go out before more fitting. Project runs are gitignored
+  and reach the site by the deploy's rsync. The timeline's dwell is measured against the run's step (19 November).
 - Stamps on docs pages (2026-11-15, `devlog/20261115-stamps-on-docs.md`; Anselm: "each page should indicate who wrote
   it (indicate claude as well) and if revised or ordered by anybody else ... and also the date and revision"): every
   `docs/**/*.md` starts with comment lines `author`, `ordered-by`, `revised-by` (only if someone else changed its

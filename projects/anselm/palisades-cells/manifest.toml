@@ -40,6 +40,26 @@ lon_w = -118.72
 res_arcsec = 1
 
 [[module]]
+name = "seen"
+kind = "obs.hotspots"
+
+[module.params]
+end = "2025-01-12T00:00:00Z"
+every = "1h"
+file = "palisades-2025/viirs/hotspots.csv"
+frame_res_arcsec = 3
+land_only = true
+series = "seen"
+start = "2025-01-07T18:00:00Z"
+
+[module.params.place]
+lat_n = 34.16
+lat_s = 34
+lon_e = -118.46
+lon_w = -118.72
+res_arcsec = 1
+
+[[module]]
 name = "structures"
 kind = "obs.dins"
 

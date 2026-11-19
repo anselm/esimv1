@@ -99,6 +99,52 @@ reach by the slope rather than its square, but the first day's pace was partly r
 slopes. The runs on this page are on the corrected ground; the devlog entry *The holes in
 the ground* has the account.
 
+## What the satellites saw, and what a fit can and cannot do
+
+Added 19 November 2026.
+
+The mapped perimeters say little about the first day: the first one, at 06:00 UTC on
+8 January, is a hand-drawn triangle, and the first infrared map comes 27 hours after the
+ignition. Three weather satellites fill that gap. Suomi NPP, NOAA-20 and NOAA-21 each carry
+an instrument that marks pixels 375 metres across as burning, and between them they passed
+over the fire 43 times in five days. The first pass is 76 minutes after the ignition. Each
+run is now scored against what they saw as well as against the maps, and the 3D view draws
+both: the white curtain is the mapped perimeter and the blue one is the edge of the ground
+the satellites had seen burning by the moment shown.
+
+The satellites show a faster first night than the maps suggest. By the passes around 09:00
+to 10:40 UTC on 8 January, sixteen hours in, they had marked 17,800 acres; the model in its
+`vector-5` setting had burned about 5,500. A satellite pixel marks all of its footprint when
+any part is hot, so that figure overstates the ground burned: by the end the satellites'
+total is about a third above the final mapped perimeter. Even with a third taken off, the
+real fire did most of its growing in its first sixteen hours, and the model takes 27 hours
+to get there.
+
+With a record that covers every part of the fire, the constants can be searched instead
+of set by hand. `esim fit` runs the engine many times with different constants and scores
+each run against the record. Two searches were made.
+
+- **Shown only the first 27 hours** (72 runs, six constants). The best run's error on those
+  hours is 0.29, against 0.30 for the hand-set `vector-5`. On the later days, which the
+  search never saw, its error is 0.76, against 0.78. The search found nothing the hand
+  setting had missed, and both fail the later days in the same way. It is the variant
+  `fit-day-one`.
+- **Shown all four days** (128 runs, eight constants). The best run's error is 0.52. It is a
+  slow fire that is wrong everywhere by a smaller amount: 6,500 acres at 27 hours where the
+  map has 15,800, and 42,000 at the end where the map has 22,300. It is the variant
+  `fit-whole-record`.
+
+The errors are averages of two kinds of miss: how far the burned area is from the record's,
+as the logarithm of the ratio, and how much of the two shapes do not overlap. Zero is a
+perfect match; 0.7 is roughly a fire twice too big.
+
+What this establishes is a limit of the engine and not a better setting. No value of these
+constants gives a fire that grows as fast as the real one did on the first night and then
+stops as the real one did. The real fire stopped growing when the wind dropped and
+thousands of firefighters arrived; the engine has the wind but nothing in it puts a fire
+out, and its suppression module does nothing with this record. Until the engine has a way
+for a fire to stop, fitting its constants cannot fix the later days.
+
 ## What is honest about it, and what is not
 
 What is real: the ground, the buildings and their heights, the roads, the inspections, the

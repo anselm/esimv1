@@ -107,7 +107,7 @@
         "end": 1462579200,
         "events": 330,
         "id": "vector-3",
-        "made": 1794702071,
+        "made": 1795109721,
         "name": "f4-fortmcmurray-cells",
         "seed": 1,
         "set": {
@@ -575,6 +575,7 @@
     "kinds": [
       "fire.rothermel",
       "obs.perimeters",
+      "obs.hotspots",
       "obs.dins",
       "obs.record",
       "fire.suppression"
@@ -584,11 +585,11 @@
     "runs": [
       {
         "all_ledgers_closed": true,
-        "digest": "4c5d9a239751d634",
+        "digest": "c30ca1c62c2baa16",
         "end": 1736640000,
-        "events": 1764,
+        "events": 1967,
         "id": "built-barrier",
-        "made": 1794702089,
+        "made": 1795109681,
         "name": "f2-palisades-2025",
         "seed": 1,
         "set": {
@@ -600,11 +601,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "1ef44ed6900682fd",
+        "digest": "317ae485b4b30832",
         "end": 1736640000,
-        "events": 1764,
+        "events": 1967,
         "id": "gusts",
-        "made": 1794702110,
+        "made": 1795109671,
         "name": "f2-palisades-2025",
         "seed": 1,
         "set": {
@@ -616,11 +617,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "eb728349588044e2",
+        "digest": "fd14bd6c9db31039",
         "end": 1736640000,
-        "events": 1764,
+        "events": 1967,
         "id": "reanalysis",
-        "made": 1794702099,
+        "made": 1795109658,
         "name": "f2-palisades-2025",
         "seed": 1,
         "set": {
@@ -632,11 +633,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "f5303941b2b24fb9",
+        "digest": "07c9974398b4a407",
         "end": 1736640000,
-        "events": 1764,
+        "events": 1967,
         "id": "sh7",
-        "made": 1794702080,
+        "made": 1795109681,
         "name": "f2-palisades-2025",
         "seed": 1,
         "set": {
@@ -690,6 +691,7 @@
     "kinds": [
       "fire.cells",
       "obs.perimeters",
+      "obs.hotspots",
       "obs.dins",
       "obs.record",
       "fire.suppression"
@@ -699,11 +701,11 @@
     "runs": [
       {
         "all_ledgers_closed": true,
-        "digest": "4cb34e25c89bacd1",
+        "digest": "2778e2ff7807fb7b",
         "end": 1736640000,
-        "events": 2404,
+        "events": 2607,
         "id": "bodies",
-        "made": 1794703006,
+        "made": 1795109645,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -720,11 +722,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "b6e35b0c006d33f0",
+        "digest": "f448ec183b97a521",
         "end": 1736640000,
-        "events": 2441,
+        "events": 2644,
         "id": "bodies-hard",
-        "made": 1794702977,
+        "made": 1795109673,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -741,11 +743,61 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "5f6cfe3798e1859e",
+        "digest": "e9db3d770663a07c",
         "end": 1736640000,
-        "events": 2354,
+        "events": 4190,
+        "id": "fit-day-one",
+        "made": 1795109677,
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.cooling": "\"idle\"",
+          "fire.form": "\"vector\"",
+          "fire.ignite_scale": "4.2342",
+          "fire.moisture_gain": "11.4857",
+          "fire.phi_cap": "30.0429",
+          "fire.reach_m": "45",
+          "fire.slope_rate_gain": "21.1124",
+          "fire.spot_rate": "0.0176",
+          "fire.wind_phi": "1.4729"
+        },
+        "start": 1736272800,
+        "variant": "fit-day-one",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "47b162cbe1fad0b4",
+        "end": 1736640000,
+        "events": 2934,
+        "id": "fit-whole-record",
+        "made": 1795109676,
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.cool_min": "22.5113",
+          "fire.cooling": "\"idle\"",
+          "fire.form": "\"vector\"",
+          "fire.ignite_scale": "5.569",
+          "fire.live_moisture_pct": "80.0519",
+          "fire.moisture_gain": "6.9379",
+          "fire.phi_cap": "22.3522",
+          "fire.reach_m": "45",
+          "fire.slope_rate_gain": "38.6491",
+          "fire.spot_rate": "0.0082",
+          "fire.wind_phi": "1.2849"
+        },
+        "start": 1736272800,
+        "variant": "fit-whole-record",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
+        "digest": "1bef8d45cd5acc0d",
+        "end": 1736640000,
+        "events": 2557,
         "id": "houses",
-        "made": 1794702870,
+        "made": 1795109645,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -760,11 +812,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "48489b2662948c14",
+        "digest": "4e8b80270cbeb0ee",
         "end": 1736640000,
-        "events": 2419,
+        "events": 2622,
         "id": "houses-jitter",
-        "made": 1794703035,
+        "made": 1795109645,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -780,11 +832,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "9a05c3192f6588a1",
+        "digest": "d9c9fb025f5fc820",
         "end": 1736640000,
-        "events": 2644,
+        "events": 2847,
         "id": "near-2",
-        "made": 1794702897,
+        "made": 1795109646,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -797,11 +849,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "343253c0b2d36f8f",
+        "digest": "6c2f89692ae9ffc6",
         "end": 1736640000,
-        "events": 2456,
+        "events": 2659,
         "id": "near-3",
-        "made": 1794702843,
+        "made": 1795109645,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -814,11 +866,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "5f333d43efbabce9",
+        "digest": "95b2694b44bee72a",
         "end": 1736640000,
-        "events": 2354,
+        "events": 2557,
         "id": "near-4",
-        "made": 1794702923,
+        "made": 1795109645,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -831,11 +883,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "bf51da3c6184dbe1",
+        "digest": "42f8462d3165eada",
         "end": 1736640000,
-        "events": 1836,
+        "events": 2039,
         "id": "near-4-slope",
-        "made": 1794702949,
+        "made": 1795109674,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -849,11 +901,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "9f09e1ded0812a97",
+        "digest": "ddbf9d4aaff13674",
         "end": 1736640000,
-        "events": 2277,
+        "events": 2480,
         "id": "near-4-slope-6",
-        "made": 1794703092,
+        "made": 1795109674,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -867,11 +919,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "f3dfeaca1b331067",
+        "digest": "f2c756fa9a49b52e",
         "end": 1736640000,
-        "events": 2585,
+        "events": 2788,
         "id": "near-4-slope-soft",
-        "made": 1794703064,
+        "made": 1795109674,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -886,11 +938,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "903b4fbf261d7f9e",
+        "digest": "811f4a9c9f331221",
         "end": 1736640000,
-        "events": 1956,
+        "events": 2159,
         "id": "scale-2",
-        "made": 1794702817,
+        "made": 1795109646,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -902,11 +954,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "0c9f23366ccdf445",
+        "digest": "82dd8ae75f56555c",
         "end": 1736640000,
-        "events": 2129,
+        "events": 2332,
         "id": "scale-3",
-        "made": 1794702760,
+        "made": 1795109647,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -918,11 +970,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "57224e4b5a702754",
+        "digest": "cb9b07740d5e25b4",
         "end": 1736640000,
-        "events": 2319,
+        "events": 2522,
         "id": "scale-4",
-        "made": 1794702789,
+        "made": 1795109647,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -934,11 +986,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "87883280bcbd3d33",
+        "digest": "03fa1293e557910c",
         "end": 1736640000,
-        "events": 1763,
+        "events": 1966,
         "id": "scale-6",
-        "made": 1794702732,
+        "made": 1795109644,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -950,11 +1002,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "9c487c373d0e1997",
+        "digest": "475736458197c4b0",
         "end": 1736640000,
-        "events": 2152,
+        "events": 2355,
         "id": "vector-5",
-        "made": 1794703151,
+        "made": 1795109675,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -970,11 +1022,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "aab0ae3d53fe4572",
+        "digest": "3a0e59609fae83a0",
         "end": 1736640000,
-        "events": 2247,
+        "events": 2450,
         "id": "vector-5-held",
-        "made": 1794703180,
+        "made": 1795109676,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -991,11 +1043,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "831f57c39fd9906b",
+        "digest": "1e7908a8c0e7941d",
         "end": 1736640000,
-        "events": 2123,
+        "events": 2326,
         "id": "vector-8",
-        "made": 1794703122,
+        "made": 1795109676,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -1170,6 +1222,38 @@
           "suppression.mode": "hold"
         },
         "title": "The vector form at 5, with the record's completed lines holding from their recorded time"
+      },
+      {
+        "name": "fit-day-one",
+        "set": {
+          "fire.cooling": "idle",
+          "fire.form": "vector",
+          "fire.ignite_scale": 4.2342,
+          "fire.moisture_gain": 11.4857,
+          "fire.phi_cap": 30.0429,
+          "fire.reach_m": 45,
+          "fire.slope_rate_gain": 21.1124,
+          "fire.spot_rate": 0.0176,
+          "fire.wind_phi": 1.4729
+        },
+        "title": "Fitted by search to the first 27 hours only (satellite passes and the first mapped perimeters); the later days are its test"
+      },
+      {
+        "name": "fit-whole-record",
+        "set": {
+          "fire.cool_min": 22.5113,
+          "fire.cooling": "idle",
+          "fire.form": "vector",
+          "fire.ignite_scale": 5.569,
+          "fire.live_moisture_pct": 80.0519,
+          "fire.moisture_gain": 6.9379,
+          "fire.phi_cap": 22.3522,
+          "fire.reach_m": 45,
+          "fire.slope_rate_gain": 38.6491,
+          "fire.spot_rate": 0.0082,
+          "fire.wind_phi": 1.2849
+        },
+        "title": "Fitted by search to the whole record, all four days; the best any setting of eight knobs does"
       }
     ]
   },

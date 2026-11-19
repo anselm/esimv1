@@ -45,6 +45,26 @@
       }
     },
     {
+      "id": "seen",
+      "kind": "obs.hotspots",
+      "params": {
+        "end": "2025-01-12T00:00:00Z",
+        "every": "1h",
+        "file": "palisades-2025/viirs/hotspots.csv",
+        "frame_res_arcsec": 3,
+        "land_only": true,
+        "place": {
+          "lat_n": 34.16,
+          "lat_s": 34,
+          "lon_e": -118.46,
+          "lon_w": -118.72,
+          "res_arcsec": 1
+        },
+        "series": "seen",
+        "start": "2025-01-07T18:00:00Z"
+      }
+    },
+    {
       "id": "structures",
       "kind": "obs.dins",
       "params": {
@@ -106,7 +126,7 @@
   ],
   "from": {
     "entry": "manifests/f3-palisades-cells.js",
-    "hash": "sha256:fb839b0d6f7fba44cdf38a6f0b7bfb1cc9916d3ac1fc512b3f61a16055376e5d",
+    "hash": "sha256:591090f6873395259b56a9c19fe4da034c600c6f1f7cd3e97b0632c5abbed135",
     "language": "javascript"
   },
   "manifest": "manifest/1"

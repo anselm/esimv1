@@ -363,6 +363,15 @@ Every record this simulator reads, from `data/catalog.toml`, with the publisher,
 - **url** `https://cwfis.cfs.nrcan.gc.ca/downloads/hotspots/archive/{year}_hotspots.zip`
 - **notes** Not fetched by a module: the window's rows are copied into data/events/<event>/cwfis/hotspots.csv and read by obs.hotspots. rep_date carries no zone in the metadata and is taken as UTC.
 
+### NOAA JPSS VIIRS I-band active fire detections (Enterprise Fire, 375 m), Suomi NPP, NOAA-20 and NOAA-21
+
+- **id** `noaa-jpss-viirs-active-fire`
+- **publisher** NOAA National Environmental Satellite, Data, and Information Service, Joint Polar Satellite System
+- **licence** NOAA open data, a work of the United States government; the bucket's licence text not yet read
+- **verified** 2026-11-19 from canada1: about 1,000 files a day per satellite, anonymous listing and download; 6,075 files read for 7 to 12 January 2025, 3,751 detections inside the Palisades window in 43 passes, the first at 19:46 UTC on 7 January
+- **url** `https://noaa-nesdis-{satellite}-pds.s3.amazonaws.com/VIIRS_EFIRE_VIIRSI_EDR/{yyyy}/{mm}/{dd}/{file}`
+- **notes** Not fetched by a module: data/events/palisades-2025/viirs/fetch.py cuts a window and a span of days to hotspots.csv (needs h5py), which obs.hotspots reads. A file's name does not say where it looked, so the script reads every file near the overpass hours.
+
 ## vector
 
 ### Natural Earth 1:110m admin-0 countries, GeoJSON

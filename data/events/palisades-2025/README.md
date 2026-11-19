@@ -103,3 +103,30 @@ run at its `CreateDate` and the 3D view draws them; see `devlog/20261103-the-rec
 - The policy institute timeline Anselm sent (`americafirstpolicy.com`) refuses every fetch from here.
 - OroraTech's hotspot story: no download offered; the public VIIRS and MODIS detections behind it
   are the thing to fetch when a hotspot scoreboard is built.
+
+### `viirs/` — what three satellites saw burning
+
+- **Source** NOAA's JPSS open-data buckets (`noaa-nesdis-snpp-pds`, `noaa-nesdis-n20-pds`,
+  `noaa-nesdis-n21-pds`), product `VIIRS_EFIRE_VIIRSI_EDR`: the 375 m I-band active-fire
+  detections of Suomi NPP, NOAA-20 and NOAA-21, one NetCDF file per 85 seconds of swath, read
+  anonymously over HTTPS. Fetched from canada1 on 2026-11-19.
+- **Files** `hotspots.csv`: 3,751 detections inside 34.00 to 34.16 N, 118.72 to 118.46 W from
+  7 to 12 January 2025, in 43 passes. Columns: time (the middle of the file's 85 seconds, UTC),
+  satellite, sensor, latitude, longitude, fire radiative power, the product's confidence field
+  (unset, -99, in every row), its fire mask (7 low, 8 nominal, 9 high confidence: 129, 3,038 and
+  584 rows), the pixel's area, the satellite's zenith angle, day or night, and the source file.
+  `fetch.py`: the script that made it. It read 6,075 files (every file that started within two
+  hours of the afternoon and night overpass times), kept the rows in the window and discarded the files.
+- **Licence** NOAA open data, public domain as a work of the United States government; the
+  bucket's own licence text has not been read.
+- **Use** `obs.hotspots` reads it in both Palisades manifests (module `seen`). The first pass
+  is at 19:46 UTC on 7 January, 76 minutes after the ignition; there are five passes that
+  afternoon and four the following night, all before the first mapped perimeter that is more
+  than a sketch.
+- **Limits** A detection is a pixel that was hot when a satellite passed. It marks the whole
+  footprint (drawn as a disc of 187 m radius, the nadir half-pixel; pixels are larger toward the
+  swath's edge), so the seen area overstates the burned area, and cells at or below sea level
+  are left unmarked for that reason (`land_only`). Smoke can hide fire and a hot plume can read
+  as fire. Nothing here has been compared with NASA's FIRMS product, which is made from the same
+  instruments by a different algorithm.
+

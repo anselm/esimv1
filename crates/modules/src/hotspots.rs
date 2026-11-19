@@ -15,6 +15,11 @@ use std::path::PathBuf;
 
 const ACRE_M2: f64 = 4046.856;
 
+/// A series' name: the older one when the module has no prefix, else `<prefix>.<short>`.
+fn series_name(prefix: &str, old: &str, short: &str) -> String {
+    if prefix.is_empty() { old.to_string() } else { format!("{prefix}.{short}") }
+}
+
 #[derive(Clone, Serialize, Deserialize)]
 struct Spot { t: i64, lat: f64, lon: f64, sensor: String, radius_m: f64 }
 
@@ -23,6 +28,11 @@ pub struct Hotspots {
     name: String,
     lat_s: f64, lat_n: f64, lon_w: f64, lon_e: f64, res_arcsec: f64,
     file: String,
+    /// a prefix for this module's series, for a run that carries another record with the same names
+    #[serde(default)] series: String,
+    /// leave cells at or below sea level unmarked: a coastal pixel's footprint reaches over water that cannot burn
+    #[serde(default)] land_only: bool,
+    #[serde(skip)] land: Vec<bool>,
     start: String, end: String,
     every: Duration,
     frame_res_arcsec: f64,
@@ -51,6 +61,8 @@ impl Hotspots {
             lat_s: param_f64(p, "lat_s", 56.55), lat_n: param_f64(p, "lat_n", 56.85), lon_w: param_f64(p, "lon_w", -111.75), lon_e: param_f64(p, "lon_e", -111.15),
             res_arcsec: param_f64(p, "res_arcsec", 1.0),
             file: param_str(p, "file", "fortmcmurray-2016/cwfis/hotspots.csv").to_string(),
+            series: param_str(p, "series", "").to_string(),
+            land_only: p.get("land_only").and_then(|v| v.as_bool()).unwrap_or(false), land: Vec::new(),
             start: param_str(p, "start", "2016-05-01T00:00:00Z").to_string(), end: param_str(p, "end", "2016-05-07T00:00:00Z").to_string(),
             every: param_duration(p, "every", "6h")?,
             frame_res_arcsec: param_f64(p, "frame_res_arcsec", 4.0),
@@ -72,6 +84,7 @@ impl Hotspots {
         self.area_m2 = (0..grid.ny).flat_map(|r| std::iter::repeat_n(grid.row_area(r), grid.nx)).collect();
         self.metres = (0..grid.ny).map(|r| { let (mx, my) = grid.metres_per_degree(r); (mx * grid.dlon, my * grid.dlat) }).collect();
         self.seen = vec![false; grid.nx * grid.ny];
+        self.land = w.elev.iter().map(|e| !self.land_only || *e > 0.0).collect();
         let t0 = Time::parse(&self.start)?.0; let t1 = Time::parse(&self.end)?.0;
         let path = root.join("data/events").join(&self.file);
         let text = std::fs::read_to_string(&path).map_err(|e| format!("{}: {e}", path.display()))?;
@@ -112,7 +125,7 @@ impl Hotspots {
             for dr in -rr..=rr { for dc in -rc..=rc {
                 let (c, r) = (c0 + dc, r0 + dr);
                 if c < 0 || r < 0 || c >= g.nx as isize || r >= g.ny as isize { continue; }
-                if ((dc as f64 * mx).powi(2) + (dr as f64 * my).powi(2)).sqrt() <= s.radius_m.max(mx * 0.5) { self.seen[r as usize * g.nx + c as usize] = true; }
+                if ((dc as f64 * mx).powi(2) + (dr as f64 * my).powi(2)).sqrt() <= s.radius_m.max(mx * 0.5) && self.land[r as usize * g.nx + c as usize] { self.seen[r as usize * g.nx + c as usize] = true; }
             } }
             self.done += 1;
         }
@@ -152,8 +165,8 @@ impl Module for Hotspots {
             frame[fr * fg.nx + fc] = if cnt > 0 { inside as f32 / cnt as f32 } else { 0.0 };
         } }
         ctx.field("obs_hotspots", "1", &fg, frame);
-        ctx.report("obs.acres", "acres", obs_m2 / ACRE_M2);
-        ctx.report("obs.hotspots_so_far", "detections", n as f64);
+        ctx.report(&series_name(&self.series, "obs.acres", "acres"), "acres", obs_m2 / ACRE_M2);
+        ctx.report(&series_name(&self.series, "obs.hotspots_so_far", "hotspots_so_far"), "detections", n as f64);
         if let Some(f) = ctx.world_read("fire.burned_frac") {
             if f.data.len() == self.seen.len() {
                 let (mut both, mut sim, mut missed, mut over) = (0.0, 0.0, 0.0, 0.0);
@@ -164,10 +177,10 @@ impl Module for Hotspots {
                     match (s, self.seen[i]) { (true, true) => both += a, (false, true) => missed += a, (true, false) => over += a, _ => {} }
                 }
                 let sorensen = if sim + obs_m2 > 0.0 { 2.0 * both / (sim + obs_m2) } else { 0.0 };
-                ctx.report("sim.acres", "acres", sim / ACRE_M2);
-                ctx.report("fit.sorensen", "1", sorensen);
-                ctx.report("fit.missed_acres", "acres", missed / ACRE_M2);
-                ctx.report("fit.over_acres", "acres", over / ACRE_M2);
+                ctx.report(&series_name(&self.series, "sim.acres", "sim_acres"), "acres", sim / ACRE_M2);
+                ctx.report(&series_name(&self.series, "fit.sorensen", "sorensen"), "1", sorensen);
+                ctx.report(&series_name(&self.series, "fit.missed_acres", "missed_acres"), "acres", missed / ACRE_M2);
+                ctx.report(&series_name(&self.series, "fit.over_acres", "over_acres"), "acres", over / ACRE_M2);
                 ctx.publish("hotspots.scored", json!({ "time": now.to_iso(), "obs_acres": obs_m2 / ACRE_M2, "sim_acres": sim / ACRE_M2, "sorensen": sorensen, "detections": n }));
             }
         }
@@ -178,19 +191,20 @@ impl Module for Hotspots {
 
 impl Hotspots {
     pub fn describe(name: &str, p: &toml::Value) -> esim_kernel::describe::Describe {
+        let series = param_str(p, "series", "");
         esim_kernel::describe::Describe::new("obs.hotspots", name, "Satellite hotspots as the record of a fire's progress, for fires nobody mapped hour by hour: detections from a CSV (CWFIS's Fire M3 archive; NASA FIRMS has the same shape) inside the window and the run's days, each marking the ground within its sensor's half-pixel as seen burning by then; at a fixed cadence the fire module's burned cells are scored against the seen area (acres, Sørensen overlap, missed and overrun). A hotspot is a pixel that was hot when a satellite passed, not a perimeter: cloud, smoke and the gaps between passes make the seen area a floor, and a pixel marks ground it only partly covers.")
             .priority(9).dt(&format!("every {}", param_str(p, "every", "6h")))
             .param("lat_s", 56.55, "deg", "").param("lat_n", 56.85, "deg", "").param("lon_w", -111.75, "deg", "").param("lon_e", -111.15, "deg", "").param("res_arcsec", 1.0, "arcsec", "")
-            .param("file", "fortmcmurray-2016/cwfis/hotspots.csv", "", "CSV under data/events/").param("start", "2016-05-01T00:00:00Z", "", "").param("end", "2016-05-07T00:00:00Z", "", "")
+            .param("file", "fortmcmurray-2016/cwfis/hotspots.csv", "", "CSV under data/events/").param("land_only", false, "", "leave cells at or below sea level unmarked (a coastal pixel reaches over water)").param("series", "", "", "a prefix for the series (seen gives seen.acres, seen.sorensen, ...), for a run that also carries mapped perimeters; empty keeps obs.acres, sim.acres, fit.*").param("start", "2016-05-01T00:00:00Z", "", "").param("end", "2016-05-07T00:00:00Z", "", "")
             .param("every", "6h", "", "the scoring cadence").param("frame_res_arcsec", 4.0, "arcsec", "the seen-by-then frames are the share of each block seen, on this grid")
             .param("time_field", "rep_date", "", "'YYYY-MM-DD HH:MM:SS', taken as UTC (the archive's metadata states no zone), or ISO").param("lat_field", "lat", "", "").param("lon_field", "lon", "", "").param("sensor_field", "sensor", "", "")
             .param("default_radius_m", 500.0, "m", "half-pixel for a sensor not in the table (VIIRS-I 187, VIIRS-M 375, MODIS and AVHRR 500, OLI 15; recalled nadir values)")
             .publish("hotspots.loaded", "{ file, count, first, last, by_sensor, time_zone }").publish("hotspots.scored", "{ time, obs_acres, sim_acres, sorensen, detections }")
             .read("fire.burned_frac", "1", false, "the fire module's burned cells")
             .frame("obs_hotspots", "1")
-            .report("obs.acres", "acres").report("obs.hotspots_so_far", "detections").report("sim.acres", "acres").report("fit.sorensen", "1").report("fit.missed_acres", "acres").report("fit.over_acres", "acres")
+            .report(&series_name(series, "obs.acres", "acres"), "acres").report(&series_name(series, "obs.hotspots_so_far", "hotspots_so_far"), "detections").report(&series_name(series, "sim.acres", "sim_acres"), "acres").report(&series_name(series, "fit.sorensen", "sorensen"), "1").report(&series_name(series, "fit.missed_acres", "missed_acres"), "acres").report(&series_name(series, "fit.over_acres", "over_acres"), "acres")
             .asset("copernicus-dem-glo30", "the grid")
-            .view("chart", "Seen burning from orbit", "obs.acres", "the ground within a hotspot's footprint by this time; a floor on the burned area").view("chart", "Overlap with the hotspots", "fit.sorensen", "Sørensen of the model's burned cells against the seen area")
+            .view("map", "Seen burning from orbit", "obs_hotspots", "the share of each block inside a detection's footprint by this time").view("chart", "Seen burning from orbit", &series_name(series, "obs.acres", "acres"), "the ground within a hotspot's footprint by this time; a floor on the burned area").view("chart", "Overlap with the hotspots", &series_name(series, "fit.sorensen", "sorensen"), "Sørensen of the model's burned cells against the seen area")
             .note("Fire M3 hotspots: Natural Resources Canada, Canadian Forest Service; Open Government Licence - Canada, with an end-user agreement on the download page. Copied to data/events/<event>/cwfis/ for the window and the days.")
     }
 }

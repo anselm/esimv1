@@ -40,6 +40,23 @@ const obs = {
   },
 };
 
+// What three satellites saw burning, pass by pass: NOAA's VIIRS 375 m fire detections, cut to the
+// window by data/events/palisades-2025/viirs/fetch.py. The first pass is 76 minutes after the
+// ignition and there are four on the first afternoon, hours before the first mapped perimeter.
+const seen = {
+  kind: "obs.hotspots",
+  params: {
+    place,
+    file: "palisades-2025/viirs/hotspots.csv",
+    series: "seen",
+    land_only: true,
+    start: "2025-01-07T18:00:00Z",
+    end: "2025-01-12T00:00:00Z",
+    every: "1h",
+    frame_res_arcsec: 3,
+  },
+};
+
 const structures = {
   kind: "obs.dins",
   params: {
@@ -73,4 +90,4 @@ const suppression = {
 
 // What the scenario is made of, in order. The order is the order of sections on the run page,
 // and it settles which of two modules hears an event first when their priorities are equal.
-export { run, fire, obs, structures, record, suppression, audit };
+export { run, fire, obs, seen, structures, record, suppression, audit };

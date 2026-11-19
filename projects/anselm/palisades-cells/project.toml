@@ -152,3 +152,33 @@ title = "The vector form at 5, with the record's completed lines holding from th
 "fire.ignite_scale" = 5
 "fire.slope_rate_gain" = 20
 "suppression.mode" = "hold"
+
+[[variant]]
+name = "fit-day-one"
+title = "Fitted by search to the first 27 hours only (satellite passes and the first mapped perimeters); the later days are its test"
+[variant.set]
+"fire.form" = "vector"
+"fire.cooling" = "idle"
+"fire.reach_m" = 45
+"fire.ignite_scale" = 4.2342
+"fire.wind_phi" = 1.4729
+"fire.phi_cap" = 30.0429
+"fire.slope_rate_gain" = 21.1124
+"fire.spot_rate" = 0.0176
+"fire.moisture_gain" = 11.4857
+
+[[variant]]
+name = "fit-whole-record"
+title = "Fitted by search to the whole record, all four days; the best any setting of eight knobs does"
+[variant.set]
+"fire.form" = "vector"
+"fire.cooling" = "idle"
+"fire.reach_m" = 45
+"fire.ignite_scale" = 5.5690
+"fire.wind_phi" = 1.2849
+"fire.phi_cap" = 22.3522
+"fire.slope_rate_gain" = 38.6491
+"fire.spot_rate" = 0.0082
+"fire.moisture_gain" = 6.9379
+"fire.live_moisture_pct" = 80.0519
+"fire.cool_min" = 22.5113
