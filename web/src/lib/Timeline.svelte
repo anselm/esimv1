@@ -1,8 +1,8 @@
 <script>
   // One time cursor for the whole run page: maps show the frame at or before it, charts
   // mark it. Play walks the run's moments: every frame time, every crossing's time and a
-  // few hundred even steps, given by the page; it dwells longer on a moment less than an
-  // hour from the next, so four minutes of shaking play as a scene and a year as a sweep.
+  // few hundred even steps, given by the page; it dwells longer on a moment that is
+  // much nearer the next than the even step is, so four minutes of shaking play as a scene and a year as a sweep.
   // With an event time the label reads relative to it: "6 days before", "2 min in", "day 25".
   import { isoTime, relTime } from './fmt.js'
 
@@ -25,8 +25,10 @@
       if (n === null) { playing = false; return }
       cursor = n
       const after = next(n)
-      // a scene: moments less than an hour apart get a third of a second each
-      id = setTimeout(tick, after !== null && after - n < 3600 ? 350 : 60)
+      // a scene: moments much closer together than the run's even step (and under an hour apart) get
+      // a third of a second each. Measured against the step, so that a four-day run whose every step
+      // is a quarter of an hour is not played as one long scene (it was, from 12 to 19 November 2026).
+      id = setTimeout(tick, after !== null && after - n < Math.min(3600, step / 20) ? 350 : 60)
     }
     id = setTimeout(tick, 60)
     return () => clearTimeout(id)
