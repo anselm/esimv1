@@ -49,11 +49,18 @@
     seeded = true
     const o = {}
     // a disturbance's standing map (the shaking, everywhere at once) starts off so that what it did reads
-    // first; one that moves (a fire's front) starts on. The record starts off: it is there to compare with.
+    // first; one that moves (a fire's front) starts on. The record's own maps and marks start off: they are there to compare with.
     for (const m of modules) if (m.layer === 'across' && !framesOf(m).some((f) => (run.fields[f.name]?.times?.length ?? 0) > 1)) o[`${m.name}:field`] = true
-    o.record = true
+    // of the record, only a mapped edge that moves (a fire's perimeter) starts on, as a curtain; its other maps and marks start off
+    for (const m of modules) if (m.layer === 'record') {
+      if (!framesOf(m).some((f) => isEdge(f.name))) o[`${m.name}:field`] = true
+      o[`${m.name}:marks`] = true
+    }
     off = o
   })
+  // a frame of the record that is a share of each cell inside a mapped edge and that moves: drawn as a curtain along the edge
+  const isEdge = (n) => { const f = run.fields?.[n], m = modules.find((x) => (x.frames ?? []).some((q) => q.name === n) || (x.views ?? []).some((v) => v.source === n)); return !!f && m?.layer === 'record' && f.unit === '1' && (f.max ?? 0) <= 1 && (f.times?.length ?? 0) > 1 }
+  const hasEdge = $derived(wanted.some((w) => w.show && isEdge(w.name)))
   const isOn = (k) => !off[k]
   const hasArrival = $derived(wanted.some((w) => w.show && ARRIVAL.test(w.name)))
   const toggle = (k) => { off = { ...off, [k]: !off[k] } }
@@ -196,6 +203,7 @@
   const HARMFUL = /damage|destroyed|collapsed|deaths|displaced|release|without|pgd|liquefaction|fire|burn|arrival|flame|fuel_on/
   const HEIGHTS = /height/
   const ARRIVAL = /arrival/
+  const CURTAIN_KM = 0.7  // how tall the record's edge stands, in the scene's stretched kilometres
   const FRONT_H = 2      // ground reached within this many hours of the frame's latest hour is drawn as the front
   function drawField(layerId, key, name, data) {
     const t3 = three; const f = run.fields[name]; const g = f.grid
@@ -212,6 +220,33 @@
       const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(P), 3)); geo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(C), 3))
       const obj = new THREE.LineSegments(geo, new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false }))
       t3.layers.get(layerId).add(obj); t3.fields.set(key, obj); return
+    }
+    if (isEdge(name)) {
+      // the record's edge as a curtain: a wall of light standing on the ground wherever a cell inside
+      // the mapped area (half or more of it) meets a cell outside, brightest at its foot
+      const col = new THREE.Color(LAYERS.find((l) => l.id === layerId)?.color ?? '#ffffff'), P = [], C = [], L = []
+      const inside = (r, c) => r >= 0 && c >= 0 && r < g.ny && c < g.nx && data[r * g.nx + c] >= 0.5
+      const wall = (lonA, latA, lonB, latB) => {
+        const [xa, za] = t3.km(lonA, latA), [xb, zb] = t3.km(lonB, latB), ya = t3.elevAt(lonA, latA) + 0.04, yb = t3.elevAt(lonB, latB) + 0.04
+        P.push(xa, ya, za, xb, yb, zb, xb, yb + CURTAIN_KM, zb, xa, ya, za, xb, yb + CURTAIN_KM, zb, xa, ya + CURTAIN_KM, za)
+        for (const k of [0.55, 0.55, 0, 0.55, 0, 0]) C.push(col.r * k, col.g * k, col.b * k)
+        L.push(xa, ya, za, xb, yb, zb)
+      }
+      for (let r = 0; r < g.ny; r++) for (let c = 0; c < g.nx; c++) {
+        if (!inside(r, c)) continue
+        const w = g.lon_w + c * g.dlon, e = w + g.dlon, n = g.lat_n - r * g.dlat, s = n - g.dlat
+        if (!inside(r - 1, c)) wall(w, n, e, n)
+        if (!inside(r + 1, c)) wall(w, s, e, s)
+        if (!inside(r, c - 1)) wall(w, n, w, s)
+        if (!inside(r, c + 1)) wall(e, n, e, s)
+      }
+      const grp = new THREE.Group()
+      const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(P), 3)); geo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(C), 3))
+      grp.add(new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ vertexColors: true, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide })))
+      const lg = new THREE.BufferGeometry(); lg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(L), 3))
+      grp.add(new THREE.LineSegments(lg, new THREE.LineBasicMaterial({ color: '#ffffff', transparent: true, opacity: 0.95, depthWrite: false })))
+      grp.geometry = { dispose() { for (const o of grp.children) o.geometry.dispose() } }; grp.material = { dispose() { for (const o of grp.children) o.material.dispose() } }
+      t3.layers.get(layerId).add(grp); t3.fields.set(key, grp); return
     }
     if (ARRIVAL.test(name) && /^h/.test(f.unit ?? '')) {
       // a frame of arrival hours (a fire's): what matters is which ground has burned and where the
@@ -496,5 +531,5 @@
       </div>
     </div>
   </div>
-  <p class="mt-2 max-w-3xl text-xs muted">The modelled area with the vertical stretched {ZS} times. Contour lines are the run's elevation frame, every 20 metres. Each module's map is drawn as points of light in its layer's colour, and red marks what has failed, closed or lost power at the moment shown.{#if hasArrival} Ground a fire has reached is filled dark red, cooling from orange; the bright yellow edge is ground reached in the last two hours of the model's clock, and ground with no fill has not burned.{/if} Drag to turn, scroll to zoom. A layer with no module in this run is listed and empty.</p>
+  <p class="mt-2 max-w-3xl text-xs muted">The modelled area with the vertical stretched {ZS} times. Contour lines are the run's elevation frame, every 20 metres. Each module's map is drawn as points of light in its layer's colour, and red marks what has failed, closed or lost power at the moment shown.{#if hasEdge} The pale curtain stands on the edge of the area the record had mapped by the moment shown; it does not move between one mapping and the next.{/if}{#if hasArrival} Ground a fire has reached is filled dark red, cooling from orange; the bright yellow edge is ground reached in the last two hours of the model's clock, and ground with no fill has not burned.{/if} Drag to turn, scroll to zoom. A layer with no module in this run is listed and empty.</p>
 </section>
