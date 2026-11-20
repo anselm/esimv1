@@ -75,12 +75,18 @@ const audit = {
   scores: [["sim.acres", "obs.acres"]],
 };
 
+// What people did to the fire. Off as written: nobody fights it. A variant sets mode to
+// "resources", and the engines, dozers, hand crews and helicopters that CAL FIRE's status reports
+// count then hold the fire's edge hour by hour, wherever it moves slowly enough to be held. The
+// reports count no resources before 13:20 on 8 January, local time, so nothing is held before then.
 const suppression = {
   kind: "fire.suppression",
   params: {
     place,
     mode: "off",
     line_width_m: 30,
+    reports: "palisades-2025/calfire/updates.csv",
+    reports_tz_offset_h: -8,
   },
 };
 

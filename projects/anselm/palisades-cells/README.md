@@ -141,9 +141,66 @@ perfect match; 0.7 is roughly a fire twice too big.
 What this establishes is a limit of the engine and not a better setting. No value of these
 constants gives a fire that grows as fast as the real one did on the first night and then
 stops as the real one did. The real fire stopped growing when the wind dropped and
-thousands of firefighters arrived; the engine has the wind but nothing in it puts a fire
-out, and its suppression module does nothing with this record. Until the engine has a way
-for a fire to stop, fitting its constants cannot fix the later days.
+thousands of firefighters arrived; the engine has the wind, and on the morning of
+19 November nothing in it put a fire out. The next section is what happened when it was
+given a way to.
+
+## The fire, fought
+
+Added 19 November 2026, later the same day.
+
+CAL FIRE's status reports count the resources assigned to the fire. The first report that
+counts any is from 13:20 on 8 January, local time, 27 hours after the ignition: 149 engines,
+4 dozers, 7 helicopters. By the morning of 12 January there are 519 engines, 67 dozers,
+86 hand crews and 39 helicopters. The suppression module can now put those counts to work.
+
+Every hour it looks at where the model's fire is and measures how far each stretch of the
+fire's edge moved in the hour. Each kind of resource has a rate at which it can hold edge,
+in metres an hour, and a stated share of the total is at work on the edge. The module
+spends the hour's total on the edge, taking the most active stretches first, and leaves any
+stretch that moved faster than a stated limit. Ground behind a held stretch takes no more
+heat and no embers. The module knows nothing of the mapped perimeters, and the fire engine
+knows nothing of the reports: it only hears that some cells are now held.
+
+Two numbers in this are guesses with no source: the share at work, and the fastest edge
+that can be held. A search set them, shown the mapped perimeters up to 04:00 UTC on
+10 January and tested on the six mappings after that (48 runs, `vector-5` otherwise
+unchanged).
+
+| | error on the mappings it was shown | error on the later mappings |
+|---|---|---|
+| `vector-5`, nobody fights the fire | 0.55 | 0.82 |
+| `vector-5-crews`, fought | 0.22 | 0.17 |
+
+The fought fire ends at 19,000 acres. The last mapped perimeter in the run's window has
+23,300, and from the first infrared map on the overlap of the two shapes is between 0.7
+and 0.8. The unfought
+fire ends at 64,600 acres.
+
+The fought fire has the right size and a wrong course. In the model the whole edge is held
+by 45 hours after the ignition, 18 hours after the first resources are counted, and nothing
+grows after that. The real fire added about 7,500 acres over the next three days, and the
+incident reported no containment until the evening of 9 January and 11 percent at the end
+of the window.
+The model's share of edge held and the incident's containment are not the same measure,
+but 100 percent against 11 is not a difference of definition.
+
+The search also shows why. The error does not have a best value of the share; it has a
+cliff. Below a share of about 0.2 the fire escapes and the run is as wrong as the unfought
+one. Above it the fire is caught within hours, and every higher share gives nearly the same
+run. The same holds for the limit on how fast an edge can be held. No setting gives a fire
+that is mostly held and still creeps for three days. Two things are missing for that. Held
+ground in the model never fails, where a real line is lost and retaken. And the model's
+unfought fire on the second day is vigorous everywhere, so there is no quiet edge to hold
+first and no stubborn edge to lose.
+
+The rates per engine, dozer and crew are recalled from the wildland fire handbook's tables
+and have not been checked against it; the rate for a helicopter is a guess. The fitted
+share, 0.25, absorbs any error in them, and it also absorbs the model's edge being several
+times longer than a mapped one, because it follows every 30 metre cell. It should not be
+read as a quarter of the firefighters being on the line. The fit is on one fire.
+
+In the 3D view of `vector-5-crews` the held edge is the pink rim under the People layer.
 
 ## What is honest about it, and what is not
 
@@ -161,4 +218,4 @@ draped over both at the time cursor. Since the late evening of 2026-11-03 it als
 record of what people did, from the incident's own GIS: dozer pushes, drop points, helispots and
 completed lines appear where and when they were made, pulse for a while, and carry their times,
 beside the model's ignition and the spot fires it threw. The model does not yet react to any of
-it; the lines are drawn, not defended. [Limits today](/docs/system/limits) has the list.
+it in most runs; the lines are drawn, not defended. The `vector-5-crews` run is the exception, described above. [Limits today](/docs/system/limits) has the list.

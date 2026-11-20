@@ -171,6 +171,18 @@ holds the history.
   night and then stops, because nothing in the engine puts a fire out. Against NOAA's VIIRS
   detections the engine is also slow in the first sixteen hours (about 5,500 acres against
   17,800 seen, the seen figure overstating by roughly a third). Both fits are on one fire.
+- A fought fire stops, at about the right size and far too abruptly (2026-11-19).
+  `fire.suppression` in `mode = "resources"` spends CAL FIRE's reported engines, dozers, crews
+  and helicopters on the model fire's edge each hour. With its two free constants fitted
+  (`vector-5-crews`), the error against the mapped perimeters falls from 0.55 to 0.22 on the
+  mappings the fit saw and from 0.82 to 0.17 on the later ones, and the fire ends at 19,000
+  acres against 23,300 mapped. But the model's whole edge is held 18 hours after the first
+  resources are counted, where the real fire grew for three more days and the incident reported
+  11 percent containment at the end of the window. The fit is a cliff: under a share of about 0.2
+  the fire escapes, above it the fire is caught within hours. Held ground never fails, the
+  rates per resource are recalled and unchecked, nothing is counted before the first report
+  that lists resources, and only `fire.cells` publishes the burned field the module reads, so
+  the Rothermel runs cannot be fought this way yet.
 - Our own engine (`fire.cells`, 2026-11-03) is a heat budget with guessed constants. One
   multiplier on the ignition thresholds is swept across the runs; with heat felt three cells
   away there is a cliff (the window burns in hours, or the next cell never lights), with heat

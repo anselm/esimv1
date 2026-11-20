@@ -3,7 +3,7 @@
 <!-- author: Claude -->
 <!-- ordered-by: Anselm -->
 <!-- written: 2026-11-01 -->
-<!-- revised: 2026-11-12 -->
+<!-- revised: 2026-11-19 -->
 <!-- revision: 1 -->
 # Modules
 
@@ -187,7 +187,13 @@ in doubt, split at the point where two different people would hold different opi
   not archived) becomes a `ground.break`: the cells under it to a stated width, of a stated
   strength, from the line's recorded time. `fire.cells` refuses heat and embers there;
   `fire.rothermel` makes them unburnable. In `mode = "off"` (both Palisades manifests as written)
-  the record is drawn and not defended. Resources as agents with a ledger (engines, dozers,
+  the record is drawn and not defended. In `mode = "resources"` (2026-11-19) it reads a table of
+  the incident's status reports (`reports`, a CSV under `data/events/`), and each hour holds as
+  much of the fire's edge as the counted engines, dozers, hand crews and helicopters buy at
+  stated rates times `share`, the most active stretches first, leaving any that moved faster
+  than `hold_rate_m_h` in the hour. It reads `fire.burned_frac`, publishes the held ground as
+  `ground.break`, writes the frame `edge_held` and reports `suppression.containment_pct` beside
+  the incident's own figure. Resources as agents with a ledger (engines, dozers,
   aircraft placed by rule from the reports' counts) are the next form
   (`devlog/20261104-interventions-as-a-module.md`).
 - `obs.record` (`crates/modules/src/record.rs`, 2026-11-03): the record of what people did,

@@ -99,6 +99,8 @@ kind = "fire.suppression"
 [module.params]
 line_width_m = 30
 mode = "off"
+reports = "palisades-2025/calfire/updates.csv"
+reports_tz_offset_h = -8
 
 [module.params.place]
 lat_n = 34.16

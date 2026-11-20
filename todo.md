@@ -106,9 +106,11 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
    ignition and spots (`devlog/20261103-the-record-on-the-map.md`). Afternoon of the 4th: `fire.suppression`, a
    module of its own between the record and the engines, turns the completed lines into `ground.break`
    events both engines honour, and `obs.record` can shift the record's times; neither touches the second
-   day's overrun, which precedes the record's first line. Still to do: the
-   unplaced suppression (aircraft and crews of the 8th and 9th from CAL FIRE's resource counts, as
-   agents with capacity), geocoding UL's addressed events.
+   day's overrun, which precedes the record's first line. 19 November: the resource counts now hold
+   the model fire's edge by rule (`mode = "resources"`, variant `vector-5-crews`,
+   `devlog/20261119-a-fire-that-can-be-fought.md`); the fire stops at about the right size and far too
+   abruptly. Still to do: held ground that can be lost, a marginal-burning rule in the engine, the
+   same for `fire.rothermel`, resources as placed agents, geocoding UL's addressed events.
 5. "More clearly indicate when actual buildings themselves are likely burned - right now they stay
    one color." — done in the first form (2026-11-03 evening, `devlog/20261103-bodies.md`): every
    footprint a body with its own ignition and burn, coloured in the 3D view by the model's state

@@ -182,3 +182,16 @@ title = "Fitted by search to the whole record, all four days; the best any setti
 "fire.moisture_gain" = 6.9379
 "fire.live_moisture_pct" = 80.0519
 "fire.cool_min" = 22.5113
+
+[[variant]]
+name = "vector-5-crews"
+title = "vector-5 with the fire fought: the reported engines, dozers, crews and helicopters hold the edge from the first report that counts them; share and hold rate from a fit (fit-7973bc87)"
+[variant.set]
+"fire.form" = "vector"
+"fire.cooling" = "idle"
+"fire.reach_m" = 45
+"fire.ignite_scale" = 5
+"fire.slope_rate_gain" = 20
+"suppression.mode" = "resources"
+"suppression.share" = 0.2463
+"suppression.hold_rate_m_h" = 997.4

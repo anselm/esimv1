@@ -705,7 +705,7 @@
         "end": 1736640000,
         "events": 2607,
         "id": "bodies",
-        "made": 1795109645,
+        "made": 1795135796,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -726,7 +726,7 @@
         "end": 1736640000,
         "events": 2644,
         "id": "bodies-hard",
-        "made": 1795109673,
+        "made": 1795135797,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -747,7 +747,7 @@
         "end": 1736640000,
         "events": 4190,
         "id": "fit-day-one",
-        "made": 1795109677,
+        "made": 1795135827,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -771,7 +771,7 @@
         "end": 1736640000,
         "events": 2934,
         "id": "fit-whole-record",
-        "made": 1795109676,
+        "made": 1795135827,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -797,7 +797,7 @@
         "end": 1736640000,
         "events": 2557,
         "id": "houses",
-        "made": 1795109645,
+        "made": 1795135795,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -816,7 +816,7 @@
         "end": 1736640000,
         "events": 2622,
         "id": "houses-jitter",
-        "made": 1795109645,
+        "made": 1795135796,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -836,7 +836,7 @@
         "end": 1736640000,
         "events": 2847,
         "id": "near-2",
-        "made": 1795109646,
+        "made": 1795135797,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -853,7 +853,7 @@
         "end": 1736640000,
         "events": 2659,
         "id": "near-3",
-        "made": 1795109645,
+        "made": 1795135795,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -870,7 +870,7 @@
         "end": 1736640000,
         "events": 2557,
         "id": "near-4",
-        "made": 1795109645,
+        "made": 1795135795,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -887,7 +887,7 @@
         "end": 1736640000,
         "events": 2039,
         "id": "near-4-slope",
-        "made": 1795109674,
+        "made": 1795135796,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -905,7 +905,7 @@
         "end": 1736640000,
         "events": 2480,
         "id": "near-4-slope-6",
-        "made": 1795109674,
+        "made": 1795135825,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -923,7 +923,7 @@
         "end": 1736640000,
         "events": 2788,
         "id": "near-4-slope-soft",
-        "made": 1795109674,
+        "made": 1795135825,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -942,7 +942,7 @@
         "end": 1736640000,
         "events": 2159,
         "id": "scale-2",
-        "made": 1795109646,
+        "made": 1795135797,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -958,7 +958,7 @@
         "end": 1736640000,
         "events": 2332,
         "id": "scale-3",
-        "made": 1795109647,
+        "made": 1795135796,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -974,7 +974,7 @@
         "end": 1736640000,
         "events": 2522,
         "id": "scale-4",
-        "made": 1795109647,
+        "made": 1795135797,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -990,7 +990,7 @@
         "end": 1736640000,
         "events": 1966,
         "id": "scale-6",
-        "made": 1795109644,
+        "made": 1795135794,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -1006,7 +1006,7 @@
         "end": 1736640000,
         "events": 2355,
         "id": "vector-5",
-        "made": 1795109675,
+        "made": 1795135826,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -1022,11 +1022,34 @@
       },
       {
         "all_ledgers_closed": true,
+        "digest": "662c8b4cbcfea934",
+        "end": 1736640000,
+        "events": 2406,
+        "id": "vector-5-crews",
+        "made": 1795135526,
+        "name": "f3-palisades-cells",
+        "seed": 1,
+        "set": {
+          "fire.cooling": "\"idle\"",
+          "fire.form": "\"vector\"",
+          "fire.ignite_scale": "5",
+          "fire.reach_m": "45",
+          "fire.slope_rate_gain": "20",
+          "suppression.hold_rate_m_h": "997.4",
+          "suppression.mode": "\"resources\"",
+          "suppression.share": "0.2463"
+        },
+        "start": 1736272800,
+        "variant": "vector-5-crews",
+        "verdict": "holds"
+      },
+      {
+        "all_ledgers_closed": true,
         "digest": "3a0e59609fae83a0",
         "end": 1736640000,
         "events": 2450,
         "id": "vector-5-held",
-        "made": 1795109676,
+        "made": 1795135827,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -1047,7 +1070,7 @@
         "end": 1736640000,
         "events": 2326,
         "id": "vector-8",
-        "made": 1795109676,
+        "made": 1795135827,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -1254,6 +1277,20 @@
           "fire.wind_phi": 1.2849
         },
         "title": "Fitted by search to the whole record, all four days; the best any setting of eight knobs does"
+      },
+      {
+        "name": "vector-5-crews",
+        "set": {
+          "fire.cooling": "idle",
+          "fire.form": "vector",
+          "fire.ignite_scale": 5,
+          "fire.reach_m": 45,
+          "fire.slope_rate_gain": 20,
+          "suppression.hold_rate_m_h": 997.4,
+          "suppression.mode": "resources",
+          "suppression.share": 0.2463
+        },
+        "title": "vector-5 with the fire fought: the reported engines, dozers, crews and helicopters hold the edge from the first report that counts them; share and hold rate from a fit (fit-7973bc87)"
       }
     ]
   },

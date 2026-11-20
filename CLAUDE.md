@@ -452,6 +452,15 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   Result: no setting of `fire.cells` matches the first night and then stops (variants `fit-day-one`,
   `fit-whole-record`); the engine needs a way for a fire to go out before more fitting. Project runs are gitignored
   and reach the site by the deploy's rsync. The timeline's dwell is measured against the run's step (19 November).
+- A fire that can be fought (2026-11-19 afternoon, `devlog/20261119-a-fire-that-can-be-fought.md`; Anselm: "yes we
+  definitely should do stopping!"): `fire.suppression` has `mode = "resources"`: it reads a status-report CSV
+  (`reports`, `reports_tz_offset_h`), reads `fire.burned_frac` hourly, and holds as much of the fire's edge as the
+  counted engines, dozers, crews and helicopters buy (`share` times recalled rates), most active first, skipping edge
+  faster than `hold_rate_m_h`; publishes `ground.break`, frame `edge_held`, `suppression.containment_pct`. Variant
+  `vector-5-crews` (share 0.2463, hold 997, from `fit-7973bc87`): error 0.22 train / 0.17 test against 0.55 / 0.82
+  unfought, 19,000 acres at the end against 23,343; but the whole edge is held by 45 h where the incident reported
+  11 percent. The fit is a cliff, not a peak. Next: held ground that can be lost, and a marginal-burning rule in the
+  engine. `fire.rothermel` does not write `fire.burned_frac`, so it cannot be fought this way yet.
 - Stamps on docs pages (2026-11-15, `devlog/20261115-stamps-on-docs.md`; Anselm: "each page should indicate who wrote
   it (indicate claude as well) and if revised or ordered by anybody else ... and also the date and revision"): every
   `docs/**/*.md` starts with comment lines `author`, `ordered-by`, `revised-by` (only if someone else changed its

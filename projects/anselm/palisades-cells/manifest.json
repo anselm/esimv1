@@ -109,7 +109,9 @@
           "lon_e": -118.46,
           "lon_w": -118.72,
           "res_arcsec": 1
-        }
+        },
+        "reports": "palisades-2025/calfire/updates.csv",
+        "reports_tz_offset_h": -8
       }
     },
     {
@@ -126,7 +128,7 @@
   ],
   "from": {
     "entry": "manifests/f3-palisades-cells.js",
-    "hash": "sha256:591090f6873395259b56a9c19fe4da034c600c6f1f7cd3e97b0632c5abbed135",
+    "hash": "sha256:8bdc323472941399ee5c6936ebfa19825fca05af568ea77cdda7b2164191ba09",
     "language": "javascript"
   },
   "manifest": "manifest/1"
