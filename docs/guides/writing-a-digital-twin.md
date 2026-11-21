@@ -23,6 +23,9 @@ or global (how many people live outside a livable climate in 2100 under each emi
 path). A twin does not answer such a question. It lets people explore possible answers and
 see what each one rests on.
 
+What follows is what we have learned from building simulations of places over the last
+few years, including the mistakes. We hope it is useful to you.
+
 The guide is not a manual for esimv1, the simulator this documentation belongs to. It
 describes practices and problems that hold for any engine. Where esimv1 made a choice, the
 text says so and gives the reason, so a reader can choose differently.
