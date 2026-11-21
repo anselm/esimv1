@@ -22,6 +22,17 @@
     "revision": 1
   },
   {
+    "path": "guides/writing-a-digital-twin",
+    "title": "How to write your own digital twin",
+    "order": 1,
+    "section": "Building a twin",
+    "author": "Claude",
+    "orderedBy": "Anselm",
+    "written": "2026-11-21",
+    "revised": "2026-11-21",
+    "revision": 1
+  },
+  {
     "path": "rfc/0001-manifest",
     "title": "RFC 0001: a common transport for simulations",
     "order": 1,
@@ -118,7 +129,7 @@
     "author": "Claude",
     "orderedBy": "Anselm",
     "written": "2026-11-01",
-    "revised": "2026-11-14",
+    "revised": "2026-11-19",
     "revision": 1
   },
   {
@@ -140,7 +151,7 @@
     "author": "Claude",
     "orderedBy": "Anselm",
     "written": "2026-11-01",
-    "revised": "2026-11-12",
+    "revised": "2026-11-19",
     "revision": 1
   },
   {
@@ -151,7 +162,7 @@
     "author": "Claude",
     "orderedBy": "Anselm",
     "written": "2026-11-01",
-    "revised": "2026-11-07",
+    "revised": "2026-11-21",
     "revision": 1
   },
   {
@@ -173,7 +184,7 @@
     "author": "Claude",
     "orderedBy": "Anselm",
     "written": "2026-11-01",
-    "revised": "2026-11-14",
+    "revised": "2026-11-19",
     "revision": 1
   },
   {
@@ -192,7 +203,7 @@
     "title": "Sources",
     "order": 17,
     "section": "Projects and the record",
-    "author": "Claude",
+    "author": "Claude, as the catalog that `esim sources --write` renders",
     "orderedBy": "Anselm",
     "written": "2026-11-01",
     "revised": "2026-11-12",

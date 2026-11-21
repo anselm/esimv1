@@ -3,7 +3,7 @@
 <!-- author: Claude -->
 <!-- ordered-by: Anselm -->
 <!-- written: 2026-11-01 -->
-<!-- revised: 2026-11-07 -->
+<!-- revised: 2026-11-21 -->
 <!-- revision: 1 -->
 # What this is
 
@@ -42,6 +42,7 @@ time cursor.
 - [Workspace](/docs/system/workspace), how the folders are laid out and how to behave in a shared one.
 - [Time](/docs/system/time), [Vocabulary](/docs/system/vocabulary), [Adding a module](/docs/system/adding-a-module), [Limits today](/docs/system/limits).
 - The future as tables: [Known future events](/docs/events/known), the calendar with a date and a source per row, and [Wild cards](/docs/events/wild-cards), the black swans with a rough chance a year and the effect a run applies.
+- A guide that is not about this engine: [How to write your own digital twin](/docs/guides/writing-a-digital-twin), for people and for language models to read as context.
 - A proposal: [RFC 0001](/docs/rfc/0001-manifest), the manifest as a common transport for simulations between engines, in JSON, with a schema.
 
 The design brief and every decision since are dated entries in the repository's

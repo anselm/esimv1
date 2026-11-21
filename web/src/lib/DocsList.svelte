@@ -22,9 +22,9 @@
     }
   }
   // sections in reading order; any other section follows alphabetically, pages with none last
-  const SECTIONS = ['Start here', 'Where this is going', 'The machine', 'Projects and the record', 'Telling it', 'Changing it']
+  const SECTIONS = ['Start here', 'Where this is going', 'The machine', 'Projects and the record', 'Telling it', 'Changing it', 'Building a twin']
   // what each area of the documentation is, said once above its sections
-  const AREAS = { system: ['The system', 'How the engine works, what it holds, and how to use and change it.'], events: ['The future', 'Lists of events ahead: the dated ones, and the wild cards a run may draw.'], rfc: ['Standards', 'Proposals for formats that other engines could share.'] }
+  const AREAS = { system: ['The system', 'How the engine works, what it holds, and how to use and change it.'], events: ['The future', 'Lists of events ahead: the dated ones, and the wild cards a run may draw.'], rfc: ['Standards', 'Proposals for formats that other engines could share.'], guides: ['Guides', 'How to do the work, whatever engine you use. Written for people and for language models to read as context.'] }
   const byOrder = (a, b) => (a.order ?? 99) - (b.order ?? 99) || a.path.localeCompare(b.path)
   function sectioned(list) {
     const m = new Map()

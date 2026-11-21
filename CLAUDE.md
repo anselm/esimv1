@@ -452,6 +452,9 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   Result: no setting of `fire.cells` matches the first night and then stops (variants `fit-day-one`,
   `fit-whole-record`); the engine needs a way for a fire to go out before more fitting. Project runs are gitignored
   and reach the site by the deploy's rsync. The timeline's dwell is measured against the run's step (19 November).
+- The guides area (2026-11-21, `devlog/20261121-a-guide-to-writing-a-twin.md`): `docs/guides/writing-a-digital-twin.md`
+  is a general guide to building a twin, for people and for language models as context, not about esimv1 (Anselm's
+  outline; cites digitaltwins.wiki). Docs area `guides`, section "Building a twin". Keep it engine-neutral when editing.
 - A fire that can be fought (2026-11-19 afternoon, `devlog/20261119-a-fire-that-can-be-fought.md`; Anselm: "yes we
   definitely should do stopping!"): `fire.suppression` has `mode = "resources"`: it reads a status-report CSV
   (`reports`, `reports_tz_offset_h`), reads `fire.burned_frac` hourly, and holds as much of the fire's edge as the
