@@ -83,6 +83,34 @@ wind and one fire model. It does not need hydrology.
 Then build the smallest version that runs end to end: one place, one scenario, one output.
 Extend it where its users push.
 
+## Decide how good and how fast
+
+The real world is very hard to model. A simulation that tries to be faithful in every
+respect can cost a great deal to build and a great deal to run: weather centres spend
+supercomputers on one forecast. Most projects cannot do that and do not need to.
+
+The work is to find a representation simple enough to compute and still good enough for
+your specific question. This is what programmers are usually asked to do: build a model
+that is good enough. "Good enough" has to be stated to mean anything. Say what error is
+tolerable for the decision at hand (the right valley, the right day, the right order of
+magnitude), then stop refining when a check against the record meets it. A coarse model
+that runs a thousand times and shows its spread is often worth more than a fine one that
+runs once.
+
+Decide early how fast the twin has to run, because it changes the design.
+
+- **Faster than the event, for operations.** A person steering a live situation, such as
+  a fire, a flood or a grid under strain, needs an answer in seconds or minutes, updated
+  as conditions change, so that an intervention can be tried in the model before it is
+  tried in the world. This calls for simple physics, coarse grids, precomputed tables or a
+  learned stand-in for the slow parts, and a link to live data.
+- **Slower, for planning.** A team weighing options over weeks can wait hours for a run.
+  This allows finer physics, many runs with different seeds and parameters, and a careful
+  comparison of scenarios.
+
+The same model rarely serves both. Naming which one you are building is part of naming
+the question.
+
 ## The core: how to arrange a simulation
 
 Most simulation engines, whatever their subject, have the same few parts. Keeping them
@@ -235,6 +263,29 @@ event and compare.
 A run past the end of the record rests on assumptions. Name them where the numbers are
 shown, and do not call the run a forecast.
 
+## Keep it tied to the world
+
+A check against one past event is a start. A twin that is meant to stay in use has to be
+kept in step with the world and with its own earlier results.
+
+- **Live sensors.** Gauges, weather stations, satellites, cameras and meters can feed the
+  model as it runs. This link is what some fields mean by the word "twin". Treat each feed
+  as data like any other: record its source, expect gaps and faults, and decide what the
+  model does when a sensor goes quiet.
+- **Data assimilation.** A running model drifts from the world. Assimilation corrects its
+  state toward new observations as they arrive, weighing how much to trust the model
+  against how much to trust the measurement. Weather forecasting depends on it. Simple
+  forms, such as restarting from the latest observed state or nudging toward it, go a long
+  way. Keep a version of the run that was not corrected, so the model's own error stays
+  visible.
+- **Forecast, then check.** Issue a dated forecast, keep it unchanged, and compare it with
+  what happened. Repeated over months this is the strongest evidence a twin can offer.
+- **Regression tests.** Keep a small set of reference runs with their expected results,
+  and rerun them on every change to the code or the data. A change that moves a result
+  should do so on purpose, and the reason should be written down. Without this, a fix in
+  one module quietly breaks another, and a new version of a dataset changes answers that
+  nobody rechecks.
+
 ## Show it
 
 A running simulation that nobody can see persuades nobody. Visualization is how the work
@@ -351,7 +402,7 @@ answers down and keep them with the project.
 ## An order of work
 
 1. Name the question, the user and the decision. Confirm it needs a simulator and not
-   a replay.
+   a replay. Say what "good enough" means and how fast it must run.
 2. Talk to the people affected.
 3. Answer the questions in the section above, in writing.
 4. Find the data and the existing tools, and record every source.
@@ -361,7 +412,8 @@ answers down and keep them with the project.
 8. Add the display: map or 3D view, time, record beside model.
 9. Add interventions as named parameter changes, and outcomes on several bottom lines.
 10. Put it in front of its users and watch what they misread.
-11. Decide who keeps it alive.
+11. Decide who keeps it alive. If it stays live, add the sensor feeds, the dated
+    forecasts and the regression tests.
 
 Keep a dated log of decisions throughout. A year later the order of thinking is as
 valuable as the code.
@@ -375,6 +427,8 @@ When helping someone build a twin:
   replays recorded data, say that it is a visualization and ask whether that is the aim.
 - Look for an existing engine, dataset or tool before writing one, and name it.
 - Propose the smallest model that could address the question, and name what it leaves out.
+- Ask what error is tolerable for the decision, and whether the twin must run fast enough
+  for live operations or only for planning.
 - For each part, state the representation you chose and the one you rejected, with the
   reason.
 - Mark each number as sourced, recalled from memory, or a guess. Do not present a recalled
@@ -399,10 +453,9 @@ against, or a report of where a run misses is useful there.
 
 ## What was left out
 
-This guide does not cover live coupling to sensors and data assimilation, which is what
-some fields mean by a twin; learned models trained on data in place of written rules;
-performance and parallel computing; or the cost of running a service. Each deserves its
-own page.
+This guide does not cover the methods of data assimilation in any depth, learned models
+trained on data in place of written rules, the engineering of performance and parallel
+computing, or the budget for running a service. Each deserves its own page.
 
 ## Further reading
 

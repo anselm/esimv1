@@ -26,3 +26,8 @@ coupling and data assimilation, learned models, performance, cost).
 Sources: the wiki's page on The Grammar of Simulation, its front page, guide list and article
 list, read on the day through a summarising fetch; the paper and the wiki's guides were not read
 in full, and the page says so. The rest is opinion from building this engine and cites nothing.
+
+Later the same day, on Anselm's notes: a section on deciding how good and how fast (a faithful
+model is very costly, the job is a representation good enough for the question, and a twin for
+live operator-in-the-loop use is a different build from one for planning), and a section on
+keeping it tied to the world (live sensors, data assimilation, dated forecasts, regression tests).
