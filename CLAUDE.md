@@ -542,3 +542,13 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   projects to move out later. The devlog lists what that asks of the engine (projects and record folders outside the
   tree, a version to name, play from a chosen moment, a prepared bundle, lidar ground, the viewer as a part); none is
   built. Do not build the scenario ahead of his word on its first question.
+- The refactor (2026-11-22, `devlog/20261122-a-refactor-pass-how-to-approach.md`; Anselm: "esimv1 acts as the hub.
+  esimv1-core sounds good. esimv1-viewer sounds good. repos only for truly significant scenarios"): the decided names are
+  `esimv1` (hub), `esimv1-core` (the crates together), `esimv1-viewer`, and `esimv1-palisades`, `esimv1-portland`,
+  `esimv1-earth2100`, `esimv1-playable-sausalito`; the rest stays; all under `anselm` for now. Order: format number, project
+  by path, rearrange inside this repository, package the viewer, cut. Done so far: `run.json` begins with `format` (1) and
+  `engine`; `esim_registry::paths::event(rel)` is the only way to a record folder (a project's own `data/events/<name>`
+  shadows the engine's); `esim project run ./folder` runs a project anywhere and sets `ESIM_PROJECT`; `engine = "0.3.0"` in
+  `project.toml` is a minimum; the workspace is 0.3.0. `cargo` is at `~/.cargo/bin` and is not on a fresh shell's path:
+  export it, and never judge a build by a filtered grep alone.
+

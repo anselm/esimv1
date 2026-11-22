@@ -49,7 +49,7 @@ impl Rules {
     }
     fn load(&mut self) -> Result<(), String> {
         let root = std::env::var("ESIM_ROOT").ok().map(PathBuf::from).unwrap_or_else(|| PathBuf::from("."));
-        let table = EventTable::load(&root.join("data/events/calendar.toml"))?;
+        let table = EventTable::load(&esim_registry::paths::event("calendar.toml"))?;
         let row = table.get(&self.rule_id).ok_or_else(|| format!("calendar.toml has no row {}", self.rule_id))?;
         self.effective = row.date.clone().ok_or("rule row has no date")?;
         self.row_title = row.title.clone(); self.row_source = row.source.clone(); self.row_confidence = row.confidence.clone(); self.row_known_since = row.known_since.clone();

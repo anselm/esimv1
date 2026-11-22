@@ -501,8 +501,7 @@ impl Module for OneLine {
 }
 
 fn record_rows() -> serde_json::Value {
-    let root = std::env::var("ESIM_ROOT").ok().map(PathBuf::from).unwrap_or_else(|| PathBuf::from("."));
-    let text = std::fs::read_to_string(root.join("data/events/halfmoonbay/record.toml")).unwrap_or_default();
+    let text = std::fs::read_to_string(esim_registry::paths::event("halfmoonbay/record.toml")).unwrap_or_default();
     let v: toml::Value = toml::from_str(&text).unwrap_or(toml::Value::Table(Default::default()));
     json!(v.get("fact").and_then(|f| f.as_array()).map(|a| a.iter().map(|r| json!({
         "id": r.get("id").and_then(|x| x.as_str()), "title": r.get("title").and_then(|x| x.as_str()), "value": r.get("value").and_then(|x| x.as_float().or_else(|| x.as_integer().map(|i| i as f64))),

@@ -7,7 +7,7 @@
 //! `data/events/<folder>/aftermath.toml` with its rate, source, confidence and a switch, listed on
 //! the run page whether on or off. It reads the lifelines module's daily state and the buildings'
 //! toll as events and owns one total: `deaths.total`.
-use crate::quake::{root, sample, window_grid};
+use crate::quake::{sample, window_grid};
 use esim_kernel::manifest::{param_f64, param_str};
 use esim_kernel::{Ctx, Describe, Event, Module};
 use serde::{Deserialize, Serialize};
@@ -59,7 +59,7 @@ impl Aftermath {
         Ok(o)
     }
     fn table(folder: &str) -> Result<toml::Value, String> {
-        let path = root().join("data/events").join(folder).join("aftermath.toml");
+        let path = esim_registry::paths::event(folder).join("aftermath.toml");
         let text = std::fs::read_to_string(&path).map_err(|e| format!("{}: {e}", path.display()))?;
         text.parse::<toml::Value>().map_err(|e| format!("aftermath.toml: {e}"))
     }

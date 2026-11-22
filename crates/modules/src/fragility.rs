@@ -3,7 +3,7 @@
 //! the folder's tables. Not a module. Until 2026-11-14 this lived inside `hazard.components`, which
 //! held tanks, bridges, power structures and road segments in one kind because they share this
 //! method; they are now `fuel.tanks`, `roads.bridges`, `power.structures` and `roads.routes`.
-use crate::quake::{phi, root};
+use crate::quake::phi;
 use esim_kernel::{Ctx, LatLonGrid};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -20,11 +20,11 @@ pub(crate) fn tarr(t: &toml::Value, k: &str) -> Vec<f64> { t.get(k).and_then(|v|
 pub(crate) fn or(s: String, d: &str) -> String { if s.is_empty() { d.to_string() } else { s } }
 
 pub(crate) fn table(folder: &str, file: &str) -> Result<toml::Value, String> {
-    let path = root().join("data/events").join(folder).join(file);
+    let path = esim_registry::paths::event(folder).join(file);
     std::fs::read_to_string(&path).map_err(|e| format!("{}: {e}", path.display()))?.parse::<toml::Value>().map_err(|e| format!("{file}: {e}"))
 }
 pub(crate) fn csv(folder: &str, file: &str) -> Result<(Vec<String>, Vec<Vec<String>>), String> {
-    let path = root().join("data/events").join(folder).join(file);
+    let path = esim_registry::paths::event(folder).join(file);
     let text = std::fs::read_to_string(&path).map_err(|e| format!("{}: {e}", path.display()))?;
     let mut lines = text.lines();
     let head: Vec<String> = lines.next().ok_or("empty csv")?.split(',').map(|s| s.trim().to_string()).collect();

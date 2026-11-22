@@ -98,3 +98,58 @@ prefix that is meant to last will read oddly when there is a v2.
 - Client-side runs (`20261122-storage-compute-and-repos-from-a-cloud-session.md`) want a
   steppable kernel and a run that never touches disk. That is a change inside `core`, and
   is easier after step 3 than before it.
+
+## Later the same day: his answer, and steps 1 and 2 done
+
+Anselm:
+
+> esimv1 repo naming - yes i just felt it was easier to leave esimv1 as the user facing
+> repo - true the naming is not perfect, but it feels like we break less stuff if esimv1
+> acts as the hub. esimv1-core sounds good. esimv1-viewer sounds good. repos only for
+> truly significant scenarios makes sense esimv1-pallisades, esimv1-portland,
+> esimv1-earth2100, esimv1-playable-sausalito and leave rest. we will move githubs later -
+> can stay in /anselm . your recommended order is good. i see there is substantial work
+> here - please take your time but yes go for it.
+
+So the names are decided: `esimv1` (hub), `esimv1-core`, `esimv1-viewer`, and four
+scenario repositories, all under `anselm` for now.
+
+**Step 1, the run folder has a format number.** `run.json` now begins with `format` (1) and
+`engine` (the version that wrote it). The command line adds them; the kernel is unchanged.
+`docs/system/projects-and-runs.md` describes format 1 and says when the number moves.
+
+**Step 2, a project by path.** Three changes, none in the kernel:
+
+- `esim_registry::paths` is the one place that knows where the record folders are. Every
+  module that built `ESIM_ROOT/data/events/...` by hand (sixteen files) now asks
+  `paths::event(rel)`. When a project is being run and its own `data/events/` holds the
+  first segment of `rel`, the project's copy is read.
+- `esim project run|prepare|update|prune|new` take a folder as well as `<area>/<name>`.
+  The command line sets `ESIM_PROJECT` to the folder before any module is made. A project
+  by folder is left out of the workspace's index.
+- `engine = "0.3.0"` in `project.toml` is the oldest engine the project runs on. The
+  workspace version went from 0.2.0 to 0.3.0 so there is something to name.
+
+The test: Half Moon Bay's project folder copied to a scratch folder outside the
+repository with `data/events/halfmoonbay` inside it, the engine's own copy of that record
+moved aside, and `esim project run ./hmb --variant as-built --offline` run from the scratch
+folder. It gave log digest `70bece767182b643`, the same as the run in the tree, and its
+`describe.json` carries the record's rows. The same run in the tree with the record moved
+aside gives the same digest and a describe without the rows, because `coast.oneline` reads
+a missing record as an empty one. That is a fault of its own (a missing record should be
+an error) and is not fixed here. A project naming engine 9.0.0 was refused with a sentence
+saying so. The regression ladder shows no drift and the tests pass. Everything was put
+back; Half Moon Bay stays in the tree, as agreed.
+
+A mistake on the way: the first builds ran in a shell without `cargo` on its path and my
+filter hid the error, so the first regression pass and the first outside run were on the
+old binary. Both were redone on the new one.
+
+Not done by this step:
+
+- A scenario's repository usually holds more than the project (a view, a devlog, the
+  harness's own `project.toml`, which is a different file with the same name). The
+  project folder will have to be a subfolder of the repository, such as `scenario/`.
+- An answer from OpenStreetMap fetched for an outside project is still kept in the
+  engine's `data/osm/`.
+- `esim fit`, `ensemble` and `sweep` take a manifest and do not set `ESIM_PROJECT`.

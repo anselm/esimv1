@@ -73,7 +73,7 @@ impl Fire {
     }
     fn load(&mut self) -> Result<(), String> {
         let root = std::env::var("ESIM_ROOT").ok().map(PathBuf::from).unwrap_or_else(|| PathBuf::from("."));
-        let table = EventTable::load(&root.join("data/events/hazards.toml"))?;
+        let table = EventTable::load(&esim_registry::paths::event("hazards.toml"))?;
         let row = table.get(&self.hazard_id).ok_or_else(|| format!("hazards.toml has no row {}", self.hazard_id))?;
         if self.setting.is_empty() { self.setting = row.setting.clone().unwrap_or_else(|| "on".into()); }
         self.row_title = row.title.clone(); self.row_source = row.source.clone(); self.row_confidence = row.confidence.clone();

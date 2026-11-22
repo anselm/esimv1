@@ -10,7 +10,7 @@
 //! hospitals' generators and the emergency fleet burn, and what comes back up the pipeline.
 //! Every constant is either a published range or a guess, and the describe says which.
 
-use crate::quake::{cell_of, phi, root, sample, window_grid};
+use crate::quake::{cell_of, phi, sample, window_grid};
 use esim_kernel::manifest::{param_f64, param_str};
 use esim_kernel::{Ctx, Describe, Duration, Event, LatLonGrid, Module, Time};
 use serde::{Deserialize, Serialize};
@@ -81,7 +81,7 @@ impl Lifelines {
     }
     fn load(&mut self) -> Result<(), String> {
         let (g, _) = window_grid(self.lat_s, self.lat_n, self.lon_w, self.lon_e, self.res_arcsec)?;
-        let dir = root().join("data/events").join(&self.folder);
+        let dir = esim_registry::paths::event(&self.folder);
         let read = |f: &str| -> Result<toml::Value, String> { toml::from_str(&std::fs::read_to_string(dir.join(f)).map_err(|e| format!("{f}: {e}"))?).map_err(|e| format!("{f}: {e}")) };
         let fresh = self.bridges.is_empty();
         if fresh {
@@ -161,7 +161,7 @@ impl Lifelines {
                 .report("lifeline.hospitals_open", "hospitals").report("lifeline.hospitals_dark", "hospitals").report("lifeline.hospitals_closed", "hospitals")
                 .report("fuel.hub_gal", "gal").report("fuel.river_gal", "gal").report("fuel.ground_gal", "gal").report("fuel.consumed_gal", "gal").report("fuel.delivered_gal", "gal").report("fuel.days_left", "d");
         }
-        let dir = root().join("data/events").join(folder);
+        let dir = esim_registry::paths::event(folder);
         if let Ok(t) = std::fs::read_to_string(dir.join("bridges.toml")).map_err(|e| e.to_string()).and_then(|s| toml::from_str::<toml::Value>(&s).map_err(|e| e.to_string())) {
             if let Some(a) = t.get("bridge").and_then(|v| v.as_array()) { d = d.table("bridges", json!(a.iter().map(|b| json!({ "name": ts(b, "name"), "opened": tf(b, "opened"), "carries": ts(b, "carries"), "owner": ts(b, "owner") })).collect::<Vec<_>>())); }
         }

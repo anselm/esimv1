@@ -5,7 +5,7 @@
 //! tables and columns the study has is the event folder's `losses.toml` to say; the code names no
 //! place and no agency. Until 2026-11-13 this comparison lived inside `quake.buildings`, written
 //! for Portland and DOGAMI by name.
-use crate::quake::{read_csv, root, sample, window_grid};
+use crate::quake::{read_csv, sample, window_grid};
 use esim_kernel::manifest::{param_f64, param_str};
 use esim_kernel::{Ctx, Describe, Event, LatLonGrid, Module};
 use serde::{Deserialize, Serialize};
@@ -49,7 +49,7 @@ impl Losses {
         Ok(o)
     }
     fn meta(folder: &str) -> Result<toml::Value, String> {
-        let path = root().join("data/events").join(folder).join("losses.toml");
+        let path = esim_registry::paths::event(folder).join("losses.toml");
         let text = std::fs::read_to_string(&path).map_err(|e| format!("{}: {e}", path.display()))?;
         text.parse::<toml::Value>().map_err(|e| format!("losses.toml: {e}"))
     }
@@ -64,7 +64,7 @@ impl Losses {
         self.unit = sample(&self.folder, &ts(units, "raster"), &g)?;
         self.code = sample(&self.folder, &ts(group, "raster"), &g)?;
         let fill = |s: &str| Self::fill(s, &self.record, &self.time_of_day);
-        let dir = root().join("data/events").join(&self.folder);
+        let dir = esim_registry::paths::event(&self.folder);
         let f = |r: &Vec<String>, i: usize| r.get(i).and_then(|s| s.parse::<f64>().ok()).unwrap_or(0.0);
         let read = |table: &str, first: &str| -> Result<(Vec<Vec<String>>, usize, [usize; 4], Vec<usize>), String> {
             let (head, rows) = read_csv(&dir.join(fill(table)))?;
@@ -111,7 +111,7 @@ impl Losses {
         // the record as a table on the run page
         if let Some(m) = &meta { if let Some(group) = m.get("group") {
             let table_name = Self::fill(&ts(group, "table"), param_str(p, "record", "wet"), param_str(p, "time_of_day", "day"));
-            if let Ok((head, rows)) = read_csv(&root().join("data/events").join(folder).join(table_name)) {
+            if let Ok((head, rows)) = read_csv(&esim_registry::paths::event(folder).join(table_name)) {
                 let keep = list(group, "show_columns");
                 let (pre, suf, eq) = (list(group, "show_prefix"), list(group, "show_suffix"), list(group, "show_equal"));
                 let idx: Vec<Option<usize>> = keep.iter().map(|k| head.iter().position(|h| h == k)).collect();

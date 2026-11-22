@@ -7,7 +7,7 @@
 //! the water ramp whether it has water. What this adds to the cell counts is a population that
 //! can be followed: the same agent is counted on every day, and a later rung gives it decisions
 //! (to leave, to shelter, to travel). The cost is measured and reported: agents per second.
-use crate::quake::{root, sample, window_grid};
+use crate::quake::{sample, window_grid};
 use esim_kernel::manifest::{param_f64, param_str};
 use esim_kernel::{Ctx, Describe, Duration, Event, LatLonGrid, Module};
 use serde::{Deserialize, Serialize};
@@ -44,7 +44,7 @@ impl Agents {
     }
     fn load(&mut self) -> Result<(), String> {
         let (g, _) = window_grid(self.lat_s, self.lat_n, self.lon_w, self.lon_e, self.res_arcsec)?;
-        if let Ok(text) = std::fs::read_to_string(root().join("data/events").join(&self.folder).join("aftermath.toml")) {
+        if let Ok(text) = std::fs::read_to_string(esim_registry::paths::event(&self.folder).join("aftermath.toml")) {
             if let Ok(t) = text.parse::<toml::Value>() { if let Some(i) = t.get("inputs") {
                 // every key that begins power_dependent_dme_ is a count of people on devices, every key that
                 // begins population_ the people it was counted among; the folder may give any number of areas

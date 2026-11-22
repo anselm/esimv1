@@ -87,7 +87,7 @@ impl Record {
         let s = |p: &serde_json::Value, k: &str| p.get(k).map(|v| match v { serde_json::Value::String(x) => x.clone(), serde_json::Value::Null => String::new(), x => x.to_string() }).unwrap_or_default();
         let mut feats = Vec::new();
         for f in &self.files {
-            let path = root.join("data/events").join(f);
+            let path = esim_registry::paths::event(f);
             let text = std::fs::read_to_string(&path).map_err(|e| format!("{}: {e}", path.display()))?;
             let g: serde_json::Value = serde_json::from_str(&text).map_err(|e| format!("{}: {e}", path.display()))?;
             let Some(list) = g.get("features").and_then(|v| v.as_array()) else { return Err(format!("{}: no features", path.display())) };

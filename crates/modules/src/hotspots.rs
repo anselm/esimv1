@@ -86,7 +86,7 @@ impl Hotspots {
         self.seen = vec![false; grid.nx * grid.ny];
         self.land = w.elev.iter().map(|e| !self.land_only || *e > 0.0).collect();
         let t0 = Time::parse(&self.start)?.0; let t1 = Time::parse(&self.end)?.0;
-        let path = root.join("data/events").join(&self.file);
+        let path = esim_registry::paths::event(&self.file);
         let text = std::fs::read_to_string(&path).map_err(|e| format!("{}: {e}", path.display()))?;
         let mut lines = text.lines();
         let header: Vec<&str> = lines.next().ok_or("hotspots: empty file")?.split(',').map(|s| s.trim()).collect();

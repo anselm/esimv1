@@ -751,7 +751,7 @@ pub struct Tipping {
 
 impl Tipping {
     pub fn new(name: &str, p: &toml::Value) -> Result<Tipping, String> {
-        let path = root().join("data/events/tipping.toml");
+        let path = esim_registry::paths::event("tipping.toml");
         let text = std::fs::read_to_string(&path).map_err(|e| format!("{}: {e}", path.display()))?;
         let v: toml::Value = toml::from_str(&text).map_err(|e| format!("tipping.toml: {e}"))?;
         let elements: Vec<Element> = v.get("element").and_then(|a| a.as_array()).into_iter().flatten()
@@ -769,7 +769,7 @@ impl Tipping {
     }
     pub fn describe(name: &str, p: &toml::Value) -> Describe {
         // the rows as the run will read them, so a page can draw the rungs the run was checked against
-        let file = std::fs::read_to_string(root().join("data/events/tipping.toml")).ok().and_then(|t| toml::from_str::<toml::Value>(&t).ok());
+        let file = std::fs::read_to_string(esim_registry::paths::event("tipping.toml")).ok().and_then(|t| toml::from_str::<toml::Value>(&t).ok());
         let table = |k: &str| file.as_ref().and_then(|v| v.get(k).cloned()).and_then(|a| serde_json::to_value(a).ok()).unwrap_or(serde_json::Value::Array(vec![]));
         let coupling = param_f64(p, "coupling", 0.0);
         Describe::new("tipping.elements", name, "The climate tipping elements from data/events/tipping.toml, each with the global warming at which an assessment judged it likely to tip (a central estimate and a range) and its timescale, checked every year against the run's global anomaly. A tipping.crossing event the first year the run passes an element's low end and again its central estimate. The table is the claim; the module only compares. With coupling above zero the file's coupling rows act: once an element has passed its threshold, the elements it is coupled to have their thresholds lowered by the row's fraction times the strength, so one crossing can bring the next within reach in the same run (Wunderling et al. 2021: interacting elements lower each other's critical temperatures, the ice sheets start cascades, the Atlantic circulation carries them).")
@@ -1263,7 +1263,7 @@ pub struct TippedCarbon {
 
 impl TippedCarbon {
     pub fn new(name: &str, p: &toml::Value) -> Result<TippedCarbon, String> {
-        let text = std::fs::read_to_string(root().join("data/events/tipping.toml")).map_err(|e| format!("tipping.toml: {e}"))?;
+        let text = std::fs::read_to_string(esim_registry::paths::event("tipping.toml")).map_err(|e| format!("tipping.toml: {e}"))?;
         let v: toml::Value = toml::from_str(&text).map_err(|e| format!("tipping.toml: {e}"))?;
         let elements: Vec<CarbonElement> = v.get("element").and_then(|e| e.as_array()).into_iter().flatten()
             .filter(|e| e.get("carbon").is_some())

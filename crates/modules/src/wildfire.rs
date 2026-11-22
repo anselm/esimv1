@@ -44,8 +44,8 @@ pub struct FuelModel {
     pub source: String,
 }
 
-fn load_fuels(root: &std::path::Path) -> Result<(Vec<FuelModel>, Vec<(u8, usize, String)>), String> {
-    let text = std::fs::read_to_string(root.join("data/events/fuels.toml")).map_err(|e| format!("fuels.toml: {e}"))?;
+fn load_fuels(_root: &std::path::Path) -> Result<(Vec<FuelModel>, Vec<(u8, usize, String)>), String> {
+    let text = std::fs::read_to_string(esim_registry::paths::event("fuels.toml")).map_err(|e| format!("fuels.toml: {e}"))?;
     let v: toml::Value = toml::from_str(&text).map_err(|e| format!("fuels.toml: {e}"))?;
     let f = |t: &toml::Value, k: &str| t.get(k).and_then(|x| x.as_float().or_else(|| x.as_integer().map(|i| i as f64))).unwrap_or(0.0);
     const T_AC_TO_LB_FT2: f64 = 2000.0 / 43560.0;

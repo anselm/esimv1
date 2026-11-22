@@ -85,7 +85,7 @@ impl Suppression {
         self.land = w.elev.iter().map(|e| *e > 0.0).collect();
         self.grid = Some(grid);
         if self.mode == "resources" {
-            let path = root.join("data/events").join(&self.reports);
+            let path = esim_registry::paths::event(&self.reports);
             let text = std::fs::read_to_string(&path).map_err(|e| format!("{}: {e}", path.display()))?;
             let mut lines = text.lines();
             let head: Vec<&str> = lines.next().unwrap_or("").split(',').collect();

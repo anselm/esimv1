@@ -13,7 +13,6 @@ use esim_kernel::manifest::{param_f64, param_str};
 use esim_kernel::{Ctx, Duration, Event, Module, Time};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
-use std::path::PathBuf;
 
 #[derive(Clone, Serialize, Deserialize, Default)]
 struct Row {
@@ -39,8 +38,7 @@ fn to_next_year(now: Time) -> Duration { Time::parse(&format!("{:04}-01-01", yea
 fn year_of_str(s: &str) -> Option<i64> { s.get(0..4).and_then(|y| y.parse().ok()) }
 
 fn load_rows(file: &str) -> Result<Vec<Row>, String> {
-    let root = std::env::var("ESIM_ROOT").ok().map(PathBuf::from).unwrap_or_else(|| PathBuf::from("."));
-    let path = root.join("data/events").join(file);
+    let path = esim_registry::paths::event(file);
     let text = std::fs::read_to_string(&path).map_err(|e| format!("{}: {e}", path.display()))?;
     let v: toml::Value = toml::from_str(&text).map_err(|e| format!("{}: {e}", path.display()))?;
     let s = |t: &toml::Value, k: &str| t.get(k).and_then(|x| x.as_str()).unwrap_or("").to_string();

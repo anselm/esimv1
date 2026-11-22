@@ -28,7 +28,7 @@ pub(crate) fn root() -> PathBuf { std::env::var("ESIM_ROOT").ok().map(PathBuf::f
 /// A window raster from the event folder sampled onto the run grid at each cell's centre
 /// (nearest pixel). NaN where the file has no data.
 pub(crate) fn sample(folder: &str, file: &str, g: &LatLonGrid) -> Result<Vec<f32>, String> {
-    let path = root().join("data/events").join(folder).join(file);
+    let path = esim_registry::paths::event(folder).join(file);
     let r = cog::read(&path).map_err(|e| format!("{}: {e}", path.display()))?;
     let mut out = vec![f32::NAN; g.nx * g.ny];
     for row in 0..g.ny {
@@ -148,7 +148,7 @@ impl Ground {
         Ok(())
     }
     fn meta(folder: &str) -> Result<toml::Value, String> {
-        let path = root().join("data/events").join(folder).join("ground.toml");
+        let path = esim_registry::paths::event(folder).join("ground.toml");
         let text = std::fs::read_to_string(&path).map_err(|e| format!("{}: {e}", path.display()))?;
         text.parse::<toml::Value>().map_err(|e| format!("ground.toml: {e}"))
     }

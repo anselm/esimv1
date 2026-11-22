@@ -36,6 +36,22 @@ fn load(path: &Path) -> Result<Manifest, String> {
     Ok(m)
 }
 
+/// The layout of a run folder as a number, written into run.json as `format`. It goes up when a
+/// reader of run folders (the viewer, the auditor, anyone's script) would have to change: a file
+/// renamed or removed, a field's meaning changed. Adding a file or a field does not move it.
+/// docs/system/projects-and-runs.md, A run is a folder, is the description of format 1.
+const RUN_FORMAT: u32 = 1;
+
+/// run.json: what the kernel reports of the run, with the folder's format and the engine's version.
+fn run_json<T: serde::Serialize>(out: &T) -> String {
+    let text = serde_json::to_string_pretty(out).unwrap();
+    // put in by text so the kernel's own order of fields is kept and the kernel knows nothing of folders
+    match text.strip_prefix("{\n") {
+        Some(rest) => format!("{{\n  \"format\": {RUN_FORMAT},\n  \"engine\": \"{}\",\n{rest}", env!("CARGO_PKG_VERSION")),
+        None => text,
+    }
+}
+
 fn esim_root() -> PathBuf { std::env::var("ESIM_ROOT").ok().map(PathBuf::from).unwrap_or_else(|| PathBuf::from(".")) }
 
 /// The kernel's wiring check plus the registry's: every asset a module names must be in
@@ -47,7 +63,7 @@ fn check_report(m: &Manifest) -> esim_kernel::CheckReport {
     for d in &r.modules {
         for a in &d.assets {
             if let Some(table) = a.key.strip_prefix("events/") {
-                if !root.join("data/events").join(table).exists() { r.errors.push(format!("{} needs data/events/{table}, which is missing", d.name)); }
+                if !esim_registry::paths::event(table).exists() { r.errors.push(format!("{} needs data/events/{table}, which is missing", d.name)); }
             } else {
                 match &catalog {
                     None => r.warnings.push(format!("{} needs asset {}, and data/catalog.toml could not be read", d.name, a.key)),
@@ -266,7 +282,7 @@ fn run_with(path: &Path, out_root: &Path, sets: &[Override], variant: Option<&st
     }
     let f = fs::File::create(dir.join("log.jsonl")).map_err(|e| e.to_string())?;
     k.log.write_jsonl(std::io::BufWriter::new(f)).map_err(|e| e.to_string())?;
-    fs::write(dir.join("run.json"), serde_json::to_string_pretty(&out).unwrap()).map_err(|e| e.to_string())?;
+    fs::write(dir.join("run.json"), run_json(&out)).map_err(|e| e.to_string())?;
     for (name, f) in &k.fields {
         let fd = dir.join("fields").join(name);
         fs::create_dir_all(&fd).map_err(|e| e.to_string())?;
@@ -316,24 +332,62 @@ fn audit(dir: &Path) -> Result<(), String> {
 
 fn projects_root() -> PathBuf { esim_root().join("projects") }
 
+/// A project named by a folder instead of `<area>/<name>`: an absolute path, one that starts
+/// with `.`, or any existing folder that holds a project.toml. Such a project lives outside the
+/// engine's tree (a scenario's own repository) and is not listed in the workspace's index.
+fn project_by_path(path: &str) -> Option<PathBuf> {
+    let p = Path::new(path);
+    let explicit = p.is_absolute() || path == "." || path.starts_with("./") || path.starts_with("../");
+    if explicit || p.join("project.toml").is_file() { Some(p.to_path_buf()) } else { None }
+}
+
+/// Before anything of a project is read or run: tell the modules where its folder is, so a
+/// record folder it carries is found (`esim_registry::paths::event`), and refuse a project that
+/// names a newer engine than this one (`engine = "0.3.0"` in project.toml).
+fn enter_project(dir: &Path) -> Result<(), String> {
+    let abs = fs::canonicalize(dir).unwrap_or_else(|_| dir.to_path_buf());
+    std::env::set_var("ESIM_PROJECT", &abs);
+    let Ok(text) = fs::read_to_string(dir.join("project.toml")) else { return Ok(()) };
+    let meta: toml::Value = toml::from_str(&text).map_err(|e| format!("project.toml: {e}"))?;
+    if let Some(want) = meta.get("engine").and_then(|v| v.as_str()) {
+        let parse = |s: &str| -> Option<Vec<u64>> { s.trim().trim_start_matches(">=").trim().split('.').map(|x| x.parse().ok()).collect() };
+        let (have, need) = (parse(env!("CARGO_PKG_VERSION")).unwrap_or_default(), parse(want).ok_or_else(|| format!("project.toml: engine = {want:?} is not a version like 0.3.0"))?);
+        if have < need { return Err(format!("this project needs esim {want} or newer, and this is esim {}", env!("CARGO_PKG_VERSION"))); }
+    }
+    Ok(())
+}
+
+/// The workspace's index lists the projects under the engine's `projects/`; a project run by
+/// path is not one of them.
+fn reindex_if_inside(path: &str) -> Result<(), String> { if project_by_path(path).is_some() { Ok(()) } else { projects_index().map(|_| ()) } }
+
 fn project_dir(path: &str) -> Result<PathBuf, String> {
+    if let Some(p) = project_by_path(path) { enter_project(&p)?; return Ok(p); }
+    let dir = project_dir_inside(path)?;
+    enter_project(&dir)?;
+    Ok(dir)
+}
+
+fn project_dir_inside(path: &str) -> Result<PathBuf, String> {
     let parts: Vec<&str> = path.trim_matches('/').split('/').collect();
     if parts.len() != 2 || parts.iter().any(|p| p.is_empty() || p.starts_with('.') || !p.chars().all(|c| c.is_ascii_alphanumeric() || c == '-' || c == '_')) {
-        return Err(format!("project path must be <area>/<name> in [a-z0-9-_], got {path}"));
+        return Err(format!("a project is <area>/<name> in [a-z0-9-_] under projects/, or a folder that holds a project.toml (./folder, /abs/folder); got {path}"));
     }
     Ok(projects_root().join(parts[0]).join(parts[1]))
 }
 
 fn project_new(path: &str, manifest: Option<&Path>, title: Option<&str>, description: Option<&str>, by: &str) -> Result<(), String> {
     let dir = project_dir(path)?;
-    if dir.exists() { return Err(format!("project {path} exists at {}", dir.display())); }
+    if dir.join("project.toml").exists() { return Err(format!("project {path} exists at {}", dir.display())); }
     let m = match manifest { Some(p) => load(p)?, None => return Err("a manifest is required (--manifest file)".into()) };
     fs::create_dir_all(dir.join("runs")).map_err(|e| e.to_string())?;
     // the project folder stands alone: includes are folded in before the copy
     fs::write(dir.join("manifest.toml"), Manifest::resolve_text(manifest.unwrap())?).map_err(|e| e.to_string())?;
     write_entities(&dir, &m, manifest.unwrap())?;
     copy_sources(&dir, &m)?;
-    let (area, name) = path.trim_matches('/').split_once('/').unwrap();
+    // a project made by folder has no area: its name is the folder's
+    let folder_name = fs::canonicalize(&dir).ok().and_then(|d| d.file_name().map(|n| n.to_string_lossy().to_string())).unwrap_or_default();
+    let (area, name) = match project_by_path(path) { Some(_) => ("", folder_name.as_str()), None => path.trim_matches('/').split_once('/').unwrap() };
     let mut meta = format!(
         "# A project: who asked for what, in their words, and the manifest beside it.
 area = {}
@@ -358,7 +412,7 @@ by = {}
     }
     fs::write(dir.join("project.toml"), meta).map_err(|e| e.to_string())?;
     fs::write(dir.join("runs").join("index.json"), "[]").map_err(|e| e.to_string())?;
-    projects_index()?;
+    reindex_if_inside(path)?;
     println!("project  {path} at {}", dir.display());
     Ok(())
 }
@@ -426,7 +480,7 @@ fn project_run(path: &str, variant: Option<&str>, extra: &[Override], name: Opti
     let ok = !name.is_empty() && name.len() <= 64 && name.chars().all(|c| c.is_ascii_lowercase() || c.is_ascii_digit() || c == '-' || c == '_' || c == '.') && !name.starts_with('.');
     if !ok || name == "compare" { return Err(format!("run name {name:?}: lower-case letters, digits, - _ and . only, and not `compare`")); }
     run_with(&dir.join("manifest.toml"), &dir.join("runs"), &sets, variant, Some(&name))?;
-    projects_index()?;
+    reindex_if_inside(path)?;
     Ok(())
 }
 
@@ -440,7 +494,7 @@ fn project_update(path: &str, manifest: &Path) -> Result<(), String> {
     fs::write(dir.join("manifest.toml"), Manifest::resolve_text(manifest)?).map_err(|e| e.to_string())?;
     write_entities(&dir, &m, manifest)?;
     copy_sources(&dir, &m)?;
-    projects_index()?;
+    reindex_if_inside(path)?;
     println!("project  {path}: manifest replaced from {}", manifest.display());
     Ok(())
 }
@@ -469,7 +523,7 @@ fn project_prune(path: &str, keep: usize) -> Result<(), String> {
         }
     }
     update_index(&runs)?;
-    projects_index()?;
+    reindex_if_inside(path)?;
     println!("pruned   {path}: {removed} run folders removed, {keep} kept per variant");
     Ok(())
 }

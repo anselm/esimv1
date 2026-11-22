@@ -82,7 +82,7 @@ impl Routes {
     /// thinned to one point every 30 m or so. A drawing aid; the model uses the graph.
     fn geometry(folder: &str, rt: &toml::Value) -> Option<serde_json::Value> {
         let file = or(ts(rt, "geometry"), "routes.geojson"); let idp = or(ts(rt, "geometry_id"), "SegmentID");
-        let text = std::fs::read_to_string(root().join("data/events").join(folder).join(&file)).ok()?;
+        let text = std::fs::read_to_string(esim_registry::paths::event(folder).join(&file)).ok()?;
         let g: serde_json::Value = serde_json::from_str(&text).ok()?;
         fn rings(geom: &serde_json::Value, out: &mut Vec<Vec<(f64, f64)>>) {
             let ring = |r: &serde_json::Value| -> Vec<(f64, f64)> { r.as_array().into_iter().flatten().filter_map(|q| Some((q[0].as_f64()?, q[1].as_f64()?))).collect() };

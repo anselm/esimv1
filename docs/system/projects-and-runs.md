@@ -3,7 +3,7 @@
 <!-- author: Claude -->
 <!-- ordered-by: Anselm -->
 <!-- written: 2026-11-01 -->
-<!-- revised: 2026-11-19 -->
+<!-- revised: 2026-11-22 -->
 <!-- revision: 1 -->
 # Projects and runs
 
@@ -25,6 +25,34 @@ and run it elsewhere.
 The description matters more than it looks. It is what the person asked for, in their
 own words, kept beside the manifest a model drafted from it. When the manifest and the
 description disagree, the description is the claim and the manifest is the attempt.
+
+## A project kept somewhere else
+
+A project does not have to live under `projects/`. Any folder that holds a `project.toml`
+and a manifest can be run by naming the folder:
+
+```
+esim project run ./my-scenario --variant wet-day
+esim project prepare /home/me/my-scenario
+```
+
+The folder is taken as a path when it is absolute, starts with `./` or `../`, or holds a
+`project.toml`. Its runs land in its own `runs/`. It is not listed in this workspace's
+index, because it is not part of this workspace. `ESIM_ROOT` still names the engine's
+folder, where the catalog, the fetched cache and the shared tables are; run the command
+from the engine's folder, or set `ESIM_ROOT` to it.
+
+A project may bring its record with it. A table or folder under the project's own
+`data/events/` is read in place of the engine's folder of the same name, so a manifest that
+says `folder = "my-town"` finds `my-scenario/data/events/my-town/`. The first path segment
+decides: a record folder is read whole from one place. This holds for a project under
+`projects/` too.
+
+`engine = "0.3.0"` in `project.toml` names the oldest engine the project runs on. An older
+`esim` refuses it and says which version it is. `esim --version` prints the engine's.
+
+What an outside project cannot yet bring is a new kind of module: kinds are compiled into
+the engine.
 
 ## A depiction, and the front page
 
@@ -146,6 +174,12 @@ runs/<run name>/
   audit.json        the auditor's reading
   snapshots.json    kernel snapshots, when the manifest asked for them
 ```
+
+`run.json` begins with `format`, the layout of the run folder as a number, and `engine`,
+the version that wrote it. This page describes format 1. The number goes up when a reader
+of run folders would have to change: a file renamed or removed, a field's meaning changed.
+A new file or a new field does not move it. Runs written before 22 November 2026 carry no
+`format` and are format 1.
 
 A project's run has a plain name, and the name is its address: `/anselm/portland-cascadia/wet-day`.
 The name is the variant's, or `base` for the manifest as written, or whatever `--name` gives.
