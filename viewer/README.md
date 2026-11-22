@@ -35,9 +35,9 @@ the parsed `run.json`:
 ```svelte
 <script>
   import { FieldMap } from 'esimv1-viewer'
-  let { base, run, t } = $props()
+  let { base, run, cursor } = $props()
 </script>
-<FieldMap {base} {run} name="fire_arrival_h" {t} />
+<FieldMap name="fire_arrival_h" field={run.fields.fire_arrival_h} {base} {cursor} />
 ```
 
 The props of each component are read from its source for now; they are not documented.

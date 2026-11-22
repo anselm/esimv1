@@ -250,7 +250,11 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
 
 ## A refactor pass (Anselm, 2026-11-22; `devlog/20261122-a-refactor-pass-how-to-approach.md`)
 
-- Recommended, not decided: the hub keeps `esimv1`, the crates move together to
-  `esimv1-core`, the viewer becomes a package, scenarios with a life of their own get a
-  repository each. Order: version the run folder, run a project by path, rearrange inside
-  this repository, package the viewer, then cut.
+- Names decided: `esimv1` (hub), `esimv1-core`, `esimv1-viewer`, `esimv1-palisades`, `esimv1-portland`,
+  `esimv1-earth2100`, `esimv1-playable-sausalito`. Done: the run folder's format number, a project by
+  path, the engine in `core/`, the viewer in `viewer/`, Portland's record inside its project.
+- Open: three questions for Anselm (the Palisades pair, how the hub shows a scenario kept elsewhere,
+  where the engine's documentation lives), then the cut. The deploy script is edited and untested.
+- A missing record folder should be an error; `coast.oneline` reads it as empty.
+- `esim fit`, `ensemble` and `sweep` do not set `ESIM_PROJECT`, so they do not find a record kept in a project.
+- The catalog: list live feeds a page reads, and let a scenario add entries of its own.

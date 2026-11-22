@@ -215,3 +215,41 @@ Sausalito view does not use it yet, and the three small modules written there to
 - Decide where the engine's own documentation lives.
 - The cut itself makes four or more new repositories and pushes them. That is outward
   and is Anselm's to say go on, with the names as he gave them.
+
+## Portland's record moves into its project
+
+`core/data/events/portland-cascadia` (17 MB: DOGAMI's ground layers, the tanks, bridges,
+poles, routes, the loss tables) is now `projects/anselm/portland-cascadia/data/events/portland-cascadia`.
+The project folder is the whole scenario: description, manifest and its source, page,
+README, record. Nothing in the manifest changed; `folder = "portland-cascadia"` is found
+in the project first.
+
+Checked by running `wet-day` under a scratch name before and after the move: the same log
+digest (`3cdfbe0d1c103a92`), an identical `describe.json`, and every series identical
+except `agents.per_second`, which is a wall-clock speed and differs between any two runs.
+The scratch runs were deleted; the standing runs were not touched, and `esim project
+update` was not run, so the frozen manifest is as it was.
+
+The source manifest is in two places for now: `core/manifests/q1-portland-cascadia.js` and
+the project's `source/`. The copy in `core/` goes at the cut.
+
+Not moved: the Palisades record, because two projects read it (`palisades-2025` and
+`palisades-cells`) and one folder can only be inside one of them. Earth 2100 has no record
+of its own; its tables (`tipping.toml`, the two future-event lists) are shared and stay
+with the engine.
+
+## Three questions for Anselm before the cut
+
+1. **Palisades.** One repository, `esimv1-palisades`, holding both projects and their
+   shared record? Then a scenario repository is a folder of projects with one
+   `data/events` beside them, and the record is looked for beside the project as well as
+   inside it. Recommended, because the Rothermel run is the baseline the page compares
+   our engine against.
+2. **How the hub shows a scenario kept elsewhere.** Recommended: the hub keeps a short
+   list (repository, version, where it sits under `projects/`), and a script clones each
+   at its named version before a build or a deploy. Addresses such as
+   `/anselm/portland-cascadia` do not change. Git submodules would do the same with more
+   to go wrong.
+3. **The engine's own documentation** (`docs/system`, the RFC, the protocol). Recommended:
+   it moves to `esimv1-core` with the code it describes, and the hub's site serves it
+   from its checkout of the engine, at the same addresses.
