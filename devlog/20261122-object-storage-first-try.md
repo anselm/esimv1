@@ -107,3 +107,40 @@ What this does not show yet:
 - Reads straight from the bucket by a browser, which would take load off the VM. That
   needs a public address and a cross-origin rule, which this token cannot set.
 - The engine's fetched cache as a mirror. Not started.
+
+## Every project's runs are in the bucket
+
+Anselm: "yes move project runs here at least." All thirteen projects under
+`projects/anselm/` were uploaded with `deploy/store.py put`:
+
+| | |
+|---|---|
+| on disk, less snapshots | 6.96 GB |
+| stored | 760 MB, 24,563 objects |
+| time to upload | about three and a half minutes |
+
+The largest are Earth 2100 (227 MB stored), Portland (165 MB), the Palisades on our
+engine (139 MB) and the eight-seed planet (124 MB). Three files read back through the
+server (a Portland `run.json`, an Earth 2100 `describe.json`, a runs index) are the same
+as the disk.
+
+The runs are still on canada1 as well; nothing was deleted, and the deployed copy still
+reads its own disk. A rerun on canada1 is not uploaded by itself: `store.py put` has to be
+run again for that project, and it does not remove an object whose file has gone.
+
+What else belongs in the bucket, in the order I would do it:
+
+1. **The deployed copy reads its runs from here** in place of the rsync. This is the use
+   the upload was for.
+2. **A mirror of the engine's fetched cache** (4.2 GB). It lets a second machine or a
+   cloud session run a scenario without waiting on a publisher, and it is the only copy
+   we would have if a publisher took a file down. Several sources are free for
+   non-commercial use only or have terms not yet read, so this stays private.
+3. **A prepared bundle per scenario**: the files one scenario's modules read, so a run
+   fetches nothing. This is the piece that play on a visitor's own device needs.
+4. **Chosen snapshots**, when play from a chosen moment is built. Not all 14.4 GB.
+
+What should stay where it is: code, documentation, manifests and the scenarios' records
+stay in git, which is the source of truth. Built `esim` binaries belong on GitHub
+Releases. Loose runs are scratch. The Sausalito view's data is a few megabytes and stays
+in its repository; the lidar pieces are fetched again in half a minute.
