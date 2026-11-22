@@ -9,8 +9,13 @@ Reads ~/.config/cf/r2 (access_key_id, secret_access_key, endpoint, bucket). Need
 a private Python environment and not a dependency of the site. Text and raw-float files are
 gzipped before upload and stored with their content encoding, so a browser gets them small;
 snapshots.json (the engine's saved states, which no reader needs) is left behind.
+
+Two guards on cost. A file whose size and time have not changed since it was last sent is not
+sent again (the record is .store-sent.json beside projects/, not in git), because each upload is
+a billed operation once past the monthly allowance. And nothing is sent when the bucket already
+holds more than the cap in ~/.config/cf/r2 (cap_gb, 8 by default: the free allowance is 10).
 """
-import os, sys, gzip, mimetypes, boto3
+import os, sys, gzip, json, mimetypes, boto3
 from concurrent.futures import ThreadPoolExecutor
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,6 +25,12 @@ BUCKET = conf.get('bucket', 'esimv1')
 TYPES = {'.json': 'application/json', '.jsonl': 'application/x-ndjson', '.toml': 'application/toml; charset=utf-8', '.f32': 'application/octet-stream',
          '.md': 'text/markdown; charset=utf-8', '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.geojson': 'application/geo+json', '.csv': 'text/csv; charset=utf-8'}
 SQUEEZE = set(TYPES)
+CAP_GB = float(conf.get('cap_gb', 8)); SENT = os.path.join(HERE, '.store-sent.json')
+def held():
+    n = size = 0
+    for page in s3.get_paginator('list_objects_v2').paginate(Bucket=BUCKET):
+        for o in page.get('Contents', []): n += 1; size += o['Size']
+    return n, size
 
 def put(path, key):
     ext = os.path.splitext(path)[1]; data = open(path, 'rb').read(); extra = {'ContentType': TYPES.get(ext) or mimetypes.guess_type(path)[0] or 'application/octet-stream'}
@@ -33,10 +44,7 @@ def put(path, key):
 cmd = sys.argv[1] if len(sys.argv) > 1 else ''
 if cmd == 'buckets': print([b['Name'] for b in s3.list_buckets()['Buckets']])
 elif cmd == 'ls':
-    n = size = 0
-    for page in s3.get_paginator('list_objects_v2').paginate(Bucket=BUCKET, Prefix=sys.argv[2] if len(sys.argv) > 2 else ''):
-        for o in page.get('Contents', []): n += 1; size += o['Size']
-    print(f'{n} objects, {size / 1e6:.1f} MB')
+    n, size = held(); print(f'{n} objects, {size / 1e9:.2f} GB of a {CAP_GB:g} GB cap')
 elif cmd == 'put':
     proj, only = sys.argv[2], set(sys.argv[3:]); root = os.path.realpath(os.path.join(HERE, 'projects', proj)); todo = []
     for d, dirs, files in os.walk(root):
@@ -46,6 +54,14 @@ elif cmd == 'put':
         for f in files:
             if f == 'snapshots.json' or f.endswith('.tmp'): continue
             todo.append((os.path.join(d, f), f'projects/{proj}/' + os.path.relpath(os.path.join(d, f), root).replace(os.sep, '/')))
-    with ThreadPoolExecutor(32) as pool: done = list(pool.map(lambda a: put(*a), todo))
-    print(f'{len(done)} files, {sum(r for r, _ in done) / 1e6:.1f} MB on disk, {sum(s for _, s in done) / 1e6:.1f} MB stored, to {BUCKET}/projects/{proj}')
+    sent = json.load(open(SENT)) if os.path.exists(SENT) else {}
+    stamp = lambda f: [os.path.getsize(f), int(os.path.getmtime(f))]
+    fresh = [(f, k) for f, k in todo if sent.get(k) != stamp(f)]
+    if fresh:
+        n, size = held()
+        if size > CAP_GB * 1e9: sys.exit(f'refused: the bucket holds {size / 1e9:.2f} GB, over the {CAP_GB:g} GB cap; remove something or raise cap_gb')
+    with ThreadPoolExecutor(32) as pool: done = list(pool.map(lambda a: put(*a), fresh))
+    for f, k in fresh: sent[k] = stamp(f)
+    json.dump(sent, open(SENT, 'w'))
+    print(f'{len(todo) - len(fresh)} unchanged, {len(done)} files, {sum(r for r, _ in done) / 1e6:.1f} MB on disk, {sum(s for _, s in done) / 1e6:.1f} MB stored, to {BUCKET}/projects/{proj}')
 else: print(__doc__)

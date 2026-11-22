@@ -267,6 +267,7 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
   `ESIM_STORE`); two runs uploaded and a run page drawn from them.
 - All thirteen projects' runs are uploaded (760 MB stored from 6.96 GB). `store.py put` again after a rerun; it does not
   yet remove objects whose files are gone.
-- Next, on Anselm's word: the deployed copy reads its runs from the bucket (credentials on the VM, no rsync of runs).
-  Then a mirror of the fetched cache, a prepared bundle per scenario, chosen snapshots. Rotate the credentials.
+- Done 22 November: the deployed copy reads its runs from the bucket and holds no run folder; the upload skips
+  unchanged files and stops at an 8 GB cap.
+- Next: upload after a rerun, remove objects whose files are gone, rotate the credentials.
 - Later: a public address for direct reads; the fetched cache as a mirror.

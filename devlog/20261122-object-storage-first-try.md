@@ -144,3 +144,33 @@ What should stay where it is: code, documentation, manifests and the scenarios' 
 stay in git, which is the source of truth. Built `esim` binaries belong on GitHub
 Releases. Loose runs are scratch. The Sausalito view's data is a few megabytes and stays
 in its repository; the lidar pieces are fetched again in half a minute.
+
+## The deployed copy reads its runs from the bucket
+
+Anselm: "yes, redeploy." Two deploys, the first since the refactor.
+
+The first set the VM to ask the bucket before its own disk while its run folders were
+still there. The live site answered: pages, the engine's documentation from its new
+place, and run files marked as coming from the bucket; a Portland `run.json` was the same
+as the one on canada1; three pages were looked at in a browser with no page errors. The
+second deploy removed the run folders from the VM and the ask-first switch. After it the
+VM holds no run folder at all (`/srv/esim/projects` went from 6.6 GB to 13 MB, the disk
+from 52 to 24 percent), a field frame fetched from the live site is the same as the disk
+on canada1, and a Half Moon Bay run page draws.
+
+`deploy/deploy.sh` now uploads every project's runs, copies the reader's part of the
+credentials to `/srv/esim/store.conf`, and rsyncs the project folders without their run
+folders. A deploy with nothing changed took three and a half minutes.
+
+On cost (Anselm: "i am slightly worried about unbounded costs"). Cloudflare's price page,
+read on this day: the first 10 GB stored each month is free and then $0.015 per GB; the
+first million uploads and listings are free and then $4.50 per million; the first ten
+million reads are free and then $0.36 per million; nothing is charged for bandwidth. We
+hold 0.76 GB and have made about 75,000 uploads this month. R2 has no hard spending
+limit. Anselm set budget alerts in the dashboard, and `deploy/store.py` has two guards:
+it does not send a file whose size and time are unchanged since it was last sent, and it
+refuses to send anything once the bucket holds more than 8 GB (`cap_gb` in the
+credentials file).
+
+Still to do: upload a project after a rerun without waiting for a deploy; remove objects
+whose files have gone; rotate the credentials.

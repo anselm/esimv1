@@ -565,8 +565,7 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
 - Portland's record is inside its project (2026-11-22): `projects/anselm/portland-cascadia/data/events/portland-cascadia/`,
   no longer under `core/data/events`. The Palisades record is still in `core/data/events/palisades-2025` (two projects
   read it). Steps 1 to 4 of the refactor are done; the cut into repositories waits on Anselm's answers to the three
-  questions at the end of `devlog/20261122-a-refactor-pass-how-to-approach.md`. The deploy script has not been run since
-  the move; run it only on his say and watch the first one.
+  questions at the end of `devlog/20261122-a-refactor-pass-how-to-approach.md`. The deploy still runs only on his say.
 - **The cut** (2026-11-22, step 5; Anselm: "yes push new repos"): this repository is the hub. `core/` is a clone of
   `anselm/esimv1-core`, `viewer/` of `anselm/esimv1-viewer`, `scenarios/esimv1-{palisades,portland,earth2100}` of those
   repositories, all ignored by this repository's git; `projects/anselm/{palisades-2025,palisades-cells,portland-cascadia,
@@ -582,5 +581,6 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   settings; to be rotated). `deploy/store.py put <area/name> [run ...]` uploads a project less snapshots, gzipped
   (needs boto3: `~/.cache/sausalito-venv/bin/python`). `ESIM_STORE=<credentials file>` makes the server read files
   under `/projects/` it does not hold from the bucket (`web/lib/store.mjs`); `ESIM_STORE_FIRST=1` asks the bucket first.
-  Not used by the deployed copy yet.
+  The deployed copy has read its runs from the bucket since 2026-11-22 and holds no run folder: `deploy/deploy.sh esimv1`
+  uploads runs (unchanged files skipped, 8 GB cap), then rsyncs the rest. The deploy was run twice that day and works.
 
