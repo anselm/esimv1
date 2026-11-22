@@ -260,3 +260,10 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
 - A missing record folder should be an error; `coast.oneline` reads it as empty.
 - `esim fit`, `ensemble` and `sweep` do not set `ESIM_PROJECT`, so they do not find a record kept in a project.
 - The catalog: list live feeds a page reads, and let a scenario add entries of its own.
+
+## Object storage (Anselm, 2026-11-22; `devlog/20261122-object-storage-first-try.md`)
+
+- Blocked on a credential: neither Cloudflare token on canada1 can reach R2. Needs an R2 token from Anselm.
+- Then: `projects/` less snapshots in a public bucket, the server sending `/projects/` requests there, a run page
+  looked at on a copy with no runs. Expect to fix the server-side log filter, cross-origin reads, compression.
+
