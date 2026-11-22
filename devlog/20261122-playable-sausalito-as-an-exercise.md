@@ -82,3 +82,50 @@ would need their own fixtures.
 - Whether play is computed ahead and played back, or stepped live.
 - Whether the scenario repository vendors esimv1 (a submodule or a pinned checkout) or expects
   it installed.
+
+## Later the same day: modularity as a whole
+
+Anselm, after the first view tests: "should [the other demos] also move to separate packages?
+How modular is visualization? ... are those libraries deeply interwoven with the core simulation
+engine? ... the main esimv1 website is effectively a multi user space - and also a simulator -
+and also a bunch of other stuff ... Almost like the simulator core should be the piece that moves
+to a new repo?"
+
+What is in this repository, counted that day:
+
+| Part | Size | Depends on |
+|---|---|---|
+| Kernel (clock, bus, ledgers, manifest readers) | 2,300 lines of Rust | nothing of ours |
+| Registry (fetching and reading data) | 3,100 | kernel |
+| Modules (the kinds) | 12,100 | kernel, registry |
+| Command line and auditor | 1,600 | all three |
+| Viewer components and pages | about 5,700 lines of Svelte and JavaScript | run folders, as files |
+| Server (projects, accounts, drafting, runs) | 485 lines | the command line, by spawning it |
+| Content | 14 projects, 41 manifests, 5 record folders, docs, devlog | the kinds by name |
+
+The viewer shares no code with the engine. It reads what a run wrote (`run.json`,
+`describe.json`, `log.jsonl`, the field frames), and the server starts the command line as a
+process. So the seam between simulation and picture is a file format, and it already exists.
+What is not separate is the viewer from the site: `Scene3D`, `Layers3D`, `FieldMap`, `Chart`
+and `Timeline` live inside the app with its router and project pages, and some know topics of
+particular scenarios (fire ignitions, lifeline marks). I did not audit each component for this.
+
+Recommended shape, four kinds of repository:
+
+1. **The core**: the five crates, the protocol, the manifest RFC, the regress ladder, the guide.
+2. **The viewer**, a package of components that draw a run folder, with no site around them.
+3. **The site**: the multi-user workspace (server, accounts, project pages, front page), which
+   uses the other two.
+4. **Scenarios**, one repository each, content only.
+
+Which piece keeps the name is his call. My recommendation is that `esimv1` stays the core,
+because the core is what other developers will name as a dependency, and the site and the
+scenarios move out. Moving the core out instead leaves `esimv1` meaning the website.
+
+Order: Sausalito first, since it proves a project can run from outside. Then one existing
+scenario with a record folder (the Palisades), which tests items 1 and 2 of the list above.
+Then the rest. The viewer becomes a package when a second site needs it, which Sausalito's
+solid view may be. Scenario-specific kinds (`portland.lifelines`) cannot leave with their
+scenario until a kind can be added from outside the core.
+
+Not decided. Nothing was moved.
