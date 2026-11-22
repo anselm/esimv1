@@ -578,7 +578,7 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   report unpushed work per repository. Sausalito is `anselm/esimv1-playable-sausalito` (folder
   `~/projects/2027/playable-sausalito`).
 - Object storage (2026-11-22, `devlog/20261122-object-storage-first-try.md`): Cloudflare R2 bucket `esimv1`, private;
-  credentials in `~/.config/cf/r2` (object read and write on that bucket only; cannot list buckets or change its
+  credentials in `~/.config/cf/r2` (the token Anselm named `esimv1-r2-token`; object read and write on that bucket only; cannot list buckets or change its
   settings; to be rotated). `deploy/store.py put <area/name> [run ...]` uploads a project less snapshots, gzipped
   (needs boto3: `~/.cache/sausalito-venv/bin/python`). `ESIM_STORE=<credentials file>` makes the server read files
   under `/projects/` it does not hold from the bucket (`web/lib/store.mjs`); `ESIM_STORE_FIRST=1` asks the bucket first.
