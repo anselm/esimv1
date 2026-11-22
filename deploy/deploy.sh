@@ -10,6 +10,8 @@ HERE=$(cd "$(dirname "$0")/.." && pwd)
 HOST="exedev@$VM.exe.xyz"
 RS="rsync -az --delete -e 'ssh -o ServerAliveInterval=5 -o StrictHostKeyChecking=accept-new'"
 
+# the engine, the viewer and the scenarios kept in their own repositories must be here; say what version each is at
+"$HERE/deploy/parts.sh"
 "$HERE/deploy/cards.sh" >/dev/null
 (cd "$HERE/web" && npm run build >/dev/null)
 # the static fallbacks the read-only server reads: kinds, projects index, outlines

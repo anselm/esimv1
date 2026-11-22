@@ -113,6 +113,7 @@ Rust stable (rustup) and Node 20 or newer. First runs fetch a few hundred megaby
 records into `data/cache/` and pin their hashes in `data/catalog.lock.toml`.
 
 ```sh
+deploy/parts.sh                                                    # clone the engine, the viewer and the scenarios kept elsewhere
 (cd core && cargo build --release)
 ./core/target/release/esim kinds                                        # the module kinds
 ./core/target/release/esim check core/manifests/p4-planet-people.toml        # wiring from the describes
@@ -145,22 +146,28 @@ kernel check it before anything runs.
 ## Layout
 
 ```
-core/          the engine, which will become the repository esimv1-core:
-  crates/        kernel, registry, modules, audit, cli
-  manifests/     the ladder, from two buckets to the planet; bundles to include
-  regress/       ladder.toml, the hindcast rungs; baseline.json, their accepted scores
-  data/          catalog.toml, catalog.lock.toml, events/ tables      (cache/ is not in git)
 projects/      <area>/<name>/{project.toml, manifest.toml, README.md, runs/}   (runs are not in git)
-docs/          documentation pages, docs/<area>/<name>.md; docs/system/ is the simulator's own
-web/           the viewer and the project server
+docs/          documentation pages of this workspace, docs/<area>/<name>.md
+web/           the site: pages, router, accounts, the project server
+deploy/        parts.sh (clone the parts), deploy.sh (a read-only copy to an exe.dev VM)
+parts.list     the parts kept in their own repositories, and the version of each this hub is built against
 devlog/        dated entries: the design brief and every decision since
-deploy/        provision and deploy a read-only copy to an exe.dev VM
 todo.md        open research projects and layers, one line each
+
+cloned here by deploy/parts.sh, each its own repository, none in this one's git:
+core/          anselm/esimv1-core: the engine (kernel, registry, modules, auditor, the esim command line),
+               its catalog and shared tables, the ladder manifests, the engine's own documentation
+viewer/        anselm/esimv1-viewer: the components that draw a run folder
+scenarios/     anselm/esimv1-palisades, esimv1-portland, esimv1-earth2100: scenarios with a life of their
+               own, each with its record; their project folders are linked into projects/anselm/
 ```
 
-The engine and the workspace are two folders with two names. `ESIM_ROOT` is the engine's
-(`core/` here) and `ESIM_WORKSPACE` is where `projects/`, `docs/` and loose `runs/` are
-(this folder). Run `esim` from this folder and it finds both.
+This repository is the hub: the site people use, and the workspace of scenarios that have
+not moved out. Since 22 November 2026 the engine, the viewer and three scenarios are
+separate repositories. `ESIM_ROOT` is the engine's folder (`core/` here) and
+`ESIM_WORKSPACE` is where `projects/` and loose `runs/` are (this folder); `esim` run from
+this folder finds both. A fourth scenario, Sausalito, is `anselm/esimv1-playable-sausalito`
+and is not shown here yet.
 
 ## Where things stand
 

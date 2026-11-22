@@ -253,8 +253,10 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
 - Names decided: `esimv1` (hub), `esimv1-core`, `esimv1-viewer`, `esimv1-palisades`, `esimv1-portland`,
   `esimv1-earth2100`, `esimv1-playable-sausalito`. Done: the run folder's format number, a project by
   path, the engine in `core/`, the viewer in `viewer/`, Portland's record inside its project.
-- Open: three questions for Anselm (the Palisades pair, how the hub shows a scenario kept elsewhere,
-  where the engine's documentation lives), then the cut. The deploy script is edited and untested.
+- Cut on 22 November 2026: five repositories made, `parts.list` and `deploy/parts.sh` hold them together.
+- Open: watch the first deploy (the script is edited and untested); rooms and registry entries for the new
+  repositories (the manager's call); the engine's `docs/system/workspace.md` describes the old layout; show
+  Sausalito on the hub once it has a manifest.
 - A missing record folder should be an error; `coast.oneline` reads it as empty.
 - `esim fit`, `ensemble` and `sweep` do not set `ESIM_PROJECT`, so they do not find a record kept in a project.
 - The catalog: list live feeds a page reads, and let a scenario add entries of its own.

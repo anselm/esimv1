@@ -567,4 +567,14 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   read it). Steps 1 to 4 of the refactor are done; the cut into repositories waits on Anselm's answers to the three
   questions at the end of `devlog/20261122-a-refactor-pass-how-to-approach.md`. The deploy script has not been run since
   the move; run it only on his say and watch the first one.
+- **The cut** (2026-11-22, step 5; Anselm: "yes push new repos"): this repository is the hub. `core/` is a clone of
+  `anselm/esimv1-core`, `viewer/` of `anselm/esimv1-viewer`, `scenarios/esimv1-{palisades,portland,earth2100}` of those
+  repositories, all ignored by this repository's git; `projects/anselm/{palisades-2025,palisades-cells,portland-cascadia,
+  planet-2100}` are links into them, made by `deploy/parts.sh` from `parts.list`. A change to the engine, the viewer or
+  one of those scenarios is a commit in that folder's own repository, never here; each has its own `CLAUDE.md`. After
+  tagging a part, raise its version in `parts.list`. Their source manifests are in the scenario repositories
+  (`scenarios/esimv1-palisades/manifests/f3-palisades-cells.js`, `scenarios/esimv1-portland/manifests/q1-portland-cascadia.js`);
+  Earth 2100's stays in `core/manifests/p4-planet-people.toml`. The engine's documentation is `core/docs/`. Commit and
+  report unpushed work per repository. Sausalito is `anselm/esimv1-playable-sausalito` (folder
+  `~/projects/2027/playable-sausalito`).
 

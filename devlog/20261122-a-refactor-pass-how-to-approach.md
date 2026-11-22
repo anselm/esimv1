@@ -253,3 +253,59 @@ with the engine.
 3. **The engine's own documentation** (`docs/system`, the RFC, the protocol). Recommended:
    it moves to `esimv1-core` with the code it describes, and the hub's site serves it
    from its checkout of the engine, at the same addresses.
+
+## Step 5: the cut
+
+Anselm's answers: the Palisades repository holds both models; the hub keeps a list and
+clones; the engine's documentation moves to the engine; "yes push new repos."
+
+Five repositories were cut from this one with `git filter-repo`, each keeping the history
+of its files under their old and new paths:
+
+| repository | what | commits carried | tag |
+|---|---|---|---|
+| `anselm/esimv1-core` | the engine, its catalog and tables, the ladder, its documentation | 128 | v0.3.0 |
+| `anselm/esimv1-viewer` | the components that draw a run folder | 61 | v0.3.0 |
+| `anselm/esimv1-palisades` | `palisades-2025`, `palisades-cells`, their shared record, the two manifests | 23 | v0.1.0 |
+| `anselm/esimv1-portland` | `portland-cascadia` with its record, the manifest | 26 | v0.1.0 |
+| `anselm/esimv1-earth2100` | `planet-2100` | 19 | v0.1.0 |
+
+Each got a README, a `CLAUDE.md`, a harness `project.toml` and a devlog entry saying where
+it came from. `anselm/playable-sausalito` was renamed `anselm/esimv1-playable-sausalito`.
+
+**What a scenario repository looks like.** One or more project folders, an optional
+`data/events/` at the top for a record several of them share, and `manifests/` for the
+manifests as written. The harness's `project.toml` is at the top and each project's own
+`project.toml` is in its folder, so the two files of one name do not meet. The engine
+looks for a record inside the project folder, then beside it, then in its own
+`data/events`.
+
+**How the hub holds its parts.** `parts.list` names each part's folder, repository and
+version, and for a scenario where its project folders sit under `projects/`.
+`deploy/parts.sh` clones what is missing, links the project folders in, and reports which
+version each part is at; `--pin` checks out the listed versions. On canada1 the clones are
+this folder's `core/`, `viewer/` and `scenarios/*`, which this repository's git ignores, so
+every path that worked before the cut still works and the addresses on the site are the
+same. The deploy copies the linked folders as folders.
+
+**The engine's documentation** is `core/docs/` (`system`, `rfc`, `events`,
+`protocol-v0.md`). The site serves it at the addresses it always had; a page of those
+areas cannot be saved from the site.
+
+Checked after the swap: the engine's tests pass (the Portland describe test now finds the
+scenario in its own repository and is skipped where there is no clone); the ladder shows
+no drift; `palisades-cells/vector-5`, `palisades-2025/reanalysis` and `planet-2100/held`
+rerun through the links to the digests of the standing runs; the site serves the linked
+projects and the engine's pages.
+
+Known loose ends:
+
+- The deploy script has been edited three times today and not run. The first deploy
+  should be watched, in particular the copy of the linked project folders.
+- `esim kinds --json` is a little smaller than before: a kind whose describe reads a table
+  from a scenario's record (Portland's) no longer finds it when no project is being run.
+- On canada1 the new repositories have no rooms and are not in the harness registry. The
+  manager decides whether each gets one or whether this room keeps working across them.
+- The engine's `docs/system/workspace.md` still describes the layout before the cut.
+- Earth 2100's manifest as written stays in the engine (`p4-planet-people.toml`), because
+  it is also a rung of the regression ladder.

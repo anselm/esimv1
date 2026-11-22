@@ -3,8 +3,17 @@ runs/
 node_modules/
 dist/
 .env
-core/data/cache/
+
 
 # the fetcher's holds: one empty file per fetched thing, so two runs do not fetch it at once
 .locks/
 *.part
+
+# parts kept in their own repositories and cloned here by deploy/parts.sh (parts.list)
+/core/
+/viewer/
+/scenarios/
+/projects/anselm/palisades-2025
+/projects/anselm/palisades-cells
+/projects/anselm/portland-cascadia
+/projects/anselm/planet-2100
