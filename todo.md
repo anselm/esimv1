@@ -263,7 +263,8 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
 
 ## Object storage (Anselm, 2026-11-22; `devlog/20261122-object-storage-first-try.md`)
 
-- Blocked on a credential: neither Cloudflare token on canada1 can reach R2. Needs an R2 token from Anselm.
-- Then: `projects/` less snapshots in a public bucket, the server sending `/projects/` requests there, a run page
-  looked at on a copy with no runs. Expect to fix the server-side log filter, cross-origin reads, compression.
-
+- Works on canada1 with the bucket private and the server as the reader (`deploy/store.py`, `web/lib/store.mjs`,
+  `ESIM_STORE`); two runs uploaded and a run page drawn from them.
+- Next, on Anselm's word: use it on the deployed copy (credentials on the VM, upload in place of rsync), then
+  upload every project's runs and read the size. Rotate the credentials (they passed through a chat).
+- Later: a public address for direct reads; the fetched cache as a mirror.

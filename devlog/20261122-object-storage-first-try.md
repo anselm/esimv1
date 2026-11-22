@@ -1,4 +1,4 @@
-# Object storage: a first try that stopped at the credential
+# Object storage: a first try
 
 22 November 2026. Claude (Fable 5.2, the esimv1 room on canada1), on Anselm's word: "i
 would like to exercise cloudflare object storage".
@@ -57,3 +57,53 @@ cloud session can run a scenario when a publisher's server is slow or refuses it
 slow USGS file server met in the Sausalito work today is the case for it.
 
 Nothing in this entry was built.
+
+## Later the same day: it works, with the bucket kept private
+
+Anselm made the bucket (`esimv1`) and a token. The credentials are in `~/.config/cf/r2`
+on canada1 (mode 600). They passed through a chat as a screenshot, so they should be
+rotated. The Cloudflare endpoint refused TLS for the first minutes after R2 was switched
+on and then answered.
+
+What the token can do decided the design. It reads and writes objects in the one bucket.
+It cannot list buckets, turn on a public address or set a cross-origin rule. So the
+bucket stays private and the site's server is the reader:
+
+- `deploy/store.py put <area/name> [run ...]` uploads a project folder as the site serves
+  it, leaving out `snapshots.json` and the record. Text and raw-float files are gzipped
+  first and stored with their content encoding.
+- `web/lib/store.mjs` signs each read itself (no SDK). With `ESIM_STORE` naming the
+  credentials file, the server reads from the bucket any file under `/projects/` that the
+  machine does not hold, and passes it on as stored. `ESIM_STORE_FIRST=1` asks the bucket
+  before the disk, which is how it was tested on a machine that has both.
+
+![A Palisades run page drawn from the bucket](img-20261122-run-from-the-bucket.png)
+
+Measured:
+
+| run | on disk, less snapshots | stored | upload |
+|---|---|---|---|
+| Half Moon Bay, `as-built` | 90.1 MB, 145 files | 1.0 MB | 2 s |
+| Palisades, `palisades-cells/vector-5` | 61.9 MB, 242 files | 9.6 MB | 3 s |
+
+A copy of the site on port 5183, asking the bucket first, served `run.json` and a field
+frame byte for byte the same as the disk, answered a log filtered to one topic (156 bytes
+on the wire where the whole log is megabytes), fell back to the disk for a run that was
+not uploaded, and drew the Palisades run page with its 3D view and no page errors.
+
+Of the four things I expected to have to fix, three went away because the server stayed
+in the path: the log filter still runs on the server, there is no cross-origin read, and
+compression is done once at upload. The fourth stands: a rerun replaces a run under the
+same name, so stored files are marked to be cached for a minute only.
+
+What this does not show yet:
+
+- The public site. The deployed copy has not been touched. To use the bucket there, the
+  VM needs the credentials file and `ESIM_STORE`, and the deploy would upload runs in
+  place of the rsync. That is a deploy and waits for Anselm's word.
+- Size and cost at full scale. Only two runs are in the bucket (387 objects, 10.6 MB).
+  The two ratios above differ by ten times, so I will not guess the whole from them.
+  Prices and the free allowance were not checked.
+- Reads straight from the bucket by a browser, which would take load off the VM. That
+  needs a public address and a cross-origin rule, which this token cannot set.
+- The engine's fetched cache as a mirror. Not started.

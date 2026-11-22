@@ -36,6 +36,7 @@ import { fileURLToPath } from 'node:url'
 import { Server } from 'socket.io'
 import Anthropic from '@anthropic-ai/sdk'
 import { verifyHandshake, ATTEST_URL } from './lib/attest.mjs'
+import { storeFrom, sendFromStore } from './lib/store.mjs'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.resolve(here, '..')
@@ -52,6 +53,10 @@ const MODEL = process.env.ESIM_MODEL || 'claude-opus-5-5'
 // needed in this mode: kinds and projects come from the files the last run wrote.
 const READONLY = process.env.ESIM_READONLY === '1'
 const HAVE_ESIM = fs.existsSync(ESIM)
+// ESIM_STORE names a file of object-storage credentials (web/lib/store.mjs). With it, a file under
+// /projects/ that is not on this machine is read from the bucket, so a copy of the site can show runs
+// it was never sent. ESIM_STORE_FIRST=1 asks the bucket before the disk, to test it on a machine that has both.
+const STORE = storeFrom(process.env.ESIM_STORE), STORE_FIRST = process.env.ESIM_STORE_FIRST === '1'
 // ESIM_PUBLIC=1: a public, writable copy. Identity comes from attest (ATTEST_URL, default
 // https://attest.monster) on the socket handshake; a signed-in person may create, run and
 // write only under the area that is their attest handle, which they claim on first use
@@ -316,7 +321,12 @@ function serveStatic(req, res) {
     return true
   }
   if (url.startsWith('/runs/')) return under('/runs/', path.join(ROOT, 'runs'))
-  if (url.startsWith('/projects/')) return under('/projects/', path.join(ROOT, 'projects'))
+  if (url.startsWith('/projects/')) {
+    const local = path.resolve(ROOT, 'projects', url.slice('/projects/'.length))
+    const here = local.startsWith(path.join(ROOT, 'projects') + path.sep) && fs.existsSync(local)
+    if (STORE && path.extname(url) && (STORE_FIRST || !here)) return sendFromStore(req, res, url.slice(1), { topic: query.get('topic'), missing: () => under('/projects/', path.join(ROOT, 'projects')) })
+    return under('/projects/', path.join(ROOT, 'projects'))
+  }
   // a page of the engine's own documentation (system, rfc, events) is in the engine's folder
   if (url.startsWith('/docs/')) { const rel = url.slice('/docs/'.length); const inCore = !fs.existsSync(path.join(DOCS, rel)) && (fs.existsSync(path.join(CORE_DOCS, rel)) || fs.existsSync(path.join(CORE_DOCS, rel + '.md'))); return under('/docs/', inCore ? CORE_DOCS : DOCS) }
   if (!fs.existsSync(DIST)) { res.statusCode = 503; return res.end('viewer not built: run `npm run build` in web/, or use the Vite dev server') }
@@ -486,5 +496,5 @@ io.on('connection', (socket) => {
 })
 
 server.listen(PORT, '0.0.0.0', () => {
-  console.log(`esim ${VERSION}${READONLY ? ' (read-only)' : ''}${PUBLIC ? ` (public; identity from ${ATTEST_URL})` : ''} on :${PORT}, root ${ROOT}, esim ${ESIM}, viewer ${fs.existsSync(DIST) ? 'from dist/' : 'NOT BUILT (npm run build)'}, model ${MODEL} (key ${process.env.ANTHROPIC_API_KEY ? 'set' : 'missing'}), local ${LOCAL_MODEL} at ${OLLAMA}`)
+  console.log(`esim ${VERSION}${READONLY ? ' (read-only)' : ''}${STORE ? ` (store: bucket ${STORE.bucket}${STORE_FIRST ? ', asked first' : ''})` : ''}${PUBLIC ? ` (public; identity from ${ATTEST_URL})` : ''} on :${PORT}, root ${ROOT}, esim ${ESIM}, viewer ${fs.existsSync(DIST) ? 'from dist/' : 'NOT BUILT (npm run build)'}, model ${MODEL} (key ${process.env.ANTHROPIC_API_KEY ? 'set' : 'missing'}), local ${LOCAL_MODEL} at ${OLLAMA}`)
 })
