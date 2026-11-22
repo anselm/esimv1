@@ -20,8 +20,11 @@ eval $RS "$HERE/web/dist" "$HERE/web/lib" "$HERE/web/server.mjs" "$HERE/web/pack
 # snapshots.json is the engine's saved states for resuming a run (1.4 GB for one Portland run); the
 # read-only copy never resumes anything and its viewer never reads the file, so it is left behind
 # and removed where an earlier deploy put it. Deleting first frees the room the new runs need.
-eval $RS --delete-before --delete-excluded --exclude='snapshots.json' --exclude='fields/*/*.f32.tmp' "$HERE/projects/" "$HOST:/srv/esim/projects/"
+eval $RS --delete-before --delete-excluded --exclude='snapshots.json' --exclude='fields/*/*.f32.tmp' --copy-links "$HERE/projects/" "$HOST:/srv/esim/projects/"
 eval $RS "$HERE/docs/" "$HOST:/srv/esim/docs/"
+# the engine's own documentation, which the server reads from the engine's folder
+ssh -o ServerAliveInterval=5 "$HOST" 'mkdir -p /srv/esim/core'
+eval $RS "$HERE/core/docs" "$HOST:/srv/esim/core/"
 # the server reads these for the country picker and outlines when the geojson cache is absent
 # dependencies from package.json on the VM (socket.io and the SDK), then restart
 ssh -o ServerAliveInterval=5 "$HOST" 'cd /srv/esim/web && npm install --omit=dev --no-audit --no-fund >/dev/null && sudo systemctl restart esim.service && sleep 2 && systemctl is-active esim.service'

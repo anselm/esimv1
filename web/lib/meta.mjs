@@ -41,7 +41,8 @@ export function describe(root, url) {
     if (parts.length === 1) return { ...page, title: `Documentation · ${SITE}`, description: 'How the simulator works and what it does not do: the kernel, the module kinds, manifests, projects and runs, the honesty rules, and the limits to read before any number.' }
     const p = parts.slice(1).join('/')
     const d = docs.find((x) => x.path === p)
-    const desc = firstParagraph(path.join(root, 'docs', p + '.md'))
+    const own = path.join(root, 'docs', p + '.md')   // the engine's own pages are in its folder
+    const desc = firstParagraph(fs.existsSync(own) ? own : path.join(process.env.ESIM_ROOT || path.join(root, 'core'), 'docs', p + '.md'))
     return { ...page, title: `${d?.title ?? p} · ${SITE}`, description: clip(desc) || page.description, type: 'article' }
   }
   if (top === 'kinds') return { ...page, title: `Module kinds · ${SITE}`, description: 'Every module kind the simulator has, from its own declaration: what it reads, writes, publishes and accounts for, with every parameter named, defaulted and sourced.' }

@@ -317,7 +317,8 @@ function serveStatic(req, res) {
   }
   if (url.startsWith('/runs/')) return under('/runs/', path.join(ROOT, 'runs'))
   if (url.startsWith('/projects/')) return under('/projects/', path.join(ROOT, 'projects'))
-  if (url.startsWith('/docs/')) return under('/docs/', DOCS)
+  // a page of the engine's own documentation (system, rfc, events) is in the engine's folder
+  if (url.startsWith('/docs/')) { const rel = url.slice('/docs/'.length); const inCore = !fs.existsSync(path.join(DOCS, rel)) && (fs.existsSync(path.join(CORE_DOCS, rel)) || fs.existsSync(path.join(CORE_DOCS, rel + '.md'))); return under('/docs/', inCore ? CORE_DOCS : DOCS) }
   if (!fs.existsSync(DIST)) { res.statusCode = 503; return res.end('viewer not built: run `npm run build` in web/, or use the Vite dev server') }
   if (url === '/robots.txt') { res.setHeader('Content-Type', 'text/plain; charset=utf-8'); return res.end(`User-agent: *\nAllow: /\nSitemap: ${originOf(req)}/sitemap.xml\n`) }
   if (url === '/sitemap.xml') { res.setHeader('Content-Type', 'application/xml; charset=utf-8'); return res.end(sitemap(ROOT, originOf(req))) }
@@ -336,15 +337,14 @@ function serveStatic(req, res) {
 // line orders pages within an area; `<!-- section: name -->` groups them under a heading.
 // A page states who wrote it and when in the same way: author, ordered-by, revised-by,
 // written, revised (dates as YYYY-MM-DD) and revision (docs/system/workspace.md, Stamps).
-const DOCS = path.join(ROOT, 'docs')
+const DOCS = path.join(ROOT, 'docs'), CORE_DOCS = path.join(CORE, 'docs')
 function docsIndex() {
   const pages = []
-  if (!fs.existsSync(DOCS)) return pages
-  for (const area of fs.readdirSync(DOCS, { withFileTypes: true })) {
+  for (const root of [DOCS, CORE_DOCS]) if (fs.existsSync(root)) for (const area of fs.readdirSync(root, { withFileTypes: true })) {
     if (!area.isDirectory()) continue
-    for (const f of fs.readdirSync(path.join(DOCS, area.name))) {
+    for (const f of fs.readdirSync(path.join(root, area.name))) {
       if (!f.endsWith('.md')) continue
-      const text = fs.readFileSync(path.join(DOCS, area.name, f), 'utf8')
+      const text = fs.readFileSync(path.join(root, area.name, f), 'utf8')
       const title = (text.match(/^#\s+(.+)$/m) || [])[1]?.trim() ?? null
       const order = Number((text.match(/<!--\s*order:\s*(\d+)\s*-->/) || [])[1]) || null
       const section = (text.match(/<!--\s*section:\s*(.+?)\s*-->/) || [])[1] ?? null
@@ -426,6 +426,7 @@ io.on('connection', (socket) => {
   socket.on('doc.save', ({ path: p, markdown } = {}, ack) => reply(ack, async () => {
     if (READONLY) refuse()
     if (!validPath(p)) throw new Error('page path must be area/name in lower case letters, digits, - and _')
+    if (fs.existsSync(path.join(CORE_DOCS, p.split('/')[0]))) throw new Error(`/docs/${p.split('/')[0]} is the engine's own documentation and is edited in its repository`)
     claimArea(await who(), p.split('/')[0])
     if (typeof markdown !== 'string' || !markdown.trim()) throw new Error('an empty page is not saved')
     if (markdown.length > 200_000) throw new Error('page too long')

@@ -56,7 +56,7 @@ fn run_json<T: serde::Serialize>(out: &T) -> String {
 /// `main` settles it once and puts it in `ESIM_ROOT`, where every module and the registry read it.
 fn esim_root() -> PathBuf { esim_registry::paths::root() }
 
-/// The workspace: where `projects/`, `docs/` and the loose `runs/` are. `ESIM_WORKSPACE`, or the
+/// The workspace: where `projects/` and the loose `runs/` are (the engine's own documentation is in its folder). `ESIM_WORKSPACE`, or the
 /// current directory. It is the same folder as the engine's when the two are kept together.
 fn workspace_root() -> PathBuf { std::env::var("ESIM_WORKSPACE").ok().filter(|s| !s.is_empty()).map(PathBuf::from).unwrap_or_else(|| PathBuf::from(".")) }
 
@@ -604,7 +604,7 @@ fn sources(write: bool) -> Result<(), String> {
     for p in &cat.places { md.push_str(&format!("- **{}**: {} {}\n", p.title, p.why, if p.gauge.is_empty() { String::new() } else { format!("Gauge: {}.", p.gauge) })); }
     md.push_str("\n## Thresholds and tables\n\n`data/events/tipping.toml` carries the climate tipping elements with a source and a confidence per row (every row recalled from Armstrong McKay et al. 2022 until checked); `data/events/calendar.toml` and `hazards.toml` carry dated rules and hazards with their sources. The human climate niche (Xu et al. 2020), the wet-bulb limits (Vecellio et al. 2022; Sherwood and Huber 2010), the carbon response (Joos et al. 2013; Millar et al. 2017), the energy balance (Held et al. 2010; Geoffroy et al. 2013), the gas forcings (Myhre et al. 1998) and the wet-bulb formula (Stull 2011) are cited in each kind's describe, marked recalled where not yet checked against the paper.\n");
     if write {
-        let p = workspace_root().join("docs/system/sources.md");
+        let p = esim_root().join("docs/system/sources.md");
         fs::write(&p, &md).map_err(|e| e.to_string())?;
         println!("wrote {}", p.display());
     } else { print!("{md}"); }
@@ -663,7 +663,7 @@ fn events(write: bool) -> Result<(), String> {
 
     for (name, md) in pages {
         if write {
-            let dir = workspace_root().join("docs/events");
+            let dir = esim_root().join("docs/events");
             fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
             let p = dir.join(name);
             fs::write(&p, &md).map_err(|e| e.to_string())?;

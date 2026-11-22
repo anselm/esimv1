@@ -14,7 +14,7 @@ try { commit = execSync('git rev-parse --short HEAD', { cwd: here }).toString().
 
 // Serve the sibling ../runs and ../projects folders at /runs/ and /projects/ in dev and
 // preview. A production deploy copies them into dist/ (not done here).
-function serveFolder(prefix, root) {
+function serveFolder(prefix, first, second = null) {
   const types = {
     '.json': 'application/json',
     '.f32': 'application/octet-stream',
@@ -25,6 +25,8 @@ function serveFolder(prefix, root) {
   const handler = (req, res, next) => {
     if (!req.url || !req.url.startsWith(prefix)) return next()
     const rel = decodeURIComponent(req.url.split('?')[0].slice(prefix.length))
+    // a second folder answers what the first does not hold (the engine's own documentation)
+    const root = second && !fs.existsSync(path.resolve(first, rel)) && fs.existsSync(path.resolve(second, rel)) ? second : first
     const file = path.resolve(root, rel)
     if (!file.startsWith(root + path.sep)) {
       res.statusCode = 403
@@ -53,7 +55,7 @@ export default defineConfig({
     tailwindcss(), svelte(),
     serveFolder('/runs/', path.resolve(here, '../runs')),
     serveFolder('/projects/', path.resolve(here, '../projects')),
-    serveFolder('/docs/', path.resolve(here, '../docs')),
+    serveFolder('/docs/', path.resolve(here, '../docs'), path.resolve(here, '../core/docs')),
   ],
   // The viewer is its own package (../viewer, to become the repository esimv1-viewer). While it sits
   // beside the site it is read from source, and its imports of svelte and three resolve to the site's copies.
