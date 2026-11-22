@@ -1,3 +1,4 @@
+import { places } from './config.js'
 // What a notebook page shares between its views: one run, loaded once, and one moment in it.
 // Every `esim-` tag on a page that names the same run reads the same context, so a timeline
 // placed anywhere moves every map, chart and counter of that run.
@@ -25,7 +26,7 @@ export function loadRun(path, key, fixed) {
       let base, id
       if (fixed && (!key || key === fixed.id)) { base = fixed.base; id = fixed.id }
       else {
-        const idx = (await json(`/projects/${path}/runs/index.json`)) ?? []
+        const idx = (await json(`${places.projects}/${path}/runs/index.json`)) ?? []
         const byId = key ? idx.find((r) => r.id === key) : null
         if (byId) id = byId.id
         else {
@@ -33,7 +34,7 @@ export function loadRun(path, key, fixed) {
           if (!rows.length) throw new Error(key ? `no run of ${key}` : 'no runs yet')
           id = rows[0].id
         }
-        base = `/projects/${path}/runs/${encodeURIComponent(id)}`
+        base = `${places.projects}/${path}/runs/${encodeURIComponent(id)}`
       }
       const run = await json(`${base}/run.json`)
       if (!run) throw new Error(`run ${id} could not be read`)

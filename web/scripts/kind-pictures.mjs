@@ -6,7 +6,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import zlib from 'node:zlib'
-import { LAYERS } from '../src/lib/layers.js'
+import { LAYERS } from '../../viewer/src/layers.js'
 
 const ROOT = process.cwd()
 const OUT = path.join(ROOT, 'docs/kinds')

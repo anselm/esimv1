@@ -6,7 +6,7 @@
   import { req, hello } from './socket.js'
   let writable = $state(false)
   hello().then((h) => { writable = !h.readonly })
-  import { render, titleOf } from './markdown.js'
+  import { render, titleOf } from 'esimv1-viewer/markdown.js'
   import { stampOf, handleOf, day } from './stamp.js'
 
   let { path } = $props()

@@ -1,4 +1,6 @@
 @import "tailwindcss";
+/* the viewer package's components use the same utility classes */
+@source "../../viewer/src";
 
 @theme {
   /* one brand colour, used sparingly: a deep teal */

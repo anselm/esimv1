@@ -1,18 +1,18 @@
 <script>
   import Badge from './Badge.svelte'
-  import { newestFirst } from './runs.js'
+  import { newestFirst } from 'esimv1-viewer/runs.js'
   import Account from './Account.svelte'
   // One project: what was asked, the manifest, the runs, and a button to run it again.
   import { link, go } from './router.svelte.js'
   import { req, onLog, onChanged, hello } from './socket.js'
-  import { isoDate, num } from './fmt.js'
-  import Status from './Status.svelte'
-  import Verdict from './Verdict.svelte'
-  import Readme from './Readme.svelte'
+  import { isoDate, num } from 'esimv1-viewer/fmt.js'
+  import Status from 'esimv1-viewer/Status.svelte'
+  import Verdict from 'esimv1-viewer/Verdict.svelte'
+  import Readme from 'esimv1-viewer/Readme.svelte'
   import Crumbs from './Crumbs.svelte'
   import ProjectScene from './ProjectScene.svelte'
   import Pager from './Pager.svelte'
-  import Notebook from './Notebook.svelte'
+  import Notebook from 'esimv1-viewer/Notebook.svelte'
   // a project may lay its own page out: page.html beside its manifest
   let pageSrc = $state(null)
   $effect(() => { const u = `/projects/${path}/page.html`; pageSrc = null; fetch(u, { method: 'HEAD', cache: 'no-store' }).then((r) => { if (r.ok && (r.headers.get('content-type') ?? '').includes('html')) pageSrc = u }).catch(() => {}) })

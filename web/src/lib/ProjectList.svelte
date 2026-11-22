@@ -2,7 +2,7 @@
   $effect(() => { document.title = 'esim' })
   let { area = null } = $props()
   import Badge from './Badge.svelte'
-  import { newestFirst } from './runs.js'
+  import { newestFirst } from 'esimv1-viewer/runs.js'
   import Account from './Account.svelte'
   // The front page lists the areas: the top folders, one per person or group, each with how
   // much is in it and the pictures of its featured projects. An area's page (/<area>) lists its
@@ -13,8 +13,8 @@
   let writable = $state(false)
   let readonly = $state(false)
   hello().then((h) => { writable = !h.readonly; readonly = Boolean(h.readonly && !h.offline) })
-  import { isoDate } from './fmt.js'
-  import Verdict from './Verdict.svelte'
+  import { isoDate } from 'esimv1-viewer/fmt.js'
+  import Verdict from 'esimv1-viewer/Verdict.svelte'
   import Pager from './Pager.svelte'
   import HeroGlobe from './HeroGlobe.svelte'
   let page = $state(0)

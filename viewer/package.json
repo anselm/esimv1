@@ -1,0 +1,22 @@
+{
+  "name": "esimv1-viewer",
+  "version": "0.3.0",
+  "type": "module",
+  "license": "MIT",
+  "description": "Svelte components that draw an esim run folder: maps, charts, the 3D scenes, the timeline, ledgers, the wiring diagram and README figures.",
+  "svelte": "./src/index.js",
+  "exports": {
+    ".": {
+      "svelte": "./src/index.js",
+      "default": "./src/index.js"
+    },
+    "./*": "./src/*"
+  },
+  "files": [
+    "src"
+  ],
+  "peerDependencies": {
+    "svelte": "^5.0.0",
+    "three": "^0.170.0"
+  }
+}

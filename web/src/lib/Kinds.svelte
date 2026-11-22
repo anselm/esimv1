@@ -6,7 +6,7 @@
   // owns, publishes and subscribes, its ledgers, outputs and data.
   import { link } from './router.svelte.js'
   import { req } from './socket.js'
-  import { LAYERS } from './layers.js'
+  import { LAYERS } from 'esimv1-viewer/layers.js'
 
   let kinds = $state(null)
   let error = $state(null)

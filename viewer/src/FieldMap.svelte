@@ -1,4 +1,5 @@
 <script module>
+  import { places } from './config.js'
   // the status palette for marks, shared with the legend (ModuleViews)
   export const MARK_COLORS = { open: '#0e7c86', generator: '#c77d00', dark: '#b3261e', closed: '#b3261e', damaged: '#6b7280', spilled: '#b3261e' }
 
@@ -6,7 +7,7 @@
   const frameCache = new Map()      // `${base}/${name}/${i}` -> Promise<Float32Array>
   let outlinesPromise = null
   function outlinesOnce() {
-    if (!outlinesPromise) outlinesPromise = fetch('/docs/outlines.json').then((r) => (r.ok ? r.json() : null)).catch(() => null)
+    if (!outlinesPromise) outlinesPromise = fetch(places.outlines).then((r) => (r.ok ? r.json() : null)).catch(() => null)
     return outlinesPromise
   }
 </script>

@@ -181,3 +181,37 @@ Left in the hub for now, to be decided at the cut: the engine's own documentatio
 (`docs/system`, the RFC, `protocol-v0.md`), which the hub's site serves and the command
 line writes two pages of. The deploy script was edited for the new paths and has not been
 run.
+
+## Step 4: the viewer is a package beside the site
+
+Twenty-one components and seven helpers that draw a run folder moved from `web/src/lib/`
+to `viewer/src/`, with a `package.json` named `esimv1-viewer` and an index that exports
+them. The split fell cleanly by file: none of the moved files imported the router, the
+socket or the account code. What stayed in `web/` is the site: the pages (project list,
+project, run, compare, docs, kinds, new project), the router, the socket, accounts and
+the server.
+
+Three things the drawing code took from the site without saying so are now stated in one
+place, `viewer/src/config.js`: where project folders are served, and the two outline files
+for maps and the globe. The defaults are the site's addresses, so the site is unchanged.
+
+The site reads the package from source through a Vite alias while both are in one
+repository. After the cut it becomes an ordinary dependency.
+
+Checked: the site builds; a Palisades run page with the 3D layers view, the Earth 2100
+project page and the front page were looked at in a browser on the rebuilt site, with no
+page errors.
+
+Limits of this cut are in `viewer/README.md`: it has only ever been used by this site, it
+needs Tailwind 4 in the host page, and its components' props are not documented. The
+Sausalito view does not use it yet, and the three small modules written there today
+(tide, sky, water) would move here once it does.
+
+## What is left before the cut (step 5)
+
+- Records for the four scenarios move into their project folders (`data/events/<name>`
+  inside the project), so each project folder is the whole of its scenario. The two
+  Palisades projects share one record folder, which needs a rule.
+- Decide where the engine's own documentation lives.
+- The cut itself makes four or more new repositories and pushes them. That is outward
+  and is Anselm's to say go on, with the names as he gave them.

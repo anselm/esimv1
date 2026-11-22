@@ -2,10 +2,10 @@
   import Pager from './Pager.svelte'
   let page = $state(0)
   import Badge from './Badge.svelte'
-  import { newestFirst } from './runs.js'
+  import { newestFirst } from 'esimv1-viewer/runs.js'
   import { link } from './router.svelte.js'
-  import { isoDate, num } from './fmt.js'
-  import Status from './Status.svelte'
+  import { isoDate, num } from 'esimv1-viewer/fmt.js'
+  import Status from 'esimv1-viewer/Status.svelte'
 
   async function load() {
     const r = await fetch('/runs/index.json', { cache: 'no-store' })

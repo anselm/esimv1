@@ -55,7 +55,11 @@ export default defineConfig({
     serveFolder('/projects/', path.resolve(here, '../projects')),
     serveFolder('/docs/', path.resolve(here, '../docs')),
   ],
+  // The viewer is its own package (../viewer, to become the repository esimv1-viewer). While it sits
+  // beside the site it is read from source, and its imports of svelte and three resolve to the site's copies.
+  resolve: { alias: { 'esimv1-viewer': path.resolve(here, '../viewer/src') }, dedupe: ['svelte', 'three'] },
   server: {
+    fs: { allow: [path.resolve(here, '..')] },
     // the project server (server.mjs) speaks socket.io on 5181
     proxy: { '/socket.io': { target: 'http://127.0.0.1:5181', ws: true } },
   },

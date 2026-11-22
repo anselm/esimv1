@@ -1,4 +1,5 @@
 <script>
+  import { places } from './config.js'
   // A project's README.md, rendered with live figures. Prose is Markdown; a fenced block
   // whose language is `esim` is an embed, and its first word says which:
   //
@@ -19,7 +20,7 @@
   import Wiring from './Wiring.svelte'
 
   let { path, md } = $props()
-  const base = $derived(`/projects/${path}`)   // relative images and links in the README resolve here
+  const base = $derived(`${places.projects}/${path}`)   // relative images and links in the README resolve here
   let runs = $state(null)
   let error = $state(null)
 

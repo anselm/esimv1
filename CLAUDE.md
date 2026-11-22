@@ -556,4 +556,10 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   binary is `core/target/release/esim`; build and test with `(cd core && cargo ...)`. Run `esim` from the top folder: it
   takes `./core` as `ESIM_ROOT` and the top folder as `ESIM_WORKSPACE` (projects, docs, runs). `esim project update
   anselm/x --manifest core/manifests/y.js`. The deploy script is edited for this and untested.
+- **The viewer is in `viewer/`** (2026-11-22, step 4): the components that draw a run folder (`FieldMap`, `Chart`,
+  `Timeline`, `Layers3D`, `Scene3D`, `Globe`, `Readme`, `Notebook`, `Wiring`, ... and `runs.js`, `fmt.js`, `layers.js`,
+  `markdown.js`, `ramp.js`) are `viewer/src/*`, package `esimv1-viewer`; the site imports them as
+  `esimv1-viewer/Name.svelte` through a Vite alias. Wherever this file says `web/src/lib/X` for one of those, read
+  `viewer/src/X`. Pages, router, socket and accounts stay in `web/src/lib`. Addresses the viewer needs outside a run
+  folder are in `viewer/src/config.js`.
 

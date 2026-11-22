@@ -3,9 +3,9 @@
   // project's first variant, in the layers view, with a timeline of its own. When the project has
   // no run the view can draw (no elevation frame, or runs made before modules carried layers),
   // nothing is shown and the page keeps its cover picture.
-  import Layers3D from './Layers3D.svelte'
-  import Timeline from './Timeline.svelte'
-  import { latestRuns } from './runs.js'
+  import Layers3D from 'esimv1-viewer/Layers3D.svelte'
+  import Timeline from 'esimv1-viewer/Timeline.svelte'
+  import { latestRuns } from 'esimv1-viewer/runs.js'
   import { link } from './router.svelte.js'
 
   let { path, shown = $bindable(false) } = $props()

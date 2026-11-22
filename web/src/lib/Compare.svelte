@@ -1,15 +1,15 @@
 <script>
   import Badge from './Badge.svelte'
-  import { newestFirst } from './runs.js'
+  import { newestFirst } from 'esimv1-viewer/runs.js'
   // Two futures side by side: a project's variants, latest run each, under one cursor.
   // Big counters that move with the cursor, the maps, the crossings so far, and a country
   // picker that draws one country's path from the run logs. Built for the 2100 question.
   import { link } from './router.svelte.js'
   import Crumbs from './Crumbs.svelte'
-  import { isoDate, num } from './fmt.js'
-  import FieldMap from './FieldMap.svelte'
-  import Chart from './Chart.svelte'
-  import Timeline from './Timeline.svelte'
+  import { isoDate, num } from 'esimv1-viewer/fmt.js'
+  import FieldMap from 'esimv1-viewer/FieldMap.svelte'
+  import Chart from 'esimv1-viewer/Chart.svelte'
+  import Timeline from 'esimv1-viewer/Timeline.svelte'
 
   let { path, variants: wanted = null } = $props()
   let runs = $state(null)        // [{ variant, title, id, run, base, log }]

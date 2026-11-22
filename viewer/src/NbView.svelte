@@ -1,4 +1,5 @@
 <script>
+  import { places } from './config.js'
   // One `esim-` tag of a notebook page, drawn. The tag's name says what to draw and its
   // attributes say which part of the run; the run and the moment come from the shared context.
   //
@@ -37,7 +38,7 @@
     return x.toFixed(a < 10 ? 2 : 1)
   }
   let readme = $state(null)
-  $effect(() => { if (tag === 'esim-readme') fetch(`/projects/${path}/README.md`).then((r) => (r.ok ? r.text() : '')).then((t) => { readme = t }) })
+  $effect(() => { if (tag === 'esim-readme') fetch(`${places.projects}/${path}/README.md`).then((r) => (r.ok ? r.text() : '')).then((t) => { readme = t }) })
   const sentences = $derived(ctx.crossings.filter((c) => c.t <= (ctx.cursor ?? Infinity) && c.data?.sentence).slice().reverse().slice(0, Number(attrs.count ?? 6)))
   const only = $derived(attrs.only ? attrs.only.split(',').map((s) => s.trim()) : attrs.name ? [attrs.name] : null)
 </script>

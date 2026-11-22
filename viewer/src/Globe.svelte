@@ -1,4 +1,5 @@
 <script>
+  import { places } from './config.js'
   // The world scored, on a globe: every country a glyph at its centroid, the nine bands of
   // its score stacked outward from the surface, the total its height. The table comes from
   // the run's log (region.scored events, the latest at or before the cursor), the outlines
@@ -59,8 +60,8 @@
       out.sort((a, b) => a.t - b.t)
       tables = out
     }).catch((e) => { if (live) error = e.message })
-    fetch('/docs/outlines.json').then((r) => (r.ok ? r.json() : null)).then((o) => { if (live) outlines = o }).catch(() => {})
-    fetch('/docs/country-outlines.json').then((r) => (r.ok ? r.json() : null)).then((o) => { if (live) countryRings = o }).catch(() => {})
+    fetch(places.outlines).then((r) => (r.ok ? r.json() : null)).then((o) => { if (live) outlines = o }).catch(() => {})
+    fetch(places.countryOutlines).then((r) => (r.ok ? r.json() : null)).then((o) => { if (live) countryRings = o }).catch(() => {})
     return () => { live = false }
   })
 
