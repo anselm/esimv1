@@ -247,3 +247,10 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
 - The wire binding and a stdio module host. `docs/protocol-v0.md`
 - `scenarios/` as a curated ladder. `devlog/20261101-roots.md`
 - The 2100 scenario, effects as claims: a claims table with source, confidence and a switch, one module onto by-name ports, births and deaths on the people (the UN Low variant first), band multipliers, a capacity scale; air and longevity, falling fertility, heat and thinking as the first rows. `devlog/20261109-effects-as-claims.md`
+
+## A refactor pass (Anselm, 2026-11-22; `devlog/20261122-a-refactor-pass-how-to-approach.md`)
+
+- Recommended, not decided: the hub keeps `esimv1`, the crates move together to
+  `esimv1-core`, the viewer becomes a package, scenarios with a life of their own get a
+  repository each. Order: version the run folder, run a project by path, rearrange inside
+  this repository, package the viewer, then cut.
