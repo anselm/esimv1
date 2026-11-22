@@ -53,7 +53,7 @@ ok(await waitFor(login, `document.body.innerText.includes('@' + ${JSON.stringify
 ok(await waitFor(login, `document.querySelector('input[readonly]')?.value === ${JSON.stringify(handle)}`, 10000), 'the area field is locked to the handle')
 ok(await waitFor(login, `document.body.innerText.includes('is free; it becomes yours')`, 10000), 'the server says the area is free')
 // create a project under the handle with a small manifest
-const manifest = readFileSync(path.join(ROOT, 'manifests/m0-buckets.toml'), 'utf8')
+const manifest = readFileSync(path.join(ROOT, 'core/manifests/m0-buckets.toml'), 'utf8')
 await evalIn(login, set('input[placeholder="your name or a topic"] ~ input, input.field:not([readonly])', 'e2e buckets'))
 await evalIn(login, `(() => { const inputs = [...document.querySelectorAll('input.field')]; const t = inputs.find(i => !i.readOnly); t.value = 'e2e buckets'; t.dispatchEvent(new Event('input', { bubbles: true })); const ta = [...document.querySelectorAll('textarea')].pop(); ta.value = ${JSON.stringify(manifest)}; ta.dispatchEvent(new Event('input', { bubbles: true })); return true })()`)
 ok(await waitFor(login, `document.body.innerText.includes('/' + ${JSON.stringify(handle)} + '/e2e-buckets')`), 'the path reads /' + handle + '/e2e-buckets')

@@ -39,7 +39,11 @@ import { verifyHandshake, ATTEST_URL } from './lib/attest.mjs'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.resolve(here, '..')
-const ESIM = process.env.ESIM_BIN || path.join(ROOT, 'target/release/esim')
+// The engine's folder (the catalog, the cache, the shared tables): `core/` beside this workspace,
+// or wherever ESIM_ROOT says a checkout of esimv1-core is.
+const CORE = process.env.ESIM_ROOT || path.join(ROOT, 'core')
+const ESIM = process.env.ESIM_BIN || path.join(CORE, 'target/release/esim')
+const ESIM_ENV = { ...process.env, ESIM_ROOT: CORE, ESIM_WORKSPACE: ROOT }
 const PORT = Number(process.env.PORT || 5181)
 const VERSION = JSON.parse(fs.readFileSync(path.join(here, 'package.json'), 'utf8')).version
 const MODEL = process.env.ESIM_MODEL || 'claude-opus-5-5'
@@ -64,7 +68,7 @@ const LOCAL_MODEL = process.env.ESIM_LOCAL_MODEL || 'gpt-oss:120b'
 
 function esim(args, onLine) {
   return new Promise((resolve) => {
-    const child = spawn(ESIM, args, { cwd: ROOT, env: { ...process.env, ESIM_ROOT: ROOT } })
+    const child = spawn(ESIM, args, { cwd: ROOT, env: ESIM_ENV })
     let out = ''
     const take = (chunk) => {
       const s = chunk.toString()
@@ -80,7 +84,7 @@ function esim(args, onLine) {
 
 function esimJson(args) {
   return new Promise((resolve, reject) => {
-    execFile(ESIM, args, { cwd: ROOT, env: { ...process.env, ESIM_ROOT: ROOT }, maxBuffer: 64 << 20 }, (err, stdout, stderr) => {
+    execFile(ESIM, args, { cwd: ROOT, env: ESIM_ENV, maxBuffer: 64 << 20 }, (err, stdout, stderr) => {
       if (err) return reject(new Error(stderr || err.message))
       try { resolve(JSON.parse(stdout)) } catch (e) { reject(new Error(`bad json from esim ${args[0]}: ${e.message}`)) }
     })
@@ -137,7 +141,7 @@ async function checkManifest(text) {
   try {
     // `describe` prints the check report as JSON even when there are errors
     const r = await new Promise((resolve) => {
-      execFile(ESIM, ['describe', file], { cwd: ROOT, env: { ...process.env, ESIM_ROOT: ROOT }, maxBuffer: 64 << 20 }, (err, stdout, stderr) => {
+      execFile(ESIM, ['describe', file], { cwd: ROOT, env: ESIM_ENV, maxBuffer: 64 << 20 }, (err, stdout, stderr) => {
         try { resolve(JSON.parse(stdout)) } catch { resolve({ errors: [(stderr || stdout || String(err)).trim()], warnings: [], info: [], modules: [] }) }
       })
     })
@@ -359,7 +363,7 @@ function docsIndex() {
 docsIndex()
 // the countries in file order (the country_index raster's indices), for the compare view's picker
 try {
-  const gj = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/cache/natural-earth_ne_110m_admin_0_countries.geojson'), 'utf8'))
+  const gj = JSON.parse(fs.readFileSync(path.join(CORE, 'data/cache/natural-earth_ne_110m_admin_0_countries.geojson'), 'utf8'))
   const list = gj.features.map((f) => ({ iso3: f.properties.ISO_A3 === '-99' ? f.properties.ADM0_A3 : f.properties.ISO_A3, name: f.properties.NAME }))
   fs.writeFileSync(path.join(DOCS, 'countries.json'), JSON.stringify(list))
   const rings = []

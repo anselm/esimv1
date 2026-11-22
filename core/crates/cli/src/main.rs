@@ -52,7 +52,23 @@ fn run_json<T: serde::Serialize>(out: &T) -> String {
     }
 }
 
-fn esim_root() -> PathBuf { std::env::var("ESIM_ROOT").ok().map(PathBuf::from).unwrap_or_else(|| PathBuf::from(".")) }
+/// The engine's folder: the catalog, the fetched cache, the shared tables, the ladder manifests.
+/// `main` settles it once and puts it in `ESIM_ROOT`, where every module and the registry read it.
+fn esim_root() -> PathBuf { esim_registry::paths::root() }
+
+/// The workspace: where `projects/`, `docs/` and the loose `runs/` are. `ESIM_WORKSPACE`, or the
+/// current directory. It is the same folder as the engine's when the two are kept together.
+fn workspace_root() -> PathBuf { std::env::var("ESIM_WORKSPACE").ok().filter(|s| !s.is_empty()).map(PathBuf::from).unwrap_or_else(|| PathBuf::from(".")) }
+
+/// With no `ESIM_ROOT` given, the engine's folder is the current directory when the catalog is
+/// there, and `./core` when the catalog is there instead (the layout of the esimv1 repository,
+/// where the engine sits in `core/` beside the workspace).
+fn settle_root() {
+    if std::env::var("ESIM_ROOT").map(|s| !s.is_empty()).unwrap_or(false) { return; }
+    let here = Path::new(".");
+    let root = if !here.join("data/catalog.toml").exists() && here.join("core/data/catalog.toml").exists() { here.join("core") } else { here.to_path_buf() };
+    std::env::set_var("ESIM_ROOT", fs::canonicalize(&root).unwrap_or(root));
+}
 
 /// The kernel's wiring check plus the registry's: every asset a module names must be in
 /// the catalog, every event table it names must exist.
@@ -330,7 +346,7 @@ fn audit(dir: &Path) -> Result<(), String> {
 // ---- projects: a folder per project under projects/<area>/<name>, holding project.toml,
 // manifest.toml and runs/. The folder is the project; the viewer and the server only read it.
 
-fn projects_root() -> PathBuf { esim_root().join("projects") }
+fn projects_root() -> PathBuf { workspace_root().join("projects") }
 
 /// A project named by a folder instead of `<area>/<name>`: an absolute path, one that starts
 /// with `.`, or any existing folder that holds a project.toml. Such a project lives outside the
@@ -588,7 +604,7 @@ fn sources(write: bool) -> Result<(), String> {
     for p in &cat.places { md.push_str(&format!("- **{}**: {} {}\n", p.title, p.why, if p.gauge.is_empty() { String::new() } else { format!("Gauge: {}.", p.gauge) })); }
     md.push_str("\n## Thresholds and tables\n\n`data/events/tipping.toml` carries the climate tipping elements with a source and a confidence per row (every row recalled from Armstrong McKay et al. 2022 until checked); `data/events/calendar.toml` and `hazards.toml` carry dated rules and hazards with their sources. The human climate niche (Xu et al. 2020), the wet-bulb limits (Vecellio et al. 2022; Sherwood and Huber 2010), the carbon response (Joos et al. 2013; Millar et al. 2017), the energy balance (Held et al. 2010; Geoffroy et al. 2013), the gas forcings (Myhre et al. 1998) and the wet-bulb formula (Stull 2011) are cited in each kind's describe, marked recalled where not yet checked against the paper.\n");
     if write {
-        let p = esim_root().join("docs/system/sources.md");
+        let p = workspace_root().join("docs/system/sources.md");
         fs::write(&p, &md).map_err(|e| e.to_string())?;
         println!("wrote {}", p.display());
     } else { print!("{md}"); }
@@ -647,7 +663,7 @@ fn events(write: bool) -> Result<(), String> {
 
     for (name, md) in pages {
         if write {
-            let dir = esim_root().join("docs/events");
+            let dir = workspace_root().join("docs/events");
             fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
             let p = dir.join(name);
             fs::write(&p, &md).map_err(|e| e.to_string())?;
@@ -1173,7 +1189,7 @@ fn regress(accept: bool, only: Option<&str>) -> Result<(), String> {
         let watch: Vec<&str> = rung.get("watch").and_then(|v| v.as_array()).into_iter().flatten().filter_map(|v| v.as_str()).collect();
         let extra: Vec<(&str, &str)> = rung.get("scores").and_then(|v| v.as_array()).into_iter().flatten().filter_map(|p| Some((p.get(0)?.as_str()?, p.get(1)?.as_str()?))).collect();
         println!("rung     {name}: {manifest}{}", if sets.is_empty() { String::new() } else { format!(" with {}", sets.iter().map(|(k, v)| format!("{k}={v}")).collect::<Vec<_>>().join(" ")) });
-        let dir = run_with(Path::new(manifest), &out_root, &sets, None, None)?;
+        let dir = run_with(&root.join(manifest), &out_root, &sets, None, None)?;
         for (sim, obs) in &extra { score(&dir, sim, obs)?; }
         let scores: Vec<serde_json::Value> = fs::read_to_string(dir.join("scores.json")).ok().and_then(|t| serde_json::from_str(&t).ok()).unwrap_or_default();
         let run: serde_json::Value = serde_json::from_str(&fs::read_to_string(dir.join("run.json")).map_err(|e| e.to_string())?).map_err(|e| e.to_string())?;
@@ -1229,6 +1245,7 @@ fn regress(accept: bool, only: Option<&str>) -> Result<(), String> {
 fn main() {
     // --offline on any command: nothing may be fetched; a missing file is an error that names it
     if std::env::args().any(|a| a == "--offline") { std::env::set_var("ESIM_OFFLINE", "1"); }
+    settle_root();
     let args: Vec<String> = std::env::args().collect();
     let res = match args.get(1).map(String::as_str) {
         Some("--version") | Some("version") => { println!("esim {}", env!("CARGO_PKG_VERSION")); Ok(()) }

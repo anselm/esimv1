@@ -2,7 +2,7 @@
 // 50m file (the same outlines the score.regions module keys on), thinned for the globe.
 // Usage: node web/scripts/country-outlines.mjs   (from the repo root)
 import fs from 'node:fs'
-const src = 'data/cache/natural-earth_ne_50m_admin_0_countries.geojson'
+const src = 'core/data/cache/natural-earth_ne_50m_admin_0_countries.geojson'
 const g = JSON.parse(fs.readFileSync(src, 'utf8'))
 const out = {}
 let rings = 0, pts = 0

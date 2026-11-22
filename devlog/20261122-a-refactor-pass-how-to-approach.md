@@ -153,3 +153,31 @@ Not done by this step:
 - An answer from OpenStreetMap fetched for an outside project is still kept in the
   engine's `data/osm/`.
 - `esim fit`, `ensemble` and `sweep` take a manifest and do not set `ESIM_PROJECT`.
+
+## Step 3, first half: the engine is in `core/`
+
+`Cargo.toml`, `Cargo.lock`, `crates/`, `data/`, `manifests/` and `regress/` moved into
+`core/` with `git mv`, and the built `target/` and the fetched cache with them. That folder
+is what will be cut out as `esimv1-core`. The top folder keeps `projects/`, `docs/`,
+`runs/`, `web/`, `deploy/` and the devlog: the hub.
+
+The command line has two roots where it had one. `ESIM_ROOT` is the engine's folder and
+`ESIM_WORKSPACE` is where `projects/`, `docs/` and loose `runs/` are. With neither set,
+`esim` run from the top folder takes `./core` as the engine when the catalog is there, so
+the habit of running from the top folder still works. The server passes both. The ladder's
+manifests are read relative to the engine's folder.
+
+Checked: the build, the tests and the regression ladder (37 values, no drift) from
+`core/`; Half Moon Bay rerun from the top folder to the same digest; the local server
+restarted on the new binary and a run page looked at in a browser.
+
+What a person has to change: commands that named `manifests/x` from the top folder now
+say `core/manifests/x`, and the binary is `core/target/release/esim`. The README and
+`docs/system/workspace.md` say so. Older devlog entries and the long list in `CLAUDE.md`
+still name `crates/`, `data/` and `manifests/` without the prefix; they are history and
+are left as written.
+
+Left in the hub for now, to be decided at the cut: the engine's own documentation
+(`docs/system`, the RFC, `protocol-v0.md`), which the hub's site serves and the command
+line writes two pages of. The deploy script was edited for the new paths and has not been
+run.

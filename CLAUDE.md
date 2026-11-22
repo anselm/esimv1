@@ -551,4 +551,9 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   shadows the engine's); `esim project run ./folder` runs a project anywhere and sets `ESIM_PROJECT`; `engine = "0.3.0"` in
   `project.toml` is a minimum; the workspace is 0.3.0. `cargo` is at `~/.cargo/bin` and is not on a fresh shell's path:
   export it, and never judge a build by a filtered grep alone.
+- **The engine is in `core/`** (2026-11-22, step 3 of the refactor): `core/{Cargo.toml,crates,data,manifests,regress,target}`.
+  Every path earlier in this file that begins `crates/`, `data/`, `manifests/` or `regress/` is now under `core/`; the
+  binary is `core/target/release/esim`; build and test with `(cd core && cargo ...)`. Run `esim` from the top folder: it
+  takes `./core` as `ESIM_ROOT` and the top folder as `ESIM_WORKSPACE` (projects, docs, runs). `esim project update
+  anselm/x --manifest core/manifests/y.js`. The deploy script is edited for this and untested.
 

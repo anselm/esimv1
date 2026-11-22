@@ -113,22 +113,22 @@ Rust stable (rustup) and Node 20 or newer. First runs fetch a few hundred megaby
 records into `data/cache/` and pin their hashes in `data/catalog.lock.toml`.
 
 ```sh
-cargo build --release
-./target/release/esim kinds                                        # the module kinds
-./target/release/esim check manifests/p4-planet-people.toml        # wiring from the describes
-./target/release/esim run manifests/p1-planet-co2-1850-2025.toml   # 175 years of planet, about a second
-./target/release/esim warm cells                                   # once, ~100 min: the 1 km people and the reanalysis boxes the planet-2100 project reads
-./target/release/esim run manifests/m3-water-boone.toml            # a year of basin hydrology, about 40 s
-./target/release/esim verify manifests/m2-heat-boone-week.toml     # determinism and replay
-./target/release/esim regress                                      # the hindcast ladder against regress/baseline.json; --accept records a new one
-./target/release/esim manifest manifests/j3-planet-wild-members.js # a JavaScript manifest as the entity list it resolves to; --id for its hash
-cargo test --release                                               # about 40 s with the data cached
+(cd core && cargo build --release)
+./core/target/release/esim kinds                                        # the module kinds
+./core/target/release/esim check core/manifests/p4-planet-people.toml        # wiring from the describes
+./core/target/release/esim run core/manifests/p1-planet-co2-1850-2025.toml   # 175 years of planet, about a second
+./core/target/release/esim warm cells                                   # once, ~100 min: the 1 km people and the reanalysis boxes the planet-2100 project reads
+./core/target/release/esim run core/manifests/m3-water-boone.toml            # a year of basin hydrology, about 40 s
+./core/target/release/esim verify core/manifests/m2-heat-boone-week.toml     # determinism and replay
+./core/target/release/esim regress                                      # the hindcast ladder against core/regress/baseline.json; --accept records a new one
+./core/target/release/esim manifest core/manifests/j3-planet-wild-members.js # a JavaScript manifest as the entity list it resolves to; --id for its hash
+(cd core && cargo test --release)                                             # about 40 s with the data cached
 
 # projects: a folder with a manifest, a description and runs; variants are named overrides
-./target/release/esim project new me/planet --manifest manifests/p4-planet-people.toml
-./target/release/esim project prepare me/planet                    # fetch what its modules need, and stop before the clock
-./target/release/esim project run me/planet
-./target/release/esim project run me/planet --set emissions.after_record=zero_by:2050
+./core/target/release/esim project new me/planet --manifest core/manifests/p4-planet-people.toml
+./core/target/release/esim project prepare me/planet                    # fetch what its modules need, and stop before the clock
+./core/target/release/esim project run me/planet
+./core/target/release/esim project run me/planet --set emissions.after_record=zero_by:2050
 
 # the viewer and the server, one process
 cd web && npm install && npm run build && node server.mjs          # http://localhost:5181
@@ -145,16 +145,22 @@ kernel check it before anything runs.
 ## Layout
 
 ```
-crates/        kernel, registry, modules, audit, cli
-manifests/     the ladder, from two buckets to the planet; bundles to include
+core/          the engine, which will become the repository esimv1-core:
+  crates/        kernel, registry, modules, audit, cli
+  manifests/     the ladder, from two buckets to the planet; bundles to include
+  regress/       ladder.toml, the hindcast rungs; baseline.json, their accepted scores
+  data/          catalog.toml, catalog.lock.toml, events/ tables      (cache/ is not in git)
 projects/      <area>/<name>/{project.toml, manifest.toml, README.md, runs/}   (runs are not in git)
-regress/       ladder.toml, the hindcast rungs; baseline.json, their accepted scores
 docs/          documentation pages, docs/<area>/<name>.md; docs/system/ is the simulator's own
-data/          catalog.toml, catalog.lock.toml, events/ tables      (cache/ is not in git)
+web/           the viewer and the project server
 devlog/        dated entries: the design brief and every decision since
 deploy/        provision and deploy a read-only copy to an exe.dev VM
 todo.md        open research projects and layers, one line each
 ```
+
+The engine and the workspace are two folders with two names. `ESIM_ROOT` is the engine's
+(`core/` here) and `ESIM_WORKSPACE` is where `projects/`, `docs/` and loose `runs/` are
+(this folder). Run `esim` from this folder and it finds both.
 
 ## Where things stand
 

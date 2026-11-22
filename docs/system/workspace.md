@@ -3,23 +3,31 @@
 <!-- author: Claude -->
 <!-- ordered-by: Anselm -->
 <!-- written: 2026-11-01 -->
-<!-- revised: 2026-11-15 -->
+<!-- revised: 2026-11-22 -->
 <!-- revision: 1 -->
 # Workspace
 
 ## Layout
 
 ```
-crates/        kernel, registry, modules, audit, cli (Rust)
-manifests/     the ladder of manifests, from two buckets to the planet; bundles to include
+core/          the engine: crates/ (kernel, registry, modules, audit, cli, in Rust),
+               manifests/ (the ladder, from two buckets to the planet; bundles to include),
+               data/ (catalog.toml, catalog.lock.toml, events/ tables; cache/ is not in git),
+               regress/ (the hindcast ladder and its accepted scores)
 projects/      <area>/<name>/ project folders; runs inside them are not in git
 runs/          loose runs, not in git
 docs/          this documentation: <area>/<name>.md; protocol-v0.md
-data/          catalog.toml, catalog.lock.toml, events/ tables; cache/ is not in git
 devlog/        dated entries: the design brief and every decision since
 web/           the viewer and the server
 todo.md        open work, one line each, pointing into the devlog
 ```
+
+The engine and the workspace are separate folders. The engine's folder (`core/`, named by
+`ESIM_ROOT`) holds code, the catalog, fetched data and the shared tables. The workspace
+(this repository's top folder, named by `ESIM_WORKSPACE`) holds what people make with it:
+projects, documentation and runs. `esim` run from the top folder finds both. Since
+22 November 2026 the engine has been in `core/`; pages written before then name its
+folders without that prefix.
 
 ## Areas
 
