@@ -536,3 +536,9 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   low"); the project server then drafts with a local model through ollama and labels it.
 - A first ten-day river forecast was issued 2026-11-01 (`devlog/20261101-f1-first-forecast.md`)
   and is to be checked against USGS on or after 2026-11-11.
+- Playable Sausalito (2026-11-22, `devlog/20261122-playable-sausalito-as-an-exercise.md`): the first scenario kept
+  outside this repository, at `~/projects/2027/playable-sausalito` (repo `anselm/playable-sausalito`, public, content
+  only; new Rust kinds stay here). It is the test of esimv1 as a core others depend on, and Anselm expects the other
+  projects to move out later. The devlog lists what that asks of the engine (projects and record folders outside the
+  tree, a version to name, play from a chosen moment, a prepared bundle, lidar ground, the viewer as a part); none is
+  built. Do not build the scenario ahead of his word on its first question.
