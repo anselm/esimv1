@@ -166,7 +166,7 @@ This repository is the hub: the site people use, and the workspace of scenarios 
 not moved out. Since 22 November 2026 the engine, the viewer and three scenarios are
 separate repositories. `ESIM_ROOT` is the engine's folder (`core/` here) and
 `ESIM_WORKSPACE` is where `projects/` and loose `runs/` are (this folder); `esim` run from
-this folder finds both. A fourth scenario, Sausalito, is `anselm/esimv1-playable-sausalito`
+this folder finds both. A fourth scenario, Sausalito, is `anselm/esimv1-sausalito-model`
 and is not shown here yet.
 
 ## Where things stand

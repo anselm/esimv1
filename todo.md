@@ -251,7 +251,7 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
 ## A refactor pass (Anselm, 2026-11-22; `devlog/20261122-a-refactor-pass-how-to-approach.md`)
 
 - Names decided: `esimv1` (hub), `esimv1-core`, `esimv1-viewer`, `esimv1-palisades`, `esimv1-portland`,
-  `esimv1-earth2100`, `esimv1-playable-sausalito`. Done: the run folder's format number, a project by
+  `esimv1-earth2100`, `esimv1-sausalito-model` (first `esimv1-playable-sausalito`). Done: the run folder's format number, a project by
   path, the engine in `core/`, the viewer in `viewer/`, Portland's record inside its project.
 - Cut on 22 November 2026: five repositories made, `parts.list` and `deploy/parts.sh` hold them together.
 - Open: watch the first deploy (the script is edited and untested); rooms and registry entries for the new

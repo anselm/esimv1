@@ -574,7 +574,7 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   tagging a part, raise its version in `parts.list`. Their source manifests are in the scenario repositories
   (`scenarios/esimv1-palisades/manifests/f3-palisades-cells.js`, `scenarios/esimv1-portland/manifests/q1-portland-cascadia.js`);
   Earth 2100's stays in `core/manifests/p4-planet-people.toml`. The engine's documentation is `core/docs/`. Commit and
-  report unpushed work per repository. Sausalito is `anselm/esimv1-playable-sausalito` (folder
+  report unpushed work per repository. Sausalito is `anselm/esimv1-sausalito-model` (renamed from esimv1-playable-sausalito on 2026-11-24) (folder
   `~/projects/2027/playable-sausalito`).
 - Object storage (2026-11-22, `devlog/20261122-object-storage-first-try.md`): Cloudflare R2 bucket `esimv1`, private;
   credentials in `~/.config/cf/r2` (the token Anselm named `esimv1-r2-token`; object read and write on that bucket only; cannot list buckets or change its
