@@ -10,7 +10,6 @@
   import Verdict from 'esimv1-viewer/Verdict.svelte'
   import Readme from 'esimv1-viewer/Readme.svelte'
   import Crumbs from './Crumbs.svelte'
-  import ProjectScene from './ProjectScene.svelte'
   import Pager from './Pager.svelte'
   import Notebook from 'esimv1-viewer/Notebook.svelte'
   // a project may lay its own page out: page.html beside its manifest
@@ -30,7 +29,6 @@
 
   let { path } = $props()
   $effect(() => { if (meta?.title) document.title = `${meta.title} · esim` })
-  let sceneShown = $state(false)
   let meta = $state(null)
   let manifest = $state('')
   // the program a project was made from, when it was a JavaScript or JSON manifest: kept
@@ -135,9 +133,10 @@
     </div>
   </section>
 
-  <!-- the place in 3D from the newest run, when a run can show it; otherwise the cover picture -->
-  {#if pageSrc}<section class="mb-10"><Notebook src={pageSrc} {path} /></section>{:else}<ProjectScene {path} bind:shown={sceneShown} />{/if}
-  {#if meta.cover && !sceneShown && !pageSrc}
+  <!-- A project page shows no run of its own: the 3D view belongs to a run's page (Anselm, 2026-11-26:
+       "it is confusing to me that it has many runs and also shows one of them"). -->
+  {#if pageSrc}<section class="mb-10"><Notebook src={pageSrc} {path} /></section>{/if}
+  {#if meta.cover && !pageSrc}
     <!-- a depiction of the scenario, a file beside the manifest named in project.toml -->
     <figure class="mb-10 max-w-3xl">
       <img src={`/projects/${path}/${meta.cover}`} alt={meta.cover_caption ?? meta.title ?? path} class="w-full rounded-[3px]" />
