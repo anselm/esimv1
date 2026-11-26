@@ -1,0 +1,67 @@
+<!-- The page for one run of this project: HTML, with the site's views placed by tag (docs/system/pages).
+     It serves every variant, so the words say what to look at and the numbers come from the run. -->
+
+<p class="nb-lede">This is one run of the shoreline south of Pillar Point Harbor at Half Moon Bay, from 1961, the year the Army Corps of Engineers finished the breakwater. Waves move sand along the beach, the breakwater shelters some of it and starves the rest, and the bluff retreats where the beach runs out. Drag the bar to move through the years.</p>
+
+<div class="nb-counters">
+  <esim-counter series="coast.harbor_sand_m3" label="cubic metres of sand in the harbor"></esim-counter>
+  <esim-counter series="coast.shore_surfers_m" label="shoreline change at Surfer's Beach, metres"></esim-counter>
+  <esim-counter series="coast.bluff_max_m" label="greatest bluff retreat, metres"></esim-counter>
+  <esim-counter series="coast.hs_mean_m" label="mean wave height, metres"></esim-counter>
+</div>
+<esim-timeline></esim-timeline>
+
+<esim-tabs>
+
+<section title="The shoreline">
+<p>The beach is a single line that moves in and out. Where more sand arrives than leaves, the line moves seaward; where less, it retreats. The map shows the change since the start, and the charts follow four named places.</p>
+<esim-map field="shore_change_m"></esim-map>
+<div class="nb-cols">
+  <esim-chart series="coast.shore_surfers_m" title="Surfer's Beach, metres"></esim-chart>
+  <esim-chart series="coast.shore_vallejo_m" title="Vallejo Beach, metres"></esim-chart>
+  <esim-chart series="coast.shore_miramar_m" title="Miramar, metres"></esim-chart>
+  <esim-chart series="coast.shore_south_m" title="the south end, metres"></esim-chart>
+</div>
+</section>
+
+<section title="Sand and the harbor">
+<p>Sand moves along the shore with the waves. Some leaks through the breakwater and settles in the harbor, which is the silting the dredging question is about.</p>
+<div class="nb-cols">
+  <esim-chart series="coast.harbor_sand_m3" title="sand in the harbor, cubic metres"></esim-chart>
+  <esim-chart series="coast.harbor_rate_m3_yr" title="rate into the harbor, cubic metres a year"></esim-chart>
+  <esim-chart series="coast.near_change_m3_yr" title="sand lost near the breakwater, cubic metres a year"></esim-chart>
+  <esim-chart series="coast.placed_m3" title="sand placed on the beach, cubic metres"></esim-chart>
+</div>
+<div class="nb-cols">
+  <esim-chart series="coast.bluff_mean_near_m" title="mean bluff retreat near the breakwater, metres"></esim-chart>
+  <esim-chart series="coast.hs_mean_m" title="mean wave height, metres"></esim-chart>
+</div>
+</section>
+
+<section title="Against the record">
+<p>Two numbers from the Army Corps of Engineers' study can be compared with the as-built run: the rate sand enters the harbor and the rate the beach near the breakwater has eroded. A ratio of 1 is agreement.</p>
+<div class="nb-counters">
+  <esim-counter series="fit.harbor_ratio" label="harbor filling, model over record" at="end"></esim-counter>
+  <esim-counter series="fit.near_erosion_ratio" label="erosion near the breakwater, model over record" at="end"></esim-counter>
+</div>
+<p class="nb-note">Three of the model's constants were fitted: the share of sand that leaks through the breakwater, a correction to the wave direction, and the transport coefficient, which came out 80 times below the textbook value. The harbor ratio is close partly for that reason, and the erosion near the breakwater is several times too large.</p>
+</section>
+
+<section title="How far to trust it">
+<ul>
+    <li>The waves are one half-degree cell of a reanalysis, far offshore of the real surf zone.</li>
+    <li>A one-line model has no cross-shore shape, no rocks and no river sand.</li>
+    <li>The coast it starts from is today's OpenStreetMap line, not a 1961 survey.</li>
+    <li>Three constants are fitted, so agreement with the harbor record is not an independent check.</li>
+  </ul>
+<p>The <a href="/anselm/halfmoonbay-shoreline">project page</a> gives the account and the sources.</p>
+<h3>How the parts are connected</h3>
+<esim-wiring></esim-wiring>
+</section>
+
+<section title="Everything recorded">
+<p>Every part of the model with the panel it describes for itself: its own account of what it does and leaves out, its maps, its counters and its charts.</p>
+<esim-modules></esim-modules>
+</section>
+
+</esim-tabs>

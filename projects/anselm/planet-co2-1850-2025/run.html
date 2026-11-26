@@ -1,0 +1,49 @@
+<!-- The page for one run of this project: HTML, with the site's views placed by tag (docs/system/pages).
+     It serves every variant, so the words say what to look at and the numbers come from the run. -->
+
+<p class="nb-lede">This is the planet as one box, from 1850 to 2025: measured emissions go into a carbon account, and the CO2 left in the air warms a two-layer ocean. Drag the bar to move through the years.</p>
+
+<div class="nb-counters">
+  <esim-counter series="carbon.co2_ppm" label="CO2 in the model, ppm"></esim-counter>
+  <esim-counter series="obs.co2_ppm" label="CO2 measured, ppm"></esim-counter>
+  <esim-counter series="energy.gmst_anom_c" label="warming in the model, degrees C"></esim-counter>
+  <esim-counter series="obs.gmst_hadcrut5_c" label="warming measured, degrees C"></esim-counter>
+</div>
+<esim-timeline></esim-timeline>
+
+<esim-tabs>
+
+<section title="Carbon">
+<p>The model takes each year's measured emissions and removes carbon to the land and ocean with sinks of fixed speeds. What is left is compared with the air measured at Mauna Loa and in the Law Dome ice.</p>
+<div class="nb-cols">
+  <esim-chart series="carbon.emissions_gtc_yr" title="emissions, billion tonnes of carbon a year"></esim-chart>
+  <esim-chart series="carbon.co2_ppm" title="CO2 in the model, ppm"></esim-chart>
+  <esim-chart series="obs.co2_ppm" title="CO2 measured, ppm"></esim-chart>
+  <esim-chart series="carbon.airborne_fraction" title="share of emissions still in the air"></esim-chart>
+</div>
+</section>
+
+<section title="Warming">
+<p>The extra CO2 traps heat. A surface layer and a deep layer of ocean take it up, and the surface warming is compared with two measured records.</p>
+<div class="nb-cols">
+  <esim-chart series="energy.forcing_w_m2" title="forcing, watts per square metre"></esim-chart>
+  <esim-chart series="energy.gmst_anom_c" title="warming in the model, degrees C"></esim-chart>
+  <esim-chart series="obs.gmst_hadcrut5_c" title="measured, HadCRUT5"></esim-chart>
+  <esim-chart series="obs.gmst_gistemp_c" title="measured, GISTEMP"></esim-chart>
+  <esim-chart series="energy.stored_zj" title="heat stored, zettajoules"></esim-chart>
+</div>
+</section>
+
+<section title="How far to trust it">
+<ul>
+    <li>CO2 is the only forcing here, with no methane, aerosols or volcanoes. The model ends 2025 at 480 ppm against 425 measured.</li>
+    <li>The parameters are published values recalled from memory. Nothing is tuned.</li>
+    <li>This is the bottom rung of the planetary ladder, kept as a check. <a href="/anselm/planet-2100">Earth 2100</a> is the full version.</li>
+  </ul>
+</section>
+
+<section title="Everything recorded">
+<p>This run was made before runs carried a description of their parts, so there are no panels to show here. <esim-run-link>The full data page</esim-run-link> lists every map and series it recorded.</p>
+</section>
+
+</esim-tabs>

@@ -1,0 +1,67 @@
+<!-- The page for one run of this project: HTML, with the site's views placed by tag (docs/system/pages).
+     It serves every variant, so the words say what to look at and the numbers come from the run. -->
+
+<p class="nb-lede">This is one run of an imagined fire on Rothermel's spread equations: it starts at Devil's Gulch campsite in Marin County on 1 October 2029 and is followed for three days under the weather of 27 to 29 October 2019. Drag the bar under the map to move through the run, or press play. Everything on this page follows the moment the bar shows.</p>
+
+<div class="nb-counters">
+  <esim-counter series="fire.burned_acres" label="acres burned in the model"></esim-counter>
+  <esim-counter series="place.550_nicasio_valley_road.distance_m" label="metres from the house to burned ground"></esim-counter>
+  <esim-counter series="fire.wind_m_s" label="wind, metres a second"></esim-counter>
+  <esim-counter series="fire.gust_m_s" label="gusts, metres a second"></esim-counter>
+</div>
+<esim-timeline></esim-timeline>
+
+<esim-tabs>
+
+<section title="The fire">
+<p>This model spreads fire by Rothermel's equations, the ones behind the fire-behaviour tools agencies use: a rate of spread for each cell from its fuel, its slope, the wind and the dryness of the fuel.</p>
+<esim-map field="fire_arrival_h"></esim-map>
+<div class="nb-cols">
+  <div><h3>The fuel model assigned to each cell</h3><esim-map field="fire_fuel_class"></esim-map></div>
+  <div><esim-chart series="fire.burned_acres" title="acres burned"></esim-chart><esim-chart series="fire.head_ros_shrub_m_min" title="rate of spread at the head in shrub, metres a minute"></esim-chart></div>
+</div>
+</section>
+
+<section title="The house">
+<p>Two places are staked on the map: the campsite where the fire starts and the house at 550 Nicasio Valley Road. Each hour the model measures how far the nearest burned ground is from each.</p>
+<div class="nb-counters">
+  <esim-counter series="place.550_nicasio_valley_road.distance_m" label="metres from the house to burned ground"></esim-counter>
+  <esim-counter series="place.reached_count" label="of the two places reached"></esim-counter>
+</div>
+<esim-chart series="place.550_nicasio_valley_road.distance_m" title="distance from the house to the nearest burned ground, metres"></esim-chart>
+<esim-story count="6" sources></esim-story>
+<p class="nb-note">In all four variants this model stops between 1.3 and 2.2 kilometres short of the house. The same scenario on our own engine either reaches it within a day and a half or never spreads at all. The two models disagree and there is no record to choose between them.</p>
+</section>
+
+<section title="Weather">
+<p>The weather is one point of the ERA5 reanalysis, hour by hour, for the whole window.</p>
+<div class="nb-cols">
+  <esim-chart series="fire.wind_m_s" title="wind speed, metres a second"></esim-chart>
+  <esim-chart series="fire.gust_m_s" title="gusts, metres a second"></esim-chart>
+  <esim-chart series="fire.wind_dir_deg" title="wind direction, degrees"></esim-chart>
+  <esim-chart series="fire.rh_pct" title="relative humidity, percent"></esim-chart>
+  <esim-chart series="fire.t2m_c" title="air temperature, degrees C"></esim-chart>
+  <esim-chart series="fire.dead_moisture_pct" title="moisture of dead fuel, percent"></esim-chart>
+</div>
+</section>
+
+<section title="How far to trust it">
+<ul>
+    <li>The fuel table is recalled from memory of Scott and Burgan (2005) and has not been checked against it.</li>
+    <li>The wind is one point of a coarse reanalysis and does not bend around the terrain.</li>
+    <li>Nobody fights the fire unless the variant says so.</li>
+    <li>This model writes no elevation frame, so its run page has a flat map where the other fire pages have a relief.</li>
+    <li>There is no record to check this fire against, because it has not happened.</li>
+    <li>The house is placed by the Census geocoder, on the road and not on the building.</li>
+  </ul>
+<p>The <a href="/anselm/nicasio-2029-rothermel">project page</a> gives the account and the sources.</p>
+<h3>How the parts are connected</h3>
+<esim-wiring></esim-wiring>
+</section>
+
+<section title="Everything recorded">
+<p>Every part of the model with the panel it describes for itself: its own account of what it does and leaves out, its maps, its counters and its charts.</p>
+<esim-modules></esim-modules>
+</section>
+
+</esim-tabs>

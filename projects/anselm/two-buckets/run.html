@@ -1,0 +1,30 @@
+<!-- The page for one run of this project: HTML, with the site's views placed by tag (docs/system/pages).
+     It serves every variant, so the words say what to look at and the numbers come from the run. -->
+
+<p class="nb-lede">This is the simplest thing the engine can run: a tap pours into an upper bucket, which leaks into a lower one, which leaks away. It exists to check that the water account closes. Drag the bar to move through the month.</p>
+
+<div class="nb-counters">
+  <esim-counter series="rain.poured_m3" label="cubic metres poured so far"></esim-counter>
+  <esim-counter series="upper.volume_m3" label="in the upper bucket"></esim-counter>
+  <esim-counter series="lower.volume_m3" label="in the lower bucket"></esim-counter>
+</div>
+<esim-timeline></esim-timeline>
+
+<esim-tabs>
+
+<section title="The buckets">
+<p>Each bucket fills until what leaks out equals what comes in. The two record at different rates on purpose, to test that parts on different clocks still agree.</p>
+<div class="nb-cols">
+  <esim-chart series="upper.volume_m3" title="upper bucket, cubic metres"></esim-chart>
+  <esim-chart series="lower.volume_m3" title="lower bucket, cubic metres"></esim-chart>
+  <esim-chart series="upper.outflow_m3_s" title="upper outflow, cubic metres a second"></esim-chart>
+  <esim-chart series="lower.outflow_m3_s" title="lower outflow, cubic metres a second"></esim-chart>
+</div>
+<p class="nb-note">This checks a formula and the bookkeeping. It says nothing about any real place.</p>
+</section>
+
+<section title="Everything recorded">
+<p>This run was made before runs carried a description of their parts, so there are no panels to show here. <esim-run-link>The full data page</esim-run-link> lists every map and series it recorded.</p>
+</section>
+
+</esim-tabs>

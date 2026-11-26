@@ -1,0 +1,71 @@
+<!-- The page for one run of this project: HTML, with the site's views placed by tag (docs/system/pages).
+     It serves every variant, so the words say what to look at and the numbers come from the run. -->
+
+<p class="nb-lede">This is one run of an imagined fire: it starts at Devil's Gulch campsite in Marin County on 1 October 2029 and is followed for three days under the wind of a real Red Flag day, 27 to 29 October 2019. Drag the bar under the picture to move through the run, or press play. Everything on this page follows the moment the bar shows.</p>
+
+<esim-scene></esim-scene>
+<esim-timeline></esim-timeline>
+
+<div class="nb-counters">
+  <esim-counter series="fire.burned_acres" label="acres burned in the model"></esim-counter>
+  <esim-counter series="place.550_nicasio_valley_road.distance_m" label="metres from the house to burned ground"></esim-counter>
+  <esim-counter series="fire.built_cells_burned" label="built cells burned"></esim-counter>
+  <esim-counter series="fire.wind_m_s" label="wind, metres a second"></esim-counter>
+</div>
+
+<esim-tabs>
+
+<section title="The fire">
+<p>The model divides the ground into 30-metre cells. Each cell has a height, a land cover and, where there are any, buildings. A burning cell heats its neighbours, more strongly downwind and uphill, and a neighbour catches when it has taken enough heat. Embers can start new fires ahead of the front.</p>
+<div class="nb-cols">
+  <div><h3>Hours after ignition that the fire arrived</h3><esim-map field="fire_arrival_h"></esim-map></div>
+  <div><h3>What the model takes each cell to be made of</h3><esim-map field="fire_fuel_kind"></esim-map></div>
+</div>
+<div class="nb-cols">
+  <esim-chart series="fire.burned_acres" title="acres burned"></esim-chart>
+  <esim-chart series="fire.ignited_cells_hour" title="cells catching each hour"></esim-chart>
+  <esim-chart series="fire.spots_hour" title="new fires from embers each hour"></esim-chart>
+</div>
+</section>
+
+<section title="The house">
+<p>Two places are staked on the map: the campsite where the fire starts and the house at 550 Nicasio Valley Road. Each hour the model measures how far the nearest burned ground is from each.</p>
+<div class="nb-counters">
+  <esim-counter series="place.550_nicasio_valley_road.distance_m" label="metres from the house to burned ground"></esim-counter>
+  <esim-counter series="place.reached_count" label="of the two places reached"></esim-counter>
+</div>
+<esim-chart series="place.550_nicasio_valley_road.distance_m" title="distance from the house to the nearest burned ground, metres"></esim-chart>
+<esim-story count="6" sources></esim-story>
+<p class="nb-note">The house is placed by the Census geocoder, which puts an address on the road and not on the building. The model counts a place as reached when fire is within 50 metres.</p>
+</section>
+
+<section title="Wind and dryness">
+<p>The wind and the dryness of dead fuel drive the spread. Both are read from weather records and are the same in every variant of the scenario unless the variant says otherwise.</p>
+<div class="nb-cols">
+  <esim-chart series="fire.wind_m_s" title="wind speed, metres a second"></esim-chart>
+  <esim-chart series="fire.wind_from_deg" title="direction the wind blows from, degrees"></esim-chart>
+  <esim-chart series="fire.dead_moisture_pct" title="moisture of dead fuel, percent"></esim-chart>
+</div>
+</section>
+
+<section title="How far to trust it">
+<ul>
+    <li>Every constant of the fire engine is a guess. One of them, the multiplier on the heat a cell needs before it catches, is the knob the variants turn.</li>
+    <li>Nobody fights the fire unless the variant says so.</li>
+    <li>The wind does not bend around the terrain, and the fire does not change the wind.</li>
+    <li>The fuel table is recalled from memory of Scott and Burgan (2005) and has not been checked against it.</li>
+    <li>There is no record to check this fire against, because it has not happened.</li>
+    <li>The variants disagree completely: with the catching threshold times 3 or 5 the fire takes the whole window, and times 8 it never leaves its first cell. The engine cannot say which is right.</li>
+    <li>The wind is borrowed from another year's storm.</li>
+  </ul>
+<p>The <a href="/anselm/nicasio-2029">project page</a> gives the account and the sources.</p>
+<h3>How the parts are connected</h3>
+<esim-wiring></esim-wiring>
+</section>
+
+<section title="Everything recorded">
+<p>Every part of the model with the panel it describes for itself: its own account of what it does and leaves out, its maps, its counters and its charts.</p>
+<esim-modules></esim-modules>
+</section>
+
+</esim-tabs>

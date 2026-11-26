@@ -1,0 +1,98 @@
+<!-- The page for one run of this project: HTML, with the site's views placed by tag (docs/system/pages).
+     It serves every variant, so the words say what to look at and the numbers come from the run. -->
+
+<p class="nb-lede">This is one member of eight: Earth to 2100 with emissions held at today's level and the deck of wild cards in play, each member drawing the deck with a different seed. Drag the bar to move through the years, or press play. Everything on this page follows the year the bar shows.</p>
+
+<div class="nb-counters">
+  <esim-counter series="energy.gmst_anom_c" label="degrees C above 1850 to 1900"></esim-counter>
+  <esim-counter series="carbon.co2_ppm" label="CO2, parts per million"></esim-counter>
+  <esim-counter series="people.world_total" label="people"></esim-counter>
+  <esim-counter series="people.outside_niche" label="people outside the climate people have lived in"></esim-counter>
+  <esim-counter series="heat.people_month_long" label="people in a heatwave a month long"></esim-counter>
+  <esim-counter series="tipping.elements_past_central" label="tipping elements past their central estimate"></esim-counter>
+</div>
+<esim-timeline></esim-timeline>
+
+<esim-tabs>
+
+<section title="What happens">
+<p>The run tells its own story as it goes. Each sentence is written by the part of the model that worked the thing out, in the year it happened. The newest is first.</p>
+<esim-story count="10" sources></esim-story>
+</section>
+
+<section title="Carbon and warming">
+<p>Emissions enter a carbon account with sinks that weaken as the planet warms. The CO2 that stays in the air, with the other gases and aerosols, sets the forcing, and a two-layer ocean turns the forcing into warming. Up to 2025 the model can be compared with the measurements.</p>
+<div class="nb-cols">
+  <esim-chart series="carbon.emissions_gtc_yr" title="emissions, billion tonnes of carbon a year"></esim-chart>
+  <esim-chart series="carbon.co2_ppm" title="CO2 in the model, ppm"></esim-chart>
+  <esim-chart series="obs.co2_ppm" title="CO2 measured, ppm"></esim-chart>
+  <esim-chart series="energy.gmst_anom_c" title="warming in the model, degrees C"></esim-chart>
+  <esim-chart series="obs.gmst_hadcrut5_c" title="warming measured (HadCRUT5), degrees C"></esim-chart>
+  <esim-chart series="sea.thermal_m" title="sea level rise from warming water alone, metres"></esim-chart>
+</div>
+<p class="nb-note">In 2024 the model is at +1.69 degrees against +1.54 measured, and 451 ppm against 425. Both parameter sets are recalled from the literature and nothing is tuned.</p>
+</section>
+
+<section title="People and heat">
+<p>People are placed by country and, in the cell runs, by half-degree cell. The model counts those whose home climate has moved outside the range people have historically lived in, those past a wet-bulb threshold, and those in long heatwaves.</p>
+<div class="nb-counters">
+  <esim-counter series="people.outside_niche_pct" label="percent of people outside the niche"></esim-counter>
+  <esim-counter series="wetbulb.people_over_a" label="people past the wet-bulb threshold"></esim-counter>
+  <esim-counter series="heat.countries_month_long" label="countries with a month-long heatwave over half their people"></esim-counter>
+</div>
+<div class="nb-cols">
+  <div><h3>People outside the niche</h3><esim-map field="people_outside_niche"></esim-map></div>
+  <div><h3>Days a year over 31 degrees wet-bulb</h3><esim-map field="wetbulb_days_over_31"></esim-map></div>
+  <div><h3>Heatwave days a year</h3><esim-map field="heatwave_days"></esim-map></div>
+  <div><h3>Mean temperature, degrees C</h3><esim-map field="climate_tas_c"></esim-map></div>
+</div>
+<div class="nb-cols">
+  <esim-chart series="people.outside_niche" title="people outside the niche"></esim-chart>
+  <esim-chart series="heat.people_month_long" title="people in a month-long heatwave"></esim-chart>
+</div>
+</section>
+
+<section title="Tipping and shocks">
+<p>Tipping elements are counted as past their threshold when warming passes the published estimate, and some then release carbon. Wild cards, when the variant plays them, are drawn from a deck of speculative events by the run's seed.</p>
+<div class="nb-counters">
+  <esim-counter series="tipping.elements_past_low" label="tipping elements past the low end of their range"></esim-counter>
+  <esim-counter series="tipping.elements_past_central" label="past the central estimate"></esim-counter>
+  <esim-counter series="carbon.tipped_cumulative_gtc" label="billion tonnes of carbon released by tipping"></esim-counter>
+  <esim-counter series="shock.count" label="wild cards drawn" optional></esim-counter>
+</div>
+<div class="nb-cols">
+  <esim-chart series="tipping.elements_past_central" title="tipping elements past their central estimate"></esim-chart>
+  <esim-chart series="carbon.tipped_gtc_yr" title="carbon released by tipping, a year"></esim-chart>
+  <esim-chart series="energy.forcing_shock_w_m2" title="forcing from wild cards, watts per square metre" optional></esim-chart>
+</div>
+</section>
+
+<section title="Regions and capacity">
+<p>Each country is scored on nine World Bank indicators and the scores move as heat and shocks arrive. From those pressures the model computes a world capacity to cut emissions, which in the derailed variants slows the planned cuts.</p>
+<esim-module name="regions"></esim-module>
+<div class="nb-cols">
+  <esim-chart series="region.people_stress" title="share of people under heat stress"></esim-chart>
+  <esim-chart series="capacity.world" title="world capacity to cut emissions"></esim-chart>
+  <esim-chart series="options.cut_needed_pct_yr" title="cut needed each year to hold the first level, percent"></esim-chart>
+</div>
+</section>
+
+<section title="How far to trust it">
+<ul>
+    <li>Every model parameter is a published value recalled from memory and labelled as such in each part's panel. Nothing is tuned.</li>
+    <li>The rules that move a country's score and the world's capacity are placeholders.</li>
+    <li>The wild-card deck and its chances are written from memory and unchecked.</li>
+    <li>The warming of each country scales with the global mean by a fitted slope that runs high for small islands and Gulf states.</li>
+    <li>The eight members differ only in their seed, so the spread between them is the deck's and nothing else's.</li>
+  </ul>
+<p><a href="/anselm/planet-wild-members/compare">The compare page</a> puts the eight side by side.</p>
+<h3>How the parts are connected</h3>
+<esim-wiring></esim-wiring>
+</section>
+
+<section title="Everything recorded">
+<p>Every part of the model with the panel it describes for itself: its own account of what it does and leaves out, its maps, its counters and its charts.</p>
+<esim-modules></esim-modules>
+</section>
+
+</esim-tabs>

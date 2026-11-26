@@ -1,0 +1,81 @@
+<!-- The page for one run of this project: HTML, with the site's views placed by tag (docs/system/pages).
+     It serves every variant, so the words say what to look at and the numbers come from the run. -->
+
+<p class="nb-lede">This is one run of our fire engine on the Fort McMurray fire of May 2016, from the afternoon of 1 May to 6 May. Drag the bar under the picture to move through the six days, or press play. Everything on this page follows the moment the bar shows.</p>
+
+<esim-scene></esim-scene>
+<esim-timeline></esim-timeline>
+
+<div class="nb-counters">
+  <esim-counter series="fire.burned_acres" label="acres burned in the model"></esim-counter>
+  <esim-counter series="fit.sorensen" label="overlap with what satellites saw"></esim-counter>
+  <esim-counter series="fire.built_cells_burned" label="built cells burned"></esim-counter>
+  <esim-counter series="fire.wind_m_s" label="wind, metres a second"></esim-counter>
+</div>
+
+<esim-tabs>
+
+<section title="The fire">
+<p>The model divides the ground into 30-metre cells. Each cell has a height, a land cover and, where there are any, buildings. A burning cell heats its neighbours, more strongly downwind and uphill, and a neighbour catches when it has taken enough heat. Embers can start new fires ahead of the front.</p>
+<div class="nb-cols">
+  <div><h3>Hours after ignition that the fire arrived</h3><esim-map field="fire_arrival_h"></esim-map></div>
+  <div><h3>What the model takes each cell to be made of</h3><esim-map field="fire_fuel_kind"></esim-map></div>
+</div>
+<div class="nb-cols">
+  <esim-chart series="fire.burned_acres" title="acres burned"></esim-chart>
+  <esim-chart series="fire.ignited_cells_hour" title="cells catching each hour"></esim-chart>
+  <esim-chart series="fire.spots_hour" title="new fires from embers each hour"></esim-chart>
+</div>
+</section>
+
+<section title="Against the satellites">
+<p>Nobody mapped this fire hour by hour, so the record is the set of places where satellites saw heat. The area those detections had covered by each pass is compared with the area the model had burned by then.</p>
+<div class="nb-counters">
+  <esim-counter series="sim.acres" label="acres burned in the model"></esim-counter>
+  <esim-counter series="obs.acres" label="acres the satellites had seen burning"></esim-counter>
+  <esim-counter series="fit.sorensen" label="overlap of the two areas"></esim-counter>
+  <esim-counter series="fit.missed_acres" label="acres seen but not burned in the model"></esim-counter>
+  <esim-counter series="fit.over_acres" label="acres burned in the model but not seen"></esim-counter>
+</div>
+<div class="nb-cols">
+  <div><h3>Where the satellites had seen heat</h3><esim-map field="obs_hotspots"></esim-map></div>
+  <div><h3>Where the model had burned</h3><esim-map field="fire_arrival_h"></esim-map></div>
+</div>
+<div class="nb-cols">
+  <esim-chart series="sim.acres" title="model, acres"></esim-chart>
+  <esim-chart series="obs.acres" title="satellites, acres"></esim-chart>
+  <esim-chart series="fit.sorensen" title="overlap"></esim-chart>
+</div>
+<p class="nb-note">The overlap stays between a third and two fifths in every variant. The model reads the wind at one point from a coarse reanalysis, and on 3 May, when the fire ran into the city, that point shows a light south-easterly.</p>
+</section>
+
+<section title="Wind and dryness">
+<p>The wind and the dryness of dead fuel drive the spread. Both are read from weather records and are the same in every variant of the scenario unless the variant says otherwise.</p>
+<div class="nb-cols">
+  <esim-chart series="fire.wind_m_s" title="wind speed, metres a second"></esim-chart>
+  <esim-chart series="fire.wind_from_deg" title="direction the wind blows from, degrees"></esim-chart>
+  <esim-chart series="fire.dead_moisture_pct" title="moisture of dead fuel, percent"></esim-chart>
+</div>
+</section>
+
+<section title="How far to trust it">
+<ul>
+    <li>Every constant of the fire engine is a guess. One of them, the multiplier on the heat a cell needs before it catches, is the knob the variants turn.</li>
+    <li>Nobody fights the fire unless the variant says so.</li>
+    <li>The wind does not bend around the terrain, and the fire does not change the wind.</li>
+    <li>The fuel table is recalled from memory of Scott and Burgan (2005) and has not been checked against it.</li>
+    <li>The wind is one point of the ERA5 reanalysis for the whole window.</li>
+    <li>The buildings are OpenStreetMap footprints, which are incomplete for 2016.</li>
+    <li>The hour the fire was first detected is recalled and has not been checked against the provincial review.</li>
+  </ul>
+<p>The <a href="/anselm/fortmcmurray-2016">project page</a> gives the account and the sources.</p>
+<h3>How the parts are connected</h3>
+<esim-wiring></esim-wiring>
+</section>
+
+<section title="Everything recorded">
+<p>Every part of the model with the panel it describes for itself: its own account of what it does and leaves out, its maps, its counters and its charts.</p>
+<esim-modules></esim-modules>
+</section>
+
+</esim-tabs>

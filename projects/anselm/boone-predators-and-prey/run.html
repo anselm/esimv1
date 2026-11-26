@@ -1,0 +1,71 @@
+<!-- The page for one run of this project: HTML, with the site's views placed by tag (docs/system/pages).
+     It serves every variant, so the words say what to look at and the numbers come from the run. -->
+
+<p class="nb-lede">This is one year, 2025, in the basin of the Boone River above Webster City, Iowa: weather, water, crops and grass, a deer herd and its predators. Drag the bar to move through the year, or press play.</p>
+
+<div class="nb-counters">
+  <esim-counter series="hydro.q_sim_daily_m3_s" label="river flow in the model, cubic metres a second"></esim-counter>
+  <esim-counter series="hydro.q_obs_daily_m3_s" label="river flow measured"></esim-counter>
+  <esim-counter series="fauna.herb_total" label="deer"></esim-counter>
+  <esim-counter series="fauna.pred_total" label="predators"></esim-counter>
+</div>
+<esim-timeline></esim-timeline>
+
+<esim-tabs>
+
+<section title="Water">
+<p>Rain and snow from the ERA5 reanalysis fall on the basin, soak into the soil or run off, and reach the river gauge at Webster City, where the model can be compared with what the US Geological Survey measured.</p>
+<div class="nb-cols">
+  <esim-chart series="hydro.precip_daily_mm" title="precipitation, millimetres a day"></esim-chart>
+  <esim-chart series="hydro.q_sim_daily_m3_s" title="river flow in the model"></esim-chart>
+  <esim-chart series="hydro.q_obs_daily_m3_s" title="river flow measured"></esim-chart>
+  <esim-chart series="hydro.soil_mean_mm" title="water in the soil, millimetres"></esim-chart>
+</div>
+<div class="nb-cols">
+  <div><h3>Water in the soil</h3><esim-map field="soil_daily_mean_mm"></esim-map></div>
+  <div><h3>Where the water gathers</h3><esim-map field="flow_accum_log10_km2"></esim-map></div>
+</div>
+</section>
+
+<section title="Plants">
+<p>Crops and grass grow from sunlight, warmth and soil water. Their greenness is compared with what the MODIS satellite saw every sixteen days.</p>
+<div class="nb-cols">
+  <esim-chart series="veg.ndvi_sim_16d" title="greenness in the model"></esim-chart>
+  <esim-chart series="veg.ndvi_obs_16d" title="greenness seen by satellite"></esim-chart>
+  <esim-chart series="veg.lai_mean" title="leaf area"></esim-chart>
+  <esim-chart series="veg.biomass_mean_gc_m2" title="plant carbon, grams per square metre"></esim-chart>
+</div>
+<div class="nb-cols">
+  <div><h3>Greenness in the model</h3><esim-map field="ndvi_sim"></esim-map></div>
+  <div><h3>Greenness seen by satellite</h3><esim-map field="ndvi_modis"></esim-map></div>
+</div>
+</section>
+
+<section title="Animals">
+<p>A deer herd grazes the plants and a cohort of predators eats the deer. Both are accounts that must close: every animal is born, dies or is still there.</p>
+<div class="nb-cols">
+  <esim-chart series="fauna.herb_total" title="deer"></esim-chart>
+  <esim-chart series="fauna.pred_total" title="predators"></esim-chart>
+  <esim-chart series="fauna.herb_grazed_kgc_day" title="grazed, kilograms of carbon a day"></esim-chart>
+  <esim-chart series="fauna.herb_killed_day" title="deer killed by predators a day"></esim-chart>
+</div>
+<div class="nb-cols">
+  <div><h3>Deer per square kilometre</h3><esim-map field="herbivore_density_km2"></esim-map></div>
+  <div><h3>Predators per square kilometre</h3><esim-map field="predator_density_km2"></esim-map></div>
+</div>
+</section>
+
+<section title="How far to trust it">
+<ul>
+    <li>The river and the greenness are checked against measurements. The animals are not: no count of deer or predators in this basin is used.</li>
+    <li>The starting densities, six deer and 0.3 predators per square kilometre, are set in the manifest and do not come from a survey.</li>
+    <li>These are early rungs of the engine's ladder, kept as checks that the accounts close across parts.</li>
+  </ul>
+</section>
+
+<section title="Everything recorded">
+<p>Every part of the model with the panel it describes for itself: its own account of what it does and leaves out, its maps, its counters and its charts.</p>
+<esim-modules></esim-modules>
+</section>
+
+</esim-tabs>
