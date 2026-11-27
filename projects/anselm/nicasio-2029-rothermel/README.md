@@ -19,7 +19,8 @@ stand a population of animals that runs from the front, a firefighting module th
 off, and the two named places the run watches. None of these parts knows the others: each writes maps that it owns, and
 the others read them.
 
-```esim wiring
+```esim
+wiring
 ```
 
 This is the point of the pair. The [first Devil's Gulch page](/anselm/nicasio-2029) is the

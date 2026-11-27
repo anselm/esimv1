@@ -21,11 +21,12 @@ The fire on this page is one module of about ten. The relief, the land cover, th
 and the buildings are each read once from their own source by their own module. The weather
 module lays each hour's wind, temperature and humidity on the ground, and a fuel moisture
 module turns that air into how dry the dead fuel is. The fire reads all of them and fetches
-nothing itself. Beside it stand a firefighting module, a population of animals that runs from
-the front, and the records the run is scored against. None of these parts knows the others:
+nothing itself. Beside it stand a population of animals that runs from the front and the
+satellite record the run is scored against. Nobody fights this fire, so the firefighting module is not in it. None of these parts knows the others:
 each writes maps or tables that it owns, and the others read them.
 
-```esim wiring
+```esim
+wiring
 ```
 
 This is what made the move from Los Angeles a small job. The relief, land cover, roads, fuel

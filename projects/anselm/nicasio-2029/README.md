@@ -23,7 +23,8 @@ nothing itself. Beside it stand a firefighting module, a population of animals t
 the front, and the records the run is scored against. None of these parts knows the others:
 each writes maps or tables that it owns, and the others read them.
 
-```esim wiring
+```esim
+wiring
 ```
 
 The [same scenario on Rothermel's model](/anselm/nicasio-2029-rothermel) shows what the
