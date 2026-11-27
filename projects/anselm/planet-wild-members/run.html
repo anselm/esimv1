@@ -3,6 +3,8 @@
 
 <p class="nb-lede">This is one member of eight: Earth to 2100 with emissions held at today's level and the deck of wild cards in play, each member drawing the deck with a different seed. Drag the bar to move through the years, or press play. Everything on this page follows the year the bar shows.</p>
 
+<esim-regions></esim-regions>
+<esim-timeline></esim-timeline>
 <div class="nb-counters">
   <esim-counter series="energy.gmst_anom_c" label="degrees C above 1850 to 1900"></esim-counter>
   <esim-counter series="carbon.co2_ppm" label="CO2, parts per million"></esim-counter>
@@ -11,8 +13,6 @@
   <esim-counter series="heat.people_month_long" label="people in a heatwave a month long"></esim-counter>
   <esim-counter series="tipping.elements_past_central" label="tipping elements past their central estimate"></esim-counter>
 </div>
-<esim-timeline></esim-timeline>
-
 <esim-tabs>
 
 <section title="What happens">
@@ -69,8 +69,8 @@
 
 <section title="Regions and capacity">
 <p>Each country is scored on nine World Bank indicators and the scores move as heat and shocks arrive. From those pressures the model computes a world capacity to cut emissions, which in the derailed variants slows the planned cuts.</p>
-<esim-module name="regions"></esim-module>
 <div class="nb-cols">
+  <esim-chart series="region.mean_total" title="mean country score"></esim-chart>
   <esim-chart series="region.people_stress" title="share of people under heat stress"></esim-chart>
   <esim-chart series="capacity.world" title="world capacity to cut emissions"></esim-chart>
   <esim-chart series="options.cut_needed_pct_yr" title="cut needed each year to hold the first level, percent"></esim-chart>

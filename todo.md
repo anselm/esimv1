@@ -271,3 +271,12 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
   unchanged files and stops at an 8 GB cap.
 - Next: upload after a rerun, remove objects whose files are gone, rotate the credentials.
 - Later: a public address for direct reads; the fetched cache as a mirror.
+
+## From 26 November 2026 (devlog/20261126-the-hub-is-a-showcase.md)
+
+- Richer wiring: split the fire scenarios' one module into weather, fuel moisture, wind, terrain and buildings that the fire subscribes to (Anselm: "we will want to argue for richer independent modules wired together").
+- Delete the account code (attest, handles, `ESIM_PUBLIC`): the hub is a showcase, not a place to sign in.
+- A rebuild step in the deploy: the hub makes the runs of every listed scenario from its listed version.
+- A catalogue row and a front-page card for a scenario with its own site (Sausalito).
+- Rerun every project so its runs carry module titles; rerun the three projects whose runs predate `describe.json`.
+- Delete `viewer/src/Globe.svelte` once the flat map is accepted.
