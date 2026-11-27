@@ -583,4 +583,14 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   under `/projects/` it does not hold from the bucket (`web/lib/store.mjs`); `ESIM_STORE_FIRST=1` asks the bucket first.
   The deployed copy has read its runs from the bucket since 2026-11-22 and holds no run folder: `deploy/deploy.sh esimv1`
   uploads runs (unchanged files skipped, 8 GB cap), then rsyncs the rest. The deploy was run twice that day and works.
-
+- The parts separated (2026-11-26, `devlog/20261126-can-the-parts-be-separated.md`; Anselm: "we are doing 'models of whole
+  systems' - that means that we must separate modules out where possible"): `core/crates/modules/src/landscape.rs` holds
+  `ground.terrain`, `ground.cover`, `roads.major`, `built.footprints`, `weather.surface`, `fuel.moisture` and `fauna.flee`
+  (a placeholder). `fire.cells` with `inputs = "world"` fetches nothing and reads them; Palisades cells, Fort McMurray and
+  Devil's Gulch run this way, with results identical to before. The ground modules must stand before the fire in the
+  manifest. The kernel's world has tables (`world_table_write`, `world_table`) for lists of things; a place's grid is
+  `esim_registry::window_grid`, pure. New window modules use `landscape::grid_of`, never `dem_window`, to learn their cells.
+  Every kind needs a row in `title_of` (`core/crates/modules/src/lib.rs`); a test fails otherwise.
+- The hub is a showcase (2026-11-26, `devlog/20261126-the-hub-is-a-showcase.md`): no sign-in, paths stay, small projects
+  stay here, the hub rebuilds what it lists. Every project has a `run.html`; a project page shows no run of its own. Earth
+  2100's world view is the flat map (`viewer/src/RegionMap.svelte`, tag `<esim-regions>`), not the globe.

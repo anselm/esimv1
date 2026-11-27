@@ -34,4 +34,4 @@ name = "gust"
 title = "Thresholds times 5, on the hour's gust instead of its mean wind"
 [variant.set]
 "fire.ignite_scale" = 5
-"fire.wind_use" = "gust"
+"weather.wind_use" = "gust"

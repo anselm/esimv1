@@ -13,10 +13,83 @@
       }
     },
     {
+      "id": "ground",
+      "kind": "ground.terrain",
+      "params": {
+        "place": {
+          "lat_n": 38.08,
+          "lat_s": 37.97,
+          "lon_e": -122.61,
+          "lon_w": -122.79,
+          "res_arcsec": 1
+        }
+      }
+    },
+    {
+      "id": "cover",
+      "kind": "ground.cover",
+      "params": {
+        "place": {
+          "lat_n": 38.08,
+          "lat_s": 37.97,
+          "lon_e": -122.61,
+          "lon_w": -122.79,
+          "res_arcsec": 1
+        }
+      }
+    },
+    {
+      "id": "roads",
+      "kind": "roads.major",
+      "params": {
+        "place": {
+          "lat_n": 38.08,
+          "lat_s": 37.97,
+          "lon_e": -122.61,
+          "lon_w": -122.79,
+          "res_arcsec": 1
+        }
+      }
+    },
+    {
+      "id": "buildings",
+      "kind": "built.footprints",
+      "params": {
+        "place": {
+          "lat_n": 38.08,
+          "lat_s": 37.97,
+          "lon_e": -122.61,
+          "lon_w": -122.79,
+          "res_arcsec": 1
+        },
+        "source": "osm"
+      }
+    },
+    {
+      "id": "weather",
+      "kind": "weather.surface",
+      "params": {
+        "at": "2029-10-01T07:00:00Z",
+        "end": "2019-10-30T07:00:00Z",
+        "place": {
+          "lat_n": 38.08,
+          "lat_s": 37.97,
+          "lon_e": -122.61,
+          "lon_w": -122.79,
+          "res_arcsec": 1
+        },
+        "source": "hrrr",
+        "start": "2019-10-27T07:00:00Z"
+      }
+    },
+    {
+      "id": "moisture",
+      "kind": "fuel.moisture"
+    },
+    {
       "id": "fire",
       "kind": "fire.cells",
       "params": {
-        "buildings": "osm",
         "cooling": "idle",
         "form": "vector",
         "frame_res_arcsec": 4,
@@ -24,6 +97,7 @@
         "ignition_lat": 38.0316,
         "ignition_lon": -122.7328,
         "ignition_time": "2029-10-01T10:00:00Z",
+        "inputs": "world",
         "place": {
           "lat_n": 38.08,
           "lat_s": 37.97,
@@ -32,11 +106,15 @@
           "res_arcsec": 1
         },
         "reach_m": 45,
-        "slope_rate_gain": 20,
-        "wind": "hrrr",
-        "wind_at": "2029-10-01T07:00:00Z",
-        "wind_end": "2019-10-30T07:00:00Z",
-        "wind_start": "2019-10-27T07:00:00Z"
+        "slope_rate_gain": 20
+      }
+    },
+    {
+      "id": "animals",
+      "kind": "fauna.flee",
+      "params": {
+        "density_km2": 20,
+        "mortality": 0.1
       }
     },
     {
@@ -83,8 +161,8 @@
     }
   ],
   "from": {
-    "entry": "manifests/f5-nicasio-2029.js",
-    "hash": "sha256:a3eb2ecf8e1f6d370f1a5a9c325a6bb68e32f5faf8235eb98069e3a735c93374",
+    "entry": "core/manifests/f5-nicasio-2029.js",
+    "hash": "sha256:17428c317afd3ac50339e1d3602416ad2efdff359eee5a1124274ef7333e4f84",
     "language": "javascript"
   },
   "manifest": "manifest/1"

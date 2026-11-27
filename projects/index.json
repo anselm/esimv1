@@ -81,7 +81,14 @@
     "description": "Our own engine on the Fort McMurray fire: heat budget on 30 m cells, OpenStreetMap buildings, ERA5 wind at one point; scored against CWFIS satellite hotspots; unsuppressed; constants carried over from the Palisades.",
     "featured": true,
     "kinds": [
+      "ground.terrain",
+      "ground.cover",
+      "roads.major",
+      "built.footprints",
+      "weather.surface",
+      "fuel.moisture",
       "fire.cells",
+      "fauna.flee",
       "obs.hotspots"
     ],
     "name": "fortmcmurray-2016",
@@ -89,11 +96,11 @@
     "runs": [
       {
         "all_ledgers_closed": true,
-        "digest": "1c322a3c99835fbb",
+        "digest": "acb4ca5db2bd5fe5",
         "end": 1462579200,
-        "events": 311,
+        "events": 1296,
         "id": "base",
-        "made": 1794702054,
+        "made": 1795739780,
         "name": "f4-fortmcmurray-cells",
         "seed": 1,
         "set": null,
@@ -103,11 +110,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "72ea7749ae6c275d",
+        "digest": "503506c0af0cdb1a",
         "end": 1462579200,
-        "events": 330,
+        "events": 1315,
         "id": "vector-3",
-        "made": 1795109721,
+        "made": 1795739793,
         "name": "f4-fortmcmurray-cells",
         "seed": 1,
         "set": {
@@ -119,11 +126,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "1c322a3c99835fbb",
+        "digest": "acb4ca5db2bd5fe5",
         "end": 1462579200,
-        "events": 311,
+        "events": 1296,
         "id": "vector-5",
-        "made": 1794702060,
+        "made": 1795739805,
         "name": "f4-fortmcmurray-cells",
         "seed": 1,
         "set": {
@@ -135,11 +142,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "843a3242cfe0b8b3",
+        "digest": "d0cef15daba69f35",
         "end": 1462579200,
-        "events": 504,
+        "events": 1489,
         "id": "vector-8",
-        "made": 1794702065,
+        "made": 1795739817,
         "name": "f4-fortmcmurray-cells",
         "seed": 1,
         "set": {
@@ -345,7 +352,14 @@
     "description": "A scenario, not a forecast: an ignition at the Devil's Gulch campsite in Samuel P. Taylor State Park, Marin County, at 3 a.m. on 1 October 2029, under the Red Flag wind of 27 to 29 October 2019 played hour for hour, on today's ground. The stake is a house, 550 Nicasio Valley Road, six kilometres east. Nobody fights the fire. Anselm asked for it on 2026-11-08: a brand new simulation of 550 Nicasio Valley Road, a fire starting not far away at Devil's Gulch campsite, 1 October, in 2029, with some wind conditions.",
     "featured": false,
     "kinds": [
+      "ground.terrain",
+      "ground.cover",
+      "roads.major",
+      "built.footprints",
+      "weather.surface",
+      "fuel.moisture",
       "fire.cells",
+      "fauna.flee",
       "obs.places",
       "fire.suppression"
     ],
@@ -354,16 +368,16 @@
     "runs": [
       {
         "all_ledgers_closed": true,
-        "digest": "4b7615887655606f",
+        "digest": "1c8e3f355237392a",
         "end": 1885791600,
-        "events": 764,
+        "events": 1349,
         "id": "gust",
-        "made": 1794702019,
+        "made": 1795739831,
         "name": "f5-nicasio-2029",
         "seed": 1,
         "set": {
           "fire.ignite_scale": "5",
-          "fire.wind_use": "\"gust\""
+          "weather.wind_use": "\"gust\""
         },
         "start": 1885532400,
         "variant": "gust",
@@ -371,11 +385,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "5639d288ebddd9ad",
+        "digest": "9ed007699d6e7ab1",
         "end": 1885791600,
-        "events": 378,
+        "events": 963,
         "id": "scale-3",
-        "made": 1794703222,
+        "made": 1795739841,
         "name": "f5-nicasio-2029",
         "seed": 1,
         "set": {
@@ -387,11 +401,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "843cf62ba3f070db",
+        "digest": "eb7633498dadb68c",
         "end": 1885791600,
-        "events": 463,
+        "events": 1048,
         "id": "scale-5",
-        "made": 1794701998,
+        "made": 1795739851,
         "name": "f5-nicasio-2029",
         "seed": 1,
         "set": {
@@ -403,11 +417,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "fde33d3766a3d362",
+        "digest": "346044c9d2a6e586",
         "end": 1885791600,
-        "events": 226,
+        "events": 811,
         "id": "scale-8",
-        "made": 1794702008,
+        "made": 1795739861,
         "name": "f5-nicasio-2029",
         "seed": 1,
         "set": {
@@ -445,7 +459,7 @@
         "name": "gust",
         "set": {
           "fire.ignite_scale": 5,
-          "fire.wind_use": "gust"
+          "weather.wind_use": "gust"
         },
         "title": "Thresholds times 5, on the hour's gust instead of its mean wind"
       }
@@ -689,23 +703,30 @@
     "description": "The same fire, the same ground and record, on an engine of our own: a heat budget on 30 m cells that know their elevation, land cover, buildings and roads, under NOAA's 3 km wind hour by hour. Every constant is a guess; one of them is fitted to the first infrared perimeter and declared; the structures the inspectors recorded are the test. Nobody fights the fire.",
     "featured": true,
     "kinds": [
+      "ground.terrain",
+      "ground.cover",
+      "roads.major",
+      "built.footprints",
+      "weather.surface",
+      "fuel.moisture",
       "fire.cells",
+      "fauna.flee",
+      "fire.suppression",
       "obs.perimeters",
       "obs.hotspots",
       "obs.dins",
-      "obs.record",
-      "fire.suppression"
+      "obs.record"
     ],
     "name": "palisades-cells",
     "path": "anselm/palisades-cells",
     "runs": [
       {
         "all_ledgers_closed": true,
-        "digest": "2778e2ff7807fb7b",
+        "digest": "c50f4727b527df32",
         "end": 1736640000,
-        "events": 2607,
+        "events": 3432,
         "id": "bodies",
-        "made": 1795135796,
+        "made": 1795739889,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -722,11 +743,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "f448ec183b97a521",
+        "digest": "2a729b2d66b4df58",
         "end": 1736640000,
-        "events": 2644,
+        "events": 3469,
         "id": "bodies-hard",
-        "made": 1795135797,
+        "made": 1795739917,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -743,11 +764,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "e9db3d770663a07c",
+        "digest": "633a8d760037ab9a",
         "end": 1736640000,
-        "events": 4190,
+        "events": 5015,
         "id": "fit-day-one",
-        "made": 1795135827,
+        "made": 1795739946,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -767,11 +788,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "47b162cbe1fad0b4",
+        "digest": "2aca842d8b3641f4",
         "end": 1736640000,
-        "events": 2934,
+        "events": 3759,
         "id": "fit-whole-record",
-        "made": 1795135827,
+        "made": 1795739974,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -793,11 +814,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "1bef8d45cd5acc0d",
+        "digest": "9160e05d86493985",
         "end": 1736640000,
-        "events": 2557,
+        "events": 3382,
         "id": "houses",
-        "made": 1795135795,
+        "made": 1795740002,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -812,11 +833,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "4e8b80270cbeb0ee",
+        "digest": "b082bdb60697d342",
         "end": 1736640000,
-        "events": 2622,
+        "events": 3447,
         "id": "houses-jitter",
-        "made": 1795135796,
+        "made": 1795740030,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -832,11 +853,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "d9c9fb025f5fc820",
+        "digest": "49590ec860b17670",
         "end": 1736640000,
-        "events": 2847,
+        "events": 3672,
         "id": "near-2",
-        "made": 1795135797,
+        "made": 1795740057,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -849,11 +870,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "6c2f89692ae9ffc6",
+        "digest": "3effc2d920aaad91",
         "end": 1736640000,
-        "events": 2659,
+        "events": 3484,
         "id": "near-3",
-        "made": 1795135795,
+        "made": 1795740085,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -866,11 +887,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "95b2694b44bee72a",
+        "digest": "4c8bb67f79c96ac4",
         "end": 1736640000,
-        "events": 2557,
+        "events": 3382,
         "id": "near-4",
-        "made": 1795135795,
+        "made": 1795740113,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -883,11 +904,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "42f8462d3165eada",
+        "digest": "07832b08a05770ad",
         "end": 1736640000,
-        "events": 2039,
+        "events": 2864,
         "id": "near-4-slope",
-        "made": 1795135796,
+        "made": 1795740140,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -901,11 +922,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "ddbf9d4aaff13674",
+        "digest": "3dca236f93847392",
         "end": 1736640000,
-        "events": 2480,
+        "events": 3305,
         "id": "near-4-slope-6",
-        "made": 1795135825,
+        "made": 1795740168,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -919,11 +940,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "f2c756fa9a49b52e",
+        "digest": "e100010786534adf",
         "end": 1736640000,
-        "events": 2788,
+        "events": 3613,
         "id": "near-4-slope-soft",
-        "made": 1795135825,
+        "made": 1795740196,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -938,11 +959,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "811f4a9c9f331221",
+        "digest": "44048696f58b19a5",
         "end": 1736640000,
-        "events": 2159,
+        "events": 2984,
         "id": "scale-2",
-        "made": 1795135797,
+        "made": 1795740225,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -954,11 +975,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "82dd8ae75f56555c",
+        "digest": "4a16f15c3d8f043e",
         "end": 1736640000,
-        "events": 2332,
+        "events": 3157,
         "id": "scale-3",
-        "made": 1795135796,
+        "made": 1795740254,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -970,11 +991,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "cb9b07740d5e25b4",
+        "digest": "71be2102f86f3ead",
         "end": 1736640000,
-        "events": 2522,
+        "events": 3347,
         "id": "scale-4",
-        "made": 1795135797,
+        "made": 1795740284,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -986,11 +1007,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "03fa1293e557910c",
+        "digest": "e8eafab952ce4aab",
         "end": 1736640000,
-        "events": 1966,
+        "events": 2791,
         "id": "scale-6",
-        "made": 1795135794,
+        "made": 1795740311,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -1002,11 +1023,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "475736458197c4b0",
+        "digest": "19b3b2184f81cb7a",
         "end": 1736640000,
-        "events": 2355,
+        "events": 3180,
         "id": "vector-5",
-        "made": 1795135826,
+        "made": 1795740340,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -1022,11 +1043,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "662c8b4cbcfea934",
+        "digest": "016ed36e3dbef384",
         "end": 1736640000,
-        "events": 2406,
+        "events": 3231,
         "id": "vector-5-crews",
-        "made": 1795135526,
+        "made": 1795740369,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -1045,11 +1066,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "3a0e59609fae83a0",
+        "digest": "8ed053520b49b94a",
         "end": 1736640000,
-        "events": 2450,
+        "events": 3275,
         "id": "vector-5-held",
-        "made": 1795135827,
+        "made": 1795740397,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -1066,11 +1087,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "1e7908a8c0e7941d",
+        "digest": "1fec67da8f7a9d05",
         "end": 1736640000,
-        "events": 2326,
+        "events": 3151,
         "id": "vector-8",
-        "made": 1795135827,
+        "made": 1795740426,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -1293,43 +1314,6 @@
         "title": "vector-5 with the fire fought: the reported engines, dozers, crews and helicopters hold the edge from the first report that counts them; share and hold rate from a fit (fit-7973bc87)"
       }
     ]
-  },
-  {
-    "area": "anselm",
-    "by": "anselm",
-    "created": "2026-11-27",
-    "description": "The same fire engine with the relief, the hour's air and the dryness of the fuel as modules of their own, and a placeholder population of animals that flees the fire: a test that the engine's parts can be separated and joined.",
-    "kinds": [
-      "ground.terrain",
-      "weather.surface",
-      "fuel.moisture",
-      "fire.cells",
-      "fauna.flee",
-      "fire.suppression",
-      "obs.perimeters",
-      "obs.hotspots",
-      "obs.dins",
-      "obs.record"
-    ],
-    "name": "palisades-wired",
-    "path": "anselm/palisades-wired",
-    "runs": [
-      {
-        "all_ledgers_closed": true,
-        "digest": "25bcbe4eabec77f3",
-        "end": 1736640000,
-        "events": 3175,
-        "id": "base",
-        "made": 1795738857,
-        "name": "f7-palisades-wired",
-        "seed": 1,
-        "set": null,
-        "start": 1736272800,
-        "variant": null,
-        "verdict": "holds"
-      }
-    ],
-    "title": "The Palisades fire, with its parts separated"
   },
   {
     "area": "anselm",

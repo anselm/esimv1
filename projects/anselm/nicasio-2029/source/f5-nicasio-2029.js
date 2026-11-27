@@ -21,20 +21,31 @@ const run = {
   notes: "A scenario, not a forecast: an ignition at the Devil's Gulch campsite, Samuel P. Taylor State Park, Marin County, on 1 October 2029 under the Red Flag wind of 27 to 29 October 2019 (HRRR, hour for hour), on today's ground; the stake is 550 Nicasio Valley Road; unsuppressed; constants carried over from the Palisades.",
 };
 
+// The parts of the ground and the air, each a module of its own. They stand before the fire
+// because it takes the ground from them when the run starts.
+const ground = { kind: "ground.terrain", params: { place } };
+const cover = { kind: "ground.cover", params: { place } };
+const roads = { kind: "roads.major", params: { place } };
+const buildings = { kind: "built.footprints", params: { place, source: "osm" } };
+const weather = {
+  kind: "weather.surface",
+  params: { place, source: "hrrr", start: "2019-10-27T07:00:00Z", end: "2019-10-30T07:00:00Z", at: "2029-10-01T07:00:00Z" },
+};
+const moisture = { kind: "fuel.moisture", params: {} };
+
+// Animals on the wildland, a placeholder population, leaving ground the fire reaches.
+const animals = { kind: "fauna.flee", params: { density_km2: 20, mortality: 0.1 } };
+
 const fire = {
   kind: "fire.cells",
   params: {
     place,
+    inputs: "world",
     // Devil's Gulch Campsite: OpenStreetMap relation 17685328, centre 38.0316, -122.7328 (read 2026-11-08)
     ignition_lat: 38.0316,
     ignition_lon: -122.7328,
     // 03:00 Pacific daylight time on 1 October 2029, in the strongest hours of the borrowed night
     ignition_time: "2029-10-01T10:00:00Z",
-    wind: "hrrr",
-    wind_start: "2019-10-27T07:00:00Z",
-    wind_end: "2019-10-30T07:00:00Z",
-    wind_at: "2029-10-01T07:00:00Z",
-    buildings: "osm",
     form: "vector",
     cooling: "idle",
     reach_m: 45,
@@ -67,4 +78,4 @@ const suppression = {
 
 // What the scenario is made of, in order. The order is the order of sections on the run page,
 // and it settles which of two modules hears an event first when their priorities are equal.
-export { run, fire, places, suppression };
+export { run, ground, cover, roads, buildings, weather, moisture, fire, animals, places, suppression };

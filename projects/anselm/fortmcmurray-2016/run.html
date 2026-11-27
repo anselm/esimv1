@@ -49,6 +49,26 @@
 <p class="nb-note">The overlap stays between a third and two fifths in every variant. The model reads the wind at one point from a coarse reanalysis, and on 3 May, when the fire ran into the city, that point shows a light south-easterly.</p>
 </section>
 
+<section title="How the parts connect">
+<p>Each box is a module and an arrow is something one module writes and another reads. The relief, the land cover, the roads and the buildings are each read once from their source. The weather lays each hour's air on the cells and the fuel moisture module turns that air into how dry the dead fuel is. The fire reads all of them and fetches nothing itself. The animals read where the fire has burned, and the records score it.</p>
+<esim-wiring></esim-wiring>
+<p class="nb-note">The parts were one module until 26 November 2026. Separating them changed none of the fire's numbers. Heat passing between cells, ignition and burning out are still one computation inside the fire, because they cannot be pulled apart without changing what is computed.</p>
+</section>
+
+<section title="Animals">
+<p>A placeholder population, declared as one: twenty animals on every square kilometre of grass, shrub and tree at the start. Each hour the animals on newly burned ground move to the nearest unburned cell, a tenth of them die there, and those with no unburned ground within three kilometres die. Every animal is accounted for.</p>
+<div class="nb-counters">
+  <esim-counter series="fauna.alive" label="animals alive"></esim-counter>
+  <esim-counter series="fauna.killed_by_fire" label="killed by the fire"></esim-counter>
+  <esim-counter series="fauna.displaced" label="moves made to escape"></esim-counter>
+</div>
+<div class="nb-cols">
+  <div><h3>Animals per square kilometre</h3><esim-map field="animals_density_km2"></esim-map></div>
+  <div><esim-chart series="fauna.alive" title="animals alive"></esim-chart><esim-chart series="fauna.fleeing_hour" title="animals fleeing each hour"></esim-chart></div>
+</div>
+<p class="nb-note">This says nothing about any real species. An animal here moves only once its own cell has burned and goes to the nearest unburned cell, a road or a town included. It is in the run to show that a second module can react to the fire without the fire knowing it exists.</p>
+</section>
+
 <section title="Wind and dryness">
 <p>The wind and the dryness of dead fuel drive the spread. Both are read from weather records and are the same in every variant of the scenario unless the variant says otherwise.</p>
 <div class="nb-cols">
@@ -69,8 +89,7 @@
     <li>The hour the fire was first detected is recalled and has not been checked against the provincial review.</li>
   </ul>
 <p>The <a href="/anselm/fortmcmurray-2016">project page</a> gives the account and the sources.</p>
-<h3>How the parts are connected</h3>
-<esim-wiring></esim-wiring>
+
 </section>
 
 <section title="Everything recorded">

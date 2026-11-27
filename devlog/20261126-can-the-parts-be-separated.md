@@ -92,3 +92,33 @@ reader: relief, air, fuel state, the fire, firefighting, buildings, animals, peo
 - `fire.rothermel` gets the same `inputs = "world"`.
 - A real animals module, if wanted: senses the front at a distance, moves at a speed, has habitat.
 - Not deployed. The new project's runs are on canada1 only.
+
+## Later the same day: done for the three cell-fire scenarios
+
+Anselm: "go for it".
+
+- **Gap 1, lists of things: closed in a first form.** The kernel's world has tables beside its fields
+  (`WorldTable` in `core/crates/kernel/src/world.rs`; `world_table_write`, `world_table` on the context):
+  one row per thing, numeric columns, optionally an outline per row, one owner, written whole, logged with
+  a digest like a field. This is an addition to the kernel, kept to one type and two verbs. A module that
+  keeps its own state about the same things writes its own table in the same row order; nothing enforces
+  that order yet.
+- **Gap 2, the grid: closed by a pure function.** `esim_registry::window_grid` gives the cells of a place
+  with nothing fetched, and the elevation reader lays its data on exactly those. The new modules and the
+  fire use it (`landscape::grid_of`). Twenty older call sites still read the elevation model to learn
+  their grid; they agree with it and can be moved over one by one.
+- **Three more parts**: `ground.cover`, `roads.major`, `built.footprints` (the table of buildings and two
+  maps). `fire.cells` with `inputs = "world"` now fetches nothing at all.
+- **The three scenarios run this way**: Palisades cells, Fort McMurray and Devil's Gulch each have ten or
+  more modules: relief, land cover, roads, buildings, weather, fuel moisture, fire, animals, firefighting
+  where present, and the records. The experiment project `anselm/palisades-wired` is removed; Palisades
+  cells is that form now.
+- **Checked**: every series of all 28 runs (20 Palisades variants, 4 Fort McMurray, 4 Devil's Gulch)
+  compared with what it held before the change: identical, including the variants that burn buildings
+  one by one. The engine's tests pass. The wiring tab of Fort McMurray and the animals tab of Devil's
+  Gulch looked at on the local server.
+- Nicasio's `gust` variant sets `weather.wind_use` now, not `fire.wind_use`.
+
+Still open: gaps 3 and 4 (fields on different grids; hourly coupling), `fire.rothermel` and its two
+projects, the Boone modules, a rule for row order between tables, and the animals as more than a
+placeholder. Not deployed; the reruns are on canada1 and reach the site with the next deploy.

@@ -8,24 +8,8 @@ snapshot_every = "10d"
 notes = "A scenario, not a forecast: an ignition at the Devil's Gulch campsite, Samuel P. Taylor State Park, Marin County, on 1 October 2029 under the Red Flag wind of 27 to 29 October 2019 (HRRR, hour for hour), on today's ground; the stake is 550 Nicasio Valley Road; unsuppressed; constants carried over from the Palisades."
 
 [[module]]
-name = "fire"
-kind = "fire.cells"
-
-[module.params]
-buildings = "osm"
-cooling = "idle"
-form = "vector"
-frame_res_arcsec = 4
-ignite_scale = 5
-ignition_lat = 38.0316
-ignition_lon = -122.7328
-ignition_time = "2029-10-01T10:00:00Z"
-reach_m = 45
-slope_rate_gain = 20
-wind = "hrrr"
-wind_at = "2029-10-01T07:00:00Z"
-wind_end = "2019-10-30T07:00:00Z"
-wind_start = "2019-10-27T07:00:00Z"
+name = "ground"
+kind = "ground.terrain"
 
 [module.params.place]
 lat_n = 38.08
@@ -33,6 +17,96 @@ lat_s = 37.97
 lon_e = -122.61
 lon_w = -122.79
 res_arcsec = 1
+
+[[module]]
+name = "cover"
+kind = "ground.cover"
+
+[module.params.place]
+lat_n = 38.08
+lat_s = 37.97
+lon_e = -122.61
+lon_w = -122.79
+res_arcsec = 1
+
+[[module]]
+name = "roads"
+kind = "roads.major"
+
+[module.params.place]
+lat_n = 38.08
+lat_s = 37.97
+lon_e = -122.61
+lon_w = -122.79
+res_arcsec = 1
+
+[[module]]
+name = "buildings"
+kind = "built.footprints"
+
+[module.params]
+source = "osm"
+
+[module.params.place]
+lat_n = 38.08
+lat_s = 37.97
+lon_e = -122.61
+lon_w = -122.79
+res_arcsec = 1
+
+[[module]]
+name = "weather"
+kind = "weather.surface"
+
+[module.params]
+at = "2029-10-01T07:00:00Z"
+end = "2019-10-30T07:00:00Z"
+source = "hrrr"
+start = "2019-10-27T07:00:00Z"
+
+[module.params.place]
+lat_n = 38.08
+lat_s = 37.97
+lon_e = -122.61
+lon_w = -122.79
+res_arcsec = 1
+
+[[module]]
+name = "moisture"
+kind = "fuel.moisture"
+
+[module.params]
+
+[[module]]
+name = "fire"
+kind = "fire.cells"
+
+[module.params]
+cooling = "idle"
+form = "vector"
+frame_res_arcsec = 4
+ignite_scale = 5
+ignition_lat = 38.0316
+ignition_lon = -122.7328
+ignition_time = "2029-10-01T10:00:00Z"
+inputs = "world"
+reach_m = 45
+slope_rate_gain = 20
+
+[module.params.place]
+lat_n = 38.08
+lat_s = 37.97
+lon_e = -122.61
+lon_w = -122.79
+res_arcsec = 1
+
+[[module]]
+name = "animals"
+kind = "fauna.flee"
+
+[module.params]
+density_km2 = 20
+mortality = 0.1
 
 [[module]]
 name = "places"

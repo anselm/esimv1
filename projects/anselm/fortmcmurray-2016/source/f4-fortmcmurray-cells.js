@@ -19,19 +19,31 @@ const run = {
   notes: "Our own engine on the Fort McMurray fire: heat budget on 30 m cells, OpenStreetMap buildings, ERA5 wind at one point; scored against CWFIS satellite hotspots; unsuppressed; constants carried over from the Palisades.",
 };
 
+// The parts of the ground and the air, each a module of its own. They stand before the fire
+// because it takes the ground from them when the run starts.
+const ground = { kind: "ground.terrain", params: { place } };
+const cover = { kind: "ground.cover", params: { place } };
+const roads = { kind: "roads.major", params: { place } };
+const buildings = { kind: "built.footprints", params: { place, source: "osm" } };
+const weather = {
+  kind: "weather.surface",
+  params: { place, source: "era5", start: "2016-05-01T22:00:00Z", end: "2016-05-07T00:00:00Z" },
+};
+const moisture = { kind: "fuel.moisture", params: {} };
+
+// Animals on the wildland, a placeholder population, leaving ground the fire reaches.
+const animals = { kind: "fauna.flee", params: { density_km2: 20, mortality: 0.1 } };
+
 const fire = {
   kind: "fire.cells",
   params: {
     place,
+    inputs: "world",
     // detected on the afternoon of 1 May 2016 (local, MDT); the hour is recalled as about 16:00 and not
     // yet checked against the provincial review; the point is the Wikipedia infobox's
     ignition_time: "2016-05-01T22:00:00Z",
     ignition_lat: 56.66528,
     ignition_lon: -111.38333,
-    wind: "era5",
-    wind_start: "2016-05-01T22:00:00Z",
-    wind_end: "2016-05-07T00:00:00Z",
-    buildings: "osm",
     form: "vector",
     cooling: "idle",
     reach_m: 45,
@@ -59,4 +71,4 @@ const audit = {
 
 // What the scenario is made of, in order. The order is the order of sections on the run page,
 // and it settles which of two modules hears an event first when their priorities are equal.
-export { run, fire, obs, audit };
+export { run, ground, cover, roads, buildings, weather, moisture, fire, animals, obs, audit };
