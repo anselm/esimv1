@@ -112,7 +112,7 @@
     <!-- this page's file was first committed on 2026-11-01 -->
     <div class="mono mt-3 text-xs muted"><a use:link={{ area: 'anselm' }} class="hover:text-brand">@anselm</a> · 1 November 2026</div>
     <p class="mt-5 text-lg leading-relaxed">A model of a place is a claim about how that place works. esim builds such models from published data, with every assumption open to inspection, and lets anyone push on them and watch what follows.</p>
-    <p class="mt-3 leading-relaxed muted">It treats a place as one system: its ground and water, what is built on it, the services that run through it, and the people who live there, all on one clock. Each scenario runs in seconds to a minute, can be played back and changed, and says plainly what it gets wrong. The aim is a tool that a city or a community can use to see what a decision would do before it is made.</p>
+    <p class="mt-3 leading-relaxed muted">It treats a place as one system: its ground and water, what is built on it, the services that run through it, and the people who live there, all on one clock. The system is assembled from separate parts. In a fire scenario the relief, the land cover, the roads, the buildings, the weather, the dryness of the fuel, the fire, the animals that run from it and the crews that fight it are each a module of their own, and the same parts serve other places and a second fire model. Each scenario runs in seconds to a minute, can be played back and changed, and says plainly what it gets wrong. The aim is a tool that a city or a community can use to see what a decision would do before it is made.</p>
     <div class="mt-6 flex flex-wrap gap-3 text-sm">
       <a use:link={{ doc: 'system/goals' }} class="rounded-[3px] bg-brand px-4 py-2 text-white hover:opacity-90">Where this is going</a>
       <a use:link={{ doc: 'system/overview' }} class="rounded-[3px] border border-neutral-300 bg-white/70 px-4 py-2 hover:border-brand dark:border-neutral-700 dark:bg-neutral-950/70">How it works</a>
@@ -124,7 +124,7 @@
   <!-- three facts about the engine, each drawn from what is in the repository -->
   <section class="mt-12 grid max-w-3xl gap-6 border-y border-neutral-200 py-6 sm:grid-cols-3 dark:border-neutral-800">
     <div><div class="mono text-3xl">{projects.length}</div><div class="mt-1 text-sm muted">scenarios so far: fires, a river basin, a harbor, a city after an earthquake, the planet to 2100</div></div>
-    <div><div class="mono text-3xl">{kindCount || '—'}</div><div class="mt-1 text-sm muted">kinds of module, each meant as a unit of science that more than one scenario can use</div></div>
+    <div><div class="mono text-3xl">{kindCount || '—'}</div><div class="mt-1 text-sm muted">kinds of module, each a part that more than one scenario can use: the same relief, land cover, weather and fuel-moisture modules serve five fire scenarios on two fire models</div></div>
     <div><div class="mono text-3xl">{projects.reduce((n, p) => n + (p.runs ?? []).length, 0)}</div><div class="mt-1 text-sm muted">runs on record, every one replayable from its manifest and its seed</div></div>
   </section>
 

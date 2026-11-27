@@ -46,17 +46,19 @@
 </section>
 
 <section title="Animals">
-<p>A placeholder population, declared as one: twenty animals on every square kilometre of grass, shrub and tree at the start. Each hour the animals on newly burned ground move to the nearest unburned cell, a tenth of them die there, and those with no unburned ground within three kilometres die. Every animal is accounted for.</p>
+<p>A placeholder population, declared as one: twenty animals on every square kilometre of tree, shrub, grass and wetland at the start. They notice newly burning ground within 600 metres and move away from it at three kilometres an hour. The hour is replayed in five-minute steps from the fire's own record of when each cell caught, so the animals move ahead of the front and not after it. Of those the front overtakes, three in ten die and the rest reach the nearest unburned ground. Ground holding more than four times its starting number sheds the excess to the ground around it, a few cells each hour. An animal driven to the edge of the modelled area leaves it. Every animal is accounted for.</p>
 <div class="nb-counters">
-  <esim-counter series="fauna.alive" label="animals alive"></esim-counter>
+  <esim-counter series="fauna.alive" label="animals alive in the area"></esim-counter>
+  <esim-counter series="fauna.displaced" label="now on ground beyond what it held at the start"></esim-counter>
+  <esim-counter series="fauna.caught" label="overtaken by the front so far"></esim-counter>
   <esim-counter series="fauna.killed_by_fire" label="killed by the fire"></esim-counter>
-  <esim-counter series="fauna.displaced" label="moves made to escape"></esim-counter>
+  <esim-counter series="fauna.left_window" label="left the modelled area"></esim-counter>
 </div>
 <div class="nb-cols">
   <div><h3>Animals per square kilometre</h3><esim-map field="animals_density_km2"></esim-map></div>
-  <div><esim-chart series="fauna.alive" title="animals alive"></esim-chart><esim-chart series="fauna.fleeing_hour" title="animals fleeing each hour"></esim-chart></div>
+  <div><esim-chart series="fauna.displaced" title="animals displaced"></esim-chart><esim-chart series="fauna.in_flight" title="animals moving at the hour's end"></esim-chart><esim-chart series="fauna.killed_by_fire" title="killed by the fire"></esim-chart></div>
 </div>
-<p class="nb-note">This says nothing about any real species. An animal here moves only once its own cell has burned and goes to the nearest unburned cell, a road or a town included. It is in the run to show that a second module can react to the fire without the fire knowing it exists.</p>
+<p class="nb-note">This says nothing about any real species, and none of these numbers is an estimate. The distance, the speed and the share that dies are guesses with no source, and the animals cross towns and roads as if they were open ground. The module is in the run to show that a part can react to the fire without the fire being changed: it reads where the fire is and when each cell caught, and nothing else.</p>
 </section>
 
 <section title="Wind and dryness">

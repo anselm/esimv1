@@ -46,7 +46,7 @@
 </div>
 
 <h1 class="text-xl font-medium">Module kinds</h1>
-<p class="mt-1 max-w-2xl text-sm muted">Every kind of module a scenario can use, grouped by the layer of the world it belongs to and described by itself: what it does and leaves out, where its numbers come from, what it reads and writes. Open a card for the detail. A layer with no kind yet is listed, because the gap is part of the picture. Each card's picture is an output of a real run that uses the kind: a map at the end of the run, or a series over it.</p>
+<p class="mt-1 max-w-2xl text-sm muted">Every kind of module a scenario can use, grouped by the layer of the world it belongs to and described by itself. A scenario is assembled from these parts, and they meet only in the maps, tables and events they declare. Each card says what it does and leaves out, where its numbers come from, what it reads and writes. Open a card for the detail. A layer with no kind yet is listed, because the gap is part of the picture. Each card's picture is an output of a real run that uses the kind: a map at the end of the run, or a series over it.</p>
 <input class="field mt-4 w-64" bind:value={q} placeholder="filter" aria-label="filter kinds" />
 
 {#if error}
@@ -71,7 +71,7 @@
                 <img src={pictures[k.kind].img} alt="{pictures[k.kind].what}, from {pictures[k.kind].title}" class="mb-3 aspect-[16/9] w-full rounded-[3px] object-cover" loading="lazy" />
                 <div class="mb-2 text-[11px] muted">{pictures[k.kind].what}: {pictures[k.kind].how}, from <span class="mono">{pictures[k.kind].project}</span></div>
               {/if}
-              <div class="mono text-base font-medium">{k.kind}</div>
+              {#if k.title}<div class="text-base font-medium">{k.title}</div><div class="mono text-xs muted">{k.kind}</div>{:else}<div class="mono text-base font-medium">{k.kind}</div>{/if}
               <p class="mt-1.5 text-sm leading-relaxed">{open === k.kind ? k.summary : firstSentence(k.summary)}</p>
               <div class="mt-2 mono text-[11px] muted">{k.dt} · {n(k.params)} settings · writes {n(k.fields_owned)} · reads {n(k.fields_read)} · {n(k.assets)} data</div>
             </button>

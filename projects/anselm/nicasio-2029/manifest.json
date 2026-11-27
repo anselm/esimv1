@@ -113,8 +113,7 @@
       "id": "animals",
       "kind": "fauna.flee",
       "params": {
-        "density_km2": 20,
-        "mortality": 0.1
+        "density_km2": 20
       }
     },
     {
@@ -162,7 +161,7 @@
   ],
   "from": {
     "entry": "core/manifests/f5-nicasio-2029.js",
-    "hash": "sha256:17428c317afd3ac50339e1d3602416ad2efdff359eee5a1124274ef7333e4f84",
+    "hash": "sha256:5c053645f54b121ebed799432f4ea3e0a8b13145d6fae273094b94e4ba6dbf34",
     "language": "javascript"
   },
   "manifest": "manifest/1"

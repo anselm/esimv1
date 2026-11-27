@@ -3,8 +3,38 @@
 A whole-system simulator built as a bucket of tools: small modules of science on one
 clock, each reading real records, exchanging events and shared fields, moving conserved
 quantities through ledgers that must balance at every seam. A manifest arranges modules
-into a scenario; a run is a folder anyone can replay, score, audit and look at. The
-first stages are a river basin in Iowa and the planet to 2100.
+into a scenario; a run is a folder anyone can replay, score, audit and look at.
+
+The scenarios so far are five wildfires (two that happened, one that has not, on two fire
+models), a river basin in Iowa, a harbor's shoreline, Portland after a Cascadia
+earthquake, and the planet to 2100. This repository is the hub that presents them. The
+engine, the viewer and the larger scenarios are kept in repositories of their own.
+
+## Whole systems from separate parts
+
+The claim under test is that a model of a whole place can be assembled from parts that do
+not know each other. A fire scenario here is not one fire program. It is about ten
+modules: the relief, the land cover, the major roads, the buildings, the hour's weather,
+the dryness of the dead fuel, the fire, a population of animals that runs from it, the
+crews that fight it, and the records it is scored against. Each has its own data and its
+own author's assumptions. They meet only in shared maps and tables that one module owns
+and the others read, and the engine refuses a scenario whose parts do not fit.
+
+Three things follow, and each can be seen in the runs:
+
+- **A part can be swapped.** The Palisades fire and the Devil's Gulch scenario each run on
+  two fire models, Rothermel's and our own cell model. Everything else in the scenario is
+  the same modules with the same settings.
+- **A part can be reused.** Fort McMurray, in boreal Canada, uses the same parts as Los
+  Angeles with two of them pointed at other sources: buildings from OpenStreetMap, weather
+  from a global reanalysis.
+- **A new part can join without the others changing.** The animals were added as one
+  module and one line in each scenario. The fire was not edited.
+
+What this does not yet show: the animals are a placeholder with no species; parts see each
+other once an hour of simulated time; and two parts that affect each other within the
+hour (a fire and the wind it makes) would have to be one part or take a shorter step.
+`devlog/20261126-can-the-parts-be-separated.md` has the test and its limits.
 
 **Live, read-only: https://esimv1.exe.xyz/** · version 0.1.1 · code MIT
 
@@ -51,7 +81,8 @@ what the run does not yet measure.
 ## What it does
 
 - **Kernel** (`crates/kernel`): a virtual clock in seconds, events ordered by time,
-  priority and sequence, shared gridded fields with one owner each, cell-addressed events,
+  priority and sequence, shared gridded fields and tables of things (buildings, say) with one
+  owner each, cell-addressed events,
   double-entry ledgers closed on a cadence, an append-only log with a digest, snapshots
   and exact replay, TOML manifests with includes and a place stated once.
 - **Registry** (`crates/registry`): a catalog of sources with licence and verification
@@ -59,11 +90,14 @@ what the run does not yet measure.
   gauges, stations, reanalyses, satellite vegetation, emissions, ice cores, temperature
   records, population, country outlines and the station network. Nothing synthetic,
   including in tests.
-- **Modules** (`crates/modules`): forty-six kinds today. For a basin: solar irradiance
+- **Modules** (`crates/modules`): sixty kinds today, each with a title in plain words. For a basin: solar irradiance
   on terrain, a surface heat slab, reanalysis weather, a water balance routed to the
   gauge, a crop, herbivore and predator cohorts, fire, farm agents, calendar rules, soil
-  nitrogen to the river. For a wildfire: Rothermel's spread on 30 m terrain with fuel from
-  land cover and the hour's wind, scored against the incident's mapped perimeters. For the planet: observed emissions into a carbon ledger, a carbon
+  nitrogen to the river. For a wildfire: the relief, land cover,
+  roads, buildings, weather and fuel moisture as separate modules; two fire models that read
+  them (Rothermel's spread, and a heat budget on 30 m cells with buildings as bodies);
+  firefighting; animals; the incident's mapped perimeters, satellite detections and inspected
+  structures as scoreboards. For the planet: observed emissions into a carbon ledger, a carbon
   cycle with sink feedback, methane and nitrous oxide, the IPCC assessed forcings, a
   two-layer energy balance, thermal sea level, the records as scoreboards; then people on
   half-degree cells: WorldPop's pattern at the UN's count, each country's temperature from
@@ -86,10 +120,11 @@ what the run does not yet measure.
   audit, check, describe, kinds, projects, sources, regress (the hindcast ladder, which
   every coupling must leave where it was or move on purpose).
 - **Viewer and server** (`web/`): Svelte pages composed from each module's own declared
-  views in the manifest's order, maps under one time cursor; a project's README rendered
-  with live figures from its runs (the thresholds ladder, a table at a year); a Node
-  server that serves the pages and folders and, when not read-only, lists, drafts (with
-  a model), checks, creates and runs projects over one socket.
+  views in the manifest's order, maps under one time cursor; a run page written in HTML
+  with the run's maps, charts and wiring as tags; a project's README rendered with live
+  figures from its runs; a Node server that serves the pages and folders. The public copy
+  is a showcase: nobody signs in, and scenarios are made on a developer's machine with the
+  command line.
 
 ## Honesty rules
 
@@ -138,17 +173,16 @@ cd web && npm run dev                                              # development
 
 A manifest is a short document in TOML, JSON (the entity form of RFC 0001) or JavaScript
 (a hermetic module whose exports are the entities; `esim manifest <file>` prints what any
-of them resolves to); `docs/system/manifests.md` has the grammar. The
-conversational way to make one is the "+ project" form in the viewer, which asks a model
-to draft a manifest from a description against the kinds' own descriptions and has the
-kernel check it before anything runs.
+of them resolves to); `docs/system/manifests.md` has the grammar. On a developer's own
+copy the "+ project" form asks a model to draft a manifest from a description against the
+kinds' own descriptions, and the kernel checks it before anything runs.
 
 ## Layout
 
 ```
 projects/      <area>/<name>/{project.toml, manifest.toml, README.md, runs/}   (runs are not in git)
 docs/          documentation pages of this workspace, docs/<area>/<name>.md
-web/           the site: pages, router, accounts, the project server
+web/           the site: pages, router, the project server
 deploy/        parts.sh (clone the parts), deploy.sh (a read-only copy to an exe.dev VM)
 parts.list     the parts kept in their own repositories, and the version of each this hub is built against
 devlog/        dated entries: the design brief and every decision since
@@ -162,8 +196,8 @@ scenarios/     anselm/esimv1-palisades, esimv1-portland, esimv1-earth2100: scena
                own, each with its record; their project folders are linked into projects/anselm/
 ```
 
-This repository is the hub: the site people use, and the workspace of scenarios that have
-not moved out. Since 22 November 2026 the engine, the viewer and three scenarios are
+This repository is the hub: the site that presents the scenarios, and the home of the
+smaller ones that have not moved out. Since 22 November 2026 the engine, the viewer and three scenarios are
 separate repositories. `ESIM_ROOT` is the engine's folder (`core/` here) and
 `ESIM_WORKSPACE` is where `projects/` and loose `runs/` are (this folder); `esim` run from
 this folder finds both. A fourth scenario, Sausalito, is `anselm/esimv1-sausalito-model`

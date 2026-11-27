@@ -15,6 +15,29 @@ portability test: "the climate, vegetation and circumstances in Fort McMurray ar
 and may force us to generalize our model." Written 2026-11-04; the numbers below come from the
 runs as the page is read.
 
+## What the scenario is made of
+
+The fire on this page is one module of about ten. The relief, the land cover, the major roads
+and the buildings are each read once from their own source by their own module. The weather
+module lays each hour's wind, temperature and humidity on the ground, and a fuel moisture
+module turns that air into how dry the dead fuel is. The fire reads all of them and fetches
+nothing itself. Beside it stand a firefighting module, a population of animals that runs from
+the front, and the records the run is scored against. None of these parts knows the others:
+each writes maps or tables that it owns, and the others read them.
+
+```esim wiring
+```
+
+This is what made the move from Los Angeles a small job. The relief, land cover, roads, fuel
+moisture, fire and animals are the Palisades modules with a different place written in. Two
+parts were pointed at other sources, as the next section says: the buildings module reads
+OpenStreetMap, and the weather module reads a global reanalysis.
+
+The animals are a placeholder, with no species and guessed senses and speed. They are there to
+show that a part can react to the fire without the fire being changed, and no number of animals
+killed or displaced on these pages is an estimate. Parts see each other once an hour of
+simulated time. [What this is](/docs/system/overview) has the argument and its limits.
+
 ## What had to change, and what did not
 
 The ground is the same ground: the Copernicus elevation model and the European Space

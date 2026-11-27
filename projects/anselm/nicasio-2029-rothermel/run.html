@@ -7,7 +7,6 @@
   <esim-counter series="fire.burned_acres" label="acres burned in the model"></esim-counter>
   <esim-counter series="place.550_nicasio_valley_road.distance_m" label="metres from the house to burned ground"></esim-counter>
   <esim-counter series="fire.wind_m_s" label="wind, metres a second"></esim-counter>
-  <esim-counter series="fire.gust_m_s" label="gusts, metres a second"></esim-counter>
 </div>
 <esim-timeline></esim-timeline>
 
@@ -33,11 +32,32 @@
 <p class="nb-note">In all four variants this model stops between 1.3 and 2.2 kilometres short of the house. The same scenario on our own engine either reaches it within a day and a half or never spreads at all. The two models disagree and there is no record to choose between them.</p>
 </section>
 
+<section title="How the parts connect">
+<p>Each box is a module and an arrow is something one module writes and another reads. The relief and the land cover are each read once from their source. The weather lays each hour's air on the cells and the fuel moisture module turns that air into how dry the dead fuel is. Rothermel's model reads all of them and fetches nothing itself. The animals read where the fire is and when each cell caught, and the places module watches the house.</p>
+<esim-wiring></esim-wiring>
+<p class="nb-note">The fire was one module that loaded its own ground and weather until 26 November 2026. After the separation the burned area was the same at every hour. The relief, land cover, weather and fuel moisture here are the same modules that <a href="/anselm/nicasio-2029">the first Devil's Gulch page</a> reads with a different fire model in this one's place.</p>
+</section>
+
+<section title="Animals">
+<p>A placeholder population, declared as one: twenty animals on every square kilometre of tree, shrub, grass and wetland at the start. They notice newly burning ground within 600 metres and move away from it at three kilometres an hour. The hour is replayed in five-minute steps from the fire's own record of when each cell caught, so the animals move ahead of the front and not after it. Of those the front overtakes, three in ten die and the rest reach the nearest unburned ground. Ground holding more than four times its starting number sheds the excess to the ground around it, a few cells each hour. An animal driven to the edge of the modelled area leaves it. Every animal is accounted for.</p>
+<div class="nb-counters">
+  <esim-counter series="fauna.alive" label="animals alive in the area"></esim-counter>
+  <esim-counter series="fauna.displaced" label="now on ground beyond what it held at the start"></esim-counter>
+  <esim-counter series="fauna.caught" label="overtaken by the front so far"></esim-counter>
+  <esim-counter series="fauna.killed_by_fire" label="killed by the fire"></esim-counter>
+  <esim-counter series="fauna.left_window" label="left the modelled area"></esim-counter>
+</div>
+<div class="nb-cols">
+  <div><h3>Animals per square kilometre</h3><esim-map field="animals_density_km2"></esim-map></div>
+  <div><esim-chart series="fauna.displaced" title="animals displaced"></esim-chart><esim-chart series="fauna.in_flight" title="animals moving at the hour's end"></esim-chart><esim-chart series="fauna.killed_by_fire" title="killed by the fire"></esim-chart></div>
+</div>
+<p class="nb-note">This says nothing about any real species, and none of these numbers is an estimate. The distance, the speed and the share that dies are guesses with no source, and the animals cross towns and roads as if they were open ground. The module is in the run to show that a part can react to the fire without the fire being changed: it reads where the fire is and when each cell caught, and nothing else.</p>
+</section>
+
 <section title="Weather">
-<p>The weather is one point of the ERA5 reanalysis, hour by hour, for the whole window.</p>
+<p>The weather is one point of the ERA5 reanalysis, hour by hour, for the whole window, laid on the ground by the weather module. In the gusts variant the weather module writes the hourly gust as the wind.</p>
 <div class="nb-cols">
   <esim-chart series="fire.wind_m_s" title="wind speed, metres a second"></esim-chart>
-  <esim-chart series="fire.gust_m_s" title="gusts, metres a second"></esim-chart>
   <esim-chart series="fire.wind_dir_deg" title="wind direction, degrees"></esim-chart>
   <esim-chart series="fire.rh_pct" title="relative humidity, percent"></esim-chart>
   <esim-chart series="fire.t2m_c" title="air temperature, degrees C"></esim-chart>

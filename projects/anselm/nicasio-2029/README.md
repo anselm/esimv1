@@ -13,6 +13,28 @@ fire](/anselm/palisades-cells) and carried to [Fort McMurray](/anselm/fortmcmurr
 down on ground it has never been scored on, in a year that has no weather, and asked what it does.
 Read it as a statement about the engine as much as about the valley.
 
+## What the scenario is made of
+
+The fire on this page is one module of about ten. The relief, the land cover, the major roads
+and the buildings are each read once from their own source by their own module. The weather
+module lays each hour's wind, temperature and humidity on the ground, and a fuel moisture
+module turns that air into how dry the dead fuel is. The fire reads all of them and fetches
+nothing itself. Beside it stand a firefighting module, a population of animals that runs from
+the front, and the records the run is scored against. None of these parts knows the others:
+each writes maps or tables that it owns, and the others read them.
+
+```esim wiring
+```
+
+The [same scenario on Rothermel's model](/anselm/nicasio-2029-rothermel) shows what the
+separation buys: it is this page's relief, land cover, weather, fuel moisture and animals with
+another fire model in the fire's place.
+
+The animals are a placeholder, with no species and guessed senses and speed. They are there to
+show that a part can react to the fire without the fire being changed, and no number of animals
+killed or displaced on these pages is an estimate. Parts see each other once an hour of
+simulated time. [What this is](/docs/system/overview) has the argument and its limits.
+
 ## What was borrowed, and from whom
 
 A year in the future has no wind. The run borrows a real day: NOAA's 3 km analysis for 27 to 29
@@ -23,7 +45,7 @@ the 28th (the warning is in the Iowa Environmental Mesonet's archive of such war
 campsite, on the floor of a wooded canyon, the analysis puts a light wind over the ignition: one
 to two metres a second in the night, eight from the north-east through the first afternoon, with
 gusts to thirteen. The ridges had more; a 3 km cell does not see a ridge. The air it carries is
-dry: the dead fuel moisture the engine derives from the hour's temperature and humidity sits
+dry: the dead fuel moisture that the fuel moisture module works out from the hour's temperature and humidity sits
 between three and five percent for most of the first two days.
 
 The ground is today's. The elevation is the Copernicus model, the cover is the European Space
@@ -34,7 +56,7 @@ number along the road, which is to say on the road's centreline; the parcel is n
 public page we found ties the address to the names Anselm gave. The project's event folder
 (`data/events/nicasio-2029/README.md`) lists every source and the day it was read.
 
-Nobody fights the fire. There is no evacuation, no engine at any house, no aircraft, and no
+Nobody fights the fire: the firefighting module is in the scenario and switched off. There is no evacuation, no engine at any house, no aircraft, and no
 record to score the run against, because there is nothing to score it against.
 
 ## What the runs say
@@ -99,5 +121,5 @@ into the afternoon to see the ground.
 - The house is a point on a road centreline. It counts as reached when a burned cell lies within
   fifty metres of that point; the buildings on the parcel are whatever OpenStreetMap had on the
   day, and nothing says what stands there in 2029.
-- Nobody fights the fire, nobody leaves, and the record that would tell us what any of this is
+- Nobody fights the fire, no person leaves (only the placeholder animals move), and the record that would tell us what any of this is
   worth does not exist.

@@ -112,8 +112,7 @@
       "id": "animals",
       "kind": "fauna.flee",
       "params": {
-        "density_km2": 20,
-        "mortality": 0.1
+        "density_km2": 20
       }
     },
     {
@@ -148,7 +147,7 @@
   ],
   "from": {
     "entry": "core/manifests/f4-fortmcmurray-cells.js",
-    "hash": "sha256:20e064446e07665f3102ba724b967c261420787f49f61ff789e5f743877694f1",
+    "hash": "sha256:00b6c675e01e3cb5381a7fe798069dc0f31f53459d24614d181978c97f3e0793",
     "language": "javascript"
   },
   "manifest": "manifest/1"

@@ -8,16 +8,8 @@ snapshot_every = "10d"
 notes = "A scenario, not a forecast: the Devil's Gulch ignition of 1 October 2029 on Rothermel's spread model with the ERA5 point wind of 27 to 29 October 2019 played hour for hour; the stake is 550 Nicasio Valley Road; unsuppressed; fuel parameters recalled from Scott and Burgan 2005 and not yet checked."
 
 [[module]]
-name = "fire"
-kind = "fire.rothermel"
-
-[module.params]
-ignition_lat = 38.0316
-ignition_lon = -122.7328
-ignition_time = "2029-10-01T10:00:00Z"
-wind_at = "2029-10-01T00:00:00Z"
-wind_end = "2019-10-31"
-wind_start = "2019-10-27"
+name = "ground"
+kind = "ground.terrain"
 
 [module.params.place]
 lat_n = 38.08
@@ -25,6 +17,64 @@ lat_s = 37.97
 lon_e = -122.61
 lon_w = -122.79
 res_arcsec = 1
+
+[[module]]
+name = "cover"
+kind = "ground.cover"
+
+[module.params.place]
+lat_n = 38.08
+lat_s = 37.97
+lon_e = -122.61
+lon_w = -122.79
+res_arcsec = 1
+
+[[module]]
+name = "weather"
+kind = "weather.surface"
+
+[module.params]
+at = "2029-10-01T00:00:00Z"
+end = "2019-10-31T00:00:00Z"
+source = "era5"
+start = "2019-10-27T00:00:00Z"
+
+[module.params.place]
+lat_n = 38.08
+lat_s = 37.97
+lon_e = -122.61
+lon_w = -122.79
+res_arcsec = 1
+
+[[module]]
+name = "moisture"
+kind = "fuel.moisture"
+
+[module.params]
+
+[[module]]
+name = "fire"
+kind = "fire.rothermel"
+
+[module.params]
+ignition_lat = 38.0316
+ignition_lon = -122.7328
+ignition_time = "2029-10-01T10:00:00Z"
+inputs = "world"
+
+[module.params.place]
+lat_n = 38.08
+lat_s = 37.97
+lon_e = -122.61
+lon_w = -122.79
+res_arcsec = 1
+
+[[module]]
+name = "animals"
+kind = "fauna.flee"
+
+[module.params]
+density_km2 = 20
 
 [[module]]
 name = "places"

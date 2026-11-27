@@ -18,18 +18,30 @@ const run = {
   notes: "A scenario, not a forecast: the Devil's Gulch ignition of 1 October 2029 on Rothermel's spread model with the ERA5 point wind of 27 to 29 October 2019 played hour for hour; the stake is 550 Nicasio Valley Road; unsuppressed; fuel parameters recalled from Scott and Burgan 2005 and not yet checked.",
 };
 
+// The parts of the ground and the air, each a module of its own, the same ones the other engine
+// reads in F5. They stand before the fire because it takes the ground from them when the run starts.
+const ground = { kind: "ground.terrain", params: { place } };
+const cover = { kind: "ground.cover", params: { place } };
+// the ERA5 hours of the borrowed days, one 25 km point for the whole window; midnight UTC of the
+// first day falls on midnight UTC of 1 October 2029
+const weather = {
+  kind: "weather.surface",
+  params: { place, source: "era5", start: "2019-10-27T00:00:00Z", end: "2019-10-31T00:00:00Z", at: "2029-10-01T00:00:00Z" },
+};
+const moisture = { kind: "fuel.moisture", params: {} };
+
+// Animals on the wildland, a placeholder population that runs from the front.
+const animals = { kind: "fauna.flee", params: { density_km2: 20 } };
+
 const fire = {
   kind: "fire.rothermel",
   params: {
     place,
+    inputs: "world",
     // Devil's Gulch Campsite: OpenStreetMap relation 17685328 (read 2026-11-08); 03:00 Pacific daylight time
     ignition_time: "2029-10-01T10:00:00Z",
     ignition_lat: 38.0316,
     ignition_lon: -122.7328,
-    // the ERA5 hours of the borrowed days; midnight UTC of wind_start falls on midnight UTC of 1 October 2029
-    wind_start: "2019-10-27",
-    wind_end: "2019-10-31",
-    wind_at: "2029-10-01T00:00:00Z",
   },
 };
 
@@ -55,4 +67,4 @@ const suppression = {
 
 // What the scenario is made of, in order. The order is the order of sections on the run page,
 // and it settles which of two modules hears an event first when their priorities are equal.
-export { run, fire, places, suppression };
+export { run, ground, cover, weather, moisture, fire, animals, places, suppression };

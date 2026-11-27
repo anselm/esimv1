@@ -13,12 +13,37 @@
       }
     },
     {
-      "id": "fire",
-      "kind": "fire.rothermel",
+      "id": "ground",
+      "kind": "ground.terrain",
       "params": {
-        "ignition_lat": 38.0316,
-        "ignition_lon": -122.7328,
-        "ignition_time": "2029-10-01T10:00:00Z",
+        "place": {
+          "lat_n": 38.08,
+          "lat_s": 37.97,
+          "lon_e": -122.61,
+          "lon_w": -122.79,
+          "res_arcsec": 1
+        }
+      }
+    },
+    {
+      "id": "cover",
+      "kind": "ground.cover",
+      "params": {
+        "place": {
+          "lat_n": 38.08,
+          "lat_s": 37.97,
+          "lon_e": -122.61,
+          "lon_w": -122.79,
+          "res_arcsec": 1
+        }
+      }
+    },
+    {
+      "id": "weather",
+      "kind": "weather.surface",
+      "params": {
+        "at": "2029-10-01T00:00:00Z",
+        "end": "2019-10-31T00:00:00Z",
         "place": {
           "lat_n": 38.08,
           "lat_s": 37.97,
@@ -26,9 +51,36 @@
           "lon_w": -122.79,
           "res_arcsec": 1
         },
-        "wind_at": "2029-10-01T00:00:00Z",
-        "wind_end": "2019-10-31",
-        "wind_start": "2019-10-27"
+        "source": "era5",
+        "start": "2019-10-27T00:00:00Z"
+      }
+    },
+    {
+      "id": "moisture",
+      "kind": "fuel.moisture"
+    },
+    {
+      "id": "fire",
+      "kind": "fire.rothermel",
+      "params": {
+        "ignition_lat": 38.0316,
+        "ignition_lon": -122.7328,
+        "ignition_time": "2029-10-01T10:00:00Z",
+        "inputs": "world",
+        "place": {
+          "lat_n": 38.08,
+          "lat_s": 37.97,
+          "lon_e": -122.61,
+          "lon_w": -122.79,
+          "res_arcsec": 1
+        }
+      }
+    },
+    {
+      "id": "animals",
+      "kind": "fauna.flee",
+      "params": {
+        "density_km2": 20
       }
     },
     {
@@ -75,8 +127,8 @@
     }
   ],
   "from": {
-    "entry": "manifests/f6-nicasio-2029-rothermel.js",
-    "hash": "sha256:6f363aee72a9df1076f826fbf6dcd3c814e4792c77c435e7f6db3f645a6803b5",
+    "entry": "core/manifests/f6-nicasio-2029-rothermel.js",
+    "hash": "sha256:2958d8a55a90ca0a6418254acc694d4ecaba7852eeed1e55f2ecd7830bbc787a",
     "language": "javascript"
   },
   "manifest": "manifest/1"

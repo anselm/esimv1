@@ -9,6 +9,29 @@ With no record to score either engine against, two engines on one scenario are t
 to a check: where they agree the agreement is about the ground and the wind, and where they
 disagree the disagreement is about the engines.
 
+## What the scenario is made of
+
+The fire on this page is one module among several. The relief and the land cover are each read
+once from their own source by their own module. The weather module lays each hour's wind,
+temperature and humidity on the ground, and a fuel moisture module turns that air into how dry
+the dead fuel is. Rothermel's model reads all of them and fetches nothing itself. Beside it
+stand a population of animals that runs from the front, a firefighting module that is switched
+off, and the two named places the run watches. None of these parts knows the others: each writes maps that it owns, and
+the others read them.
+
+```esim wiring
+```
+
+This is the point of the pair. The [first Devil's Gulch page](/anselm/nicasio-2029) is the
+same relief, land cover, fuel moisture and animals modules with our own fire model in this
+one's place and a finer weather record. After this fire was separated from its ground and
+weather on 26 November 2026, the burned area of all four runs was the same at every hour as
+before.
+
+The animals are a placeholder, with no species and guessed senses and speed, and no number of
+animals killed or displaced on these pages is an estimate.
+[What this is](/docs/system/overview) has the argument and its limits.
+
 ## What is different
 
 The fuel is a fuel model per cell from the land cover, through the Scott and Burgan models

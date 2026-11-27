@@ -594,3 +594,11 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
 - The hub is a showcase (2026-11-26, `devlog/20261126-the-hub-is-a-showcase.md`): no sign-in, paths stay, small projects
   stay here, the hub rebuilds what it lists. Every project has a `run.html`; a project page shows no run of its own. Earth
   2100's world view is the flat map (`viewer/src/RegionMap.svelte`, tag `<esim-regions>`), not the globe.
+- The second round on the parts (2026-11-26 evening, `devlog/20261126-a-second-round-on-the-parts.md`): `fire.rothermel` has
+  `inputs = "world"` too, so all five fire scenarios (manifests f2 to f6) are the same ground, weather and moisture modules
+  with one of two fire models; gusts variants set `weather.wind_use`. Both fires write `fire.arrival_s` in that form.
+  `fauna.flee` senses the front (`sense_m`, `speed_m_h`, `step`, `crowd`), replays the hour from `fire.arrival_s`, reads
+  habitat from `ground.cover_code`, and lets animals leave the window (`fauna.left_window`). `landscape::field_on` lays a
+  field from other cells onto the reader's; `weather.surface` may write on its own cells (`cell_arcsec`). `fire.rothermel`
+  does write `fire.burned_frac` (an older entry above says it does not). The funder-facing account of the modular claim is
+  the hub README's "Whole systems from separate parts" and `core/docs/system/overview.md`; keep the two in step.

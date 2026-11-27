@@ -78,7 +78,7 @@
     "cover": "cover.png",
     "cover_caption": "The run page's three-dimensional view, dark mode, 2026-11-08: the Fort McMurray window from the elevation model with the fire's arrival draped on it, the vector-5 run at its end.",
     "created": "2026-11-04",
-    "description": "Our own engine on the Fort McMurray fire: heat budget on 30 m cells, OpenStreetMap buildings, ERA5 wind at one point; scored against CWFIS satellite hotspots; unsuppressed; constants carried over from the Palisades.",
+    "description": "The parts built for the Palisades, carried to boreal Canada: the same relief, land cover, roads, fuel moisture, fire and animals modules, with buildings from OpenStreetMap and weather from the ERA5 reanalysis at one point; scored against CWFIS satellite hotspots; unsuppressed; constants carried over from the Palisades.",
     "featured": true,
     "kinds": [
       "ground.terrain",
@@ -110,11 +110,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "503506c0af0cdb1a",
+        "digest": "a18ac9e1df203593",
         "end": 1462579200,
-        "events": 1315,
+        "events": 1437,
         "id": "vector-3",
-        "made": 1795739793,
+        "made": 1795766111,
         "name": "f4-fortmcmurray-cells",
         "seed": 1,
         "set": {
@@ -126,11 +126,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "acb4ca5db2bd5fe5",
+        "digest": "ef8ea5ad25470e06",
         "end": 1462579200,
-        "events": 1296,
+        "events": 1418,
         "id": "vector-5",
-        "made": 1795739805,
+        "made": 1795766113,
         "name": "f4-fortmcmurray-cells",
         "seed": 1,
         "set": {
@@ -142,11 +142,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "d0cef15daba69f35",
+        "digest": "8d973dd5fc3026a5",
         "end": 1462579200,
-        "events": 1489,
+        "events": 1611,
         "id": "vector-8",
-        "made": 1795739817,
+        "made": 1795766117,
         "name": "f4-fortmcmurray-cells",
         "seed": 1,
         "set": {
@@ -368,11 +368,11 @@
     "runs": [
       {
         "all_ledgers_closed": true,
-        "digest": "1c8e3f355237392a",
+        "digest": "66fd8ad17874d504",
         "end": 1885791600,
-        "events": 1349,
+        "events": 1421,
         "id": "gust",
-        "made": 1795739831,
+        "made": 1795766093,
         "name": "f5-nicasio-2029",
         "seed": 1,
         "set": {
@@ -385,11 +385,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "9ed007699d6e7ab1",
+        "digest": "63b56bb3ef4c9613",
         "end": 1885791600,
-        "events": 963,
+        "events": 1035,
         "id": "scale-3",
-        "made": 1795739841,
+        "made": 1795766084,
         "name": "f5-nicasio-2029",
         "seed": 1,
         "set": {
@@ -401,11 +401,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "eb7633498dadb68c",
+        "digest": "e212ceeee9e4ba57",
         "end": 1885791600,
-        "events": 1048,
+        "events": 1120,
         "id": "scale-5",
-        "made": 1795739851,
+        "made": 1795766088,
         "name": "f5-nicasio-2029",
         "seed": 1,
         "set": {
@@ -417,11 +417,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "346044c9d2a6e586",
+        "digest": "310065e15ab68a86",
         "end": 1885791600,
-        "events": 811,
+        "events": 883,
         "id": "scale-8",
-        "made": 1795739861,
+        "made": 1795766086,
         "name": "f5-nicasio-2029",
         "seed": 1,
         "set": {
@@ -471,10 +471,15 @@
     "cover": "cover.png",
     "cover_caption": "Where Rothermel's unsuppressed fire had reached by the end of the third day, coloured by the hour it arrived (yellow first, red last), on the borrowed ERA5 point wind; the roads from OpenStreetMap. Drawn from the run's own frames, 2026-11-08.",
     "created": "2026-11-08",
-    "description": "The same scenario as A fire at Devil's Gulch, October 2029, on the older engine: Rothermel's 1972 spread model on the same 30 m ground, fuel from land cover through the Scott and Burgan models, the wind as the ERA5 reanalysis at one 25 km point, borrowed from the Red Flag days of 27 to 29 October 2019 and played hour for hour. The stake is the same house. Nobody fights the fire. A separate simulation, as Anselm asked on 2026-11-08, so the two engines can be read against each other with no record between them.",
+    "description": "The same scenario as A fire at Devil's Gulch, October 2029, with the fire model swapped: Rothermel's 1972 spread model reading the same relief and land cover modules, fuel from land cover through the Scott and Burgan models, the wind as the ERA5 reanalysis at one 25 km point, borrowed from the Red Flag days of 27 to 29 October 2019 and played hour for hour. The stake is the same house. Nobody fights the fire. A separate simulation, as Anselm asked on 2026-11-08, so the two engines can be read against each other with no record between them.",
     "featured": false,
     "kinds": [
+      "ground.terrain",
+      "ground.cover",
+      "weather.surface",
+      "fuel.moisture",
       "fire.rothermel",
+      "fauna.flee",
       "obs.places",
       "fire.suppression"
     ],
@@ -483,11 +488,11 @@
     "runs": [
       {
         "all_ledgers_closed": true,
-        "digest": "5b539d8cbdab05dd",
+        "digest": "cf00db1de1c476d6",
         "end": 1885791600,
-        "events": 227,
+        "events": 879,
         "id": "built-barrier",
-        "made": 1794702041,
+        "made": 1795766076,
         "name": "f6-nicasio-2029-rothermel",
         "seed": 1,
         "set": {
@@ -499,15 +504,15 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "33b1bab5a2202f97",
+        "digest": "324d2655b5180daf",
         "end": 1885791600,
-        "events": 227,
+        "events": 879,
         "id": "gusts",
-        "made": 1794702036,
+        "made": 1795766075,
         "name": "f6-nicasio-2029-rothermel",
         "seed": 1,
         "set": {
-          "fire.wind_source": "\"gust\""
+          "weather.wind_use": "\"gust\""
         },
         "start": 1885532400,
         "variant": "gusts",
@@ -515,15 +520,15 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "56a0ba659c004975",
+        "digest": "57864985a16c66cf",
         "end": 1885791600,
-        "events": 227,
+        "events": 879,
         "id": "reanalysis",
-        "made": 1794702031,
+        "made": 1795766072,
         "name": "f6-nicasio-2029-rothermel",
         "seed": 1,
         "set": {
-          "fire.wind_source": "\"mean\""
+          "weather.wind_use": "\"mean\""
         },
         "start": 1885532400,
         "variant": "reanalysis",
@@ -531,11 +536,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "93e4442900476cdd",
+        "digest": "a36cdffdcd06b972",
         "end": 1885791600,
-        "events": 227,
+        "events": 879,
         "id": "sh7",
-        "made": 1794702046,
+        "made": 1795766078,
         "name": "f6-nicasio-2029-rothermel",
         "seed": 1,
         "set": {
@@ -551,14 +556,14 @@
       {
         "name": "reanalysis",
         "set": {
-          "fire.wind_source": "mean"
+          "weather.wind_use": "mean"
         },
         "title": "The ERA5 wind as read, 25 km, at the window's centre"
       },
       {
         "name": "gusts",
         "set": {
-          "fire.wind_source": "gust"
+          "weather.wind_use": "gust"
         },
         "title": "The ERA5 hourly gust as the wind: the upper bound the reanalysis allows"
       },
@@ -584,10 +589,15 @@
     "cover": "cover.png",
     "cover_caption": "Where the model's unsuppressed fire had reached 27 hours after ignition, coloured by the hour it arrived (yellow first, red last), on the reanalysis wind; in white the first infrared perimeter the incident mapped at that hour (15,824 acres), in blue the final perimeter (23,448 acres). Land cover beneath: trees, shrub, grass, built-up, the sea. Drawn from the run's own frames, 2026-11-03.",
     "created": "2026-11-03",
-    "description": "The Palisades fire of 7 January 2025 run again on its own ground: Rothermel's spread model on 30 m terrain, fuel from land cover, the hour's wind from the ERA5 reanalysis, ignited where and when the record says, with no one fighting it. NIFC's mapped perimeters score the burned area as each was current. Variants: the reanalysis wind as read; its gusts; built-up land as a barrier; the heavier shrub model. A hindcast of a known event, not a forecast.",
+    "description": "The Palisades fire of 7 January 2025 run again on its own ground: Rothermel's spread model reading separate modules for the 30 m terrain, the land cover, the hour's weather from the ERA5 reanalysis and the fuel's moisture, ignited where and when the record says, with no one fighting it. NIFC's mapped perimeters score the burned area as each was current. Variants: the reanalysis wind as read; its gusts; built-up land as a barrier; the heavier shrub model. A hindcast of a known event, not a forecast.",
     "featured": false,
     "kinds": [
+      "ground.terrain",
+      "ground.cover",
+      "weather.surface",
+      "fuel.moisture",
       "fire.rothermel",
+      "fauna.flee",
       "obs.perimeters",
       "obs.hotspots",
       "obs.dins",
@@ -599,11 +609,11 @@
     "runs": [
       {
         "all_ledgers_closed": true,
-        "digest": "c30ca1c62c2baa16",
+        "digest": "23389ce1baa69e95",
         "end": 1736640000,
-        "events": 1967,
+        "events": 2889,
         "id": "built-barrier",
-        "made": 1795109681,
+        "made": 1795766066,
         "name": "f2-palisades-2025",
         "seed": 1,
         "set": {
@@ -615,15 +625,15 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "317ae485b4b30832",
+        "digest": "51d7fc9242f9cdec",
         "end": 1736640000,
-        "events": 1967,
+        "events": 2889,
         "id": "gusts",
-        "made": 1795109671,
+        "made": 1795766069,
         "name": "f2-palisades-2025",
         "seed": 1,
         "set": {
-          "fire.wind_source": "\"gust\""
+          "weather.wind_use": "\"gust\""
         },
         "start": 1736272800,
         "variant": "gusts",
@@ -631,15 +641,15 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "fd14bd6c9db31039",
+        "digest": "2accd2d4576b7fc0",
         "end": 1736640000,
-        "events": 1967,
+        "events": 2889,
         "id": "reanalysis",
-        "made": 1795109658,
+        "made": 1795766067,
         "name": "f2-palisades-2025",
         "seed": 1,
         "set": {
-          "fire.wind_source": "\"mean\""
+          "weather.wind_use": "\"mean\""
         },
         "start": 1736272800,
         "variant": "reanalysis",
@@ -647,11 +657,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "07c9974398b4a407",
+        "digest": "55a6965c21a7de50",
         "end": 1736640000,
-        "events": 1967,
+        "events": 2889,
         "id": "sh7",
-        "made": 1795109681,
+        "made": 1795766063,
         "name": "f2-palisades-2025",
         "seed": 1,
         "set": {
@@ -667,14 +677,14 @@
       {
         "name": "reanalysis",
         "set": {
-          "fire.wind_source": "mean"
+          "weather.wind_use": "mean"
         },
         "title": "The ERA5 wind as read, 25 km, at the window's centre"
       },
       {
         "name": "gusts",
         "set": {
-          "fire.wind_source": "gust"
+          "weather.wind_use": "gust"
         },
         "title": "The ERA5 hourly gust as the wind: the upper bound the reanalysis allows"
       },
@@ -700,7 +710,7 @@
     "cover": "cover.png",
     "cover_caption": "The ground as the engine saw it, from the run page's three-dimensional view: the terrain from the elevation model, every building a box of its stated height, the fire's arrival draped over both at the time cursor. The near-4 run, dark mode, 2026-11-03.",
     "created": "2026-11-03",
-    "description": "The same fire, the same ground and record, on an engine of our own: a heat budget on 30 m cells that know their elevation, land cover, buildings and roads, under NOAA's 3 km wind hour by hour. Every constant is a guess; one of them is fitted to the first infrared perimeter and declared; the structures the inspectors recorded are the test. Nobody fights the fire.",
+    "description": "The same fire, the same ground and record, assembled from separate parts: relief, land cover, roads, buildings, NOAA's 3 km weather hour by hour, fuel moisture, animals and firefighting as modules, read by a fire model of our own, a heat budget on 30 m cells. Every constant is a guess; one of them is fitted to the first infrared perimeter and declared; the structures the inspectors recorded are the test. Nobody fights the fire except in the variant with the incident's counted crews.",
     "featured": true,
     "kinds": [
       "ground.terrain",
@@ -722,11 +732,11 @@
     "runs": [
       {
         "all_ledgers_closed": true,
-        "digest": "c50f4727b527df32",
+        "digest": "13b242310a02f83a",
         "end": 1736640000,
-        "events": 3432,
+        "events": 3534,
         "id": "bodies",
-        "made": 1795739889,
+        "made": 1795766218,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -743,11 +753,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "2a729b2d66b4df58",
+        "digest": "52039d7f5d920ede",
         "end": 1736640000,
-        "events": 3469,
+        "events": 3571,
         "id": "bodies-hard",
-        "made": 1795739917,
+        "made": 1795766218,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -764,11 +774,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "633a8d760037ab9a",
+        "digest": "7cc181478316e3b5",
         "end": 1736640000,
-        "events": 5015,
+        "events": 5117,
         "id": "fit-day-one",
-        "made": 1795739946,
+        "made": 1795766287,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -788,11 +798,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "2aca842d8b3641f4",
+        "digest": "29633028edf75500",
         "end": 1736640000,
-        "events": 3759,
+        "events": 3861,
         "id": "fit-whole-record",
-        "made": 1795739974,
+        "made": 1795766290,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -814,11 +824,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "9160e05d86493985",
+        "digest": "2a047b89af2055cb",
         "end": 1736640000,
-        "events": 3382,
+        "events": 3484,
         "id": "houses",
-        "made": 1795740002,
+        "made": 1795766185,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -833,11 +843,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "b082bdb60697d342",
+        "digest": "2f35f21d447a4690",
         "end": 1736640000,
-        "events": 3447,
+        "events": 3549,
         "id": "houses-jitter",
-        "made": 1795740030,
+        "made": 1795766194,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -853,11 +863,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "49590ec860b17670",
+        "digest": "b2b51452fdb73b35",
         "end": 1736640000,
-        "events": 3672,
+        "events": 3774,
         "id": "near-2",
-        "made": 1795740057,
+        "made": 1795766158,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -870,11 +880,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "3effc2d920aaad91",
+        "digest": "148daf7e930bc940",
         "end": 1736640000,
-        "events": 3484,
+        "events": 3586,
         "id": "near-3",
-        "made": 1795740085,
+        "made": 1795766179,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -887,11 +897,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "4c8bb67f79c96ac4",
+        "digest": "2a55ffb060fb3812",
         "end": 1736640000,
-        "events": 3382,
+        "events": 3484,
         "id": "near-4",
-        "made": 1795740113,
+        "made": 1795766182,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -904,11 +914,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "07832b08a05770ad",
+        "digest": "4d8c7739d1e0c7a1",
         "end": 1736640000,
-        "events": 2864,
+        "events": 2966,
         "id": "near-4-slope",
-        "made": 1795740140,
+        "made": 1795766215,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -922,11 +932,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "3dca236f93847392",
+        "digest": "c2c69d8cb00509bb",
         "end": 1736640000,
-        "events": 3305,
+        "events": 3407,
         "id": "near-4-slope-6",
-        "made": 1795740168,
+        "made": 1795766230,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -940,11 +950,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "e100010786534adf",
+        "digest": "621e9b9f7e27a2bc",
         "end": 1736640000,
-        "events": 3613,
+        "events": 3715,
         "id": "near-4-slope-soft",
-        "made": 1795740196,
+        "made": 1795766250,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -959,11 +969,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "44048696f58b19a5",
+        "digest": "c705db4cb8903e80",
         "end": 1736640000,
-        "events": 2984,
+        "events": 3086,
         "id": "scale-2",
-        "made": 1795740225,
+        "made": 1795766125,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -975,11 +985,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "4a16f15c3d8f043e",
+        "digest": "f9d45d2cb6e6a6e0",
         "end": 1736640000,
-        "events": 3157,
+        "events": 3259,
         "id": "scale-3",
-        "made": 1795740254,
+        "made": 1795766145,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -991,11 +1001,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "71be2102f86f3ead",
+        "digest": "90e71cb4134b4d37",
         "end": 1736640000,
-        "events": 3347,
+        "events": 3449,
         "id": "scale-4",
-        "made": 1795740284,
+        "made": 1795766148,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -1007,11 +1017,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "e8eafab952ce4aab",
+        "digest": "e76962bff3d662bf",
         "end": 1736640000,
-        "events": 2791,
+        "events": 2893,
         "id": "scale-6",
-        "made": 1795740311,
+        "made": 1795766145,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -1023,11 +1033,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "19b3b2184f81cb7a",
+        "digest": "e99111d6572927ef",
         "end": 1736640000,
-        "events": 3180,
+        "events": 3282,
         "id": "vector-5",
-        "made": 1795740340,
+        "made": 1795766254,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -1043,11 +1053,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "016ed36e3dbef384",
+        "digest": "f03be536e7a76e6c",
         "end": 1736640000,
-        "events": 3231,
+        "events": 3333,
         "id": "vector-5-crews",
-        "made": 1795740369,
+        "made": 1795766288,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -1066,11 +1076,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "8ed053520b49b94a",
+        "digest": "39c1b1337a8f9c78",
         "end": 1736640000,
-        "events": 3275,
+        "events": 3377,
         "id": "vector-5-held",
-        "made": 1795740397,
+        "made": 1795766266,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -1087,11 +1097,11 @@
       },
       {
         "all_ledgers_closed": true,
-        "digest": "1fec67da8f7a9d05",
+        "digest": "1517e8c8a7e23f39",
         "end": 1736640000,
-        "events": 3151,
+        "events": 3253,
         "id": "vector-8",
-        "made": 1795740426,
+        "made": 1795766256,
         "name": "f3-palisades-cells",
         "seed": 1,
         "set": {
@@ -1826,7 +1836,7 @@
     "area": "anselm",
     "by": "anselm, in the esim session of 2026-11-07",
     "cover": "cover.png",
-    "cover_caption": "The run page's globe, dark mode, 2026-11-08: the regions scored at the run's end, one member of the eight.",
+    "cover_caption": "The globe the run page carried until 26 November 2026 (it is a flat map now), dark mode, 2026-11-08: the regions scored at the run's end, one member of the eight.",
     "created": "2026-11-08",
     "description": "Earth 2100 with emissions held and the wild-card deck in play, one member per seed: the spread the deck makes by 2100, from a JavaScript manifest.",
     "featured": false,
