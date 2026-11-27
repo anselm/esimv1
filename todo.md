@@ -280,3 +280,4 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
 - A catalogue row and a front-page card for a scenario with its own site (Sausalito).
 - Rerun every project so its runs carry module titles; rerun the three projects whose runs predate `describe.json`.
 - Delete `viewer/src/Globe.svelte` once the flat map is accepted.
+- Separation of concerns, after the experiment of 26 November (`devlog/20261126-can-the-parts-be-separated.md`): make the wired form the default for the fire scenarios; split land cover, roads and buildings out of `fire.cells`; design a shared table of bodies; a resampling helper for fields on different grids; adopt "the terrain owns the grid".

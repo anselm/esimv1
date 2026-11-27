@@ -1296,6 +1296,43 @@
   },
   {
     "area": "anselm",
+    "by": "anselm",
+    "created": "2026-11-27",
+    "description": "The same fire engine with the relief, the hour's air and the dryness of the fuel as modules of their own, and a placeholder population of animals that flees the fire: a test that the engine's parts can be separated and joined.",
+    "kinds": [
+      "ground.terrain",
+      "weather.surface",
+      "fuel.moisture",
+      "fire.cells",
+      "fauna.flee",
+      "fire.suppression",
+      "obs.perimeters",
+      "obs.hotspots",
+      "obs.dins",
+      "obs.record"
+    ],
+    "name": "palisades-wired",
+    "path": "anselm/palisades-wired",
+    "runs": [
+      {
+        "all_ledgers_closed": true,
+        "digest": "25bcbe4eabec77f3",
+        "end": 1736640000,
+        "events": 3175,
+        "id": "base",
+        "made": 1795738857,
+        "name": "f7-palisades-wired",
+        "seed": 1,
+        "set": null,
+        "start": 1736272800,
+        "variant": null,
+        "verdict": "holds"
+      }
+    ],
+    "title": "The Palisades fire, with its parts separated"
+  },
+  {
+    "area": "anselm",
     "by": "anselm, via claude 2026-11-01",
     "cover": "cover.png",
     "cover_caption": "People living outside the human climate niche in 2091 with emissions held at the 2024 rate: the held run's own field, one-degree cells, log scale, drawn 2026-11-03.",
