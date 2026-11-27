@@ -281,3 +281,6 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
 - Rerun every project so its runs carry module titles; rerun the three projects whose runs predate `describe.json`.
 - Delete `viewer/src/Globe.svelte` once the flat map is accepted.
 - Separation of concerns (`devlog/20261126-can-the-parts-be-separated.md`, `devlog/20261126-a-second-round-on-the-parts.md`): done for all five fire scenarios on 26 November, with both fire models reading the same parts, animals that run ahead of the front, and fields that meet across grids. Open: the check should refuse ground modules placed after the fire; a rule for row order between shared tables; move the twenty older modules to `window_grid`; a scenario that uses a coarser weather grid; two parts that drive each other within the hour (fire and its own wind); an animals module that knows a species; a part written by someone else.
+- esimv1-data (`dataservice/`, 2026-11-27): choose the public address for the store and push; migrate the first reader
+  (Portland's 3D view has no building heights and the massing product now exists); finish the OpenStreetMap products
+  for Nicasio, Half Moon Bay, the Palisades and Fort McMurray when Overpass answers; lidar heights; rasters cut to a place.

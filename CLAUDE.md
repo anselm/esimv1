@@ -602,3 +602,9 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   field from other cells onto the reader's; `weather.surface` may write on its own cells (`cell_arcsec`). `fire.rothermel`
   does write `fire.burned_frac` (an older entry above says it does not). The funder-facing account of the modular claim is
   the hub README's "Whole systems from separate parts" and `core/docs/system/overview.md`; keep the two in step.
+- esimv1-data (2026-11-27, `devlog/20261127-esimv1-data-written.md`; Anselm: "a consolidator of lower level data products"):
+  `dataservice/` is a clone of `anselm/esimv1-data` (public, in `parts.list`), a standalone Rust tool that builds small data
+  products (buildings with heights, roads, tables, records) for named places and catalogues them as static STAC 1.1 in a
+  store (folder, web address or S3 bucket). Read its `docs/design.md` before touching a name or path: addresses are meant
+  to last. Its `store/` and `cache/` are not in git. No scenario reads from it yet; migration is incremental and on his
+  word. Its products are inputs, lightly refined; runs stay the simulator's.
