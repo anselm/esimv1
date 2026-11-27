@@ -7,6 +7,7 @@
 #   deploy/deploy.sh esimv1
 #   STORE_FIRST=1 deploy/deploy.sh esimv1    the VM asks the bucket before its own disk (to test the bucket while runs are still on the VM)
 #   PRUNE_RUNS=1 deploy/deploy.sh esimv1     also remove run folders from the VM, once the bucket is known to serve them
+#   DATA_HOST=data.earthlight.cloud deploy/deploy.sh esimv1   the VM also answers for that host with the esimv1-data store under data/ in the bucket
 set -euo pipefail
 VM=${1:?vm name}
 HERE=$(cd "$(dirname "$0")/.." && pwd)
@@ -27,7 +28,7 @@ for meta in "$HERE"/projects/*/*/project.toml; do
 done
 # the VM's own copy of the credentials (only what a reader of objects needs), and the unit told where it is
 grep -E '^(access_key_id|secret_access_key|endpoint|bucket)=' "$HOME/.config/cf/r2" | ssh -o ServerAliveInterval=5 -o StrictHostKeyChecking=accept-new "$HOST" 'umask 077 && cat > /srv/esim/store.conf'
-ssh -o ServerAliveInterval=5 "$HOST" "sudo mkdir -p /etc/systemd/system/esim.service.d && printf '[Service]\nEnvironment=ESIM_STORE=/srv/esim/store.conf\n${STORE_FIRST:+Environment=ESIM_STORE_FIRST=1\n}' | sudo tee /etc/systemd/system/esim.service.d/store.conf >/dev/null && sudo systemctl daemon-reload"
+ssh -o ServerAliveInterval=5 "$HOST" "sudo mkdir -p /etc/systemd/system/esim.service.d && printf '[Service]\nEnvironment=ESIM_STORE=/srv/esim/store.conf\n${DATA_HOST:+Environment=ESIM_DATA_HOST=$DATA_HOST\n}${STORE_FIRST:+Environment=ESIM_STORE_FIRST=1\n}' | sudo tee /etc/systemd/system/esim.service.d/store.conf >/dev/null && sudo systemctl daemon-reload"
 
 ssh -o ServerAliveInterval=5 -o StrictHostKeyChecking=accept-new "$HOST" 'mkdir -p /srv/esim/web'
 eval $RS "$HERE/web/dist" "$HERE/web/lib" "$HERE/web/server.mjs" "$HERE/web/package.json" "$HOST:/srv/esim/web/"

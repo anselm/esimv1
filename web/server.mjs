@@ -305,8 +305,20 @@ function sendJsonlTopic(req, res, file, topic) {
     rl.on('close', () => out.end())
   })
 }
+// ESIM_DATA_HOST names a host (data.earthlight.cloud) under which this server passes on the esimv1-data
+// store kept in the bucket under data/: files only, readable from any origin. A stand-in until the
+// store has a public bucket of its own; the addresses are the ones it will keep.
+const DATA_HOST = (process.env.ESIM_DATA_HOST || '').toLowerCase()
+function serveData(req, res, url) {
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  if (req.method !== 'GET' && req.method !== 'HEAD') { res.statusCode = 405; return res.end('read only') }
+  if (url.split('/').includes('..')) { res.statusCode = 403; return res.end('forbidden') }
+  const key = 'data' + (url.endsWith('/') ? url + 'index.html' : url)
+  sendFromStore(req, res, key, { missing: () => { res.statusCode = 404; res.setHeader('Content-Type', 'text/plain; charset=utf-8'); res.end('no such file in this store') } })
+}
 function serveStatic(req, res) {
   const url = decodeURIComponent((req.url || '/').split('?')[0])
+  if (DATA_HOST && STORE && (req.headers['x-forwarded-host'] || req.headers.host || '').toLowerCase().split(':')[0] === DATA_HOST) return serveData(req, res, url)
   const query = new URLSearchParams((req.url || '').split('?')[1] || '')
   const under = (prefix, root) => {
     const file = path.resolve(root, url.slice(prefix.length))
