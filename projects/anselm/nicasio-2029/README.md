@@ -19,8 +19,8 @@ The fire on this page is one module of about ten. The relief, the land cover, th
 and the buildings are each read once from their own source by their own module. The weather
 module lays each hour's wind, temperature and humidity on the ground, and a fuel moisture
 module turns that air into how dry the dead fuel is. The fire reads all of them and fetches
-nothing itself. Beside it stand a firefighting module, a population of animals that runs from
-the front, and the records the run is scored against. None of these parts knows the others:
+nothing itself. Beside it stand a firefighting module that is switched off, a population of animals that
+runs from the front, and a module that watches two named places. There is no record to score this run against. None of these parts knows the others:
 each writes maps or tables that it owns, and the others read them.
 
 ```esim
