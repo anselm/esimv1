@@ -287,3 +287,5 @@ dated `devlog/` entry it names; status lives there too, not here. Asked for by A
   warehouse products the engine can fetch; rasters cut to a place; lidar heights; Portland's 3D view reading the
   massing; a coverage map on the catalogue page; check the map's date in every Overpass answer; search the two
   Palisades fits again on the new inputs; the Bay Area model's scripts onto warehouse products (its own room).
+
+- [ ] dataservice massing: a low building overlapping a tower's surveyed footprint takes the tower's height (Golden Gateway Garage, 2 storeys, 115.7 m, san-francisco-bay 2026-11-28). Match by overlap area, or refuse a survey height far above the tagged storeys. (2026-11-27)
