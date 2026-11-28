@@ -86,7 +86,7 @@ table 2016-05-07T00:00Z fire.burned_acres=burned_by_the_end obs.acres=seen_from_
 The Palisades' own setting, thresholds times five, burns two to three times the seen area
 from the second day on. Times eight the pace is the record's: within a few hundred acres of the
 seen area on the fourth morning and within a tenth by the end, with the first night a third
-short. Times three fills the window in three days. So the engine carries over with one constant
+short. Times three burns 120,000 acres by the third morning and then stops growing. So the engine carries over with one constant
 moved, and the constant that moved is the one that stands for everything the fuel table does
 not know; a boreal spruce stand and a Santa Monica chaparral slope should not share it, and
 they do not.

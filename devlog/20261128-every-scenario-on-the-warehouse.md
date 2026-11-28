@@ -68,7 +68,8 @@ How far they moved:
   reread. The two `esim fit` results on the page were computed on the old inputs and not searched again.
 - Fort McMurray: the three faster settings moved a good deal (thresholds times five ends at 141,000 acres where
   it had 118,000; times three at 120,000 where it had 184,000), the times-eight setting hardly at all (98,506
-  against 98,425). The page's account, pace right at times eight and shape wrong, reads the same.
+  against 98,425). The page's account, pace right at times eight and shape wrong, reads the same, with one
+  sentence changed: at times three the fire now stops growing on the third morning where it used to go on.
 - Devil's Gulch: under 0.1 percent in burned area; the house is reached at the same hours.
 
 This is a finding about the engine as much as about the data: a cell fire's result depends on the road map's date
