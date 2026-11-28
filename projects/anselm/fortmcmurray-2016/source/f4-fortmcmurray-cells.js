@@ -9,6 +9,14 @@
 // where: the window every module here works on, and its resolution
 const place = { lat_s: 56.55, lat_n: 56.85, lon_w: -111.75, lon_e: -111.15, res_arcsec: 1 };
 
+// what: the products of the data warehouse this scenario reads (https://data.earthlight.cloud), each named by
+// its address there. A product never changes once made, so these lines fix the bytes a run reads.
+const data = {
+  roads: "roads/osm/fort-mcmurray/2026-11-28",
+  names: "names/osm/fort-mcmurray/2026-11-28",
+  buildings: "buildings/massing/fort-mcmurray/2026-11-28",
+};
+
 const run = {
   name: "f4-fortmcmurray-cells",
   start: "2016-05-01T22:00:00Z",
@@ -23,8 +31,8 @@ const run = {
 // because it takes the ground from them when the run starts.
 const ground = { kind: "ground.terrain", params: { place } };
 const cover = { kind: "ground.cover", params: { place } };
-const roads = { kind: "roads.major", params: { place } };
-const buildings = { kind: "built.footprints", params: { place, source: "osm" } };
+const roads = { kind: "roads.major", params: { place, data } };
+const buildings = { kind: "built.footprints", params: { place, data } };
 const weather = {
   kind: "weather.surface",
   params: { place, source: "era5", start: "2016-05-01T22:00:00Z", end: "2016-05-07T00:00:00Z" },
@@ -38,6 +46,7 @@ const fire = {
   kind: "fire.cells",
   params: {
     place,
+    data,
     inputs: "world",
     // detected on the afternoon of 1 May 2016 (local, MDT); the hour is recalled as about 16:00 and not
     // yet checked against the provincial review; the point is the Wikipedia infobox's

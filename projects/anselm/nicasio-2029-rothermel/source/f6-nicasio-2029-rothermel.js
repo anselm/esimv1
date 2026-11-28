@@ -8,6 +8,10 @@
 // where: the window every module here works on, and its resolution
 const place = { lat_s: 37.97, lat_n: 38.08, lon_w: -122.79, lon_e: -122.61, res_arcsec: 1 };
 
+// what: the products of the data warehouse this scenario reads (https://data.earthlight.cloud), each named by
+// its address there. A product never changes once made, so these lines fix the bytes a run reads.
+const data = { roads: "roads/osm/nicasio/2026-11-27", names: "names/osm/nicasio/2026-11-28" };
+
 const run = {
   name: "f6-nicasio-2029-rothermel",
   start: "2029-10-01T07:00:00Z",
@@ -37,6 +41,7 @@ const fire = {
   kind: "fire.rothermel",
   params: {
     place,
+    data,
     inputs: "world",
     // Devil's Gulch Campsite: OpenStreetMap relation 17685328 (read 2026-11-08); 03:00 Pacific daylight time
     ignition_time: "2029-10-01T10:00:00Z",

@@ -51,7 +51,8 @@ between three and five percent for most of the first two days.
 
 The ground is today's. The elevation is the Copernicus model, the cover is the European Space
 Agency's 2021 map, which calls two thirds of the window tree cover and most of the rest grass,
-and the 2,429 buildings and the major roads are OpenStreetMap's. The campsite is where
+and the 2,480 buildings and the major roads are OpenStreetMap's, read from the
+[data warehouse](https://data.earthlight.cloud/) as the map stood in late November 2026. The campsite is where
 OpenStreetMap puts it. The house is where the US Census Bureau's geocoder interpolates the street
 number along the road, which is to say on the road's centreline; the parcel is not checked, and no
 public page we found ties the address to the names Anselm gave. The project's event folder

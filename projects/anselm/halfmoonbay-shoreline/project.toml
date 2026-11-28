@@ -1,6 +1,7 @@
 # A project: who asked for what, in their words, and the manifest beside it.
 area = "anselm"
 name = "halfmoonbay-shoreline"
+engine = "0.4.0"
 title = "Half Moon Bay: the breakwater and the beach"
 featured = true
 cover = "cover.png"

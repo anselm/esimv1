@@ -42,6 +42,11 @@
       "id": "roads",
       "kind": "roads.major",
       "params": {
+        "data": {
+          "buildings": "buildings/massing/nicasio/2026-11-27",
+          "names": "names/osm/nicasio/2026-11-28",
+          "roads": "roads/osm/nicasio/2026-11-27"
+        },
         "place": {
           "lat_n": 38.08,
           "lat_s": 37.97,
@@ -55,14 +60,18 @@
       "id": "buildings",
       "kind": "built.footprints",
       "params": {
+        "data": {
+          "buildings": "buildings/massing/nicasio/2026-11-27",
+          "names": "names/osm/nicasio/2026-11-28",
+          "roads": "roads/osm/nicasio/2026-11-27"
+        },
         "place": {
           "lat_n": 38.08,
           "lat_s": 37.97,
           "lon_e": -122.61,
           "lon_w": -122.79,
           "res_arcsec": 1
-        },
-        "source": "osm"
+        }
       }
     },
     {
@@ -91,6 +100,11 @@
       "kind": "fire.cells",
       "params": {
         "cooling": "idle",
+        "data": {
+          "buildings": "buildings/massing/nicasio/2026-11-27",
+          "names": "names/osm/nicasio/2026-11-28",
+          "roads": "roads/osm/nicasio/2026-11-27"
+        },
         "form": "vector",
         "frame_res_arcsec": 4,
         "ignite_scale": 5,
@@ -161,7 +175,7 @@
   ],
   "from": {
     "entry": "core/manifests/f5-nicasio-2029.js",
-    "hash": "sha256:5c053645f54b121ebed799432f4ea3e0a8b13145d6fae273094b94e4ba6dbf34",
+    "hash": "sha256:93790f680224ce04766dd75f4d859bbe14c4cfd3b4408bbb0042c22c612fc68b",
     "language": "javascript"
   },
   "manifest": "manifest/1"

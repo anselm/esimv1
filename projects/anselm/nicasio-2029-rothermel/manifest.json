@@ -63,6 +63,10 @@
       "id": "fire",
       "kind": "fire.rothermel",
       "params": {
+        "data": {
+          "names": "names/osm/nicasio/2026-11-28",
+          "roads": "roads/osm/nicasio/2026-11-27"
+        },
         "ignition_lat": 38.0316,
         "ignition_lon": -122.7328,
         "ignition_time": "2029-10-01T10:00:00Z",
@@ -128,7 +132,7 @@
   ],
   "from": {
     "entry": "core/manifests/f6-nicasio-2029-rothermel.js",
-    "hash": "sha256:2958d8a55a90ca0a6418254acc694d4ecaba7852eeed1e55f2ecd7830bbc787a",
+    "hash": "sha256:a4a6721185057f48ed9c0a63b650598bce4c0898f5d41804b104580f4c58b1c6",
     "language": "javascript"
   },
   "manifest": "manifest/1"

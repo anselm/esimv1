@@ -42,6 +42,11 @@
       "id": "roads",
       "kind": "roads.major",
       "params": {
+        "data": {
+          "buildings": "buildings/massing/fort-mcmurray/2026-11-28",
+          "names": "names/osm/fort-mcmurray/2026-11-28",
+          "roads": "roads/osm/fort-mcmurray/2026-11-28"
+        },
         "place": {
           "lat_n": 56.85,
           "lat_s": 56.55,
@@ -55,14 +60,18 @@
       "id": "buildings",
       "kind": "built.footprints",
       "params": {
+        "data": {
+          "buildings": "buildings/massing/fort-mcmurray/2026-11-28",
+          "names": "names/osm/fort-mcmurray/2026-11-28",
+          "roads": "roads/osm/fort-mcmurray/2026-11-28"
+        },
         "place": {
           "lat_n": 56.85,
           "lat_s": 56.55,
           "lon_e": -111.15,
           "lon_w": -111.75,
           "res_arcsec": 1
-        },
-        "source": "osm"
+        }
       }
     },
     {
@@ -90,6 +99,11 @@
       "kind": "fire.cells",
       "params": {
         "cooling": "idle",
+        "data": {
+          "buildings": "buildings/massing/fort-mcmurray/2026-11-28",
+          "names": "names/osm/fort-mcmurray/2026-11-28",
+          "roads": "roads/osm/fort-mcmurray/2026-11-28"
+        },
         "form": "vector",
         "frame_res_arcsec": 4,
         "ignite_scale": 5,
@@ -147,7 +161,7 @@
   ],
   "from": {
     "entry": "core/manifests/f4-fortmcmurray-cells.js",
-    "hash": "sha256:00b6c675e01e3cb5381a7fe798069dc0f31f53459d24614d181978c97f3e0793",
+    "hash": "sha256:7e3564dc750233883e730009a35af955b79de12afb7a19347ab513b9210a01e9",
     "language": "javascript"
   },
   "manifest": "manifest/1"

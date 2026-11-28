@@ -62,6 +62,10 @@ ignition_lon = -122.7328
 ignition_time = "2029-10-01T10:00:00Z"
 inputs = "world"
 
+[module.params.data]
+names = "names/osm/nicasio/2026-11-28"
+roads = "roads/osm/nicasio/2026-11-27"
+
 [module.params.place]
 lat_n = 38.08
 lat_s = 37.97

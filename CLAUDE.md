@@ -608,3 +608,15 @@ how to run it. Development runs on canada1; a read-only copy is deployed to esim
   store (folder, web address or S3 bucket). Read its `docs/design.md` before touching a name or path: addresses are meant
   to last. Its `store/` and `cache/` are not in git. No scenario reads from it yet; migration is incremental and on his
   word. Its products are inputs, lightly refined; runs stay the simulator's.
+- Every scenario on the warehouse (2026-11-28, `devlog/20261128-every-scenario-on-the-warehouse.md`; Anselm: "every single
+  project should switch to it"): core is 0.4.0 and reads roads, buildings, names and shorelines only as warehouse products
+  named in a manifest's `data` table (`core/crates/registry/src/warehouse.rs`; `core/docs/system/data.md`); `core/data/osm`
+  and the engine's Overpass and ArcGIS building readers are gone, so every earlier entry here that mentions them is
+  history. Public store: https://data.earthlight.cloud (served by the esimv1 VM from the bucket's `data/` prefix,
+  `ESIM_DATA_HOST`). On canada1 the engine reads `dataservice/store` first. After building products: `esim-data index`,
+  then `esim-data push "s3:$HOME/.config/cf/r2:data"`; never index or push while a build runs. Overpass: the French
+  mirror first; kumi.systems served a map six months old. Portland, Palisades Rothermel, Devil's Gulch Rothermel and
+  Half Moon Bay kept their digests; the three cell-fire projects moved (newer road map, estimated building heights).
+  A Palisades cell run takes about half a minute of simulation; `rerun.sh`-style loops over all twenty take ten minutes.
+  Not migrated: record folders, API answers (weather, flow, indicators), rasters. Not deployed.
+

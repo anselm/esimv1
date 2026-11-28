@@ -1,6 +1,7 @@
 # A project: who asked for what, in their words, and the manifest beside it.
 area = "anselm"
 name = "nicasio-2029-rothermel"
+engine = "0.4.0"
 title = "A fire at Devil's Gulch, October 2029: Rothermel's model"
 featured = false
 cover = "cover.png"

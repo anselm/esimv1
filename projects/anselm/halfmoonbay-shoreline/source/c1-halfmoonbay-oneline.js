@@ -12,6 +12,14 @@
 // where: the window every module here works on, and its resolution
 const place = { lat_s: 37.42, lat_n: 37.52, lon_w: -122.52, lon_e: -122.42, res_arcsec: 1 };
 
+// what: the products of the data warehouse this scenario reads (https://data.earthlight.cloud), each named by
+// its address there. A product never changes once made, so these lines fix the bytes a run reads.
+const data = {
+  shore: "shore/osm/half-moon-bay/2026-11-28",
+  roads: "roads/osm/half-moon-bay/2026-11-27",
+  names: "names/osm/half-moon-bay/2026-11-28",
+};
+
 const run = {
   name: "c1-halfmoonbay-oneline",
   start: "1961-01-01",
@@ -26,6 +34,7 @@ const coast = {
   kind: "coast.oneline",
   params: {
     place,
+    data,
     breakwater: "on",
     // fitted (2026-11-08, a sweep of 0.39, 0.05, 0.02, 0.01, 0.005): the one-line model's transport
     // coefficient, 80 times below the open-coast value, because the reanalysis cell's wave height is

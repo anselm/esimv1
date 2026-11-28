@@ -11,6 +11,14 @@
 // where: the window every module here works on, and its resolution
 const place = { lat_s: 37.97, lat_n: 38.08, lon_w: -122.79, lon_e: -122.61, res_arcsec: 1 };
 
+// what: the products of the data warehouse this scenario reads (https://data.earthlight.cloud), each named by
+// its address there. A product never changes once made, so these lines fix the bytes a run reads.
+const data = {
+  roads: "roads/osm/nicasio/2026-11-27",
+  names: "names/osm/nicasio/2026-11-28",
+  buildings: "buildings/massing/nicasio/2026-11-27",
+};
+
 const run = {
   name: "f5-nicasio-2029",
   start: "2029-10-01T07:00:00Z",
@@ -25,8 +33,8 @@ const run = {
 // because it takes the ground from them when the run starts.
 const ground = { kind: "ground.terrain", params: { place } };
 const cover = { kind: "ground.cover", params: { place } };
-const roads = { kind: "roads.major", params: { place } };
-const buildings = { kind: "built.footprints", params: { place, source: "osm" } };
+const roads = { kind: "roads.major", params: { place, data } };
+const buildings = { kind: "built.footprints", params: { place, data } };
 const weather = {
   kind: "weather.surface",
   params: { place, source: "hrrr", start: "2019-10-27T07:00:00Z", end: "2019-10-30T07:00:00Z", at: "2029-10-01T07:00:00Z" },
@@ -40,6 +48,7 @@ const fire = {
   kind: "fire.cells",
   params: {
     place,
+    data,
     inputs: "world",
     // Devil's Gulch Campsite: OpenStreetMap relation 17685328, centre 38.0316, -122.7328 (read 2026-11-08)
     ignition_lat: 38.0316,

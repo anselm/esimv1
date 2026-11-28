@@ -17,6 +17,11 @@
       "kind": "coast.oneline",
       "params": {
         "breakwater": "on",
+        "data": {
+          "names": "names/osm/half-moon-bay/2026-11-28",
+          "roads": "roads/osm/half-moon-bay/2026-11-27",
+          "shore": "shore/osm/half-moon-bay/2026-11-28"
+        },
         "k_cerc": 0.005,
         "leak_frac": 0.2,
         "place": {
@@ -30,8 +35,8 @@
     }
   ],
   "from": {
-    "entry": "manifests/c1-halfmoonbay-oneline.js",
-    "hash": "sha256:a39072461988d00c4ddae25a49bf58cc969807d1e8fe4aabe5fb63895479312b",
+    "entry": "core/manifests/c1-halfmoonbay-oneline.js",
+    "hash": "sha256:5a48cdb4a4a7c9598763bb18371094ac341b211b9f6eb36463f3b35067fe0c65",
     "language": "javascript"
   },
   "manifest": "manifest/1"

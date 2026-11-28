@@ -1,6 +1,7 @@
 # A project: who asked for what, in their words, and the manifest beside it.
 area = "anselm"
 name = "fortmcmurray-2016"
+engine = "0.4.0"
 title = "The Fort McMurray fire, May 2016"
 featured = true
 cover = "cover.png"

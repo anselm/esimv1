@@ -47,8 +47,10 @@ million cells; shrub and grass a quarter of that). Three things were not there a
 found elsewhere.
 
 - Buildings. There is no county footprint service with heights; the buildings are
-  OpenStreetMap's, 21,380 of them in the window, with heights from their tags where present and
-  two storeys otherwise, and no record of which burned.
+  OpenStreetMap's, 21,400 of them in the window, read from the
+  [data warehouse](https://data.earthlight.cloud/). Seven have a height from the map. Of the rest,
+  2,742 have Microsoft's estimate from pictures taken from above and 18,651 a guess from
+  neighbouring buildings or from the building's kind and size. There is no record of which burned.
 - Wind. NOAA's 3 km analysis stops at the border. The wind is the ERA5 reanalysis at one
   point, as the first Palisades project used, and it reads this fire mild: 2 to 5 metres a
   second through the days the record has gusts to 72 km/h.

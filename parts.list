@@ -2,9 +2,9 @@
 # built against. deploy/parts.sh clones any that are missing and links scenario projects into
 # projects/. Columns: folder here, repository on GitHub, version (a tag), then for a scenario
 # repository its project folders and where each sits under projects/.
-core                          anselm/esimv1-core          v0.3.0
+core                          anselm/esimv1-core          v0.4.0
 viewer                        anselm/esimv1-viewer        v0.3.0
-scenarios/esimv1-palisades    anselm/esimv1-palisades     v0.1.0   palisades-2025=anselm/palisades-2025 palisades-cells=anselm/palisades-cells
-scenarios/esimv1-portland     anselm/esimv1-portland      v0.1.0   portland-cascadia=anselm/portland-cascadia
+scenarios/esimv1-palisades    anselm/esimv1-palisades     v0.2.0   palisades-2025=anselm/palisades-2025 palisades-cells=anselm/palisades-cells
+scenarios/esimv1-portland     anselm/esimv1-portland      v0.2.0   portland-cascadia=anselm/portland-cascadia
 scenarios/esimv1-earth2100    anselm/esimv1-earth2100     v0.1.0   planet-2100=anselm/planet-2100
 dataservice                   anselm/esimv1-data          main

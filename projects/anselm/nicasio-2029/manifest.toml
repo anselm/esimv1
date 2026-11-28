@@ -33,6 +33,11 @@ res_arcsec = 1
 name = "roads"
 kind = "roads.major"
 
+[module.params.data]
+buildings = "buildings/massing/nicasio/2026-11-27"
+names = "names/osm/nicasio/2026-11-28"
+roads = "roads/osm/nicasio/2026-11-27"
+
 [module.params.place]
 lat_n = 38.08
 lat_s = 37.97
@@ -44,8 +49,10 @@ res_arcsec = 1
 name = "buildings"
 kind = "built.footprints"
 
-[module.params]
-source = "osm"
+[module.params.data]
+buildings = "buildings/massing/nicasio/2026-11-27"
+names = "names/osm/nicasio/2026-11-28"
+roads = "roads/osm/nicasio/2026-11-27"
 
 [module.params.place]
 lat_n = 38.08
@@ -92,6 +99,11 @@ ignition_time = "2029-10-01T10:00:00Z"
 inputs = "world"
 reach_m = 45
 slope_rate_gain = 20
+
+[module.params.data]
+buildings = "buildings/massing/nicasio/2026-11-27"
+names = "names/osm/nicasio/2026-11-28"
+roads = "roads/osm/nicasio/2026-11-27"
 
 [module.params.place]
 lat_n = 38.08

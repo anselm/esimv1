@@ -16,6 +16,11 @@ breakwater = "on"
 k_cerc = 0.005
 leak_frac = 0.2
 
+[module.params.data]
+names = "names/osm/half-moon-bay/2026-11-28"
+roads = "roads/osm/half-moon-bay/2026-11-27"
+shore = "shore/osm/half-moon-bay/2026-11-28"
+
 [module.params.place]
 lat_n = 37.52
 lat_s = 37.42
